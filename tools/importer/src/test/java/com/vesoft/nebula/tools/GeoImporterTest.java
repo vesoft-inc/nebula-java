@@ -70,9 +70,10 @@ public class GeoImporterTest {
 
     @Test
     public void testReadContent() throws Exception {
-        File file = new File("/Users/chenpengwei/Documents/project/nebula/src/tools/importer/src/test/resources/geo.csv");
+        File file = new File("/Users/chenpengwei/Documents/project/nebula-java/tools/importer/src/test/Resources/geo.csv");
         CSVParser csvParser = CSVParser.parse(
-                file, Charset.forName("UTF-8"),
+                file,
+                Charset.forName("UTF-8"),
                 CSVFormat.DEFAULT
                         .withFirstRecordAsHeader()
                         .withIgnoreEmptyLines()

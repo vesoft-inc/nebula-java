@@ -1,6 +1,5 @@
 package com.vesoft.nebula.tools;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.geometry.S2CellId;
 import com.google.common.geometry.S2LatLng;
@@ -16,8 +15,7 @@ import org.kohsuke.args4j.CmdLineParser;
 
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class GeoImporter {
     private static final Logger LOGGER = Logger.getLogger(GeoImporter.class.getClass());
@@ -32,7 +30,6 @@ public class GeoImporter {
     private static ExecutorService executor = Executors.newFixedThreadPool(4);
 
     private GeoOptions geoOptions;
-
     private CSVParser csvParser;
 
     private GeoImporter() {
@@ -83,7 +80,9 @@ public class GeoImporter {
         return geoKeys;
     }
 
-    private void run() throws Exception {
+    private void runMultiJob() throws Exception {
+        final long startTime = System.currentTimeMillis();
+
         List<HostAndPort> hostAndPorts = Lists.newLinkedList();
         for (String address : geoOptions.addresses.split(",")) {
             String[] hostAndPort = address.split(":");
@@ -95,34 +94,85 @@ public class GeoImporter {
                     Integer.valueOf(hostAndPort[1])));
         }
 
-        GraphClient client = new GraphClientImpl(hostAndPorts, geoOptions.timeout, 3, 1);
-
-        if (client.connect(geoOptions.user, geoOptions.password) == 0) {
-            LOGGER.debug(String.format("%s connect to thrift service", geoOptions.user));
-        } else {
-            LOGGER.error("Connection or Authenticate Failed");
-            return;
-        }
-
-        if (client.execute(String.format(Constant.USE_TEMPLATE, geoOptions.spaceName)) == 0) {
-            LOGGER.info(String.format("Switch Space to %s", geoOptions.spaceName));
-        } else {
-            LOGGER.error(String.format("USE %s Failed", geoOptions.spaceName));
-            return;
-        }
-
         csvParser = readContent();
 
+        CompletionService<Integer> completionService = new ExecutorCompletionService<>(executor);
         Iterator<CSVRecord> iterator = csvParser.iterator();
-        while (iterator.hasNext()) {
-            CSVRecord record = iterator.next();
-            double lat = Double.parseDouble(record.get(0));
-            double lng = Double.parseDouble(record.get(1));
-            List<Long> cells = indexCells(lat, lng);
-            List<String> values = buildGeoEdgeKey(cells, Long.parseLong(record.get(2)));
+        Integer count = geoOptions.batchSize;
+        Integer taskCnt = 0;
+        Integer recordCnt = 0;
+        List<CSVRecord> records;
+        while (true) {
+            records = new ArrayList<>();
+            while (iterator.hasNext()) {
+                CSVRecord record = iterator.next();
+                records.add(record);
+                recordCnt++;
+                if (--count == 0 || !iterator.hasNext()) {
+                    completionService.submit(new InsertTask(records, hostAndPorts, geoOptions));
+                    taskCnt++;
+                    count = geoOptions.batchSize;
+                    break;
+                }
+            }
+
+            if (!iterator.hasNext()) {
+                break;
+            }
+        }
+
+        Integer failedTaskCnt = 0;
+        for (int i = 0; i < taskCnt; ++i) {
+            Integer code = completionService.take().get();
+            if (code != 0) {
+                failedTaskCnt++;
+            }
+        }
+
+        LOGGER.info(String.format("Row Counts : %d", recordCnt));
+        LOGGER.info(String.format("Time Interval : %d ms", System.currentTimeMillis() - startTime));
+        LOGGER.info(String.format("Total task : %d, Failed : %d", taskCnt, failedTaskCnt));
+
+        executor.shutdown();
+    }
+
+    private class InsertTask implements Callable<Integer> {
+        private List<CSVRecord> records;
+        private List<HostAndPort> hostAndPorts;
+        private GeoOptions geoOptions;
+
+        public InsertTask(List<CSVRecord> records, List<HostAndPort> hostAndPorts, GeoOptions geoOptions) {
+            this.records = records;
+            this.hostAndPorts = hostAndPorts;
+            this.geoOptions = geoOptions;
+        }
+
+        @Override
+        public Integer call() {
+            final long startTime = System.currentTimeMillis();
+            List<String> values = new ArrayList<>();
+            for (CSVRecord record : records) {
+                double lat = Double.parseDouble(record.get(0));
+                double lng = Double.parseDouble(record.get(1));
+                List<Long> cells = indexCells(lat, lng);
+                List<String> vals = buildGeoEdgeKey(cells, Long.parseLong(record.get(2)));
+                values.addAll(vals);
+            }
             String exec = String.format(
                     Constant.BATCH_INSERT_TEMPLATE, "EDGE", "locate", "", String.join(",", values));
-            client.execute(exec);
+
+            try {
+                GraphClient client = ClientManager.getClient(hostAndPorts, geoOptions);
+                Integer code = client.execute(exec);
+                if (code != 0) {
+                    LOGGER.error(records);
+                }
+                LOGGER.info(String.format("Insert batch success: %d, cost %d ms",
+                        records.size(), System.currentTimeMillis() - startTime));
+                return code;
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
     }
 
@@ -139,7 +189,7 @@ public class GeoImporter {
             }
 
             GeoImporter.INSTANCE.setGeoOptions(geoOptions);
-            GeoImporter.INSTANCE.run();
+            GeoImporter.INSTANCE.runMultiJob();
         } catch (CmdLineException e) {
             LOGGER.error("Parse options error: ", e);
             cmdLineParser.printUsage(System.err);
