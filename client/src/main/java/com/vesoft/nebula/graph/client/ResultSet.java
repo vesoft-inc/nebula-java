@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client;
+package com.vesoft.nebula.graph.client;
 
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.RowValue;
