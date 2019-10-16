@@ -1,5 +1,6 @@
 package com.vesoft.nebula.tools;
 
+import com.sun.codemodel.internal.JMethod;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.junit.AfterClass;
@@ -41,27 +42,21 @@ public class GeoImporterTest {
         GeoOptions geoOptions = new GeoOptions();
         CmdLineParser cmdLineParser = new CmdLineParser(geoOptions);
 
-        try {
-            String[] argsEmpty = {};
-            cmdLineParser.parseArgument(argsEmpty);
-
-            String[] argsHelp = {"-h"};
-            cmdLineParser.parseArgument(argsHelp);
-        } catch (Exception e) {
-            cmdLineParser.printUsage(System.err);
-        }
+        String[] argsEmpty = {"-h"};
+        cmdLineParser.parseArgument(argsEmpty);
+        Assert.assertTrue(geoOptions.help);
 
         String[] args = {
                 "-a=127.0.0.1:3699",
-                "-f=./src/test/resources/geo.csv",
+                "-f=./tools/importer/src/test/Resources/geo.csv",
                 "-b=16",
                 "-name=geo",
-                "-d=.",
+                "-d=./error",
                 "-u=user",
                 "-p=password"};
         cmdLineParser.parseArgument(args);
         Assert.assertEquals(geoOptions.addresses, "127.0.0.1:3699");
-        Assert.assertEquals(geoOptions.file.getPath(), "./src/test/resources/geo.csv");
+        Assert.assertEquals(geoOptions.file.getPath(), "./tools/importer/src/test/Resources/geo.csv");
         Assert.assertEquals(geoOptions.batchSize, 16);
         Assert.assertEquals(geoOptions.spaceName, "geo");
         Assert.assertEquals(geoOptions.user, "user");
@@ -70,22 +65,25 @@ public class GeoImporterTest {
 
     @Test
     public void testReadContent() throws Exception {
-        File file = new File("/Users/chenpengwei/Documents/project/nebula-java/tools/importer/src/test/Resources/geo.csv");
-        CSVParser csvParser = CSVParser.parse(
-                file,
-                Charset.forName("UTF-8"),
-                CSVFormat.DEFAULT
-                        .withFirstRecordAsHeader()
-                        .withIgnoreEmptyLines()
-                        .withTrim()
-        );
+        GeoOptions geoOptions = new GeoOptions();
+        CmdLineParser cmdLineParser = new CmdLineParser(geoOptions);
 
-        Iterator iterator = csvParser.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
+        String[] args = {
+                "-a=127.0.0.1:3699",
+                "-f=./src/test/Resources/geo.csv",
+                "-b=16",
+                "-name=geo",
+                "-d=./error",
+                "-u=user",
+                "-p=password"};
+        cmdLineParser.parseArgument(args);
 
-        System.out.println(csvParser.getHeaderNames());
+        Method setGeoOptions = GeoImporter.class.getDeclaredMethod("setGeoOptions", GeoOptions.class);
+        setGeoOptions.setAccessible(true);
+        setGeoOptions.invoke(GeoImporter.getInstance(), geoOptions);
+
+        Method readContent = GeoImporter.class.getDeclaredMethod("readContent");
+        readContent.setAccessible(true);
+        readContent.invoke(GeoImporter.getInstance());
     }
-
 }

@@ -4,6 +4,7 @@ import org.kohsuke.args4j.Option;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class GeoOptions {
     @Option(name = "-a", aliases = "-address", usage = "thrift service addresses. ip:port", required = true)
@@ -21,11 +22,11 @@ public class GeoOptions {
     @Option(name = "-o", aliases = "-timeout", usage = "thrift connection timeout with ms.")
     int timeout = Constant.DEFAULT_CONNECTION_TIMEOUT_MS;
     @Option(name = "-d", aliases = "-errorPath", usage = "save the failed record in error path.")
-    Path errorPath;
-    @Option(name = "-s", aliases = "-stat", usage = "print statistics info.")
-    boolean statistics = false;
+    Path errorPath = Paths.get("./error");
+    @Option(name = "-j", aliases = "-job", usage = "insert job number")
+    Integer jobNum = 1;
 
-    @Option(name = "-h", aliases = "-help")
+    @Option(name = "-h", aliases = "-help", help = true)
     boolean help;
 
     @Override
@@ -39,7 +40,8 @@ public class GeoOptions {
                 ", batchSize=" + batchSize +
                 ", timeout=" + timeout +
                 ", errorPath=" + errorPath +
-                ", statistics=" + statistics +
+                ", jobNum=" + jobNum +
+                ", help=" + help +
                 '}';
     }
 }

@@ -5,15 +5,17 @@ import com.google.common.geometry.S2CellId;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.graph.client.GraphClient;
-import com.vesoft.nebula.graph.client.GraphClientImpl;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.log4j.Logger;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
+import java.io.FileWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -27,10 +29,11 @@ public class GeoImporter {
     private static Integer minCellLevel = 5;
     private static Integer maxCellLevel = 24;
 
-    private static ExecutorService executor = Executors.newFixedThreadPool(4);
-
+    private ExecutorService executor;
     private GeoOptions geoOptions;
+    private List<HostAndPort> hostAndPorts;
     private CSVParser csvParser;
+    private CSVPrinter csvPrinter;
 
     private GeoImporter() {
     }
@@ -55,8 +58,8 @@ public class GeoImporter {
         return cellIds;
     }
 
-    private CSVParser readContent() throws Exception {
-        CSVParser parser = CSVParser.parse(
+    private void readContent() throws Exception {
+        csvParser = CSVParser.parse(
                 geoOptions.file,
                 Charset.forName("UTF-8"),
                 CSVFormat.DEFAULT
@@ -64,11 +67,9 @@ public class GeoImporter {
                         .withIgnoreEmptyLines()
                         .withTrim());
 
-        if (!header.equals(parser.getHeaderNames())) {
+        if (!header.equals(csvParser.getHeaderNames())) {
             throw new Exception("Header should be [lat,lng,dst]");
         }
-
-        return parser;
     }
 
     private List<String> buildGeoEdgeKey(List<Long> cellIds, Long dstId) {
@@ -80,10 +81,8 @@ public class GeoImporter {
         return geoKeys;
     }
 
-    private void runMultiJob() throws Exception {
-        final long startTime = System.currentTimeMillis();
-
-        List<HostAndPort> hostAndPorts = Lists.newLinkedList();
+    private void checkOptions() throws Exception {
+        hostAndPorts = Lists.newLinkedList();
         for (String address : geoOptions.addresses.split(",")) {
             String[] hostAndPort = address.split(":");
             if (hostAndPort.length != 2) {
@@ -94,8 +93,28 @@ public class GeoImporter {
                     Integer.valueOf(hostAndPort[1])));
         }
 
-        csvParser = readContent();
+        if (Files.exists(geoOptions.errorPath)) {
+            String errMsg = String.format("%s have existed", geoOptions.errorPath);
+            LOGGER.error(errMsg);
+            throw new Exception(errMsg);
+        }
 
+        if (Files.isDirectory(geoOptions.errorPath)) {
+            String errMsg = String.format("%s is a directory", geoOptions.errorPath);
+            LOGGER.error(errMsg);
+            throw new Exception(errMsg);
+        }
+
+        FileWriter fileWriter=new FileWriter(geoOptions.errorPath.toFile());
+        csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
+    }
+
+    private void runMultiJob() throws Exception {
+        final long startTime = System.currentTimeMillis();
+        checkOptions();
+        readContent();
+
+        executor = Executors.newFixedThreadPool(geoOptions.jobNum);
         CompletionService<Integer> completionService = new ExecutorCompletionService<>(executor);
         Iterator<CSVRecord> iterator = csvParser.iterator();
         Integer count = geoOptions.batchSize;
@@ -109,7 +128,7 @@ public class GeoImporter {
                 records.add(record);
                 recordCnt++;
                 if (--count == 0 || !iterator.hasNext()) {
-                    completionService.submit(new InsertTask(records, hostAndPorts, geoOptions));
+                    completionService.submit(new InsertTask(records));
                     taskCnt++;
                     count = geoOptions.batchSize;
                     break;
@@ -133,18 +152,17 @@ public class GeoImporter {
         LOGGER.info(String.format("Time Interval : %d ms", System.currentTimeMillis() - startTime));
         LOGGER.info(String.format("Total task : %d, Failed : %d", taskCnt, failedTaskCnt));
 
+        if (failedTaskCnt == 0) {
+            Files.delete(geoOptions.errorPath);
+        }
         executor.shutdown();
     }
 
     private class InsertTask implements Callable<Integer> {
         private List<CSVRecord> records;
-        private List<HostAndPort> hostAndPorts;
-        private GeoOptions geoOptions;
 
-        public InsertTask(List<CSVRecord> records, List<HostAndPort> hostAndPorts, GeoOptions geoOptions) {
+        public InsertTask(List<CSVRecord> records) {
             this.records = records;
-            this.hostAndPorts = hostAndPorts;
-            this.geoOptions = geoOptions;
         }
 
         @Override
@@ -165,10 +183,13 @@ public class GeoImporter {
                 GraphClient client = ClientManager.getClient(hostAndPorts, geoOptions);
                 Integer code = client.execute(exec);
                 if (code != 0) {
-                    LOGGER.error(records);
+                    synchronized (csvPrinter) {
+                        csvPrinter.printRecords(records);
+                    }
+                    LOGGER.info(String.format("Insert batch failed: %d, cost %d ms",
+                            records.size(), System.currentTimeMillis() - startTime));
+
                 }
-                LOGGER.info(String.format("Insert batch success: %d, cost %d ms",
-                        records.size(), System.currentTimeMillis() - startTime));
                 return code;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
@@ -181,20 +202,20 @@ public class GeoImporter {
         CmdLineParser cmdLineParser = new CmdLineParser(geoOptions);
         try {
             cmdLineParser.parseArgument(args);
-            LOGGER.info(geoOptions.toString());
-
             if (geoOptions.help) {
                 cmdLineParser.printUsage(System.out);
                 return;
             }
+            LOGGER.info(geoOptions.toString());
 
             GeoImporter.INSTANCE.setGeoOptions(geoOptions);
             GeoImporter.INSTANCE.runMultiJob();
         } catch (CmdLineException e) {
-            LOGGER.error("Parse options error: ", e);
+            LOGGER.error("Parse options error: " + e.getMessage());
             cmdLineParser.printUsage(System.err);
         } catch (Exception e) {
-            LOGGER.error("Import error: ", e);
+            LOGGER.error("Import error: " + e.getMessage());
+            cmdLineParser.printUsage(System.err);
         }
     }
 }
