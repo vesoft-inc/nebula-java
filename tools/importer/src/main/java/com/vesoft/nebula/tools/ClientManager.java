@@ -12,10 +12,10 @@ public class ClientManager {
 
     private static ThreadLocal<GraphClient> clientThreadLocal = new ThreadLocal<>();
 
-    public static GraphClient getClient(List<HostAndPort> hostAndPorts, GeoOptions options) throws Exception {
+    public static GraphClient getClient(List<HostAndPort> hostAndPorts, Options options) throws Exception {
         GraphClient client = clientThreadLocal.get();
         if (client == null) {
-            client = new GraphClientImpl(hostAndPorts, options.timeout, 3, 1);
+            client = new GraphClientImpl(hostAndPorts, options.timeout, options.connectionRetry, options.executionRetry);
             if (client.connect(options.user, options.password) != 0) {
                 throw new Exception("Connect fail.");
             }

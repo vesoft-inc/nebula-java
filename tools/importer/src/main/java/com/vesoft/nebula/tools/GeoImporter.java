@@ -23,14 +23,14 @@ public class GeoImporter {
     private static final Logger LOGGER = Logger.getLogger(GeoImporter.class.getClass());
 
     private static final GeoImporter INSTANCE = new GeoImporter();
-    private static final List<String> header = new ArrayList<String>(
+    private static final List<String> header = new ArrayList<>(
             Arrays.asList("lat", "lng", "dst"));
     private static Integer maxCellCoverNums = 18;
     private static Integer minCellLevel = 5;
     private static Integer maxCellLevel = 24;
 
     private ExecutorService executor;
-    private GeoOptions geoOptions;
+    private Options options;
     private List<HostAndPort> hostAndPorts;
     private CSVParser csvParser;
     private CSVPrinter csvPrinter;
@@ -40,10 +40,6 @@ public class GeoImporter {
 
     public static GeoImporter getInstance() {
         return INSTANCE;
-    }
-
-    public void setGeoOptions(GeoOptions geoOptions) {
-        this.geoOptions = geoOptions;
     }
 
     private List<Long> indexCells(double lat, double lng) {
@@ -60,7 +56,7 @@ public class GeoImporter {
 
     private void readContent() throws Exception {
         csvParser = CSVParser.parse(
-                geoOptions.file,
+                options.file,
                 Charset.forName("UTF-8"),
                 CSVFormat.DEFAULT
                         .withFirstRecordAsHeader()
@@ -83,7 +79,7 @@ public class GeoImporter {
 
     private void checkOptions() throws Exception {
         hostAndPorts = Lists.newLinkedList();
-        for (String address : geoOptions.addresses.split(",")) {
+        for (String address : options.addresses.split(",")) {
             String[] hostAndPort = address.split(":");
             if (hostAndPort.length != 2) {
                 LOGGER.error(String.format("Address format error: %s", address));
@@ -93,31 +89,32 @@ public class GeoImporter {
                     Integer.valueOf(hostAndPort[1])));
         }
 
-        if (Files.exists(geoOptions.errorPath)) {
-            String errMsg = String.format("%s have existed", geoOptions.errorPath);
+        if (Files.exists(options.errorPath)) {
+            String errMsg = String.format("%s have existed", options.errorPath);
             LOGGER.error(errMsg);
             throw new Exception(errMsg);
         }
 
-        if (Files.isDirectory(geoOptions.errorPath)) {
-            String errMsg = String.format("%s is a directory", geoOptions.errorPath);
+        if (Files.isDirectory(options.errorPath)) {
+            String errMsg = String.format("%s is a directory", options.errorPath);
             LOGGER.error(errMsg);
             throw new Exception(errMsg);
         }
 
-        FileWriter fileWriter=new FileWriter(geoOptions.errorPath.toFile());
+        FileWriter fileWriter=new FileWriter(options.errorPath.toFile());
         csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
     }
 
-    private void runMultiJob() throws Exception {
+    public void runMultiJob(Options options) throws Exception {
         final long startTime = System.currentTimeMillis();
+        this.options = options;
         checkOptions();
         readContent();
 
-        executor = Executors.newFixedThreadPool(geoOptions.jobNum);
+        executor = Executors.newFixedThreadPool(options.jobNum);
         CompletionService<Integer> completionService = new ExecutorCompletionService<>(executor);
         Iterator<CSVRecord> iterator = csvParser.iterator();
-        Integer count = geoOptions.batchSize;
+        Integer count = options.batchSize;
         Integer taskCnt = 0;
         Integer recordCnt = 0;
         List<CSVRecord> records;
@@ -130,7 +127,7 @@ public class GeoImporter {
                 if (--count == 0 || !iterator.hasNext()) {
                     completionService.submit(new InsertTask(records));
                     taskCnt++;
-                    count = geoOptions.batchSize;
+                    count = options.batchSize;
                     break;
                 }
             }
@@ -153,7 +150,7 @@ public class GeoImporter {
         LOGGER.info(String.format("Total task : %d, Failed : %d", taskCnt, failedTaskCnt));
 
         if (failedTaskCnt == 0) {
-            Files.delete(geoOptions.errorPath);
+            Files.delete(options.errorPath);
         }
         executor.shutdown();
     }
@@ -180,7 +177,7 @@ public class GeoImporter {
                     Constant.BATCH_INSERT_TEMPLATE, "EDGE", "locate", "", String.join(",", values));
 
             try {
-                GraphClient client = ClientManager.getClient(hostAndPorts, geoOptions);
+                GraphClient client = ClientManager.getClient(hostAndPorts, options);
                 Integer code = client.execute(exec);
                 if (code != 0) {
                     synchronized (csvPrinter) {
@@ -198,18 +195,17 @@ public class GeoImporter {
     }
 
     public static void main(String[] args) {
-        GeoOptions geoOptions = new GeoOptions();
-        CmdLineParser cmdLineParser = new CmdLineParser(geoOptions);
+        Options options = new Options();
+        CmdLineParser cmdLineParser = new CmdLineParser(options);
         try {
             cmdLineParser.parseArgument(args);
-            if (geoOptions.help) {
+            if (options.help) {
                 cmdLineParser.printUsage(System.out);
                 return;
             }
-            LOGGER.info(geoOptions.toString());
+            LOGGER.info(options.toString());
 
-            GeoImporter.INSTANCE.setGeoOptions(geoOptions);
-            GeoImporter.INSTANCE.runMultiJob();
+            GeoImporter.INSTANCE.runMultiJob(options);
         } catch (CmdLineException e) {
             LOGGER.error("Parse options error: " + e.getMessage());
             cmdLineParser.printUsage(System.err);
