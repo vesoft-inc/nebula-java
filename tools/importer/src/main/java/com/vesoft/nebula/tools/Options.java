@@ -1,9 +1,14 @@
+/* Copyright (c) 2019 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.tools;
 
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -122,6 +127,150 @@ public class Options {
         }
 
         return hostAndPorts;
+    }
+
+    public String getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(String addresses) {
+        this.addresses = addresses;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSpaceName() {
+        return spaceName;
+    }
+
+    public void setSpaceName(String spaceName) {
+        this.spaceName = spaceName;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
+    }
+
+    public Path getErrorPath() {
+        return errorPath;
+    }
+
+    public void setErrorPath(Path errorPath) {
+        this.errorPath = errorPath;
+    }
+
+    public Integer getJobNum() {
+        return jobNum;
+    }
+
+    public void setJobNum(Integer jobNum) {
+        this.jobNum = jobNum;
+    }
+
+    public Boolean getStatistic() {
+        return isStatistic;
+    }
+
+    public void setStatistic(Boolean statistic) {
+        isStatistic = statistic;
+    }
+
+    public Integer getConnectionRetry() {
+        return connectionRetry;
+    }
+
+    public void setConnectionRetry(Integer connectionRetry) {
+        this.connectionRetry = connectionRetry;
+    }
+
+    public Integer getExecutionRetry() {
+        return executionRetry;
+    }
+
+    public void setExecutionRetry(Integer executionRetry) {
+        this.executionRetry = executionRetry;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    public String getColumns() {
+        return columns;
+    }
+
+    public void setColumns(String columns) {
+        this.columns = columns;
+    }
+
+    public Boolean getHasRanking() {
+        return hasRanking;
+    }
+
+    public void setHasRanking(Boolean hasRanking) {
+        this.hasRanking = hasRanking;
+    }
+
+    public Boolean getGeo() {
+        return isGeo;
+    }
+
+    public void setGeo(Boolean geo) {
+        isGeo = geo;
+    }
+
+    public Boolean getHelp() {
+        return help;
+    }
+
+    public void setHelp(Boolean help) {
+        this.help = help;
     }
 
     @Override
