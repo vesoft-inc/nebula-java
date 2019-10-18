@@ -96,28 +96,14 @@ public class GeoImporter {
 
         executor = Executors.newFixedThreadPool(options.jobNum);
         CompletionService<Integer> completionService = new ExecutorCompletionService<>(executor);
-        Iterator<CSVRecord> iterator = csvParser.iterator();
-        Integer count = options.batchSize;
+        CsvRecordBatchIterator iterator = new CsvRecordBatchIterator(csvParser.iterator(), options.batchSize);
         Integer taskCnt = 0;
         Integer recordCnt = 0;
-        List<CSVRecord> records;
-        while (true) {
-            records = new ArrayList<>();
-            while (iterator.hasNext()) {
-                CSVRecord record = iterator.next();
-                records.add(record);
-                recordCnt++;
-                if (--count == 0 || !iterator.hasNext()) {
-                    completionService.submit(new InsertTask(records));
-                    taskCnt++;
-                    count = options.batchSize;
-                    break;
-                }
-            }
-
-            if (!iterator.hasNext()) {
-                break;
-            }
+        while (iterator.hasNext()) {
+            List<CSVRecord> records = iterator.next();
+            recordCnt += records.size();
+            completionService.submit(new InsertTask(records));
+            taskCnt++;
         }
 
         Integer failedTaskCnt = 0;
@@ -136,6 +122,37 @@ public class GeoImporter {
             Files.delete(options.errorPath);
         }
         executor.shutdown();
+    }
+
+    private class CsvRecordBatchIterator implements Iterator<List<CSVRecord>> {
+        private Iterator<CSVRecord> iter;
+        private Integer size;
+
+        public CsvRecordBatchIterator(Iterator<CSVRecord> iter, Integer size) {
+            this.iter = iter;
+            this.size = size;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return iter.hasNext();
+        }
+
+        @Override
+        public List<CSVRecord> next() {
+            if (!iter.hasNext()) {
+                throw new RuntimeException("No element exist.");
+            } else {
+                List<CSVRecord> csvRecords = new ArrayList<>();
+                int count = 0;
+                while (iter.hasNext() && count < size) {
+                    csvRecords.add(iter.next());
+                    ++count;
+                }
+
+                return csvRecords;
+            }
+        }
     }
 
     private class InsertTask implements Callable<Integer> {
