@@ -31,7 +31,7 @@ public class Options {
 
     @Option(name = "-f", aliases = "--file", usage = "data file path with file name.",
             required = true)
-    File file;
+    String file;
 
     @Option(name = "-b", aliases = "--batch", usage = "batch insert size.")
     Integer batchSize = Constant.DEFAULT_INSERT_BATCH_SIZE;
@@ -93,6 +93,10 @@ public class Options {
             if (columns == null) {
                 throw new Exception("Option \"-c (--column)\" is required when not import geo.");
             }
+        } else {
+            type = Constant.EDGE;
+            schemaName = "locate";
+            columns = "";
         }
 
         if (Files.exists(errorPath)) {

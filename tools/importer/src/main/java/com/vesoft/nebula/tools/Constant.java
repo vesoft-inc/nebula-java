@@ -19,4 +19,9 @@ public class Constant {
 
     public static final String VERTEX = "vertex";
     public static final String EDGE = "edge";
+
+    public static Integer maxCellCoverNums = 18;
+    public static Integer minCellLevel = 5;
+    public static Integer maxCellLevel = 24;
+
 }
