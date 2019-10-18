@@ -16,11 +16,13 @@ public class Importer {
                 cmdLineParser.printUsage(System.out);
                 return;
             }
+            options.checkOptions();
             LOGGER.info(options.toString());
 
             if (options.isGeo) {
                 GeoImporter.getInstance().runMultiJob(options);
             } else {
+                NormalImporter.getInstance().runMultiJob(options);
             }
         } catch (CmdLineException e) {
             LOGGER.error("Parse options error: " + e.getMessage());

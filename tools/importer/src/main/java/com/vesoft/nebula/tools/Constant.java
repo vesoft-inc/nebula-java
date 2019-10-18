@@ -16,4 +16,7 @@ public class Constant {
     public static final String INSERT_EDGE_VALUE_WITHOUT_RANKING_TEMPLATE = "%d->%d: (%s)";
     public static final String INSERT_EDGE_VALUE_TEMPLATE = "%d->%d@%d: (%s)";
     public static final String BATCH_INSERT_TEMPLATE = "INSERT %s %s(%s) values %s";
+
+    public static final String VERTEX = "vertex";
+    public static final String EDGE = "edge";
 }

@@ -44,6 +44,7 @@ public class GeoImporterTest {
         cmdLineParser.parseArgument(argsHelp);
 
         String[] args = {
+                "-g",
                 "-a=127.0.0.1:3699",
                 "-f=./tools/importer/src/test/Resources/geo.csv",
                 "-b=16",

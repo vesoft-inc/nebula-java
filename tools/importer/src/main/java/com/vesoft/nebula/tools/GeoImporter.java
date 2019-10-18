@@ -14,6 +14,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
@@ -66,6 +67,7 @@ public class GeoImporter {
         if (!header.equals(csvParser.getHeaderNames())) {
             throw new Exception("Header should be [lat,lng,dst]");
         }
+
     }
 
     private List<String> buildGeoEdgeKey(List<Long> cellIds, Long dstId) {
@@ -77,39 +79,15 @@ public class GeoImporter {
         return geoKeys;
     }
 
-    private void checkOptions() throws Exception {
-        hostAndPorts = Lists.newLinkedList();
-        for (String address : options.addresses.split(",")) {
-            String[] hostAndPort = address.split(":");
-            if (hostAndPort.length != 2) {
-                LOGGER.error(String.format("Address format error: %s", address));
-                return;
-            }
-            hostAndPorts.add(HostAndPort.fromParts(hostAndPort[0],
-                    Integer.valueOf(hostAndPort[1])));
-        }
-
-        if (Files.exists(options.errorPath)) {
-            String errMsg = String.format("%s have existed", options.errorPath);
-            LOGGER.error(errMsg);
-            throw new Exception(errMsg);
-        }
-
-        if (Files.isDirectory(options.errorPath)) {
-            String errMsg = String.format("%s is a directory", options.errorPath);
-            LOGGER.error(errMsg);
-            throw new Exception(errMsg);
-        }
-
-        FileWriter fileWriter=new FileWriter(options.errorPath.toFile());
-        csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
-    }
-
     public void runMultiJob(Options options) throws Exception {
         final long startTime = System.currentTimeMillis();
+
         this.options = options;
-        checkOptions();
+        this.hostAndPorts = options.getHostPort();
+
         readContent();
+        FileWriter fileWriter=new FileWriter(options.errorPath.toFile());
+        csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
 
         executor = Executors.newFixedThreadPool(options.jobNum);
         CompletionService<Integer> completionService = new ExecutorCompletionService<>(executor);
@@ -165,6 +143,7 @@ public class GeoImporter {
         @Override
         public Integer call() {
             final long startTime = System.currentTimeMillis();
+            Integer retCode = 0;
             List<String> values = new ArrayList<>();
             for (CSVRecord record : records) {
                 double lat = Double.parseDouble(record.get(0));
@@ -178,8 +157,8 @@ public class GeoImporter {
 
             try {
                 GraphClient client = ClientManager.getClient(hostAndPorts, options);
-                Integer code = client.execute(exec);
-                if (code != 0) {
+                retCode = client.execute(exec);
+                if (retCode != 0) {
                     synchronized (csvPrinter) {
                         csvPrinter.printRecords(records);
                     }
@@ -187,31 +166,13 @@ public class GeoImporter {
                             records.size(), System.currentTimeMillis() - startTime));
 
                 }
-                return code;
-            } catch (Exception e) {
+            } catch (ClientManager.GetClientFailException e) {
                 throw new RuntimeException(e.getMessage());
+            } catch (IOException e) {
+                LOGGER.error("IOException: ", e);
+            } finally {
+                return retCode;
             }
-        }
-    }
-
-    public static void main(String[] args) {
-        Options options = new Options();
-        CmdLineParser cmdLineParser = new CmdLineParser(options);
-        try {
-            cmdLineParser.parseArgument(args);
-            if (options.help) {
-                cmdLineParser.printUsage(System.out);
-                return;
-            }
-            LOGGER.info(options.toString());
-
-            GeoImporter.INSTANCE.runMultiJob(options);
-        } catch (CmdLineException e) {
-            LOGGER.error("Parse options error: " + e.getMessage());
-            cmdLineParser.printUsage(System.err);
-        } catch (Exception e) {
-            LOGGER.error("Import error: " + e.getMessage());
-            cmdLineParser.printUsage(System.err);
         }
     }
 }
