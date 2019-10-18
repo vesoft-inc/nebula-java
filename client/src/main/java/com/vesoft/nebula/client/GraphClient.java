@@ -16,12 +16,12 @@ public interface GraphClient {
 
     public int connect(String username, String password);
 
-    public void disconnect();
+    public int switchSpace(String space);
 
     public int execute(String stmt);
 
-    public int executeUpdate(String stmt);
-
     public ResultSet executeQuery(String stmt)
             throws ConnectionException, NGQLException, TException;
+
+    public void disconnect();
 }
