@@ -1,30 +1,20 @@
 package com.vesoft.nebula.tools;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.kohsuke.args4j.CmdLineParser;
-
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
+import org.kohsuke.args4j.CmdLineParser;
+
 
 public class GeoImporterTest {
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-
-    }
-
     @Test
     public void testIndexCells() throws Exception {
-        Method method = GeoImporter.class.getDeclaredMethod("indexCells", double.class, double.class);
+        Method method = GeoImporter.class.getDeclaredMethod("indexCells",
+                double.class, double.class);
         method.setAccessible(true);
         Object obj = method.invoke(GeoImporter.getInstance(), 30.28522, 120.01338);
         List<Long> result = (ArrayList<Long>) obj;
@@ -44,14 +34,14 @@ public class GeoImporterTest {
         cmdLineParser.parseArgument(argsHelp);
 
         String[] args = {
-                "-g",
-                "-a=127.0.0.1:3699",
-                "-f=./tools/importer/src/test/Resources/geo.csv",
-                "-b=16",
-                "-n=geo",
-                "-d=./error",
-                "-u=user",
-                "-p=password"};
+            "-g",
+            "-a=127.0.0.1:3699",
+            "-f=./tools/importer/src/test/Resources/geo.csv",
+            "-b=16",
+            "-n=geo",
+            "-d=./error",
+            "-u=user",
+            "-p=password"};
         cmdLineParser.parseArgument(args);
         Assert.assertEquals(options.addresses, "127.0.0.1:3699");
         Assert.assertEquals(options.file.getPath(), "./tools/importer/src/test/Resources/geo.csv");
@@ -67,18 +57,18 @@ public class GeoImporterTest {
         CmdLineParser cmdLineParser = new CmdLineParser(options);
 
         String[] args = {
-                "-a=127.0.0.1:3699",
-                "-f=./src/test/Resources/geo.csv",
-                "-b=16",
-                "-name=geo",
-                "-d=./error",
-                "-u=user",
-                "-p=password"};
+            "-a=127.0.0.1:3699",
+            "-f=./src/test/Resources/geo.csv",
+            "-b=16",
+            "-n=geo",
+            "-d=./error",
+            "-u=user",
+            "-p=password"};
         cmdLineParser.parseArgument(args);
 
-        Method setGeoOptions = GeoImporter.class.getDeclaredMethod("setOptions", Options.class);
-        setGeoOptions.setAccessible(true);
-        setGeoOptions.invoke(GeoImporter.getInstance(), options);
+        Field opField = GeoImporter.class.getDeclaredField("options");
+        opField.setAccessible(true);
+        opField.set(GeoImporter.getInstance(), options);
 
         Method readContent = GeoImporter.class.getDeclaredMethod("readContent");
         readContent.setAccessible(true);

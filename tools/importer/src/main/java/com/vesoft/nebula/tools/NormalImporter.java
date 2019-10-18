@@ -33,7 +33,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -141,50 +145,51 @@ public class NormalImporter {
                             .collect(Collectors.toList());
 
                     switch (options.type.toLowerCase()) {
-                        case Constant.VERTEX:
-                            long id = Long.parseLong(tokenList.get(0));
-                            List<String> vertexValueList = tokenList.subList(1, tokenList.size());
-                            String vertexValue = Joiner.on(", ").join(vertexValueList);
-                            LOGGER.trace(String.format("vertex id: %d, value: %s", id,
-                                    vertexValue));
-                            values.add(String.format(Constant.INSERT_VERTEX_VALUE_TEMPLATE, id,
-                                    vertexValue));
-                            break;
-                        case Constant.EDGE:
-                            long source = Long.parseLong(tokenList.get(0));
-                            long target = Long.parseLong(tokenList.get(1));
-                            if (options.hasRanking) {
-                                long ranking = Long.parseLong(tokenList.get(2));
-                                List<String> edgeList = tokenList.subList(3, tokenList.size());
-                                String edgeValue = Joiner.on(", ").join(edgeList);
-                                LOGGER.trace(String.format("edge source: %d, target: %d, ranking:"
-                                                + " %d, value: %s", source, target,
-                                        ranking, edgeValue));
-                                values.add(String.format(Constant.INSERT_EDGE_VALUE_TEMPLATE, source,
-                                        target, ranking, edgeValue));
-                            } else {
-                                List<String> edgeList = tokenList.subList(2, tokenList.size());
-                                String edgeValue = Joiner.on(", ").join(edgeList);
-                                LOGGER.trace(String.format("edge source: %d, target: %d, value:"
-                                        + " %s", source, target, edgeValue));
-                                values.add(String.format(
-                                        Constant.INSERT_EDGE_VALUE_WITHOUT_RANKING_TEMPLATE, source,
-                                        target, edgeValue));
-                            }
-                            break;
-                        default:
-                            LOGGER.error("Type should be vertex or edge");
-                            break;
+                      case Constant.VERTEX:
+                          long id = Long.parseLong(tokenList.get(0));
+                          List<String> vertexValueList = tokenList.subList(1, tokenList.size());
+                          String vertexValue = Joiner.on(", ").join(vertexValueList);
+                          LOGGER.trace(String.format("vertex id: %d, value: %s", id,
+                                  vertexValue));
+                          values.add(String.format(Constant.INSERT_VERTEX_VALUE_TEMPLATE, id,
+                                  vertexValue));
+                          break;
+                      case Constant.EDGE:
+                          long source = Long.parseLong(tokenList.get(0));
+                          long target = Long.parseLong(tokenList.get(1));
+                          if (options.hasRanking) {
+                              long ranking = Long.parseLong(tokenList.get(2));
+                              List<String> edgeList = tokenList.subList(3, tokenList.size());
+                              String edgeValue = Joiner.on(", ").join(edgeList);
+                              LOGGER.trace(String.format("edge source: %d, target: %d, ranking:"
+                                              + " %d, value: %s", source, target,
+                                      ranking, edgeValue));
+                              values.add(String.format(Constant.INSERT_EDGE_VALUE_TEMPLATE, source,
+                                      target, ranking, edgeValue));
+                          } else {
+                              List<String> edgeList = tokenList.subList(2, tokenList.size());
+                              String edgeValue = Joiner.on(", ").join(edgeList);
+                              LOGGER.trace(String.format("edge source: %d, target: %d, value:"
+                                      + " %s", source, target, edgeValue));
+                              values.add(String.format(
+                                      Constant.INSERT_EDGE_VALUE_WITHOUT_RANKING_TEMPLATE, source,
+                                      target, edgeValue));
+                          }
+                          break;
+                      default:
+                          LOGGER.error("Type should be vertex or edge");
+                          break;
                     }
                 }
 
-                String exec = String.format(Constant.BATCH_INSERT_TEMPLATE, options.type, options.schemaName, options.columns,
+                String exec = String.format(Constant.BATCH_INSERT_TEMPLATE,
+                        options.type, options.schemaName, options.columns,
                         Joiner.on(", ").join(values));
                 LOGGER.debug(String.format("Execute: %s", exec));
                 retCode = client.execute(exec);
                 if (retCode != 0) {
-                    Files.write(options.errorPath, segment, Charset.forName("UTF-8"), CREATE, APPEND,
-                            SYNC);
+                    Files.write(options.errorPath, segment, Charset.forName("UTF-8"),
+                            CREATE, APPEND, SYNC);
                     LOGGER.error("Graph Client Execution Failed !");
                 }
             } catch (ClientManager.GetClientFailException e) {
@@ -210,7 +215,8 @@ public class NormalImporter {
         Configuration configuration = new Configuration();
         FileSystem fileSystem = FileSystem.get(URI.create(filePath), configuration);
         LOGGER.info(String.format("Reading HDFS: %s", options.file));
-        try (InputStream stream = fileSystem.open(new org.apache.hadoop.fs.Path(options.file.getPath()));
+        try (InputStream stream = fileSystem.open(
+                new org.apache.hadoop.fs.Path(options.file.getPath()));
              Reader reader = new InputStreamReader(stream);
              BufferedReader buffered = new BufferedReader(reader)) {
             return buffered.lines();

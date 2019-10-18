@@ -1,24 +1,29 @@
 package com.vesoft.nebula.tools;
 
-import com.google.common.collect.Lists;
 import com.google.common.geometry.S2CellId;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.graph.client.GraphClient;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.log4j.Logger;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.log4j.Logger;
+
 
 public class GeoImporter {
     private static final Logger LOGGER = Logger.getLogger(GeoImporter.class.getClass());
@@ -86,7 +91,7 @@ public class GeoImporter {
         this.hostAndPorts = options.getHostPort();
 
         readContent();
-        FileWriter fileWriter=new FileWriter(options.errorPath.toFile());
+        FileWriter fileWriter = new FileWriter(options.errorPath.toFile());
         csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
 
         executor = Executors.newFixedThreadPool(options.jobNum);

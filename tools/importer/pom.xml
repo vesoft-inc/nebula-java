@@ -87,7 +87,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.vesoft.nebula.importer.Importer</mainClass>
+                                    <mainClass>com.vesoft.nebula.tools.Importer</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
