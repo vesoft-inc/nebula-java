@@ -91,7 +91,7 @@ public class GeoImporter {
         this.hostAndPorts = options.getHostPort();
 
         readContent();
-        FileWriter fileWriter = new FileWriter(options.errorPath.toFile());
+        FileWriter fileWriter = new FileWriter(options.errorPath.toFile(), true);
         csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
 
         executor = Executors.newFixedThreadPool(options.jobNum);
