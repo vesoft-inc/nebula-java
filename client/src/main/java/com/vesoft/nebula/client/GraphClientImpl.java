@@ -84,6 +84,11 @@ public class GraphClientImpl implements GraphClient {
              DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
+    public GraphClientImpl(String host, int port) {
+        this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
+             DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+    }
+
     /**
      * Connect to the Graph Services.
      *
@@ -127,21 +132,13 @@ public class GraphClientImpl implements GraphClient {
     }
 
     /**
-     * Sign out from Graph Services.
+     * Switch Graph Space
+     *
+     * @param space The space name
+     * @return      The ErrorCode of status, 0 is succeeded.
      */
-    @Override
-    public void disconnect() {
-        if (!checkTransportOpened(transport)) {
-            return;
-        }
-
-        try {
-            client.signout(sessionId_);
-        } catch (TException e) {
-            LOGGER.error("Disconnect error: " + e.getMessage());
-        } finally {
-            transport.close();
-        }
+    public int switchSpace(String space) {
+        return execute(String.format("USE %s", space));
     }
 
     /**
@@ -173,17 +170,6 @@ public class GraphClientImpl implements GraphClient {
     }
 
     /**
-     * Execute the query sentence.
-     *
-     * @param stmt The query sentence.
-     * @return     The ErrorCode of status, 0 is succeeded.
-     */
-    @Override
-    public int executeUpdate(String stmt) {
-        return execute(stmt);
-    }
-
-    /**
      * Execute the query sentence which will return a ResultSet.
      *
      * @param stmt The query sentence.
@@ -210,5 +196,23 @@ public class GraphClientImpl implements GraphClient {
 
     private boolean checkTransportOpened(TTransport transport) {
         return !Objects.isNull(transport) && transport.isOpen();
+    }
+
+    /**
+     * Sign out from Graph Services.
+     */
+    @Override
+    public void close() {
+        if (!checkTransportOpened(transport)) {
+            return;
+        }
+
+        try {
+            client.signout(sessionId_);
+        } catch (TException e) {
+            LOGGER.error("Disconnect error: " + e.getMessage());
+        } finally {
+            transport.close();
+        }
     }
 }
