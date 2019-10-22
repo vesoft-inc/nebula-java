@@ -27,6 +27,17 @@ public class GraphClientExample {
 
     private static final String SPACE_NAME = "test";
 
+    private static final String[] createTags = {
+        "CREATE TAG course(name string, credits int);",
+        "CREATE TAG building(name string);",
+        "CREATE TAG student(name string, age int, gender string);",
+    };
+
+    private static final String[] createEdges = {
+        "CREATE EDGE like(likeness double);",
+        "CREATE EDGE select(grade int);"
+    };
+
     private static final String[] insertVertices = {
         "INSERT VERTEX student(name, age, gender) VALUES 200:(\"Monica\", 16, \"female\");",
         "INSERT VERTEX student(name, age, gender) VALUES 201:(\"Mike\", 18, \"male\");",
@@ -60,6 +71,22 @@ public class GraphClientExample {
                     LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));
                     LOGGER.error(String.format("Please confirm %s have been created", SPACE_NAME));
                     System.exit(-1);
+                }
+
+                for (String statement : createTags) {
+                    code = client.execute(statement);
+                    if (code != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                        System.exit(-1);
+                    }
+                }
+
+                for (String statement : createEdges) {
+                    code = client.execute(statement);
+                    if (code != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Create Edge Failed: %s", statement));
+                        System.exit(-1);
+                    }
                 }
 
                 for (String statement : insertVertices) {

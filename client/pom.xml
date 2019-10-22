@@ -77,6 +77,9 @@
                     <configLocation>
                         https://raw.githubusercontent.com/vesoft-inc/nebula-java/master/nebula_java_style_checks.xml
                     </configLocation>
+                    <sourceDirectories>
+                        ${project.build.sourceDirectory}
+                    </sourceDirectories>
                     <encoding>UTF-8</encoding>
                     <failOnViolation>true</failOnViolation>
                     <linkXRef>false</linkXRef>
@@ -100,6 +103,18 @@
                         <version>8.18</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.5</version>
+                <configuration>
+                    <threshold>High</threshold>
+                    <effort>Default</effort>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
+                    <excludeFilterFile>excludeFilter.xml</excludeFilterFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>
