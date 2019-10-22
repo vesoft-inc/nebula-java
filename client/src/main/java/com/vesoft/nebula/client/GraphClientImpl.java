@@ -202,7 +202,7 @@ public class GraphClientImpl implements GraphClient {
      * Sign out from Graph Services.
      */
     @Override
-    public void disconnect() {
+    public void close() {
         if (!checkTransportOpened(transport)) {
             return;
         }
