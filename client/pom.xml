@@ -11,15 +11,6 @@
 
     <artifactId>client</artifactId>
 
-    <properties>
-        <download.url>
-            https://raw.githubusercontent.com/vesoft-inc/nebula/master/src/interface/graph.thrift
-        </download.url>
-        <download.outputDirectory>
-            ${project.build.directory}/src/main/thrift
-        </download.outputDirectory>
-    </properties>
-
     <build>
         <plugins>
             <plugin>

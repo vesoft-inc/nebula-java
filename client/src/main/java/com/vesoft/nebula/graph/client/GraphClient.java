@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client;
+package com.vesoft.nebula.graph.client;
 
 import com.facebook.thrift.TException;
 
@@ -18,8 +18,8 @@ public interface GraphClient extends AutoCloseable {
 
     public int switchSpace(String space);
 
-    public int execute(String stmt);
+    public int execute(String statement);
 
-    public ResultSet executeQuery(String stmt)
+    public ResultSet executeQuery(String statement)
             throws ConnectionException, NGQLException, TException;
 }

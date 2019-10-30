@@ -4,18 +4,16 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client;
+package com.vesoft.nebula.graph.client;
 
-public class NGQLException extends Exception {
-    private int code;
+public class ConnectionException extends Exception {
 
-    public NGQLException(int code) {
+    public ConnectionException() {
         super();
-        this.code = code;
     }
 
-    public int getCode() {
-        return code;
+    public ConnectionException(String message) {
+        super(message);
     }
 }
 
