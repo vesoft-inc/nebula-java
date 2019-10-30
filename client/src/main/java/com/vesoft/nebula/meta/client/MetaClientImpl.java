@@ -6,14 +6,13 @@
 
 package com.vesoft.nebula.meta.client;
 
-import com.vesoft.nebula.graph.client.GraphClientImpl;
 import com.vesoft.nebula.meta.MetaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MetaClientImpl implements MetaClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class.getName());
 
     private MetaService.Client client;
 
