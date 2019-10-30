@@ -12,7 +12,6 @@ import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.Pair;
-import com.vesoft.nebula.graph.client.GraphClientImpl;
 import com.vesoft.nebula.storage.ExecResponse;
 import com.vesoft.nebula.storage.GeneralResponse;
 import com.vesoft.nebula.storage.GetRequest;
@@ -20,22 +19,21 @@ import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.RemoveRangeRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.StorageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Nebula Storage Client
  */
 public class StorageClientImpl implements StorageClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class.getName());
 
     private StorageService.Client client;
 
@@ -45,8 +43,8 @@ public class StorageClientImpl implements StorageClient {
     private int space;
 
     public StorageClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
-        checkArgument(timeout > 0);
-        checkArgument(connectionRetry > 0);
+        com.google.common.base.Preconditions.checkArgument(timeout > 0);
+        com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
 
         addresses.forEach(address -> {
             String host = address.getHost();
@@ -63,7 +61,9 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param space
+     * Use Space
+     *
+     * @param space nebula space ID
      */
     @Override
     public void switchSpace(int space) {
@@ -71,9 +71,11 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param part
-     * @param key
-     * @param value
+     * Put key-value pair into partition
+     *
+     * @param part  partitionID
+     * @param key   nebula key
+     * @param value nebula value
      * @return
      */
     @Override
@@ -98,8 +100,10 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param part
-     * @param values
+     * Put multi key-value pairs into partition
+     *
+     * @param part   partitionID
+     * @param values key-value pairs
      * @return
      */
     public boolean put(int part, Map<String, String> values) {
@@ -125,8 +129,10 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param part
-     * @param key
+     * Get key from part
+     *
+     * @param part partitionID
+     * @param key  nebula key
      * @return
      */
     @Override
@@ -149,8 +155,10 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param part
-     * @param keys
+     * Get multi keys from part
+     *
+     * @param part partitionID
+     * @param keys nebula keys
      * @return
      */
     public Optional<Map<String, String>> get(int part, List<String> keys) {
@@ -172,8 +180,10 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param part
-     * @param key
+     * Remove key from part
+     *
+     * @param part partitionID
+     * @param key  nebula key
      * @return
      */
     @Override
@@ -196,9 +206,11 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param part
-     * @param start
-     * @param end
+     * Remove keys from start to end at part
+     *
+     * @param part  partitionID
+     * @param start nebula start key
+     * @param end   nebula end key
      * @return
      */
     @Override
@@ -221,7 +233,9 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @param response
+     * Check the response is successfully
+     *
+     * @param response execution response
      * @return
      */
     private boolean isSuccess(ExecResponse response) {
@@ -229,10 +243,13 @@ public class StorageClientImpl implements StorageClient {
     }
 
     /**
-     * @throws Exception
+     * Close the client
+     *
+     * @throws Exception close exception
      */
     @Override
     public void close() throws Exception {
 
     }
 }
+
