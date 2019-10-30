@@ -80,6 +80,11 @@ public class GraphClientImpl implements GraphClient {
              DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
+    public GraphClientImpl(String host, int port) {
+        this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
+             DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+    }
+
     /**
      * Connect to the Graph Services.
      *
@@ -120,6 +125,16 @@ public class GraphClientImpl implements GraphClient {
             }
         }
         return ErrorCode.E_FAIL_TO_CONNECT;
+    }
+
+    /**
+     * Switch Graph Space
+     *
+     * @param space The space name
+     * @return      The ErrorCode of status, 0 is succeeded.
+     */
+    public int switchSpace(String space) {
+        return execute(String.format("USE %s", space));
     }
 
     /**
@@ -196,5 +211,4 @@ public class GraphClientImpl implements GraphClient {
             transport.close();
         }
     }
-
 }

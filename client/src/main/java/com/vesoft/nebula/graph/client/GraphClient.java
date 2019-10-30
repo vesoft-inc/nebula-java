@@ -16,6 +16,8 @@ public interface GraphClient extends AutoCloseable {
 
     public int connect(String username, String password);
 
+    public int switchSpace(String space);
+
     public int execute(String statement);
 
     public ResultSet executeQuery(String statement)
