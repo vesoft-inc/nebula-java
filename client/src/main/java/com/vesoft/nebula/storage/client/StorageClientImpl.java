@@ -1,0 +1,238 @@
+/* Copyright (c) 2019 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
+package com.vesoft.nebula.storage.client;
+
+import com.facebook.thrift.TException;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.net.HostAndPort;
+import com.google.common.net.InetAddresses;
+import com.vesoft.nebula.Pair;
+import com.vesoft.nebula.graph.client.GraphClientImpl;
+import com.vesoft.nebula.storage.ExecResponse;
+import com.vesoft.nebula.storage.GeneralResponse;
+import com.vesoft.nebula.storage.GetRequest;
+import com.vesoft.nebula.storage.PutRequest;
+import com.vesoft.nebula.storage.RemoveRangeRequest;
+import com.vesoft.nebula.storage.RemoveRequest;
+import com.vesoft.nebula.storage.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+/**
+ *
+ */
+public class StorageClientImpl implements StorageClient {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class.getName());
+
+    private StorageService.Client client;
+
+    private final List<HostAndPort> addresses;
+    private final int connectionRetry;
+    private final int timeout;
+    private int space;
+
+    public StorageClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
+        checkArgument(timeout > 0);
+        checkArgument(connectionRetry > 0);
+
+        addresses.forEach(address -> {
+            String host = address.getHost();
+            int port = address.getPort();
+            if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
+                throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
+                        host, port));
+            }
+        });
+
+        this.addresses = addresses;
+        this.timeout = timeout;
+        this.connectionRetry = connectionRetry;
+    }
+
+    /**
+     * @param space
+     */
+    @Override
+    public void switchSpace(int space) {
+        this.space = space;
+    }
+
+    /**
+     * @param part
+     * @param key
+     * @param value
+     * @return
+     */
+    @Override
+    public boolean put(int part, String key, String value) {
+        PutRequest request = new PutRequest();
+        request.setSpace_id(space);
+        Map<Integer, List<Pair>> parts = Maps.newHashMap();
+        List<Pair> pairs = Lists.newArrayList(new Pair(key, value));
+        parts.put(part, pairs);
+        request.setParts(parts);
+        LOGGER.debug("Put Request: %s", request.toString());
+
+        ExecResponse response;
+        try {
+            response = client.put(request);
+        } catch (TException e) {
+            LOGGER.error("Put Failed: %s", e.getMessage());
+            return false;
+        }
+
+        return isSuccess(response);
+    }
+
+    /**
+     * @param part
+     * @param values
+     * @return
+     */
+    public boolean put(int part, Map<String, String> values) {
+        PutRequest request = new PutRequest();
+        request.setSpace_id(space);
+        Map<Integer, List<Pair>> parts = Maps.newHashMap();
+        List<Pair> pairs = Lists.newLinkedList();
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            pairs.add(new Pair(entry.getKey(), entry.getValue()));
+        }
+        parts.put(part, pairs);
+        request.setParts(parts);
+        LOGGER.debug("Put Request: %s", request.toString());
+
+        ExecResponse response;
+        try {
+            response = client.put(request);
+        } catch (TException e) {
+            LOGGER.error("Put Failed: %s", e.getMessage());
+            return false;
+        }
+        return isSuccess(response);
+    }
+
+    /**
+     * @param part
+     * @param key
+     * @return
+     */
+    @Override
+    public Optional<String> get(int part, String key) {
+        GetRequest request = new GetRequest();
+        request.setSpace_id(space);
+        Map<Integer, List<String>> parts = Maps.newHashMap();
+        parts.put(part, Arrays.asList(key));
+        request.setParts(parts);
+        LOGGER.debug("Get Request: %s", request.toString());
+
+        GeneralResponse response;
+        try {
+            response = client.get(request);
+        } catch (TException e) {
+            LOGGER.error("Get Failed: %s", e.getMessage());
+            return Optional.empty();
+        }
+        return Optional.of(response.values.get(key));
+    }
+
+    /**
+     * @param part
+     * @param keys
+     * @return
+     */
+    public Optional<Map<String, String>> get(int part, List<String> keys) {
+        GetRequest request = new GetRequest();
+        Map<Integer, List<String>> parts = Maps.newHashMap();
+        parts.put(part, keys);
+        request.setSpace_id(space);
+        request.setParts(parts);
+        LOGGER.debug("Get Request: %s", request.toString());
+
+        GeneralResponse response;
+        try {
+            response = client.get(request);
+        } catch (TException e) {
+            LOGGER.error("Get Failed: %s", e.getMessage());
+            return Optional.empty();
+        }
+        return Optional.of(response.values);
+    }
+
+    /**
+     * @param part
+     * @param key
+     * @return
+     */
+    @Override
+    public boolean remove(int part, String key) {
+        RemoveRequest request = new RemoveRequest();
+        request.setSpace_id(space);
+        Map<Integer, List<String>> parts = Maps.newHashMap();
+        parts.put(part, Arrays.asList(key));
+        request.setParts(parts);
+        LOGGER.debug("Remove Request: %s", request.toString());
+
+        ExecResponse response;
+        try {
+            response = client.remove(request);
+        } catch (TException e) {
+            LOGGER.error("Remove Failed: %s", e.getMessage());
+            return false;
+        }
+        return isSuccess(response);
+    }
+
+    /**
+     * @param part
+     * @param start
+     * @param end
+     * @return
+     */
+    @Override
+    public boolean removeRange(int part, String start, String end) {
+        RemoveRangeRequest request = new RemoveRangeRequest();
+        request.setSpace_id(space);
+        Map<Integer, List<Pair>> parts = Maps.newHashMap();
+        parts.put(part, Arrays.asList(new Pair(start, end)));
+        request.setParts(parts);
+        LOGGER.debug("Remove Range Request: %s", request.toString());
+
+        ExecResponse response;
+        try {
+            response = client.removeRange(request);
+        } catch (TException e) {
+            LOGGER.error("Remove Range Failed: %s", e.getMessage());
+            return false;
+        }
+        return isSuccess(response);
+    }
+
+    /**
+     * @param response
+     * @return
+     */
+    private boolean isSuccess(ExecResponse response) {
+        return response.result.failed_codes.size() == 0 ? true : false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Override
+    public void close() throws Exception {
+
+    }
+}

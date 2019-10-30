@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client;
+package com.vesoft.nebula.graph.client;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -14,7 +14,6 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
-import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.graph.AuthResponse;
@@ -22,9 +21,6 @@ import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -43,7 +39,7 @@ public class GraphClientImpl implements GraphClient {
     private final int connectionRetry;
     private final int executionRetry;
     private final int timeout;
-    private long sessionId_;
+    private long sessionID;
     private TTransport transport = null;
     private GraphService.Client client;
 
@@ -119,7 +115,7 @@ public class GraphClientImpl implements GraphClient {
                     LOGGER.error(String.format("Connect address %s failed : %s",
                                  address.toString(), result.getError_msg()));
                 } else {
-                    sessionId_ = result.getSession_id();
+                    sessionID = result.getSession_id();
                     return ErrorCode.SUCCEEDED;
                 }
             } catch (TTransportException tte) {
@@ -144,11 +140,11 @@ public class GraphClientImpl implements GraphClient {
     /**
      * Execute the query sentence.
      *
-     * @param stmt The query sentence.
-     * @return     The ErrorCode of status, 0 is succeeded.
+     * @param statement The query sentence.
+     * @return          The ErrorCode of status, 0 is succeeded.
      */
     @Override
-    public int execute(String stmt) {
+    public int execute(String statement) {
         if (!checkTransportOpened(transport)) {
             return ErrorCode.E_DISCONNECTED;
         }
@@ -156,7 +152,7 @@ public class GraphClientImpl implements GraphClient {
         int retry = executionRetry;
         while (retry-- > 0) {
             try {
-                ExecutionResponse executionResponse = client.execute(sessionId_, stmt);
+                ExecutionResponse executionResponse = client.execute(sessionID, statement);
                 if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
                     LOGGER.error("execute error: " + executionResponse.getError_msg());
                 }
@@ -172,18 +168,18 @@ public class GraphClientImpl implements GraphClient {
     /**
      * Execute the query sentence which will return a ResultSet.
      *
-     * @param stmt The query sentence.
-     * @return     The ErrorCode of status, 0 is succeeded.
+     * @param statement The query sentence.
+     * @return          The ErrorCode of status, 0 is succeeded.
      */
     @Override
-    public ResultSet executeQuery(String stmt) throws ConnectionException,
+    public ResultSet executeQuery(String statement) throws ConnectionException,
            NGQLException, TException {
         if (!checkTransportOpened(transport)) {
             LOGGER.error("Thrift rpc call failed");
             throw new ConnectionException();
         }
 
-        ExecutionResponse executionResponse = client.execute(sessionId_, stmt);
+        ExecutionResponse executionResponse = client.execute(sessionID, statement);
         int code = executionResponse.getError_code();
         if (code == ErrorCode.SUCCEEDED) {
             return new ResultSet(executionResponse.getColumn_names(),
@@ -208,7 +204,7 @@ public class GraphClientImpl implements GraphClient {
         }
 
         try {
-            client.signout(sessionId_);
+            client.signout(sessionID);
         } catch (TException e) {
             LOGGER.error("Disconnect error: " + e.getMessage());
         } finally {
