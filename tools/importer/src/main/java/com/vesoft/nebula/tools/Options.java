@@ -18,9 +18,8 @@ import org.kohsuke.args4j.Option;
 
 
 public class Options {
-    @Option(name = "-a", aliases = "--address", usage = "thrift service addresses. ip:port",
-            required = true)
-    String addresses;
+    @Option(name = "-a", aliases = "--address", usage = "thrift service addresses. ip:port")
+    String addresses = Constant.DEFAULT_ADDRESSES;
 
     @Option(name = "-u", aliases = "--user", usage = "thrift service username.",
             required = true)

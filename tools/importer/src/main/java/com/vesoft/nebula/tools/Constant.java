@@ -26,6 +26,31 @@ public class Constant {
     public static final String VERTEX = "vertex";
     public static final String EDGE = "edge";
 
+    /**
+     * The index of id in csv file when import vertex.
+     * Form of data of a single line in csv would like:
+     *  id, prop1, prop2, ...
+     */
+    public static final Integer ID_INDEX = 0;
+
+    /**
+     * The index of src/dst/ranking in csv file when import edge.
+     * Form of data of a single line in csv would like:
+     *  src, dst, [ranking], prop1, prop2, ...
+     */
+    public static final Integer SRC_INDEX = 0;
+    public static final Integer DST_INDEX = 1;
+    public static final Integer RANKING_INDEX = 2;
+
+    /**
+     * The index of lst/lng/poi_id in csv file when import geo.
+     * Form of data of a single line in csv would like:
+     *  lat, lng, poi_id
+     */
+    public static final Integer LAT_INDEX = 0;
+    public static final Integer LNG_INDEX = 1;
+    public static final Integer POI_ID_INDEX = 2;
+
     public static Integer maxCellCoverNums = 18;
     public static Integer minCellLevel = 5;
     public static Integer maxCellLevel = 24;

@@ -53,7 +53,6 @@ public class CsvReader implements Reader {
                 new File(filePath),
                 Charset.forName("UTF-8"),
                 CSVFormat.DEFAULT
-                        .withFirstRecordAsHeader()
                         .withIgnoreEmptyLines()
                         .withTrim());
     }
@@ -68,7 +67,6 @@ public class CsvReader implements Reader {
                     inputStream,
                     Charset.forName("UTF-8"),
                     CSVFormat.DEFAULT
-                            .withFirstRecordAsHeader()
                             .withIgnoreEmptyLines()
                             .withTrim());
         }

@@ -24,7 +24,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.vesoft.nebula.tools.reader.Reader;
-import com.vesoft.nebula.tools.reader.CsvReader;
 import com.vesoft.nebula.tools.reader.ReaderFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -124,9 +123,9 @@ public class Importer {
         }
 
         private List<String> buildGeoEdgeKey(List<String> record) {
-            double lat = Double.parseDouble(record.get(0));
-            double lng = Double.parseDouble(record.get(1));
-            long dstId = Long.parseLong(record.get(2));
+            double lat = Double.parseDouble(record.get(Constant.LAT_INDEX));
+            double lng = Double.parseDouble(record.get(Constant.LNG_INDEX));
+            long dstId = Long.parseLong(record.get(Constant.POI_ID_INDEX));
 
             List<Long> cells = indexCells(lat, lng);
             ArrayList<String> geoKeys = new ArrayList<>();
@@ -138,7 +137,7 @@ public class Importer {
         }
 
         private String buildVertex(List<String> record) {
-            long id = Long.parseLong(record.get(0));
+            long id = Long.parseLong(record.get(Constant.ID_INDEX));
             String vertexValue = Joiner.on(", ").join(record.subList(1, record.size()));
             LOGGER.trace(String.format("vertex id: %d, value: %s", id,
                     vertexValue));
@@ -147,10 +146,10 @@ public class Importer {
         }
 
         private String buildEdge(List<String> record) {
-            long source = Long.parseLong(record.get(0));
-            long target = Long.parseLong(record.get(1));
+            long source = Long.parseLong(record.get(Constant.SRC_INDEX));
+            long target = Long.parseLong(record.get(Constant.DST_INDEX));
             if (options.hasRanking) {
-                long ranking = Long.parseLong(record.get(2));
+                long ranking = Long.parseLong(record.get(Constant.RANKING_INDEX));
                 List<String> edgeList = record.subList(3, record.size());
                 String edgeValue = Joiner.on(", ").join(edgeList);
                 LOGGER.trace(String.format("edge source: %d, target: %d, ranking:"
