@@ -45,7 +45,7 @@ public class GraphClientImpl implements GraphClient {
     private GraphService.Client client;
 
     /**
-     * The Constructor of GraphClient.
+     * The Constructor of Graph Client.
      *
      * @param addresses       The addresses of graph services.
      * @param timeout         The timeout of RPC request.
@@ -72,7 +72,7 @@ public class GraphClientImpl implements GraphClient {
     }
 
     /**
-     * The Constructor of GraphClient.
+     * The Constructor of Graph Client.
      *
      * @param addresses The addresses of graph services.
      */
@@ -81,6 +81,12 @@ public class GraphClientImpl implements GraphClient {
              DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
+    /**
+     * The Constructor of Graph Client.
+     *
+     * @param host The host of graph services.
+     * @param port The port of graph services.
+     */
     public GraphClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
              DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
