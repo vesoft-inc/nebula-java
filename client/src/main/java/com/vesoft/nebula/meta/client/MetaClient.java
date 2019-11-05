@@ -6,5 +6,7 @@
 
 package com.vesoft.nebula.meta.client;
 
-public interface MetaClient extends AutoCloseable {
+import com.vesoft.nebula.Client;
+
+public interface MetaClient extends Client {
 }
