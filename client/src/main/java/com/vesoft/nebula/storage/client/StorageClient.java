@@ -6,9 +6,13 @@
 
 package com.vesoft.nebula.storage.client;
 
+import com.vesoft.nebula.Client;
+
 import java.util.Optional;
 
-public interface StorageClient extends AutoCloseable {
+public interface StorageClient extends Client {
+
+    public boolean connect();
 
     public void switchSpace(int space);
 
