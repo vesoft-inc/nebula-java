@@ -42,6 +42,13 @@ public class StorageClientImpl implements StorageClient {
     private final int timeout;
     private int space;
 
+    /**
+     * The Constructor of Storage Client.
+     *
+     * @param addresses       The addresses of storage services.
+     * @param timeout         The timeout of RPC request.
+     * @param connectionRetry The number of retries when connection failure.
+     */
     public StorageClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
         com.google.common.base.Preconditions.checkArgument(timeout > 0);
         com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
@@ -58,6 +65,26 @@ public class StorageClientImpl implements StorageClient {
         this.addresses = addresses;
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
+    }
+
+    /**
+     * The Constructor of Storage Client.
+     *
+     * @param addresses The addresses of storage services.
+     */
+    public StorageClientImpl(List<HostAndPort> addresses) {
+        this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+    }
+
+    /**
+     * The Constructor of Storage Client.
+     *
+     * @param host The host of graph services.
+     * @param port The port of graph services.
+     */
+    public StorageClientImpl(String host, int port) {
+        this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
+                DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
     /**

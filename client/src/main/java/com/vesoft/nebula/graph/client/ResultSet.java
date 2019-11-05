@@ -10,10 +10,12 @@ import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.RowValue;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ResultSet {
 
-    private List<byte[]> columns;
+    private List<String> columns;
     private List<RowValue> rows;
 
     public ResultSet() {
@@ -21,15 +23,23 @@ public class ResultSet {
     }
 
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
-        this.columns = columns;
+        this.columns = columns.stream().map(String::new).collect(Collectors.toList());
         this.rows = rows;
     }
 
-    public List<byte[]> getColumns() {
+    public List<String> getColumns() {
         return columns;
     }
 
     public List<RowValue> getRows() {
         return rows;
+    }
+
+    @Override
+    public String toString() {
+        return "ResultSet{" +
+                "columns=" + columns +
+                ", rows=" + rows +
+                '}';
     }
 }
