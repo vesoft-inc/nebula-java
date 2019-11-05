@@ -7,12 +7,9 @@
 package com.vesoft.nebula.graph.client;
 
 import com.facebook.thrift.TException;
+import com.vesoft.nebula.Client;
 
-public interface GraphClient extends AutoCloseable {
-
-    public static final int DEFAULT_TIMEOUT_MS = 1000;
-    public static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
-    public static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
+public interface GraphClient extends Client {
 
     public int connect(String username, String password);
 
