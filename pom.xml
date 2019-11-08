@@ -15,6 +15,5 @@
 
     <modules>
         <module>client</module>
-        <module>tools</module>
     </modules>
 </project>
