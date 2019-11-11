@@ -37,9 +37,9 @@ public class ResultSet {
 
     @Override
     public String toString() {
-        return "ResultSet{" +
-                "columns=" + columns +
-                ", rows=" + rows +
-                '}';
+        return "ResultSet{"
+                + "columns=" + columns
+                + ", rows=" + rows
+                + '}';
     }
 }
