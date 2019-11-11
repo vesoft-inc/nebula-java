@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface StorageClient extends Client {
 
+    public boolean connect();
+
     public void switchSpace(int space);
 
     public boolean put(int part, String key, String value);

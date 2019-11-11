@@ -7,6 +7,11 @@
 package com.vesoft.nebula.storage.client;
 
 import com.facebook.thrift.TException;
+import com.facebook.thrift.protocol.TBinaryProtocol;
+import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.transport.TSocket;
+import com.facebook.thrift.transport.TTransport;
+import com.facebook.thrift.transport.TTransportException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
@@ -24,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +41,7 @@ public class StorageClientImpl implements StorageClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class.getName());
 
+    private TTransport transport = null;
     private StorageService.Client client;
 
     private final List<HostAndPort> addresses;
@@ -95,6 +102,28 @@ public class StorageClientImpl implements StorageClient {
     @Override
     public void switchSpace(int space) {
         this.space = space;
+    }
+
+    public boolean connect() {
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            Random random = new Random(System.currentTimeMillis());
+            int position = random.nextInt(addresses.size());
+            HostAndPort address = addresses.get(position);
+            transport = new TSocket(address.getHost(), address.getPort(), timeout);
+            TProtocol protocol = new TBinaryProtocol(transport);
+
+            try {
+                transport.open();
+                client = new StorageService.Client(protocol);
+                return true;
+            } catch (TTransportException tte) {
+                LOGGER.error("Connect failed: " + tte.getMessage());
+            } catch (TException te) {
+                LOGGER.error("Connect failed: " + te.getMessage());
+            }
+        }
+        return false;
     }
 
     /**
@@ -178,7 +207,12 @@ public class StorageClientImpl implements StorageClient {
             LOGGER.error("Get Failed: %s", e.getMessage());
             return Optional.empty();
         }
-        return Optional.of(response.values.get(key));
+
+        if (response.values.containsKey(key)) {
+            return Optional.of(response.values.get(key));
+        } else {
+            return null;
+        }
     }
 
     /**
