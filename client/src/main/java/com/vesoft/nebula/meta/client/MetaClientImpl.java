@@ -40,7 +40,7 @@ public class MetaClientImpl implements MetaClient {
     private final int timeout;
     private HostAndPort leader;
     private List<IdName> spaces;
-    private Map<String, IdName> spaceNames;
+    private Map<String, Integer> spaceNames;
     private Map<Integer, Map<Integer, List<HostAddr>>> parts;
     private Map<Integer, Map<String, TagItem>> tagItems;
     private Map<Integer, Map<String, EdgeItem>> edgeItems;
@@ -98,11 +98,11 @@ public class MetaClientImpl implements MetaClient {
 
     @Override
     public List<HostAddr> getPart(String spaceName, int partId) {
-        if(!spaceNames.containsKey(spaceName)) {
+        if (!spaceNames.containsKey(spaceName)) {
             LOGGER.error("There is no space named: %s", spaceName);
             return null;
         }
-        return getPart(spaceNames.get(spaceName).getId().getSpace_id(), partId);
+        return getPart(spaceNames.get(spaceName), partId);
     }
 
     /**
@@ -123,6 +123,15 @@ public class MetaClientImpl implements MetaClient {
         return tag == null ? null : tag.getTag_id();
     }
 
+    @Override
+    public Integer getTagId(String spaceName, String tagName) {
+        if (!spaceNames.containsKey(spaceName)) {
+            LOGGER.error("There is no space named: %s", spaceName);
+            return null;
+        }
+        return getTagId(spaceNames.get(spaceName), tagName);
+    }
+
     /**
      * Get a edge type by a particular space Id and edge name
      *
@@ -141,12 +150,24 @@ public class MetaClientImpl implements MetaClient {
         return edge == null ? null : edge.getEdge_type();
     }
 
+    @Override
+    public Integer getEdgeType(String spaceName, String edgeName) {
+        if (!spaceNames.containsKey(spaceName)) {
+            LOGGER.error("There is no space named: %s", spaceName);
+            return null;
+        }
+        return getEdgeType(spaceNames.get(spaceName), edgeName);
+    }
+
     private void init() {
-        connect();
+        boolean isConnected = connect();
+        if (!isConnected) {
+            LOGGER.error("Connection has not been established. Connect Failed");
+        }
         listSpaces();
-        for (IdName spcace : spaces) {
-            spaceNames.put(spcace.getName(), spcace);
-            int spaceId = spcace.getId().getSpace_id();
+        for (IdName space : spaces) {
+            int spaceId = space.getId().getSpace_id();
+            spaceNames.put(space.getName(), spaceId);
             getParts(spaceId);
             getTagItems(spaceId);
             getEdgeTypes(spaceId);
