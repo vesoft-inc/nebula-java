@@ -7,31 +7,19 @@
 package com.vesoft.nebula.meta.client;
 
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.Client;
 
 import java.util.List;
 
-public interface MetaClient extends AutoCloseable {
-
-    public static final int DEFAULT_TIMEOUT_MS = 1000;
-    public static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
-
-    public void init();
-
-    public boolean connect();
+public interface MetaClient extends Client {
 
     public List<HostAddr> getPart(int spaceId, int partId);
+
+    public List<HostAddr> getPart(String spaceName, int partId);
 
     public Integer getTagId(int spaceId, String tagName);
 
     public Integer getEdgeType(int spaceId, String edgeName);
-
-    public boolean getParts(int spaceId);
-
-    public boolean getTagItems(int spaceId);
-
-    public boolean getEdgeTypes(int spaceId);
-
-    public boolean listSpaces();
 
 }
 

@@ -14,6 +14,7 @@ import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.HostAddr;
@@ -37,11 +38,12 @@ public class MetaClientImpl implements MetaClient {
     private final List<HostAndPort> addresses;
     private final int connectionRetry;
     private final int timeout;
-    public HostAndPort leader;
-    public List<IdName> spaces;
-    public Map<Integer, Map<Integer, List<HostAddr>>> parts;
-    public Map<Integer, Map<String, TagItem>> tagItems;
-    public Map<Integer, Map<String, EdgeItem>> edgeItems;
+    private HostAndPort leader;
+    private List<IdName> spaces;
+    private Map<String, IdName> spaceNames;
+    private Map<Integer, Map<Integer, List<HostAddr>>> parts;
+    private Map<Integer, Map<String, TagItem>> tagItems;
+    private Map<Integer, Map<String, EdgeItem>> edgeItems;
 
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
         com.google.common.base.Preconditions.checkArgument(timeout > 0);
@@ -58,9 +60,9 @@ public class MetaClientImpl implements MetaClient {
                         host, port));
             }
         });
-        this.parts = new HashMap<>();
-        this.tagItems = new HashMap<>();
-        this.edgeItems = new HashMap<>();
+        this.parts = Maps.newHashMap();
+        this.tagItems = Maps.newHashMap();
+        this.edgeItems = Maps.newHashMap();
         this.addresses = addresses;
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
@@ -72,6 +74,10 @@ public class MetaClientImpl implements MetaClient {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
+    public MetaClientImpl(List<HostAndPort> addresses) {
+        this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+    }
+
     /**
      * Get a list of host addresses by a particular space Id
      *
@@ -81,10 +87,6 @@ public class MetaClientImpl implements MetaClient {
      */
     @Override
     public List<HostAddr> getPart(int spaceId, int partId) {
-        if (spaceId == 0) {
-            LOGGER.error("Space_id has not been specified");
-            return null;
-        }
         if (!this.parts.containsKey(spaceId)) {
             getParts(spaceId);
         }
@@ -92,6 +94,15 @@ public class MetaClientImpl implements MetaClient {
         if (map.isEmpty()) return null;
         List<HostAddr> addrs = map.get(partId);
         return addrs.isEmpty() ? null : addrs;
+    }
+
+    @Override
+    public List<HostAddr> getPart(String spaceName, int partId) {
+        if(!spaceNames.containsKey(spaceName)) {
+            LOGGER.error("There is no space named: %s", spaceName);
+            return null;
+        }
+        return getPart(spaceNames.get(spaceName).getId().getSpace_id(), partId);
     }
 
     /**
@@ -130,12 +141,11 @@ public class MetaClientImpl implements MetaClient {
         return edge == null ? null : edge.getEdge_type();
     }
 
-
-    @Override
-    public void init() {
+    private void init() {
         connect();
         listSpaces();
         for (IdName spcace : spaces) {
+            spaceNames.put(spcace.getName(), spcace);
             int spaceId = spcace.getId().getSpace_id();
             getParts(spaceId);
             getTagItems(spaceId);
@@ -143,8 +153,7 @@ public class MetaClientImpl implements MetaClient {
         }
     }
 
-    @Override
-    public boolean connect() {
+    private boolean connect() {
         int retry = connectionRetry;
         while (retry-- != 0) {
             Random random = new Random(System.currentTimeMillis());
@@ -170,8 +179,7 @@ public class MetaClientImpl implements MetaClient {
      *
      * @return
      */
-    @Override
-    public boolean listSpaces() {
+    private boolean listSpaces() {
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response;
         try {
@@ -196,8 +204,7 @@ public class MetaClientImpl implements MetaClient {
      * @param spaceId
      * @return
      */
-    @Override
-    public boolean getParts(int spaceId) {
+    private boolean getParts(int spaceId) {
         GetPartsAllocReq request = new GetPartsAllocReq();
         request.setSpace_id(spaceId);
 
@@ -224,8 +231,7 @@ public class MetaClientImpl implements MetaClient {
      * @param spaceId
      * @return
      */
-    @Override
-    public boolean getTagItems(int spaceId) {
+    private boolean getTagItems(int spaceId) {
         ListTagsReq request = new ListTagsReq();
         request.setSpace_id(spaceId);
 
@@ -256,8 +262,7 @@ public class MetaClientImpl implements MetaClient {
      * @param spaceId
      * @return
      */
-    @Override
-    public boolean getEdgeTypes(int spaceId) {
+    private boolean getEdgeTypes(int spaceId) {
         ListEdgesReq request = new ListEdgesReq();
         request.setSpace_id(spaceId);
 
@@ -282,7 +287,14 @@ public class MetaClientImpl implements MetaClient {
         return true;
     }
 
-    @Override
+    public HostAndPort getLeader() {
+        return leader;
+    }
+
+    public List<IdName> getSpaces() {
+        return spaces;
+    }
+
     public void close() throws Exception {
 
     }
