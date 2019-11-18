@@ -60,6 +60,8 @@ public class MetaClientImpl implements MetaClient {
                         host, port));
             }
         });
+        this.spaces = Lists.newArrayList();
+        this.spaceNames = Maps.newHashMap();
         this.parts = Maps.newHashMap();
         this.tagItems = Maps.newHashMap();
         this.edgeItems = Maps.newHashMap();
@@ -91,9 +93,11 @@ public class MetaClientImpl implements MetaClient {
             getParts(spaceId);
         }
         Map<Integer, List<HostAddr>> map = parts.get(spaceId);
-        if (map.isEmpty()) return null;
+        if (map == null){
+            return null;
+        }
         List<HostAddr> addrs = map.get(partId);
-        return addrs.isEmpty() ? null : addrs;
+        return addrs;
     }
 
     @Override
@@ -206,13 +210,13 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.listSpaces(request);
         } catch (TException e) {
-            LOGGER.error("List Spaces Error: %s", e.getMessage());
+            LOGGER.error("List Spaces Error: " + e.getMessage());
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             this.spaces = response.getSpaces();
         } else {
-            LOGGER.error("Init Error: %d", response.getCode());
+            LOGGER.error("Init Error: " + response.getCode());
             return false;
         }
         return true;
@@ -232,15 +236,15 @@ public class MetaClientImpl implements MetaClient {
         GetPartsAllocResp response;
         try {
             response = client.getPartsAlloc(request);
-        } catch (TException e) {
-            LOGGER.error("Get parts failed: %s", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Get Parts failed: " + e.getMessage());
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             Map<Integer, List<HostAddr>> part = response.getParts();
             this.parts.put(spaceId, part);
         } else {
-            LOGGER.error("Get Parts Error: %s", response.getCode());
+            LOGGER.error("Get Parts Error: " + response.getCode());
             return false;
         }
         return true;
@@ -260,18 +264,20 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.listTags(request);
         } catch (TException e) {
-            LOGGER.error("Get Tag Error: %s", e.getMessage());
+            LOGGER.error("Get Tag Error: " + e.getMessage());
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             List<TagItem> tagItem = response.getTags();
             Map<String, TagItem> tmp = new HashMap<>();
-            for (TagItem ti : tagItem) {
-                tmp.put(ti.getTag_name(), ti);
+            if (tagItem != null) {
+                for (TagItem ti : tagItem) {
+                    tmp.put(ti.getTag_name(), ti);
+                }
+                this.tagItems.put(spaceId, tmp);
             }
-            this.tagItems.put(spaceId, tmp);
         } else {
-            LOGGER.error("Get tags Error: %s", response.getCode());
+            LOGGER.error("Get tags Error: " + response.getCode());
             return false;
         }
         return true;
@@ -291,18 +297,20 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.listEdges(request);
         } catch (TException e) {
-            LOGGER.error("Get Edge Error: %s", e.getMessage());
+            LOGGER.error("Get Edge Error: " + e.getMessage());
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             List<EdgeItem> edgeItem = response.getEdges();
             Map<String, EdgeItem> tmp = new HashMap<>();
-            for (EdgeItem ei : edgeItem) {
-                tmp.put(ei.getEdge_name(), ei);
+            if (edgeItem != null) {
+                for (EdgeItem ei : edgeItem) {
+                    tmp.put(ei.getEdge_name(), ei);
+                }
+                this.edgeItems.put(spaceId, tmp);
             }
-            this.edgeItems.put(spaceId, tmp);
         } else {
-            LOGGER.error("Get tags Error: %s", response.getCode());
+            LOGGER.error("Get tags Error: " + response.getCode());
             return false;
         }
         return true;
@@ -314,6 +322,11 @@ public class MetaClientImpl implements MetaClient {
 
     public List<IdName> getSpaces() {
         return spaces;
+    }
+
+    @Override
+    public Map<Integer, Map<Integer, List<HostAddr>>> getParts() {
+        return this.parts;
     }
 
     public void close() throws Exception {
