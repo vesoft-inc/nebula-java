@@ -8,19 +8,31 @@ package com.vesoft.nebula.storage.client;
 
 import com.vesoft.nebula.Client;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface StorageClient extends Client {
-
-    public boolean connect();
 
     public void switchSpace(int space);
 
     public boolean put(int part, String key, String value);
 
+    public boolean put(int part, int key, int value);
+
+    public boolean put(int part, Map<String, String> values);
+
     public Optional<String> get(int part, String key);
+
+    public int get(int part, int key);
+
+    public Optional<Map<String, String>> get(int part, List<String> keys);
 
     public boolean remove(int part, String key);
 
     public boolean removeRange(int part, String start, String end);
+
+    public long hash(int key);
+
+    public long hash(String key);
 }

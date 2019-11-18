@@ -10,11 +10,13 @@ import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Client;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MetaClient extends Client {
 
     public List<HostAddr> getPart(int spaceId, int partId);
     public List<HostAddr> getPart(String spaceName, int partId);
+    public Map<Integer, Map<Integer, List<HostAddr>>> getParts();
 
     public Integer getTagId(int spaceId, String tagName);
     public Integer getTagId(String spaceName, String tagName);
