@@ -19,7 +19,6 @@ import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.IPv4IntTransformer;
-import com.vesoft.nebula.MurmurHash2;
 import com.vesoft.nebula.Pair;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.client.MetaClientImpl;
@@ -27,6 +26,7 @@ import com.vesoft.nebula.storage.*;
 
 import java.util.*;
 
+import org.apache.commons.codec.digest.MurmurHash2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,7 +183,7 @@ public class StorageClientImpl implements StorageClient {
         List<Pair> pairs = Lists.newArrayList(new Pair(key, value));
         parts.put(part, pairs);
         request.setParts(parts);
-        LOGGER.debug("Put Request:" + request.toString());
+        LOGGER.debug(String.format("Put Request: %s", request.toString()));
 
         ExecResponse response;
         while (retry-- != 0) {
@@ -209,7 +209,7 @@ public class StorageClientImpl implements StorageClient {
                     return true;
                 }
             } catch (TException e) {
-                LOGGER.error("Put Failed: " + e.getMessage());
+                LOGGER.error(String.format("Put Failed: %s", e.getMessage()));
             }
         }
         return false;
@@ -233,13 +233,13 @@ public class StorageClientImpl implements StorageClient {
         }
         parts.put(part, pairs);
         request.setParts(parts);
-        LOGGER.debug("Put Request: " + request.toString());
+        LOGGER.debug(String.format("Put Request: %s", request.toString()));
 
         ExecResponse response;
         try {
             response = client.put(request);
         } catch (TException e) {
-            LOGGER.error("Put Failed: " + e.getMessage());
+            LOGGER.error(String.format("Put Failed: %s", e.getMessage()));
             return false;
         }
         return isSuccess(response);
@@ -266,7 +266,7 @@ public class StorageClientImpl implements StorageClient {
         Map<Integer, List<String>> parts = Maps.newHashMap();
         parts.put(part, Arrays.asList(key));
         request.setParts(parts);
-        LOGGER.debug("Get Request: " + request.toString());
+        LOGGER.debug(String.format("Get Request: ", request.toString()));
 
         GeneralResponse response;
         while (retry-- != 0) {
@@ -296,7 +296,7 @@ public class StorageClientImpl implements StorageClient {
                     }
                 }
             } catch (TException e) {
-                LOGGER.error("Get Failed: " + e.getMessage());
+                LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
             }
         }
         return Optional.empty();
@@ -316,13 +316,13 @@ public class StorageClientImpl implements StorageClient {
         parts.put(part, keys);
         request.setSpace_id(space);
         request.setParts(parts);
-        LOGGER.debug("Get Request: " + request.toString());
+        LOGGER.debug(String.format("Get Request: %s", request.toString()));
 
         GeneralResponse response;
         try {
             response = client.get(request);
         } catch (TException e) {
-            LOGGER.error("Get Failed: " + e.getMessage());
+            LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
             return Optional.empty();
         }
         return Optional.of(response.values);
@@ -342,13 +342,13 @@ public class StorageClientImpl implements StorageClient {
         Map<Integer, List<String>> parts = Maps.newHashMap();
         parts.put(part, Arrays.asList(key));
         request.setParts(parts);
-        LOGGER.debug("Remove Request: %s", request.toString());
+        LOGGER.debug(String.format("Remove Request: %s", request.toString()));
 
         ExecResponse response;
         try {
             response = client.remove(request);
         } catch (TException e) {
-            LOGGER.error("Remove Failed: %s", e.getMessage());
+            LOGGER.error(String.format("Remove Failed: %s", e.getMessage()));
             return false;
         }
         return isSuccess(response);
@@ -369,7 +369,7 @@ public class StorageClientImpl implements StorageClient {
         Map<Integer, List<Pair>> parts = Maps.newHashMap();
         parts.put(part, Arrays.asList(new Pair(start, end)));
         request.setParts(parts);
-        LOGGER.debug("Remove Range Request: %s", request.toString());
+        LOGGER.debug(String.format("Remove Range Request: %s", request.toString()));
 
         ExecResponse response;
         try {

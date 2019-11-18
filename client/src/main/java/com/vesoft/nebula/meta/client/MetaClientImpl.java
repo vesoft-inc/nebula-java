@@ -103,7 +103,7 @@ public class MetaClientImpl implements MetaClient {
     @Override
     public List<HostAddr> getPart(String spaceName, int partId) {
         if (!spaceNames.containsKey(spaceName)) {
-            LOGGER.error("There is no space named: %s", spaceName);
+            LOGGER.error(String.format("There is no space named: %s", spaceName));
             return null;
         }
         return getPart(spaceNames.get(spaceName), partId);
@@ -130,7 +130,7 @@ public class MetaClientImpl implements MetaClient {
     @Override
     public Integer getTagId(String spaceName, String tagName) {
         if (!spaceNames.containsKey(spaceName)) {
-            LOGGER.error("There is no space named: %s", spaceName);
+            LOGGER.error(String.format("There is no space named: %s", spaceName));
             return null;
         }
         return getTagId(spaceNames.get(spaceName), tagName);
@@ -157,7 +157,7 @@ public class MetaClientImpl implements MetaClient {
     @Override
     public Integer getEdgeType(String spaceName, String edgeName) {
         if (!spaceNames.containsKey(spaceName)) {
-            LOGGER.error("There is no space named: %s", spaceName);
+            LOGGER.error(String.format("There is no space named: %s", spaceName));
             return null;
         }
         return getEdgeType(spaceNames.get(spaceName), edgeName);
@@ -210,13 +210,13 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.listSpaces(request);
         } catch (TException e) {
-            LOGGER.error("List Spaces Error: " + e.getMessage());
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             this.spaces = response.getSpaces();
         } else {
-            LOGGER.error("Init Error: " + response.getCode());
+            LOGGER.error("Init Error: %s" + response.getCode());
             return false;
         }
         return true;
@@ -237,7 +237,7 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.getPartsAlloc(request);
         } catch (Exception e) {
-            LOGGER.error("Get Parts failed: " + e.getMessage());
+            LOGGER.error(String.format("Get Parts failed: %s", e.getMessage()));
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
@@ -264,7 +264,7 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.listTags(request);
         } catch (TException e) {
-            LOGGER.error("Get Tag Error: " + e.getMessage());
+            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
@@ -297,7 +297,7 @@ public class MetaClientImpl implements MetaClient {
         try {
             response = client.listEdges(request);
         } catch (TException e) {
-            LOGGER.error("Get Edge Error: " + e.getMessage());
+            LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             return false;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
