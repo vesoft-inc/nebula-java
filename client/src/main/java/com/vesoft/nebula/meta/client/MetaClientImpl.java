@@ -12,17 +12,33 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.meta.*;
+import com.vesoft.nebula.meta.EdgeItem;
+import com.vesoft.nebula.meta.ErrorCode;
+import com.vesoft.nebula.meta.GetPartsAllocReq;
+import com.vesoft.nebula.meta.GetPartsAllocResp;
+import com.vesoft.nebula.meta.IdName;
+import com.vesoft.nebula.meta.ListEdgesReq;
+import com.vesoft.nebula.meta.ListEdgesResp;
+import com.vesoft.nebula.meta.ListSpacesReq;
+import com.vesoft.nebula.meta.ListSpacesResp;
+import com.vesoft.nebula.meta.ListTagsReq;
+import com.vesoft.nebula.meta.ListTagsResp;
+import com.vesoft.nebula.meta.MetaService;
+import com.vesoft.nebula.meta.TagItem;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * Nebula Meta Client
@@ -48,10 +64,10 @@ public class MetaClientImpl implements MetaClient {
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
         com.google.common.base.Preconditions.checkArgument(timeout > 0);
         com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
-
         if (addresses.isEmpty()) {
-            throw new IllegalArgumentException("No meta server address is specified. Meta server is required");
+            throw new IllegalArgumentException("No meta server address is specified.");
         }
+
         addresses.forEach(address -> {
             String host = address.getHost();
             int port = address.getPort();
@@ -60,6 +76,7 @@ public class MetaClientImpl implements MetaClient {
                         host, port));
             }
         });
+
         this.spaces = Lists.newArrayList();
         this.spaceNames = Maps.newHashMap();
         this.parts = Maps.newHashMap();
@@ -73,7 +90,8 @@ public class MetaClientImpl implements MetaClient {
     }
 
     public MetaClientImpl(String host, int port) {
-        this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+        this(Lists.newArrayList(HostAndPort.fromParts(host, port)),
+                DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
     public MetaClientImpl(List<HostAndPort> addresses) {
@@ -83,8 +101,8 @@ public class MetaClientImpl implements MetaClient {
     /**
      * Get a list of host addresses by a particular space Id
      *
-     * @param spaceId
-     * @param partId
+     * @param spaceId Nebula space ID
+     * @param partId  Nebula partition ID
      * @return
      */
     @Override
@@ -93,7 +111,7 @@ public class MetaClientImpl implements MetaClient {
             getParts(spaceId);
         }
         Map<Integer, List<HostAddr>> map = parts.get(spaceId);
-        if (map == null || map.isEmpty()){
+        if (map == null || map.isEmpty()) {
             return null;
         }
         return map.get(partId);
@@ -111,8 +129,8 @@ public class MetaClientImpl implements MetaClient {
     /**
      * Get a tag Id by a particular space Id and tag name
      *
-     * @param spaceId
-     * @param tagName
+     * @param spaceId Nebula space ID
+     * @param tagName Nebula tag name
      * @return
      */
     @Override
@@ -120,8 +138,12 @@ public class MetaClientImpl implements MetaClient {
         if (!this.tagItems.containsKey(spaceId)) {
             getTagItems(spaceId);
         }
+
         Map<String, TagItem> map = tagItems.get(spaceId);
-        if (map == null || map.isEmpty()) return null;
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
         TagItem tag = map.get(tagName);
         return tag == null ? null : tag.getTag_id();
     }
@@ -138,8 +160,8 @@ public class MetaClientImpl implements MetaClient {
     /**
      * Get a edge type by a particular space Id and edge name
      *
-     * @param spaceId
-     * @param edgeName
+     * @param spaceId  Nebula space ID
+     * @param edgeName Nebula edge name
      * @return
      */
     @Override
@@ -147,8 +169,12 @@ public class MetaClientImpl implements MetaClient {
         if (!this.edgeItems.containsKey(spaceId)) {
             getEdgeTypes(spaceId);
         }
+
         Map<String, EdgeItem> map = edgeItems.get(spaceId);
-        if (map == null || map.isEmpty()) return null;
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
         EdgeItem edge = map.get(edgeName);
         return edge == null ? null : edge.getEdge_type();
     }
@@ -221,11 +247,16 @@ public class MetaClientImpl implements MetaClient {
         return true;
     }
 
+    @Override
+    public Map<Integer, Map<Integer, List<HostAddr>>> getParts() {
+        return this.parts;
+    }
+
     /**
      * Get all parts and the addrs in a space
      * Store in this.parts
      *
-     * @param spaceId
+     * @param spaceId Nebula space ID
      * @return
      */
     private boolean getParts(int spaceId) {
@@ -239,6 +270,7 @@ public class MetaClientImpl implements MetaClient {
             LOGGER.error(String.format("Get Parts failed: %s", e.getMessage()));
             return false;
         }
+
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             Map<Integer, List<HostAddr>> part = response.getParts();
             this.parts.put(spaceId, part);
@@ -252,7 +284,7 @@ public class MetaClientImpl implements MetaClient {
     /**
      * Get all tags, store as tagName : tagItem in this.tagItems
      *
-     * @param spaceId
+     * @param spaceId Nebula space ID
      * @return
      */
     private boolean getTagItems(int spaceId) {
@@ -285,7 +317,7 @@ public class MetaClientImpl implements MetaClient {
     /**
      * Get all edges, store as edgeName : edgeItem in this.edgeItems
      *
-     * @param spaceId
+     * @param spaceId Nebula space ID
      * @return
      */
     private boolean getEdgeTypes(int spaceId) {
@@ -299,10 +331,11 @@ public class MetaClientImpl implements MetaClient {
             LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             return false;
         }
+
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             List<EdgeItem> edgeItem = response.getEdges();
             Map<String, EdgeItem> tmp = new HashMap<>();
-            if (edgeItem != null) {
+            if (!Objects.isNull(edgeItem)) {
                 for (EdgeItem ei : edgeItem) {
                     tmp.put(ei.getEdge_name(), ei);
                 }
@@ -321,11 +354,6 @@ public class MetaClientImpl implements MetaClient {
 
     public List<IdName> getSpaces() {
         return spaces;
-    }
-
-    @Override
-    public Map<Integer, Map<Integer, List<HostAddr>>> getParts() {
-        return this.parts;
     }
 
     public void close() throws Exception {
