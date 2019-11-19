@@ -3,6 +3,7 @@
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
+
 package com.vesoft.nebula;
 
 import java.util.regex.Matcher;
@@ -13,7 +14,7 @@ public class IPv4IntTransformer {
     /**
      * Transform Int to IP String
      *
-     * @param ip
+     * @param ip The encoded ip address
      * @return
      */
     public static String intToIPv4(int ip) {
@@ -35,15 +36,16 @@ public class IPv4IntTransformer {
     /**
      * Transform IP String to int
      *
-     * @param ipv4Addr
+     * @param address The IP address.
      * @return
      */
-    public static int ip2Integer(String ipv4Addr) {
-        if (!isIPv4Address(ipv4Addr))
+    public static int ip2Integer(String address) {
+        if (!isIPv4Address(address)) {
             throw new RuntimeException("Invalid ip address");
+        }
 
         Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(ipv4Addr);
+        Matcher matcher = pattern.matcher(address);
         int result = 0;
         int counter = 0;
         while (matcher.find()) {
@@ -56,14 +58,14 @@ public class IPv4IntTransformer {
     /**
      * Check is the IP String valid or not
      *
-     * @param ipv4Addr
+     * @param address The IP address.
      * @return
      */
-    private static boolean isIPv4Address(String ipv4Addr) {
+    private static boolean isIPv4Address(String address) {
         String lower = "(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])";
         String regex = lower + "(\\." + lower + "){3}";
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(ipv4Addr);
+        Matcher matcher = pattern.matcher(address);
         return matcher.matches();
     }
 }
