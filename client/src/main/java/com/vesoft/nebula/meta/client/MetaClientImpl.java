@@ -235,7 +235,7 @@ public class MetaClientImpl implements MetaClient {
         GetPartsAllocResp response;
         try {
             response = client.getPartsAlloc(request);
-        } catch (Exception e) {
+        } catch (TException e) {
             LOGGER.error(String.format("Get Parts failed: %s", e.getMessage()));
             return false;
         }
