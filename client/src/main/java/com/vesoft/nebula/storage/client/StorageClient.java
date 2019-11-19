@@ -18,21 +18,15 @@ public interface StorageClient extends Client {
 
     public boolean put(int part, String key, String value);
 
-    public boolean put(int part, int key, int value);
-
     public boolean put(int part, Map<String, String> values);
 
     public Optional<String> get(int part, String key);
-
-    public int get(int part, int key);
 
     public Optional<Map<String, String>> get(int part, List<String> keys);
 
     public boolean remove(int part, String key);
 
     public boolean removeRange(int part, String start, String end);
-
-    public long hash(int key);
 
     public long hash(String key);
 }

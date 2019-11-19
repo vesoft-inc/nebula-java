@@ -44,7 +44,7 @@ public class StorageClientImpl implements StorageClient {
     private final int connectionRetry;
     private final int timeout;
     private int space;
-    private HostAddr tmpLeader;
+    private HostAddr tmpLeader; // Used to record the address of the recent connection
     private MetaClientImpl metaClient;
     private Map<Integer, Map<Integer, HostAddr>> leaders;
 
@@ -159,11 +159,6 @@ public class StorageClientImpl implements StorageClient {
             leaders.put(space, Maps.newHashMap());
     }
 
-    @Override
-    public boolean put(int part, int key, int value) {
-        return put(part, String.valueOf(key), String.valueOf(value));
-    }
-
     /**
      * Put key-value pair into partition
      *
@@ -176,7 +171,6 @@ public class StorageClientImpl implements StorageClient {
     public boolean put(int part, String key, String value) {
         int retry = connectionRetry;
         checkLeader(part);
-
         PutRequest request = new PutRequest();
         request.setSpace_id(space);
         Map<Integer, List<Pair>> parts = Maps.newHashMap();
@@ -191,8 +185,6 @@ public class StorageClientImpl implements StorageClient {
                 response = client.put(request);
                 if (!isSuccess(response)) {
                     for (ResultCode code : response.result.getFailed_codes()) {
-                        //LOGGER.error("Put Failure! Failed part " + code.getPart_id() +
-                        //", failed code " + code.getCode());
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
                             if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
@@ -202,7 +194,6 @@ public class StorageClientImpl implements StorageClient {
                         }
                     }
                 } else {
-                    //LOGGER.info("Put Succeed! Put " + key + " : " + value + " to part " + part);
                     if (!leaders.get(space).containsKey(part) || leaders.get(space).get(part) != tmpLeader) {
                         updateLeader(space, part, tmpLeader);
                     }
@@ -224,6 +215,8 @@ public class StorageClientImpl implements StorageClient {
      */
     @Override
     public boolean put(int part, Map<String, String> values) {
+        int retry = connectionRetry;
+        checkLeader(part);
         PutRequest request = new PutRequest();
         request.setSpace_id(space);
         Map<Integer, List<Pair>> parts = Maps.newHashMap();
@@ -236,18 +229,31 @@ public class StorageClientImpl implements StorageClient {
         LOGGER.debug(String.format("Put Request: %s", request.toString()));
 
         ExecResponse response;
-        try {
-            response = client.put(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("Put Failed: %s", e.getMessage()));
-            return false;
+        while (retry-- != 0) {
+            try {
+                response = client.put(request);
+                if (!isSuccess(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                updateLeader(space, code.getPart_id(), new HostAddr(addr.getIp(), addr.getPort()));
+                                connect(addr);
+                            }
+                        }
+                    }
+                } else {
+                    if (!leaders.get(space).containsKey(part) || leaders.get(space).get(part) != tmpLeader) {
+                        updateLeader(space, part, tmpLeader);
+                    }
+                    return true;
+                }
+            } catch (TException e) {
+                LOGGER.error(String.format("Put Failed: %s", e.getMessage()));
+                return false;
+            }
         }
-        return isSuccess(response);
-    }
-
-    @Override
-    public int get(int part, int key) {
-        return get(part, String.valueOf(key)).isPresent() ? Integer.parseInt(get(part, String.valueOf(key)).get()) : null;
+        return false;
     }
 
     /**
@@ -266,7 +272,7 @@ public class StorageClientImpl implements StorageClient {
         Map<Integer, List<String>> parts = Maps.newHashMap();
         parts.put(part, Arrays.asList(key));
         request.setParts(parts);
-        LOGGER.debug(String.format("Get Request: ", request.toString()));
+        LOGGER.debug(String.format("Get Request: %s", request.toString()));
 
         GeneralResponse response;
         while (retry-- != 0) {
@@ -274,8 +280,6 @@ public class StorageClientImpl implements StorageClient {
                 response = client.get(request);
                 if (!isSuccess(response)) {
                     for (ResultCode code : response.result.getFailed_codes()) {
-                        //LOGGER.error("Get Failure! Failed part " + code.getPart_id() +
-                        //", failed code " + code.getCode());
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
                             if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
@@ -285,7 +289,6 @@ public class StorageClientImpl implements StorageClient {
                         }
                     }
                 } else {
-                    //LOGGER.info("Get Succeed!");
                     if (!leaders.get(space).containsKey(part) || leaders.get(space).get(part) != tmpLeader) {
                         updateLeader(space, part, tmpLeader);
                     }
@@ -311,6 +314,8 @@ public class StorageClientImpl implements StorageClient {
      */
     @Override
     public Optional<Map<String, String>> get(int part, List<String> keys) {
+        int retry = connectionRetry;
+        checkLeader(part);
         GetRequest request = new GetRequest();
         Map<Integer, List<String>> parts = Maps.newHashMap();
         parts.put(part, keys);
@@ -319,13 +324,31 @@ public class StorageClientImpl implements StorageClient {
         LOGGER.debug(String.format("Get Request: %s", request.toString()));
 
         GeneralResponse response;
-        try {
-            response = client.get(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
-            return Optional.empty();
+        while (retry-- != 0) {
+            try {
+                response = client.get(request);
+                if (!isSuccess(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                updateLeader(space, code.getPart_id(), new HostAddr(addr.getIp(), addr.getPort()));
+                                connect(addr);
+                            }
+                        }
+                    }
+                } else {
+                    if (!leaders.get(space).containsKey(part) || leaders.get(space).get(part) != tmpLeader) {
+                        updateLeader(space, part, tmpLeader);
+                    }
+                    Optional.of(response.values);
+                }
+            } catch (TException e) {
+                LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
+                return Optional.empty();
+            }
         }
-        return Optional.of(response.values);
+        return Optional.empty();
     }
 
     /**
@@ -337,6 +360,8 @@ public class StorageClientImpl implements StorageClient {
      */
     @Override
     public boolean remove(int part, String key) {
+        int retry = connectionRetry;
+        checkLeader(part);
         RemoveRequest request = new RemoveRequest();
         request.setSpace_id(space);
         Map<Integer, List<String>> parts = Maps.newHashMap();
@@ -345,13 +370,31 @@ public class StorageClientImpl implements StorageClient {
         LOGGER.debug(String.format("Remove Request: %s", request.toString()));
 
         ExecResponse response;
-        try {
-            response = client.remove(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("Remove Failed: %s", e.getMessage()));
-            return false;
+        while (retry-- != 0){
+            try {
+                response = client.remove(request);
+                if (!isSuccess(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                updateLeader(space, code.getPart_id(), new HostAddr(addr.getIp(), addr.getPort()));
+                                connect(addr);
+                            }
+                        }
+                    }
+                } else {
+                    if (!leaders.get(space).containsKey(part) || leaders.get(space).get(part) != tmpLeader) {
+                        updateLeader(space, part, tmpLeader);
+                    }
+                    return true;
+                }
+            } catch (TException e) {
+                LOGGER.error(String.format("Remove Failed: %s", e.getMessage()));
+                return false;
+            }
         }
-        return isSuccess(response);
+        return false;
     }
 
     /**
@@ -364,6 +407,8 @@ public class StorageClientImpl implements StorageClient {
      */
     @Override
     public boolean removeRange(int part, String start, String end) {
+        int retry = connectionRetry;
+        checkLeader(part);
         RemoveRangeRequest request = new RemoveRangeRequest();
         request.setSpace_id(space);
         Map<Integer, List<Pair>> parts = Maps.newHashMap();
@@ -372,13 +417,31 @@ public class StorageClientImpl implements StorageClient {
         LOGGER.debug(String.format("Remove Range Request: %s", request.toString()));
 
         ExecResponse response;
-        try {
-            response = client.removeRange(request);
-        } catch (TException e) {
-            LOGGER.error("Remove Range Failed: %s", e.getMessage());
-            return false;
+        while (retry-- != 0){
+            try {
+                response = client.removeRange(request);
+                if (!isSuccess(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                updateLeader(space, code.getPart_id(), new HostAddr(addr.getIp(), addr.getPort()));
+                                connect(addr);
+                            }
+                        }
+                    }
+                } else {
+                    if (!leaders.get(space).containsKey(part) || leaders.get(space).get(part) != tmpLeader) {
+                        updateLeader(space, part, tmpLeader);
+                    }
+                    return true;
+                }
+            } catch (TException e) {
+                LOGGER.error(String.format("Remove Range Failed: %s", e.getMessage()));
+                return false;
+            }
         }
-        return isSuccess(response);
+        return false;
     }
 
     /**
@@ -410,6 +473,7 @@ public class StorageClientImpl implements StorageClient {
             if (addrs != null) {
                 this.addresses.clear();
                 for (HostAddr addr : addrs) {
+
                     addresses.add(HostAndPort.fromParts(IPv4IntTransformer.intToIPv4(addr.getIp()), addr.getPort()));
                 }
             }
@@ -423,10 +487,6 @@ public class StorageClientImpl implements StorageClient {
      * @param key
      * @return
      */
-    public long hash(int key) {
-        return hash(String.valueOf(key));
-    }
-
     public long hash(String key) {
         return MurmurHash2.hash64(key);
     }
