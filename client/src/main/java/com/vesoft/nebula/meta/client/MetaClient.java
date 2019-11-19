@@ -7,6 +7,25 @@
 package com.vesoft.nebula.meta.client;
 
 import com.vesoft.nebula.Client;
+import com.vesoft.nebula.HostAddr;
+
+import java.util.List;
+import java.util.Map;
 
 public interface MetaClient extends Client {
+
+    public List<HostAddr> getPart(int spaceId, int partId);
+
+    public List<HostAddr> getPart(String spaceName, int partId);
+
+    public Map<Integer, Map<Integer, List<HostAddr>>> getParts();
+
+    public Integer getTagId(int spaceId, String tagName);
+
+    public Integer getTagId(String spaceName, String tagName);
+
+    public Integer getEdgeType(int spaceId, String edgeName);
+
+    public Integer getEdgeType(String spaceName, String edgeName);
 }
+
