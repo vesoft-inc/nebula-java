@@ -24,6 +24,8 @@ import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.RemoveRangeRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,15 +33,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Nebula Storage Client
  */
 public class StorageClientImpl implements StorageClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class);
 
     private TTransport transport = null;
     private StorageService.Client client;

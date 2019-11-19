@@ -6,6 +6,9 @@
 
 package com.vesoft.nebula.graph.client;
 
+/**
+ *
+ */
 public class NGQLException extends Exception {
     private int code;
 

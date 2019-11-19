@@ -9,8 +9,9 @@ package com.vesoft.nebula;
 /**
  *
  */
-public interface Client extends AutoCloseable {
-    public static final int DEFAULT_TIMEOUT_MS = 1000;
-    public static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
-    public static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
+public class QuerySessionFactory implements SessionFactory<SimpleQuerySession> {
+    @Override
+    public SimpleQuerySession create() {
+        return new SimpleQuerySession();
+    }
 }

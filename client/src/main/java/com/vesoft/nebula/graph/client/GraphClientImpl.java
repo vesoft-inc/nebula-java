@@ -6,8 +6,6 @@
 
 package com.vesoft.nebula.graph.client;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
@@ -21,20 +19,21 @@ import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * The Java thrift client wrapper.
  */
 public class GraphClientImpl implements GraphClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class);
 
     private final List<HostAndPort> addresses;
     private final int connectionRetry;

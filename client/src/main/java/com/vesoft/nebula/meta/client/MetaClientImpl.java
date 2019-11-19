@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class MetaClientImpl implements MetaClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
     private MetaService.Client client;
 
