@@ -24,11 +24,6 @@ public class StorageClientExample {
 
         try {
             try (StorageClient client = new StorageClientImpl(args[0], Integer.valueOf(args[1]))) {
-                if (!client.connect()) {
-                    LOGGER.error("Connection Failed");
-                    return;
-                }
-
                 if (client.put(PART, "key", "value")) {
                     Optional<String> valueOpt = client.get(PART, "key");
                     System.out.println(valueOpt.get());
