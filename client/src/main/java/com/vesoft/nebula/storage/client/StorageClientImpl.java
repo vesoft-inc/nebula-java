@@ -599,15 +599,24 @@ public class StorageClientImpl implements StorageClient {
 
     private void updateLeader(int spaceId, int partId, HostAddr addr) {
         LOGGER.debug("Update leader for space " + spaceId + ", " + partId + " to " + addr);
+        if (!leaders.containsKey(spaceId)) {
+            leaders.put(spaceId, new ConcurrentHashMap<>());
+        }
         leaders.get(spaceId).put(partId, addr);
     }
 
     private void invalidLeader(int spaceId, int partId) {
         LOGGER.debug("Invalid leader for space " + spaceId + ", " + partId);
+        if (!leaders.containsKey(spaceId)) {
+            leaders.put(spaceId, new ConcurrentHashMap<>());
+        }
         leaders.get(spaceId).remove(partId);
     }
 
     private HostAddr getLeader(int space, int part) {
+        if (!leaders.containsKey(space)) {
+            leaders.put(space, new ConcurrentHashMap<>());
+        }
         if (leaders.get(space).containsKey(part)) {
             return leaders.get(space).get(part);
         } else {
@@ -630,6 +639,7 @@ public class StorageClientImpl implements StorageClient {
     private int keyToPartId(int space, String key) {
         // TODO: need to handle this
         if (!partsAlloc.containsKey(space)) {
+            LOGGER.error("Invalid part of " + key);
             return -1;
         }
         int partNum = partsAlloc.get(space).size();
