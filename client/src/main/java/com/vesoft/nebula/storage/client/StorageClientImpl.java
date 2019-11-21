@@ -55,6 +55,8 @@ public class StorageClientImpl implements StorageClient {
     private Map<Integer, Map<Integer, HostAddr>> leaders;
     private Map<Integer, Map<Integer, List<HostAddr>>> partsAlloc;
 
+    private ExecutorService threadPool;
+
     /**
      * Constructor
      *
@@ -68,8 +70,9 @@ public class StorageClientImpl implements StorageClient {
 
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
-        this.leaders = Maps.newHashMap();
+        this.leaders = new ConcurrentHashMap<>();
         this.clientMap = new ConcurrentHashMap<>();
+        this.threadPool = Executors.newFixedThreadPool(DEFAULT_THREAD_COUNT);
     }
 
     /**
@@ -184,9 +187,8 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Boolean> responses = Collections.synchronizedList(new ArrayList<Boolean>(groups.size()));
-        ExecutorService executorService = Executors.newFixedThreadPool(groups.size());
         for (Map.Entry<HostAddr, PutRequest> entry : requests.entrySet()) {
-            executorService.submit(new Runnable() {
+            threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
                     Optional<StorageService.Client> optional = connect(entry.getKey());
@@ -208,7 +210,6 @@ public class StorageClientImpl implements StorageClient {
             LOGGER.error("Put interrupted");
             return false;
         }
-        executorService.shutdown();
 
         for (Boolean ret : responses) {
             if (!ret) {
@@ -325,9 +326,8 @@ public class StorageClientImpl implements StorageClient {
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Optional<Map<String, String>>> responses = Collections.synchronizedList(
                 new ArrayList<Optional<Map<String, String>>>(groups.size()));
-        ExecutorService executorService = Executors.newFixedThreadPool(groups.size());
         for (Map.Entry<HostAddr, GetRequest> entry : requests.entrySet()) {
-            executorService.submit(new Runnable() {
+            threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
                     Optional<StorageService.Client> optional = connect(entry.getKey());
@@ -347,9 +347,7 @@ public class StorageClientImpl implements StorageClient {
             LOGGER.error("Put interrupted");
             return Optional.empty();
         }
-        executorService.shutdown();
 
-        // TODO: judge if we get all values
         Map<String, String> result = new HashMap<>();
         for (Optional<Map<String, String>> response : responses) {
             if (response.isPresent()) {
@@ -461,9 +459,8 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Boolean> responses = Collections.synchronizedList(new ArrayList<Boolean>(groups.size()));
-        ExecutorService executorService = Executors.newFixedThreadPool(groups.size());
         for (Map.Entry<HostAddr, RemoveRequest> entry : requests.entrySet()) {
-            executorService.submit(new Runnable() {
+            threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
                     Optional<StorageService.Client> optional = connect(entry.getKey());
@@ -485,7 +482,6 @@ public class StorageClientImpl implements StorageClient {
             LOGGER.error("Put interrupted");
             return false;
         }
-        executorService.shutdown();
 
         for (Boolean ret : responses) {
             if (!ret) {
@@ -498,7 +494,7 @@ public class StorageClientImpl implements StorageClient {
     /**
      * Remove keys from start to end at part
      *
-     * @param part  nebula space id
+     * @param part  partitionID
      * @param start nebula start key
      * @param end   nebula end key
      * @return
@@ -636,7 +632,7 @@ public class StorageClientImpl implements StorageClient {
      */
     @Override
     public void close() throws Exception {
-
+        threadPool.shutdownNow();
     }
 }
 
