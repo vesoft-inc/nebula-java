@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class StorageClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientExample.class);
-    private static final int PART = 1;
+    private static final int SPACE = 1;
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -27,8 +27,8 @@ public class StorageClientExample {
 
         try {
             try (StorageClient client = new StorageClientImpl(args[0], Integer.valueOf(args[1]))) {
-                if (client.put(PART, "key", "value")) {
-                    Optional<String> valueOpt = client.get(PART, "key");
+                if (client.put(SPACE, "key", "value")) {
+                    Optional<String> valueOpt = client.get(SPACE, "key");
                     System.out.println(valueOpt.get());
                 }
             }
