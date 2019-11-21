@@ -25,12 +25,12 @@ import com.vesoft.nebula.storage.ExecResponse;
 import com.vesoft.nebula.storage.GeneralResponse;
 import com.vesoft.nebula.storage.GetRequest;
 import com.vesoft.nebula.storage.PutRequest;
-import com.vesoft.nebula.storage.RemoveRangeRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.ResultCode;
 import com.vesoft.nebula.storage.StorageService;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,12 +49,11 @@ public class StorageClientImpl implements StorageClient {
     private TTransport transport = null;
     private Map<HostAddr, StorageService.Client> clientMap;
 
-    private final List<HostAndPort> addresses;
     private final int connectionRetry;
     private final int timeout;
     private MetaClientImpl metaClient;
     private Map<Integer, Map<Integer, HostAddr>> leaders;
-    private Map<Integer, Map<Integer, List<HostAddr>>> parts;
+    private Map<Integer, Map<Integer, List<HostAddr>>> partsAlloc;
 
     /**
      * Constructor
@@ -67,39 +66,10 @@ public class StorageClientImpl implements StorageClient {
         com.google.common.base.Preconditions.checkArgument(timeout > 0);
         com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
 
-        addresses.forEach(address -> {
-            String host = address.getHost();
-            int port = address.getPort();
-            if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
-                throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
-            }
-        });
-
-        this.addresses = addresses;
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
         this.leaders = Maps.newHashMap();
-    }
-
-    /**
-     * Constructor with Storage Host String and Port Integer
-     *
-     * @param host The host of storage services.
-     * @param port The port of storage services.
-     */
-    public StorageClientImpl(String host, int port) {
-        this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
-                DEFAULT_CONNECTION_RETRY_SIZE);
-    }
-
-    /**
-     * Constructor with a List of Storage addresses
-     *
-     * @param addresses The addresses of storage services.
-     */
-    public StorageClientImpl(List<HostAndPort> addresses) {
-        this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+        this.clientMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -110,8 +80,8 @@ public class StorageClientImpl implements StorageClient {
     public StorageClientImpl(MetaClientImpl metaClient) {
         this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
         this.metaClient = metaClient;
-        metaClient.init();
-        parts = metaClient.getParts();
+        this.metaClient.init();
+        this.partsAlloc = this.metaClient.getParts();
     }
 
     private Optional<StorageService.Client> connect(HostAddr addr) {
@@ -652,10 +622,10 @@ public class StorageClientImpl implements StorageClient {
 
     private int keyToPartId(int space, String key) {
         // TODO: need to handle this
-        if (!parts.containsKey(space)) {
+        if (!partsAlloc.containsKey(space)) {
             return -1;
         }
-        int partNum = parts.get(space).size();
+        int partNum = partsAlloc.get(space).size();
         return (int) Math.abs(hash(key)) % partNum;
     }
 

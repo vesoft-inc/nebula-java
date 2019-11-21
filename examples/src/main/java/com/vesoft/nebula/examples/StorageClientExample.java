@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.examples;
 
+import com.vesoft.nebula.meta.client.MetaClient;
+import com.vesoft.nebula.meta.client.MetaClientImpl;
 import com.vesoft.nebula.storage.client.StorageClient;
 import com.vesoft.nebula.storage.client.StorageClientImpl;
 
@@ -26,11 +28,11 @@ public class StorageClientExample {
         }
 
         try {
-            try (StorageClient client = new StorageClientImpl(args[0], Integer.valueOf(args[1]))) {
-                if (client.put(SPACE, "key", "value")) {
-                    Optional<String> valueOpt = client.get(SPACE, "key");
-                    System.out.println(valueOpt.get());
-                }
+            MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
+            StorageClient storageClient = new StorageClientImpl(metaClient);
+            if (storageClient.put(SPACE, "key", "value")) {
+                Optional<String> valueOpt = storageClient.get(SPACE, "key");
+                System.out.println(valueOpt.get());
             }
         } catch (Exception e) {
             e.printStackTrace();
