@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.storage.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
@@ -66,8 +68,8 @@ public class StorageClientImpl implements StorageClient {
      * @param connectionRetry The number of retries when connection failure.
      */
     public StorageClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
-        com.google.common.base.Preconditions.checkArgument(timeout > 0);
-        com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
+        checkArgument(timeout > 0);
+        checkArgument(connectionRetry > 0);
 
         addresses.forEach(address -> {
             String host = address.getHost();
@@ -130,8 +132,6 @@ public class StorageClientImpl implements StorageClient {
                 return true;
             } catch (TTransportException tte) {
                 LOGGER.error("Connect failed: " + tte.getMessage());
-            } catch (TException te) {
-                LOGGER.error("Connect failed: " + te.getMessage());
             }
         }
         return false;
@@ -152,9 +152,7 @@ public class StorageClientImpl implements StorageClient {
                 return true;
             } catch (TTransportException tte) {
                 LOGGER.error("Connect failed: " + tte.getMessage());
-            } catch (TException te) {
-                LOGGER.error("Connect failed: " + te.getMessage());
-            }
+            } 
         }
         return false;
     }

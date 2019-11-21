@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.meta.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
@@ -62,8 +64,8 @@ public class MetaClientImpl implements MetaClient {
     private Map<Integer, Map<String, EdgeItem>> edgeItems;
 
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
-        com.google.common.base.Preconditions.checkArgument(timeout > 0);
-        com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
+        checkArgument(timeout > 0);
+        checkArgument(connectionRetry > 0);
         if (addresses.isEmpty()) {
             throw new IllegalArgumentException("No meta server address is specified.");
         }

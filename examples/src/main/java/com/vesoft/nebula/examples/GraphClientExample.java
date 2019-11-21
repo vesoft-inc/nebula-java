@@ -68,7 +68,7 @@ public class GraphClientExample {
         }
 
         try {
-            try (GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]))) {
+            try (GraphClient client = new GraphClientImpl(args[0], Integer.parseInt(args[1]))) {
                 client.connect("user", "password");
                 int code = client.switchSpace(SPACE_NAME);
                 if (code != ErrorCode.SUCCEEDED) {
@@ -113,7 +113,7 @@ public class GraphClientExample {
                 try {
                     resultSet = client.executeQuery(simpleQuery);
                 } catch (ConnectionException | NGQLException | TException e) {
-                    LOGGER.error("Query Failed: ", e.getMessage());
+                    LOGGER.error(String.format("Query Failed: %s", e.getMessage()));
                 }
                 List<String> columns = resultSet.getColumns()
                         .stream()
@@ -122,13 +122,13 @@ public class GraphClientExample {
                 LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(columns)));
 
                 for (RowValue value : resultSet.getRows()) {
-                    LOGGER.info("ID: %d", value.columns.get(0).getId());
+                    LOGGER.info(String.format("ID: %d", value.columns.get(0).getId()));
                 }
 
                 try {
                     resultSet = client.executeQuery(complexQuery);
                 } catch (ConnectionException | NGQLException | TException e) {
-                    LOGGER.error("Query Failed: ", e.getMessage());
+                    LOGGER.error(String.format("Query Failed: %s", e.getMessage()));
                 }
 
                 columns = resultSet.getColumns()
@@ -139,13 +139,13 @@ public class GraphClientExample {
                 LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(columns)));
 
                 for (RowValue value : resultSet.getRows()) {
-                    LOGGER.info("%s, %d, %s", new String(value.columns.get(0).getStr()),
+                    LOGGER.info(String.format("%s, %d, %s", new String(value.columns.get(0).getStr()),
                             value.columns.get(1).getInteger(),
-                            new String(value.columns.get(2).getStr()));
+                            new String(value.columns.get(2).getStr())));
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("Connection Failed: ", e.getMessage());
+            LOGGER.error(String.format("Connection Failed: %s", e.getMessage()));
         }
     }
 }
