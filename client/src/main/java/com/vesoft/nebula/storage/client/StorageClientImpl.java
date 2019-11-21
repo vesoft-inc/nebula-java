@@ -17,7 +17,6 @@ import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.utils.IPv4IntTransformer;
 import com.vesoft.nebula.Pair;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.client.MetaClientImpl;
@@ -28,8 +27,16 @@ import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.ResultCode;
 import com.vesoft.nebula.storage.StorageService;
+import com.vesoft.nebula.utils.IPv4IntTransformer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -132,7 +139,7 @@ public class StorageClientImpl implements StorageClient {
         if (!optional.isPresent()) {
             return false;
         }
-        StorageService.Client client = optional.get();
+        final StorageService.Client client = optional.get();
 
         PutRequest request = new PutRequest();
         request.setSpace_id(space);
@@ -186,7 +193,8 @@ public class StorageClientImpl implements StorageClient {
         }
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
-        final List<Boolean> responses = Collections.synchronizedList(new ArrayList<Boolean>(groups.size()));
+        final List<Boolean> responses = Collections.synchronizedList(
+                new ArrayList<Boolean>(groups.size()));
         for (Map.Entry<HostAddr, PutRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
@@ -266,7 +274,7 @@ public class StorageClientImpl implements StorageClient {
         if (!optional.isPresent()) {
             return Optional.empty();
         }
-        StorageService.Client client = optional.get();
+        final StorageService.Client client = optional.get();
 
         GetRequest request = new GetRequest();
         request.setSpace_id(space);
@@ -357,7 +365,8 @@ public class StorageClientImpl implements StorageClient {
         return Optional.of(result);
     }
 
-    private Optional<Map<String, String>> doGet(int space, StorageService.Client client, GetRequest request) {
+    private Optional<Map<String, String>> doGet(int space, StorageService.Client client,
+                                                GetRequest request) {
         GeneralResponse response;
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -405,7 +414,7 @@ public class StorageClientImpl implements StorageClient {
         if (!optional.isPresent()) {
             return false;
         }
-        StorageService.Client client = optional.get();
+        final StorageService.Client client = optional.get();
 
         RemoveRequest request = new RemoveRequest();
         request.setSpace_id(space);
@@ -458,7 +467,8 @@ public class StorageClientImpl implements StorageClient {
         }
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
-        final List<Boolean> responses = Collections.synchronizedList(new ArrayList<Boolean>(groups.size()));
+        final List<Boolean> responses = Collections.synchronizedList(
+                new ArrayList<Boolean>(groups.size()));
         for (Map.Entry<HostAddr, RemoveRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
@@ -591,6 +601,7 @@ public class StorageClientImpl implements StorageClient {
         LOGGER.debug("Update leader for space " + spaceId + ", " + partId + " to " + addr);
         leaders.get(spaceId).put(partId, addr);
     }
+
     private void invalidLeader(int spaceId, int partId) {
         LOGGER.debug("Invalid leader for space " + spaceId + ", " + partId);
         leaders.get(spaceId).remove(partId);
