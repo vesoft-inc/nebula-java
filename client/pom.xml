@@ -14,6 +14,28 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java</source>
+                                <source>src/main/generated</source>
+                                <source>src/main/fbthrift</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -29,7 +51,7 @@
                 <version>3.0.0</version>
                 <configuration>
                     <configLocation>
-                        https://raw.githubusercontent.com/vesoft-inc/nebula-java/master/nebula_java_style_checks.xml
+                        ${project.parent.basedir}/nebula_java_style_checks.xml
                     </configLocation>
                     <sourceDirectories>
                         ${project.build.sourceDirectory}
@@ -82,11 +104,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.facebook</groupId>
-            <artifactId>thrift</artifactId>
-            <version>1.0.0</version>
-        </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

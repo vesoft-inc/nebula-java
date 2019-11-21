@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StorageClientImpl implements StorageClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class);
 
     private TTransport transport = null;
     private StorageService.Client client;
