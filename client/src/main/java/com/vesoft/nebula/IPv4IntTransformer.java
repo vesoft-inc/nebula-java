@@ -9,7 +9,10 @@ package com.vesoft.nebula;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class IPv4IntTransformer {
+/**
+ *
+ */
+public final class IPv4IntTransformer {
 
     /**
      * Transform Int to IP String

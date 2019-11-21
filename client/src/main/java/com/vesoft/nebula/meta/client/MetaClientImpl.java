@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MetaClientImpl implements MetaClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
     private MetaService.Client client;
 
@@ -160,17 +160,17 @@ public class MetaClientImpl implements MetaClient {
     /**
      * Get a edge type by a particular space Id and edge name
      *
-     * @param spaceId  Nebula space ID
+     * @param space    Nebula space ID
      * @param edgeName Nebula edge name
      * @return
      */
     @Override
-    public Integer getEdgeType(int spaceId, String edgeName) {
-        if (!this.edgeItems.containsKey(spaceId)) {
-            getEdgeTypes(spaceId);
+    public Integer getEdgeType(int space, String edgeName) {
+        if (!this.edgeItems.containsKey(space)) {
+            getEdgeTypes(space);
         }
 
-        Map<String, EdgeItem> map = edgeItems.get(spaceId);
+        Map<String, EdgeItem> map = edgeItems.get(space);
         if (map == null || map.isEmpty()) {
             return null;
         }
