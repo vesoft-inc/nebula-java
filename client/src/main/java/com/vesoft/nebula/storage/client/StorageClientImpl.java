@@ -29,8 +29,6 @@ import com.vesoft.nebula.storage.RemoveRangeRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.ResultCode;
 import com.vesoft.nebula.storage.StorageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;

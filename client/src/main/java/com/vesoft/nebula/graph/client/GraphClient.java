@@ -15,30 +15,35 @@ import com.vesoft.nebula.Client;
 public interface GraphClient extends Client {
 
     /**
-     * @param username
-     * @param password
+     * Connect to nebula query engine.
+     *
+     * @param username User name
+     * @param password User password
      * @return
      */
     public int connect(String username, String password);
 
     /**
-     * @param space
+     * Switch to the specified space.
+     *
+     * @param space space name.
      * @return
      */
     public int switchSpace(String space);
 
     /**
-     * @param statement
+     * Execute the DML statement.
+     *
+     * @param statement execution statement.
      * @return
      */
     public int execute(String statement);
 
     /**
-     * @param statement
+     * Execute the query statement and return result set.
+     *
+     * @param statement execution statement.
      * @return
-     * @throws ConnectionException
-     * @throws NGQLException
-     * @throws TException
      */
     public ResultSet executeQuery(String statement)
             throws ConnectionException, NGQLException, TException;

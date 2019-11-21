@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.graph.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.vesoft.nebula.graph.ColumnValue;
@@ -13,8 +15,6 @@ import com.vesoft.nebula.graph.ColumnValue;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  *
@@ -24,14 +24,16 @@ public class NebulaRow {
     private Map<String, Integer> fieldIndex = Maps.newHashMap();
 
     /**
-     *
+     * Constructor
      */
     public NebulaRow() {
 
     }
 
     /**
-     * @param field
+     * Get field index by field name.
+     *
+     * @param field field name
      * @return
      */
     public Integer getFieldIndex(String field) {
@@ -41,7 +43,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param field
+     * Check whether the field is exist.
+     *
+     * @param field field name
      * @return
      */
     public boolean exist(String field) {
@@ -49,7 +53,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param index
+     * Get string value by field index.
+     *
+     * @param index field index
      * @return
      */
     public String getString(int index) {
@@ -58,7 +64,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param field
+     * Get string value by field name.
+     *
+     * @param field field name
      * @return
      */
     public String getString(String field) {
@@ -67,7 +75,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param index
+     * Get long value by field index.
+     *
+     * @param index field index
      * @return
      */
     public Long getLong(int index) {
@@ -75,7 +85,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param field
+     * Get long value by field name.
+     *
+     * @param field field name
      * @return
      */
     public Long getLong(String field) {
@@ -84,7 +96,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param index
+     * Get double value by field index.
+     *
+     * @param index field index
      * @return
      */
     public Double getDouble(int index) {
@@ -93,7 +107,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param field
+     * Get double value by field name.
+     *
+     * @param field field name
      * @return
      */
     public Double getDouble(String field) {
@@ -103,7 +119,9 @@ public class NebulaRow {
 
 
     /**
-     * @param index
+     * Get float value by field index.
+     *
+     * @param index field index
      * @return
      */
     public Float getFloat(int index) {
@@ -112,7 +130,9 @@ public class NebulaRow {
     }
 
     /**
-     * @param field
+     * Get float value by field name.
+     *
+     * @param field field name
      * @return
      */
     public Float getFloat(String field) {

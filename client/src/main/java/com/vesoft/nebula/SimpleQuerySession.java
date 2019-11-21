@@ -16,12 +16,10 @@ public class SimpleQuerySession implements Session {
 
     }
 
-    @Override
     public int execute(String sentence) {
         return 0;
     }
 
-    @Override
     public int executeQuery(String sentence) {
         return 0;
     }

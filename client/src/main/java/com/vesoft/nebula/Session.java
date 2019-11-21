@@ -16,15 +16,4 @@ public interface Session extends AutoCloseable {
      */
     public void connect();
 
-    /**
-     * @param sentence
-     * @return
-     */
-    public int execute(String sentence);
-
-    /**
-     * @param sentence
-     * @return
-     */
-    public int executeQuery(String sentence);
 }

@@ -6,13 +6,13 @@
 
 package com.vesoft.nebula;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  *
@@ -40,8 +40,10 @@ public class Cluster {
         }
 
         /**
-         * @param host
-         * @param port
+         * Add node address.
+         *
+         * @param host The host of address.
+         * @param port The port of address.
          * @return
          */
         public Cluster.Builder addNode(String host, int port) {
@@ -56,7 +58,9 @@ public class Cluster {
         }
 
         /**
-         * @param user
+         * Supplement user name.
+         *
+         * @param user Nebula user name.
          * @return
          */
         public Cluster.Builder withUser(String user) {
@@ -66,7 +70,9 @@ public class Cluster {
         }
 
         /**
-         * @param password
+         * Supplement user password.
+         *
+         * @param password Nebula password.
          * @return
          */
         public Cluster.Builder withPassword(String password) {
@@ -76,7 +82,9 @@ public class Cluster {
         }
 
         /**
-         * @param timeout
+         * Supplement connection timeout.
+         *
+         * @param timeout the connection timeout.
          * @return
          */
         public Cluster.Builder withConnectionTimeout(long timeout) {
@@ -86,7 +94,9 @@ public class Cluster {
         }
 
         /**
-         * @param retry
+         * Supplement connection retry.
+         *
+         * @param retry the connection retry.
          * @return
          */
         public Cluster.Builder withConnectionRetry(int retry) {
@@ -96,7 +106,9 @@ public class Cluster {
         }
 
         /**
-         * @param retry
+         * Supplement execution retry.
+         *
+         * @param retry the execution retry.
          * @return
          */
         public Cluster.Builder withExecutionRetry(int retry) {
@@ -142,7 +154,7 @@ public class Cluster {
     /**
      *
      */
-    public void connect() {
-
+    public Session build() {
+        return null;
     }
 }

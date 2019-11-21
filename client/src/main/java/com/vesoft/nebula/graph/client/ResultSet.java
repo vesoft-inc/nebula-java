@@ -22,15 +22,15 @@ public class ResultSet implements Iterator {
     private List<RowValue> rows;
 
     /**
-     *
+     * Constructor
      */
     public ResultSet() {
         this(Lists.newArrayList(), Lists.newArrayList());
     }
 
     /**
-     * @param columns
-     * @param rows
+     * @param columns schema info
+     * @param rows    field values
      */
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
         this.columns = columns.stream().map(String::new).collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class ResultSet implements Iterator {
      *
      * @return
      */
-    public List<String> getColumnNames() {
+    public List<String> getColumns() {
         return columns;
     }
 
