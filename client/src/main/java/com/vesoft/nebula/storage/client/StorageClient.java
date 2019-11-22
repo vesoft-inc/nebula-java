@@ -14,19 +14,17 @@ import java.util.Optional;
 
 public interface StorageClient extends Client {
 
-    public void switchSpace(int space);
+    public boolean put(int space, String key, String value);
 
-    public boolean put(int part, String key, String value);
+    public boolean put(int space, Map<String, String> kvs);
 
-    public boolean put(int part, Map<String, String> values);
+    public Optional<String> get(int space, String key);
 
-    public Optional<String> get(int part, String key);
+    public Optional<Map<String, String>> get(int space, List<String> keys);
 
-    public Optional<Map<String, String>> get(int part, List<String> keys);
+    public boolean remove(int space, String key);
 
-    public boolean remove(int part, String key);
+    public boolean remove(int space, List<String> keys);
 
-    public boolean removeRange(int part, String start, String end);
-
-    public long hash(String key);
+    // public boolean removeRange(int space, String start, String end);
 }
