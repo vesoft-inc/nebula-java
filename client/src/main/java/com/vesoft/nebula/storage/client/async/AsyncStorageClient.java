@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.storage.client;
+package com.vesoft.nebula.storage.client.async;
 
 import com.vesoft.nebula.Client;
 

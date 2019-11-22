@@ -4,12 +4,15 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.graph.client;
+package com.vesoft.nebula.graph.client.async;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.Client;
+import com.vesoft.nebula.graph.client.ConnectionException;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
 
 
 public interface AsyncGraphClient extends Client {

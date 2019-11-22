@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.graph.client;
+package com.vesoft.nebula.graph.client.async;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -31,6 +31,9 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+import com.vesoft.nebula.graph.client.ConnectionException;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -188,7 +191,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     @Override
     public ListenableFuture<Optional<ResultSet>> executeQuery(String statement) throws
-            ConnectionException, NGQLException, TException {
+        ConnectionException, NGQLException, TException {
         return threadPool.submit(new Callable<Optional<ResultSet>>() {
             @Override
             public Optional<ResultSet> call() throws Exception {

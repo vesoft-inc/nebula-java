@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.graph.client;
+package com.vesoft.nebula.graph.client.async;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.vesoft.nebula.graph.client.ConnectionException;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import org.slf4j.Logger;
