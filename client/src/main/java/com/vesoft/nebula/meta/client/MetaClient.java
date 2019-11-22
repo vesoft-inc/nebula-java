@@ -14,6 +14,8 @@ import java.util.Map;
 
 public interface MetaClient extends Client {
 
+    public boolean listSpaces();
+
     public List<HostAddr> getPart(int spaceId, int partId);
 
     public List<HostAddr> getPart(String spaceName, int partId);

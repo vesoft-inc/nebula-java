@@ -75,7 +75,7 @@ public class MetaClientImpl implements MetaClient {
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+                    host, port));
             }
         });
 
@@ -93,7 +93,7 @@ public class MetaClientImpl implements MetaClient {
 
     public MetaClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)),
-                DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+            DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
     public MetaClientImpl(List<HostAndPort> addresses) {
@@ -231,7 +231,7 @@ public class MetaClientImpl implements MetaClient {
      *
      * @return
      */
-    private boolean listSpaces() {
+    public boolean listSpaces() {
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response;
         try {
@@ -243,7 +243,7 @@ public class MetaClientImpl implements MetaClient {
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             this.spaces = response.getSpaces();
         } else {
-            LOGGER.error(String.format("Init Error: %s", response.getCode()));
+            LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
             return false;
         }
         return true;

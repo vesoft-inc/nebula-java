@@ -51,14 +51,14 @@ import org.slf4j.LoggerFactory;
 
 public class AsyncMetaClientImpl implements AsyncMetaClient {
     private static final Logger LOGGER =
-            LoggerFactory.getLogger(AsyncMetaClientImpl.class.getName());
+        LoggerFactory.getLogger(AsyncMetaClientImpl.class.getName());
 
     private MetaService.Client client;
 
     private TTransport transport = null;
 
     private ListeningExecutorService threadPool =
-            MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+        MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
     private final List<HostAndPort> addresses;
     private final int connectionRetry;
@@ -76,19 +76,21 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+                    host, port));
             }
         });
 
         this.addresses = addresses;
         this.connectionRetry = connectionRetry;
         this.timeout = timeout;
-        connect();
+        if (!connect()) {
+            LOGGER.error("Connection Failed.");
+        }
     }
 
     public AsyncMetaClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)),
-                DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+            DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
     public AsyncMetaClientImpl(List<HostAndPort> addresses) {
@@ -119,15 +121,16 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         return threadPool.submit(new Callable<Optional<ListSpaceResult>>() {
             @Override
             public Optional<ListSpaceResult> call() {
+                ListSpacesReq request = new ListSpacesReq();
                 ListSpacesResp response;
                 try {
-                    response = client.listSpaces(new ListSpacesReq());
+                    response = client.listSpaces(request);
                 } catch (TException e) {
                     LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
                     return Optional.absent();
                 }
                 if (response.getCode() != ErrorCode.SUCCEEDED) {
-                    LOGGER.error(String.format("Init Error: %s", response.getCode()));
+                    LOGGER.error(String.format("List Spaces Error Code: %s", response.getCode()));
                     return Optional.absent();
                 }
                 ListSpaceResult result = new ListSpaceResult();
@@ -146,7 +149,6 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
             public Optional<GetPartsAllocResult> call() throws Exception {
                 GetPartsAllocReq request = new GetPartsAllocReq();
                 request.setSpace_id(spaceId);
-
                 GetPartsAllocResp response;
                 try {
                     response = client.getPartsAlloc(request);
@@ -163,7 +165,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
                     }
                     return Optional.of(result);
                 } else {
-                    LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
+                    LOGGER.error(String.format("Get Parts Error Code: %s", response.getCode()));
                     return Optional.absent();
                 }
             }
