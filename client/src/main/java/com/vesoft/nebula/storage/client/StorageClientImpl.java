@@ -94,9 +94,9 @@ public class StorageClientImpl implements StorageClient {
         this.partsAlloc = this.metaClient.getParts();
     }
 
-    private Optional<StorageService.Client> connect(HostAddr addr) {
+    private StorageService.Client connect(HostAddr addr) {
         if (clientMap.containsKey(addr)) {
-            return Optional.of(clientMap.get(addr));
+            return clientMap.get(addr);
         }
 
         int retry = connectionRetry;
@@ -110,14 +110,14 @@ public class StorageClientImpl implements StorageClient {
                 transport.open();
                 StorageService.Client client = new StorageService.Client(protocol);
                 clientMap.put(addr, client);
-                return Optional.of(client);
+                return client;
             } catch (TTransportException tte) {
                 LOGGER.error("Connect failed: " + tte.getMessage());
             } catch (TException te) {
                 LOGGER.error("Connect failed: " + te.getMessage());
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     /**
@@ -135,11 +135,6 @@ public class StorageClientImpl implements StorageClient {
         if (leader == null) {
             return false;
         }
-        Optional<StorageService.Client> optional = connect(leader);
-        if (!optional.isPresent()) {
-            return false;
-        }
-        final StorageService.Client client = optional.get();
 
         PutRequest request = new PutRequest();
         request.setSpace_id(space);
@@ -149,7 +144,7 @@ public class StorageClientImpl implements StorageClient {
         request.setParts(parts);
         LOGGER.debug(String.format("Put Request: %s", request.toString()));
 
-        return doPut(space, client, request);
+        return doPut(space, leader, request);
     }
 
     /**
@@ -199,15 +194,11 @@ public class StorageClientImpl implements StorageClient {
             threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
-                    Optional<StorageService.Client> optional = connect(entry.getKey());
-                    if (!optional.isPresent()) {
+                    if (doPut(space, entry.getKey(), entry.getValue())) {
+                        responses.add(true);
+                    } else {
                         responses.add(false);
-                        countDownLatch.countDown();
-                        return;
                     }
-                    StorageService.Client client = optional.get();
-                    doPut(space, client, entry.getValue());
-                    responses.add(true);
                     countDownLatch.countDown();
                 }
             });
@@ -227,7 +218,12 @@ public class StorageClientImpl implements StorageClient {
         return true;
     }
 
-    private boolean doPut(int space, StorageService.Client client, PutRequest request) {
+    private boolean doPut(int space, HostAddr leader, PutRequest request) {
+        StorageService.Client client = connect(leader);
+        if (client == null) {
+            return false;
+        }
+
         ExecResponse response;
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -238,8 +234,12 @@ public class StorageClientImpl implements StorageClient {
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
                             if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                                HostAddr address = new HostAddr(addr.getIp(), addr.getPort());
-                                updateLeader(space, code.getPart_id(), address);
+                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), newLeader);
+                                StorageService.Client newClient = connect(newLeader);
+                                if (newClient != null) {
+                                    client = newClient;
+                                }
                             }
                         }
                     }
@@ -270,11 +270,6 @@ public class StorageClientImpl implements StorageClient {
         if (leader == null) {
             return Optional.empty();
         }
-        Optional<StorageService.Client> optional = connect(leader);
-        if (!optional.isPresent()) {
-            return Optional.empty();
-        }
-        final StorageService.Client client = optional.get();
 
         GetRequest request = new GetRequest();
         request.setSpace_id(space);
@@ -283,7 +278,7 @@ public class StorageClientImpl implements StorageClient {
         request.setParts(parts);
         LOGGER.debug(String.format("Get Request: %s", request.toString()));
 
-        Optional<Map<String, String>> result = doGet(space, client, request);
+        Optional<Map<String, String>> result = doGet(space, leader, request);
         if (!result.isPresent() || !result.get().containsKey(key)) {
             return Optional.empty();
         } else {
@@ -338,13 +333,7 @@ public class StorageClientImpl implements StorageClient {
             threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
-                    Optional<StorageService.Client> optional = connect(entry.getKey());
-                    if (!optional.isPresent()) {
-                        countDownLatch.countDown();
-                        return;
-                    }
-                    StorageService.Client client = optional.get();
-                    responses.add(doGet(space, client, entry.getValue()));
+                    responses.add(doGet(space, entry.getKey(), entry.getValue()));
                     countDownLatch.countDown();
                 }
             });
@@ -365,8 +354,13 @@ public class StorageClientImpl implements StorageClient {
         return Optional.of(result);
     }
 
-    private Optional<Map<String, String>> doGet(int space, StorageService.Client client,
+    private Optional<Map<String, String>> doGet(int space, HostAddr leader,
                                                 GetRequest request) {
+        StorageService.Client client = connect(leader);
+        if (client == null) {
+            return Optional.empty();
+        }
+
         GeneralResponse response;
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -377,8 +371,12 @@ public class StorageClientImpl implements StorageClient {
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
                             if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                                HostAddr address = new HostAddr(addr.getIp(), addr.getPort());
-                                updateLeader(space, code.getPart_id(), address);
+                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), newLeader);
+                                StorageService.Client newClient = connect(newLeader);
+                                if (newClient != null) {
+                                    client = newClient;
+                                }
                             }
                         }
                     }
@@ -410,11 +408,6 @@ public class StorageClientImpl implements StorageClient {
         if (leader == null) {
             return false;
         }
-        Optional<StorageService.Client> optional = connect(leader);
-        if (!optional.isPresent()) {
-            return false;
-        }
-        final StorageService.Client client = optional.get();
 
         RemoveRequest request = new RemoveRequest();
         request.setSpace_id(space);
@@ -423,7 +416,7 @@ public class StorageClientImpl implements StorageClient {
         request.setParts(parts);
         LOGGER.debug(String.format("Remove Request: %s", request.toString()));
 
-        return doRemove(space, client, request);
+        return doRemove(space, leader, request);
     }
 
     /**
@@ -473,15 +466,11 @@ public class StorageClientImpl implements StorageClient {
             threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
-                    Optional<StorageService.Client> optional = connect(entry.getKey());
-                    if (!optional.isPresent()) {
+                    if (doRemove(space, entry.getKey(), entry.getValue())) {
+                        responses.add(true);
+                    } else {
                         responses.add(false);
-                        countDownLatch.countDown();
-                        return;
                     }
-                    StorageService.Client client = optional.get();
-                    doRemove(space, client, entry.getValue());
-                    responses.add(true);
                     countDownLatch.countDown();
                 }
             });
@@ -552,7 +541,12 @@ public class StorageClientImpl implements StorageClient {
     }
      */
 
-    private boolean doRemove(int space, StorageService.Client client, RemoveRequest request) {
+    private boolean doRemove(int space, HostAddr leader, RemoveRequest request) {
+        StorageService.Client client = connect(leader);
+        if (client == null) {
+            return false;
+        }
+
         ExecResponse response;
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -563,8 +557,12 @@ public class StorageClientImpl implements StorageClient {
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
                             if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                                HostAddr address = new HostAddr(addr.getIp(), addr.getPort());
-                                updateLeader(space, code.getPart_id(), address);
+                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), newLeader);
+                                StorageService.Client newClient = connect(newLeader);
+                                if (newClient != null) {
+                                    client = newClient;
+                                }
                             }
                         }
                     }
@@ -642,8 +640,9 @@ public class StorageClientImpl implements StorageClient {
             LOGGER.error("Invalid part of " + key);
             return -1;
         }
+        // TODO: this is different to implement in c++, which converts to unsigned long at first
         int partNum = partsAlloc.get(space).size();
-        return (int) Math.abs(hash(key)) % partNum;
+        return (int) (Math.abs(hash(key)) % partNum + 1);
     }
 
     /**
