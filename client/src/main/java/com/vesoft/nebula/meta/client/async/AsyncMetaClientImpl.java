@@ -57,8 +57,8 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
 
     private TTransport transport = null;
 
-    private ListeningExecutorService threadPool =
-        MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+    private ListeningExecutorService threadPool;
+
 
     private final List<HostAndPort> addresses;
     private final int connectionRetry;
@@ -83,6 +83,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         this.addresses = addresses;
         this.connectionRetry = connectionRetry;
         this.timeout = timeout;
+        this.threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         if (!connect()) {
             LOGGER.error("Connection Failed.");
         }

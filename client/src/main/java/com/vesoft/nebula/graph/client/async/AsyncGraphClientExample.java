@@ -16,14 +16,14 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
+import com.vesoft.nebula.graph.client.ConnectionException;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import org.slf4j.Logger;

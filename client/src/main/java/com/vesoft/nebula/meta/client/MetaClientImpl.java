@@ -190,7 +190,7 @@ public class MetaClientImpl implements MetaClient {
         return getEdgeType(spaceNames.get(spaceName), edgeName);
     }
 
-    public void init() {
+    private void init() {
         boolean isConnected = connect();
         if (!isConnected) {
             LOGGER.error("Connection has not been established. Connect Failed");

@@ -12,10 +12,10 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
-import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Pair;
 import com.vesoft.nebula.meta.ErrorCode;
@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -90,7 +89,6 @@ public class StorageClientImpl implements StorageClient {
     public StorageClientImpl(MetaClientImpl metaClient) {
         this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
         this.metaClient = metaClient;
-        this.metaClient.init();
         this.partsAlloc = this.metaClient.getParts();
     }
 
@@ -189,7 +187,7 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Boolean> responses = Collections.synchronizedList(
-                new ArrayList<Boolean>(groups.size()));
+            new ArrayList<Boolean>(groups.size()));
         for (Map.Entry<HostAddr, PutRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
@@ -268,7 +266,7 @@ public class StorageClientImpl implements StorageClient {
         int part = keyToPartId(space, key);
         HostAddr leader = getLeader(space, part);
         if (leader == null) {
-            return Optional.empty();
+            return Optional.absent();
         }
 
         GetRequest request = new GetRequest();
@@ -280,7 +278,7 @@ public class StorageClientImpl implements StorageClient {
 
         Optional<Map<String, String>> result = doGet(space, leader, request);
         if (!result.isPresent() || !result.get().containsKey(key)) {
-            return Optional.empty();
+            return Optional.absent();
         } else {
             return Optional.of(result.get().get(key));
         }
@@ -328,7 +326,7 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Optional<Map<String, String>>> responses = Collections.synchronizedList(
-                new ArrayList<Optional<Map<String, String>>>(groups.size()));
+            new ArrayList<Optional<Map<String, String>>>(groups.size()));
         for (Map.Entry<HostAddr, GetRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
@@ -342,7 +340,7 @@ public class StorageClientImpl implements StorageClient {
             countDownLatch.await();
         } catch (InterruptedException e) {
             LOGGER.error("Put interrupted");
-            return Optional.empty();
+            return Optional.absent();
         }
 
         Map<String, String> result = new HashMap<>();
@@ -358,7 +356,7 @@ public class StorageClientImpl implements StorageClient {
                                                 GetRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {
-            return Optional.empty();
+            return Optional.absent();
         }
 
         GeneralResponse response;
@@ -388,10 +386,10 @@ public class StorageClientImpl implements StorageClient {
                     invalidLeader(space, part);
                 }
                 LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
-                return Optional.empty();
+                return Optional.absent();
             }
         }
-        return Optional.empty();
+        return Optional.absent();
     }
 
     /**
@@ -461,7 +459,7 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Boolean> responses = Collections.synchronizedList(
-                new ArrayList<Boolean>(groups.size()));
+            new ArrayList<Boolean>(groups.size()));
         for (Map.Entry<HostAddr, RemoveRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
@@ -540,7 +538,6 @@ public class StorageClientImpl implements StorageClient {
         return false;
     }
      */
-
     private boolean doRemove(int space, HostAddr leader, RemoveRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {

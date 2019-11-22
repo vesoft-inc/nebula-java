@@ -6,23 +6,41 @@
 
 package com.vesoft.nebula.storage.client.async;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
+import com.facebook.thrift.TException;
+import com.facebook.thrift.protocol.TBinaryProtocol;
+import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
+import com.facebook.thrift.transport.TTransportException;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
-import com.google.common.net.InetAddresses;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.Pair;
+import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.client.MetaClientImpl;
+import com.vesoft.nebula.storage.ExecResponse;
+import com.vesoft.nebula.storage.GeneralResponse;
+import com.vesoft.nebula.storage.GetRequest;
+import com.vesoft.nebula.storage.PutRequest;
+import com.vesoft.nebula.storage.RemoveRequest;
+import com.vesoft.nebula.storage.ResultCode;
 import com.vesoft.nebula.storage.StorageService;
+import com.vesoft.nebula.utils.IPv4IntTransformer;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.codec.digest.MurmurHash2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +60,7 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
     private Map<Integer, Map<Integer, HostAddr>> leaders;
     private Map<Integer, Map<Integer, List<HostAddr>>> partsAlloc;
 
-    private ExecutorService threadPool;
+    private ListeningExecutorService threadPool;
 
     /**
      * Constructor
@@ -59,7 +77,7 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
         this.connectionRetry = connectionRetry;
         this.leaders = new ConcurrentHashMap<>();
         this.clientMap = new ConcurrentHashMap<>();
-        this.threadPool = Executors.newFixedThreadPool(DEFAULT_THREAD_COUNT);
+        this.threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     }
 
     /**
@@ -70,7 +88,6 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
     public AsyncStorageClientImpl(MetaClientImpl metaClient) {
         this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
         this.metaClient = metaClient;
-        this.metaClient.init();
         this.partsAlloc = this.metaClient.getParts();
     }
 
@@ -85,7 +102,6 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
             int port = addr.getPort();
             transport = new TSocket(ip, port, timeout);
             TProtocol protocol = new TBinaryProtocol(transport);
-
             try {
                 transport.open();
                 StorageService.Client client = new StorageService.Client(protocol);
@@ -109,22 +125,31 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
      * @return
      */
     @Override
-    public boolean put(int space, String key, String value) {
-        int part = keyToPartId(space, key);
-        HostAddr leader = getLeader(space, part);
-        if (leader == null) {
-            return false;
-        }
+    public ListenableFuture<Boolean> put(int space, String key, String value) {
+        return threadPool.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                int part = keyToPartId(space, key);
+                HostAddr leader = getLeader(space, part);
+                if (leader == null) {
+                    LOGGER.error(String.format("Get Leader Failed When Putting %s : %s to Space "
+                        + "%d", key, value, space));
+                    return false;
+                }
 
-        PutRequest request = new PutRequest();
-        request.setSpace_id(space);
-        Map<Integer, List<Pair>> parts = Maps.newHashMap();
-        List<Pair> pairs = Lists.newArrayList(new Pair(key, value));
-        parts.put(part, pairs);
-        request.setParts(parts);
-        LOGGER.debug(String.format("Put Request: %s", request.toString()));
+                PutRequest request = new PutRequest();
+                request.setSpace_id(space);
+                Map<Integer, List<Pair>> parts = Maps.newHashMap();
+                List<Pair> pairs = Lists.newArrayList(new Pair(key, value));
+                parts.put(part, pairs);
+                request.setParts(parts);
+                //LOGGER.debug(String.format("Put Request: %s", request.toString()));
 
-        return doPut(space, leader, request);
+                return doPut(space, leader, request);
+            }
+        });
+
+
     }
 
     private boolean doPut(int space, HostAddr leader, PutRequest request) {
@@ -173,33 +198,39 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
      * @return
      */
     @Override
-    public Optional<String> get(int space, String key) {
-        int part = keyToPartId(space, key);
-        HostAddr leader = getLeader(space, part);
-        if (leader == null) {
-            return Optional.empty();
-        }
+    public ListenableFuture<Optional<String>> get(int space, String key) {
+        return threadPool.submit(new Callable<Optional<String>>() {
+            @Override
+            public Optional<String> call() throws Exception {
+                int part = keyToPartId(space, key);
+                HostAddr leader = getLeader(space, part);
+                if (leader == null) {
+                    LOGGER.error(String.format("Get Leader Failed When Getting Key %s from Space "
+                        + "%d"), key, space);
+                    return Optional.absent();
+                }
+                GetRequest request = new GetRequest();
+                request.setSpace_id(space);
+                Map<Integer, List<String>> parts = Maps.newHashMap();
+                parts.put(part, Arrays.asList(key));
+                request.setParts(parts);
+                //LOGGER.debug(String.format("Get Request: %s", request.toString()));
 
-        GetRequest request = new GetRequest();
-        request.setSpace_id(space);
-        Map<Integer, List<String>> parts = Maps.newHashMap();
-        parts.put(part, Arrays.asList(key));
-        request.setParts(parts);
-        LOGGER.debug(String.format("Get Request: %s", request.toString()));
-
-        Optional<Map<String, String>> result = doGet(space, leader, request);
-        if (!result.isPresent() || !result.get().containsKey(key)) {
-            return Optional.empty();
-        } else {
-            return Optional.of(result.get().get(key));
-        }
+                Optional<Map<String, String>> result = doGet(space, leader, request);
+                if (!result.isPresent() || !result.get().containsKey(key)) {
+                    return Optional.absent();
+                } else {
+                    return Optional.of(result.get().get(key));
+                }
+            }
+        });
     }
 
     private Optional<Map<String, String>> doGet(int space, HostAddr leader,
                                                 GetRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {
-            return Optional.empty();
+            return Optional.absent();
         }
 
         GeneralResponse response;
@@ -229,10 +260,10 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
                     invalidLeader(space, part);
                 }
                 LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
-                return Optional.empty();
+                return Optional.absent();
             }
         }
-        return Optional.empty();
+        return Optional.absent();
     }
 
     /**
@@ -243,22 +274,29 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
      * @return
      */
     @Override
-    public boolean remove(int space, String key) {
-        int part = keyToPartId(space, key);
-        HostAddr leader = getLeader(space, part);
-        if (leader == null) {
-            return false;
-        }
+    public ListenableFuture<Boolean> remove(int space, String key) {
+        return threadPool.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                int part = keyToPartId(space, key);
+                HostAddr leader = getLeader(space, part);
+                if (leader == null) {
+                    LOGGER.error(String.format("Get Leader Faild When Removing Key %s from Space "
+                        + "%d", key, space));
+                    return false;
+                }
+                RemoveRequest request = new RemoveRequest();
+                request.setSpace_id(space);
+                Map<Integer, List<String>> parts = Maps.newHashMap();
+                parts.put(part, Arrays.asList(key));
+                request.setParts(parts);
+                LOGGER.debug(String.format("Remove Request: %s", request.toString()));
 
-        RemoveRequest request = new RemoveRequest();
-        request.setSpace_id(space);
-        Map<Integer, List<String>> parts = Maps.newHashMap();
-        parts.put(part, Arrays.asList(key));
-        request.setParts(parts);
-        LOGGER.debug(String.format("Remove Request: %s", request.toString()));
-
-        return doRemove(space, leader, request);
+                return doRemove(space, leader, request);
+            }
+        });
     }
+
     private boolean doRemove(int space, HostAddr leader, RemoveRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {
@@ -353,12 +391,10 @@ public class AsyncStorageClientImpl implements AsyncStorageClient {
     }
 
     private int keyToPartId(int space, String key) {
-        // TODO: need to handle this
         if (!partsAlloc.containsKey(space)) {
             LOGGER.error("Invalid part of " + key);
             return -1;
         }
-        // TODO: this is different to implement in c++, which converts to unsigned long at first
         int partNum = partsAlloc.get(space).size();
         return (int) (Math.abs(hash(key)) % partNum + 1);
     }
