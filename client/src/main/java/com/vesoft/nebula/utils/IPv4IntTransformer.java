@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula;
+package com.vesoft.nebula.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
