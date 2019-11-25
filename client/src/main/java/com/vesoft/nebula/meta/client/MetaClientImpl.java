@@ -48,7 +48,6 @@ public class MetaClientImpl implements MetaClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
     private MetaService.Client client;
-
     private TTransport transport = null;
 
     private final List<HostAndPort> addresses;
@@ -85,8 +84,6 @@ public class MetaClientImpl implements MetaClient {
         this.addresses = addresses;
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
-
-        this.init();
     }
 
     public MetaClientImpl(String host, int port) {
@@ -108,11 +105,12 @@ public class MetaClientImpl implements MetaClient {
     @Override
     public List<HostAddr> getPart(int spaceId, int partId) {
         if (!this.parts.containsKey(spaceId)) {
-            getParts(spaceId);
+             getParts(spaceId);
         }
+
         Map<Integer, List<HostAddr>> map = parts.get(spaceId);
-        if (map == null || map.isEmpty()) {
-            return null;
+        if (Objects.isNull(map) || map.isEmpty()) {
+            return Lists.newArrayList();
         }
         return map.get(partId);
     }
@@ -121,7 +119,7 @@ public class MetaClientImpl implements MetaClient {
     public List<HostAddr> getPart(String spaceName, int partId) {
         if (!spaceNames.containsKey(spaceName)) {
             LOGGER.error(String.format("There is no space named: %s", spaceName));
-            return null;
+            return Lists.newArrayList();
         }
         return getPart(spaceNames.get(spaceName), partId);
     }
@@ -140,12 +138,12 @@ public class MetaClientImpl implements MetaClient {
         }
 
         Map<String, TagItem> map = tagItems.get(spaceId);
-        if (map == null || map.isEmpty()) {
-            return null;
+        if (Objects.isNull(map) || map.isEmpty()) {
+            return -1;
         }
 
         TagItem tag = map.get(tagName);
-        return tag == null ? null : tag.getTag_id();
+        return tag == null ? -1 : tag.getTag_id();
     }
 
     @Override
@@ -171,28 +169,29 @@ public class MetaClientImpl implements MetaClient {
         }
 
         Map<String, EdgeItem> map = edgeItems.get(space);
-        if (map == null || map.isEmpty()) {
-            return null;
+        if (Objects.isNull(map) || map.isEmpty()) {
+            return -1;
         }
 
         EdgeItem edge = map.get(edgeName);
-        return edge == null ? null : edge.getEdge_type();
+        return edge == null ? -1 : edge.getEdge_type();
     }
 
     @Override
     public Integer getEdgeType(String spaceName, String edgeName) {
         if (!spaceNames.containsKey(spaceName)) {
             LOGGER.error(String.format("There is no space named: %s", spaceName));
-            return null;
+            return -1;
         }
         return getEdgeType(spaceNames.get(spaceName), edgeName);
     }
 
-    public void init() {
-        boolean isConnected = connect();
-        if (!isConnected) {
+    public boolean init() {
+        if (!connect()) {
             LOGGER.error("Connection has not been established. Connect Failed");
+            return false;
         }
+
         listSpaces();
         for (IdName space : spaces) {
             int spaceId = space.getId().getSpace_id();
@@ -201,6 +200,7 @@ public class MetaClientImpl implements MetaClient {
             getTagItems(spaceId);
             getEdgeTypes(spaceId);
         }
+        return true;
     }
 
     private boolean connect() {
@@ -214,11 +214,10 @@ public class MetaClientImpl implements MetaClient {
             try {
                 transport.open();
                 client = new MetaService.Client(protocol);
-                return true;
-            } catch (TTransportException tte) {
-                LOGGER.error("Connect failed: " + tte.getMessage());
-            } catch (TException te) {
-                LOGGER.error("Connect failed: " + te.getMessage());
+            } catch (TTransportException transportException) {
+                LOGGER.error("Connect failed: " + transportException.getMessage());
+            } catch (TException e) {
+                LOGGER.error("Connect failed: " + e.getMessage());
             }
         }
         return false;
@@ -357,7 +356,7 @@ public class MetaClientImpl implements MetaClient {
     }
 
     public void close() throws Exception {
-
+        transport.close();
     }
 }
 
