@@ -14,12 +14,35 @@ import com.vesoft.nebula.meta.client.async.entry.ListTagsCallback;
 
 public interface AsyncMetaClient extends Client {
 
+    /**
+     * List all spaces
+     *
+     * @return callback ListSpaceCallback
+     */
     public ListSpaceCallback listSpaces();
 
+    /**
+     * Get Parts Allocations
+     *
+     * @param spaceId space ID
+     * @return
+     */
     public GetPartsAllocCallback getPartsAlloc(int spaceId);
 
+    /**
+     * List Tags
+     *
+     * @param spaceId space ID
+     * @return
+     */
     public ListTagsCallback listTags(int spaceId);
 
+    /**
+     * List Edges
+     *
+     * @param spaceId space ID
+     * @return
+     */
     public ListEdgesCallback listEdges(int spaceId);
 
 }

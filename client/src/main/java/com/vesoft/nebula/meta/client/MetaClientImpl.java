@@ -107,7 +107,7 @@ public class MetaClientImpl implements MetaClient {
     @Override
     public List<HostAddr> getPart(int spaceId, int partId) {
         if (!this.parts.containsKey(spaceId)) {
-             getParts(spaceId);
+            getParts(spaceId);
         }
 
         Map<Integer, List<HostAddr>> map = parts.get(spaceId);

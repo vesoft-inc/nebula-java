@@ -25,14 +25,14 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.GraphService;
+import com.vesoft.nebula.graph.client.async.entry.AuthenticateCallback;
+import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
-import com.vesoft.nebula.graph.client.async.entry.AuthenticateCallback;
-import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,8 +8,6 @@ package com.vesoft.nebula.graph.client;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.Client;
-import com.vesoft.nebula.graph.client.async.NebulaResultCodeFuture;
-import com.vesoft.nebula.graph.client.async.NebulaResultSetFuture;
 
 /**
  *
@@ -49,18 +47,4 @@ public interface GraphClient extends Client {
      */
     public ResultSet executeQuery(String statement)
             throws ConnectionException, NGQLException, TException;
-
-    /**
-     *
-     * @param statement
-     * @return
-     */
-    public NebulaResultCodeFuture executeAsync(String statement);
-
-    /**
-     *
-     * @param statement
-     * @return
-     */
-    public NebulaResultSetFuture executeQueryAsync(String statement);
 }

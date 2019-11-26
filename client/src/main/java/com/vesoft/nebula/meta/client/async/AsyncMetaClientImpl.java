@@ -12,7 +12,9 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.async.TAsyncClientManager;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocolFactory;
-import com.facebook.thrift.transport.*;
+import com.facebook.thrift.transport.TNonblockingSocket;
+import com.facebook.thrift.transport.TNonblockingTransport;
+import com.facebook.thrift.transport.TTransportException;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
@@ -102,6 +104,11 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         return false;
     }
 
+    /**
+     * List all spaces
+     *
+     * @return callback ListSpaceCallback
+     */
     @Override
     public ListSpaceCallback listSpaces() {
         ListSpaceCallback callback = new ListSpaceCallback();
@@ -113,6 +120,12 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         return callback;
     }
 
+    /**
+     * Get Parts Allocations
+     *
+     * @param spaceId space ID
+     * @return callback GetPartsAllocCallback
+     */
     @Override
     public GetPartsAllocCallback getPartsAlloc(int spaceId) {
         GetPartsAllocCallback callback = new GetPartsAllocCallback();
@@ -126,6 +139,12 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         return callback;
     }
 
+    /**
+     * List Tags
+     *
+     * @param spaceId space ID
+     * @return callback ListTagsCallback
+     */
     @Override
     public ListTagsCallback listTags(int spaceId) {
         ListTagsCallback callback = new ListTagsCallback();
@@ -139,6 +158,12 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         return callback;
     }
 
+    /**
+     * List Edges
+     *
+     * @param spaceId space ID
+     * @return callback ListEdgesCallback
+     */
     @Override
     public ListEdgesCallback listEdges(int spaceId) {
         ListEdgesCallback callback = new ListEdgesCallback();

@@ -6,13 +6,14 @@
 
 package com.vesoft.nebula.graph.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
-import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
@@ -20,8 +21,7 @@ import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
-import com.vesoft.nebula.graph.client.async.NebulaResultCodeFuture;
-import com.vesoft.nebula.graph.client.async.NebulaResultSetFuture;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -194,16 +194,6 @@ public class GraphClientImpl implements GraphClient {
             LOGGER.error("Execute error: " + executionResponse.getError_msg());
             throw new NGQLException(code);
         }
-    }
-
-    @Override
-    public NebulaResultCodeFuture executeAsync(String statement) {
-        return null;
-    }
-
-    @Override
-    public NebulaResultSetFuture executeQueryAsync(String statement) {
-        return null;
     }
 
     private boolean checkTransportOpened(TTransport transport) {

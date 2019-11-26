@@ -11,8 +11,10 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.async.AsyncMethodCallback;
 import com.facebook.thrift.async.TAsyncMethodCall;
 import com.google.common.base.Optional;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,7 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
     protected Lock lock = new ReentrantLock();
     protected TBase result;
     protected boolean isReady = false;
+
 
     public Optional<TBase> getResult() {
         return result == null ? Optional.absent() : Optional.of(result);

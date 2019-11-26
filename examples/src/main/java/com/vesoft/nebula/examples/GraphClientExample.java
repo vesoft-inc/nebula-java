@@ -139,7 +139,8 @@ public class GraphClientExample {
                 LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(columns)));
 
                 for (RowValue value : resultSet.getRows()) {
-                    LOGGER.info(String.format("%s, %d, %s", new String(value.columns.get(0).getStr()),
+                    LOGGER.info(String.format("%s, %d, %s",
+                        new String(value.columns.get(0).getStr()),
                             value.columns.get(1).getInteger(),
                             new String(value.columns.get(2).getStr())));
                 }

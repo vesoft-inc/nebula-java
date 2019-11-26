@@ -4,31 +4,18 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.graph.client.async;
+package com.vesoft.nebula.examples;
 
 import com.facebook.thrift.TBase;
-import com.facebook.thrift.TException;
-import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
-import com.vesoft.nebula.graph.RowValue;
-import com.vesoft.nebula.graph.client.ConnectionException;
 import com.vesoft.nebula.graph.client.NGQLException;
 import com.vesoft.nebula.graph.client.ResultSet;
 
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
+import com.vesoft.nebula.graph.client.async.AsyncGraphClient;
+import com.vesoft.nebula.graph.client.async.AsyncGraphClientImpl;
 import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
-import com.vesoft.nebula.meta.client.async.entry.ListSpaceCallback;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,6 +132,5 @@ public class AsyncGraphClientExample {
                 LOGGER.error("Execute error");
             }
         }
-
     }
 }
