@@ -8,32 +8,31 @@ package com.vesoft.nebula.graph.client.async;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.facebook.thrift.TBase;
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TCompactProtocol;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TSocket;
-import com.facebook.thrift.transport.TTransport;
+import com.facebook.thrift.async.TAsyncClientManager;
+import com.facebook.thrift.protocol.TBinaryProtocol;
+import com.facebook.thrift.protocol.TProtocolFactory;
+import com.facebook.thrift.transport.TNonblockingSocket;
+import com.facebook.thrift.transport.TNonblockingTransport;
+import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
-import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+import com.vesoft.nebula.graph.client.async.entry.AuthenticateCallback;
+import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +48,9 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
     private final int executionRetry;
     private final int timeout;
     private long sessionID;
-    private TTransport transport = null;
-    private GraphService.Client client;
+    private GraphService.AsyncClient client;
+    private TNonblockingTransport transport = null;
+    private TAsyncClientManager manager;
 
     /**
      * The Constructor of Graph Client.
@@ -107,7 +107,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      * @return The ErrorCode of status, 0 is succeeded.
      */
     @Override
-    public ListenableFuture<Optional<Integer>> switchSpace(String space) {
+    public ExecuteCallback switchSpace(String space) {
         return execute(String.format("USE %s", space));
     }
 
@@ -125,27 +125,41 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
             Random random = new Random(System.currentTimeMillis());
             int position = random.nextInt(addresses.size());
             HostAndPort address = addresses.get(position);
-            transport = new TSocket(address.getHost(), address.getPort(), timeout);
-            TProtocol protocol = new TCompactProtocol(transport);
 
             try {
-                transport.open();
-                client = new GraphService.Client(protocol);
-                AuthResponse result = client.authenticate(username, password);
-                if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
-                    LOGGER.error("User name or password error");
-                    return ErrorCode.E_BAD_USERNAME_PASSWORD;
+                manager = new TAsyncClientManager();
+                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                TProtocolFactory protocol = new TBinaryProtocol.Factory();
+                client = new GraphService.AsyncClient(protocol, manager, transport);
+                AuthenticateCallback callback = new AuthenticateCallback();
+                client.authenticate(username, password, callback);
+                Optional<TBase> respOption = Optional.absent();
+                while (!callback.checkReady()) {
+                    respOption = callback.getResult();
                 }
+                if (respOption.isPresent()) {
+                    AuthResponse result = (AuthResponse) respOption.get();
+                    if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
+                        LOGGER.error("User name or password error");
+                        return ErrorCode.E_BAD_USERNAME_PASSWORD;
+                    }
 
-                if (result.getError_code() != ErrorCode.SUCCEEDED) {
-                    LOGGER.error(String.format("Connect address %s failed : %s",
+                    if (result.getError_code() != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Connect address %s failed : %s",
                             address.toString(), result.getError_msg()));
+                    } else {
+                        sessionID = result.getSession_id();
+                        return ErrorCode.SUCCEEDED;
+                    }
                 } else {
-                    sessionID = result.getSession_id();
-                    return ErrorCode.SUCCEEDED;
+                    LOGGER.info(String.format("Auth not founded"));
                 }
-            } catch (TException tte) {
+            } catch (TTransportException tte) {
                 LOGGER.error("Connect failed: " + tte.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TException e) {
+                e.printStackTrace();
             }
         }
         return ErrorCode.E_FAIL_TO_CONNECT;
@@ -157,68 +171,22 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      * @param statement The query sentence.
      * @return The ErrorCode of status, 0 is succeeded.
      */
-    public ListenableFuture<Optional<Integer>> execute(String statement) {
-        return threadPool.submit(new Callable<Optional<Integer>>() {
-            @Override
-            public Optional<Integer> call() throws Exception {
-                if (!checkTransportOpened(transport)) {
-                    return Optional.of(ErrorCode.E_DISCONNECTED);
-                }
-                int retry = executionRetry;
-                while (retry-- > 0) {
-                    try {
-                        ExecutionResponse executionResponse =
-                                client.execute(sessionID, statement);
-                        if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
-                            LOGGER.error("execute error: " + executionResponse.getError_msg());
-                        }
-                        return Optional.of(executionResponse.getError_code());
-                    } catch (TException e) {
-                        LOGGER.error("Thrift rpc call failed: " + e.getMessage());
-                        return Optional.of(ErrorCode.E_RPC_FAILURE);
-                    }
-                }
-                return Optional.of(ErrorCode.E_RPC_FAILURE);
+    public ExecuteCallback execute(String statement) {
+        ExecuteCallback callback = new ExecuteCallback();
+        int retry = executionRetry;
+        while (retry-- > 0) {
+            try {
+                client.execute(sessionID, statement, callback);
+            } catch (TException e) {
+                e.printStackTrace();
             }
-        });
-    }
-
-    /**
-     * Execute the query sentence which will return a ResultSet.
-     *
-     * @param statement The query sentence.
-     * @return The ErrorCode of status, 0 is succeeded.
-     */
-    @Override
-    public ListenableFuture<Optional<ResultSet>> executeQuery(String statement) throws
-        ConnectionException, NGQLException, TException {
-        return threadPool.submit(new Callable<Optional<ResultSet>>() {
-            @Override
-            public Optional<ResultSet> call() throws Exception {
-                if (!checkTransportOpened(transport)) {
-                    LOGGER.error("Thrift rpc call failed");
-                    throw new ConnectionException();
-                }
-                ExecutionResponse executionResponse = client.execute(sessionID, statement);
-                int code = executionResponse.getError_code();
-                if (code == ErrorCode.SUCCEEDED) {
-                    return Optional.of(new ResultSet(executionResponse.getColumn_names(),
-                            executionResponse.getRows()));
-                } else {
-                    LOGGER.error("Execute error: " + executionResponse.getError_msg());
-                    throw new NGQLException(code);
-                }
-            }
-        });
-
-    }
-
-    private boolean checkTransportOpened(TTransport transport) {
-        return !Objects.isNull(transport) && transport.isOpen();
+        }
+        return callback;
     }
 
     @Override
     public void close() throws Exception {
-
+        transport.close();
+        manager.stop();
     }
 }

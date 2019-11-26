@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.graph.client.async;
 
+import com.facebook.thrift.TBase;
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -15,6 +16,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.graph.ErrorCode;
+import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.RowValue;
 import com.vesoft.nebula.graph.client.ConnectionException;
 import com.vesoft.nebula.graph.client.NGQLException;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
+import com.vesoft.nebula.meta.client.async.entry.ListSpaceCallback;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import org.slf4j.Logger;
@@ -31,8 +35,6 @@ import org.slf4j.LoggerFactory;
 
 public class AsyncGraphClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientExample.class);
-    private static ListeningExecutorService EXECUTOR_SERVICE =
-        MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
     private static final String SPACE_NAME = "test";
 
@@ -73,57 +75,6 @@ public class AsyncGraphClientExample {
             + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
             + "$$.student.age AS Age, $$.student.gender AS Gender;";
 
-    private static FutureCallback<Optional<Integer>> executeCallback =
-        new FutureCallback<Optional<Integer>>() {
-            @Override
-            public void onSuccess(@Nullable Optional<Integer> integerOptional) {
-                if (integerOptional.isPresent()) {
-                    int code = integerOptional.get();
-                    if (code != ErrorCode.SUCCEEDED) {
-                        LOGGER.error("Execute Statement Failed");
-                        System.exit(-1);
-                    } else {
-                        LOGGER.info("Statement Successfully Executed");
-                    }
-                } else {
-                    LOGGER.error("Execute Statement Failed");
-                    System.exit(-1);
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                LOGGER.error(String.format("Execute Statement Error: %s", throwable.getMessage()));
-                System.exit(-1);
-            }
-        };
-
-    private static FutureCallback<Optional<ResultSet>> executeQueryCallback =
-        new FutureCallback<Optional<ResultSet>>() {
-            @Override
-            public void onSuccess(@Nullable Optional<ResultSet> resultSetOptional) {
-                if (resultSetOptional.isPresent()) {
-                    ResultSet resultSet = resultSetOptional.get();
-                    List<String> columns =
-                        resultSet.getColumns().stream().map(String::new).collect(
-                            Collectors.toList());
-                    LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(columns)));
-
-                    for (RowValue value : resultSet.getRows()) {
-                        LOGGER.info(String.format("ID: %d", value.columns.get(0).getId()));
-                    }
-                } else {
-                    LOGGER.error("Execute Query Statement Failed");
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                LOGGER.error(String.format("Execute Query Statement Error: %s",
-                    throwable.getMessage()));
-                System.exit(-1);
-            }
-        };
 
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
@@ -134,78 +85,64 @@ public class AsyncGraphClientExample {
         try (AsyncGraphClient client = new AsyncGraphClientImpl(args[0],
             Integer.parseInt(args[1]))) {
             client.connect("user", "password");
-            ListenableFuture<Optional<Integer>> switchSpaceCodeFuture =
-                client.switchSpace(SPACE_NAME);
-            Futures.addCallback(
-                switchSpaceCodeFuture,
-                new FutureCallback<Optional<Integer>>() {
-                    @Override
-                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
-                        if (integerOptional.isPresent()) {
-                            int code = integerOptional.get();
-                            if (code != ErrorCode.SUCCEEDED) {
-                                LOGGER.error(String.format("Switch Space %s Failed",
-                                    SPACE_NAME));
-                                LOGGER.error(String.format("Please confirm %s have been "
-                                    + "created", SPACE_NAME));
-                                System.exit(-1);
-                            } else {
-                                LOGGER.info(String.format("Successfully Switched to Space %s",
-                                    SPACE_NAME));
-                            }
-                        } else {
-                            LOGGER.error("Switch Space Failed. No Code Returned");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        LOGGER.error(String.format("Switch Space Error: %s",
-                            throwable.getMessage()));
-                    }
-                },
-                EXECUTOR_SERVICE);
+            ExecuteCallback switchSpaceCallback = client.switchSpace(SPACE_NAME);
+            Optional<TBase> respOption = Optional.absent();
+            while (!switchSpaceCallback.checkReady()) {
+                respOption = switchSpaceCallback.getResult();
+            }
 
             for (String statement : createTags) {
-                ListenableFuture<Optional<Integer>> executeCodeFuture =
-                    client.execute(statement);
-                Futures.addCallback(executeCodeFuture, executeCallback, EXECUTOR_SERVICE);
+                client.execute(statement);
             }
 
             for (String statement : createEdges) {
-                ListenableFuture<Optional<Integer>> executeCodeFuture =
-                    client.execute(statement);
-                Futures.addCallback(executeCodeFuture, executeCallback, EXECUTOR_SERVICE);
+                client.execute(statement);
             }
 
             for (String statement : insertVertices) {
-                ListenableFuture<Optional<Integer>> executeCodeFuture =
-                    client.execute(statement);
-                Futures.addCallback(executeCodeFuture, executeCallback, EXECUTOR_SERVICE);
+                client.execute(statement);
             }
 
             for (String statement : insertEdges) {
-                ListenableFuture<Optional<Integer>> executeCodeFuture =
-                    client.execute(statement);
-                Futures.addCallback(executeCodeFuture, executeCallback, EXECUTOR_SERVICE);
+                client.execute(statement);
             }
 
-            try {
-                ListenableFuture<Optional<ResultSet>> executeQueryCodeFuture =
-                    client.executeQuery(simpleQuery);
-                Futures.addCallback(executeQueryCodeFuture, executeQueryCallback,
-                    EXECUTOR_SERVICE);
-            } catch (ConnectionException | NGQLException | TException e) {
-                LOGGER.error(String.format("Query Failed: %s", e.getMessage()));
+            ExecuteCallback callback = client.execute(simpleQuery);
+            Optional<TBase> simpleResp = Optional.absent();
+            while (!callback.checkReady()) {
+                simpleResp = callback.getResult();
+            }
+            if (simpleResp.isPresent()) {
+                ExecutionResponse resp = (ExecutionResponse) simpleResp.get();
+                int code = resp.getError_code();
+                if (code == ErrorCode.SUCCEEDED) {
+                    ResultSet resultSet = new ResultSet(resp.getColumn_names(), resp.getRows());
+                    LOGGER.info(resultSet.toString());
+                } else {
+                    LOGGER.error("Execute error: " + resp.getError_msg());
+                    throw new NGQLException(code);
+                }
+            } else {
+                LOGGER.error("Execute error");
             }
 
-            try {
-                ListenableFuture<Optional<ResultSet>> executeQueryCodeFuture =
-                    client.executeQuery(complexQuery);
-                Futures.addCallback(executeQueryCodeFuture, executeQueryCallback,
-                    EXECUTOR_SERVICE);
-            } catch (ConnectionException | NGQLException | TException e) {
-                LOGGER.error(String.format("Query Failed: %s", e.getMessage()));
+            callback = client.execute(complexQuery);
+            Optional<TBase> complexResp = Optional.absent();
+            while (!callback.checkReady()) {
+                complexResp = callback.getResult();
+            }
+            if (complexResp.isPresent()) {
+                ExecutionResponse resp = (ExecutionResponse) complexResp.get();
+                int code = resp.getError_code();
+                if (code == ErrorCode.SUCCEEDED) {
+                    ResultSet resultSet = new ResultSet(resp.getColumn_names(), resp.getRows());
+                    LOGGER.info(resultSet.toString());
+                } else {
+                    LOGGER.error("Execute error: " + resp.getError_msg());
+                    throw new NGQLException(code);
+                }
+            } else {
+                LOGGER.error("Execute error");
             }
         }
 

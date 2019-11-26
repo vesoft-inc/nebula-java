@@ -9,42 +9,26 @@ package com.vesoft.nebula.meta.client.async;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.facebook.thrift.TException;
+import com.facebook.thrift.async.TAsyncClientManager;
 import com.facebook.thrift.protocol.TBinaryProtocol;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TSocket;
-import com.facebook.thrift.transport.TTransport;
-import com.facebook.thrift.transport.TTransportException;
-import com.google.common.base.Optional;
+import com.facebook.thrift.protocol.TProtocolFactory;
+import com.facebook.thrift.transport.*;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.meta.EdgeItem;
-import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.GetPartsAllocReq;
-import com.vesoft.nebula.meta.GetPartsAllocResp;
-import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListEdgesReq;
-import com.vesoft.nebula.meta.ListEdgesResp;
 import com.vesoft.nebula.meta.ListSpacesReq;
-import com.vesoft.nebula.meta.ListSpacesResp;
 import com.vesoft.nebula.meta.ListTagsReq;
-import com.vesoft.nebula.meta.ListTagsResp;
 import com.vesoft.nebula.meta.MetaService;
-import com.vesoft.nebula.meta.TagItem;
-import com.vesoft.nebula.meta.client.entry.GetPartsAllocResult;
-import com.vesoft.nebula.meta.client.entry.ListEdgesResult;
-import com.vesoft.nebula.meta.client.entry.ListSpaceResult;
-import com.vesoft.nebula.meta.client.entry.ListTagsResult;
+import com.vesoft.nebula.meta.client.async.entry.GetPartsAllocCallback;
+import com.vesoft.nebula.meta.client.async.entry.ListEdgesCallback;
+import com.vesoft.nebula.meta.client.async.entry.ListSpaceCallback;
+import com.vesoft.nebula.meta.client.async.entry.ListTagsCallback;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,11 +37,11 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
     private static final Logger LOGGER =
         LoggerFactory.getLogger(AsyncMetaClientImpl.class.getName());
 
-    private MetaService.Client client;
+    private MetaService.AsyncClient client;
 
-    private TTransport transport = null;
+    private TNonblockingTransport transport = null;
 
-    private ListeningExecutorService threadPool;
+    private TAsyncClientManager manager;
 
 
     private final List<HostAndPort> addresses;
@@ -83,7 +67,6 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         this.addresses = addresses;
         this.connectionRetry = connectionRetry;
         this.timeout = timeout;
-        this.threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
         if (!connect()) {
             LOGGER.error("Connection Failed.");
         }
@@ -104,142 +87,74 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
             Random random = new Random(System.currentTimeMillis());
             int position = random.nextInt(addresses.size());
             HostAndPort address = addresses.get(position);
-            transport = new TSocket(address.getHost(), address.getPort(), timeout);
-            TProtocol protocol = new TBinaryProtocol(transport);
             try {
-                transport.open();
-                client = new MetaService.Client(protocol);
+                manager = new TAsyncClientManager();
+                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                TProtocolFactory protocol = new TBinaryProtocol.Factory();
+                client = new MetaService.AsyncClient(protocol, manager, transport);
                 return true;
             } catch (TTransportException tte) {
                 LOGGER.error("Connect failed: " + tte.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return false;
     }
 
     @Override
-    public ListenableFuture<Optional<ListSpaceResult>> listSpaces() {
-        return threadPool.submit(new Callable<Optional<ListSpaceResult>>() {
-            @Override
-            public Optional<ListSpaceResult> call() {
-                ListSpacesReq request = new ListSpacesReq();
-                ListSpacesResp response;
-                try {
-                    response = client.listSpaces(request);
-                } catch (TException e) {
-                    LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
-                    return Optional.absent();
-                }
-                if (response.getCode() != ErrorCode.SUCCEEDED) {
-                    LOGGER.error(String.format("List Spaces Error Code: %s", response.getCode()));
-                    return Optional.absent();
-                }
-                ListSpaceResult result = new ListSpaceResult();
-                for (IdName space : response.getSpaces()) {
-                    result.add(space.id, space.name);
-                }
-                return Optional.of(result);
-            }
-        });
+    public ListSpaceCallback listSpaces() {
+        ListSpaceCallback callback = new ListSpaceCallback();
+        try {
+            client.listSpaces(new ListSpacesReq(), callback);
+        } catch (TException e) {
+            LOGGER.error(String.format("List Space Call Error: %s", e.getMessage()));
+        }
+        return callback;
     }
 
     @Override
-    public ListenableFuture<Optional<GetPartsAllocResult>> getPartsAlloc(int spaceId) {
-        return threadPool.submit(new Callable<Optional<GetPartsAllocResult>>() {
-            @Override
-            public Optional<GetPartsAllocResult> call() throws Exception {
-                GetPartsAllocReq request = new GetPartsAllocReq();
-                request.setSpace_id(spaceId);
-                GetPartsAllocResp response;
-                try {
-                    response = client.getPartsAlloc(request);
-                } catch (TException e) {
-                    LOGGER.error(String.format("Get Parts Error: %s", e.getMessage()));
-                    return Optional.absent();
-                }
-
-                if (response.getCode() == ErrorCode.SUCCEEDED) {
-                    Map<Integer, List<HostAddr>> part = response.getParts();
-                    GetPartsAllocResult result = new GetPartsAllocResult();
-                    for (Map.Entry<Integer, List<HostAddr>> entry : part.entrySet()) {
-                        result.add(entry.getKey(), entry.getValue());
-                    }
-                    return Optional.of(result);
-                } else {
-                    LOGGER.error(String.format("Get Parts Error Code: %s", response.getCode()));
-                    return Optional.absent();
-                }
-            }
-        });
+    public GetPartsAllocCallback getPartsAlloc(int spaceId) {
+        GetPartsAllocCallback callback = new GetPartsAllocCallback();
+        GetPartsAllocReq req = new GetPartsAllocReq();
+        req.setSpace_id(spaceId);
+        try {
+            client.getPartsAlloc(req, callback);
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Parts Alloc Call Error: %s", e.getMessage()));
+        }
+        return callback;
     }
 
     @Override
-    public ListenableFuture<Optional<ListTagsResult>> listTags(int spaceId) {
-        return threadPool.submit(new Callable<Optional<ListTagsResult>>() {
-            @Override
-            public Optional<ListTagsResult> call() throws Exception {
-                ListTagsReq request = new ListTagsReq();
-                request.setSpace_id(spaceId);
-
-                ListTagsResp response;
-                try {
-                    response = client.listTags(request);
-                } catch (TException e) {
-                    LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
-                    return Optional.absent();
-                }
-                if (response.getCode() == ErrorCode.SUCCEEDED) {
-                    List<TagItem> tags = response.getTags();
-                    ListTagsResult result = new ListTagsResult();
-                    if (tags != null) {
-                        for (TagItem tagItem : tags) {
-                            result.add(tagItem.getTag_name(), tagItem);
-                        }
-                        return Optional.of(result);
-                    }
-                } else {
-                    LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-                }
-                return Optional.absent();
-            }
-        });
+    public ListTagsCallback listTags(int spaceId) {
+        ListTagsCallback callback = new ListTagsCallback();
+        ListTagsReq req = new ListTagsReq();
+        req.setSpace_id(spaceId);
+        try {
+            client.listTags(req, callback);
+        } catch (TException e) {
+            LOGGER.error(String.format("List Tags Call Error: %s", e.getMessage()));
+        }
+        return callback;
     }
 
     @Override
-    public ListenableFuture<Optional<ListEdgesResult>> listEdges(int spaceId) {
-        return threadPool.submit(new Callable<Optional<ListEdgesResult>>() {
-            @Override
-            public Optional<ListEdgesResult> call() throws Exception {
-                ListEdgesReq request = new ListEdgesReq();
-                request.setSpace_id(spaceId);
-
-                ListEdgesResp response;
-                try {
-                    response = client.listEdges(request);
-                } catch (TException e) {
-                    LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
-                    return Optional.absent();
-                }
-
-                if (response.getCode() == ErrorCode.SUCCEEDED) {
-                    List<EdgeItem> edges = response.getEdges();
-                    ListEdgesResult result = new ListEdgesResult();
-                    if (edges != null) {
-                        for (EdgeItem edgeItem : edges) {
-                            result.add(edgeItem.getEdge_name(), edgeItem);
-                        }
-                        return Optional.of(result);
-                    }
-                } else {
-                    LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-                }
-                return Optional.absent();
-            }
-        });
+    public ListEdgesCallback listEdges(int spaceId) {
+        ListEdgesCallback callback = new ListEdgesCallback();
+        ListEdgesReq req = new ListEdgesReq();
+        req.setSpace_id(spaceId);
+        try {
+            client.listEdges(req, callback);
+        } catch (TException e) {
+            LOGGER.error(String.format("List Edges Call Error: %s", e.getMessage()));
+        }
+        return callback;
     }
 
     @Override
     public void close() throws Exception {
-
+        transport.close();
+        manager.stop();
     }
 }
