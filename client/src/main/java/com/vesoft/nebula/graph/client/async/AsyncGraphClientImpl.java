@@ -20,17 +20,22 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
+import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
 import com.vesoft.nebula.graph.client.async.entry.AuthenticateCallback;
 import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
@@ -40,8 +45,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientImpl.class);
 
-    private ListeningExecutorService threadPool =
-            MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+    private ListeningExecutorService service;
 
     private final List<HostAndPort> addresses;
     private final int connectionRetry;
@@ -69,9 +73,11 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+                    host, port));
             }
         });
+
+        service = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
         this.addresses = addresses;
         this.timeout = timeout;
@@ -86,7 +92,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     public AsyncGraphClientImpl(List<HostAndPort> addresses) {
         this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE,
-                DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -97,7 +103,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     public AsyncGraphClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
-                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -107,7 +113,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      * @return The ErrorCode of status, 0 is succeeded.
      */
     @Override
-    public ExecuteCallback switchSpace(String space) {
+    public ListenableFuture<Optional<Integer>> switchSpace(String space) {
         return execute(String.format("USE %s", space));
     }
 
@@ -171,21 +177,66 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      * @param statement The query sentence.
      * @return The ErrorCode of status, 0 is succeeded.
      */
-    public ExecuteCallback execute(String statement) {
-        ExecuteCallback callback = new ExecuteCallback();
-        int retry = executionRetry;
-        while (retry-- > 0) {
-            try {
-                client.execute(sessionID, statement, callback);
-            } catch (TException e) {
-                e.printStackTrace();
+    public ListenableFuture<Optional<Integer>> execute(String statement) {
+        return service.submit(new Callable<Optional<Integer>>() {
+            @Override
+            public Optional<Integer> call() throws Exception {
+                ExecuteCallback callback = new ExecuteCallback();
+                try {
+                    client.execute(sessionID, statement, callback);
+                } catch (TException e) {
+                    e.printStackTrace();
+                }
+                while (!callback.checkReady()) {
+                    Thread.sleep(100);
+                }
+                if (callback.getResult().isPresent()) {
+                    ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
+                    if (resp.getError_code() != ErrorCode.SUCCEEDED) {
+                        LOGGER.error("execute error: " + resp.getError_msg());
+                    }
+                    return Optional.of(resp.getError_code());
+                } else {
+                    return Optional.absent();
+                }
             }
-        }
-        return callback;
+        });
+    }
+
+    @Override
+    public ListenableFuture<Optional<ResultSet>> executeQuery(String statement) {
+        return service.submit(new Callable<Optional<ResultSet>>() {
+            @Override
+            public Optional<ResultSet> call() throws Exception {
+                ExecuteCallback callback = new ExecuteCallback();
+                try {
+                    client.execute(sessionID, statement, callback);
+                } catch (TException e) {
+                    e.printStackTrace();
+                }
+                while (!callback.checkReady()) {
+                    Thread.sleep(100);
+                }
+                if (callback.getResult().isPresent()) {
+                    ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
+                    int code = resp.getError_code();
+                    if (code == ErrorCode.SUCCEEDED) {
+                        ResultSet rs = new ResultSet(resp.getColumn_names(), resp.getRows());
+                        return Optional.of(rs);
+                    } else {
+                        LOGGER.error("Execute error: " + resp.getError_msg());
+                        throw new NGQLException(code);
+                    }
+                } else {
+                    return Optional.absent();
+                }
+            }
+        });
     }
 
     @Override
     public void close() throws Exception {
+        service.shutdown();
         transport.close();
         manager.stop();
     }

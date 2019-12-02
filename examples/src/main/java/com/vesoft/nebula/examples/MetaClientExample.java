@@ -14,7 +14,7 @@ public class MetaClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientExample.class);
 
     public static void main(String[] args) {
-        MetaClientImpl metaClient = new MetaClientImpl("127.0.0.1", 28910);
+        MetaClientImpl metaClient = new MetaClientImpl("127.0.0.1", 45500);
         LOGGER.info(metaClient.getPart(1, 1).toString());
         LOGGER.info(metaClient.getTagId(1, "test").toString());
         LOGGER.info(metaClient.getEdgeType(1, "test").toString());

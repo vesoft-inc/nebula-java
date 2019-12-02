@@ -6,22 +6,30 @@
 
 package com.vesoft.nebula.examples;
 
-import com.facebook.thrift.TBase;
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
 import com.vesoft.nebula.graph.ErrorCode;
-import com.vesoft.nebula.graph.ExecutionResponse;
-import com.vesoft.nebula.graph.client.NGQLException;
 import com.vesoft.nebula.graph.client.ResultSet;
 
 import com.vesoft.nebula.graph.client.async.AsyncGraphClient;
 import com.vesoft.nebula.graph.client.async.AsyncGraphClientImpl;
-import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
 
+import java.util.concurrent.Executors;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class AsyncGraphClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientExample.class);
+
+    private static ListeningExecutorService service;
 
     private static final String SPACE_NAME = "test";
 
@@ -32,7 +40,8 @@ public class AsyncGraphClientExample {
     };
 
     private static final String[] createEdges = {
-        "CREATE EDGE like(likeness double);", "CREATE EDGE select(grade int);"
+        "CREATE EDGE like(likeness double);",
+        "CREATE EDGE select(grade int);"
     };
 
     private static final String[] insertVertices = {
@@ -69,68 +78,154 @@ public class AsyncGraphClientExample {
                 + "<port>");
             return;
         }
+        service = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+
         try (AsyncGraphClient client = new AsyncGraphClientImpl(args[0],
             Integer.parseInt(args[1]))) {
             client.connect("user", "password");
-            ExecuteCallback switchSpaceCallback = client.switchSpace(SPACE_NAME);
-            Optional<TBase> respOption = Optional.absent();
-            while (!switchSpaceCallback.checkReady()) {
-                respOption = switchSpaceCallback.getResult();
-            }
+            ListenableFuture<Optional<Integer>> listenableFuture = client.switchSpace(SPACE_NAME);
+            Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
+                @Override
+                public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                    if (integerOptional.isPresent()) {
+                        if (integerOptional.get() == ErrorCode.SUCCEEDED) {
+                            LOGGER.info("Switch Space Succeed");
+                        } else {
+                            LOGGER.error(String.format("Switch Space Error: %d",
+                                integerOptional.get()));
+                        }
+                    } else {
+                        LOGGER.error("Switch Space Error");
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    LOGGER.error("Switch Space Error");
+                }
+            }, service);
 
             for (String statement : createTags) {
-                client.execute(statement);
+                listenableFuture = client.execute(statement);
+                Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
+                    @Override
+                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                        if (integerOptional.isPresent()
+                            && integerOptional.get() == ErrorCode.SUCCEEDED) {
+                            LOGGER.info("Succeed");
+                        } else {
+                            LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                            System.exit(-1);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                        System.exit(-1);
+                    }
+                }, service);
             }
 
             for (String statement : createEdges) {
-                client.execute(statement);
+                listenableFuture = client.execute(statement);
+                Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
+                    @Override
+                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                        if (integerOptional.isPresent()
+                            && integerOptional.get() == ErrorCode.SUCCEEDED) {
+                            LOGGER.info("Succeed");
+                        } else {
+                            LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                            System.exit(-1);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                        System.exit(-1);
+                    }
+                }, service);
             }
 
             for (String statement : insertVertices) {
-                client.execute(statement);
+                listenableFuture = client.execute(statement);
+                Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
+                    @Override
+                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                        if (integerOptional.isPresent()
+                            && integerOptional.get() == ErrorCode.SUCCEEDED) {
+                            LOGGER.info("Succeed");
+                        } else {
+                            LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                            System.exit(-1);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                        System.exit(-1);
+                    }
+                }, service);
             }
 
             for (String statement : insertEdges) {
-                client.execute(statement);
+                listenableFuture = client.execute(statement);
+                Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
+                    @Override
+                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                        if (integerOptional.isPresent()
+                            && integerOptional.get() == ErrorCode.SUCCEEDED) {
+                            LOGGER.info("Succeed");
+                        } else {
+                            LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                            System.exit(-1);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                        System.exit(-1);
+                    }
+                }, service);
             }
 
-            ExecuteCallback callback = client.execute(simpleQuery);
-            Optional<TBase> simpleResp = Optional.absent();
-            while (!callback.checkReady()) {
-                simpleResp = callback.getResult();
-            }
-            if (simpleResp.isPresent()) {
-                ExecutionResponse resp = (ExecutionResponse) simpleResp.get();
-                int code = resp.getError_code();
-                if (code == ErrorCode.SUCCEEDED) {
-                    ResultSet resultSet = new ResultSet(resp.getColumn_names(), resp.getRows());
-                    LOGGER.info(resultSet.toString());
-                } else {
-                    LOGGER.error("Execute error: " + resp.getError_msg());
-                    throw new NGQLException(code);
+            ListenableFuture<Optional<ResultSet>> queryFuture = client.executeQuery(simpleQuery);
+            Futures.addCallback(queryFuture, new FutureCallback<Optional<ResultSet>>() {
+                @Override
+                public void onSuccess(@Nullable Optional<ResultSet> resultSetOptional) {
+                    if (resultSetOptional.isPresent()) {
+                        LOGGER.info(resultSetOptional.get().toString());
+                    } else {
+                        LOGGER.error("Execute Failed");
+                    }
                 }
-            } else {
-                LOGGER.error("Execute error");
-            }
 
-            callback = client.execute(complexQuery);
-            Optional<TBase> complexResp = Optional.absent();
-            while (!callback.checkReady()) {
-                complexResp = callback.getResult();
-            }
-            if (complexResp.isPresent()) {
-                ExecutionResponse resp = (ExecutionResponse) complexResp.get();
-                int code = resp.getError_code();
-                if (code == ErrorCode.SUCCEEDED) {
-                    ResultSet resultSet = new ResultSet(resp.getColumn_names(), resp.getRows());
-                    LOGGER.info(resultSet.toString());
-                } else {
-                    LOGGER.error("Execute error: " + resp.getError_msg());
-                    throw new NGQLException(code);
+                @Override
+                public void onFailure(Throwable throwable) {
+                    LOGGER.error("Execute Error");
                 }
-            } else {
-                LOGGER.error("Execute error");
-            }
+            }, service);
+
+            queryFuture = client.executeQuery(complexQuery);
+            Futures.addCallback(queryFuture, new FutureCallback<Optional<ResultSet>>() {
+                @Override
+                public void onSuccess(@Nullable Optional<ResultSet> resultSetOptional) {
+                    if (resultSetOptional.isPresent()) {
+                        LOGGER.info(resultSetOptional.get().toString());
+                    } else {
+                        LOGGER.error("Execute Failed");
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    LOGGER.error("Execute Error");
+                }
+            }, service);
         }
     }
 }

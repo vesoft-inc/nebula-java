@@ -19,7 +19,7 @@ import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Pair;
 import com.vesoft.nebula.meta.ErrorCode;
-import com.vesoft.nebula.meta.client.MetaClientImpl;
+import com.vesoft.nebula.meta.client.MetaClient;
 import com.vesoft.nebula.storage.ExecResponse;
 import com.vesoft.nebula.storage.GeneralResponse;
 import com.vesoft.nebula.storage.GetRequest;
@@ -57,7 +57,7 @@ public class StorageClientImpl implements StorageClient {
 
     private final int connectionRetry;
     private final int timeout;
-    private MetaClientImpl metaClient;
+    private MetaClient metaClient;
     private Map<Integer, Map<Integer, HostAddr>> leaders;
     private Map<Integer, Map<Integer, List<HostAddr>>> partsAlloc;
 
@@ -86,7 +86,7 @@ public class StorageClientImpl implements StorageClient {
      *
      * @param metaClient The Nebula MetaClient
      */
-    public StorageClientImpl(MetaClientImpl metaClient) {
+    public StorageClientImpl(MetaClient metaClient) {
         this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
         this.metaClient = metaClient;
         this.partsAlloc = this.metaClient.getParts();

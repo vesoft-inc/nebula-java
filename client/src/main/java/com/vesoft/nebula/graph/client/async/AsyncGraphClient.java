@@ -6,9 +6,11 @@
 
 package com.vesoft.nebula.graph.client.async;
 
-import com.vesoft.nebula.Client;
-import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
 
+import com.vesoft.nebula.Client;
+import com.vesoft.nebula.graph.client.ResultSet;
 
 public interface AsyncGraphClient extends Client {
 
@@ -18,7 +20,7 @@ public interface AsyncGraphClient extends Client {
      * @param space space name.
      * @return
      */
-    public ExecuteCallback switchSpace(String space);
+    public ListenableFuture<Optional<Integer>> switchSpace(String space);
 
     /**
      * Connect to nebula query engine.
@@ -35,5 +37,13 @@ public interface AsyncGraphClient extends Client {
      * @param statement execution statement.
      * @return
      */
-    public ExecuteCallback execute(String statement);
+    public ListenableFuture<Optional<Integer>> execute(String statement);
+
+    /**
+     * Execute the query statement and return result set.
+     *
+     * @param statement execution statement.
+     * @return
+     */
+    public ListenableFuture<Optional<ResultSet>> executeQuery(String statement);
 }

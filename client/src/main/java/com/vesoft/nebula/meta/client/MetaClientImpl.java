@@ -194,7 +194,7 @@ public class MetaClientImpl implements MetaClient {
             return false;
         }
 
-        listSpaces();
+        this.spaces = listSpaces();
         for (IdName space : spaces) {
             int spaceId = space.getId().getSpace_id();
             spaceNames.put(space.getName(), spaceId);
@@ -205,7 +205,8 @@ public class MetaClientImpl implements MetaClient {
         return true;
     }
 
-    private boolean connect() {
+    @Override
+    public boolean connect() {
         int retry = connectionRetry;
         while (retry-- != 0) {
             Random random = new Random(System.currentTimeMillis());
@@ -216,6 +217,7 @@ public class MetaClientImpl implements MetaClient {
             try {
                 transport.open();
                 client = new MetaService.Client(protocol);
+                return true;
             } catch (TTransportException transportException) {
                 LOGGER.error("Connect failed: " + transportException.getMessage());
             } catch (TException e) {
@@ -230,22 +232,21 @@ public class MetaClientImpl implements MetaClient {
      *
      * @return
      */
-    public boolean listSpaces() {
+    public List<IdName> listSpaces() {
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response;
         try {
             response = client.listSpaces(request);
         } catch (TException e) {
             LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
-            return false;
+            return null;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
-            this.spaces = response.getSpaces();
+            return response.getSpaces();
         } else {
             LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
-            return false;
+            return null;
         }
-        return true;
     }
 
     @Override

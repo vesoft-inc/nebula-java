@@ -14,6 +14,7 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
+
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
@@ -25,6 +26,7 @@ import com.vesoft.nebula.graph.GraphService;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +62,7 @@ public class GraphClientImpl implements GraphClient {
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+                    host, port));
             }
         });
 
@@ -77,7 +79,7 @@ public class GraphClientImpl implements GraphClient {
      */
     public GraphClientImpl(List<HostAndPort> addresses) {
         this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE,
-                DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -88,7 +90,7 @@ public class GraphClientImpl implements GraphClient {
      */
     public GraphClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
-                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -119,7 +121,7 @@ public class GraphClientImpl implements GraphClient {
 
                 if (result.getError_code() != ErrorCode.SUCCEEDED) {
                     LOGGER.error(String.format("Connect address %s failed : %s",
-                            address.toString(), result.getError_msg()));
+                        address.toString(), result.getError_msg()));
                 } else {
                     sessionID = result.getSession_id();
                     return ErrorCode.SUCCEEDED;
@@ -179,7 +181,7 @@ public class GraphClientImpl implements GraphClient {
      */
     @Override
     public ResultSet executeQuery(String statement) throws ConnectionException,
-            NGQLException, TException {
+        NGQLException, TException {
         if (!checkTransportOpened(transport)) {
             LOGGER.error("Thrift rpc call failed");
             throw new ConnectionException();
@@ -189,7 +191,7 @@ public class GraphClientImpl implements GraphClient {
         int code = executionResponse.getError_code();
         if (code == ErrorCode.SUCCEEDED) {
             return new ResultSet(executionResponse.getColumn_names(),
-                    executionResponse.getRows());
+                executionResponse.getRows());
         } else {
             LOGGER.error("Execute error: " + executionResponse.getError_msg());
             throw new NGQLException(code);

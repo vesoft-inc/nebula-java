@@ -6,20 +6,42 @@
 
 package com.vesoft.nebula.meta.client.async;
 
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.Client;
-import com.vesoft.nebula.meta.client.async.entry.GetPartsAllocCallback;
-import com.vesoft.nebula.meta.client.async.entry.ListEdgesCallback;
-import com.vesoft.nebula.meta.client.async.entry.ListSpaceCallback;
-import com.vesoft.nebula.meta.client.async.entry.ListTagsCallback;
+import com.vesoft.nebula.meta.GetPartsAllocResp;
+import com.vesoft.nebula.meta.ListEdgesResp;
+import com.vesoft.nebula.meta.ListSpacesResp;
+import com.vesoft.nebula.meta.ListTagsResp;
 
 public interface AsyncMetaClient extends Client {
+
+    /**
+     * connect
+     *
+     * @return boolean connection
+     */
+    public boolean connect();
+
+    /**
+     * Initialize Async Meta client
+     */
+    public void init();
 
     /**
      * List all spaces
      *
      * @return callback ListSpaceCallback
      */
-    public ListSpaceCallback listSpaces();
+    public ListenableFuture<Optional<ListSpacesResp>> listSpaces();
+
+    /**
+     * Get Parts Allocations
+     *
+     * @param spaceName space name
+     * @return
+     */
+    public ListenableFuture<Optional<GetPartsAllocResp>> getPartsAlloc(String spaceName);
 
     /**
      * Get Parts Allocations
@@ -27,7 +49,15 @@ public interface AsyncMetaClient extends Client {
      * @param spaceId space ID
      * @return
      */
-    public GetPartsAllocCallback getPartsAlloc(int spaceId);
+    public ListenableFuture<Optional<GetPartsAllocResp>> getPartsAlloc(int spaceId);
+
+    /**
+     * List Tags
+     *
+     * @param spaceName space name
+     * @return
+     */
+    public ListenableFuture<Optional<ListTagsResp>> listTags(String spaceName);
 
     /**
      * List Tags
@@ -35,7 +65,15 @@ public interface AsyncMetaClient extends Client {
      * @param spaceId space ID
      * @return
      */
-    public ListTagsCallback listTags(int spaceId);
+    public ListenableFuture<Optional<ListTagsResp>> listTags(int spaceId);
+
+    /**
+     * List Edges
+     *
+     * @param spaceName space name
+     * @return
+     */
+    public ListenableFuture<Optional<ListEdgesResp>> listEdges(String spaceName);
 
     /**
      * List Edges
@@ -43,6 +81,5 @@ public interface AsyncMetaClient extends Client {
      * @param spaceId space ID
      * @return
      */
-    public ListEdgesCallback listEdges(int spaceId);
-
+    public ListenableFuture<Optional<ListEdgesResp>> listEdges(int spaceId);
 }
