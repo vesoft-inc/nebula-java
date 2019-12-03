@@ -47,7 +47,7 @@ Execute a query:
 int code = client.execute("CREATE TAG course(name string, credits int);");
 ```
 
-If query executes seccuessfully, `0` will be returned. For a more complete example, refer to [Graph Java client](xxx).
+If query executes seccuessfully, `0` will be returned. For a more complete example, refer to [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
 
 <!-- Not Ready RC2 Rlease
 ### Meta Client Example
