@@ -19,9 +19,11 @@ Depending on the version of Nebula Graph that you are connecting to, you will ha
 When using Maven, add this to your pom.xml file:
 
 ```
-<groupId>com.vesoft</groupId>
-<artifactId>nebula</artifactId>
-<version>${VERSION}</version>
+<dependency>
+    <groupId>com.vesoft</groupId>
+    <artifactId>nebula</artifactId>
+    <version>${VERSION}</version>
+</dependency>
 ```
 
 change ${VERSION} here. For more versions, please refer to xxx.
