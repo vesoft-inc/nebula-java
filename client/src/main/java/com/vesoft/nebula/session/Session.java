@@ -4,11 +4,18 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula;
+package com.vesoft.nebula.session;
 
-public interface SessionFactory<T extends Session> {
+import java.io.Closeable;
+
+/**
+ *
+ */
+public interface Session extends Closeable {
+
     /**
-     * @return
+     *
      */
-    public T create();
+    public void connect();
+
 }

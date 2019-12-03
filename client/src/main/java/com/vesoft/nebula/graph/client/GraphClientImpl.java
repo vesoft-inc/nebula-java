@@ -18,16 +18,12 @@ import com.facebook.thrift.transport.TTransportException;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
-
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
-
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,14 +54,16 @@ public class GraphClientImpl implements GraphClient {
                            int executionRetry) {
         checkArgument(timeout > 0);
         checkArgument(connectionRetry > 0);
-        addresses.forEach(address -> {
+
+
+        for (HostAndPort address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                         host, port));
             }
-        });
+        }
 
         this.addresses = addresses;
         this.timeout = timeout;
@@ -178,7 +176,7 @@ public class GraphClientImpl implements GraphClient {
      * Execute the query sentence which will return a ResultSet.
      *
      * @param statement The query sentence.
-     * @return The ErrorCode of status, 0 is succeeded.
+     * @return The result set of the query sentence.
      */
     @Override
     public ResultSet executeQuery(String statement) throws ConnectionException,
@@ -200,13 +198,12 @@ public class GraphClientImpl implements GraphClient {
     }
 
     private boolean checkTransportOpened(TTransport transport) {
-        return !Objects.isNull(transport) && transport.isOpen();
+        return transport != null && transport.isOpen();
     }
 
     /**
      * Sign out from Graph Services.
      */
-    @Override
     public void close() {
         if (!checkTransportOpened(transport)) {
             return;
