@@ -27,89 +27,89 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, Comparable<RemoveHostsReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("RemoveHostsReq");
-  private static final TField HOSTS_FIELD_DESC = new TField("hosts", TType.LIST, (short)1);
+public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListPartsReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListPartsReq");
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
 
-  public List<com.vesoft.nebula.HostAddr> hosts;
-  public static final int HOSTS = 1;
+  public int space_id;
+  public static final int SPACE_ID = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(HOSTS, new FieldMetaData("hosts", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(RemoveHostsReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListPartsReq.class, metaDataMap);
   }
 
-  public RemoveHostsReq() {
+  public ListPartsReq() {
   }
 
-  public RemoveHostsReq(
-    List<com.vesoft.nebula.HostAddr> hosts)
+  public ListPartsReq(
+    int space_id)
   {
     this();
-    this.hosts = hosts;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public RemoveHostsReq(RemoveHostsReq other) {
-    if (other.isSetHosts()) {
-      this.hosts = TBaseHelper.deepCopy(other.hosts);
-    }
+  public ListPartsReq(ListPartsReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
   }
 
-  public RemoveHostsReq deepCopy() {
-    return new RemoveHostsReq(this);
+  public ListPartsReq deepCopy() {
+    return new ListPartsReq(this);
   }
 
   @Deprecated
-  public RemoveHostsReq clone() {
-    return new RemoveHostsReq(this);
+  public ListPartsReq clone() {
+    return new ListPartsReq(this);
   }
 
-  public List<com.vesoft.nebula.HostAddr>  getHosts() {
-    return this.hosts;
+  public int  getSpace_id() {
+    return this.space_id;
   }
 
-  public RemoveHostsReq setHosts(List<com.vesoft.nebula.HostAddr> hosts) {
-    this.hosts = hosts;
+  public ListPartsReq setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     return this;
   }
 
-  public void unsetHosts() {
-    this.hosts = null;
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
   }
 
-  // Returns true if field hosts is set (has been assigned a value) and false otherwise
-  public boolean isSetHosts() {
-    return this.hosts != null;
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setHostsIsSet(boolean value) {
-    if (!value) {
-      this.hosts = null;
-    }
+  public void setSpace_idIsSet(boolean value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case HOSTS:
+    case SPACE_ID:
       if (value == null) {
-        unsetHosts();
+        unsetSpace_id();
       } else {
-        setHosts((List<com.vesoft.nebula.HostAddr>)value);
+        setSpace_id((Integer)value);
       }
       break;
 
@@ -120,8 +120,8 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case HOSTS:
-      return getHosts();
+    case SPACE_ID:
+      return new Integer(getSpace_id());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -131,8 +131,8 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case HOSTS:
-      return isSetHosts();
+    case SPACE_ID:
+      return isSetSpace_id();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -142,23 +142,23 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof RemoveHostsReq)
-      return this.equals((RemoveHostsReq)that);
+    if (that instanceof ListPartsReq)
+      return this.equals((ListPartsReq)that);
     return false;
   }
 
-  public boolean equals(RemoveHostsReq that) {
+  public boolean equals(ListPartsReq that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_hosts = true && this.isSetHosts();
-    boolean that_present_hosts = true && that.isSetHosts();
-    if (this_present_hosts || that_present_hosts) {
-      if (!(this_present_hosts && that_present_hosts))
+    boolean this_present_space_id = true;
+    boolean that_present_space_id = true;
+    if (this_present_space_id || that_present_space_id) {
+      if (!(this_present_space_id && that_present_space_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.hosts, that.hosts))
+      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
         return false;
     }
 
@@ -169,16 +169,16 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_hosts = true && (isSetHosts());
-    builder.append(present_hosts);
-    if (present_hosts)
-      builder.append(hosts);
+    boolean present_space_id = true;
+    builder.append(present_space_id);
+    if (present_space_id)
+      builder.append(space_id);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(RemoveHostsReq other) {
+  public int compareTo(ListPartsReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -189,11 +189,11 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -211,22 +211,10 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
       }
       switch (field.id)
       {
-        case HOSTS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list46 = iprot.readListBegin();
-              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list46.size));
-              for (int _i47 = 0; 
-                   (_list46.size < 0) ? iprot.peekList() : (_i47 < _list46.size); 
-                   ++_i47)
-              {
-                com.vesoft.nebula.HostAddr _elem48;
-                _elem48 = new com.vesoft.nebula.HostAddr();
-                _elem48.read(iprot);
-                this.hosts.add(_elem48);
-              }
-              iprot.readListEnd();
-            }
+        case SPACE_ID:
+          if (field.type == TType.I32) {
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -248,17 +236,9 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.hosts != null) {
-      oprot.writeFieldBegin(HOSTS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter49 : this.hosts)        {
-          _iter49.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -278,21 +258,17 @@ public class RemoveHostsReq implements TBase, java.io.Serializable, Cloneable, C
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("RemoveHostsReq");
+    StringBuilder sb = new StringBuilder("ListPartsReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("hosts");
+    sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHosts() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getHosts(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Pair;
+import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.client.MetaClientImpl;
 import com.vesoft.nebula.storage.ExecResponse;
@@ -26,17 +27,29 @@ import com.vesoft.nebula.storage.GetRequest;
 import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.ResultCode;
+import com.vesoft.nebula.storage.ScanEdgeRequest;
+import com.vesoft.nebula.storage.ScanEdgeResponse;
+import com.vesoft.nebula.storage.ScanVertexRequest;
+import com.vesoft.nebula.storage.ScanVertexResponse;
 import com.vesoft.nebula.storage.StorageService;
+import com.vesoft.nebula.storage.client.handler.ScanEdgeConsumer;
+import com.vesoft.nebula.storage.client.handler.ScanVertexConsumer;
 import com.vesoft.nebula.utils.IPv4IntTransformer;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.apache.commons.codec.digest.MurmurHash2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +69,9 @@ public class StorageClientImpl implements StorageClient {
     private MetaClientImpl metaClient;
     private Map<Integer, Map<Integer, HostAddr>> leaders;
     private Map<Integer, Map<Integer, List<HostAddr>>> partsAlloc;
+
+    private ScanEdgeConsumer scanEdgeConsumer;
+    private ScanVertexConsumer scanVertexConsumer;
 
     private ExecutorService threadPool;
 
@@ -85,8 +101,9 @@ public class StorageClientImpl implements StorageClient {
     public StorageClientImpl(MetaClientImpl metaClient) {
         this(Lists.<HostAndPort>newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
         this.metaClient = metaClient;
-        this.metaClient.init();
         this.partsAlloc = this.metaClient.getParts();
+        this.scanEdgeConsumer = new ScanEdgeConsumer(metaClient);
+        this.scanVertexConsumer = new ScanVertexConsumer(metaClient);
     }
 
     private StorageService.Client connect(HostAddr addr) {
@@ -216,6 +233,7 @@ public class StorageClientImpl implements StorageClient {
     private boolean doPut(int space, HostAddr leader, PutRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {
+            disconnect(leader);
             return false;
         }
 
@@ -225,19 +243,7 @@ public class StorageClientImpl implements StorageClient {
             try {
                 response = client.put(request);
                 if (!isSuccessfully(response)) {
-                    for (ResultCode code : response.result.getFailed_codes()) {
-                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
-                            HostAddr addr = code.getLeader();
-                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
-                                updateLeader(space, code.getPart_id(), newLeader);
-                                StorageService.Client newClient = connect(newLeader);
-                                if (newClient != null) {
-                                    client = newClient;
-                                }
-                            }
-                        }
-                    }
+                    handleResultCodes(response.result.failed_codes, space, client, leader);
                 } else {
                     return true;
                 }
@@ -245,7 +251,9 @@ public class StorageClientImpl implements StorageClient {
                 for (Integer part : request.parts.keySet()) {
                     invalidLeader(space, part);
                 }
+                disconnect(leader);
                 LOGGER.error(String.format("Put Failed: %s", e.getMessage()));
+                return false;
             }
         }
         return false;
@@ -353,6 +361,7 @@ public class StorageClientImpl implements StorageClient {
                                                 GetRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {
+            disconnect(leader);
             return Optional.absent();
         }
 
@@ -362,19 +371,7 @@ public class StorageClientImpl implements StorageClient {
             try {
                 response = client.get(request);
                 if (!isSuccessfully(response)) {
-                    for (ResultCode code : response.result.getFailed_codes()) {
-                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
-                            HostAddr addr = code.getLeader();
-                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
-                                updateLeader(space, code.getPart_id(), newLeader);
-                                StorageService.Client newClient = connect(newLeader);
-                                if (newClient != null) {
-                                    client = newClient;
-                                }
-                            }
-                        }
-                    }
+                    handleResultCodes(response.result.failed_codes, space, client, leader);
                 } else {
                     return Optional.of(response.values);
                 }
@@ -382,6 +379,7 @@ public class StorageClientImpl implements StorageClient {
                 for (Integer part : request.parts.keySet()) {
                     invalidLeader(space, part);
                 }
+                disconnect(leader);
                 LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
                 return Optional.absent();
             }
@@ -530,6 +528,7 @@ public class StorageClientImpl implements StorageClient {
     private boolean doRemove(int space, HostAddr leader, RemoveRequest request) {
         StorageService.Client client = connect(leader);
         if (client == null) {
+            disconnect(leader);
             return false;
         }
 
@@ -539,19 +538,7 @@ public class StorageClientImpl implements StorageClient {
             try {
                 response = client.remove(request);
                 if (!isSuccessfully(response)) {
-                    for (ResultCode code : response.result.getFailed_codes()) {
-                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
-                            HostAddr addr = code.getLeader();
-                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
-                                updateLeader(space, code.getPart_id(), newLeader);
-                                StorageService.Client newClient = connect(newLeader);
-                                if (newClient != null) {
-                                    client = newClient;
-                                }
-                            }
-                        }
-                    }
+                    handleResultCodes(response.result.failed_codes, space, client, leader);
                 } else {
                     return true;
                 }
@@ -559,6 +546,7 @@ public class StorageClientImpl implements StorageClient {
                 for (Integer part : request.parts.keySet()) {
                     invalidLeader(space, part);
                 }
+                disconnect(leader);
                 LOGGER.error(String.format("Remove Failed: %s", e.getMessage()));
                 return false;
             }
@@ -566,12 +554,239 @@ public class StorageClientImpl implements StorageClient {
         return false;
     }
 
+    @Override
+    public Iterator<Result<ScanEdgeRequest>> scanEdge(int space) throws Exception {
+        Set<Integer> partIds = metaClient.getParts().get(space).keySet();
+        Iterator<Integer> iterator = partIds.iterator();
+        if (!iterator.hasNext()) {
+            return null;
+        }
+        return scanEdge(space, iterator, DEFAULT_SCAN_ROW_LIMIT,
+                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    }
+
+    @Override
+    public Iterator<Result<ScanEdgeRequest>> scanEdge(
+            int space, int rowLimit,long startTime, long endTime) throws Exception {
+        Set<Integer> partIds = metaClient.getParts().get(space).keySet();
+        Iterator<Integer> iterator = partIds.iterator();
+        if (!iterator.hasNext()) {
+            return null;
+        }
+        return scanEdge(space, iterator, rowLimit, startTime, endTime);
+    }
+
+    @Override
+    public Iterator<Result<ScanEdgeRequest>> scanEdge(int space, int part) throws Exception {
+        return scanEdge(space, part, DEFAULT_SCAN_ROW_LIMIT,
+                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    }
+
+    @Override
+    public Iterator<Result<ScanEdgeRequest>> scanEdge(
+            int space, int part, int rowLimit, long startTime, long endTime) throws Exception {
+        ScanEdgeRequest request = new ScanEdgeRequest();
+        request.setSpace_id(space);
+        request.setPart_id(part);
+        request.setCursor(null);
+        request.setRow_limit(rowLimit);
+        request.setStart_time(startTime);
+        request.setEnd_time(endTime);
+
+        return scanEdge(request);
+    }
+
+    @Override
+    public Iterator<Result<ScanEdgeRequest>> scanEdge(ScanEdgeRequest request) throws Exception {
+        HostAddr leader = getLeader(request.space_id, request.part_id);
+        if (leader == null) {
+            throw new IllegalArgumentException("Part " + request.part_id
+                                               + " not found in space " + request.space_id);
+        }
+
+        ScanEdgeResponse response = doScanEdge(request.space_id, leader, request);
+        return scanEdgeConsumer.handle(request, response);
+    }
+
+    @Override
+    public Iterator<Result<ScanEdgeRequest>> scanEdge(
+            ScanEdgeRequest request, Iterator<Integer> partIt) throws Exception {
+        HostAddr leader = getLeader(request.space_id, request.part_id);
+        if (leader == null) {
+            throw new IllegalArgumentException("Part " + request.part_id
+                    + " not found in space " + request.space_id);
+        }
+
+        ScanEdgeResponse response = doScanEdge(request.space_id, leader, request);
+        return scanEdgeConsumer.handle(request, response, partIt);
+    }
+
+    private Iterator<Result<ScanEdgeRequest>> scanEdge(int space, Iterator<Integer> partIt,
+                                                       int rowLimit, long startTime, long endTime)
+            throws Exception {
+        ScanEdgeRequest request = new ScanEdgeRequest();
+        request.setSpace_id(space);
+        request.setPart_id(partIt.next());
+        request.setCursor(null);
+        request.setRow_limit(rowLimit);
+        request.setStart_time(startTime);
+        request.setEnd_time(endTime);
+
+        return scanEdge(request, partIt);
+    }
+
+    /**
+     * Scan all edges of a partition
+     * @param space nebula space id
+     * @param leader host addr
+     * @param request scan edge request
+     * @return response which contains next start cursor, done if next cursor is empty
+     */
+    private ScanEdgeResponse doScanEdge(int space, HostAddr leader, ScanEdgeRequest request)
+            throws IOException {
+        StorageService.Client client = connect(leader);
+        if (client == null) {
+            disconnect(leader);
+            throw new IOException("Failed to connect " + leader);
+        }
+
+        ScanEdgeResponse response;
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            try {
+                response = client.scanEdge(request);
+                if (!response.result.failed_codes.isEmpty()) {
+                    handleResultCodes(response.result.failed_codes, space, client, leader);
+                } else {
+                    return response;
+                }
+            } catch (TException e) {
+                invalidLeader(space, request.getPart_id());
+                disconnect(leader);
+                LOGGER.error(String.format("ScanEdge Failed: %s", e.getMessage()));
+            }
+        }
+        throw new IOException("Failed to scan edge within " + connectionRetry + " retry");
+    }
+
+    @Override
+    public Iterator<Result<ScanVertexRequest>> scanVertex(int space) throws Exception {
+        Set<Integer> partIds = metaClient.getParts().get(space).keySet();
+        Iterator<Integer> iterator = partIds.iterator();
+        if (!iterator.hasNext()) {
+            return null;
+        }
+        return scanVertex(space, iterator, DEFAULT_SCAN_ROW_LIMIT,
+                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    }
+
+    @Override
+    public Iterator<Result<ScanVertexRequest>> scanVertex(
+            int space, int rowLimit,long startTime, long endTime) throws Exception {
+        Set<Integer> partIds = metaClient.getParts().get(space).keySet();
+        Iterator<Integer> iterator = partIds.iterator();
+        if (!iterator.hasNext()) {
+            return null;
+        }
+        return scanVertex(space, iterator, rowLimit, startTime, endTime);
+    }
+
+    @Override
+    public Iterator<Result<ScanVertexRequest>> scanVertex(int space, int part) throws Exception {
+        return scanVertex(space, part, DEFAULT_SCAN_ROW_LIMIT,
+                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    }
+
+    @Override
+    public Iterator<Result<ScanVertexRequest>> scanVertex(
+            int space, int part, int rowLimit, long startTime, long endTime) throws Exception {
+        ScanVertexRequest request = new ScanVertexRequest();
+        request.setSpace_id(space);
+        request.setPart_id(part);
+        request.setCursor(null);
+        request.setRow_limit(rowLimit);
+        request.setStart_time(startTime);
+        request.setEnd_time(endTime);
+
+        return scanVertex(request);
+    }
+
+    @Override
+    public Iterator<Result<ScanVertexRequest>> scanVertex(
+            ScanVertexRequest request) throws Exception {
+        HostAddr leader = getLeader(request.space_id, request.part_id);
+        if (leader == null) {
+            throw new IllegalArgumentException("Part " + request.part_id
+                    + " not found in space " + request.space_id);
+        }
+
+        ScanVertexResponse response = doScanVertex(request.space_id, leader, request);
+        return scanVertexConsumer.handle(request, response);
+    }
+
+    @Override
+    public Iterator<Result<ScanVertexRequest>> scanVertex(
+            ScanVertexRequest request, Iterator<Integer> iterator) throws Exception {
+        HostAddr leader = getLeader(request.space_id, request.part_id);
+        if (leader == null) {
+            throw new IllegalArgumentException("Part " + request.part_id
+                    + " not found in space " + request.space_id);
+        }
+
+        ScanVertexResponse response = doScanVertex(request.space_id, leader, request);
+        return scanVertexConsumer.handle(request, response, iterator);
+    }
+
+    private Iterator<Result<ScanVertexRequest>> scanVertex(
+            int space,Iterator<Integer> iterator, int rowLimit, long startTime, long endTime)
+            throws Exception {
+        ScanVertexRequest request = new ScanVertexRequest();
+        request.setSpace_id(space);
+        request.setPart_id(iterator.next());
+        request.setCursor(null);
+        request.setRow_limit(rowLimit);
+        request.setStart_time(startTime);
+        request.setEnd_time(endTime);
+
+        return scanVertex(request, iterator);
+    }
+
+    /**
+     * Scan all vertex of a partition
+     * @param space nebula space id
+     * @param leader host addr
+     * @param request scan vertex request
+     * @return response which contains next start cursor, done if next cursor is empty
+     */
+    private ScanVertexResponse doScanVertex(int space, HostAddr leader, ScanVertexRequest request)
+            throws IOException {
+        StorageService.Client client = connect(leader);
+        if (client == null) {
+            disconnect(leader);
+            throw new IOException("Failed to connect " + leader);
+        }
+
+        ScanVertexResponse response;
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            try {
+                response = client.scanVertex(request);
+                if (!response.result.failed_codes.isEmpty()) {
+                    handleResultCodes(response.result.failed_codes, space, client, leader);
+                } else {
+                    return response;
+                }
+            } catch (TException e) {
+                invalidLeader(space, request.getPart_id());
+                disconnect(leader);
+                LOGGER.error(String.format("ScanVertex Failed: %s", e.getMessage()));
+            }
+        }
+        throw new IOException("Failed to scan edge within " + connectionRetry + " retry");
+    }
 
     /**
      * Check the exec response is successfully
-     *
-     * @param response execution response
-     * @return
      */
     private boolean isSuccessfully(ExecResponse response) {
         return response.result.failed_codes.size() == 0;
@@ -622,19 +837,64 @@ public class StorageClientImpl implements StorageClient {
         }
     }
 
+    private void handleResultCodes(List<ResultCode> failedCodes, int space,
+                                   StorageService.Client client, HostAddr leader) {
+        for (ResultCode code : failedCodes) {
+            if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                HostAddr addr = code.getLeader();
+                if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                    HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                    updateLeader(space, code.getPart_id(), newLeader);
+                    StorageService.Client newClient = connect(newLeader);
+                    if (newClient != null) {
+                        client = newClient;
+                        leader = newLeader;
+                    }
+                }
+            }
+        }
+    }
+
+    private void disconnect(HostAddr hostAddr) {
+        clientMap.remove(hostAddr);
+    }
+
     private long hash(String key) {
         return MurmurHash2.hash64(key);
+    }
+
+    private long hash(long key) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(key);
+        return MurmurHash2.hash64(buffer.array(), Long.BYTES);
+    }
+
+    private int keyToPartId(int space, long vertexId) {
+        // TODO: need to handle this
+        if (!partsAlloc.containsKey(space)) {
+            LOGGER.error("Invalid part of " + space);
+            return -1;
+        }
+        int partNum = partsAlloc.get(space).size();
+        if (partNum <= 0) {
+            return -1;
+        }
+        long hashValue = Long.parseUnsignedLong(Long.toUnsignedString(hash(vertexId)));
+        return (int) (Math.floorMod(hashValue, partNum) + 1);
     }
 
     private int keyToPartId(int space, String key) {
         // TODO: need to handle this
         if (!partsAlloc.containsKey(space)) {
-            LOGGER.error("Invalid part of " + key);
+            LOGGER.error("Invalid part of " + space);
             return -1;
         }
-        // TODO: this is different to implement in c++, which converts to unsigned long at first
         int partNum = partsAlloc.get(space).size();
-        return (int) (Math.abs(hash(key)) % partNum + 1);
+        if (partNum <= 0) {
+            return -1;
+        }
+        long hashValue = Long.parseUnsignedLong(Long.toUnsignedString(hash(key)));
+        return (int) (Math.floorMod(hashValue, partNum) + 1);
     }
 
     /**

@@ -36,8 +36,12 @@ public class ErrorCode {
   public static final int E_STORE_SEGMENT_ILLEGAL = -32;
   public static final int E_BAD_BALANCE_PLAN = -33;
   public static final int E_BALANCED = -34;
+  public static final int E_NO_RUNNING_BALANCE_PLAN = -35;
+  public static final int E_NO_VALID_HOST = -36;
+  public static final int E_CORRUPTTED_BALANCE_PLAN = -37;
   public static final int E_INVALID_PASSWORD = -41;
   public static final int E_INPROPER_ROLE = -42;
+  public static final int E_SNAPSHOT_FAILURE = -51;
   public static final int E_UNKNOWN = -99;
 
   public static final IntRangeSet VALID_VALUES;
