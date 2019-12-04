@@ -26,7 +26,7 @@ When using Maven, add this to your pom.xml file:
 </dependency>
 ```
 
-change ${VERSION} here. For more versions, please refer to xxx.
+change ${VERSION} here. For more versions, please refer to [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ### Graph Client Example
 
