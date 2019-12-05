@@ -29,7 +29,7 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
         while (!checkReady()) {
             Thread.sleep(100);
         }
-        return result == null ? Optional.absent() : Optional.of(result);
+        return Optional.of(result);
     }
 
     @Override
@@ -45,7 +45,7 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
     public abstract void doComplete(TAsyncMethodCall response) throws TException;
 
     public boolean checkReady() {
-        if (isReady.compareAndSet(true, true)) {
+        if (isReady.get()) {
             return true;
         } else {
             return false;
