@@ -12,8 +12,7 @@ import com.facebook.thrift.async.AsyncMethodCallback;
 import com.facebook.thrift.async.TAsyncMethodCall;
 import com.google.common.base.Optional;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,40 +21,35 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNebulaCallback.class);
 
-    protected Lock lock = new ReentrantLock();
     protected TBase result;
-    protected boolean isReady = false;
 
+    protected AtomicBoolean isReady = new AtomicBoolean(false);
 
-    public Optional<TBase> getResult() {
+    public Optional<?> getResult() throws InterruptedException {
+        while (!checkReady()) {
+            Thread.sleep(100);
+        }
         return result == null ? Optional.absent() : Optional.of(result);
     }
 
     @Override
     public void onComplete(TAsyncMethodCall response) {
-        if (lock.tryLock()) {
-            try {
-                doComplete(response);
-                isReady = true;
-            } catch (TException e) {
-                e.printStackTrace();
-            } finally {
-                lock.unlock();
-            }
+        try {
+            doComplete(response);
+            isReady.compareAndSet(false, true);
+        } catch (TException e) {
+            e.printStackTrace();
         }
     }
 
     public abstract void doComplete(TAsyncMethodCall response) throws TException;
 
     public boolean checkReady() {
-        if (lock.tryLock()) {
-            try {
-                return isReady;
-            } finally {
-                lock.unlock();
-            }
+        if (isReady.compareAndSet(true, true)) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override

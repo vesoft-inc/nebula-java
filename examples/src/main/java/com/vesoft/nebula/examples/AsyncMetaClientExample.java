@@ -17,9 +17,7 @@ import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListSpacesResp;
 import com.vesoft.nebula.meta.client.async.AsyncMetaClientImpl;
-import com.vesoft.nebula.meta.client.entry.ListSpaceResult;
 
-import java.util.Map;
 import java.util.concurrent.Executors;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -52,18 +50,12 @@ public class AsyncMetaClientExample {
                     ListSpacesResp resp = listSpacesRespOptional.get();
                     if (resp.getCode() != ErrorCode.SUCCEEDED) {
                         LOGGER.error(String.format("List Spaces Error Code: %s", resp.getCode()));
+                        return;
                     }
-                    ListSpaceResult result = new ListSpaceResult();
                     for (IdName space : resp.getSpaces()) {
-                        result.add(space.id, space.name);
+                        LOGGER.info(String.format("Space name: %s, Space Id: %d", space.name,
+                            space.id.getSpace_id()));
                     }
-                    Map<Integer, String> map = result.getResult();
-                    LOGGER.info("---------------Spaces:--------------");
-                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
-                        LOGGER.info(String.format("Space ID: %d, ", entry.getKey())
-                            + String.format("Space name: %s", entry.getValue()));
-                    }
-                    LOGGER.info("------------------------------------");
                 } else {
                     LOGGER.info(String.format("No Space Founded"));
                 }

@@ -19,5 +19,5 @@ public interface AsyncStorageClient extends Client {
 
     public ListenableFuture<Boolean> remove(int space, String key);
 
-    public void close() throws Exception;
+    public void close();
 }

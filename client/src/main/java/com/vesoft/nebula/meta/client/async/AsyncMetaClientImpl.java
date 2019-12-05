@@ -79,14 +79,14 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
             throw new IllegalArgumentException("No meta server address is specified.");
         }
 
-        addresses.forEach(address -> {
+        for (HostAndPort address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                     host, port));
             }
-        });
+        }
 
         service = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
@@ -157,9 +157,6 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
                 } catch (TException e) {
                     LOGGER.error(String.format("List Space Call Error: %s", e.getMessage()));
                 }
-                while (!callback.checkReady()) {
-                    Thread.sleep(100);
-                }
                 if (callback.getResult().isPresent()) {
                     ListSpacesResp resp = (ListSpacesResp) callback.getResult().get();
                     return Optional.of(resp);
@@ -193,7 +190,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
      * @return
      */
     @Override
-    public ListenableFuture<Optional<GetPartsAllocResp>> getPartsAlloc(int spaceId) {
+    public ListenableFuture<Optional<GetPartsAllocResp>> getPartsAlloc(final int spaceId) {
         return service.submit(new Callable<Optional<GetPartsAllocResp>>() {
             @Override
             public Optional<GetPartsAllocResp> call() throws Exception {
@@ -241,7 +238,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
      * @return
      */
     @Override
-    public ListenableFuture<Optional<ListTagsResp>> listTags(int spaceId) {
+    public ListenableFuture<Optional<ListTagsResp>> listTags(final int spaceId) {
         return service.submit(new Callable<Optional<ListTagsResp>>() {
             @Override
             public Optional<ListTagsResp> call() throws Exception {
@@ -289,7 +286,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
      * @return
      */
     @Override
-    public ListenableFuture<Optional<ListEdgesResp>> listEdges(int spaceId) {
+    public ListenableFuture<Optional<ListEdgesResp>> listEdges(final int spaceId) {
         return service.submit(new Callable<Optional<ListEdgesResp>>() {
             @Override
             public Optional<ListEdgesResp> call() throws Exception {
@@ -315,9 +312,13 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         service.shutdown();
         transport.close();
-        manager.stop();
+        try {
+            manager.stop();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

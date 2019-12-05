@@ -300,7 +300,7 @@ public class MetaClientImpl implements MetaClient {
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             List<TagItem> tagItem = response.getTags();
-            Map<String, TagItem> tmp = new HashMap<>();
+            Map<String, TagItem> tmp = Maps.newHashMap();
             if (tagItem != null) {
                 for (TagItem ti : tagItem) {
                     tmp.put(ti.getTag_name(), ti);

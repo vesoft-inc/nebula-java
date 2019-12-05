@@ -68,14 +68,14 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
                                 int executionRetry) {
         checkArgument(timeout > 0);
         checkArgument(connectionRetry > 0);
-        addresses.forEach(address -> {
+        for (HostAndPort address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                     host, port));
             }
-        });
+        }
 
         service = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
@@ -141,7 +141,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
                 client.authenticate(username, password, callback);
                 Optional<TBase> respOption = Optional.absent();
                 while (!callback.checkReady()) {
-                    respOption = callback.getResult();
+                    respOption = (Optional<TBase>) callback.getResult();
                 }
                 if (respOption.isPresent()) {
                     AuthResponse result = (AuthResponse) respOption.get();
@@ -166,6 +166,8 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
                 e.printStackTrace();
             } catch (TException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         return ErrorCode.E_FAIL_TO_CONNECT;
@@ -177,7 +179,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      * @param statement The query sentence.
      * @return The ErrorCode of status, 0 is succeeded.
      */
-    public ListenableFuture<Optional<Integer>> execute(String statement) {
+    public ListenableFuture<Optional<Integer>> execute(final String statement) {
         return service.submit(new Callable<Optional<Integer>>() {
             @Override
             public Optional<Integer> call() throws Exception {
@@ -204,7 +206,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
     }
 
     @Override
-    public ListenableFuture<Optional<ResultSet>> executeQuery(String statement) {
+    public ListenableFuture<Optional<ResultSet>> executeQuery(final String statement) {
         return service.submit(new Callable<Optional<ResultSet>>() {
             @Override
             public Optional<ResultSet> call() throws Exception {
@@ -235,9 +237,13 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         service.shutdown();
         transport.close();
-        manager.stop();
+        try {
+            manager.stop();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

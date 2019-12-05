@@ -20,7 +20,7 @@ public interface MetaClient extends Client {
      *
      * @return boolean
      */
-    public boolean init();
+    public void init();
 
     /**
      * connect to server

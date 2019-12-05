@@ -80,8 +80,9 @@ public class AsyncGraphClientExample {
         }
         service = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
-        try (AsyncGraphClient client = new AsyncGraphClientImpl(args[0],
-            Integer.parseInt(args[1]))) {
+        AsyncGraphClient client = new AsyncGraphClientImpl(args[0],
+            Integer.parseInt(args[1]));
+        try  {
             client.connect("user", "password");
             ListenableFuture<Optional<Integer>> listenableFuture = client.switchSpace(SPACE_NAME);
             Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
@@ -105,7 +106,7 @@ public class AsyncGraphClientExample {
                 }
             }, service);
 
-            for (String statement : createTags) {
+            for (final String statement : createTags) {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
@@ -127,7 +128,7 @@ public class AsyncGraphClientExample {
                 }, service);
             }
 
-            for (String statement : createEdges) {
+            for (final String statement : createEdges) {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
@@ -149,7 +150,7 @@ public class AsyncGraphClientExample {
                 }, service);
             }
 
-            for (String statement : insertVertices) {
+            for (final String statement : insertVertices) {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
@@ -171,7 +172,7 @@ public class AsyncGraphClientExample {
                 }, service);
             }
 
-            for (String statement : insertEdges) {
+            for (final String statement : insertEdges) {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
@@ -226,6 +227,8 @@ public class AsyncGraphClientExample {
                     LOGGER.error("Execute Error");
                 }
             }, service);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
