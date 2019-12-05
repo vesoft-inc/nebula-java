@@ -11,7 +11,6 @@ import com.vesoft.nebula.graph.RowValue;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -25,7 +24,7 @@ public class ResultSet implements Iterator {
      * Constructor
      */
     public ResultSet() {
-        this(Lists.newArrayList(), Lists.newArrayList());
+        this(Lists.<byte[]>newArrayList(), Lists.<RowValue>newArrayList());
     }
 
     /**
@@ -33,7 +32,10 @@ public class ResultSet implements Iterator {
      * @param rows    field values
      */
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
-        this.columns = columns.stream().map(String::new).collect(Collectors.toList());
+        this.columns = Lists.newArrayListWithCapacity(columns.size());
+        for (byte[] column : columns) {
+            this.columns.add(new String(column));
+        }
         this.rows = rows;
     }
 
@@ -58,6 +60,11 @@ public class ResultSet implements Iterator {
     @Override
     public Object next() {
         return null;
+    }
+
+    @Override
+    public void remove() {
+
     }
 
     @Override

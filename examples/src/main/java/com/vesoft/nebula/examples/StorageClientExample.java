@@ -7,11 +7,9 @@
 package com.vesoft.nebula.examples;
 
 import com.google.common.base.Optional;
-import com.vesoft.nebula.meta.client.MetaClient;
 import com.vesoft.nebula.meta.client.MetaClientImpl;
 import com.vesoft.nebula.storage.client.StorageClient;
 import com.vesoft.nebula.storage.client.StorageClientImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,7 @@ public class StorageClientExample {
         }
 
         try {
-            MetaClient metaClient = new MetaClientImpl(args[0], Integer.parseInt(args[1]));
+            MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
             StorageClient storageClient = new StorageClientImpl(metaClient);
             final int count = 1000;
             for (int i = 0; i < count; i++) {

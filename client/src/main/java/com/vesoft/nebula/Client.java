@@ -6,10 +6,12 @@
 
 package com.vesoft.nebula;
 
+import java.io.Closeable;
+
 /**
  *
  */
-public interface Client extends AutoCloseable {
+public interface Client extends Closeable {
     public static final int DEFAULT_TIMEOUT_MS = 1000;
     public static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     public static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;

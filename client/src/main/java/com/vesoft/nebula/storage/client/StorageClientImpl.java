@@ -19,7 +19,7 @@ import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Pair;
 import com.vesoft.nebula.meta.ErrorCode;
-import com.vesoft.nebula.meta.client.MetaClient;
+import com.vesoft.nebula.meta.client.MetaClientImpl;
 import com.vesoft.nebula.storage.ExecResponse;
 import com.vesoft.nebula.storage.GeneralResponse;
 import com.vesoft.nebula.storage.GetRequest;
@@ -28,19 +28,15 @@ import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.ResultCode;
 import com.vesoft.nebula.storage.StorageService;
 import com.vesoft.nebula.utils.IPv4IntTransformer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.commons.codec.digest.MurmurHash2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +53,7 @@ public class StorageClientImpl implements StorageClient {
 
     private final int connectionRetry;
     private final int timeout;
-    private MetaClient metaClient;
+    private MetaClientImpl metaClient;
     private Map<Integer, Map<Integer, HostAddr>> leaders;
     private Map<Integer, Map<Integer, List<HostAddr>>> partsAlloc;
 
@@ -76,8 +72,8 @@ public class StorageClientImpl implements StorageClient {
 
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
-        this.leaders = new ConcurrentHashMap<>();
-        this.clientMap = new ConcurrentHashMap<>();
+        this.leaders = Maps.newConcurrentMap();
+        this.clientMap = Maps.newConcurrentMap();
         this.threadPool = Executors.newFixedThreadPool(DEFAULT_THREAD_COUNT);
     }
 
@@ -86,9 +82,10 @@ public class StorageClientImpl implements StorageClient {
      *
      * @param metaClient The Nebula MetaClient
      */
-    public StorageClientImpl(MetaClient metaClient) {
-        this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+    public StorageClientImpl(MetaClientImpl metaClient) {
+        this(Lists.<HostAndPort>newArrayList(), DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
         this.metaClient = metaClient;
+        this.metaClient.init();
         this.partsAlloc = this.metaClient.getParts();
     }
 
@@ -153,8 +150,8 @@ public class StorageClientImpl implements StorageClient {
      * @return
      */
     @Override
-    public boolean put(int space, Map<String, String> kvs) {
-        Map<Integer, List<Pair>> groups = new HashMap<>();
+    public boolean put(final int space, Map<String, String> kvs) {
+        Map<Integer, List<Pair>> groups = Maps.newHashMap();
         for (Map.Entry<String, String> kv : kvs.entrySet()) {
             int part = keyToPartId(space, kv.getKey());
             if (!groups.containsKey(part)) {
@@ -163,7 +160,7 @@ public class StorageClientImpl implements StorageClient {
             groups.get(part).add(new Pair(kv.getKey(), kv.getValue()));
         }
 
-        Map<HostAddr, PutRequest> requests = new HashMap<>();
+        Map<HostAddr, PutRequest> requests = Maps.newHashMap();
         for (Map.Entry<Integer, List<Pair>> entry : groups.entrySet()) {
             int part = entry.getKey();
             HostAddr leader = getLeader(space, part);
@@ -187,8 +184,8 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Boolean> responses = Collections.synchronizedList(
-            new ArrayList<Boolean>(groups.size()));
-        for (Map.Entry<HostAddr, PutRequest> entry : requests.entrySet()) {
+                new ArrayList<Boolean>(groups.size()));
+        for (final Map.Entry<HostAddr, PutRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -227,7 +224,7 @@ public class StorageClientImpl implements StorageClient {
         while (retry-- != 0) {
             try {
                 response = client.put(request);
-                if (!isSuccess(response)) {
+                if (!isSuccessfully(response)) {
                     for (ResultCode code : response.result.getFailed_codes()) {
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
@@ -292,8 +289,8 @@ public class StorageClientImpl implements StorageClient {
      * @return
      */
     @Override
-    public Optional<Map<String, String>> get(int space, List<String> keys) {
-        Map<Integer, List<String>> groups = new HashMap<>();
+    public Optional<Map<String, String>> get(final int space, List<String> keys) {
+        Map<Integer, List<String>> groups = Maps.newHashMap();
         for (String key : keys) {
             int part = keyToPartId(space, key);
             if (!groups.containsKey(part)) {
@@ -302,7 +299,7 @@ public class StorageClientImpl implements StorageClient {
             groups.get(part).add(key);
         }
 
-        Map<HostAddr, GetRequest> requests = new HashMap<>();
+        Map<HostAddr, GetRequest> requests = Maps.newHashMap();
         for (Map.Entry<Integer, List<String>> entry : groups.entrySet()) {
             int part = entry.getKey();
             HostAddr leader = getLeader(space, part);
@@ -326,8 +323,8 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Optional<Map<String, String>>> responses = Collections.synchronizedList(
-            new ArrayList<Optional<Map<String, String>>>(groups.size()));
-        for (Map.Entry<HostAddr, GetRequest> entry : requests.entrySet()) {
+                new ArrayList<Optional<Map<String, String>>>(groups.size()));
+        for (final Map.Entry<HostAddr, GetRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -343,7 +340,7 @@ public class StorageClientImpl implements StorageClient {
             return Optional.absent();
         }
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = Maps.newHashMap();
         for (Optional<Map<String, String>> response : responses) {
             if (response.isPresent()) {
                 result.putAll(response.get());
@@ -364,7 +361,7 @@ public class StorageClientImpl implements StorageClient {
         while (retry-- != 0) {
             try {
                 response = client.get(request);
-                if (!isSuccess(response)) {
+                if (!isSuccessfully(response)) {
                     for (ResultCode code : response.result.getFailed_codes()) {
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
@@ -425,8 +422,8 @@ public class StorageClientImpl implements StorageClient {
      * @return
      */
     @Override
-    public boolean remove(int space, List<String> keys) {
-        Map<Integer, List<String>> groups = new HashMap<>();
+    public boolean remove(final int space, List<String> keys) {
+        Map<Integer, List<String>> groups = Maps.newHashMap();
         for (String key : keys) {
             int part = keyToPartId(space, key);
             if (!groups.containsKey(part)) {
@@ -435,7 +432,7 @@ public class StorageClientImpl implements StorageClient {
             groups.get(part).add(key);
         }
 
-        Map<HostAddr, RemoveRequest> requests = new HashMap<>();
+        Map<HostAddr, RemoveRequest> requests = Maps.newHashMap();
         for (Map.Entry<Integer, List<String>> entry : groups.entrySet()) {
             int part = entry.getKey();
             HostAddr leader = getLeader(space, part);
@@ -459,8 +456,8 @@ public class StorageClientImpl implements StorageClient {
 
         final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
         final List<Boolean> responses = Collections.synchronizedList(
-            new ArrayList<Boolean>(groups.size()));
-        for (Map.Entry<HostAddr, RemoveRequest> entry : requests.entrySet()) {
+                new ArrayList<Boolean>(groups.size()));
+        for (final Map.Entry<HostAddr, RemoveRequest> entry : requests.entrySet()) {
             threadPool.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -488,14 +485,6 @@ public class StorageClientImpl implements StorageClient {
         return true;
     }
 
-    /**
-     * Remove keys from start to end at part
-     *
-     * @param part  partitionID
-     * @param start nebula start key
-     * @param end   nebula end key
-     * @return
-     */
     /*
     @Override
     public boolean removeRange(int part, String start, String end) {
@@ -549,7 +538,7 @@ public class StorageClientImpl implements StorageClient {
         while (retry-- != 0) {
             try {
                 response = client.remove(request);
-                if (!isSuccess(response)) {
+                if (!isSuccessfully(response)) {
                     for (ResultCode code : response.result.getFailed_codes()) {
                         if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                             HostAddr addr = code.getLeader();
@@ -579,23 +568,29 @@ public class StorageClientImpl implements StorageClient {
 
 
     /**
-     * Check the response is successfully
+     * Check the exec response is successfully
      *
      * @param response execution response
      * @return
      */
-    private boolean isSuccess(ExecResponse response) {
+    private boolean isSuccessfully(ExecResponse response) {
         return response.result.failed_codes.size() == 0;
     }
 
-    private boolean isSuccess(GeneralResponse response) {
+    /**
+     * Check the general response is successfully
+     *
+     * @param response general response
+     * @return
+     */
+    private boolean isSuccessfully(GeneralResponse response) {
         return response.result.failed_codes.size() == 0;
     }
 
     private void updateLeader(int spaceId, int partId, HostAddr addr) {
         LOGGER.debug("Update leader for space " + spaceId + ", " + partId + " to " + addr);
         if (!leaders.containsKey(spaceId)) {
-            leaders.put(spaceId, new ConcurrentHashMap<>());
+            leaders.put(spaceId, Maps.<Integer, HostAddr>newConcurrentMap());
         }
         leaders.get(spaceId).put(partId, addr);
     }
@@ -603,14 +598,14 @@ public class StorageClientImpl implements StorageClient {
     private void invalidLeader(int spaceId, int partId) {
         LOGGER.debug("Invalid leader for space " + spaceId + ", " + partId);
         if (!leaders.containsKey(spaceId)) {
-            leaders.put(spaceId, new ConcurrentHashMap<>());
+            leaders.put(spaceId, Maps.<Integer, HostAddr>newConcurrentMap());
         }
         leaders.get(spaceId).remove(partId);
     }
 
     private HostAddr getLeader(int space, int part) {
         if (!leaders.containsKey(space)) {
-            leaders.put(space, new ConcurrentHashMap<>());
+            leaders.put(space, Maps.<Integer, HostAddr>newConcurrentMap());
         }
         if (leaders.get(space).containsKey(part)) {
             return leaders.get(space).get(part);
@@ -647,9 +642,9 @@ public class StorageClientImpl implements StorageClient {
      *
      * @throws Exception close exception
      */
-    @Override
-    public void close() throws Exception {
+    public void close() {
         threadPool.shutdownNow();
+        transport.close();
     }
 }
 

@@ -32,13 +32,9 @@ import com.vesoft.nebula.meta.ListTagsReq;
 import com.vesoft.nebula.meta.ListTagsResp;
 import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.TagItem;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +46,7 @@ public class MetaClientImpl implements MetaClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
     private MetaService.Client client;
+
     private TTransport transport = null;
 
     private final List<HostAndPort> addresses;
@@ -69,14 +66,14 @@ public class MetaClientImpl implements MetaClient {
             throw new IllegalArgumentException("No meta server address is specified.");
         }
 
-        addresses.forEach(address -> {
+        for (HostAndPort address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                     host, port));
             }
-        });
+        }
 
         this.spaces = Lists.newArrayList();
         this.spaceNames = Maps.newHashMap();
@@ -86,6 +83,8 @@ public class MetaClientImpl implements MetaClient {
         this.addresses = addresses;
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
+
+        this.init();
     }
 
     public MetaClientImpl(String host, int port) {
@@ -111,8 +110,8 @@ public class MetaClientImpl implements MetaClient {
         }
 
         Map<Integer, List<HostAddr>> map = parts.get(spaceId);
-        if (Objects.isNull(map) || map.isEmpty()) {
-            return Lists.newArrayList();
+        if (map == null || map.isEmpty()) {
+            return null;
         }
         return map.get(partId);
     }
@@ -121,7 +120,7 @@ public class MetaClientImpl implements MetaClient {
     public List<HostAddr> getPart(String spaceName, int partId) {
         if (!spaceNames.containsKey(spaceName)) {
             LOGGER.error(String.format("There is no space named: %s", spaceName));
-            return Lists.newArrayList();
+            return null;
         }
         return getPart(spaceNames.get(spaceName), partId);
     }
@@ -140,8 +139,8 @@ public class MetaClientImpl implements MetaClient {
         }
 
         Map<String, TagItem> map = tagItems.get(spaceId);
-        if (Objects.isNull(map) || map.isEmpty()) {
-            return -1;
+        if (map == null || map.isEmpty()) {
+            return null;
         }
 
         TagItem tag = map.get(tagName);
@@ -171,8 +170,8 @@ public class MetaClientImpl implements MetaClient {
         }
 
         Map<String, EdgeItem> map = edgeItems.get(space);
-        if (Objects.isNull(map) || map.isEmpty()) {
-            return -1;
+        if (map == null || map.isEmpty()) {
+            return null;
         }
 
         EdgeItem edge = map.get(edgeName);
@@ -183,15 +182,15 @@ public class MetaClientImpl implements MetaClient {
     public Integer getEdgeType(String spaceName, String edgeName) {
         if (!spaceNames.containsKey(spaceName)) {
             LOGGER.error(String.format("There is no space named: %s", spaceName));
-            return -1;
+            return null;
         }
         return getEdgeType(spaceNames.get(spaceName), edgeName);
     }
 
-    public boolean init() {
-        if (!connect()) {
+    public void init() {
+        boolean isConnected = connect();
+        if (!isConnected) {
             LOGGER.error("Connection has not been established. Connect Failed");
-            return false;
         }
 
         this.spaces = listSpaces();
@@ -202,7 +201,6 @@ public class MetaClientImpl implements MetaClient {
             getTagItems(spaceId);
             getEdgeTypes(spaceId);
         }
-        return true;
     }
 
     @Override
@@ -336,8 +334,8 @@ public class MetaClientImpl implements MetaClient {
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             List<EdgeItem> edgeItem = response.getEdges();
-            Map<String, EdgeItem> tmp = new HashMap<>();
-            if (!Objects.isNull(edgeItem)) {
+            Map<String, EdgeItem> tmp = Maps.newHashMap();
+            if (edgeItem != null) {
                 for (EdgeItem ei : edgeItem) {
                     tmp.put(ei.getEdge_name(), ei);
                 }
@@ -358,7 +356,7 @@ public class MetaClientImpl implements MetaClient {
         return spaces;
     }
 
-    public void close() throws Exception {
+    public void close() {
         transport.close();
     }
 }

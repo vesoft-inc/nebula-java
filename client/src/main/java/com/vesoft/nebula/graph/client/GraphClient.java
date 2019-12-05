@@ -19,7 +19,7 @@ public interface GraphClient extends Client {
      *
      * @param username User name
      * @param password User password
-     * @return
+     * @return The ErrorCode of status, 0 is succeeded.
      */
     public int connect(String username, String password);
 
@@ -27,7 +27,7 @@ public interface GraphClient extends Client {
      * Switch to the specified space.
      *
      * @param space space name.
-     * @return
+     * @return The ErrorCode of status, 0 is succeeded.
      */
     public int switchSpace(String space);
 
@@ -35,7 +35,7 @@ public interface GraphClient extends Client {
      * Execute the DML statement.
      *
      * @param statement execution statement.
-     * @return
+     * @return The ErrorCode of status, 0 is succeeded.
      */
     public int execute(String statement);
 
@@ -43,7 +43,10 @@ public interface GraphClient extends Client {
      * Execute the query statement and return result set.
      *
      * @param statement execution statement.
-     * @return
+     * @return The result set of the query sentence.
+     * @throws ConnectionException the connection exception
+     * @throws NGQLException       the nebula exception
+     * @throws TException          the thrift exception
      */
     public ResultSet executeQuery(String statement)
             throws ConnectionException, NGQLException, TException;

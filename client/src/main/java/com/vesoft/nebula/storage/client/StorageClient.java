@@ -8,7 +8,6 @@ package com.vesoft.nebula.storage.client;
 
 import com.google.common.base.Optional;
 import com.vesoft.nebula.Client;
-
 import java.util.List;
 import java.util.Map;
 

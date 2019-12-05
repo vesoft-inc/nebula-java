@@ -7,14 +7,78 @@
     <groupId>com.vesoft</groupId>
     <artifactId>nebula</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-beta</version>
+    <version>1.0.0-rc2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+    <!-- More Project Information -->
+    <name>nebula-java</name>
+    <description>Nebula Java Client</description>
+    <url>https://github.com/vesoft-inc/nebula-java</url>
+    <scm>
+        <connection>scm:git:https://github.com/vesoft-inc/nebula</connection>
+        <url>https://github.com/vesoft-inc/nebula</url>
+        <developerConnection>scm:git:https://github.com/vesoft-inc/nebula</developerConnection>
+    </scm>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>wcg</id>
+            <name>Wang Chenguang</name>
+            <email>jdoe@example.com</email>
+            <organization>vesoft</organization>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+
     <modules>
         <module>client</module>
         <module>examples</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>release</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
 </project>
