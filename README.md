@@ -21,7 +21,7 @@ When using Maven, add this to your pom.xml file:
 ```
 <dependency>
     <groupId>com.vesoft</groupId>
-    <artifactId>nebula</artifactId>
+    <artifactId>client</artifactId>
     <version>${VERSION}</version>
 </dependency>
 ```
