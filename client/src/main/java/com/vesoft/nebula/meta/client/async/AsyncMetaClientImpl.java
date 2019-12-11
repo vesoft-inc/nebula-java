@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 
 public class AsyncMetaClientImpl implements AsyncMetaClient {
     private static final Logger LOGGER =
-        LoggerFactory.getLogger(AsyncMetaClientImpl.class.getName());
+            LoggerFactory.getLogger(AsyncMetaClientImpl.class.getName());
 
     private MetaService.AsyncClient client;
 
@@ -80,11 +80,11 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         }
 
         for (HostAndPort address : addresses) {
-            String host = address.getHost();
+            String host = address.getHostText();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                    host, port));
+                        host, port));
             }
         }
 
@@ -101,7 +101,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
 
     public AsyncMetaClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)),
-            DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+                DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
     public AsyncMetaClientImpl(List<HostAndPort> addresses) {
@@ -128,7 +128,8 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
             HostAndPort address = addresses.get(position);
             try {
                 manager = new TAsyncClientManager();
-                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                transport = new TNonblockingSocket(address.getHostText(),
+                        address.getPort(), timeout);
                 TProtocolFactory protocol = new TBinaryProtocol.Factory();
                 client = new MetaService.AsyncClient(protocol, manager, transport);
                 return true;

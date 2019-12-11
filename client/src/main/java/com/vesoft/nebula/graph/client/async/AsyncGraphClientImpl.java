@@ -69,11 +69,11 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
         checkArgument(timeout > 0);
         checkArgument(connectionRetry > 0);
         for (HostAndPort address : addresses) {
-            String host = address.getHost();
+            String host = address.getHostText();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                    host, port));
+                        host, port));
             }
         }
 
@@ -92,7 +92,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     public AsyncGraphClientImpl(List<HostAndPort> addresses) {
         this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE,
-            DEFAULT_EXECUTION_RETRY_SIZE);
+                DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -103,7 +103,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     public AsyncGraphClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
-            DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -134,7 +134,8 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
 
             try {
                 manager = new TAsyncClientManager();
-                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                transport = new TNonblockingSocket(address.getHostText(),
+                        address.getPort(), timeout);
                 TProtocolFactory protocol = new TBinaryProtocol.Factory();
                 client = new GraphService.AsyncClient(protocol, manager, transport);
                 AuthenticateCallback callback = new AuthenticateCallback();
@@ -152,7 +153,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
 
                     if (result.getError_code() != ErrorCode.SUCCEEDED) {
                         LOGGER.error(String.format("Connect address %s failed : %s",
-                            address.toString(), result.getError_msg()));
+                                address.toString(), result.getError_msg()));
                     } else {
                         sessionID = result.getSession_id();
                         return ErrorCode.SUCCEEDED;
