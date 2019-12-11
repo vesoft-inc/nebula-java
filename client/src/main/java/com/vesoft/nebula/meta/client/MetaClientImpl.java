@@ -16,11 +16,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
+import com.vesoft.nebula.ColumnDef;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.ErrorCode;
+import com.vesoft.nebula.meta.GetEdgeReq;
+import com.vesoft.nebula.meta.GetEdgeResp;
 import com.vesoft.nebula.meta.GetPartsAllocReq;
 import com.vesoft.nebula.meta.GetPartsAllocResp;
+import com.vesoft.nebula.meta.GetTagReq;
+import com.vesoft.nebula.meta.GetTagResp;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListEdgesReq;
 import com.vesoft.nebula.meta.ListEdgesResp;
@@ -30,6 +35,7 @@ import com.vesoft.nebula.meta.ListTagsReq;
 import com.vesoft.nebula.meta.ListTagsResp;
 import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.TagItem;
+import com.vesoft.nebula.utils.NebulaTypeUtil;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -57,6 +63,9 @@ public class MetaClientImpl implements MetaClient {
     private Map<Integer, Map<String, TagItem>> tagItems;
     private Map<Integer, Map<String, EdgeItem>> edgeItems;
 
+    private static final int LATEST_TAG_VERSION = -1;
+    private static final int LATEST_EDGE_VERSION = -1;
+
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
         com.google.common.base.Preconditions.checkArgument(timeout > 0);
         com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
@@ -65,7 +74,7 @@ public class MetaClientImpl implements MetaClient {
         }
 
         for (HostAndPort address : addresses) {
-            String host = address.getHost();
+            String host = address.getHostText();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
@@ -184,6 +193,66 @@ public class MetaClientImpl implements MetaClient {
         return getEdgeType(spaceNames.get(spaceName), edgeName);
     }
 
+    @Override
+    public Map<String, Class> getTagSchema(String spaceName, String tagName, long version) {
+        Map<String, Class> result = Maps.newHashMap();
+        if (!spaceNames.containsKey(spaceName)) {
+            return result;
+        }
+
+        GetTagReq request = new GetTagReq();
+        request.setSpace_id(spaceNames.get(spaceName));
+        request.setTag_name(tagName);
+        request.setVersion(version);
+
+        GetTagResp response;
+        try {
+            response = client.getTag(request);
+        } catch (TException e) {
+            e.printStackTrace();
+            return result;
+        }
+
+        for (ColumnDef column : response.getSchema().columns) {
+            result.put(column.name, NebulaTypeUtil.supportedTypeToClass(column.type.type));
+        }
+        return result;
+    }
+
+    public Map<String, Class> getTagSchema(String spaceName, String tagName) {
+        return getTagSchema(spaceName, tagName, LATEST_TAG_VERSION);
+    }
+
+    @Override
+    public Map<String, Class> getEdgeSchema(String spaceName, String edgeName, long version) {
+        Map<String, Class> result = Maps.newHashMap();
+        if (!spaceNames.containsKey(spaceName)) {
+            return result;
+        }
+
+        GetEdgeReq request = new GetEdgeReq();
+        request.setSpace_id(spaceNames.get(spaceName));
+        request.setEdge_name(edgeName);
+        request.setVersion(version);
+
+        GetEdgeResp response;
+        try {
+            response = client.getEdge(request);
+        } catch (TException e) {
+            e.printStackTrace();
+            return result;
+        }
+
+        for (ColumnDef column : response.getSchema().columns) {
+            result.put(column.name, NebulaTypeUtil.supportedTypeToClass(column.type.type));
+        }
+        return result;
+    }
+
+    public Map<String, Class> getEdgeSchema(String spaceName, String edgeName) {
+        return getEdgeSchema(spaceName, edgeName, LATEST_EDGE_VERSION);
+    }
+
     public void init() {
         boolean isConnected = connect();
         if (!isConnected) {
@@ -205,7 +274,7 @@ public class MetaClientImpl implements MetaClient {
             Random random = new Random(System.currentTimeMillis());
             int position = random.nextInt(addresses.size());
             HostAndPort address = addresses.get(position);
-            transport = new TSocket(address.getHost(), address.getPort(), timeout);
+            transport = new TSocket(address.getHostText(), address.getPort(), timeout);
             TProtocol protocol = new TBinaryProtocol(transport);
             try {
                 transport.open();
