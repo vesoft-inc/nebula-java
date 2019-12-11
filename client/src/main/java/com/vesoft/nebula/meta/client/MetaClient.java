@@ -8,11 +8,28 @@ package com.vesoft.nebula.meta.client;
 
 import com.vesoft.nebula.Client;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.meta.IdName;
 
 import java.util.List;
 import java.util.Map;
 
 public interface MetaClient extends Client {
+
+    /**
+     * Must be used to initialize meta client
+     *
+     * @return boolean
+     */
+    public void init();
+
+    /**
+     * connect to server
+     *
+     * @return boolean
+     */
+    public boolean connect();
+
+    public List<IdName> listSpaces();
 
     public List<HostAddr> getPart(int spaceId, int partId);
 

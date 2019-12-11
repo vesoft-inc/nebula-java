@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.meta.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
@@ -67,8 +69,8 @@ public class MetaClientImpl implements MetaClient {
     private static final int LATEST_EDGE_VERSION = -1;
 
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
-        com.google.common.base.Preconditions.checkArgument(timeout > 0);
-        com.google.common.base.Preconditions.checkArgument(connectionRetry > 0);
+        checkArgument(timeout > 0);
+        checkArgument(connectionRetry > 0);
         if (addresses.isEmpty()) {
             throw new IllegalArgumentException("No meta server address is specified.");
         }
@@ -78,7 +80,7 @@ public class MetaClientImpl implements MetaClient {
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+                    host, port));
             }
         }
 
@@ -96,7 +98,7 @@ public class MetaClientImpl implements MetaClient {
 
     public MetaClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)),
-                DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
+            DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE);
     }
 
     public MetaClientImpl(List<HostAndPort> addresses) {
@@ -115,6 +117,7 @@ public class MetaClientImpl implements MetaClient {
         if (!this.parts.containsKey(spaceId)) {
             getParts(spaceId);
         }
+
         Map<Integer, List<HostAddr>> map = parts.get(spaceId);
         if (map == null || map.isEmpty()) {
             return null;
@@ -258,7 +261,8 @@ public class MetaClientImpl implements MetaClient {
         if (!isConnected) {
             LOGGER.error("Connection has not been established. Connect Failed");
         }
-        listSpaces();
+
+        this.spaces = listSpaces();
         for (IdName space : spaces) {
             int spaceId = space.getId().getSpace_id();
             spaceNames.put(space.getName(), spaceId);
@@ -268,7 +272,8 @@ public class MetaClientImpl implements MetaClient {
         }
     }
 
-    private boolean connect() {
+    @Override
+    public boolean connect() {
         int retry = connectionRetry;
         while (retry-- != 0) {
             Random random = new Random(System.currentTimeMillis());
@@ -280,10 +285,10 @@ public class MetaClientImpl implements MetaClient {
                 transport.open();
                 client = new MetaService.Client(protocol);
                 return true;
-            } catch (TTransportException tte) {
-                LOGGER.error("Connect failed: " + tte.getMessage());
-            } catch (TException te) {
-                LOGGER.error("Connect failed: " + te.getMessage());
+            } catch (TTransportException transportException) {
+                LOGGER.error("Connect failed: " + transportException.getMessage());
+            } catch (TException e) {
+                LOGGER.error("Connect failed: " + e.getMessage());
             }
         }
         return false;
@@ -294,22 +299,21 @@ public class MetaClientImpl implements MetaClient {
      *
      * @return
      */
-    private boolean listSpaces() {
+    public List<IdName> listSpaces() {
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response;
         try {
             response = client.listSpaces(request);
         } catch (TException e) {
             LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
-            return false;
+            return null;
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
-            this.spaces = response.getSpaces();
+            return response.getSpaces();
         } else {
-            LOGGER.error(String.format("Init Error: %s", response.getCode()));
-            return false;
+            LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
+            return null;
         }
-        return true;
     }
 
     @Override
