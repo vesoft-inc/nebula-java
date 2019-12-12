@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.IPv4IntTransformer;
+import com.vesoft.nebula.utils.IPv4IntTransformer;
 
 import java.util.List;
 import java.util.Map;

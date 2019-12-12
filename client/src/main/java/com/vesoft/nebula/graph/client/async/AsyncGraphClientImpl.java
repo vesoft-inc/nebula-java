@@ -8,11 +8,14 @@ package com.vesoft.nebula.graph.client.async;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.facebook.thrift.TBase;
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TCompactProtocol;
-import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TSocket;
-import com.facebook.thrift.transport.TTransport;
+import com.facebook.thrift.async.TAsyncClientManager;
+import com.facebook.thrift.protocol.TBinaryProtocol;
+import com.facebook.thrift.protocol.TProtocolFactory;
+import com.facebook.thrift.transport.TNonblockingSocket;
+import com.facebook.thrift.transport.TNonblockingTransport;
+import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
@@ -24,16 +27,17 @@ import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
+import com.vesoft.nebula.graph.client.async.entry.AuthenticateCallback;
+import com.vesoft.nebula.graph.client.async.entry.ExecuteCallback;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,16 +45,16 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientImpl.class);
 
-    private ListeningExecutorService threadPool =
-            MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+    private ListeningExecutorService service;
 
     private final List<HostAndPort> addresses;
     private final int connectionRetry;
     private final int executionRetry;
     private final int timeout;
     private long sessionID;
-    private TTransport transport = null;
-    private GraphService.Client client;
+    private GraphService.AsyncClient client;
+    private TNonblockingTransport transport = null;
+    private TAsyncClientManager manager;
 
     /**
      * The Constructor of Graph Client.
@@ -64,14 +68,16 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
                                 int executionRetry) {
         checkArgument(timeout > 0);
         checkArgument(connectionRetry > 0);
-        addresses.forEach(address -> {
+        for (HostAndPort address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+                    host, port));
             }
-        });
+        }
+
+        service = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
         this.addresses = addresses;
         this.timeout = timeout;
@@ -86,7 +92,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     public AsyncGraphClientImpl(List<HostAndPort> addresses) {
         this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE,
-                DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -97,7 +103,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      */
     public AsyncGraphClientImpl(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
-                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -125,27 +131,43 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
             Random random = new Random(System.currentTimeMillis());
             int position = random.nextInt(addresses.size());
             HostAndPort address = addresses.get(position);
-            transport = new TSocket(address.getHost(), address.getPort(), timeout);
-            TProtocol protocol = new TCompactProtocol(transport);
 
             try {
-                transport.open();
-                client = new GraphService.Client(protocol);
-                AuthResponse result = client.authenticate(username, password);
-                if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
-                    LOGGER.error("User name or password error");
-                    return ErrorCode.E_BAD_USERNAME_PASSWORD;
+                manager = new TAsyncClientManager();
+                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                TProtocolFactory protocol = new TBinaryProtocol.Factory();
+                client = new GraphService.AsyncClient(protocol, manager, transport);
+                AuthenticateCallback callback = new AuthenticateCallback();
+                client.authenticate(username, password, callback);
+                Optional<TBase> respOption = Optional.absent();
+                while (!callback.checkReady()) {
+                    respOption = (Optional<TBase>) callback.getResult();
                 }
+                if (respOption.isPresent()) {
+                    AuthResponse result = (AuthResponse) respOption.get();
+                    if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
+                        LOGGER.error("User name or password error");
+                        return ErrorCode.E_BAD_USERNAME_PASSWORD;
+                    }
 
-                if (result.getError_code() != ErrorCode.SUCCEEDED) {
-                    LOGGER.error(String.format("Connect address %s failed : %s",
+                    if (result.getError_code() != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Connect address %s failed : %s",
                             address.toString(), result.getError_msg()));
+                    } else {
+                        sessionID = result.getSession_id();
+                        return ErrorCode.SUCCEEDED;
+                    }
                 } else {
-                    sessionID = result.getSession_id();
-                    return ErrorCode.SUCCEEDED;
+                    LOGGER.info(String.format("Auth not founded"));
                 }
-            } catch (TException tte) {
+            } catch (TTransportException tte) {
                 LOGGER.error("Connect failed: " + tte.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         return ErrorCode.E_FAIL_TO_CONNECT;
@@ -157,68 +179,71 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
      * @param statement The query sentence.
      * @return The ErrorCode of status, 0 is succeeded.
      */
-    public ListenableFuture<Optional<Integer>> execute(String statement) {
-        return threadPool.submit(new Callable<Optional<Integer>>() {
+    public ListenableFuture<Optional<Integer>> execute(final String statement) {
+        return service.submit(new Callable<Optional<Integer>>() {
             @Override
             public Optional<Integer> call() throws Exception {
-                if (!checkTransportOpened(transport)) {
-                    return Optional.of(ErrorCode.E_DISCONNECTED);
+                ExecuteCallback callback = new ExecuteCallback();
+                try {
+                    client.execute(sessionID, statement, callback);
+                } catch (TException e) {
+                    e.printStackTrace();
                 }
-                int retry = executionRetry;
-                while (retry-- > 0) {
-                    try {
-                        ExecutionResponse executionResponse =
-                                client.execute(sessionID, statement);
-                        if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
-                            LOGGER.error("execute error: " + executionResponse.getError_msg());
-                        }
-                        return Optional.of(executionResponse.getError_code());
-                    } catch (TException e) {
-                        LOGGER.error("Thrift rpc call failed: " + e.getMessage());
-                        return Optional.of(ErrorCode.E_RPC_FAILURE);
+                while (!callback.checkReady()) {
+                    Thread.sleep(100);
+                }
+                if (callback.getResult().isPresent()) {
+                    ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
+                    if (resp.getError_code() != ErrorCode.SUCCEEDED) {
+                        LOGGER.error("execute error: " + resp.getError_msg());
                     }
+                    return Optional.of(resp.getError_code());
+                } else {
+                    return Optional.absent();
                 }
-                return Optional.of(ErrorCode.E_RPC_FAILURE);
             }
         });
     }
 
-    /**
-     * Execute the query sentence which will return a ResultSet.
-     *
-     * @param statement The query sentence.
-     * @return The ErrorCode of status, 0 is succeeded.
-     */
     @Override
-    public ListenableFuture<Optional<ResultSet>> executeQuery(String statement) throws
-        ConnectionException, NGQLException, TException {
-        return threadPool.submit(new Callable<Optional<ResultSet>>() {
+    public ListenableFuture<Optional<ResultSet>> executeQuery(final String statement) {
+        return service.submit(new Callable<Optional<ResultSet>>() {
             @Override
             public Optional<ResultSet> call() throws Exception {
-                if (!checkTransportOpened(transport)) {
-                    LOGGER.error("Thrift rpc call failed");
-                    throw new ConnectionException();
+                ExecuteCallback callback = new ExecuteCallback();
+                try {
+                    client.execute(sessionID, statement, callback);
+                } catch (TException e) {
+                    e.printStackTrace();
                 }
-                ExecutionResponse executionResponse = client.execute(sessionID, statement);
-                int code = executionResponse.getError_code();
-                if (code == ErrorCode.SUCCEEDED) {
-                    return Optional.of(new ResultSet(executionResponse.getColumn_names(),
-                            executionResponse.getRows()));
+                while (!callback.checkReady()) {
+                    Thread.sleep(100);
+                }
+                if (callback.getResult().isPresent()) {
+                    ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
+                    int code = resp.getError_code();
+                    if (code == ErrorCode.SUCCEEDED) {
+                        ResultSet rs = new ResultSet(resp.getColumn_names(), resp.getRows());
+                        return Optional.of(rs);
+                    } else {
+                        LOGGER.error("Execute error: " + resp.getError_msg());
+                        throw new NGQLException(code);
+                    }
                 } else {
-                    LOGGER.error("Execute error: " + executionResponse.getError_msg());
-                    throw new NGQLException(code);
+                    return Optional.absent();
                 }
             }
         });
-
-    }
-
-    private boolean checkTransportOpened(TTransport transport) {
-        return !Objects.isNull(transport) && transport.isOpen();
     }
 
     @Override
-    public void close() throws Exception {
-
+    public void close() {
+        service.shutdown();
+        transport.close();
+        try {
+            manager.stop();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

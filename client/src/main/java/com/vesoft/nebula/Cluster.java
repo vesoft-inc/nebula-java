@@ -12,6 +12,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 
+import com.vesoft.nebula.session.Session;
 import java.util.List;
 
 /**
@@ -44,15 +45,14 @@ public class Cluster {
          *
          * @param host The host of address.
          * @param port The port of address.
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder addNode(String host, int port) {
-            addresses.forEach(address -> {
-                if (address.getHost().equals(host) && address.getPort() == port) {
+            for (HostAndPort address : addresses) {
+                if (address.getHostText().equals(host) && address.getPort() == port) {
                     throw new IllegalArgumentException("Address have duplicate");
                 }
-            });
-
+            }
             addresses.add(HostAndPort.fromParts(host, port));
             return this;
         }
@@ -61,7 +61,7 @@ public class Cluster {
          * Supplement user name.
          *
          * @param user Nebula user name.
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withUser(String user) {
             checkArgument(!Strings.isNullOrEmpty(user));
@@ -73,7 +73,7 @@ public class Cluster {
          * Supplement user password.
          *
          * @param password Nebula password.
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withPassword(String password) {
             checkArgument(!Strings.isNullOrEmpty(password));
@@ -85,7 +85,7 @@ public class Cluster {
          * Supplement connection timeout.
          *
          * @param timeout the connection timeout.
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withConnectionTimeout(long timeout) {
             checkArgument(timeout > 0);
@@ -97,7 +97,7 @@ public class Cluster {
          * Supplement connection retry.
          *
          * @param retry the connection retry.
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withConnectionRetry(int retry) {
             checkArgument(retry > 0);
@@ -109,7 +109,7 @@ public class Cluster {
          * Supplement execution retry.
          *
          * @param retry the execution retry.
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withExecutionRetry(int retry) {
             checkArgument(retry > 0);
@@ -118,7 +118,7 @@ public class Cluster {
         }
 
         /**
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withMeta() {
             type = Type.META;
@@ -126,7 +126,7 @@ public class Cluster {
         }
 
         /**
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withStorage() {
             type = Type.STORAGE;
@@ -134,7 +134,7 @@ public class Cluster {
         }
 
         /**
-         * @return
+         * @return The builder instance of cluster.
          */
         public Cluster.Builder withGraph() {
             type = Type.GRAPH;
@@ -142,7 +142,7 @@ public class Cluster {
         }
 
         /**
-         * @return
+         * @return The cluster instance.
          */
         public Cluster build() {
             Cluster cluster = new Cluster();

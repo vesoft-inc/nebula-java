@@ -26,4 +26,9 @@ public class NebulaRowSet implements Iterator<NebulaRow> {
     public NebulaRow next() {
         return null;
     }
+
+    @Override
+    public void remove() {
+
+    }
 }

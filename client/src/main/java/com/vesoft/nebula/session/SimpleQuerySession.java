@@ -4,12 +4,16 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula;
+package com.vesoft.nebula.session;
+
+import com.vesoft.nebula.graph.client.GraphClient;
+import java.io.IOException;
 
 /**
  *
  */
 public class SimpleQuerySession implements Session {
+    private GraphClient client;
 
     @Override
     public void connect() {
@@ -25,7 +29,7 @@ public class SimpleQuerySession implements Session {
     }
 
     @Override
-    public void close() throws Exception {
-
+    public void close() throws IOException {
+        client.close();
     }
 }

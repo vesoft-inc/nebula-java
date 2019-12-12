@@ -9,42 +9,77 @@ package com.vesoft.nebula.meta.client.async;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.Client;
-import com.vesoft.nebula.meta.client.entry.GetPartsAllocResult;
-import com.vesoft.nebula.meta.client.entry.ListEdgesResult;
-import com.vesoft.nebula.meta.client.entry.ListSpaceResult;
-import com.vesoft.nebula.meta.client.entry.ListTagsResult;
+import com.vesoft.nebula.meta.GetPartsAllocResp;
+import com.vesoft.nebula.meta.ListEdgesResp;
+import com.vesoft.nebula.meta.ListSpacesResp;
+import com.vesoft.nebula.meta.ListTagsResp;
 
 public interface AsyncMetaClient extends Client {
 
     /**
-     * ListSpaceResult contains a map using spaceIds as keys and spaceNames as values
+     * connect
      *
-     * @return
+     * @return boolean connection
      */
-    public ListenableFuture<Optional<ListSpaceResult>> listSpaces();
+    public boolean connect();
 
     /**
-     * GetPartsAllocResult contains a map using partIds as keys and lists of
-     * corresponding addresses as values
-     *
-     * @param spaceId space id
-     * @return
+     * Initialize Async Meta client
      */
-    public ListenableFuture<Optional<GetPartsAllocResult>> getPartsAlloc(int spaceId);
+    public void init();
 
     /**
-     * ListTagsResult contains a map using tagNames as keys and tagItems as values
+     * List all spaces
      *
-     * @param spaceId space id
-     * @return
+     * @return callback ListSpaceCallback
      */
-    public ListenableFuture<Optional<ListTagsResult>> listTags(int spaceId);
+    public ListenableFuture<Optional<ListSpacesResp>> listSpaces();
 
     /**
-     * ListEdgesResult contains a map using edgeNames as keys and edgeItems as values
+     * Get Parts Allocations
      *
-     * @param spaceId space id
+     * @param spaceName space name
      * @return
      */
-    public ListenableFuture<Optional<ListEdgesResult>> listEdges(int spaceId);
+    public ListenableFuture<Optional<GetPartsAllocResp>> getPartsAlloc(String spaceName);
+
+    /**
+     * Get Parts Allocations
+     *
+     * @param spaceId space ID
+     * @return
+     */
+    public ListenableFuture<Optional<GetPartsAllocResp>> getPartsAlloc(int spaceId);
+
+    /**
+     * List Tags
+     *
+     * @param spaceName space name
+     * @return
+     */
+    public ListenableFuture<Optional<ListTagsResp>> listTags(String spaceName);
+
+    /**
+     * List Tags
+     *
+     * @param spaceId space ID
+     * @return
+     */
+    public ListenableFuture<Optional<ListTagsResp>> listTags(int spaceId);
+
+    /**
+     * List Edges
+     *
+     * @param spaceName space name
+     * @return
+     */
+    public ListenableFuture<Optional<ListEdgesResp>> listEdges(String spaceName);
+
+    /**
+     * List Edges
+     *
+     * @param spaceId space ID
+     * @return
+     */
+    public ListenableFuture<Optional<ListEdgesResp>> listEdges(int spaceId);
 }
