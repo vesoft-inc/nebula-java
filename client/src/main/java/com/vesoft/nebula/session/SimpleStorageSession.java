@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.session;
 
-import com.vesoft.nebula.storage.client.StorageClient;
+import com.vesoft.nebula.client.storage.StorageClient;
 import java.io.IOException;
 
 public class SimpleStorageSession implements Session {

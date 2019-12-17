@@ -8,14 +8,13 @@ package com.vesoft.nebula.examples;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
+import com.vesoft.nebula.client.graph.ConnectionException;
+import com.vesoft.nebula.client.graph.GraphClient;
+import com.vesoft.nebula.client.graph.GraphClientImpl;
+import com.vesoft.nebula.client.graph.NGQLException;
+import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.GraphClient;
-import com.vesoft.nebula.graph.client.GraphClientImpl;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +55,8 @@ public class GraphClientExample {
     private static final String simpleQuery = "GO FROM 201 OVER like;";
 
     private static final String complexQuery = "GO FROM 201 OVER like "
-            + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
-            + "$$.student.age AS Age, $$.student.gender AS Gender;";
+        + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
+        + "$$.student.age AS Age, $$.student.gender AS Gender;";
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -66,9 +65,10 @@ public class GraphClientExample {
             return;
         }
 
-        GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]));
+        GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]))
+                .withUser("user").withPassword("password");
         try {
-            client.connect("user", "password");
+            client.connect();
             int code = client.switchSpace(SPACE_NAME);
             if (ErrorCode.SUCCEEDED != code) {
                 LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));
@@ -142,12 +142,10 @@ public class GraphClientExample {
                         value.columns.get(1).getInteger(),
                         new String(value.columns.get(2).getStr()));
             }
+        } catch (TException e) {
+            e.printStackTrace();
         } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            client.close();
         }
     }
 }

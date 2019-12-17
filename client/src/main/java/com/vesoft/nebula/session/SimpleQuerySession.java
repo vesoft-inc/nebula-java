@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.session;
 
-import com.vesoft.nebula.graph.client.GraphClient;
+import com.vesoft.nebula.client.graph.GraphClient;
 import java.io.IOException;
 
 /**

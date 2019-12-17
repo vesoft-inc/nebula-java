@@ -1,0 +1,624 @@
+/* Copyright (c) 2019 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
+package com.vesoft.nebula.client.storage;
+
+import com.facebook.thrift.TException;
+import com.facebook.thrift.transport.TTransport;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.Pair;
+import com.vesoft.nebula.client.meta.MetaClient;
+import com.vesoft.nebula.meta.ErrorCode;
+import com.vesoft.nebula.storage.ExecResponse;
+import com.vesoft.nebula.storage.GeneralResponse;
+import com.vesoft.nebula.storage.GetRequest;
+import com.vesoft.nebula.storage.PutRequest;
+import com.vesoft.nebula.storage.RemoveRequest;
+import com.vesoft.nebula.storage.ResultCode;
+import com.vesoft.nebula.storage.StorageService;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import org.apache.commons.codec.digest.MurmurHash2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Nebula Storage Client
+ */
+public class StorageClientImpl extends StorageClient {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class);
+
+    private TTransport transport = null;
+    private Map<HostAddr, StorageService.Client> clientMap;
+
+    private MetaClient client;
+    private Map<String, Map<Integer, HostAddr>> leaders;
+    private Map<String, Map<Integer, List<HostAddr>>> partsAlloc;
+
+    private ExecutorService threadPool;
+
+    public StorageClientImpl(List<HostAndPort> addresses, int timeout,
+                             int connectionRetry, int executionRetry) {
+        super(addresses, timeout, connectionRetry, executionRetry);
+    }
+
+    public StorageClientImpl(List<HostAndPort> addresses) {
+        super(addresses);
+    }
+
+    public StorageClientImpl(String host, int port) {
+        super(host, port);
+    }
+
+    /**
+     * Constructor with a MetaClient object
+     *
+     * @param client The Nebula MetaClient
+     */
+    public void withMetaClient(MetaClient client) {
+        this.client = client;
+        //        this.partsAlloc = this.metaClient.getParts();
+    }
+
+    @Override
+    public int doConnect(HostAndPort address) throws TException {
+        return 0;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return transport.isOpen();
+    }
+
+    /**
+     * Put key-value pair into partition
+     *
+     * @param space nebula space id
+     * @param key   nebula key
+     * @param value nebula value
+     * @return
+     */
+    @Override
+    public boolean put(String space, String key, String value) {
+        int part = keyToPartId(space, key);
+        HostAddr leader = getLeader(space, part);
+        if (leader == null) {
+            return false;
+        }
+
+        PutRequest request = new PutRequest();
+        int spaceID = client.getSpaceIDFromCache(space);
+        request.setSpace_id(spaceID);
+        Map<Integer, List<Pair>> parts = Maps.newHashMap();
+        List<Pair> pairs = Lists.newArrayList(new Pair(key, value));
+        parts.put(part, pairs);
+        request.setParts(parts);
+        LOGGER.debug(String.format("Put Request: %s", request.toString()));
+
+        return doPut(space, leader, request);
+    }
+
+    /**
+     * Put multi key-value pairs into partition
+     *
+     * @param space nebula space id
+     * @param kvs   key-value pairs
+     * @return
+     */
+    @Override
+    public boolean put(final String space, Map<String, String> kvs) {
+        Map<Integer, List<Pair>> groups = Maps.newHashMap();
+        for (Map.Entry<String, String> kv : kvs.entrySet()) {
+            int part = keyToPartId(space, kv.getKey());
+            if (!groups.containsKey(part)) {
+                groups.put(part, new ArrayList<Pair>());
+            }
+            groups.get(part).add(new Pair(kv.getKey(), kv.getValue()));
+        }
+
+        Map<HostAddr, PutRequest> requests = Maps.newHashMap();
+        int spaceID = client.getSpaceIDFromCache(space);
+        for (Map.Entry<Integer, List<Pair>> entry : groups.entrySet()) {
+            int part = entry.getKey();
+            HostAddr leader = getLeader(space, part);
+            if (!requests.containsKey(leader)) {
+                PutRequest request = new PutRequest();
+                request.setSpace_id(spaceID);
+                Map<Integer, List<Pair>> parts = Maps.newHashMap();
+                parts.put(part, entry.getValue());
+                request.setParts(parts);
+                LOGGER.debug(String.format("Put Request: %s", request.toString()));
+                requests.put(leader, request);
+            } else {
+                PutRequest request = requests.get(leader);
+                if (!request.parts.containsKey(part)) {
+                    request.parts.put(part, entry.getValue());
+                } else {
+                    request.parts.get(part).addAll(entry.getValue());
+                }
+            }
+        }
+
+        final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
+        final List<Boolean> responses = Collections.synchronizedList(
+                new ArrayList<Boolean>(groups.size()));
+        for (final Map.Entry<HostAddr, PutRequest> entry : requests.entrySet()) {
+            threadPool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    if (doPut(space, entry.getKey(), entry.getValue())) {
+                        responses.add(true);
+                    } else {
+                        responses.add(false);
+                    }
+                    countDownLatch.countDown();
+                }
+            });
+        }
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            LOGGER.error("Put interrupted");
+            return false;
+        }
+
+        for (Boolean ret : responses) {
+            if (!ret) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean doPut(String space, HostAddr leader, PutRequest request) {
+        if (!clientMap.containsKey(addr)) {
+            return false;
+        }
+
+        StorageService.Client client = clientMap.get(leader);
+        ExecResponse response;
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            try {
+                response = client.put(request);
+                if (!isSuccessfully(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), newLeader);
+                                StorageService.Client newClient = clientMap.get(leader);
+                                if (newClient != null) {
+                                    client = newClient;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    return true;
+                }
+            } catch (TException e) {
+                for (Integer part : request.parts.keySet()) {
+                    invalidLeader(space, part);
+                }
+                LOGGER.error(String.format("Put Failed: %s", e.getMessage()));
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get key from part
+     *
+     * @param space nebula space id
+     * @param key   nebula key
+     * @return
+     */
+    @Override
+    public Optional<String> get(String space, String key) {
+        int part = keyToPartId(space, key);
+        HostAddr leader = getLeader(space, part);
+        if (leader == null) {
+            return Optional.absent();
+        }
+
+        GetRequest request = new GetRequest();
+        int spaceID = client.getSpaceIDFromCache(space);
+        request.setSpace_id(spaceID);
+        Map<Integer, List<String>> parts = Maps.newHashMap();
+        parts.put(part, Arrays.asList(key));
+        request.setParts(parts);
+        LOGGER.debug(String.format("Get Request: %s", request.toString()));
+
+        Optional<Map<String, String>> result = doGet(space, leader, request);
+        if (!result.isPresent() || !result.get().containsKey(key)) {
+            return Optional.absent();
+        } else {
+            return Optional.of(result.get().get(key));
+        }
+    }
+
+    /**
+     * Get multi keys from part
+     *
+     * @param space nebula space id
+     * @param keys  nebula keys
+     * @return
+     */
+    @Override
+    public Optional<Map<String, String>> get(final String space, List<String> keys) {
+        Map<Integer, List<String>> groups = Maps.newHashMap();
+        for (String key : keys) {
+            int part = keyToPartId(space, key);
+            if (!groups.containsKey(part)) {
+                groups.put(part, new ArrayList<String>());
+            }
+            groups.get(part).add(key);
+        }
+
+        Map<HostAddr, GetRequest> requests = Maps.newHashMap();
+        for (Map.Entry<Integer, List<String>> entry : groups.entrySet()) {
+            int part = entry.getKey();
+            HostAddr leader = getLeader(space, part);
+            if (!requests.containsKey(leader)) {
+                GetRequest request = new GetRequest();
+                int spaceID = client.getSpaceIDFromCache(space);
+                request.setSpace_id(spaceID);
+                Map<Integer, List<String>> parts = Maps.newHashMap();
+                parts.put(part, entry.getValue());
+                request.setParts(parts);
+                LOGGER.debug(String.format("Get Request: %s", request.toString()));
+                requests.put(leader, request);
+            } else {
+                GetRequest request = requests.get(leader);
+                if (!request.parts.containsKey(part)) {
+                    request.parts.put(part, entry.getValue());
+                } else {
+                    request.parts.get(part).addAll(entry.getValue());
+                }
+            }
+        }
+
+        final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
+        final List<Optional<Map<String, String>>> responses = Collections.synchronizedList(
+                new ArrayList<Optional<Map<String, String>>>(groups.size()));
+        for (final Map.Entry<HostAddr, GetRequest> entry : requests.entrySet()) {
+            threadPool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    responses.add(doGet(space, entry.getKey(), entry.getValue()));
+                    countDownLatch.countDown();
+                }
+            });
+        }
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            LOGGER.error("Put interrupted");
+            return Optional.absent();
+        }
+
+        Map<String, String> result = Maps.newHashMap();
+        for (Optional<Map<String, String>> response : responses) {
+            if (response.isPresent()) {
+                result.putAll(response.get());
+            }
+        }
+        return Optional.of(result);
+    }
+
+    private Optional<Map<String, String>> doGet(String space, HostAddr leader,
+                                                GetRequest request) {
+        if (!clientMap.containsKey(addr)) {
+            return Optional.absent();
+        }
+        StorageService.Client client = clientMap.get(leader);
+
+        GeneralResponse response;
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            try {
+                response = client.get(request);
+                if (!isSuccessfully(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), newLeader);
+                                StorageService.Client newClient = clientMap.get(newLeader);
+                                if (newClient != null) {
+                                    client = newClient;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    return Optional.of(response.values);
+                }
+            } catch (TException e) {
+                for (Integer part : request.parts.keySet()) {
+                    invalidLeader(space, part);
+                }
+                LOGGER.error(String.format("Get Failed: %s", e.getMessage()));
+                return Optional.absent();
+            }
+        }
+        return Optional.absent();
+    }
+
+    /**
+     * Remove key from part
+     *
+     * @param space nebula space id
+     * @param key   nebula key
+     * @return
+     */
+    @Override
+    public boolean remove(String space, String key) {
+        int part = keyToPartId(space, key);
+        HostAddr leader = getLeader(space, part);
+        if (leader == null) {
+            return false;
+        }
+
+        RemoveRequest request = new RemoveRequest();
+        int spaceID = client.getSpaceIDFromCache(space);
+        request.setSpace_id(spaceID);
+        Map<Integer, List<String>> parts = Maps.newHashMap();
+        parts.put(part, Arrays.asList(key));
+        request.setParts(parts);
+        LOGGER.debug(String.format("Remove Request: %s", request.toString()));
+        return doRemove(space, leader, request);
+    }
+
+    /**
+     * Remove multi keys from part
+     *
+     * @param space nebula space id
+     * @param keys  nebula keys
+     * @return
+     */
+    @Override
+    public boolean remove(final String space, List<String> keys) {
+        Map<Integer, List<String>> groups = Maps.newHashMap();
+        for (String key : keys) {
+            int part = keyToPartId(space, key);
+            if (!groups.containsKey(part)) {
+                groups.put(part, new ArrayList<String>());
+            }
+            groups.get(part).add(key);
+        }
+
+        Map<HostAddr, RemoveRequest> requests = Maps.newHashMap();
+        for (Map.Entry<Integer, List<String>> entry : groups.entrySet()) {
+            int part = entry.getKey();
+            HostAddr leader = getLeader(space, part);
+            if (!requests.containsKey(leader)) {
+                RemoveRequest request = new RemoveRequest();
+                int spaceID = client.getSpaceIDFromCache(space);
+                request.setSpace_id(spaceID);
+                Map<Integer, List<String>> parts = Maps.newHashMap();
+                parts.put(part, entry.getValue());
+                request.setParts(parts);
+                LOGGER.debug(String.format("Put Request: %s", request.toString()));
+                requests.put(leader, request);
+            } else {
+                RemoveRequest request = requests.get(leader);
+                if (!request.parts.containsKey(part)) {
+                    request.parts.put(part, entry.getValue());
+                } else {
+                    request.parts.get(part).addAll(entry.getValue());
+                }
+            }
+        }
+
+        final CountDownLatch countDownLatch = new CountDownLatch(groups.size());
+        final List<Boolean> responses = Collections.synchronizedList(
+                new ArrayList<Boolean>(groups.size()));
+        for (final Map.Entry<HostAddr, RemoveRequest> entry : requests.entrySet()) {
+            threadPool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    if (doRemove(space, entry.getKey(), entry.getValue())) {
+                        responses.add(true);
+                    } else {
+                        responses.add(false);
+                    }
+                    countDownLatch.countDown();
+                }
+            });
+        }
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            LOGGER.error("Put interrupted");
+            return false;
+        }
+
+        for (Boolean ret : responses) {
+            if (!ret) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+    @Override
+    public boolean removeRange(int part, String start, String end) {
+        checkLeader(part);
+        RemoveRangeRequest request = new RemoveRangeRequest();
+        request.setSpace_id(space);
+        Map<Integer, List<Pair>> parts = Maps.newHashMap();
+        parts.put(part, Arrays.asList(new Pair(start, end)));
+        request.setParts(parts);
+        LOGGER.debug(String.format("Remove Range Request: %s", request.toString()));
+
+        ExecResponse response;
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            try {
+                response = client.removeRange(request);
+                if (!isSuccess(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                HostAddr address = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), address);
+                                connect(addr);
+                            }
+                        }
+                    }
+                } else {
+                    if (!leaders.get(space).containsKey(part)
+                            || leaders.get(space).get(part) != currentLeaderAddress) {
+                        updateLeader(space, part, currentLeaderAddress);
+                    }
+                    return true;
+                }
+            } catch (TException e) {
+                LOGGER.error(String.format("Remove Range Failed: %s", e.getMessage()));
+                return false;
+            }
+        }
+        return false;
+    }
+     */
+    private boolean doRemove(String space, HostAddr leader, RemoveRequest request) {
+        if (!clientMap.containsKey(addr)) {
+            return false;
+        }
+
+        StorageService.Client client = clientMap.get(leader);
+        ExecResponse response;
+        int retry = connectionRetry;
+        while (retry-- != 0) {
+            try {
+                response = client.remove(request);
+                if (!isSuccessfully(response)) {
+                    for (ResultCode code : response.result.getFailed_codes()) {
+                        if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                            HostAddr addr = code.getLeader();
+                            if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
+                                HostAddr newLeader = new HostAddr(addr.getIp(), addr.getPort());
+                                updateLeader(space, code.getPart_id(), newLeader);
+                                StorageService.Client newClient = clientMap.get(newLeader);
+                                if (newClient != null) {
+                                    client = newClient;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    return true;
+                }
+            } catch (TException e) {
+                for (Integer part : request.parts.keySet()) {
+                    invalidLeader(space, part);
+                }
+                LOGGER.error(String.format("Remove Failed: %s", e.getMessage()));
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Check the exec response is successfully
+     *
+     * @param response execution response
+     * @return
+     */
+    private boolean isSuccessfully(ExecResponse response) {
+        return response.result.failed_codes.size() == 0;
+    }
+
+    /**
+     * Check the general response is successfully
+     *
+     * @param response general response
+     * @return
+     */
+    private boolean isSuccessfully(GeneralResponse response) {
+        return response.result.failed_codes.size() == 0;
+    }
+
+    private void updateLeader(String spaceId, int partId, HostAddr addr) {
+        LOGGER.debug("Update leader for space " + spaceId + ", " + partId + " to " + addr);
+        if (!leaders.containsKey(spaceId)) {
+            leaders.put(spaceId, Maps.<Integer, HostAddr>newConcurrentMap());
+        }
+        leaders.get(spaceId).put(partId, addr);
+    }
+
+    private void invalidLeader(String spaceId, int partId) {
+        LOGGER.debug("Invalid leader for space " + spaceId + ", " + partId);
+        if (!leaders.containsKey(spaceId)) {
+            leaders.put(spaceId, Maps.<Integer, HostAddr>newConcurrentMap());
+        }
+        leaders.get(spaceId).remove(partId);
+    }
+
+    private HostAddr getLeader(String space, int part) {
+        if (!leaders.containsKey(space)) {
+            leaders.put(space, Maps.<Integer, HostAddr>newConcurrentMap());
+        }
+        if (leaders.get(space).containsKey(part)) {
+            return leaders.get(space).get(part);
+        } else {
+            List<HostAddr> addrs = client.getPart(space, part);
+            if (addrs != null) {
+                Random random = new Random(System.currentTimeMillis());
+                int position = random.nextInt(addrs.size());
+                HostAddr leader = addrs.get(position);
+                leaders.get(space).put(part, leader);
+                return leader;
+            }
+            return null;
+        }
+    }
+
+    private long hash(String key) {
+        return MurmurHash2.hash64(key);
+    }
+
+    private int keyToPartId(String space, String key) {
+        // TODO: need to handle this
+        if (!partsAlloc.containsKey(space)) {
+            LOGGER.error("Invalid part of " + key);
+            return -1;
+        }
+        // TODO: this is different to implement in c++, which converts to unsigned long at first
+        int partNum = partsAlloc.get(space).size();
+        return (int) (Math.abs(hash(key)) % partNum + 1);
+    }
+
+    /**
+     * Close the client
+     *
+     * @throws Exception close exception
+     */
+    public void close() {
+        threadPool.shutdownNow();
+        transport.close();
+    }
+}
+

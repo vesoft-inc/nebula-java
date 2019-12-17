@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.session;
 
-import com.vesoft.nebula.meta.client.MetaClient;
+import com.vesoft.nebula.client.meta.MetaClient;
 import java.io.IOException;
 
 public class SimpleMetaSession implements Session {
