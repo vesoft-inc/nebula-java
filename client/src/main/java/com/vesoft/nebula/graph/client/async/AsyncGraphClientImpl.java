@@ -69,7 +69,7 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
         checkArgument(timeout > 0);
         checkArgument(connectionRetry > 0);
         for (HostAndPort address : addresses) {
-            String host = address.getHost();
+            String host = address.getHostText();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
@@ -134,7 +134,8 @@ public class AsyncGraphClientImpl implements AsyncGraphClient {
 
             try {
                 manager = new TAsyncClientManager();
-                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                transport = new TNonblockingSocket(address.getHostText(),
+                        address.getPort(), timeout);
                 TProtocolFactory protocol = new TBinaryProtocol.Factory();
                 client = new GraphService.AsyncClient(protocol, manager, transport);
                 AuthenticateCallback callback = new AuthenticateCallback();
