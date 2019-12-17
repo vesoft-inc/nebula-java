@@ -41,6 +41,7 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
   private static final TField MONTH_FIELD_DESC = new TField("month", TType.STRUCT, (short)9);
   private static final TField DATE_FIELD_DESC = new TField("date", TType.STRUCT, (short)10);
   private static final TField DATETIME_FIELD_DESC = new TField("datetime", TType.STRUCT, (short)11);
+  private static final TField PATH_FIELD_DESC = new TField("path", TType.STRUCT, (short)41);
 
   public static final int BOOL_VAL = 1;
   public static final int INTEGER = 2;
@@ -53,6 +54,7 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
   public static final int MONTH = 9;
   public static final int DATE = 10;
   public static final int DATETIME = 11;
+  public static final int PATH = 41;
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -79,6 +81,8 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
         new StructMetaData(TType.STRUCT, Date.class)));
     tmpMetaDataMap.put(DATETIME, new FieldMetaData("datetime", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, DateTime.class)));
+    tmpMetaDataMap.put(PATH, new FieldMetaData("path", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, Path.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -163,6 +167,12 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
     return x;
   }
 
+  public static ColumnValue path(Path value) {
+    ColumnValue x = new ColumnValue();
+    x.setPath(value);
+    return x;
+  }
+
 
   @Override
   protected void checkType(short setField, Object value) throws ClassCastException {
@@ -222,6 +232,11 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
           break;
         }
         throw new ClassCastException("Was expecting value of type DateTime for field 'datetime', but got " + value.getClass().getSimpleName());
+      case PATH:
+        if (value instanceof Path) {
+          break;
+        }
+        throw new ClassCastException("Was expecting value of type Path for field 'path', but got " + value.getClass().getSimpleName());
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -291,6 +306,11 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
             break;
           case DATETIME:
             if (field.type == DATETIME_FIELD_DESC.type) {
+              setField_ = field.id;
+            }
+            break;
+          case PATH:
+            if (field.type == PATH_FIELD_DESC.type) {
               setField_ = field.id;
             }
             break;
@@ -408,6 +428,16 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
           TProtocolUtil.skip(iprot, field.type);
           return null;
         }
+      case PATH:
+        if (field.type == PATH_FIELD_DESC.type) {
+          Path path;
+          path = new Path();
+          path.read(iprot);
+          return path;
+        } else {
+          TProtocolUtil.skip(iprot, field.type);
+          return null;
+        }
       default:
         TProtocolUtil.skip(iprot, field.type);
         return null;
@@ -461,6 +491,10 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
         DateTime datetime = (DateTime)getFieldValue();
         datetime.write(oprot);
         return;
+      case PATH:
+        Path path = (Path)getFieldValue();
+        path.write(oprot);
+        return;
       default:
         throw new IllegalStateException("Cannot write union with unknown field " + setField);
     }
@@ -491,6 +525,8 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
         return DATE_FIELD_DESC;
       case DATETIME:
         return DATETIME_FIELD_DESC;
+      case PATH:
+        return PATH_FIELD_DESC;
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -645,6 +681,20 @@ public class ColumnValue extends TUnion<ColumnValue> implements Comparable<Colum
   public void setDatetime(DateTime value) {
     if (value == null) throw new NullPointerException();
     setField_ = DATETIME;
+    value_ = value;
+  }
+
+  public Path  getPath() {
+    if (getSetField() == PATH) {
+      return (Path)getFieldValue();
+    } else {
+      throw new RuntimeException("Cannot get field 'path' because union is currently set to " + getFieldDesc(getSetField()).name);
+    }
+  }
+
+  public void setPath(Path value) {
+    if (value == null) throw new NullPointerException();
+    setField_ = PATH;
     value_ = value;
   }
 
@@ -829,6 +879,21 @@ String space = prettyPrint ? " " : "";
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this. getDatetime(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    // Only print this field if it is the set field
+    if (getSetField() == PATH)
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("path");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getPath() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getPath(), indent + 1, prettyPrint));
       }
       first = false;
     }

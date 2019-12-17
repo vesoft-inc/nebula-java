@@ -80,7 +80,7 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
         }
 
         for (HostAndPort address : addresses) {
-            String host = address.getHost();
+            String host = address.getHostText();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
@@ -128,7 +128,8 @@ public class AsyncMetaClientImpl implements AsyncMetaClient {
             HostAndPort address = addresses.get(position);
             try {
                 manager = new TAsyncClientManager();
-                transport = new TNonblockingSocket(address.getHost(), address.getPort(), timeout);
+                transport = new TNonblockingSocket(address.getHostText(),
+                        address.getPort(), timeout);
                 TProtocolFactory protocol = new TBinaryProtocol.Factory();
                 client = new MetaService.AsyncClient(protocol, manager, transport);
                 return true;

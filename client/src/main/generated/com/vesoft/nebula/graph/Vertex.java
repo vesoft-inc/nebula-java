@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
+package com.vesoft.nebula.graph;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
@@ -27,89 +27,89 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comparable<AddHostsReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("AddHostsReq");
-  private static final TField HOSTS_FIELD_DESC = new TField("hosts", TType.LIST, (short)1);
+public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparable<Vertex> {
+  private static final TStruct STRUCT_DESC = new TStruct("Vertex");
+  private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)1);
 
-  public List<com.vesoft.nebula.HostAddr> hosts;
-  public static final int HOSTS = 1;
+  public long id;
+  public static final int ID = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
+  private static final int __ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(HOSTS, new FieldMetaData("hosts", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(AddHostsReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(Vertex.class, metaDataMap);
   }
 
-  public AddHostsReq() {
+  public Vertex() {
   }
 
-  public AddHostsReq(
-    List<com.vesoft.nebula.HostAddr> hosts)
+  public Vertex(
+    long id)
   {
     this();
-    this.hosts = hosts;
+    this.id = id;
+    setIdIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public AddHostsReq(AddHostsReq other) {
-    if (other.isSetHosts()) {
-      this.hosts = TBaseHelper.deepCopy(other.hosts);
-    }
+  public Vertex(Vertex other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.id = TBaseHelper.deepCopy(other.id);
   }
 
-  public AddHostsReq deepCopy() {
-    return new AddHostsReq(this);
+  public Vertex deepCopy() {
+    return new Vertex(this);
   }
 
   @Deprecated
-  public AddHostsReq clone() {
-    return new AddHostsReq(this);
+  public Vertex clone() {
+    return new Vertex(this);
   }
 
-  public List<com.vesoft.nebula.HostAddr>  getHosts() {
-    return this.hosts;
+  public long  getId() {
+    return this.id;
   }
 
-  public AddHostsReq setHosts(List<com.vesoft.nebula.HostAddr> hosts) {
-    this.hosts = hosts;
+  public Vertex setId(long id) {
+    this.id = id;
+    setIdIsSet(true);
     return this;
   }
 
-  public void unsetHosts() {
-    this.hosts = null;
+  public void unsetId() {
+    __isset_bit_vector.clear(__ID_ISSET_ID);
   }
 
-  // Returns true if field hosts is set (has been assigned a value) and false otherwise
-  public boolean isSetHosts() {
-    return this.hosts != null;
+  // Returns true if field id is set (has been assigned a value) and false otherwise
+  public boolean isSetId() {
+    return __isset_bit_vector.get(__ID_ISSET_ID);
   }
 
-  public void setHostsIsSet(boolean value) {
-    if (!value) {
-      this.hosts = null;
-    }
+  public void setIdIsSet(boolean value) {
+    __isset_bit_vector.set(__ID_ISSET_ID, value);
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case HOSTS:
+    case ID:
       if (value == null) {
-        unsetHosts();
+        unsetId();
       } else {
-        setHosts((List<com.vesoft.nebula.HostAddr>)value);
+        setId((Long)value);
       }
       break;
 
@@ -120,8 +120,8 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case HOSTS:
-      return getHosts();
+    case ID:
+      return new Long(getId());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -131,8 +131,8 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case HOSTS:
-      return isSetHosts();
+    case ID:
+      return isSetId();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -142,23 +142,23 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof AddHostsReq)
-      return this.equals((AddHostsReq)that);
+    if (that instanceof Vertex)
+      return this.equals((Vertex)that);
     return false;
   }
 
-  public boolean equals(AddHostsReq that) {
+  public boolean equals(Vertex that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_hosts = true && this.isSetHosts();
-    boolean that_present_hosts = true && that.isSetHosts();
-    if (this_present_hosts || that_present_hosts) {
-      if (!(this_present_hosts && that_present_hosts))
+    boolean this_present_id = true;
+    boolean that_present_id = true;
+    if (this_present_id || that_present_id) {
+      if (!(this_present_id && that_present_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.hosts, that.hosts))
+      if (!TBaseHelper.equalsNobinary(this.id, that.id))
         return false;
     }
 
@@ -169,16 +169,16 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_hosts = true && (isSetHosts());
-    builder.append(present_hosts);
-    if (present_hosts)
-      builder.append(hosts);
+    boolean present_id = true;
+    builder.append(present_id);
+    if (present_id)
+      builder.append(id);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(AddHostsReq other) {
+  public int compareTo(Vertex other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -189,11 +189,11 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
+    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
+    lastComparison = TBaseHelper.compareTo(id, other.id);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -211,22 +211,10 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       switch (field.id)
       {
-        case HOSTS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list38 = iprot.readListBegin();
-              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list38.size));
-              for (int _i39 = 0; 
-                   (_list38.size < 0) ? iprot.peekList() : (_i39 < _list38.size); 
-                   ++_i39)
-              {
-                com.vesoft.nebula.HostAddr _elem40;
-                _elem40 = new com.vesoft.nebula.HostAddr();
-                _elem40.read(iprot);
-                this.hosts.add(_elem40);
-              }
-              iprot.readListEnd();
-            }
+        case ID:
+          if (field.type == TType.I64) {
+            this.id = iprot.readI64();
+            setIdIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -248,17 +236,9 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.hosts != null) {
-      oprot.writeFieldBegin(HOSTS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter41 : this.hosts)        {
-          _iter41.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(ID_FIELD_DESC);
+    oprot.writeI64(this.id);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -278,21 +258,17 @@ public class AddHostsReq implements TBase, java.io.Serializable, Cloneable, Comp
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("AddHostsReq");
+    StringBuilder sb = new StringBuilder("Vertex");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("hosts");
+    sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHosts() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getHosts(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

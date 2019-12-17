@@ -7,6 +7,7 @@
 package com.vesoft.nebula.meta.client;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.vesoft.nebula.utils.NebulaCommon.LATEST_SCHEMA_VERSION;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TBinaryProtocol;
@@ -64,9 +65,6 @@ public class MetaClientImpl implements MetaClient {
     private Map<Integer, Map<Integer, List<HostAddr>>> parts;
     private Map<Integer, Map<String, TagItem>> tagItems;
     private Map<Integer, Map<String, EdgeItem>> edgeItems;
-
-    private static final int LATEST_TAG_VERSION = -1;
-    private static final int LATEST_EDGE_VERSION = -1;
 
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry) {
         checkArgument(timeout > 0);
@@ -175,7 +173,7 @@ public class MetaClientImpl implements MetaClient {
     @Override
     public Integer getEdgeType(int space, String edgeName) {
         if (!this.edgeItems.containsKey(space)) {
-            getEdgeTypes(space);
+            getEdgeItems(space);
         }
 
         Map<String, EdgeItem> map = edgeItems.get(space);
@@ -223,7 +221,7 @@ public class MetaClientImpl implements MetaClient {
     }
 
     public Map<String, Class> getTagSchema(String spaceName, String tagName) {
-        return getTagSchema(spaceName, tagName, LATEST_TAG_VERSION);
+        return getTagSchema(spaceName, tagName, LATEST_SCHEMA_VERSION);
     }
 
     @Override
@@ -253,7 +251,7 @@ public class MetaClientImpl implements MetaClient {
     }
 
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName) {
-        return getEdgeSchema(spaceName, edgeName, LATEST_EDGE_VERSION);
+        return getEdgeSchema(spaceName, edgeName, LATEST_SCHEMA_VERSION);
     }
 
     public void init() {
@@ -268,7 +266,7 @@ public class MetaClientImpl implements MetaClient {
             spaceNames.put(space.getName(), spaceId);
             getParts(spaceId);
             getTagItems(spaceId);
-            getEdgeTypes(spaceId);
+            getEdgeItems(spaceId);
         }
     }
 
@@ -389,7 +387,7 @@ public class MetaClientImpl implements MetaClient {
      * @param spaceId Nebula space ID
      * @return
      */
-    private boolean getEdgeTypes(int spaceId) {
+    private boolean getEdgeItems(int spaceId) {
         ListEdgesReq request = new ListEdgesReq();
         request.setSpace_id(spaceId);
 
@@ -415,6 +413,68 @@ public class MetaClientImpl implements MetaClient {
             return false;
         }
         return true;
+    }
+
+    public TagItem getTagItemFromCache(int space, String tagName) {
+        if (!this.tagItems.containsKey(space)) {
+            getTagItems(space);
+        }
+
+        Map<String, TagItem> tagMap = tagItems.get(space);
+        if (tagMap == null || tagMap.isEmpty()) {
+            return null;
+        }
+
+        return tagMap.get(tagName);
+    }
+
+    public EdgeItem getEdgeItemCache(int space, String edgeName) {
+        if (!this.edgeItems.containsKey(space)) {
+            getEdgeItems(space);
+        }
+
+        Map<String, EdgeItem> edgeMap = edgeItems.get(space);
+        if (edgeMap == null || edgeMap.isEmpty()) {
+            return null;
+        }
+
+        return edgeMap.get(edgeName);
+    }
+
+    public String getTagNameFromCache(int space, int tagId) {
+        if (!this.tagItems.containsKey(space)) {
+            getTagItems(space);
+        }
+
+        Map<String, TagItem> tagMap = tagItems.get(space);
+        if (tagMap == null || tagMap.isEmpty()) {
+            return null;
+        }
+
+        for (Map.Entry<String, TagItem> entry : tagMap.entrySet()) {
+            if (entry.getValue().tag_id == tagId) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public String getEdgeNameFromCache(int space, int edgeType) {
+        if (!this.edgeItems.containsKey(space)) {
+            getEdgeItems(space);
+        }
+
+        Map<String, EdgeItem> edgeMap = edgeItems.get(space);
+        if (edgeMap == null || edgeMap.isEmpty()) {
+            return null;
+        }
+
+        for (Map.Entry<String, EdgeItem> entry : edgeMap.entrySet()) {
+            if (entry.getValue().edge_type == edgeType) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     public HostAndPort getLeader() {

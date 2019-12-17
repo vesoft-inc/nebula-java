@@ -20,18 +20,18 @@ public final class NebulaTypeUtil {
 
     public static Class supportedTypeToClass(int type) {
         switch (type) {
-          case SupportedType.BOOL:
-              return Boolean.class;
-          case SupportedType.INT:
-          case SupportedType.VID:
-              return Long.class;
-          case SupportedType.FLOAT:
-          case SupportedType.DOUBLE:
-              return Double.class;
-          case SupportedType.STRING:
-              return String.class;
-          default:
-              return Void.class;
+            case SupportedType.BOOL:
+                return Boolean.class;
+            case SupportedType.INT:
+            case SupportedType.VID:
+                return Long.class;
+            case SupportedType.FLOAT:
+            case SupportedType.DOUBLE:
+                return Double.class;
+            case SupportedType.STRING:
+                return String.class;
+            default:
+                return Void.class;
         }
     }
 }

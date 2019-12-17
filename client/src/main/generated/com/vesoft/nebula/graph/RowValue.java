@@ -214,16 +214,16 @@ public class RowValue implements TBase, java.io.Serializable, Cloneable, Compara
         case COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list0 = iprot.readListBegin();
-              this.columns = new ArrayList<ColumnValue>(Math.max(0, _list0.size));
-              for (int _i1 = 0; 
-                   (_list0.size < 0) ? iprot.peekList() : (_i1 < _list0.size); 
-                   ++_i1)
+              TList _list4 = iprot.readListBegin();
+              this.columns = new ArrayList<ColumnValue>(Math.max(0, _list4.size));
+              for (int _i5 = 0; 
+                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
+                   ++_i5)
               {
-                ColumnValue _elem2;
-                _elem2 = new ColumnValue();
-                _elem2.read(iprot);
-                this.columns.add(_elem2);
+                ColumnValue _elem6;
+                _elem6 = new ColumnValue();
+                _elem6.read(iprot);
+                this.columns.add(_elem6);
               }
               iprot.readListEnd();
             }
@@ -252,8 +252,8 @@ public class RowValue implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.columns.size()));
-        for (ColumnValue _iter3 : this.columns)        {
-          _iter3.write(oprot);
+        for (ColumnValue _iter7 : this.columns)        {
+          _iter7.write(oprot);
         }
         oprot.writeListEnd();
       }
