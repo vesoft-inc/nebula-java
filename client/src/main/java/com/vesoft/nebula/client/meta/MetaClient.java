@@ -7,38 +7,36 @@
 package com.vesoft.nebula.client.meta;
 
 import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.AbstractClient;
-import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.meta.IdName;
+import com.vesoft.nebula.Schema;
+import com.vesoft.nebula.client.meta.entry.SpaceNameID;
+import com.vesoft.nebula.meta.EdgeItem;
+import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
 import java.util.Map;
 
-public abstract class MetaClient extends AbstractClient {
+public interface MetaClient extends AutoCloseable {
 
-    public MetaClient(List<HostAndPort> addresses, int timeout,
-                      int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
-    }
+    public static final int LATEST_SCHEMA_VERSION = -1;
 
-    public MetaClient(List<HostAndPort> addresses) {
-        super(addresses);
-    }
+    public int getSpaceIDFromCache(String spaceName);
 
-    public MetaClient(String host, int port) {
-        super(host, port);
-    }
+    public List<SpaceNameID> listSpaces();
 
-    public abstract List<IdName> listSpaces();
+    public Map<String, Map<Integer, List<HostAndPort>>> getParts();
 
-    public abstract int getSpaceIDFromCache(String name);
+    public List<HostAndPort> getPart(String spaceName, int part);
 
-    public abstract List<HostAddr> getPart(String spaceName, int partID);
+    public Schema getTag(String spaceName, String tagName);
 
-    public abstract Map<String, Map<Integer, List<HostAddr>>> getParts();
+    public Schema getEdge(String spaceName, String edgeName);
 
-    public abstract Integer getTagId(String spaceName, String tagName);
+    public List<TagItem> getTags(String spaceName);
 
-    public abstract Integer getEdgeType(String spaceName, String edgeName);
+    public TagItem getTagItemFromCache(String spaceName, String tagName);
+
+    public List<EdgeItem> getEdges(String spaceName);
+
+    public EdgeItem getEdgeItemFromCache(String spaceName, String edgeName);
 
     /**
      * Get tag schema with specified version.
@@ -48,9 +46,9 @@ public abstract class MetaClient extends AbstractClient {
      * @param version   the tag's version
      * @return
      */
-    public abstract Map<String, Class> getTagSchema(String spaceName,
-                                                    String tagName,
-                                                    long version);
+    public Map<String, Class> getTagSchema(String spaceName,
+                                           String tagName,
+                                           long version);
 
     /**
      * Get edge schema with specified version.
@@ -60,9 +58,9 @@ public abstract class MetaClient extends AbstractClient {
      * @param version   the edge's version
      * @return
      */
-    public abstract Map<String, Class> getEdgeSchema(String spaceName,
-                                                     String edgeName,
-                                                     long version);
+    public Map<String, Class> getEdgeSchema(String spaceName,
+                                            String edgeName,
+                                            long version);
 
 }
 

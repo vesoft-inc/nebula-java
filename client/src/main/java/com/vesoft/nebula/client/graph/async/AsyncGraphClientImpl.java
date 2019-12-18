@@ -17,6 +17,7 @@ import com.google.common.base.Optional;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.vesoft.nebula.AsyncAbstractClient;
 import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.client.graph.async.entry.AuthenticateCallback;
@@ -32,7 +33,8 @@ import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AsyncGraphClientImpl extends AsyncGraphClient {
+public class AsyncGraphClientImpl extends AsyncAbstractClient
+        implements AsyncGraphClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientImpl.class);
 
@@ -40,6 +42,8 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
 
     private long sessionID;
     private GraphService.AsyncClient client;
+    private String user;
+    private String password;
 
     public AsyncGraphClientImpl(List addresses, int timeout,
                                 int connectionRetry, int executionRetry) {
@@ -55,7 +59,17 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
     }
 
     @Override
-    public int doConnect(HostAndPort address) throws TException {
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public int doConnect(List<HostAndPort> address) throws TException {
         return 0;
     }
 
@@ -126,27 +140,24 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
      * @return The ErrorCode of status, 0 is succeeded.
      */
     public ListenableFuture<Optional<Integer>> execute(final String statement) {
-        return service.submit(new Callable<Optional<Integer>>() {
-            @Override
-            public Optional<Integer> call() throws Exception {
-                ExecuteCallback callback = new ExecuteCallback();
-                try {
-                    client.execute(sessionID, statement, callback);
-                } catch (TException e) {
-                    e.printStackTrace();
+        return service.submit(() -> {
+            ExecuteCallback callback = new ExecuteCallback();
+            try {
+                client.execute(sessionID, statement, callback);
+            } catch (TException e) {
+                e.printStackTrace();
+            }
+            while (!callback.checkReady()) {
+                Thread.sleep(100);
+            }
+            if (callback.getResult().isPresent()) {
+                ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
+                if (resp.getError_code() != ErrorCode.SUCCEEDED) {
+                    LOGGER.error("execute error: " + resp.getError_msg());
                 }
-                while (!callback.checkReady()) {
-                    Thread.sleep(100);
-                }
-                if (callback.getResult().isPresent()) {
-                    ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
-                    if (resp.getError_code() != ErrorCode.SUCCEEDED) {
-                        LOGGER.error("execute error: " + resp.getError_msg());
-                    }
-                    return Optional.of(resp.getError_code());
-                } else {
-                    return Optional.absent();
-                }
+                return Optional.of(resp.getError_code());
+            } else {
+                return Optional.absent();
             }
         });
     }
@@ -192,4 +203,5 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
             e.printStackTrace();
         }
     }
+
 }

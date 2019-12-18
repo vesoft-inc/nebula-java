@@ -7,11 +7,16 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
-import com.facebook.thrift.transport.TTransport;
+import com.facebook.thrift.protocol.TCompactProtocol;
+import com.facebook.thrift.transport.TSocket;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.AbstractClient;
 import com.vesoft.nebula.ColumnDef;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.Schema;
+import com.vesoft.nebula.client.meta.entry.SpaceNameID;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.GetEdgeReq;
@@ -20,7 +25,6 @@ import com.vesoft.nebula.meta.GetPartsAllocReq;
 import com.vesoft.nebula.meta.GetPartsAllocResp;
 import com.vesoft.nebula.meta.GetTagReq;
 import com.vesoft.nebula.meta.GetTagResp;
-import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListEdgesReq;
 import com.vesoft.nebula.meta.ListEdgesResp;
 import com.vesoft.nebula.meta.ListSpacesReq;
@@ -29,34 +33,38 @@ import com.vesoft.nebula.meta.ListTagsReq;
 import com.vesoft.nebula.meta.ListTagsResp;
 import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.TagItem;
+import com.vesoft.nebula.utils.AddressUtil;
 import com.vesoft.nebula.utils.NebulaTypeUtil;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Nebula Meta Client
  */
-public class MetaClientImpl extends MetaClient {
+public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
+    private HostAndPort leader;
+
+    // Use a lock to protect the cache
+    private ReentrantReadWriteLock lock;
+    private Map<String, Integer> spaceNameID;
+    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation;
+    private Map<String, Map<String, TagItem>> spaceTagItems;
+    private Map<String, Map<String, EdgeItem>> spaceEdgeItems;
+
+
     private MetaService.Client client;
 
-    private TTransport transport = null;
-    private HostAndPort leader;
-    private List<IdName> spaces;
-    private Map<String, Integer> spaceNames;
-    private Map<String, Map<Integer, List<HostAddr>>> parts;
-    private Map<String, Map<String, TagItem>> tagItems;
-    private Map<String, Map<String, EdgeItem>> edgeItems;
-
-    private static final int LATEST_TAG_VERSION = -1;
-    private static final int LATEST_EDGE_VERSION = -1;
-
     public MetaClientImpl(List<HostAndPort> addresses, int timeout,
-                           int connectionRetry, int executionRetry) {
+                          int connectionRetry, int executionRetry) {
         super(addresses, timeout, connectionRetry, executionRetry);
     }
 
@@ -68,26 +76,164 @@ public class MetaClientImpl extends MetaClient {
         super(host, port);
     }
 
+    @Override
+    public int doConnect(List<HostAndPort> addresses) throws TException {
+        Random random = new Random(System.currentTimeMillis());
+        int position = random.nextInt(addresses.size());
+        HostAndPort address = addresses.get(position);
+        transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        transport.open();
+        protocol = new TCompactProtocol(transport);
+        client = new MetaService.Client(protocol);
+
+        for (SpaceNameID space : listSpaces()) {
+            String spaceName = space.getName();
+            spaceNameID.put(spaceName, space.getId());
+            spacePartLocation.put(spaceName, getParts(spaceName));
+
+            // Loading tag schema's cache
+            Map<String, TagItem> tags = Maps.newHashMap();
+            for (TagItem item : getTags(spaceName)) {
+                tags.put(item.getTag_name(), item);
+            }
+            spaceTagItems.put(spaceName, tags);
+
+            // Loading edge schema's cache
+            Map<String, EdgeItem> edges = Maps.newHashMap();
+            for (EdgeItem item : getEdges(spaceName)) {
+                edges.put(item.getEdge_name(), item);
+            }
+            spaceEdgeItems.put(spaceName, edges);
+        }
+        return 0;
+    }
+
+    public Map<String, Integer> getSpaces() {
+        return spaceNameID;
+    }
+
+    public int getSpaceIDFromCache(String name) {
+        if (!spaceNameID.containsKey(name)) {
+            return -1;
+        } else {
+            return spaceNameID.get(name);
+        }
+    }
+
+    /**
+     * Get all spaces and store in this.spaces
+     *
+     * @return
+     */
+    public List<SpaceNameID> listSpaces() {
+        ListSpacesReq request = new ListSpacesReq();
+        ListSpacesResp response;
+        try {
+            response = client.listSpaces(request);
+        } catch (TException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
+            return Lists.newLinkedList();
+        }
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getSpaces().stream().map(SpaceNameID::new).collect(Collectors.toList());
+        } else {
+            LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
+            return Lists.newLinkedList();
+        }
+    }
+
     /**
      * Get a list of host addresses by a particular space Id
      *
      * @param spaceName Nebula space name
-     * @param partId    Nebula partition ID
+     * @param part      Nebula partition ID
      * @return
      */
-    @Override
-    public List<HostAddr> getPart(String spaceName, int partId) {
-        if (!this.parts.containsKey(spaceName)) {
-            getParts(spaceName);
+    public List<HostAndPort> getPartFromCache(String spaceName, int part) {
+        if (!this.spacePartLocation.containsKey(spaceName)) {
+            if (lock.writeLock().tryLock()) {
+                spacePartLocation.put(spaceName, getParts(spaceName));
+            }
+            lock.writeLock().unlock();
         }
 
-        Map<Integer, List<HostAddr>> map = parts.get(spaceName);
-        if (map == null || map.isEmpty()) {
-            return null;
+        Map<Integer, List<HostAndPort>> map = spacePartLocation.get(spaceName);
+        if (Objects.isNull(map) || map.containsKey(part)) {
+            return Lists.newArrayList();
         }
-        return map.get(partId);
+        return map.get(part);
     }
 
+    /**
+     * Get all parts and the addrs in a space
+     * Store in this.parts
+     *
+     * @param spaceName Nebula space name
+     * @return
+     */
+    private Map<Integer, List<HostAndPort>> getParts(String spaceName) {
+        GetPartsAllocReq request = new GetPartsAllocReq();
+        int spaceID = getSpaceIDFromCache(spaceName);
+        request.setSpace_id(spaceID);
+
+        GetPartsAllocResp response;
+        try {
+            response = client.getPartsAlloc(request);
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Parts failed: %s", e.getMessage()));
+            return Maps.newHashMap();
+        }
+
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            Map<Integer, List<HostAndPort>> addressMap = Maps.newHashMap();
+            for (Map.Entry<Integer, List<HostAddr>> entry : response.getParts().entrySet()) {
+                List<HostAndPort> addresses = Lists.newLinkedList();
+                for (HostAddr address : entry.getValue()) {
+                    String host = AddressUtil.intToIPv4(address.ip);
+                    HostAndPort pair = HostAndPort.fromParts(host, address.port);
+                    addresses.add(pair);
+                }
+                addressMap.put(entry.getKey(), addresses);
+            }
+            return addressMap;
+        } else {
+            LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
+            return Maps.newHashMap();
+        }
+    }
+
+    @Override
+    public Map<String, Map<Integer, List<HostAndPort>>> getParts() {
+        return this.spacePartLocation;
+    }
+
+    @Override
+    public List<HostAndPort> getPart(String spaceName, int part) {
+        return null;
+    }
+
+    public Map<String, Map<Integer, List<HostAndPort>>> getPartsFromCache() {
+        return this.spacePartLocation;
+    }
+
+    public TagItem getTagItemFromCache(String spaceName, String tagName) {
+        if (!spaceTagItems.containsKey(spaceName)) {
+            if (lock.writeLock().tryLock()) {
+                Map<String, TagItem> tags = Maps.newHashMap();
+                for (TagItem item : getTags(spaceName)) {
+                    tags.put(item.getTag_name(), item);
+                }
+                spaceTagItems.put(spaceName, tags);
+            }
+            lock.writeLock().unlock();
+        }
+
+        Map<String, TagItem> map = spaceTagItems.get(spaceName);
+        if (Objects.isNull(map) || !map.containsKey(tagName)) {
+            return null;
+        }
+        return map.get(tagName);
+    }
 
     /**
      * Get a tag Id by a particular space Id and tag name
@@ -96,55 +242,74 @@ public class MetaClientImpl extends MetaClient {
      * @param tagName   Nebula tag name
      * @return
      */
-    @Override
-    public Integer getTagId(String spaceName, String tagName) {
-        if (!this.tagItems.containsKey(spaceName)) {
-            getTagItems(spaceName);
+    public Integer getTagIdFromCache(String spaceName, String tagName) {
+        TagItem item = getTagItemFromCache(spaceName, tagName);
+        if (Objects.isNull(item)) {
+            return -1;
+        } else {
+            return item.getTag_id();
         }
-
-        Map<String, TagItem> map = tagItems.get(spaceName);
-        if (map == null || map.isEmpty()) {
-            return null;
-        }
-
-        TagItem tag = map.get(tagName);
-        return tag == null ? -1 : tag.getTag_id();
     }
 
     /**
-     * Get a edge type by a particular space Id and edge name
+     * Get all tags, store as tagName : tagItem in this.tagItems
      *
-     * @param space    Nebula space ID
-     * @param edgeName Nebula edge name
+     * @param spaceName Nebula space name
      * @return
      */
     @Override
-    public Integer getEdgeType(String space, String edgeName) {
-        if (!this.edgeItems.containsKey(space)) {
-            getEdgeTypes(space);
+    public List<TagItem> getTags(String spaceName) {
+        ListTagsReq request = new ListTagsReq();
+        int spaceID = getSpaceIDFromCache(spaceName);
+        request.setSpace_id(spaceID);
+        ListTagsResp response;
+        try {
+            response = client.listTags(request);
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
+            return Lists.newLinkedList();
         }
 
-        Map<String, EdgeItem> map = edgeItems.get(space);
-        if (map == null || map.isEmpty()) {
-            return null;
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getTags();
+        } else {
+            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
+            return Lists.newLinkedList();
+        }
+    }
+
+    @Override
+    public Schema getTag(String spaceName, String tagName) {
+        GetTagReq request = new GetTagReq();
+        int spaceID = getSpaceIDFromCache(spaceName);
+        request.setSpace_id(spaceID);
+        GetTagResp response;
+
+        try {
+            response = client.getTag(request);
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
+            return new Schema();
         }
 
-        EdgeItem edge = map.get(edgeName);
-        return edge == null ? -1 : edge.getEdge_type();
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getSchema();
+        } else {
+            return new Schema();
+        }
     }
 
     @Override
     public Map<String, Class> getTagSchema(String spaceName, String tagName, long version) {
         Map<String, Class> result = Maps.newHashMap();
-        if (!spaceNames.containsKey(spaceName)) {
+        if (!spaceNameID.containsKey(spaceName)) {
             return result;
         }
 
         GetTagReq request = new GetTagReq();
-        request.setSpace_id(spaceNames.get(spaceName));
+        request.setSpace_id(spaceNameID.get(spaceName));
         request.setTag_name(tagName);
         request.setVersion(version);
-
         GetTagResp response;
         try {
             response = client.getTag(request);
@@ -160,18 +325,103 @@ public class MetaClientImpl extends MetaClient {
     }
 
     public Map<String, Class> getTagSchema(String spaceName, String tagName) {
-        return getTagSchema(spaceName, tagName, LATEST_TAG_VERSION);
+        return getTagSchema(spaceName, tagName, LATEST_SCHEMA_VERSION);
+    }
+
+    public EdgeItem getEdgeItemFromCache(String spaceName, String edgeName) {
+        if (!spaceEdgeItems.containsKey(spaceName)) {
+            if (lock.writeLock().tryLock()) {
+                Map<String, EdgeItem> edges = Maps.newHashMap();
+                for (EdgeItem item : getEdges(spaceName)) {
+                    edges.put(item.getEdge_name(), item);
+                }
+                spaceEdgeItems.put(spaceName, edges);
+            }
+            lock.writeLock().unlock();
+        }
+
+        Map<String, EdgeItem> map = spaceEdgeItems.get(spaceName);
+        if (Objects.isNull(map) || !map.containsKey(edgeName)) {
+            return new EdgeItem();
+        }
+
+        return map.get(edgeName);
+    }
+
+    /**
+     * Get a edge type by a particular space name and edge name
+     *
+     * @param spaceName Nebula space name
+     * @param edgeName  Nebula edge name
+     * @return
+     */
+    public Integer getEdgeTypeFromCache(String spaceName, String edgeName) {
+        EdgeItem item = getEdgeItemFromCache(spaceName, edgeName);
+        if (Objects.isNull(item)) {
+            return -1;
+        } else {
+            return item.getEdge_type();
+        }
+    }
+
+    /**
+     * Get all edges, store as edgeName : edgeItem in this.edgeItems
+     *
+     * @param spaceName Nebula space name
+     * @return
+     */
+    @Override
+    public List<EdgeItem> getEdges(String spaceName) {
+        ListEdgesReq request = new ListEdgesReq();
+        int spaceID = getSpaceIDFromCache(spaceName);
+        request.setSpace_id(spaceID);
+
+        ListEdgesResp response;
+        try {
+            response = client.listEdges(request);
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
+            return Lists.newLinkedList();
+        }
+
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getEdges();
+        } else {
+            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
+            return Lists.newLinkedList();
+        }
+    }
+
+    @Override
+    public Schema getEdge(String spaceName, String edgeName) {
+        GetEdgeReq request = new GetEdgeReq();
+        int spaceID = getSpaceIDFromCache(spaceName);
+        request.setSpace_id(spaceID);
+        GetEdgeResp response;
+
+        try {
+            response = client.getEdge(request);
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
+            return new Schema();
+        }
+
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getSchema();
+        } else {
+            return new Schema();
+        }
     }
 
     @Override
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName, long version) {
         Map<String, Class> result = Maps.newHashMap();
-        if (!spaceNames.containsKey(spaceName)) {
+        if (!spaceNameID.containsKey(spaceName)) {
             return result;
         }
 
         GetEdgeReq request = new GetEdgeReq();
-        request.setSpace_id(spaceNames.get(spaceName));
+        request.setSpace_id(spaceNameID.get(spaceName));
         request.setEdge_name(edgeName);
         request.setVersion(version);
 
@@ -190,183 +440,13 @@ public class MetaClientImpl extends MetaClient {
     }
 
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName) {
-        return getEdgeSchema(spaceName, edgeName, LATEST_EDGE_VERSION);
+        return getEdgeSchema(spaceName, edgeName, LATEST_SCHEMA_VERSION);
     }
 
-    public void init() {
-        int isConnected = -1;
-        try {
-            isConnected = connect();
-        } catch (TException e) {
-            e.printStackTrace();
-        }
-
-        if (isConnected != 0) {
-            LOGGER.error("Connection has not been established. Connect Failed");
-        }
-
-        this.spaces = listSpaces();
-        for (IdName space : spaces) {
-            int spaceId = space.getId().getSpace_id();
-            spaceNames.put(space.getName(), spaceId);
-            getParts(space.getName());
-            getTagItems(space.getName());
-            getEdgeTypes(space.getName());
-        }
-    }
-
-
-    @Override
-    public int doConnect(HostAndPort address) throws TException {
-        return 0;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return transport.isOpen();
-    }
-
-    /**
-     * Get all spaces and store in this.spaces
-     *
-     * @return
-     */
-    public List<IdName> listSpaces() {
-        ListSpacesReq request = new ListSpacesReq();
-        ListSpacesResp response;
-        try {
-            response = client.listSpaces(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
-            return null;
-        }
-        if (response.getCode() == ErrorCode.SUCCEEDED) {
-            return response.getSpaces();
-        } else {
-            LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
-            return null;
-        }
-    }
-
-    @Override
-    public int getSpaceIDFromCache(String name) {
-        return 0;
-    }
-
-    @Override
-    public Map<String, Map<Integer, List<HostAddr>>> getParts() {
-        return this.parts;
-    }
-
-    /**
-     * Get all parts and the addrs in a space
-     * Store in this.parts
-     *
-     * @param spaceName Nebula space name
-     * @return
-     */
-    private boolean getParts(String spaceName) {
-        GetPartsAllocReq request = new GetPartsAllocReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
-        request.setSpace_id(spaceID);
-
-        GetPartsAllocResp response;
-        try {
-            response = client.getPartsAlloc(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("Get Parts failed: %s", e.getMessage()));
-            return false;
-        }
-
-        if (response.getCode() == ErrorCode.SUCCEEDED) {
-            Map<Integer, List<HostAddr>> part = response.getParts();
-            this.parts.put(spaceName, part);
-        } else {
-            LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Get all tags, store as tagName : tagItem in this.tagItems
-     *
-     * @param spaceName Nebula space name
-     * @return
-     */
-    private boolean getTagItems(String spaceName) {
-        ListTagsReq request = new ListTagsReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
-        request.setSpace_id(spaceID);
-
-        ListTagsResp response;
-        try {
-            response = client.listTags(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
-            return false;
-        }
-        if (response.getCode() == ErrorCode.SUCCEEDED) {
-            List<TagItem> tagItem = response.getTags();
-            Map<String, TagItem> tmp = Maps.newHashMap();
-            if (tagItem != null) {
-                for (TagItem ti : tagItem) {
-                    tmp.put(ti.getTag_name(), ti);
-                }
-                this.tagItems.put(spaceName, tmp);
-            }
-        } else {
-            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Get all edges, store as edgeName : edgeItem in this.edgeItems
-     *
-     * @param spaceName Nebula space name
-     * @return
-     */
-    private boolean getEdgeTypes(String spaceName) {
-        ListEdgesReq request = new ListEdgesReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
-        request.setSpace_id(spaceID);
-
-        ListEdgesResp response;
-        try {
-            response = client.listEdges(request);
-        } catch (TException e) {
-            LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
-            return false;
-        }
-
-        if (response.getCode() == ErrorCode.SUCCEEDED) {
-            List<EdgeItem> edgeItem = response.getEdges();
-            Map<String, EdgeItem> tmp = Maps.newHashMap();
-            if (edgeItem != null) {
-                for (EdgeItem ei : edgeItem) {
-                    tmp.put(ei.getEdge_name(), ei);
-                }
-                this.edgeItems.put(spaceName, tmp);
-            }
-        } else {
-            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-            return false;
-        }
-        return true;
-    }
 
     public HostAndPort getLeader() {
         return leader;
     }
 
-    public List<IdName> getSpaces() {
-        return spaces;
-    }
-
-    public void close() {
-        transport.close();
-    }
 }
 

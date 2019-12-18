@@ -7,37 +7,48 @@
 package com.vesoft.nebula.client.storage;
 
 import com.google.common.base.Optional;
-import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.AbstractClient;
-import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.storage.ScanEdgeResponse;
+import com.vesoft.nebula.storage.ScanVertexResponse;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class StorageClient extends AbstractClient {
-    protected HostAddr addr;
+public interface StorageClient extends AutoCloseable {
+    public static final int DEFAULT_SCAN_ROW_LIMIT = 1000;
+    public static final long DEFAULT_SCAN_START_TIME = 0;
+    public static final long DEFAULT_SCAN_END_TIME = Long.MAX_VALUE;
 
-    public StorageClient(List<HostAndPort> addresses, int timeout,
-                         int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
-    }
+    public boolean put(String space, String key, String value);
 
-    public StorageClient(List<HostAndPort> addresses) {
-        super(addresses);
-    }
+    public boolean put(String space, Map<String, String> kvs);
 
-    public StorageClient(String host, int port) {
-        super(host, port);
-    }
+    public Optional<String> get(String space, String key);
 
-    public abstract boolean put(String space, String key, String value);
+    public Optional<Map<String, String>> get(String space, List<String> keys);
 
-    public abstract boolean put(String space, Map<String, String> kvs);
+    public boolean remove(String space, String key);
 
-    public abstract Optional<String> get(String space, String key);
+    public boolean remove(String space, List<String> keys);
 
-    public abstract Optional<Map<String, String>> get(String space, List<String> keys);
+    public Iterator<ScanEdgeResponse> scanEdge(String space) throws IOException;
 
-    public abstract boolean remove(String space, String key);
+    public Iterator<ScanEdgeResponse> scanEdge(String space, int rowLimit,
+                                               long startTime, long endTime) throws IOException;
 
-    public abstract boolean remove(String space, List<String> keys);
+    public Iterator<ScanEdgeResponse> scanEdge(String space, int part) throws IOException;
+
+    public Iterator<ScanEdgeResponse> scanEdge(String space, int part, int rowLimit,
+                                               long startTime, long endTime) throws IOException;
+
+    public Iterator<ScanVertexResponse> scanVertex(String space) throws IOException;
+
+    public Iterator<ScanVertexResponse> scanVertex(String space, int rowLimit,
+                                                   long startTime, long endTime) throws IOException;
+
+    public Iterator<ScanVertexResponse> scanVertex(String space, int part) throws IOException;
+
+    public Iterator<ScanVertexResponse> scanVertex(String space, int part, int rowLimit,
+                                                   long startTime, long endTime) throws IOException;
+
 }

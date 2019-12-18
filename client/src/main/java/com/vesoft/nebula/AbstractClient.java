@@ -6,20 +6,15 @@
 
 package com.vesoft.nebula;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.TProtocol;
-import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
-
+import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.util.List;
-import java.util.Random;
 
 public abstract class AbstractClient implements Client {
     protected final List<HostAndPort> addresses;
@@ -27,7 +22,7 @@ public abstract class AbstractClient implements Client {
     protected final int executionRetry;
     protected final int timeout;
     protected TProtocol protocol;
-    protected TTransport transport = null;
+    protected TTransport transport;
 
     /**
      * The Constructor of Client.
@@ -77,16 +72,15 @@ public abstract class AbstractClient implements Client {
                 DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
+    protected abstract int doConnect(List<HostAndPort> addresses) throws TException;
+
     public int connect() throws TException {
         int retry = connectionRetry;
         while (retry-- != 0) {
-            Random random = new Random(System.currentTimeMillis());
-            int position = random.nextInt(addresses.size());
-            HostAndPort address = addresses.get(position);
-            transport = new TSocket(address.getHostText(), address.getPort(), timeout);
-            transport.open();
-            protocol = new TCompactProtocol(transport);
-            return doConnect(address);
+            int code = doConnect(addresses);
+            if (code == 0) {
+                return ErrorCode.SUCCEEDED;
+            }
         }
         return ErrorCode.E_FAIL_TO_CONNECT;
     }
@@ -102,4 +96,7 @@ public abstract class AbstractClient implements Client {
         return transport != null && transport.isOpen();
     }
 
+    public void close() {
+        transport.close();
+    }
 }

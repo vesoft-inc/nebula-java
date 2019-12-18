@@ -24,7 +24,7 @@ public class ResultSet implements Iterator {
      * Constructor
      */
     public ResultSet() {
-        this(Lists.<byte[]>newArrayList(), Lists.<RowValue>newArrayList());
+        this(Lists.newArrayList(), Lists.newArrayList());
     }
 
     /**

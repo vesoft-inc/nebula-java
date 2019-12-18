@@ -6,12 +6,10 @@
 
 package com.vesoft.nebula.session;
 
-import java.io.Closeable;
-
 /**
  *
  */
-public interface Session extends Closeable {
+public interface Session extends AutoCloseable {
 
     /**
      *

@@ -7,39 +7,14 @@
 package com.vesoft.nebula.client.graph;
 
 import com.facebook.thrift.TException;
-import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.AbstractClient;
-import java.util.List;
+import com.vesoft.nebula.auth.AuthProvider;
 
 /**
  *
  */
-public abstract class GraphClient extends AbstractClient {
-    protected String user;
-    protected String password;
+public interface GraphClient extends AuthProvider, AutoCloseable {
 
-    public GraphClient(List<HostAndPort> addresses, int timeout,
-                       int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
-    }
-
-    public GraphClient(List<HostAndPort> addresses) {
-        super(addresses);
-    }
-
-    public GraphClient(String host, int port) {
-        super(host, port);
-    }
-
-    public GraphClient withUser(String user) {
-        this.user = user;
-        return this;
-    }
-
-    public GraphClient withPassword(String password) {
-        this.password = password;
-        return this;
-    }
+    public int connect() throws TException;
 
     /**
      * Switch to the specified space.
@@ -68,8 +43,4 @@ public abstract class GraphClient extends AbstractClient {
      */
     public abstract ResultSet executeQuery(String statement)
             throws ConnectionException, NGQLException, TException;
-
-    public void close() {
-        transport.close();
-    }
 }

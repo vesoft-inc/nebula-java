@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  *
  */
-public final class IPv4IntTransformer {
+public final class AddressUtil {
 
     /**
      * Transform Int to IP String

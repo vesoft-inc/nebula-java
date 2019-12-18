@@ -10,8 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.utils.IPv4IntTransformer;
-
+import com.vesoft.nebula.utils.AddressUtil;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class GetPartsAllocResult {
     public void add(Integer partId, List<HostAddr> addrs) {
         List<HostAndPort> hostAndPortList = Lists.newArrayList();
         for (HostAddr addr : addrs) {
-            hostAndPortList.add(HostAndPort.fromParts(IPv4IntTransformer.intToIPv4(addr.ip),
+            hostAndPortList.add(HostAndPort.fromParts(AddressUtil.intToIPv4(addr.ip),
                     addr.port));
         }
         result.put(partId, hostAndPortList);

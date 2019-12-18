@@ -19,7 +19,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.storage.StorageService;
-import com.vesoft.nebula.utils.IPv4IntTransformer;
+import com.vesoft.nebula.utils.AddressUtil;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class AsyncStorageClientImpl extends AsyncStorageClient {
 
         int retry = connectionRetry;
         while (retry-- != 0) {
-            String ip = IPv4IntTransformer.intToIPv4(addr.getIp());
+            String ip = AddressUtil.intToIPv4(addr.getIp());
             int port = addr.getPort();
 
             try {
@@ -91,7 +91,7 @@ public class AsyncStorageClientImpl extends AsyncStorageClient {
     }
 
     @Override
-    public int doConnect(HostAndPort address) throws TException {
+    public int doConnect(List<HostAndPort> address) throws TException {
         return 0;
     }
 

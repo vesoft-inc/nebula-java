@@ -17,8 +17,8 @@ public class MetaClientExample {
     public static void main(String[] args) {
         MetaClient metaClient = new MetaClientImpl("127.0.0.1", 45500);
         LOGGER.info(metaClient.getPart("test", 1).toString());
-        LOGGER.info(metaClient.getTagId("test", "test_tag").toString());
-        LOGGER.info(metaClient.getEdgeType("test", "test_edge").toString());
+        LOGGER.info(metaClient.getTag("test", "test_tag").toString());
+        LOGGER.info(metaClient.getEdge("test", "test_edge").toString());
     }
 }
 

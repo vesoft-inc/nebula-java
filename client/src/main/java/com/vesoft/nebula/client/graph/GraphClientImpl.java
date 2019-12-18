@@ -7,22 +7,28 @@
 package com.vesoft.nebula.client.graph;
 
 import com.facebook.thrift.TException;
+import com.facebook.thrift.protocol.TCompactProtocol;
+import com.facebook.thrift.transport.TSocket;
 import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.AbstractClient;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 import java.util.List;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The Java thrift client wrapper.
  */
-public class GraphClientImpl extends GraphClient {
+public class GraphClientImpl extends AbstractClient implements GraphClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class);
 
+    protected String user;
+    protected String password;
     private long sessionID;
     private GraphService.Client client;
 
@@ -40,7 +46,13 @@ public class GraphClientImpl extends GraphClient {
     }
 
     @Override
-    public int doConnect(HostAndPort address) throws TException {
+    public int doConnect(List<HostAndPort> addresses) throws TException {
+        Random random = new Random(System.currentTimeMillis());
+        int position = random.nextInt(addresses.size());
+        HostAndPort address = addresses.get(position);
+        transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        transport.open();
+        protocol = new TCompactProtocol(transport);
         client = new GraphService.Client(protocol);
         AuthResponse result = client.authenticate(user, password);
         if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
@@ -133,5 +145,15 @@ public class GraphClientImpl extends GraphClient {
         } finally {
             transport.close();
         }
+    }
+
+    @Override
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -7,38 +7,13 @@
 package com.vesoft.nebula.client.graph.async;
 
 import com.google.common.base.Optional;
-import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.vesoft.nebula.AsyncAbstractClient;
+import com.vesoft.nebula.auth.AuthProvider;
 import com.vesoft.nebula.client.graph.ResultSet;
-import java.util.List;
 
-public abstract class AsyncGraphClient extends AsyncAbstractClient {
-    protected String user;
-    protected String password;
+public interface AsyncGraphClient extends AuthProvider {
 
-    public AsyncGraphClient(List<HostAndPort> addresses, int timeout,
-                            int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
-    }
-
-    public AsyncGraphClient(List<HostAndPort> addresses) {
-        super(addresses);
-    }
-
-    public AsyncGraphClient(String host, int port) {
-        super(host, port);
-    }
-
-    public AsyncGraphClient withUser(String user) {
-        this.user = user;
-        return this;
-    }
-
-    public AsyncGraphClient withPassword(String password) {
-        this.password = password;
-        return this;
-    }
+    public int connect();
 
     /**
      * Switch to the specified space.
@@ -46,7 +21,7 @@ public abstract class AsyncGraphClient extends AsyncAbstractClient {
      * @param space space name.
      * @return
      */
-    public abstract ListenableFuture<Optional<Integer>> switchSpace(String space);
+    public ListenableFuture<Optional<Integer>> switchSpace(String space);
 
     /**
      * Execute the DML statement.
@@ -54,7 +29,7 @@ public abstract class AsyncGraphClient extends AsyncAbstractClient {
      * @param statement execution statement.
      * @return
      */
-    public abstract ListenableFuture<Optional<Integer>> execute(String statement);
+    public ListenableFuture<Optional<Integer>> execute(String statement);
 
     /**
      * Execute the query statement and return result set.
@@ -62,5 +37,5 @@ public abstract class AsyncGraphClient extends AsyncAbstractClient {
      * @param statement execution statement.
      * @return
      */
-    public abstract ListenableFuture<Optional<ResultSet>> executeQuery(String statement);
+    public ListenableFuture<Optional<ResultSet>> executeQuery(String statement);
 }

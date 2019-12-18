@@ -6,21 +6,18 @@
 
 package com.vesoft.nebula.examples.async;
 
+import com.facebook.thrift.TException;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import com.vesoft.nebula.client.meta.async.AsyncMetaClientImpl;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListSpacesResp;
-
 import java.util.concurrent.Executors;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +27,7 @@ public class AsyncMetaClientExample {
 
     private static ListeningExecutorService service;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TException {
         if (args.length != 2) {
             System.out.println("Usage: "
                     + "com.vesoft.nebula.examples.async.AsyncMetaClientExample "
@@ -46,7 +43,7 @@ public class AsyncMetaClientExample {
         ListenableFuture<Optional<ListSpacesResp>> future = asyncMetaClient.listSpaces();
         Futures.addCallback(future, new FutureCallback<Optional<ListSpacesResp>>() {
             @Override
-            public void onSuccess(@Nullable Optional<ListSpacesResp> listSpacesRespOptional) {
+            public void onSuccess(Optional<ListSpacesResp> listSpacesRespOptional) {
                 if (listSpacesRespOptional.isPresent()) {
                     ListSpacesResp resp = listSpacesRespOptional.get();
                     if (resp.getCode() != ErrorCode.SUCCEEDED) {
