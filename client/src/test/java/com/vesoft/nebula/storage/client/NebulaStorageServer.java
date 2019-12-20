@@ -6,10 +6,8 @@
 
 package com.vesoft.nebula.storage.client;
 
-import com.facebook.thrift.TException;
 import com.facebook.thrift.TProcessor;
 import com.facebook.thrift.TProcessorFactory;
-import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.server.TRpcConnectionContext;
 import com.facebook.thrift.server.TServer;
@@ -35,6 +33,7 @@ public class NebulaStorageServer extends Thread {
         } catch (TTransportException e) {
             e.printStackTrace();
         }
+
         server = new TServer(processorFactory, serverSocket) {
             @Override
             public void serve() {
@@ -47,12 +46,12 @@ public class NebulaStorageServer extends Thread {
                 }
 
                 while (true) {
-                    TTransport client = null;
-                    TProcessor processor = null;
+                    TTransport client;
+                    TProcessor processor;
                     TTransport inputTransport = null;
                     TTransport outputTransport = null;
-                    TProtocol inputProtocol = null;
-                    TProtocol outputProtocol = null;
+                    TProtocol inputProtocol;
+                    TProtocol outputProtocol;
                     try {
                         client = serverTransport_.accept();
                         if (client != null) {
@@ -63,8 +62,8 @@ public class NebulaStorageServer extends Thread {
                             outputTransport = outputTransportFactory_.getTransport(client);
                             outputProtocol = outputProtocolFactory_.getProtocol(outputTransport);
 
-                            TRpcConnectionContext serverCtx =
-                                new TRpcConnectionContext(client, inputProtocol, outputProtocol);
+                            TRpcConnectionContext serverCtx = new TRpcConnectionContext(client,
+                                    inputProtocol, outputProtocol);
                             while (processor.process(inputProtocol, outputProtocol, serverCtx)) {
 
                             }

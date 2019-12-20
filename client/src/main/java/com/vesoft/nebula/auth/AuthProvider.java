@@ -4,16 +4,11 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.session;
+package com.vesoft.nebula.auth;
 
-/**
- *
- */
-public interface Session extends AutoCloseable {
+public interface AuthProvider {
 
-    /**
-     *
-     */
-    public void connect();
+    public void setUser(String user);
 
+    public void setPassword(String password);
 }
