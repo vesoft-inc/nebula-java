@@ -8,14 +8,13 @@ package com.vesoft.nebula.examples;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
+import com.vesoft.nebula.client.graph.ConnectionException;
+import com.vesoft.nebula.client.graph.GraphClient;
+import com.vesoft.nebula.client.graph.GraphClientImpl;
+import com.vesoft.nebula.client.graph.NGQLException;
+import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.GraphClient;
-import com.vesoft.nebula.graph.client.GraphClientImpl;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,32 +24,32 @@ public class GraphClientExample {
     private static final String SPACE_NAME = "test";
 
     private static final String[] createTags = {
-        "CREATE TAG course(name string, credits int);",
-        "CREATE TAG building(name string);",
-        "CREATE TAG student(name string, age int, gender string);",
+            "CREATE TAG course(name string, credits int);",
+            "CREATE TAG building(name string);",
+            "CREATE TAG student(name string, age int, gender string);",
     };
 
     private static final String[] createEdges = {
-        "CREATE EDGE like(likeness double);",
-        "CREATE EDGE select(grade int);"
+            "CREATE EDGE like(likeness double);",
+            "CREATE EDGE select(grade int);"
     };
 
     private static final String[] insertVertices = {
-        "INSERT VERTEX student(name, age, gender) VALUES 200:(\"Monica\", 16, \"female\");",
-        "INSERT VERTEX student(name, age, gender) VALUES 201:(\"Mike\", 18, \"male\");",
-        "INSERT VERTEX student(name, age, gender) VALUES 202:(\"Jane\", 17, \"female\");",
-        "INSERT VERTEX course(name, credits),building(name) VALUES 101:(\"Math\", 3, \"No5\");",
-        "INSERT VERTEX course(name, credits),building(name) VALUES 102:(\"English\", 6, \"No11\");"
+            "INSERT VERTEX student(name, age, gender) VALUES 200:(\"Monica\", 16, \"female\");",
+            "INSERT VERTEX student(name, age, gender) VALUES 201:(\"Mike\", 18, \"male\");",
+            "INSERT VERTEX student(name, age, gender) VALUES 202:(\"Jane\", 17, \"female\");",
+            "INSERT VERTEX course(name, credits),building(name) VALUES 101:(\"Math\", 3, \"No5\");",
+            "INSERT VERTEX course(name, credits),building(name) VALUES 102:(\"English\", 6, \"No11\");"
     };
 
     private static final String[] insertEdges = {
-        "INSERT EDGE select(grade) VALUES 200 -> 101:(5);",
-        "INSERT EDGE select(grade) VALUES 200 -> 102:(3);",
-        "INSERT EDGE select(grade) VALUES 201 -> 102:(3);",
-        "INSERT EDGE select(grade) VALUES 202 -> 102:(3);",
-        "INSERT EDGE like(likeness) VALUES 200 -> 201:(92.5);",
-        "INSERT EDGE like(likeness) VALUES 201 -> 200:(85.6);",
-        "INSERT EDGE like(likeness) VALUES 201 -> 202:(93.2);"
+            "INSERT EDGE select(grade) VALUES 200 -> 101:(5);",
+            "INSERT EDGE select(grade) VALUES 200 -> 102:(3);",
+            "INSERT EDGE select(grade) VALUES 201 -> 102:(3);",
+            "INSERT EDGE select(grade) VALUES 202 -> 102:(3);",
+            "INSERT EDGE like(likeness) VALUES 200 -> 201:(92.5);",
+            "INSERT EDGE like(likeness) VALUES 201 -> 200:(85.6);",
+            "INSERT EDGE like(likeness) VALUES 201 -> 202:(93.2);"
     };
 
     private static final String simpleQuery = "GO FROM 201 OVER like;";
@@ -66,9 +65,11 @@ public class GraphClientExample {
             return;
         }
 
-        GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]));
-        try {
-            client.connect("user", "password");
+        try (GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]))) {
+            client.setUser("user");
+            client.setPassword("password");
+
+            client.connect();
             int code = client.switchSpace(SPACE_NAME);
             if (ErrorCode.SUCCEEDED != code) {
                 LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));
@@ -142,12 +143,8 @@ public class GraphClientExample {
                         value.columns.get(1).getInteger(),
                         new String(value.columns.get(2).getStr()));
             }
-        } finally {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

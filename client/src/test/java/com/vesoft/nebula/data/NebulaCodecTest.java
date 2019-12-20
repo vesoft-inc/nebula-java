@@ -6,30 +6,23 @@
 
 package com.vesoft.nebula.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import com.google.common.collect.Lists;
 import com.vesoft.nebula.ColumnDef;
 import com.vesoft.nebula.NebulaCodec;
 import com.vesoft.nebula.Schema;
 import com.vesoft.nebula.SupportedType;
 import com.vesoft.nebula.ValueType;
 import com.vesoft.nebula.utils.NativeUtils;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +112,7 @@ public class NebulaCodecTest {
 
         // In decode, all Integer and Long need to pass as SupportedType.INT,
         // and all integral types are decoded as Long
-        List<ColumnDef> columns = new ArrayList<ColumnDef>();
+        List<ColumnDef> columns = Lists.newArrayList();
         columns.add(new ColumnDef("b_field", new ValueType(SupportedType.BOOL)));
         columns.add(new ColumnDef("i_field", new ValueType(SupportedType.INT)));
         columns.add(new ColumnDef("l_field", new ValueType(SupportedType.INT)));

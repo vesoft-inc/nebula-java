@@ -13,7 +13,6 @@ import java.util.Map;
 public class Result<ReqT> {
 
     public enum RowType {
-        UNKNOWN,
         VERTEX,
         EDGE,
     }

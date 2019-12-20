@@ -244,7 +244,7 @@ public class NebulaStorageService implements StorageService.Iface {
 
     void prepareData() {
         for (byte i = 1; i <= 16; i++) {
-            byte[] cursor = new byte[] {i};
+            byte[] cursor = new byte[]{i};
             nextCursors.add(cursor);
         }
         nextCursorIt = nextCursors.iterator();
