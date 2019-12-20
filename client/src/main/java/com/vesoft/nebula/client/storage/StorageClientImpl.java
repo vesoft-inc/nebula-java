@@ -78,15 +78,12 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         super(host, port);
     }
 
-    public StorageClientImpl(MetaClient client) {
-        this("", 1);
-    }
-
     /**
      * Constructor with a MetaClient object
      *
      * @param client The Nebula MetaClient
      */
+    @Override
     public void withMetaClient(MetaClient client) {
         this.client = client;
     }
@@ -643,7 +640,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     @Override
     public Iterator<ScanVertexResponse> scanVertex(String space, int part, int rowLimit,
-                                                   long startTime, long endTime) throws IOException {
+                                                   long startTime, long endTime)
+            throws IOException {
         HostAndPort leader = getLeader(space, part);
         if (Objects.isNull(leader)) {
             throw new IllegalArgumentException("Part " + part + " not found in space " + space);
@@ -692,9 +690,9 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      * @param leader    host address
      * @return response which contains next start cursor, done if next cursor is empty
      */
-    private Iterator<ScanVertexResponse> doScanVertex(String spaceName, HostAndPort leader, int part,
-                                                      int rowLimit, long startTime, long endTime)
-            throws IOException {
+    private Iterator<ScanVertexResponse> doScanVertex(String spaceName, HostAndPort leader,
+                                                      int part, int rowLimit, long startTime,
+                                                      long endTime) throws IOException {
 
         int spaceID = client.getSpaceIDFromCache(spaceName);
         StorageService.Client client = clients.get(leader);
@@ -807,7 +805,9 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
             if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                 HostAddr addr = code.getLeader();
                 if (addr != null && addr.getIp() != 0 && addr.getPort() != 0) {
-                    HostAndPort newLeader = HostAndPort.fromParts(AddressUtil.intToIPv4(addr.getIp()), addr.getPort());
+                    int ip = addr.getIp();
+                    HostAndPort newLeader = HostAndPort.fromParts(
+                            AddressUtil.intToIPv4(ip), addr.getPort());
                     updateLeader(space, code.getPart_id(), newLeader);
                     StorageService.Client newClient = clients.get(newLeader);
                     if (newClient != null) {

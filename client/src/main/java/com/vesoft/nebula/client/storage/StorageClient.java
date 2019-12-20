@@ -7,6 +7,7 @@
 package com.vesoft.nebula.client.storage;
 
 import com.google.common.base.Optional;
+import com.vesoft.nebula.client.meta.MetaClient;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import java.io.IOException;
@@ -18,6 +19,8 @@ public interface StorageClient extends AutoCloseable {
     public static final int DEFAULT_SCAN_ROW_LIMIT = 1000;
     public static final long DEFAULT_SCAN_START_TIME = 0;
     public static final long DEFAULT_SCAN_END_TIME = Long.MAX_VALUE;
+
+    public void withMetaClient(MetaClient client);
 
     public boolean put(String space, String key, String value);
 

@@ -6,10 +6,12 @@
 
 package com.vesoft.nebula;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TTransport;
-import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
@@ -36,6 +38,7 @@ public abstract class AbstractClient implements Client {
                           int connectionRetry, int executionRetry) {
         checkArgument(timeout > 0);
         checkArgument(connectionRetry > 0);
+        checkArgument(executionRetry > 0);
         for (HostAndPort address : addresses) {
             String host = address.getHostText();
             int port = address.getPort();

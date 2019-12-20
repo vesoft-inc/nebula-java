@@ -22,7 +22,7 @@ public interface GraphClient extends AuthProvider, AutoCloseable {
      * @param space space name.
      * @return The ErrorCode of status, 0 is succeeded.
      */
-    public abstract int switchSpace(String space);
+    public int switchSpace(String space);
 
     /**
      * Execute the DML statement.
@@ -30,7 +30,7 @@ public interface GraphClient extends AuthProvider, AutoCloseable {
      * @param statement execution statement.
      * @return The ErrorCode of status, 0 is succeeded.
      */
-    public abstract int execute(String statement);
+    public int execute(String statement);
 
     /**
      * Execute the query statement and return result set.
@@ -41,6 +41,6 @@ public interface GraphClient extends AuthProvider, AutoCloseable {
      * @throws NGQLException       the nebula exception
      * @throws TException          the thrift exception
      */
-    public abstract ResultSet executeQuery(String statement)
+    public ResultSet executeQuery(String statement)
             throws ConnectionException, NGQLException, TException;
 }

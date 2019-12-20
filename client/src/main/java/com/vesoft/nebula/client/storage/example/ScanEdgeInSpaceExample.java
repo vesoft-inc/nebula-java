@@ -52,7 +52,8 @@ public class ScanEdgeInSpaceExample {
         try {
             MetaClient metaClientImpl = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
             metaClient = metaClientImpl;
-            storageClient = new StorageClientImpl(metaClientImpl);
+            storageClient = new StorageClientImpl(args[0], Integer.valueOf(args[1]));
+            storageClient.withMetaClient(metaClient);
 
             for (String space : metaClient.getParts().keySet()) {
                 scanEdge(space);

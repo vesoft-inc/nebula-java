@@ -10,6 +10,8 @@ import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
+import com.vesoft.nebula.client.meta.MetaClient;
+import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.client.storage.StorageClient;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.storage.StorageService;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class StorageTestUtils {
     private NebulaStorageServer server;
+    private MetaClient metaClient;
     private StorageService.Client client;
     private StorageClient storageClient;
     private int port;
@@ -38,12 +41,14 @@ public class StorageTestUtils {
     }
 
     private void buildClient() throws Exception {
-        TTransport transport = new TSocket("localhost", port);
+        metaClient = new MetaClientImpl("127.0.0.1", port);
+
+        TTransport transport = new TSocket("127.0.0.1", port);
         TProtocol protocol = new TBinaryProtocol(transport);
         client = new StorageService.Client(protocol);
         transport.open();
 
-        storageClient = new StorageClientImpl("localhost", port);
+        storageClient = new StorageClientImpl("127.0.0.1", port);
     }
 
     public void stop() {
@@ -52,6 +57,10 @@ public class StorageTestUtils {
 
     public StorageService.Client getClient() {
         return client;
+    }
+
+    public MetaClient getMetaClient() {
+        return metaClient;
     }
 
     public StorageClient getStorageClient() {

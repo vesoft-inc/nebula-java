@@ -28,7 +28,7 @@ public class ScanEdgeInPartExample {
         LOGGER.info("Start to scan space " + space + " part " + part);
         try {
             Iterator<ScanEdgeResponse> iterator = storageClient.scanEdge(space, part);
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 process(iterator.next());
             }
         } catch (Exception e) {
@@ -52,7 +52,8 @@ public class ScanEdgeInPartExample {
         try {
             MetaClient metaClientImpl = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
             metaClient = metaClientImpl;
-            storageClient = new StorageClientImpl(metaClientImpl);
+            storageClient = new StorageClientImpl(args[0], Integer.valueOf(args[1]));
+            storageClient.withMetaClient(metaClient);
 
             for (Map.Entry<String, Map<Integer, List<HostAndPort>>> spaceEntry :
                     metaClient.getParts().entrySet()) {

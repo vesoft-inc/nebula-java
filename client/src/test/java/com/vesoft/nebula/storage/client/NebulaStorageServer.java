@@ -62,8 +62,8 @@ public class NebulaStorageServer extends Thread {
                             outputTransport = outputTransportFactory_.getTransport(client);
                             outputProtocol = outputProtocolFactory_.getProtocol(outputTransport);
 
-                            TRpcConnectionContext serverCtx =
-                                    new TRpcConnectionContext(client, inputProtocol, outputProtocol);
+                            TRpcConnectionContext serverCtx = new TRpcConnectionContext(client,
+                                    inputProtocol, outputProtocol);
                             while (processor.process(inputProtocol, outputProtocol, serverCtx)) {
 
                             }
