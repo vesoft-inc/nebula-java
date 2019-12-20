@@ -106,7 +106,7 @@ public class GraphClientImpl implements GraphClient {
             Random random = new Random(System.currentTimeMillis());
             int position = random.nextInt(addresses.size());
             HostAndPort address = addresses.get(position);
-            transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+            transport = new TSocket(address.getHostText(), address.getPort(), timeout, timeout);
             TProtocol protocol = new TCompactProtocol(transport);
 
             try {

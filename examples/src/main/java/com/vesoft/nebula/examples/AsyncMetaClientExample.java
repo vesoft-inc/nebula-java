@@ -12,15 +12,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListSpacesResp;
 import com.vesoft.nebula.meta.client.async.AsyncMetaClientImpl;
-
 import java.util.concurrent.Executors;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +41,7 @@ public class AsyncMetaClientExample {
         ListenableFuture<Optional<ListSpacesResp>> future = asyncMetaClient.listSpaces();
         Futures.addCallback(future, new FutureCallback<Optional<ListSpacesResp>>() {
             @Override
-            public void onSuccess(@Nullable Optional<ListSpacesResp> listSpacesRespOptional) {
+            public void onSuccess(Optional<ListSpacesResp> listSpacesRespOptional) {
                 if (listSpacesRespOptional.isPresent()) {
                     ListSpacesResp resp = listSpacesRespOptional.get();
                     if (resp.getCode() != ErrorCode.SUCCEEDED) {

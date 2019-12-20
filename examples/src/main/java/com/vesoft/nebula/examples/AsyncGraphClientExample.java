@@ -12,16 +12,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.client.ResultSet;
-
 import com.vesoft.nebula.graph.client.async.AsyncGraphClient;
 import com.vesoft.nebula.graph.client.async.AsyncGraphClientImpl;
-
 import java.util.concurrent.Executors;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +82,7 @@ public class AsyncGraphClientExample {
             ListenableFuture<Optional<Integer>> listenableFuture = client.switchSpace(SPACE_NAME);
             Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                 @Override
-                public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                public void onSuccess(Optional<Integer> integerOptional) {
                     if (integerOptional.isPresent()) {
                         if (integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Switch Space Succeed");
@@ -110,7 +105,7 @@ public class AsyncGraphClientExample {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
-                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                    public void onSuccess(Optional<Integer> integerOptional) {
                         if (integerOptional.isPresent()
                             && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -132,7 +127,7 @@ public class AsyncGraphClientExample {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
-                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                    public void onSuccess(Optional<Integer> integerOptional) {
                         if (integerOptional.isPresent()
                             && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -154,7 +149,7 @@ public class AsyncGraphClientExample {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
-                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                    public void onSuccess(Optional<Integer> integerOptional) {
                         if (integerOptional.isPresent()
                             && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -176,7 +171,7 @@ public class AsyncGraphClientExample {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
-                    public void onSuccess(@Nullable Optional<Integer> integerOptional) {
+                    public void onSuccess(Optional<Integer> integerOptional) {
                         if (integerOptional.isPresent()
                             && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -197,7 +192,7 @@ public class AsyncGraphClientExample {
             ListenableFuture<Optional<ResultSet>> queryFuture = client.executeQuery(simpleQuery);
             Futures.addCallback(queryFuture, new FutureCallback<Optional<ResultSet>>() {
                 @Override
-                public void onSuccess(@Nullable Optional<ResultSet> resultSetOptional) {
+                public void onSuccess(Optional<ResultSet> resultSetOptional) {
                     if (resultSetOptional.isPresent()) {
                         LOGGER.info(resultSetOptional.get().toString());
                     } else {
@@ -214,7 +209,7 @@ public class AsyncGraphClientExample {
             queryFuture = client.executeQuery(complexQuery);
             Futures.addCallback(queryFuture, new FutureCallback<Optional<ResultSet>>() {
                 @Override
-                public void onSuccess(@Nullable Optional<ResultSet> resultSetOptional) {
+                public void onSuccess(Optional<ResultSet> resultSetOptional) {
                     if (resultSetOptional.isPresent()) {
                         LOGGER.info(resultSetOptional.get().toString());
                     } else {
