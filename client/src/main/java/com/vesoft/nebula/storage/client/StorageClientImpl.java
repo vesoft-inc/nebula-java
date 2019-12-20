@@ -113,9 +113,9 @@ public class StorageClientImpl implements StorageClient {
 
         int retry = connectionRetry;
         while (retry-- != 0) {
-            String ip = IPv4IntTransformer.intToIPv4(addr.getIp());
+            String host = IPv4IntTransformer.intToIPv4(addr.getIp());
             int port = addr.getPort();
-            transport = new TSocket(ip, port, timeout);
+            transport = new TSocket(host, port, timeout, timeout);
             TProtocol protocol = new TBinaryProtocol(transport);
 
             try {
