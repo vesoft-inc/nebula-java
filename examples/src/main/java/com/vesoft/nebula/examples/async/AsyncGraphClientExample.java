@@ -29,43 +29,42 @@ public class AsyncGraphClientExample {
     private static final String SPACE_NAME = "test";
 
     private static final String[] createTags = {
-            "CREATE TAG course(name string, credits int);",
-            "CREATE TAG building(name string);",
-            "CREATE TAG student(name string, age int, gender string);",
+        "CREATE TAG course(name string, credits int);",
+        "CREATE TAG building(name string);",
+        "CREATE TAG student(name string, age int, gender string);",
     };
 
     private static final String[] createEdges = {
-            "CREATE EDGE like(likeness double);",
-            "CREATE EDGE select(grade int);"
+        "CREATE EDGE like(likeness double);",
+        "CREATE EDGE select(grade int);"
     };
 
     private static final String[] insertVertices = {
-            "INSERT VERTEX student(name, age, gender) VALUES 200:(\"Monica\", 16, \"female\");",
-            "INSERT VERTEX student(name, age, gender) VALUES 201:(\"Mike\", 18, \"male\");",
-            "INSERT VERTEX student(name, age, gender) VALUES 202:(\"Jane\", 17, \"female\");",
-            "INSERT VERTEX course(name, credits),building(name) "
-                    + "VALUES 101:(\"Math\", 3, \"No5\");",
-            "INSERT VERTEX course(name, credits),building(name) "
-                    + "VALUES 102:(\"English\", 6, \"No11\");"
+        "INSERT VERTEX student(name, age, gender) VALUES 200:(\"Monica\", 16, \"female\");",
+        "INSERT VERTEX student(name, age, gender) VALUES 201:(\"Mike\", 18, \"male\");",
+        "INSERT VERTEX student(name, age, gender) VALUES 202:(\"Jane\", 17, \"female\");",
+        "INSERT VERTEX course(name, credits),building(name) "
+                + "VALUES 101:(\"Math\", 3, \"No5\");",
+        "INSERT VERTEX course(name, credits),building(name) "
+                + "VALUES 102:(\"English\", 6, \"No11\");"
     };
 
     private static final String[] insertEdges = {
-            "INSERT EDGE select(grade) VALUES 200 -> 101:(5);",
-            "INSERT EDGE select(grade) VALUES 200 -> 102:(3);",
-            "INSERT EDGE select(grade) VALUES 201 -> 102:(3);",
-            "INSERT EDGE select(grade) VALUES 202 -> 102:(3);",
-            "INSERT EDGE like(likeness) VALUES 200 -> 201:(92.5);",
-            "INSERT EDGE like(likeness) VALUES 201 -> 200:(85.6);",
-            "INSERT EDGE like(likeness) VALUES 201 -> 202:(93.2);"
+        "INSERT EDGE select(grade) VALUES 200 -> 101:(5);",
+        "INSERT EDGE select(grade) VALUES 200 -> 102:(3);",
+        "INSERT EDGE select(grade) VALUES 201 -> 102:(3);",
+        "INSERT EDGE select(grade) VALUES 202 -> 102:(3);",
+        "INSERT EDGE like(likeness) VALUES 200 -> 201:(92.5);",
+        "INSERT EDGE like(likeness) VALUES 201 -> 200:(85.6);",
+        "INSERT EDGE like(likeness) VALUES 201 -> 202:(93.2);"
     };
 
     private static final String simpleQuery = "GO FROM 201 OVER like;";
 
     private static final String complexQuery =
-            "GO FROM 201 OVER like "
-                    + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
-                    + "$$.student.age AS Age, $$.student.gender AS Gender;";
-
+        "GO FROM 201 OVER like "
+                + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
+                + "$$.student.age AS Age, $$.student.gender AS Gender;";
 
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {

@@ -6,6 +6,9 @@
 
 package com.vesoft.nebula.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.ColumnDef;
 import com.vesoft.nebula.NebulaCodec;
@@ -21,12 +24,9 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class NebulaCodecTest {
 
