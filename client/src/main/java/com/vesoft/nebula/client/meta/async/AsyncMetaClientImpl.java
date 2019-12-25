@@ -22,6 +22,8 @@ import com.vesoft.nebula.meta.ListSpacesResp;
 import com.vesoft.nebula.meta.ListTagsReq;
 import com.vesoft.nebula.meta.ListTagsResp;
 import com.vesoft.nebula.meta.MetaService;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -32,7 +34,7 @@ public class AsyncMetaClientImpl extends AsyncAbstractClient implements AsyncMet
     private static final Logger LOGGER =
             LoggerFactory.getLogger(AsyncMetaClientImpl.class.getName());
 
-    private Map<String, Integer> spaceNameID;
+    private Map<String, Integer> spaceNameID = new HashMap<>();
     private MetaService.AsyncClient client;
 
     public AsyncMetaClientImpl(List<HostAndPort> addresses, int timeout,

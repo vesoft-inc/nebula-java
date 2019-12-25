@@ -35,6 +35,8 @@ import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.TagItem;
 import com.vesoft.nebula.utils.AddressUtil;
 import com.vesoft.nebula.utils.NebulaTypeUtil;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -55,10 +57,10 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     // Use a lock to protect the cache
     private ReentrantReadWriteLock lock;
-    private Map<String, Integer> spaceNameID;
-    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation;
-    private Map<String, Map<String, TagItem>> spaceTagItems;
-    private Map<String, Map<String, EdgeItem>> spaceEdgeItems;
+    private Map<String, Integer> spaceNameID = new HashMap<>();
+    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation = new HashMap<>();
+    private Map<String, Map<String, TagItem>> spaceTagItems = new HashMap<>();
+    private Map<String, Map<String, EdgeItem>> spaceEdgeItems = new HashMap<>();
 
 
     private MetaService.Client client;

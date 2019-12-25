@@ -37,6 +37,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,12 +57,12 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class);
 
-    private Map<HostAndPort, StorageService.Client> clients;
+    private Map<HostAndPort, StorageService.Client> clients = new HashMap<>();
 
     private MetaClient client;
-    protected List<TTransport> transports;
-    private Map<String, Map<Integer, HostAndPort>> leaders;
-    private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc;
+    protected List<TTransport> transports = new ArrayList<>();
+    private Map<String, Map<Integer, HostAndPort>> leaders = new HashMap<>();
+    private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc = new HashMap<>();
 
     private ExecutorService threadPool;
 

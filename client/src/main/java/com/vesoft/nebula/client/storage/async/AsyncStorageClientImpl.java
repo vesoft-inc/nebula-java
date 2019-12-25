@@ -21,6 +21,7 @@ import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.storage.StorageService;
 import com.vesoft.nebula.utils.AddressUtil;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -33,13 +34,13 @@ public class AsyncStorageClientImpl extends AsyncStorageClient {
     // TODO (freddie) Implement this AsyncStorageClient
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncStorageClientImpl.class);
 
-    private Map<HostAddr, StorageService.AsyncClient> clientMap;
+    private Map<HostAddr, StorageService.AsyncClient> clientMap = new HashMap<>();
 
     private MetaClientImpl metaClient;
     private TNonblockingTransport transport = null;
     private TAsyncClientManager manager;
-    private Map<Integer, Map<Integer, HostAddr>> leaders;
-    private Map<String, Map<Integer, List<HostAddr>>> partsAlloc;
+    private Map<Integer, Map<Integer, HostAddr>> leaders = new HashMap<>();
+    private Map<String, Map<Integer, List<HostAddr>>> partsAlloc = new HashMap<>();
 
     public AsyncStorageClientImpl(List<HostAndPort> addresses, int timeout,
                                   int connectionRetry, int executionRetry) {
