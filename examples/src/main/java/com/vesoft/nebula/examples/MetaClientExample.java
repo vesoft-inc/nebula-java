@@ -15,8 +15,15 @@ public class MetaClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientExample.class);
 
     public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: "
+                    + "com.vesoft.nebula.examples.StorageClientExample <host> <port>");
+            return;
+        }
+
         try {
-            MetaClient metaClient = new MetaClientImpl("127.0.0.1", 45500);
+            MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
+            metaClient.connect();
             LOGGER.info(metaClient.getPartAllocFromCache("test", 1).toString());
             LOGGER.info(metaClient.getTag("test", "test_tag").toString());
             LOGGER.info(metaClient.getEdge("test", "test_edge").toString());

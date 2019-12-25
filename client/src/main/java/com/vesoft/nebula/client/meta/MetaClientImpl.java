@@ -78,7 +78,6 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     public MetaClientImpl(String host, int port) throws Exception {
         super(host, port);
-        this.connect();
     }
 
     @Override
