@@ -37,9 +37,7 @@ public class ScanEdgeInSpaceExample {
     }
 
     private static void process(ScanEdgeResponse result) {
-        for (ScanEdge row : result.edge_data) {
-            LOGGER.info("row: " + new String(row.getKey()));
-        }
+        LOGGER.info("process " + result.edge_data.size() + " edges");
     }
 
     public static void main(String[] args) {
@@ -51,7 +49,6 @@ public class ScanEdgeInSpaceExample {
 
         try {
             MetaClientImpl metaClientImpl = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
-            metaClientImpl.connect();
             metaClient = metaClientImpl;
 
             StorageClientImpl storageClientImpl = new StorageClientImpl(metaClientImpl);

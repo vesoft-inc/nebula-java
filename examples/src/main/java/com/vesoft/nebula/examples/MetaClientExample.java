@@ -15,10 +15,14 @@ public class MetaClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientExample.class);
 
     public static void main(String[] args) {
-        MetaClient metaClient = new MetaClientImpl("127.0.0.1", 45500);
-        LOGGER.info(metaClient.getPartAllocFromCache("test", 1).toString());
-        LOGGER.info(metaClient.getTag("test", "test_tag").toString());
-        LOGGER.info(metaClient.getEdge("test", "test_edge").toString());
+        try {
+            MetaClient metaClient = new MetaClientImpl("127.0.0.1", 45500);
+            LOGGER.info(metaClient.getPartAllocFromCache("test", 1).toString());
+            LOGGER.info(metaClient.getTag("test", "test_tag").toString());
+            LOGGER.info(metaClient.getEdge("test", "test_edge").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

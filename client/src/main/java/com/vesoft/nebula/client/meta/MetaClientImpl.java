@@ -56,7 +56,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     private HostAndPort leader;
 
     // Use a lock to protect the cache
-    private ReentrantReadWriteLock lock;
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Map<String, Integer> spaceNameID = new HashMap<>();
     private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation = new HashMap<>();
     private Map<String, Map<String, TagItem>> spaceTagItems = new HashMap<>();
@@ -74,8 +74,9 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         super(addresses);
     }
 
-    public MetaClientImpl(String host, int port) {
+    public MetaClientImpl(String host, int port) throws Exception {
         super(host, port);
+        this.connect();
     }
 
     @Override
