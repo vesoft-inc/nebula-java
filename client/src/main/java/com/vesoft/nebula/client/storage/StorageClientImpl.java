@@ -545,49 +545,53 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         }
 
         int spaceID = metaClient.getSpaceIDFromCache(space);
+        /*
         int retry = executionRetry;
         while (retry-- != 0) {
-            new Iterator<ScanEdgeResponse>() {
-                private byte[] cursor = null;
-                private boolean haveNext = true;
+        */
+        return new Iterator<ScanEdgeResponse>() {
+            private byte[] cursor = null;
+            private boolean haveNext = true;
 
-                @Override
-                public boolean hasNext() {
-                    return haveNext;
+            @Override
+            public boolean hasNext() {
+                return haveNext;
+            }
+
+            @Override
+            public ScanEdgeResponse next() {
+                ScanEdgeRequest request = new ScanEdgeRequest();
+                request.setSpace_id(spaceID)
+                        .setPart_id(part)
+                        .setRow_limit(rowLimit)
+                        .setStart_time(startTime)
+                        .setCursor(cursor)
+                        .setEnd_time(endTime);
+
+                ScanEdgeResponse response;
+                try {
+                    response = client.scanEdge(request);
+                    cursor = response.next_cursor;
+                    haveNext = response.has_next;
+                } catch (TException e) {
+                    LOGGER.error(e.getMessage());
+                    haveNext = false;
+                    return null;
                 }
 
-                @Override
-                public ScanEdgeResponse next() {
-                    ScanEdgeRequest request = new ScanEdgeRequest();
-                    request.setSpace_id(spaceID)
-                            .setPart_id(part)
-                            .setRow_limit(rowLimit)
-                            .setStart_time(startTime)
-                            .setCursor(cursor)
-                            .setEnd_time(endTime);
-
-                    ScanEdgeResponse response;
-                    try {
-                        response = client.scanEdge(request);
-                        cursor = response.next_cursor;
-                        haveNext = response.has_next;
-                    } catch (TException e) {
-                        e.printStackTrace();
-                        haveNext = false;
-                        return null;
-                    }
-
-                    if (!response.result.failed_codes.isEmpty()) {
-                        handleResultCodes(response.result.failed_codes, space, client, leader);
-                        haveNext = false;
-                        return null;
-                    } else {
-                        return response;
-                    }
+                if (!response.result.failed_codes.isEmpty()) {
+                    handleResultCodes(response.result.failed_codes, space, client, leader);
+                    haveNext = false;
+                    return null;
+                } else {
+                    return response;
                 }
-            };
+            }
+        };
+        /*
         }
         throw new IOException("Failed to scan edge within " + executionRetry + " retry");
+        */
     }
 
     public Iterator<ScanVertexResponse> scanVertex(String space) {
