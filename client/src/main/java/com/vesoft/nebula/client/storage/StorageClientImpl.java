@@ -96,7 +96,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Put key-value pair into partition
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param key       nebula key
      * @param value     nebula value
      * @return
@@ -104,7 +104,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     @Override
     public boolean put(String spaceName, String key, String value) {
         int spaceID = metaClient.getSpaceIDFromCache(spaceName);
-        int part = keyToPartId(spaceID, key);
+        int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
             return false;
@@ -123,7 +123,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Put multi key-value pairs into partition
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param kvs       key-value pairs
      * @return
      */
@@ -132,7 +132,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         Map<Integer, List<Pair>> groups = Maps.newHashMap();
         for (Map.Entry<String, String> kv : kvs.entrySet()) {
-            int part = keyToPartId(spaceID, kv.getKey());
+            int part = keyToPartId(spaceName, kv.getKey());
             if (!groups.containsKey(part)) {
                 groups.put(part, new ArrayList<Pair>());
             }
@@ -221,14 +221,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Get key from part
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param key       nebula key
      * @return
      */
     @Override
     public Optional<String> get(String spaceName, String key) {
         int spaceID = metaClient.getSpaceIDFromCache(spaceName);
-        int part = keyToPartId(spaceID, key);
+        int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
             return Optional.absent();
@@ -252,7 +252,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Get multi keys from part
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param keys      nebula keys
      * @return
      */
@@ -261,7 +261,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         Map<Integer, List<String>> groups = Maps.newHashMap();
         for (String key : keys) {
-            int part = keyToPartId(spaceID, key);
+            int part = keyToPartId(spaceName, key);
             if (!groups.containsKey(part)) {
                 groups.put(part, new ArrayList<>());
             }
@@ -348,14 +348,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Remove key from part
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param key       nebula key
      * @return
      */
     @Override
     public boolean remove(String spaceName, String key) {
         int spaceID = metaClient.getSpaceIDFromCache(spaceName);
-        int part = keyToPartId(spaceID, key);
+        int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
             return false;
@@ -373,16 +373,16 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Remove multi keys from part
      *
-     * @param space nebula space id
+     * @param spaceName nebula space name
      * @param keys  nebula keys
      * @return
      */
     @Override
-    public boolean remove(final String space, List<String> keys) {
+    public boolean remove(final String spaceName, List<String> keys) {
         Map<Integer, List<String>> groups = Maps.newHashMap();
-        int spaceID = metaClient.getSpaceIDFromCache(space);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         for (String key : keys) {
-            int part = keyToPartId(spaceID, key);
+            int part = keyToPartId(spaceName, key);
             if (!groups.containsKey(part)) {
                 groups.put(part, new ArrayList<>());
             }
@@ -392,7 +392,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         Map<HostAndPort, RemoveRequest> requests = Maps.newHashMap();
         for (Map.Entry<Integer, List<String>> entry : groups.entrySet()) {
             int part = entry.getKey();
-            HostAndPort leader = getLeader(space, part);
+            HostAndPort leader = getLeader(spaceName, part);
             if (!requests.containsKey(leader)) {
                 RemoveRequest request = new RemoveRequest();
                 request.setSpace_id(spaceID);
@@ -416,7 +416,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                 new ArrayList<>(groups.size()));
         for (final Map.Entry<HostAndPort, RemoveRequest> entry : requests.entrySet()) {
             threadPool.submit(() -> {
-                if (doRemove(space, entry.getKey(), entry.getValue())) {
+                if (doRemove(spaceName, entry.getKey(), entry.getValue())) {
                     responses.add(true);
                 } else {
                     responses.add(false);
@@ -666,7 +666,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Scan all vertex of a partition
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param leader    host address
      * @return response which contains next start cursor, done if next cursor is empty
      */
@@ -828,13 +828,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         return MurmurHash2.hash64(buffer.array(), Long.BYTES);
     }
 
-    private int keyToPartId(int space, long vertexId) {
+    private int keyToPartId(String spaceName, long vertexId) {
         // TODO: need to handle this
-        if (!partsAlloc.containsKey(space)) {
-            LOGGER.error("Invalid part of " + space);
+        if (!partsAlloc.containsKey(spaceName)) {
+            LOGGER.error("Invalid part of " + spaceName);
             return -1;
         }
-        int partNum = partsAlloc.get(space).size();
+        int partNum = partsAlloc.get(spaceName).size();
         if (partNum <= 0) {
             return -1;
         }
@@ -842,13 +842,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         return (int) (Math.floorMod(hashValue, partNum) + 1);
     }
 
-    private int keyToPartId(int space, String key) {
+    private int keyToPartId(String spaceName, String key) {
         // TODO: need to handle this
-        if (!partsAlloc.containsKey(space)) {
-            LOGGER.error("Invalid part of " + space);
+        if (!partsAlloc.containsKey(spaceName)) {
+            LOGGER.error("Invalid part of " + spaceName);
             return -1;
         }
-        int partNum = partsAlloc.get(space).size();
+        int partNum = partsAlloc.get(spaceName).size();
         if (partNum <= 0) {
             return -1;
         }

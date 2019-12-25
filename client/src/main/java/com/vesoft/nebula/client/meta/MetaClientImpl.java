@@ -93,7 +93,6 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
         for (SpaceNameID space : listSpaces()) {
             String spaceName = space.getName();
-            LOGGER.info("!!! " + spaceName + " " + space);
             spaceNameID.put(spaceName, space.getId());
             spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
 
@@ -181,7 +180,6 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpaceIDFromCache(spaceName);
-        LOGGER.info("@@@ " + spaceID + " "  + spaceName);
         request.setSpace_id(spaceID);
 
         GetPartsAllocResp response;
