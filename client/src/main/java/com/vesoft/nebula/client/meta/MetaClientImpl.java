@@ -160,8 +160,8 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         }
 
         Map<Integer, List<HostAndPort>> map = spacePartLocation.get(spaceName);
-        if (Objects.isNull(map) || map.containsKey(part)) {
-            return Lists.newArrayList();
+        if (Objects.isNull(map) || !map.containsKey(part)) {
+            return null;
         }
         return map.get(part);
     }

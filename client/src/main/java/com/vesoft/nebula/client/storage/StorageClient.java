@@ -20,8 +20,6 @@ public interface StorageClient extends AutoCloseable {
     public static final long DEFAULT_SCAN_START_TIME = 0;
     public static final long DEFAULT_SCAN_END_TIME = Long.MAX_VALUE;
 
-    public void withMetaClient(MetaClientImpl metaClient);
-
     public boolean put(String space, String key, String value);
 
     public boolean put(String space, Map<String, String> kvs);

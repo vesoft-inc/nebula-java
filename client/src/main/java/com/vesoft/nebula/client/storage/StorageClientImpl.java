@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import org.apache.commons.codec.digest.MurmurHash2;
@@ -57,55 +58,38 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class);
 
-    private Map<HostAndPort, StorageService.Client> clients = new HashMap<>();
+    private Map<HostAndPort, StorageService.Client> clients = new ConcurrentHashMap<>();
 
     private MetaClientImpl metaClient;
-    protected List<TTransport> transports = new ArrayList<>();
     private Map<String, Map<Integer, HostAndPort>> leaders = new HashMap<>();
     private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc = new HashMap<>();
 
     private ExecutorService threadPool;
-
-    public StorageClientImpl(List<HostAndPort> addresses, int timeout,
-                             int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
-    }
-
-    public StorageClientImpl(List<HostAndPort> addresses) {
-        super(addresses);
-    }
-
-    public StorageClientImpl(String host, int port) {
-        super(host, port);
-    }
 
     /**
      * Constructor with a MetaClient object
      *
      * @param client The Nebula MetaClient
      */
-    @Override
-    public void withMetaClient(MetaClientImpl client) {
+    public StorageClientImpl(MetaClientImpl client) {
         this.metaClient = client;
     }
 
     @Override
     public int doConnect(List<HostAndPort> addresses) throws TException {
         for (HostAndPort address : addresses) {
-            transport = new TSocket(address.getHostText(), address.getPort(), timeout);
-            transport.open();
-            transports.add(transport);
-
-            TProtocol protocol = new TCompactProtocol(transport);
-            StorageService.Client storageClient = new StorageService.Client(protocol);
-            clients.put(address, storageClient);
+            StorageService.Client client = doConnect(address);
+            clients.put(address, client);
         }
         return 0;
     }
 
-    @Override
-    public boolean isConnected() {
-        return transport.isOpen();
+    private StorageService.Client doConnect(HostAndPort address) throws TException {
+        TTransport transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        transport.open();
+
+        TProtocol protocol = new TCompactProtocol(transport);
+        return new StorageService.Client(protocol);
     }
 
     /**
@@ -205,11 +189,12 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     private boolean doPut(String space, HostAndPort leader, PutRequest request) {
-        if (!clients.containsKey(leader)) {
+        StorageService.Client client = connect(leader);
+        if (Objects.isNull(client)) {
+            disconnect(leader);
             return false;
         }
 
-        StorageService.Client client = clients.get(leader);
         ExecResponse response;
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -331,12 +316,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private Optional<Map<String, String>> doGet(String space, HostAndPort leader,
                                                 GetRequest request) {
-        if (!clients.containsKey(leader)) {
-            return Optional.absent();
-        }
-
-        StorageService.Client client = clients.get(leader);
-        if (client == null) {
+        StorageService.Client client = connect(leader);
+        if (Objects.isNull(client)) {
             disconnect(leader);
             return Optional.absent();
         }
@@ -458,12 +439,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     private boolean doRemove(String spaceName, HostAndPort leader, RemoveRequest request) {
-        if (!clients.containsKey(leader)) {
-            return false;
-        }
-
-        StorageService.Client client = clients.get(leader);
-        if (client == null) {
+        StorageService.Client client = connect(leader);
+        if (Objects.isNull(client)) {
             disconnect(leader);
             return false;
         }
@@ -561,13 +538,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     private Iterator<ScanEdgeResponse> doScanEdge(String space, HostAndPort leader, int part,
                                                   int rowLimit, long startTime, long endTime)
             throws IOException {
-        int spaceID = metaClient.getSpaceIDFromCache(space);
-        StorageService.Client client = clients.get(leader);
+        StorageService.Client client = connect(leader);
         if (Objects.isNull(client)) {
             disconnect(leader);
             throw new IOException("Failed to connect " + leader);
         }
 
+        int spaceID = metaClient.getSpaceIDFromCache(space);
         int retry = executionRetry;
         while (retry-- != 0) {
             new Iterator<ScanEdgeResponse>() {
@@ -694,14 +671,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     private Iterator<ScanVertexResponse> doScanVertex(String spaceName, HostAndPort leader,
                                                       int part, int rowLimit, long startTime,
                                                       long endTime) throws IOException {
-
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
-        StorageService.Client client = clients.get(leader);
+        StorageService.Client client = connect(leader);
         if (Objects.isNull(client)) {
             disconnect(leader);
             throw new IOException("Failed to connect " + leader);
         }
 
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         int retry = executionRetry;
         while (retry-- != 0) {
             new Iterator<ScanVertexResponse>() {
@@ -817,6 +793,21 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                     }
                 }
             }
+        }
+    }
+
+    private StorageService.Client connect(HostAndPort address) {
+        if (!clients.containsKey(address)) {
+            try {
+                StorageService.Client client = doConnect(address);
+                clients.put(address, client);
+                return client;
+            } catch (TException e) {
+                LOGGER.error(e.getMessage());
+                return null;
+            }
+        } else {
+            return clients.get(address);
         }
     }
 

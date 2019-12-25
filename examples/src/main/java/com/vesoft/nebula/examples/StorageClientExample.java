@@ -26,7 +26,7 @@ public class StorageClientExample {
 
         try {
             MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
-            StorageClient storageClient = new StorageClientImpl(args[0], Integer.valueOf(args[1]));
+            StorageClient storageClient = new StorageClientImpl(metaClient);
             final int count = 1000;
             for (int i = 0; i < count; i++) {
                 if (!storageClient.put(SPACE_NAME, String.valueOf(i), String.valueOf(i))) {
