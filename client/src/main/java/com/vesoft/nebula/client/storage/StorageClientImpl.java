@@ -62,7 +62,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private MetaClientImpl metaClient;
     private Map<String, Map<Integer, HostAndPort>> leaders = new HashMap<>();
-    private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc = new HashMap<>();
+    private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc;
 
     private ExecutorService threadPool;
 
@@ -73,6 +73,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     public StorageClientImpl(MetaClientImpl client) {
         this.metaClient = client;
+        this.partsAlloc = metaClient.getPartsAllocFromCache();
     }
 
     @Override

@@ -65,13 +65,15 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     private MetaService.Client client;
 
-    public MetaClientImpl(List<HostAndPort> addresses, int timeout,
-                          int connectionRetry, int executionRetry) {
+    public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry,
+                          int executionRetry) throws Exception {
         super(addresses, timeout, connectionRetry, executionRetry);
+        this.connect();
     }
 
-    public MetaClientImpl(List<HostAndPort> addresses) {
+    public MetaClientImpl(List<HostAndPort> addresses) throws Exception {
         super(addresses);
+        this.connect();
     }
 
     public MetaClientImpl(String host, int port) throws Exception {
@@ -91,6 +93,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
         for (SpaceNameID space : listSpaces()) {
             String spaceName = space.getName();
+            LOGGER.info("!!! " + spaceName + " " + space);
             spaceNameID.put(spaceName, space.getId());
             spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
 
@@ -178,6 +181,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpaceIDFromCache(spaceName);
+        LOGGER.info("@@@ " + spaceID + " "  + spaceName);
         request.setSpace_id(spaceID);
 
         GetPartsAllocResp response;
