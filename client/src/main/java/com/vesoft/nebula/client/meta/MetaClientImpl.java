@@ -91,7 +91,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         for (SpaceNameID space : listSpaces()) {
             String spaceName = space.getName();
             spaceNameID.put(spaceName, space.getId());
-            spacePartLocation.put(spaceName, getParts(spaceName));
+            spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
 
             // Loading tag schema's cache
             Map<String, TagItem> tags = Maps.newHashMap();
@@ -154,7 +154,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     public List<HostAndPort> getPartFromCache(String spaceName, int part) {
         if (!this.spacePartLocation.containsKey(spaceName)) {
             if (lock.writeLock().tryLock()) {
-                spacePartLocation.put(spaceName, getParts(spaceName));
+                spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
             }
             lock.writeLock().unlock();
         }
@@ -173,7 +173,8 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      * @param spaceName Nebula space name
      * @return
      */
-    private Map<Integer, List<HostAndPort>> getParts(String spaceName) {
+    @Override
+    public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpaceIDFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -205,17 +206,19 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     }
 
     @Override
-    public Map<String, Map<Integer, List<HostAndPort>>> getParts() {
+    public Map<String, Map<Integer, List<HostAndPort>>> getPartsAllocFromCache() {
         return this.spacePartLocation;
     }
 
     @Override
-    public List<HostAndPort> getPart(String spaceName, int part) {
+    public List<HostAndPort> getPartAllocFromCache(String spaceName, int part) {
+        if (spacePartLocation.containsKey(spaceName)) {
+            Map<Integer, List<HostAndPort>> partsAlloc = spacePartLocation.get(spaceName);
+            if (partsAlloc.containsKey(part)) {
+                return partsAlloc.get(part);
+            }
+        }
         return null;
-    }
-
-    public Map<String, Map<Integer, List<HostAndPort>>> getPartsFromCache() {
-        return this.spacePartLocation;
     }
 
     public TagItem getTagItemFromCache(String spaceName, String tagName) {

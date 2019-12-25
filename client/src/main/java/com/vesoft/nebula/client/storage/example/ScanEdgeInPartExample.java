@@ -54,14 +54,14 @@ public class ScanEdgeInPartExample {
             metaClientImpl.connect();
             metaClient = metaClientImpl;
 
-            StorageClientImpl storageClientImpl = new StorageClientImpl(args[0],
-                                                                        Integer.valueOf(args[1]));
+            StorageClientImpl storageClientImpl =
+                    new StorageClientImpl(args[0], Integer.valueOf(args[1]));
             storageClientImpl.connect();
             storageClient = storageClientImpl;
-            storageClient.withMetaClient(metaClient);
+            storageClient.withMetaClient(metaClientImpl);
 
             for (Map.Entry<String, Map<Integer, List<HostAndPort>>> spaceEntry :
-                    metaClient.getParts().entrySet()) {
+                    metaClient.getPartsAllocFromCache().entrySet()) {
                 String space = spaceEntry.getKey();
                 for (Integer part : spaceEntry.getValue().keySet()) {
                     scanEdge(space, part);

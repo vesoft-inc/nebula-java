@@ -22,9 +22,11 @@ public interface MetaClient extends AutoCloseable {
 
     public List<SpaceNameID> listSpaces();
 
-    public Map<String, Map<Integer, List<HostAndPort>>> getParts();
+    public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName);
 
-    public List<HostAndPort> getPart(String spaceName, int part);
+    public Map<String, Map<Integer, List<HostAndPort>>> getPartsAllocFromCache();
+
+    public List<HostAndPort> getPartAllocFromCache(String spaceName, int part);
 
     public Schema getTag(String spaceName, String tagName);
 
