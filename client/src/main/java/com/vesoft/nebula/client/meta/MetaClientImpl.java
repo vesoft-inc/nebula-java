@@ -70,12 +70,10 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry,
                           int executionRetry) throws Exception {
         super(addresses, timeout, connectionRetry, executionRetry);
-        this.connect();
     }
 
     public MetaClientImpl(List<HostAndPort> addresses) throws Exception {
         super(addresses);
-        this.connect();
     }
 
     public MetaClientImpl(String host, int port) throws Exception {

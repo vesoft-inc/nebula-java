@@ -38,9 +38,9 @@ public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
 
     @Override
     public Result process(String spaceName, ScanVertexResponse response) {
-        Map<Integer, RowReader> readers = new HashMap<Integer, RowReader>();
-        Map<Result.RowDesc, List<Row>> rows = new HashMap<Result.RowDesc, List<Row>>();
-        Map<Integer, Result.RowDesc> vertexTypeIndex = new HashMap<Integer, Result.RowDesc>();
+        Map<Integer, RowReader> readers = new HashMap<>();
+        Map<Result.RowDesc, List<Row>> rows = new HashMap<>();
+        Map<Integer, Result.RowDesc> vertexTypeIndex = new HashMap<>();
         if (response.vertex_schema != null) {
             for (Map.Entry<Integer, Schema> entry : response.vertex_schema.entrySet()) {
                 int tagId = entry.getKey();
@@ -50,7 +50,7 @@ public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
                 long schemaVersion = tagItem.version;
                 readers.put(tagId, new RowReader(schema, schemaVersion));
                 Result.RowDesc desc = new Result.RowDesc(Result.RowType.VERTEX, tagName);
-                rows.put(desc, new ArrayList<Row>());
+                rows.put(desc, new ArrayList<>());
                 vertexTypeIndex.put(tagId, desc);
             }
         }
