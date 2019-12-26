@@ -67,16 +67,16 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     private MetaService.Client client;
 
-    public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connectionRetry,
-                          int executionRetry) throws Exception {
+    public MetaClientImpl(List<HostAndPort> addresses, int timeout,
+                          int connectionRetry, int executionRetry) {
         super(addresses, timeout, connectionRetry, executionRetry);
     }
 
-    public MetaClientImpl(List<HostAndPort> addresses) throws Exception {
+    public MetaClientImpl(List<HostAndPort> addresses) {
         super(addresses);
     }
 
-    public MetaClientImpl(String host, int port) throws Exception {
+    public MetaClientImpl(String host, int port) {
         super(host, port);
     }
 
