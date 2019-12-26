@@ -23,7 +23,8 @@ public class ScanEdgeInSpaceExample {
     private static void scanEdge(String space) {
         LOGGER.info("Start to scan space " + space);
         try {
-            Iterator<ScanEdgeResponse> iterator = storageClient.scanEdge(space);
+            Iterator<ScanEdgeResponse> iterator =
+                    storageClient.scanEdge(space, 100, 0L, Long.MAX_VALUE);
             ScanEdgeResponse result = iterator.next();
             process(result);
             while (iterator.hasNext()) {

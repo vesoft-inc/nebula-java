@@ -26,7 +26,8 @@ public class ScanEdgeInPartExample {
     private static void scanEdge(String space, int part) {
         LOGGER.info("Start to scan space " + space + " part " + part);
         try {
-            Iterator<ScanEdgeResponse> iterator = storageClient.scanEdge(space, part);
+            Iterator<ScanEdgeResponse> iterator =
+                    storageClient.scanEdge(space, part, 100, 0L, Long.MAX_VALUE);
             while (iterator.hasNext()) {
                 process(iterator.next());
             }

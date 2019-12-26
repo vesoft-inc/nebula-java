@@ -24,7 +24,7 @@ public class MetaClientExample {
         try {
             MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
             metaClient.connect();
-            LOGGER.info(metaClient.getPartAllocFromCache("test", 1).toString());
+            LOGGER.info(metaClient.getPartsAllocFromCache().toString());
             LOGGER.info(metaClient.getTag("test", "test_tag").toString());
             LOGGER.info(metaClient.getEdge("test", "test_edge").toString());
         } catch (Exception e) {
