@@ -61,7 +61,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     private Map<HostAndPort, StorageService.Client> clients = new ConcurrentHashMap<>();
 
     private MetaClientImpl metaClient;
-    private Map<String, Map<Integer, HostAndPort>> leaders = new HashMap<>();
+    private Map<String, Map<Integer, HostAndPort>> leaders = Maps.newHashMap();
     private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc;
 
     private ExecutorService threadPool;

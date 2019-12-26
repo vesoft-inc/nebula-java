@@ -57,12 +57,12 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     // Use a lock to protect the cache
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private Map<String, Integer> spaceNameID = new HashMap<>();
-    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation = new HashMap<>();
-    private Map<String, Map<String, TagItem>> spaceTagItems = new HashMap<>();
-    private Map<String, Map<String, EdgeItem>> spaceEdgeItems = new HashMap<>();
-    private Map<String, Map<Integer, String>> tagNameMap = new HashMap<>();
-    private Map<String, Map<Integer, String>> edgeNameMap = new HashMap<>();
+    private Map<String, Integer> spaceNameID = Maps.newHashMap();
+    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation = Maps.newHashMap();
+    private Map<String, Map<String, TagItem>> spaceTagItems = Maps.newHashMap();
+    private Map<String, Map<String, EdgeItem>> spaceEdgeItems = Maps.newHashMap();
+    private Map<String, Map<Integer, String>> tagNameMap = Maps.newHashMap();
+    private Map<String, Map<Integer, String>> edgeNameMap = Maps.newHashMap();
 
 
     private MetaService.Client client;

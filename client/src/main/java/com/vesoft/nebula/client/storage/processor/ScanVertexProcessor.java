@@ -26,11 +26,9 @@ import org.slf4j.LoggerFactory;
 
 
 public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
-    private Map<Integer, Schema> schema;
-    private List<ScanTag> tags;
     private MetaClientImpl metaClient;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScanEdgeProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScanVertexProcessor.class);
 
     public ScanVertexProcessor(MetaClientImpl metaClient) {
         this.metaClient = metaClient;
