@@ -24,14 +24,14 @@ public class GraphClientExample {
     private static final String SPACE_NAME = "test";
 
     private static final String[] createTags = {
-        "CREATE TAG course(name string, credits int);",
-        "CREATE TAG building(name string);",
-        "CREATE TAG student(name string, age int, gender string);",
+        "CREATE TAG IF NOT EXISTS course(name string, credits int);",
+        "CREATE TAG IF NOT EXISTS building(name string);",
+        "CREATE TAG IF NOT EXISTS student(name string, age int, gender string);",
     };
 
     private static final String[] createEdges = {
-        "CREATE EDGE like(likeness double);",
-        "CREATE EDGE select(grade int);"
+        "CREATE EDGE IF NOT EXISTS like(likeness double);",
+        "CREATE EDGE IF NOT EXISTS select(grade int);"
     };
 
     private static final String[] insertVertices = {
@@ -79,6 +79,7 @@ public class GraphClientExample {
 
             for (String statement : createTags) {
                 code = client.execute(statement);
+                LOGGER.info(statement);
                 if (ErrorCode.SUCCEEDED != code) {
                     LOGGER.error(String.format("Create Tag Failed: %s", statement));
                     System.exit(-1);
@@ -86,6 +87,7 @@ public class GraphClientExample {
             }
 
             for (String statement : createEdges) {
+                LOGGER.info(statement);
                 code = client.execute(statement);
                 if (ErrorCode.SUCCEEDED != code) {
                     LOGGER.error(String.format("Create Edge Failed: %s", statement));
@@ -94,6 +96,7 @@ public class GraphClientExample {
             }
 
             for (String statement : insertVertices) {
+                LOGGER.info(statement);
                 code = client.execute(statement);
                 if (ErrorCode.SUCCEEDED != code) {
                     LOGGER.error(String.format("Insert Vertices Failed: %s", statement));
@@ -102,6 +105,7 @@ public class GraphClientExample {
             }
 
             for (String statement : insertEdges) {
+                LOGGER.info(statement);
                 code = client.execute(statement);
                 if (ErrorCode.SUCCEEDED != code) {
                     LOGGER.error(String.format("Insert Edges Failed: %s", statement));
@@ -111,6 +115,7 @@ public class GraphClientExample {
 
             ResultSet resultSet = null;
             try {
+                LOGGER.info(simpleQuery);
                 resultSet = client.executeQuery(simpleQuery);
             } catch (ConnectionException e) {
                 LOGGER.error("Query Failed: ", e.getMessage());
@@ -123,10 +128,11 @@ public class GraphClientExample {
             LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
 
             for (RowValue value : resultSet.getRows()) {
-                LOGGER.info("ID: %d", value.columns.get(0).getId());
+                LOGGER.info("ID: {}", value.columns.get(0).getId());
             }
 
             try {
+                LOGGER.info(complexQuery);
                 resultSet = client.executeQuery(complexQuery);
             } catch (NGQLException e) {
                 e.printStackTrace();
@@ -139,9 +145,9 @@ public class GraphClientExample {
             LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
 
             for (RowValue value : resultSet.getRows()) {
-                LOGGER.info("%s, %d, %s", new String(value.columns.get(0).getStr()),
-                        value.columns.get(1).getInteger(),
-                        new String(value.columns.get(2).getStr()));
+                LOGGER.info(String.format("%s, %d, %s", new String(value.columns.get(0).getStr()),
+                                                        value.columns.get(1).getInteger(),
+                                                        new String(value.columns.get(2).getStr())));
             }
         } catch (Exception e) {
             e.printStackTrace();
