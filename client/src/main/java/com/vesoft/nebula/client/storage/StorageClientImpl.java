@@ -18,7 +18,7 @@ import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.AbstractClient;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Pair;
-import com.vesoft.nebula.client.meta.MetaClient;
+import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.storage.ExecResponse;
 import com.vesoft.nebula.storage.GeneralResponse;
@@ -37,12 +37,14 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import org.apache.commons.codec.digest.MurmurHash2;
@@ -56,69 +58,53 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientImpl.class);
 
-    private Map<HostAndPort, StorageService.Client> clients;
+    private Map<HostAndPort, StorageService.Client> clients = new ConcurrentHashMap<>();
 
-    private MetaClient client;
-    protected List<TTransport> transports;
-    private Map<String, Map<Integer, HostAndPort>> leaders;
+    private MetaClientImpl metaClient;
+    private Map<String, Map<Integer, HostAndPort>> leaders = Maps.newHashMap();
     private Map<String, Map<Integer, List<HostAndPort>>> partsAlloc;
 
     private ExecutorService threadPool;
-
-    public StorageClientImpl(List<HostAndPort> addresses, int timeout,
-                             int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
-    }
-
-    public StorageClientImpl(List<HostAndPort> addresses) {
-        super(addresses);
-    }
-
-    public StorageClientImpl(String host, int port) {
-        super(host, port);
-    }
 
     /**
      * Constructor with a MetaClient object
      *
      * @param client The Nebula MetaClient
      */
-    @Override
-    public void withMetaClient(MetaClient client) {
-        this.client = client;
+    public StorageClientImpl(MetaClientImpl client) {
+        this.metaClient = client;
+        this.partsAlloc = metaClient.getPartsAllocFromCache();
     }
 
     @Override
     public int doConnect(List<HostAndPort> addresses) throws TException {
         for (HostAndPort address : addresses) {
-            transport = new TSocket(address.getHostText(), address.getPort(), timeout);
-            transport.open();
-            transports.add(transport);
-
-            TProtocol protocol = new TCompactProtocol(transport);
-            StorageService.Client storageClient = new StorageService.Client(protocol);
-            clients.put(address, storageClient);
+            StorageService.Client client = doConnect(address);
+            clients.put(address, client);
         }
         return 0;
     }
 
-    @Override
-    public boolean isConnected() {
-        return transport.isOpen();
+    private StorageService.Client doConnect(HostAndPort address) throws TException {
+        TTransport transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        transport.open();
+
+        TProtocol protocol = new TCompactProtocol(transport);
+        return new StorageService.Client(protocol);
     }
 
     /**
      * Put key-value pair into partition
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param key       nebula key
      * @param value     nebula value
      * @return
      */
     @Override
     public boolean put(String spaceName, String key, String value) {
-        int spaceID = client.getSpaceIDFromCache(spaceName);
-        int part = keyToPartId(spaceID, key);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
             return false;
@@ -137,16 +123,16 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Put multi key-value pairs into partition
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param kvs       key-value pairs
      * @return
      */
     @Override
     public boolean put(final String spaceName, Map<String, String> kvs) {
-        int spaceID = client.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         Map<Integer, List<Pair>> groups = Maps.newHashMap();
         for (Map.Entry<String, String> kv : kvs.entrySet()) {
-            int part = keyToPartId(spaceID, kv.getKey());
+            int part = keyToPartId(spaceName, kv.getKey());
             if (!groups.containsKey(part)) {
                 groups.put(part, new ArrayList<Pair>());
             }
@@ -204,11 +190,12 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     private boolean doPut(String space, HostAndPort leader, PutRequest request) {
-        if (!clients.containsKey(leader)) {
+        StorageService.Client client = connect(leader);
+        if (Objects.isNull(client)) {
+            disconnect(leader);
             return false;
         }
 
-        StorageService.Client client = clients.get(leader);
         ExecResponse response;
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -234,14 +221,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Get key from part
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param key       nebula key
      * @return
      */
     @Override
     public Optional<String> get(String spaceName, String key) {
-        int spaceID = client.getSpaceIDFromCache(spaceName);
-        int part = keyToPartId(spaceID, key);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
             return Optional.absent();
@@ -265,16 +252,16 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Get multi keys from part
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param keys      nebula keys
      * @return
      */
     @Override
     public Optional<Map<String, String>> get(final String spaceName, List<String> keys) {
-        int spaceID = client.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         Map<Integer, List<String>> groups = Maps.newHashMap();
         for (String key : keys) {
-            int part = keyToPartId(spaceID, key);
+            int part = keyToPartId(spaceName, key);
             if (!groups.containsKey(part)) {
                 groups.put(part, new ArrayList<>());
             }
@@ -330,12 +317,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private Optional<Map<String, String>> doGet(String space, HostAndPort leader,
                                                 GetRequest request) {
-        if (!clients.containsKey(leader)) {
-            return Optional.absent();
-        }
-
-        StorageService.Client client = clients.get(leader);
-        if (client == null) {
+        StorageService.Client client = connect(leader);
+        if (Objects.isNull(client)) {
             disconnect(leader);
             return Optional.absent();
         }
@@ -365,14 +348,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Remove key from part
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param key       nebula key
      * @return
      */
     @Override
     public boolean remove(String spaceName, String key) {
-        int spaceID = client.getSpaceIDFromCache(spaceName);
-        int part = keyToPartId(spaceID, key);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
             return false;
@@ -390,16 +373,16 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Remove multi keys from part
      *
-     * @param space nebula space id
+     * @param spaceName nebula space name
      * @param keys  nebula keys
      * @return
      */
     @Override
-    public boolean remove(final String space, List<String> keys) {
+    public boolean remove(final String spaceName, List<String> keys) {
         Map<Integer, List<String>> groups = Maps.newHashMap();
-        int spaceID = client.getSpaceIDFromCache(space);
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
         for (String key : keys) {
-            int part = keyToPartId(spaceID, key);
+            int part = keyToPartId(spaceName, key);
             if (!groups.containsKey(part)) {
                 groups.put(part, new ArrayList<>());
             }
@@ -409,7 +392,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         Map<HostAndPort, RemoveRequest> requests = Maps.newHashMap();
         for (Map.Entry<Integer, List<String>> entry : groups.entrySet()) {
             int part = entry.getKey();
-            HostAndPort leader = getLeader(space, part);
+            HostAndPort leader = getLeader(spaceName, part);
             if (!requests.containsKey(leader)) {
                 RemoveRequest request = new RemoveRequest();
                 request.setSpace_id(spaceID);
@@ -433,7 +416,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                 new ArrayList<>(groups.size()));
         for (final Map.Entry<HostAndPort, RemoveRequest> entry : requests.entrySet()) {
             threadPool.submit(() -> {
-                if (doRemove(space, entry.getKey(), entry.getValue())) {
+                if (doRemove(spaceName, entry.getKey(), entry.getValue())) {
                     responses.add(true);
                 } else {
                     responses.add(false);
@@ -457,12 +440,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     private boolean doRemove(String spaceName, HostAndPort leader, RemoveRequest request) {
-        if (!clients.containsKey(leader)) {
-            return false;
-        }
-
-        StorageService.Client client = clients.get(leader);
-        if (client == null) {
+        StorageService.Client client = connect(leader);
+        if (Objects.isNull(client)) {
             disconnect(leader);
             return false;
         }
@@ -490,7 +469,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     public Iterator<ScanEdgeResponse> scanEdge(String space) {
-        Set<Integer> partIds = client.getParts().get(space).keySet();
+        Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
         Iterator<Integer> iterator = partIds.iterator();
         return scanEdge(space, iterator, DEFAULT_SCAN_ROW_LIMIT,
                 DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
@@ -498,7 +477,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     public Iterator<ScanEdgeResponse> scanEdge(String space, int rowLimit,
                                                long startTime, long endTime) {
-        Set<Integer> partIds = client.getParts().get(space).keySet();
+        Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
         Iterator<Integer> iterator = partIds.iterator();
         return scanEdge(space, iterator, rowLimit, startTime, endTime);
     }
@@ -560,26 +539,26 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     private Iterator<ScanEdgeResponse> doScanEdge(String space, HostAndPort leader, int part,
                                                   int rowLimit, long startTime, long endTime)
             throws IOException {
-        int spaceID = client.getSpaceIDFromCache(space);
-        StorageService.Client client = clients.get(leader);
+        StorageService.Client client = connect(leader);
         if (Objects.isNull(client)) {
             disconnect(leader);
             throw new IOException("Failed to connect " + leader);
         }
 
-        int retry = executionRetry;
-        while (retry-- != 0) {
-            new Iterator<ScanEdgeResponse>() {
-                private byte[] cursor = null;
-                private boolean haveNext = true;
+        int spaceID = metaClient.getSpaceIDFromCache(space);
+        return new Iterator<ScanEdgeResponse>() {
+            private byte[] cursor = null;
+            private boolean haveNext = true;
 
-                @Override
-                public boolean hasNext() {
-                    return haveNext;
-                }
+            @Override
+            public boolean hasNext() {
+                return haveNext;
+            }
 
-                @Override
-                public ScanEdgeResponse next() {
+            @Override
+            public ScanEdgeResponse next() {
+                int retry = executionRetry;
+                while (retry-- != 0) {
                     ScanEdgeRequest request = new ScanEdgeRequest();
                     request.setSpace_id(spaceID)
                             .setPart_id(part)
@@ -594,7 +573,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                         cursor = response.next_cursor;
                         haveNext = response.has_next;
                     } catch (TException e) {
-                        e.printStackTrace();
+                        LOGGER.error(e.getMessage());
                         haveNext = false;
                         return null;
                     }
@@ -607,13 +586,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                         return response;
                     }
                 }
-            };
-        }
-        throw new IOException("Failed to scan edge within " + executionRetry + " retry");
+                // TODO: throw exceptions
+                return null;
+            }
+        };
     }
 
     public Iterator<ScanVertexResponse> scanVertex(String space) {
-        Set<Integer> partIds = client.getParts().get(space).keySet();
+        Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
         Iterator<Integer> iterator = partIds.iterator();
         if (!iterator.hasNext()) {
             return null;
@@ -624,7 +604,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     public Iterator<ScanVertexResponse> scanVertex(
             String space, int rowLimit, long startTime, long endTime) {
-        Set<Integer> partIds = client.getParts().get(space).keySet();
+        Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
         Iterator<Integer> iterator = partIds.iterator();
         if (!iterator.hasNext()) {
             return null;
@@ -686,34 +666,33 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     /**
      * Scan all vertex of a partition
      *
-     * @param spaceName nebula space id
+     * @param spaceName nebula space name
      * @param leader    host address
      * @return response which contains next start cursor, done if next cursor is empty
      */
     private Iterator<ScanVertexResponse> doScanVertex(String spaceName, HostAndPort leader,
                                                       int part, int rowLimit, long startTime,
                                                       long endTime) throws IOException {
-
-        int spaceID = client.getSpaceIDFromCache(spaceName);
-        StorageService.Client client = clients.get(leader);
+        StorageService.Client client = connect(leader);
         if (Objects.isNull(client)) {
             disconnect(leader);
             throw new IOException("Failed to connect " + leader);
         }
 
-        int retry = executionRetry;
-        while (retry-- != 0) {
-            new Iterator<ScanVertexResponse>() {
-                private byte[] cursor = null;
-                private boolean haveNext = true;
+        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        return new Iterator<ScanVertexResponse>() {
+            private byte[] cursor = null;
+            private boolean haveNext = true;
 
-                @Override
-                public boolean hasNext() {
-                    return haveNext;
-                }
+            @Override
+            public boolean hasNext() {
+                return haveNext;
+            }
 
-                @Override
-                public ScanVertexResponse next() {
+            @Override
+            public ScanVertexResponse next() {
+                int retry = executionRetry;
+                while (retry-- != 0) {
                     ScanVertexRequest request = new ScanVertexRequest();
                     request.setSpace_id(spaceID)
                             .setPart_id(part)
@@ -741,9 +720,10 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                         return response;
                     }
                 }
-            };
-        }
-        throw new IOException("Failed to scan edge within " + executionRetry + " retry");
+                // TODO: throw exceptions
+                return null;
+            }
+        };
     }
 
     /**
@@ -787,7 +767,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         if (leaders.get(spaceName).containsKey(part)) {
             return leaders.get(spaceName).get(part);
         } else {
-            List<HostAndPort> address = client.getPart(spaceName, part);
+            List<HostAndPort> address = metaClient.getPartFromCache(spaceName, part);
             if (address != null) {
                 Random random = new Random(System.currentTimeMillis());
                 int position = random.nextInt(address.size());
@@ -819,6 +799,21 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         }
     }
 
+    private StorageService.Client connect(HostAndPort address) {
+        if (!clients.containsKey(address)) {
+            try {
+                StorageService.Client client = doConnect(address);
+                clients.put(address, client);
+                return client;
+            } catch (TException e) {
+                LOGGER.error(e.getMessage());
+                return null;
+            }
+        } else {
+            return clients.get(address);
+        }
+    }
+
     private void disconnect(HostAndPort address) {
         clients.remove(address);
     }
@@ -833,13 +828,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         return MurmurHash2.hash64(buffer.array(), Long.BYTES);
     }
 
-    private int keyToPartId(int space, long vertexId) {
+    private int keyToPartId(String spaceName, long vertexId) {
         // TODO: need to handle this
-        if (!partsAlloc.containsKey(space)) {
-            LOGGER.error("Invalid part of " + space);
+        if (!partsAlloc.containsKey(spaceName)) {
+            LOGGER.error("Invalid part of " + spaceName);
             return -1;
         }
-        int partNum = partsAlloc.get(space).size();
+        int partNum = partsAlloc.get(spaceName).size();
         if (partNum <= 0) {
             return -1;
         }
@@ -847,13 +842,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         return (int) (Math.floorMod(hashValue, partNum) + 1);
     }
 
-    private int keyToPartId(int space, String key) {
+    private int keyToPartId(String spaceName, String key) {
         // TODO: need to handle this
-        if (!partsAlloc.containsKey(space)) {
-            LOGGER.error("Invalid part of " + space);
+        if (!partsAlloc.containsKey(spaceName)) {
+            LOGGER.error("Invalid part of " + spaceName);
             return -1;
         }
-        int partNum = partsAlloc.get(space).size();
+        int partNum = partsAlloc.get(spaceName).size();
         if (partNum <= 0) {
             return -1;
         }

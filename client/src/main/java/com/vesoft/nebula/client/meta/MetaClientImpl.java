@@ -35,6 +35,8 @@ import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.TagItem;
 import com.vesoft.nebula.utils.AddressUtil;
 import com.vesoft.nebula.utils.NebulaTypeUtil;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,11 +56,13 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     private HostAndPort leader;
 
     // Use a lock to protect the cache
-    private ReentrantReadWriteLock lock;
-    private Map<String, Integer> spaceNameID;
-    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation;
-    private Map<String, Map<String, TagItem>> spaceTagItems;
-    private Map<String, Map<String, EdgeItem>> spaceEdgeItems;
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private Map<String, Integer> spaceNameID = Maps.newHashMap();
+    private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation = Maps.newHashMap();
+    private Map<String, Map<String, TagItem>> spaceTagItems = Maps.newHashMap();
+    private Map<String, Map<String, EdgeItem>> spaceEdgeItems = Maps.newHashMap();
+    private Map<String, Map<Integer, String>> tagNameMap = Maps.newHashMap();
+    private Map<String, Map<Integer, String>> edgeNameMap = Maps.newHashMap();
 
 
     private MetaService.Client client;
@@ -89,21 +93,27 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         for (SpaceNameID space : listSpaces()) {
             String spaceName = space.getName();
             spaceNameID.put(spaceName, space.getId());
-            spacePartLocation.put(spaceName, getParts(spaceName));
+            spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
 
             // Loading tag schema's cache
             Map<String, TagItem> tags = Maps.newHashMap();
+            Map<Integer, String> tagsName = Maps.newHashMap();
             for (TagItem item : getTags(spaceName)) {
                 tags.put(item.getTag_name(), item);
+                tagsName.put(item.getTag_id(), item.getTag_name());
             }
             spaceTagItems.put(spaceName, tags);
+            tagNameMap.put(spaceName, tagsName);
 
             // Loading edge schema's cache
             Map<String, EdgeItem> edges = Maps.newHashMap();
+            Map<Integer, String> edgesName = Maps.newHashMap();
             for (EdgeItem item : getEdges(spaceName)) {
                 edges.put(item.getEdge_name(), item);
+                edgesName.put(item.getEdge_type(), item.getEdge_name());
             }
             spaceEdgeItems.put(spaceName, edges);
+            edgeNameMap.put(spaceName, edgesName);
         }
         return 0;
     }
@@ -152,14 +162,14 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     public List<HostAndPort> getPartFromCache(String spaceName, int part) {
         if (!this.spacePartLocation.containsKey(spaceName)) {
             if (lock.writeLock().tryLock()) {
-                spacePartLocation.put(spaceName, getParts(spaceName));
+                spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
             }
             lock.writeLock().unlock();
         }
 
         Map<Integer, List<HostAndPort>> map = spacePartLocation.get(spaceName);
-        if (Objects.isNull(map) || map.containsKey(part)) {
-            return Lists.newArrayList();
+        if (Objects.isNull(map) || !map.containsKey(part)) {
+            return null;
         }
         return map.get(part);
     }
@@ -171,7 +181,8 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      * @param spaceName Nebula space name
      * @return
      */
-    private Map<Integer, List<HostAndPort>> getParts(String spaceName) {
+    @Override
+    public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpaceIDFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -203,17 +214,19 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     }
 
     @Override
-    public Map<String, Map<Integer, List<HostAndPort>>> getParts() {
+    public Map<String, Map<Integer, List<HostAndPort>>> getPartsAllocFromCache() {
         return this.spacePartLocation;
     }
 
     @Override
-    public List<HostAndPort> getPart(String spaceName, int part) {
+    public List<HostAndPort> getPartAllocFromCache(String spaceName, int part) {
+        if (spacePartLocation.containsKey(spaceName)) {
+            Map<Integer, List<HostAndPort>> partsAlloc = spacePartLocation.get(spaceName);
+            if (partsAlloc.containsKey(part)) {
+                return partsAlloc.get(part);
+            }
+        }
         return null;
-    }
-
-    public Map<String, Map<Integer, List<HostAndPort>>> getPartsFromCache() {
-        return this.spacePartLocation;
     }
 
     public TagItem getTagItemFromCache(String spaceName, String tagName) {
@@ -239,16 +252,17 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      * Get a tag Id by a particular space Id and tag name
      *
      * @param spaceName Nebula space name
-     * @param tagName   Nebula tag name
+     * @param tagId     Nebula tag id
      * @return
      */
-    public Integer getTagIdFromCache(String spaceName, String tagName) {
-        TagItem item = getTagItemFromCache(spaceName, tagName);
-        if (Objects.isNull(item)) {
-            return -1;
-        } else {
-            return item.getTag_id();
+    public String getTagNameFromCache(String spaceName, Integer tagId) {
+        if (tagNameMap.containsKey(spaceName)) {
+            Map<Integer, String> map = tagNameMap.get(spaceName);
+            if (map.containsKey(tagId)) {
+                return map.get(tagId);
+            }
         }
+        return null;
     }
 
     /**
@@ -352,16 +366,17 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      * Get a edge type by a particular space name and edge name
      *
      * @param spaceName Nebula space name
-     * @param edgeName  Nebula edge name
+     * @param edgeType  Nebula edge type
      * @return
      */
-    public Integer getEdgeTypeFromCache(String spaceName, String edgeName) {
-        EdgeItem item = getEdgeItemFromCache(spaceName, edgeName);
-        if (Objects.isNull(item)) {
-            return -1;
-        } else {
-            return item.getEdge_type();
+    public String getEdgeNameFromCache(String spaceName, Integer edgeType) {
+        if (edgeNameMap.containsKey(spaceName)) {
+            Map<Integer, String> map = edgeNameMap.get(spaceName);
+            if (map.containsKey(edgeType)) {
+                return map.get(edgeType);
+            }
         }
+        return null;
     }
 
     /**

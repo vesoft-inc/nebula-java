@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class StorageClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientExample.class);
-    private static final String SPACE_NAME = "";
+    private static final String SPACE_NAME = "test";
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -26,7 +26,8 @@ public class StorageClientExample {
 
         try {
             MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
-            StorageClient storageClient = new StorageClientImpl(args[0], Integer.valueOf(args[1]));
+            metaClient.connect();
+            StorageClient storageClient = new StorageClientImpl(metaClient);
             final int count = 1000;
             for (int i = 0; i < count; i++) {
                 if (!storageClient.put(SPACE_NAME, String.valueOf(i), String.valueOf(i))) {

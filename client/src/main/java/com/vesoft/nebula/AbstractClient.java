@@ -16,6 +16,8 @@ import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.graph.ErrorCode;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractClient implements Client {
@@ -55,7 +57,7 @@ public abstract class AbstractClient implements Client {
     }
 
     /**
-     * The Constructor of Graph Client.
+     * The Constructor of Abstract Client.
      *
      * @param addresses The addresses of graph services.
      */
@@ -65,13 +67,18 @@ public abstract class AbstractClient implements Client {
     }
 
     /**
-     * The Constructor of Graph Client.
+     * The Constructor of Abstract Client.
      *
      * @param host The host of graph services.
      * @param port The port of graph services.
      */
     public AbstractClient(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
+                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+    }
+
+    public AbstractClient() {
+        this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS,
                 DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 

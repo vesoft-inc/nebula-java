@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 public class StorageTestUtils {
     private NebulaStorageServer server;
-    private MetaClient metaClient;
-    private StorageService.Client client;
-    private StorageClient storageClient;
+    private MetaClientImpl metaClient;
+    private StorageClientImpl storageClient;
+    private StorageService.Client rpcClient;
     private int port;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageTestUtils.class);
@@ -45,18 +45,18 @@ public class StorageTestUtils {
 
         TTransport transport = new TSocket("127.0.0.1", port);
         TProtocol protocol = new TBinaryProtocol(transport);
-        client = new StorageService.Client(protocol);
+        rpcClient = new StorageService.Client(protocol);
         transport.open();
 
-        storageClient = new StorageClientImpl("127.0.0.1", port);
+        storageClient = new StorageClientImpl(metaClient);
     }
 
     public void stop() {
         server.stopServer();
     }
 
-    public StorageService.Client getClient() {
-        return client;
+    public StorageService.Client getRpcClient() {
+        return rpcClient;
     }
 
     public MetaClient getMetaClient() {
