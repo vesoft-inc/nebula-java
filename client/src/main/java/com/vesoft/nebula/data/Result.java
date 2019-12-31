@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.data;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,31 +35,24 @@ public class Result<ReqT> {
     }
 
     private Map<RowDesc, List<Row>> rows;
-    private ReqT nextRequest = null;
-    private Iterator<Integer> partIt;
+    private int size = 0;
 
     public Result(Map<RowDesc, List<Row>> rows) {
         this.rows = rows;
-    }
-
-    public Result(Map<RowDesc, List<Row>> rows, Iterator<Integer> partIt) {
-        this.rows = rows;
-        this.partIt = partIt;
+        for (Map.Entry<RowDesc, List<Row>> entry : rows.entrySet()) {
+            size += entry.getValue().size();
+        }
     }
 
     public Map<RowDesc, List<Row>> getRows() {
         return rows;
     }
 
-    public ReqT getNextRequest() {
-        return nextRequest;
+    public List<Row> getRows(RowDesc desc) {
+        return rows.get(desc);
     }
 
-    public void setNextRequest(ReqT nextRequest) {
-        this.nextRequest = nextRequest;
-    }
-
-    public Iterator<Integer> getPartIt() {
-        return partIt;
+    public int getSize() {
+        return size;
     }
 }
