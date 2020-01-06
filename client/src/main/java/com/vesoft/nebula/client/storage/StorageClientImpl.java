@@ -623,6 +623,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
             @Override
             public ScanEdgeResponse next() {
+                request.setCursor(cursor);
                 int retry = executionRetry;
                 while (retry-- != 0) {
                     ScanEdgeResponse response;
@@ -800,6 +801,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
             @Override
             public ScanVertexResponse next() {
+                request.setCursor(cursor);
                 int retry = executionRetry;
                 while (retry-- != 0) {
                     ScanVertexResponse response;

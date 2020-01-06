@@ -296,19 +296,21 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         GetTagReq request = new GetTagReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
+        request.setTag_name(tagName);
+        request.setVersion(LATEST_SCHEMA_VERSION);
         GetTagResp response;
 
         try {
             response = client.getTag(request);
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
-            return new Schema();
+            return null;
         }
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
-            return new Schema();
+            return null;
         }
     }
 
@@ -411,19 +413,21 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
+        request.setEdge_name(edgeName);
+        request.setVersion(LATEST_SCHEMA_VERSION);
         GetEdgeResp response;
 
         try {
             response = client.getEdge(request);
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
-            return new Schema();
+            return null;
         }
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
-            return new Schema();
+            return null;
         }
     }
 
