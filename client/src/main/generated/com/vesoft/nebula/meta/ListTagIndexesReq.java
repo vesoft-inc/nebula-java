@@ -27,89 +27,89 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Comparable<RegConfigReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("RegConfigReq");
-  private static final TField ITEMS_FIELD_DESC = new TField("items", TType.LIST, (short)1);
+public class ListTagIndexesReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListTagIndexesReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListTagIndexesReq");
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
 
-  public List<ConfigItem> items;
-  public static final int ITEMS = 1;
+  public int space_id;
+  public static final int SPACE_ID = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ITEMS, new FieldMetaData("items", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ConfigItem.class))));
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(RegConfigReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListTagIndexesReq.class, metaDataMap);
   }
 
-  public RegConfigReq() {
+  public ListTagIndexesReq() {
   }
 
-  public RegConfigReq(
-    List<ConfigItem> items)
+  public ListTagIndexesReq(
+    int space_id)
   {
     this();
-    this.items = items;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public RegConfigReq(RegConfigReq other) {
-    if (other.isSetItems()) {
-      this.items = TBaseHelper.deepCopy(other.items);
-    }
+  public ListTagIndexesReq(ListTagIndexesReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
   }
 
-  public RegConfigReq deepCopy() {
-    return new RegConfigReq(this);
+  public ListTagIndexesReq deepCopy() {
+    return new ListTagIndexesReq(this);
   }
 
   @Deprecated
-  public RegConfigReq clone() {
-    return new RegConfigReq(this);
+  public ListTagIndexesReq clone() {
+    return new ListTagIndexesReq(this);
   }
 
-  public List<ConfigItem>  getItems() {
-    return this.items;
+  public int  getSpace_id() {
+    return this.space_id;
   }
 
-  public RegConfigReq setItems(List<ConfigItem> items) {
-    this.items = items;
+  public ListTagIndexesReq setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     return this;
   }
 
-  public void unsetItems() {
-    this.items = null;
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
   }
 
-  // Returns true if field items is set (has been assigned a value) and false otherwise
-  public boolean isSetItems() {
-    return this.items != null;
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setItemsIsSet(boolean value) {
-    if (!value) {
-      this.items = null;
-    }
+  public void setSpace_idIsSet(boolean value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case ITEMS:
+    case SPACE_ID:
       if (value == null) {
-        unsetItems();
+        unsetSpace_id();
       } else {
-        setItems((List<ConfigItem>)value);
+        setSpace_id((Integer)value);
       }
       break;
 
@@ -120,8 +120,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ITEMS:
-      return getItems();
+    case SPACE_ID:
+      return new Integer(getSpace_id());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -131,8 +131,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case ITEMS:
-      return isSetItems();
+    case SPACE_ID:
+      return isSetSpace_id();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -142,23 +142,23 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof RegConfigReq)
-      return this.equals((RegConfigReq)that);
+    if (that instanceof ListTagIndexesReq)
+      return this.equals((ListTagIndexesReq)that);
     return false;
   }
 
-  public boolean equals(RegConfigReq that) {
+  public boolean equals(ListTagIndexesReq that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_items = true && this.isSetItems();
-    boolean that_present_items = true && that.isSetItems();
-    if (this_present_items || that_present_items) {
-      if (!(this_present_items && that_present_items))
+    boolean this_present_space_id = true;
+    boolean that_present_space_id = true;
+    if (this_present_space_id || that_present_space_id) {
+      if (!(this_present_space_id && that_present_space_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.items, that.items))
+      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
         return false;
     }
 
@@ -169,16 +169,16 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_items = true && (isSetItems());
-    builder.append(present_items);
-    if (present_items)
-      builder.append(items);
+    boolean present_space_id = true;
+    builder.append(present_space_id);
+    if (present_space_id)
+      builder.append(space_id);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(RegConfigReq other) {
+  public int compareTo(ListTagIndexesReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -189,11 +189,11 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetItems()).compareTo(other.isSetItems());
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(items, other.items);
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -211,22 +211,10 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (field.id)
       {
-        case ITEMS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list135 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list135.size));
-              for (int _i136 = 0; 
-                   (_list135.size < 0) ? iprot.peekList() : (_i136 < _list135.size); 
-                   ++_i136)
-              {
-                ConfigItem _elem137;
-                _elem137 = new ConfigItem();
-                _elem137.read(iprot);
-                this.items.add(_elem137);
-              }
-              iprot.readListEnd();
-            }
+        case SPACE_ID:
+          if (field.type == TType.I32) {
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -248,17 +236,9 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.items != null) {
-      oprot.writeFieldBegin(ITEMS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter138 : this.items)        {
-          _iter138.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -278,21 +258,17 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("RegConfigReq");
+    StringBuilder sb = new StringBuilder("ListTagIndexesReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("items");
+    sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getItems() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getItems(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

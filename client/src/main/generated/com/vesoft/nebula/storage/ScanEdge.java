@@ -29,29 +29,36 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Comparable<ScanEdge> {
   private static final TStruct STRUCT_DESC = new TStruct("ScanEdge");
-  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
-  private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
-  private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
+  private static final TField SRC_FIELD_DESC = new TField("src", TType.I64, (short)1);
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)2);
+  private static final TField DST_FIELD_DESC = new TField("dst", TType.I64, (short)3);
+  private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)4);
 
+  public long src;
   public int type;
-  public byte[] key;
+  public long dst;
   public byte[] value;
-  public static final int TYPE = 1;
-  public static final int KEY = 2;
-  public static final int VALUE = 3;
+  public static final int SRC = 1;
+  public static final int TYPE = 2;
+  public static final int DST = 3;
+  public static final int VALUE = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __TYPE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __SRC_ISSET_ID = 0;
+  private static final int __TYPE_ISSET_ID = 1;
+  private static final int __DST_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(SRC, new FieldMetaData("src", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(DST, new FieldMetaData("dst", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -65,14 +72,18 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public ScanEdge(
+    long src,
     int type,
-    byte[] key,
+    long dst,
     byte[] value)
   {
     this();
+    this.src = src;
+    setSrcIsSet(true);
     this.type = type;
     setTypeIsSet(true);
-    this.key = key;
+    this.dst = dst;
+    setDstIsSet(true);
     this.value = value;
   }
 
@@ -82,10 +93,9 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
   public ScanEdge(ScanEdge other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
+    this.src = TBaseHelper.deepCopy(other.src);
     this.type = TBaseHelper.deepCopy(other.type);
-    if (other.isSetKey()) {
-      this.key = TBaseHelper.deepCopy(other.key);
-    }
+    this.dst = TBaseHelper.deepCopy(other.dst);
     if (other.isSetValue()) {
       this.value = TBaseHelper.deepCopy(other.value);
     }
@@ -98,6 +108,29 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
   @Deprecated
   public ScanEdge clone() {
     return new ScanEdge(this);
+  }
+
+  public long  getSrc() {
+    return this.src;
+  }
+
+  public ScanEdge setSrc(long src) {
+    this.src = src;
+    setSrcIsSet(true);
+    return this;
+  }
+
+  public void unsetSrc() {
+    __isset_bit_vector.clear(__SRC_ISSET_ID);
+  }
+
+  // Returns true if field src is set (has been assigned a value) and false otherwise
+  public boolean isSetSrc() {
+    return __isset_bit_vector.get(__SRC_ISSET_ID);
+  }
+
+  public void setSrcIsSet(boolean value) {
+    __isset_bit_vector.set(__SRC_ISSET_ID, value);
   }
 
   public int  getType() {
@@ -123,28 +156,27 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.set(__TYPE_ISSET_ID, value);
   }
 
-  public byte[]  getKey() {
-    return this.key;
+  public long  getDst() {
+    return this.dst;
   }
 
-  public ScanEdge setKey(byte[] key) {
-    this.key = key;
+  public ScanEdge setDst(long dst) {
+    this.dst = dst;
+    setDstIsSet(true);
     return this;
   }
 
-  public void unsetKey() {
-    this.key = null;
+  public void unsetDst() {
+    __isset_bit_vector.clear(__DST_ISSET_ID);
   }
 
-  // Returns true if field key is set (has been assigned a value) and false otherwise
-  public boolean isSetKey() {
-    return this.key != null;
+  // Returns true if field dst is set (has been assigned a value) and false otherwise
+  public boolean isSetDst() {
+    return __isset_bit_vector.get(__DST_ISSET_ID);
   }
 
-  public void setKeyIsSet(boolean value) {
-    if (!value) {
-      this.key = null;
-    }
+  public void setDstIsSet(boolean value) {
+    __isset_bit_vector.set(__DST_ISSET_ID, value);
   }
 
   public byte[]  getValue() {
@@ -173,6 +205,14 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
+    case SRC:
+      if (value == null) {
+        unsetSrc();
+      } else {
+        setSrc((Long)value);
+      }
+      break;
+
     case TYPE:
       if (value == null) {
         unsetType();
@@ -181,11 +221,11 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
-    case KEY:
+    case DST:
       if (value == null) {
-        unsetKey();
+        unsetDst();
       } else {
-        setKey((byte[])value);
+        setDst((Long)value);
       }
       break;
 
@@ -204,11 +244,14 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case SRC:
+      return new Long(getSrc());
+
     case TYPE:
       return new Integer(getType());
 
-    case KEY:
-      return getKey();
+    case DST:
+      return new Long(getDst());
 
     case VALUE:
       return getValue();
@@ -221,10 +264,12 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
+    case SRC:
+      return isSetSrc();
     case TYPE:
       return isSetType();
-    case KEY:
-      return isSetKey();
+    case DST:
+      return isSetDst();
     case VALUE:
       return isSetValue();
     default:
@@ -247,6 +292,15 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
     if (this == that)
       return true;
 
+    boolean this_present_src = true;
+    boolean that_present_src = true;
+    if (this_present_src || that_present_src) {
+      if (!(this_present_src && that_present_src))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.src, that.src))
+        return false;
+    }
+
     boolean this_present_type = true;
     boolean that_present_type = true;
     if (this_present_type || that_present_type) {
@@ -256,12 +310,12 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
         return false;
     }
 
-    boolean this_present_key = true && this.isSetKey();
-    boolean that_present_key = true && that.isSetKey();
-    if (this_present_key || that_present_key) {
-      if (!(this_present_key && that_present_key))
+    boolean this_present_dst = true;
+    boolean that_present_dst = true;
+    if (this_present_dst || that_present_dst) {
+      if (!(this_present_dst && that_present_dst))
         return false;
-      if (!TBaseHelper.equalsSlow(this.key, that.key))
+      if (!TBaseHelper.equalsNobinary(this.dst, that.dst))
         return false;
     }
 
@@ -281,15 +335,20 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
+    boolean present_src = true;
+    builder.append(present_src);
+    if (present_src)
+      builder.append(src);
+
     boolean present_type = true;
     builder.append(present_type);
     if (present_type)
       builder.append(type);
 
-    boolean present_key = true && (isSetKey());
-    builder.append(present_key);
-    if (present_key)
-      builder.append(key);
+    boolean present_dst = true;
+    builder.append(present_dst);
+    if (present_dst)
+      builder.append(dst);
 
     boolean present_value = true && (isSetValue());
     builder.append(present_value);
@@ -311,6 +370,14 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetSrc()).compareTo(other.isSetSrc());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(src, other.src);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
     if (lastComparison != 0) {
       return lastComparison;
@@ -319,11 +386,11 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetKey()).compareTo(other.isSetKey());
+    lastComparison = Boolean.valueOf(isSetDst()).compareTo(other.isSetDst());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(key, other.key);
+    lastComparison = TBaseHelper.compareTo(dst, other.dst);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -349,6 +416,14 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
       }
       switch (field.id)
       {
+        case SRC:
+          if (field.type == TType.I64) {
+            this.src = iprot.readI64();
+            setSrcIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         case TYPE:
           if (field.type == TType.I32) {
             this.type = iprot.readI32();
@@ -357,9 +432,10 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case KEY:
-          if (field.type == TType.STRING) {
-            this.key = iprot.readBinary();
+        case DST:
+          if (field.type == TType.I64) {
+            this.dst = iprot.readI64();
+            setDstIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -388,14 +464,15 @@ public class ScanEdge implements TBase, java.io.Serializable, Cloneable, Compara
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    oprot.writeFieldBegin(SRC_FIELD_DESC);
+    oprot.writeI64(this.src);
+    oprot.writeFieldEnd();
     oprot.writeFieldBegin(TYPE_FIELD_DESC);
     oprot.writeI32(this.type);
     oprot.writeFieldEnd();
-    if (this.key != null) {
-      oprot.writeFieldBegin(KEY_FIELD_DESC);
-      oprot.writeBinary(this.key);
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(DST_FIELD_DESC);
+    oprot.writeI64(this.dst);
+    oprot.writeFieldEnd();
     if (this.value != null) {
       oprot.writeFieldBegin(VALUE_FIELD_DESC);
       oprot.writeBinary(this.value);
@@ -427,6 +504,13 @@ String space = prettyPrint ? " " : "";
     boolean first = true;
 
     sb.append(indentStr);
+    sb.append("src");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getSrc(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
@@ -434,19 +518,10 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("key");
+    sb.append("dst");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getKey() == null) {
-      sb.append("null");
-    } else {
-        int __key_size = Math.min(this. getKey().length, 128);
-        for (int i = 0; i < __key_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getKey()[i]).length() > 1 ? Integer.toHexString(this. getKey()[i]).substring(Integer.toHexString(this. getKey()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getKey()[i]).toUpperCase());
-        }
-        if (this. getKey().length > 128) sb.append(" ...");
-    }
+    sb.append(TBaseHelper.toString(this. getDst(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

@@ -27,11 +27,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListSnapshotsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListSnapshotsResp");
+public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("GetTagIndexResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField SNAPSHOTS_FIELD_DESC = new TField("snapshots", TType.LIST, (short)3);
+  private static final TField ITEM_FIELD_DESC = new TField("item", TType.STRUCT, (short)3);
 
   /**
    * 
@@ -39,10 +39,10 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<Snapshot> snapshots;
+  public TagIndexItem item;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int SNAPSHOTS = 3;
+  public static final int ITEM = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,53 +56,52 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(SNAPSHOTS, new FieldMetaData("snapshots", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, Snapshot.class))));
+    tmpMetaDataMap.put(ITEM, new FieldMetaData("item", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, TagIndexItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListSnapshotsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetTagIndexResp.class, metaDataMap);
   }
 
-  public ListSnapshotsResp() {
+  public GetTagIndexResp() {
   }
 
-  public ListSnapshotsResp(
+  public GetTagIndexResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<Snapshot> snapshots)
+    TagIndexItem item)
   {
     this();
     this.code = code;
     setCodeIsSet(true);
     this.leader = leader;
-    this.snapshots = snapshots;
+    this.item = item;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListSnapshotsResp(ListSnapshotsResp other) {
+  public GetTagIndexResp(GetTagIndexResp other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.code = TBaseHelper.deepCopy(other.code);
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetSnapshots()) {
-      this.snapshots = TBaseHelper.deepCopy(other.snapshots);
+    if (other.isSetItem()) {
+      this.item = TBaseHelper.deepCopy(other.item);
     }
   }
 
-  public ListSnapshotsResp deepCopy() {
-    return new ListSnapshotsResp(this);
+  public GetTagIndexResp deepCopy() {
+    return new GetTagIndexResp(this);
   }
 
   @Deprecated
-  public ListSnapshotsResp clone() {
-    return new ListSnapshotsResp(this);
+  public GetTagIndexResp clone() {
+    return new GetTagIndexResp(this);
   }
 
   /**
@@ -117,7 +116,7 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
    * 
    * @see ErrorCode
    */
-  public ListSnapshotsResp setCode(int code) {
+  public GetTagIndexResp setCode(int code) {
     this.code = code;
     setCodeIsSet(true);
     return this;
@@ -140,7 +139,7 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
     return this.leader;
   }
 
-  public ListSnapshotsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public GetTagIndexResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -160,31 +159,30 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<Snapshot>  getSnapshots() {
-    return this.snapshots;
+  public TagIndexItem  getItem() {
+    return this.item;
   }
 
-  public ListSnapshotsResp setSnapshots(List<Snapshot> snapshots) {
-    this.snapshots = snapshots;
+  public GetTagIndexResp setItem(TagIndexItem item) {
+    this.item = item;
     return this;
   }
 
-  public void unsetSnapshots() {
-    this.snapshots = null;
+  public void unsetItem() {
+    this.item = null;
   }
 
-  // Returns true if field snapshots is set (has been assigned a value) and false otherwise
-  public boolean isSetSnapshots() {
-    return this.snapshots != null;
+  // Returns true if field item is set (has been assigned a value) and false otherwise
+  public boolean isSetItem() {
+    return this.item != null;
   }
 
-  public void setSnapshotsIsSet(boolean value) {
+  public void setItemIsSet(boolean value) {
     if (!value) {
-      this.snapshots = null;
+      this.item = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case CODE:
@@ -203,11 +201,11 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case SNAPSHOTS:
+    case ITEM:
       if (value == null) {
-        unsetSnapshots();
+        unsetItem();
       } else {
-        setSnapshots((List<Snapshot>)value);
+        setItem((TagIndexItem)value);
       }
       break;
 
@@ -224,8 +222,8 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
     case LEADER:
       return getLeader();
 
-    case SNAPSHOTS:
-      return getSnapshots();
+    case ITEM:
+      return getItem();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -239,8 +237,8 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
       return isSetCode();
     case LEADER:
       return isSetLeader();
-    case SNAPSHOTS:
-      return isSetSnapshots();
+    case ITEM:
+      return isSetItem();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -250,12 +248,12 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ListSnapshotsResp)
-      return this.equals((ListSnapshotsResp)that);
+    if (that instanceof GetTagIndexResp)
+      return this.equals((GetTagIndexResp)that);
     return false;
   }
 
-  public boolean equals(ListSnapshotsResp that) {
+  public boolean equals(GetTagIndexResp that) {
     if (that == null)
       return false;
     if (this == that)
@@ -279,12 +277,12 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_snapshots = true && this.isSetSnapshots();
-    boolean that_present_snapshots = true && that.isSetSnapshots();
-    if (this_present_snapshots || that_present_snapshots) {
-      if (!(this_present_snapshots && that_present_snapshots))
+    boolean this_present_item = true && this.isSetItem();
+    boolean that_present_item = true && that.isSetItem();
+    if (this_present_item || that_present_item) {
+      if (!(this_present_item && that_present_item))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.snapshots, that.snapshots))
+      if (!TBaseHelper.equalsNobinary(this.item, that.item))
         return false;
     }
 
@@ -305,51 +303,12 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
     if (present_leader)
       builder.append(leader);
 
-    boolean present_snapshots = true && (isSetSnapshots());
-    builder.append(present_snapshots);
-    if (present_snapshots)
-      builder.append(snapshots);
+    boolean present_item = true && (isSetItem());
+    builder.append(present_item);
+    if (present_item)
+      builder.append(item);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(ListSnapshotsResp other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(code, other.code);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(leader, other.leader);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetSnapshots()).compareTo(other.isSetSnapshots());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(snapshots, other.snapshots);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -379,22 +338,10 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case SNAPSHOTS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list147 = iprot.readListBegin();
-              this.snapshots = new ArrayList<Snapshot>(Math.max(0, _list147.size));
-              for (int _i148 = 0; 
-                   (_list147.size < 0) ? iprot.peekList() : (_i148 < _list147.size); 
-                   ++_i148)
-              {
-                Snapshot _elem149;
-                _elem149 = new Snapshot();
-                _elem149.read(iprot);
-                this.snapshots.add(_elem149);
-              }
-              iprot.readListEnd();
-            }
+        case ITEM:
+          if (field.type == TType.STRUCT) {
+            this.item = new TagIndexItem();
+            this.item.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -424,15 +371,9 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.snapshots != null) {
-      oprot.writeFieldBegin(SNAPSHOTS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.snapshots.size()));
-        for (Snapshot _iter150 : this.snapshots)        {
-          _iter150.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
+    if (this.item != null) {
+      oprot.writeFieldBegin(ITEM_FIELD_DESC);
+      this.item.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -454,7 +395,7 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListSnapshotsResp");
+    StringBuilder sb = new StringBuilder("GetTagIndexResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -487,13 +428,13 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("snapshots");
+    sb.append("item");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSnapshots() == null) {
+    if (this. getItem() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSnapshots(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getItem(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

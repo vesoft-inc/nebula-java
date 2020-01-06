@@ -27,12 +27,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Comparable<RegConfigReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("RegConfigReq");
-  private static final TField ITEMS_FIELD_DESC = new TField("items", TType.LIST, (short)1);
+public class IndexProperties implements TBase, java.io.Serializable, Cloneable, Comparable<IndexProperties> {
+  private static final TStruct STRUCT_DESC = new TStruct("IndexProperties");
+  private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.MAP, (short)1);
 
-  public List<ConfigItem> items;
-  public static final int ITEMS = 1;
+  public Map<String,List<String>> fields;
+  public static final int FIELDS = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -40,76 +40,78 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ITEMS, new FieldMetaData("items", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ConfigItem.class))));
+    tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.STRING), 
+            new ListMetaData(TType.LIST, 
+                new FieldValueMetaData(TType.STRING)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(RegConfigReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(IndexProperties.class, metaDataMap);
   }
 
-  public RegConfigReq() {
+  public IndexProperties() {
   }
 
-  public RegConfigReq(
-    List<ConfigItem> items)
+  public IndexProperties(
+    Map<String,List<String>> fields)
   {
     this();
-    this.items = items;
+    this.fields = fields;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public RegConfigReq(RegConfigReq other) {
-    if (other.isSetItems()) {
-      this.items = TBaseHelper.deepCopy(other.items);
+  public IndexProperties(IndexProperties other) {
+    if (other.isSetFields()) {
+      this.fields = TBaseHelper.deepCopy(other.fields);
     }
   }
 
-  public RegConfigReq deepCopy() {
-    return new RegConfigReq(this);
+  public IndexProperties deepCopy() {
+    return new IndexProperties(this);
   }
 
   @Deprecated
-  public RegConfigReq clone() {
-    return new RegConfigReq(this);
+  public IndexProperties clone() {
+    return new IndexProperties(this);
   }
 
-  public List<ConfigItem>  getItems() {
-    return this.items;
+  public Map<String,List<String>>  getFields() {
+    return this.fields;
   }
 
-  public RegConfigReq setItems(List<ConfigItem> items) {
-    this.items = items;
+  public IndexProperties setFields(Map<String,List<String>> fields) {
+    this.fields = fields;
     return this;
   }
 
-  public void unsetItems() {
-    this.items = null;
+  public void unsetFields() {
+    this.fields = null;
   }
 
-  // Returns true if field items is set (has been assigned a value) and false otherwise
-  public boolean isSetItems() {
-    return this.items != null;
+  // Returns true if field fields is set (has been assigned a value) and false otherwise
+  public boolean isSetFields() {
+    return this.fields != null;
   }
 
-  public void setItemsIsSet(boolean value) {
+  public void setFieldsIsSet(boolean value) {
     if (!value) {
-      this.items = null;
+      this.fields = null;
     }
   }
 
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case ITEMS:
+    case FIELDS:
       if (value == null) {
-        unsetItems();
+        unsetFields();
       } else {
-        setItems((List<ConfigItem>)value);
+        setFields((Map<String,List<String>>)value);
       }
       break;
 
@@ -120,8 +122,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ITEMS:
-      return getItems();
+    case FIELDS:
+      return getFields();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -131,8 +133,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case ITEMS:
-      return isSetItems();
+    case FIELDS:
+      return isSetFields();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -142,23 +144,23 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof RegConfigReq)
-      return this.equals((RegConfigReq)that);
+    if (that instanceof IndexProperties)
+      return this.equals((IndexProperties)that);
     return false;
   }
 
-  public boolean equals(RegConfigReq that) {
+  public boolean equals(IndexProperties that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_items = true && this.isSetItems();
-    boolean that_present_items = true && that.isSetItems();
-    if (this_present_items || that_present_items) {
-      if (!(this_present_items && that_present_items))
+    boolean this_present_fields = true && this.isSetFields();
+    boolean that_present_fields = true && that.isSetFields();
+    if (this_present_fields || that_present_fields) {
+      if (!(this_present_fields && that_present_fields))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.items, that.items))
+      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
         return false;
     }
 
@@ -169,16 +171,16 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_items = true && (isSetItems());
-    builder.append(present_items);
-    if (present_items)
-      builder.append(items);
+    boolean present_fields = true && (isSetFields());
+    builder.append(present_fields);
+    if (present_fields)
+      builder.append(fields);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(RegConfigReq other) {
+  public int compareTo(IndexProperties other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -189,11 +191,11 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetItems()).compareTo(other.isSetItems());
+    lastComparison = Boolean.valueOf(isSetFields()).compareTo(other.isSetFields());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(items, other.items);
+    lastComparison = TBaseHelper.compareTo(fields, other.fields);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -211,21 +213,34 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (field.id)
       {
-        case ITEMS:
-          if (field.type == TType.LIST) {
+        case FIELDS:
+          if (field.type == TType.MAP) {
             {
-              TList _list135 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list135.size));
-              for (int _i136 = 0; 
-                   (_list135.size < 0) ? iprot.peekList() : (_i136 < _list135.size); 
-                   ++_i136)
+              TMap _map0 = iprot.readMapBegin();
+              this.fields = new HashMap<String,List<String>>(Math.max(0, 2*_map0.size));
+              for (int _i1 = 0; 
+                   (_map0.size < 0) ? iprot.peekMap() : (_i1 < _map0.size); 
+                   ++_i1)
               {
-                ConfigItem _elem137;
-                _elem137 = new ConfigItem();
-                _elem137.read(iprot);
-                this.items.add(_elem137);
+                String _key2;
+                List<String> _val3;
+                _key2 = iprot.readString();
+                {
+                  TList _list4 = iprot.readListBegin();
+                  _val3 = new ArrayList<String>(Math.max(0, _list4.size));
+                  for (int _i5 = 0; 
+                       (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
+                       ++_i5)
+                  {
+                    String _elem6;
+                    _elem6 = iprot.readString();
+                    _val3.add(_elem6);
+                  }
+                  iprot.readListEnd();
+                }
+                this.fields.put(_key2, _val3);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -248,14 +263,21 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.items != null) {
-      oprot.writeFieldBegin(ITEMS_FIELD_DESC);
+    if (this.fields != null) {
+      oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter138 : this.items)        {
-          _iter138.write(oprot);
+        oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.fields.size()));
+        for (Map.Entry<String, List<String>> _iter7 : this.fields.entrySet())        {
+          oprot.writeString(_iter7.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRING, _iter7.getValue().size()));
+            for (String _iter8 : _iter7.getValue())            {
+              oprot.writeString(_iter8);
+            }
+            oprot.writeListEnd();
+          }
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -278,20 +300,20 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("RegConfigReq");
+    StringBuilder sb = new StringBuilder("IndexProperties");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("items");
+    sb.append("fields");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getItems() == null) {
+    if (this. getFields() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getItems(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getFields(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

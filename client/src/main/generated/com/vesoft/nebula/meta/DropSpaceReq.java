@@ -30,18 +30,25 @@ import com.facebook.thrift.protocol.*;
 public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Comparable<DropSpaceReq> {
   private static final TStruct STRUCT_DESC = new TStruct("DropSpaceReq");
   private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)1);
+  private static final TField IF_EXISTS_FIELD_DESC = new TField("if_exists", TType.BOOL, (short)2);
 
   public String space_name;
+  public boolean if_exists;
   public static final int SPACE_NAME = 1;
+  public static final int IF_EXISTS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
+  private static final int __IF_EXISTS_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(IF_EXISTS, new FieldMetaData("if_exists", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -53,19 +60,25 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public DropSpaceReq(
-    String space_name)
+    String space_name,
+    boolean if_exists)
   {
     this();
     this.space_name = space_name;
+    this.if_exists = if_exists;
+    setIf_existsIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public DropSpaceReq(DropSpaceReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetSpace_name()) {
       this.space_name = TBaseHelper.deepCopy(other.space_name);
     }
+    this.if_exists = TBaseHelper.deepCopy(other.if_exists);
   }
 
   public DropSpaceReq deepCopy() {
@@ -101,6 +114,29 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
+  public boolean  isIf_exists() {
+    return this.if_exists;
+  }
+
+  public DropSpaceReq setIf_exists(boolean if_exists) {
+    this.if_exists = if_exists;
+    setIf_existsIsSet(true);
+    return this;
+  }
+
+  public void unsetIf_exists() {
+    __isset_bit_vector.clear(__IF_EXISTS_ISSET_ID);
+  }
+
+  // Returns true if field if_exists is set (has been assigned a value) and false otherwise
+  public boolean isSetIf_exists() {
+    return __isset_bit_vector.get(__IF_EXISTS_ISSET_ID);
+  }
+
+  public void setIf_existsIsSet(boolean value) {
+    __isset_bit_vector.set(__IF_EXISTS_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_NAME:
@@ -108,6 +144,14 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
         unsetSpace_name();
       } else {
         setSpace_name((String)value);
+      }
+      break;
+
+    case IF_EXISTS:
+      if (value == null) {
+        unsetIf_exists();
+      } else {
+        setIf_exists((Boolean)value);
       }
       break;
 
@@ -121,6 +165,9 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     case SPACE_NAME:
       return getSpace_name();
 
+    case IF_EXISTS:
+      return new Boolean(isIf_exists());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -131,6 +178,8 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     switch (fieldID) {
     case SPACE_NAME:
       return isSetSpace_name();
+    case IF_EXISTS:
+      return isSetIf_exists();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -160,6 +209,15 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
         return false;
     }
 
+    boolean this_present_if_exists = true;
+    boolean that_present_if_exists = true;
+    if (this_present_if_exists || that_present_if_exists) {
+      if (!(this_present_if_exists && that_present_if_exists))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.if_exists, that.if_exists))
+        return false;
+    }
+
     return true;
   }
 
@@ -171,6 +229,11 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     builder.append(present_space_name);
     if (present_space_name)
       builder.append(space_name);
+
+    boolean present_if_exists = true;
+    builder.append(present_if_exists);
+    if (present_if_exists)
+      builder.append(if_exists);
 
     return builder.toHashCode();
   }
@@ -195,6 +258,14 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetIf_exists()).compareTo(other.isSetIf_exists());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(if_exists, other.if_exists);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -212,6 +283,14 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
         case SPACE_NAME:
           if (field.type == TType.STRING) {
             this.space_name = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case IF_EXISTS:
+          if (field.type == TType.BOOL) {
+            this.if_exists = iprot.readBool();
+            setIf_existsIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -238,6 +317,9 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeString(this.space_name);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(IF_EXISTS_FIELD_DESC);
+    oprot.writeBool(this.if_exists);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -272,6 +354,13 @@ String space = prettyPrint ? " " : "";
     } else {
       sb.append(TBaseHelper.toString(this. getSpace_name(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("if_exists");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isIf_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
