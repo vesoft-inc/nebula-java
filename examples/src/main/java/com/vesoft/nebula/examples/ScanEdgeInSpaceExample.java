@@ -13,7 +13,13 @@ import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +29,11 @@ public class ScanEdgeInSpaceExample {
     private static StorageClient storageClient;
     private static ScanEdgeProcessor processor;
 
-    private static void scanEdge(String space) {
+    private static void scanEdge(String space, Map<String, List<String>> returnCols) {
         LOGGER.info("Start to scan space " + space);
         try {
             Iterator<ScanEdgeResponse> iterator =
-                    storageClient.scanEdge(space, 100, 0L, Long.MAX_VALUE);
+                    storageClient.scanEdge(space, returnCols, false, 100, 0L, Long.MAX_VALUE);
             ScanEdgeResponse result = iterator.next();
             process(space, result);
             while (iterator.hasNext()) {
@@ -61,8 +67,13 @@ public class ScanEdgeInSpaceExample {
 
             processor = new ScanEdgeProcessor(metaClientImpl);
 
+            Map<String, List<String>> returnCols = new HashMap<>();
+            List<String> propNames = new ArrayList<>();
+            propNames.add("grade");
+            returnCols.put("select", propNames);
+
             for (String space : metaClient.getPartsAllocFromCache().keySet()) {
-                scanEdge(space);
+                scanEdge(space, returnCols);
             }
 
         } catch (Exception e) {

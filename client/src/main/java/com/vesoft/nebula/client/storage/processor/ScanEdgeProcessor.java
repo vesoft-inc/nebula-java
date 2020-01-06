@@ -59,7 +59,8 @@ public class ScanEdgeProcessor implements Processor<ScanEdgeResponse> {
                     continue;
                 }
                 RowReader reader = readers.get(edgeType);
-                Property[] defaultProperties = reader.decodeEdgeKey(scanEdge.key);
+                Property[] defaultProperties = reader.edgeKey(
+                        scanEdge.src, scanEdge.type, scanEdge.dst);
                 Property[] properties = reader.decodeValue(scanEdge.value);
                 Result.RowDesc desc = edgeTypeIndex.get(edgeType);
                 rows.get(desc).add(new Row(defaultProperties, properties));

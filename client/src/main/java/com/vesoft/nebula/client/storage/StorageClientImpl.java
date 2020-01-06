@@ -19,10 +19,15 @@ import com.vesoft.nebula.AbstractClient;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.Pair;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
+import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.ErrorCode;
+import com.vesoft.nebula.meta.TagItem;
+import com.vesoft.nebula.storage.EntryId;
 import com.vesoft.nebula.storage.ExecResponse;
 import com.vesoft.nebula.storage.GeneralResponse;
 import com.vesoft.nebula.storage.GetRequest;
+import com.vesoft.nebula.storage.PropDef;
+import com.vesoft.nebula.storage.PropOwner;
 import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
 import com.vesoft.nebula.storage.ResultCode;
@@ -103,7 +108,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     @Override
     public boolean put(String spaceName, String key, String value) {
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
@@ -129,7 +134,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     @Override
     public boolean put(final String spaceName, Map<String, String> kvs) {
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         Map<Integer, List<Pair>> groups = Maps.newHashMap();
         for (Map.Entry<String, String> kv : kvs.entrySet()) {
             int part = keyToPartId(spaceName, kv.getKey());
@@ -227,7 +232,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     @Override
     public Optional<String> get(String spaceName, String key) {
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
@@ -258,7 +263,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     @Override
     public Optional<Map<String, String>> get(final String spaceName, List<String> keys) {
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         Map<Integer, List<String>> groups = Maps.newHashMap();
         for (String key : keys) {
             int part = keyToPartId(spaceName, key);
@@ -354,7 +359,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     @Override
     public boolean remove(String spaceName, String key) {
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         int part = keyToPartId(spaceName, key);
         HostAndPort leader = getLeader(spaceName, part);
         if (leader == null) {
@@ -380,7 +385,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     @Override
     public boolean remove(final String spaceName, List<String> keys) {
         Map<Integer, List<String>> groups = Maps.newHashMap();
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         for (String key : keys) {
             int part = keyToPartId(spaceName, key);
             if (!groups.containsKey(part)) {
@@ -468,37 +473,59 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         return false;
     }
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space) {
+    @Override
+    public Iterator<ScanEdgeResponse> scanEdge(String space, Map<String, List<String>> returnCols)
+            throws IOException {
+        return scanEdge(space, returnCols, DEFAULT_RETURN_ALL_COLUMNS,
+                DEFAULT_SCAN_ROW_LIMIT, DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    }
+
+    @Override
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException {
         Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
         Iterator<Integer> iterator = partIds.iterator();
-        return scanEdge(space, iterator, DEFAULT_SCAN_ROW_LIMIT,
-                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+        if (!iterator.hasNext()) {
+            throw new IOException("No valid part in space " + space);
+        }
+        return scanEdge(space, iterator, returnCols, allCols, limit, startTime, endTime);
     }
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space, int rowLimit,
-                                               long startTime, long endTime) {
-        Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
-        Iterator<Integer> iterator = partIds.iterator();
-        return scanEdge(space, iterator, rowLimit, startTime, endTime);
+    @Override
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, int part, Map<String, List<String>> returnCols) throws IOException {
+        return scanEdge(space, part, returnCols, DEFAULT_RETURN_ALL_COLUMNS,
+                DEFAULT_SCAN_ROW_LIMIT, DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
     }
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space, int part) throws IOException {
-        return scanEdge(space, part, DEFAULT_SCAN_ROW_LIMIT,
-                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
-    }
-
-    public Iterator<ScanEdgeResponse> scanEdge(String space, int part, int rowLimit,
-                                               long startTime, long endTime) throws IOException {
+    @Override
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, int part, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException {
         HostAndPort leader = getLeader(space, part);
         if (Objects.isNull(leader)) {
             throw new IllegalArgumentException("Part " + part + " not found in space " + space);
         }
 
-        return doScanEdge(space, leader, part, rowLimit, startTime, endTime);
+        int spaceId = metaClient.getSpaceIdFromCache(space);
+        ScanEdgeRequest request = new ScanEdgeRequest();
+        Map<Integer, List<PropDef>> columns = getEdgeReturnCols(space, returnCols);
+        request.setSpace_id(spaceId)
+                .setPart_id(part)
+                .setReturn_columns(columns)
+                .setAll_columns(allCols)
+                .setLimit(limit)
+                .setStart_time(startTime)
+                .setEnd_time(endTime);
+
+        return doScanEdge(space, leader, request);
     }
 
-    private Iterator<ScanEdgeResponse> scanEdge(String space, Iterator<Integer> parts,
-                                                int rowLimit, long startTime, long endTime) {
+    private Iterator<ScanEdgeResponse> scanEdge(
+            String space, Iterator<Integer> parts, Map<String, List<String>> returnCols,
+            boolean allCols, int limit, long startTime, long endTime) throws IOException {
+
         return new Iterator<ScanEdgeResponse>() {
             Iterator<ScanEdgeResponse> iterator;
 
@@ -517,8 +544,23 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                                 + " not found in space " + space);
                     }
 
+                    int spaceId = metaClient.getSpaceIdFromCache(space);
+                    if (spaceId == -1) {
+                        throw new IllegalArgumentException("Space " + space + " not found");
+                    }
+
+                    ScanEdgeRequest request = new ScanEdgeRequest();
+                    Map<Integer, List<PropDef>> columns = getEdgeReturnCols(space, returnCols);
+                    request.setSpace_id(spaceId)
+                            .setPart_id(part)
+                            .setReturn_columns(columns)
+                            .setAll_columns(allCols)
+                            .setLimit(limit)
+                            .setStart_time(startTime)
+                            .setEnd_time(endTime);
+
                     try {
-                        iterator = doScanEdge(space, leader, part, rowLimit, startTime, endTime);
+                        iterator = doScanEdge(space, leader, request);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -529,6 +571,32 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         };
     }
 
+    private Map<Integer, List<PropDef>> getEdgeReturnCols(String space,
+                                                          Map<String, List<String>> returnCols) {
+        Map<Integer, List<PropDef>> columns = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : returnCols.entrySet()) {
+            String edgeName = entry.getKey();
+            List<String> propNames = entry.getValue();
+            EdgeItem edgeItem = metaClient.getEdgeItemFromCache(space, edgeName);
+            if (Objects.isNull(edgeItem)) {
+                throw new IllegalArgumentException("Edge " + edgeName
+                        + " not found in space " + space);
+            }
+            int edgeType = edgeItem.edge_type;
+            EntryId id = EntryId.edge_type(edgeType);
+            List<PropDef> propDefs = new ArrayList<>();
+            for (String propName : propNames) {
+                PropDef propdef = new PropDef();
+                propdef.setOwner(PropOwner.EDGE)
+                        .setId(id)
+                        .setName(propName);
+                propDefs.add(propdef);
+            }
+            columns.put(edgeType, propDefs);
+        }
+        return columns;
+    }
+
     /**
      * Scan all edges of a partition
      *
@@ -536,16 +604,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      * @param leader host address
      * @return response which contains next start cursor, done if next cursor is empty
      */
-    private Iterator<ScanEdgeResponse> doScanEdge(String space, HostAndPort leader, int part,
-                                                  int rowLimit, long startTime, long endTime)
-            throws IOException {
+    private Iterator<ScanEdgeResponse> doScanEdge(String space, HostAndPort leader,
+                                                  ScanEdgeRequest request) throws IOException {
         StorageService.Client client = connect(leader);
         if (Objects.isNull(client)) {
             disconnect(leader);
             throw new IOException("Failed to connect " + leader);
         }
 
-        int spaceID = metaClient.getSpaceIDFromCache(space);
         return new Iterator<ScanEdgeResponse>() {
             private byte[] cursor = null;
             private boolean haveNext = true;
@@ -559,14 +625,6 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
             public ScanEdgeResponse next() {
                 int retry = executionRetry;
                 while (retry-- != 0) {
-                    ScanEdgeRequest request = new ScanEdgeRequest();
-                    request.setSpace_id(spaceID)
-                            .setPart_id(part)
-                            .setRow_limit(rowLimit)
-                            .setStart_time(startTime)
-                            .setCursor(cursor)
-                            .setEnd_time(endTime);
-
                     ScanEdgeResponse response;
                     try {
                         response = client.scanEdge(request);
@@ -592,47 +650,57 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         };
     }
 
-    public Iterator<ScanVertexResponse> scanVertex(String space) {
-        Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
-        Iterator<Integer> iterator = partIds.iterator();
-        if (!iterator.hasNext()) {
-            return null;
-        }
-        return scanVertex(space, iterator, DEFAULT_SCAN_ROW_LIMIT,
-                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    public Iterator<ScanVertexResponse> scanVertex(
+            String space, Map<String, List<String>> returnCols) throws IOException {
+        return scanVertex(space, returnCols, DEFAULT_RETURN_ALL_COLUMNS,
+                DEFAULT_SCAN_ROW_LIMIT, DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
     }
 
     public Iterator<ScanVertexResponse> scanVertex(
-            String space, int rowLimit, long startTime, long endTime) {
+            String space, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException {
         Set<Integer> partIds = metaClient.getPartsAllocFromCache().get(space).keySet();
         Iterator<Integer> iterator = partIds.iterator();
         if (!iterator.hasNext()) {
-            return null;
+            throw new IOException("No valid part in space " + space);
         }
-        return scanVertex(space, iterator, rowLimit, startTime, endTime);
+        return scanVertex(space, iterator, returnCols, allCols, limit, startTime, endTime);
     }
 
     @Override
-    public Iterator<ScanVertexResponse> scanVertex(String space, int part) throws IOException {
-        return scanVertex(space, part, DEFAULT_SCAN_ROW_LIMIT,
-                DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
+    public Iterator<ScanVertexResponse> scanVertex(
+            String space, int part, Map<String, List<String>> returnCols) throws IOException {
+        return scanVertex(space, part, returnCols, DEFAULT_RETURN_ALL_COLUMNS,
+                DEFAULT_SCAN_ROW_LIMIT, DEFAULT_SCAN_START_TIME, DEFAULT_SCAN_END_TIME);
     }
 
     @Override
-    public Iterator<ScanVertexResponse> scanVertex(String space, int part, int rowLimit,
-                                                   long startTime, long endTime)
-            throws IOException {
+    public Iterator<ScanVertexResponse> scanVertex(
+        String space, int part, Map<String, List<String>> returnCols, boolean allCols,
+        int limit, long startTime, long endTime) throws IOException {
         HostAndPort leader = getLeader(space, part);
         if (Objects.isNull(leader)) {
             throw new IllegalArgumentException("Part " + part + " not found in space " + space);
         }
 
-        return doScanVertex(space, leader, part, rowLimit, startTime, endTime);
+        int spaceId = metaClient.getSpaceIdFromCache(space);
+        ScanVertexRequest request = new ScanVertexRequest();
+        Map<Integer, List<PropDef>> columns = getVertexReturnCols(space, returnCols);
+        request.setSpace_id(spaceId)
+                .setPart_id(part)
+                .setReturn_columns(columns)
+                .setAll_columns(allCols)
+                .setLimit(limit)
+                .setStart_time(startTime)
+                .setEnd_time(endTime);
+
+        return doScanVertex(space, leader, request);
     }
 
-    private Iterator<ScanVertexResponse> scanVertex(String space,
-                                                    Iterator<Integer> parts,
-                                                    int rowLimit, long startTime, long endTime) {
+    private Iterator<ScanVertexResponse> scanVertex(
+            String space, Iterator<Integer> parts, Map<String, List<String>> returnCols,
+            boolean allCols, int limit, long startTime, long endTime) throws IOException {
+
         return new Iterator<ScanVertexResponse>() {
             Iterator<ScanVertexResponse> iterator;
 
@@ -651,8 +719,23 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                                 + " not found in space " + space);
                     }
 
+                    int spaceId = metaClient.getSpaceIdFromCache(space);
+                    if (spaceId == -1) {
+                        throw new IllegalArgumentException("Space " + space + " not found");
+                    }
+
+                    ScanVertexRequest request = new ScanVertexRequest();
+                    Map<Integer, List<PropDef>> columns = getVertexReturnCols(space, returnCols);
+                    request.setSpace_id(spaceId)
+                            .setPart_id(part)
+                            .setReturn_columns(columns)
+                            .setAll_columns(allCols)
+                            .setLimit(limit)
+                            .setStart_time(startTime)
+                            .setEnd_time(endTime);
+
                     try {
-                        iterator = doScanVertex(space, leader, part, rowLimit, startTime, endTime);
+                        iterator = doScanVertex(space, leader, request);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -663,6 +746,33 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         };
     }
 
+    private Map<Integer, List<PropDef>> getVertexReturnCols(String space,
+                                                            Map<String, List<String>> returnCols) {
+        Map<Integer, List<PropDef>> columns = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : returnCols.entrySet()) {
+            String tagName = entry.getKey();
+            List<String> propNames = entry.getValue();
+            TagItem tagItem = metaClient.getTagItemFromCache(space, tagName);
+            if (Objects.isNull(tagItem)) {
+                throw new IllegalArgumentException("Tag " + tagName
+                        + " not found in space " + space);
+            }
+
+            int tagId = tagItem.tag_id;
+            EntryId id = EntryId.tag_id(tagId);
+            List<PropDef> propDefs = new ArrayList<>();
+            for (String propName : propNames) {
+                PropDef propdef = new PropDef();
+                propdef.setOwner(PropOwner.SOURCE)
+                        .setId(id)
+                        .setName(propName);
+                propDefs.add(propdef);
+            }
+            columns.put(tagId, propDefs);
+        }
+        return columns;
+    }
+
     /**
      * Scan all vertex of a partition
      *
@@ -670,16 +780,15 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      * @param leader    host address
      * @return response which contains next start cursor, done if next cursor is empty
      */
-    private Iterator<ScanVertexResponse> doScanVertex(String spaceName, HostAndPort leader,
-                                                      int part, int rowLimit, long startTime,
-                                                      long endTime) throws IOException {
+    private Iterator<ScanVertexResponse> doScanVertex(
+            String spaceName, HostAndPort leader, ScanVertexRequest request) throws IOException {
         StorageService.Client client = connect(leader);
         if (Objects.isNull(client)) {
             disconnect(leader);
             throw new IOException("Failed to connect " + leader);
         }
 
-        int spaceID = metaClient.getSpaceIDFromCache(spaceName);
+        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         return new Iterator<ScanVertexResponse>() {
             private byte[] cursor = null;
             private boolean haveNext = true;
@@ -693,14 +802,6 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
             public ScanVertexResponse next() {
                 int retry = executionRetry;
                 while (retry-- != 0) {
-                    ScanVertexRequest request = new ScanVertexRequest();
-                    request.setSpace_id(spaceID)
-                            .setPart_id(part)
-                            .setRow_limit(rowLimit)
-                            .setStart_time(startTime)
-                            .setCursor(cursor)
-                            .setEnd_time(endTime);
-
                     ScanVertexResponse response;
                     try {
                         response = client.scanVertex(request);
