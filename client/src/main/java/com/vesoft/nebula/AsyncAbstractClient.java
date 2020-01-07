@@ -12,7 +12,9 @@ import com.facebook.thrift.protocol.TProtocolFactory;
 import com.facebook.thrift.transport.TNonblockingTransport;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public abstract class AsyncAbstractClient extends AbstractClient {
     protected ListeningExecutorService service;
@@ -35,6 +37,7 @@ public abstract class AsyncAbstractClient extends AbstractClient {
 
     @Override
     public int connect() throws TException {
+        service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1));
         int retry = connectionRetry;
         while (retry-- != 0) {
             int code = doConnect(addresses);

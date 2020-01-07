@@ -13,6 +13,24 @@ import com.facebook.thrift.TException;
  */
 public interface Client extends AutoCloseable {
 
+    public static enum ErrorCode {
+        SUCCEEDED(0);
+
+        int code;
+
+        int getCode() {
+            return code;
+        }
+
+        private ErrorCode() {
+
+        }
+
+        ErrorCode(int code) {
+            this.code = code;
+        }
+    }
+
     public static final int DEFAULT_TIMEOUT_MS = 1000;
     public static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     public static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
