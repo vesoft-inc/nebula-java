@@ -36,6 +36,7 @@ public class ErrorCode {
   public static final int E_PERSIST_SNAPSHOT_FAILED = -16;
   public static final int E_BAD_ROLE = -17;
   public static final int E_EXCEPTION = -20;
+  public static final int E_TIMEOUT = -99;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();

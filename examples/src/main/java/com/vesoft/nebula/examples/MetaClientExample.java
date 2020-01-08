@@ -6,8 +6,7 @@
 
 package com.vesoft.nebula.examples;
 
-import com.vesoft.nebula.client.meta.MetaClient;
-import com.vesoft.nebula.client.meta.MetaClientImpl;
+import com.vesoft.nebula.meta.client.MetaClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,21 +14,10 @@ public class MetaClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientExample.class);
 
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Usage: "
-                    + "com.vesoft.nebula.examples.StorageClientExample <host> <port>");
-            return;
-        }
-
-        try {
-            MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
-            metaClient.connect();
-            LOGGER.info(metaClient.getPartsAllocFromCache().toString());
-            LOGGER.info(metaClient.getTag("test", "test_tag").toString());
-            LOGGER.info(metaClient.getEdge("test", "test_edge").toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MetaClientImpl metaClient = new MetaClientImpl("127.0.0.1", 45500);
+        LOGGER.info(metaClient.getPart(2, 1).toString());
+        LOGGER.info(metaClient.getTagId(1, "test").toString());
+        LOGGER.info(metaClient.getEdgeType(1, "test").toString());
     }
 }
 

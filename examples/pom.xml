@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vesoft</groupId>
         <artifactId>nebula</artifactId>
-        <version>1.0.0-rc3</version>
+        <version>1.0.0-beta</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -13,13 +13,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -87,6 +80,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.25</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -96,12 +90,12 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>14.0</version>
+            <version>27.0.1-jre</version>
         </dependency>
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>client</artifactId>
-            <version>1.0.0-rc3</version>
+            <version>1.0.0-beta</version>
         </dependency>
     </dependencies>
 </project>

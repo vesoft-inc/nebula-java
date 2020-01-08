@@ -30,14 +30,18 @@ public class ErrorCode {
   public static final int E_EDGE_PROP_NOT_FOUND = -21;
   public static final int E_TAG_PROP_NOT_FOUND = -22;
   public static final int E_IMPROPER_DATA_TYPE = -23;
+  public static final int E_EDGE_NOT_FOUND = -24;
+  public static final int E_TAG_NOT_FOUND = -25;
   public static final int E_INVALID_FILTER = -31;
   public static final int E_INVALID_UPDATER = -32;
   public static final int E_INVALID_STORE = -33;
   public static final int E_INVALID_PEER = -34;
   public static final int E_RETRY_EXHAUSTED = -35;
+  public static final int E_TRANSFER_LEADER_FAILED = -36;
   public static final int E_LOAD_META_FAILED = -41;
   public static final int E_FAILED_TO_CHECKPOINT = -50;
   public static final int E_CHECKPOINT_BLOCKED = -51;
+  public static final int E_TIMEOUT = -99;
   public static final int E_UNKNOWN = -100;
 
   public static final IntRangeSet VALID_VALUES;

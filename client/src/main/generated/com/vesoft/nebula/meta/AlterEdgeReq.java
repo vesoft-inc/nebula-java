@@ -391,16 +391,16 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable {
         case EDGE_ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list30 = iprot.readListBegin();
-              this.edge_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list30.size));
-              for (int _i31 = 0; 
-                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
-                   ++_i31)
+              TList _list48 = iprot.readListBegin();
+              this.edge_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list48.size));
+              for (int _i49 = 0; 
+                   (_list48.size < 0) ? iprot.peekList() : (_i49 < _list48.size); 
+                   ++_i49)
               {
-                AlterSchemaItem _elem32;
-                _elem32 = new AlterSchemaItem();
-                _elem32.read(iprot);
-                this.edge_items.add(_elem32);
+                AlterSchemaItem _elem50;
+                _elem50 = new AlterSchemaItem();
+                _elem50.read(iprot);
+                this.edge_items.add(_elem50);
               }
               iprot.readListEnd();
             }
@@ -445,8 +445,8 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(EDGE_ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.edge_items.size()));
-        for (AlterSchemaItem _iter33 : this.edge_items)        {
-          _iter33.write(oprot);
+        for (AlterSchemaItem _iter51 : this.edge_items)        {
+          _iter51.write(oprot);
         }
         oprot.writeListEnd();
       }
