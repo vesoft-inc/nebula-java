@@ -32,18 +32,22 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField EDGE_NAME_FIELD_DESC = new TField("edge_name", TType.STRING, (short)2);
   private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)3);
+  private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
 
   public int space_id;
   public String edge_name;
   public com.vesoft.nebula.Schema schema;
+  public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int EDGE_NAME = 2;
   public static final int SCHEMA = 3;
+  public static final int IF_NOT_EXISTS = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __IF_NOT_EXISTS_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -54,6 +58,8 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+    tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -67,13 +73,16 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
   public CreateEdgeReq(
     int space_id,
     String edge_name,
-    com.vesoft.nebula.Schema schema)
+    com.vesoft.nebula.Schema schema,
+    boolean if_not_exists)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.edge_name = edge_name;
     this.schema = schema;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
   }
 
   /**
@@ -89,6 +98,7 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
     if (other.isSetSchema()) {
       this.schema = TBaseHelper.deepCopy(other.schema);
     }
+    this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
   }
 
   public CreateEdgeReq deepCopy() {
@@ -171,6 +181,29 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public boolean  isIf_not_exists() {
+    return this.if_not_exists;
+  }
+
+  public CreateEdgeReq setIf_not_exists(boolean if_not_exists) {
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    return this;
+  }
+
+  public void unsetIf_not_exists() {
+    __isset_bit_vector.clear(__IF_NOT_EXISTS_ISSET_ID);
+  }
+
+  // Returns true if field if_not_exists is set (has been assigned a value) and false otherwise
+  public boolean isSetIf_not_exists() {
+    return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
+  }
+
+  public void setIf_not_existsIsSet(boolean value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -197,6 +230,14 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case IF_NOT_EXISTS:
+      if (value == null) {
+        unsetIf_not_exists();
+      } else {
+        setIf_not_exists((Boolean)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -213,6 +254,9 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
     case SCHEMA:
       return getSchema();
 
+    case IF_NOT_EXISTS:
+      return new Boolean(isIf_not_exists());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -227,6 +271,8 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
       return isSetEdge_name();
     case SCHEMA:
       return isSetSchema();
+    case IF_NOT_EXISTS:
+      return isSetIf_not_exists();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -274,6 +320,15 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
+    boolean this_present_if_not_exists = true;
+    boolean that_present_if_not_exists = true;
+    if (this_present_if_not_exists || that_present_if_not_exists) {
+      if (!(this_present_if_not_exists && that_present_if_not_exists))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists))
+        return false;
+    }
+
     return true;
   }
 
@@ -295,6 +350,11 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
     builder.append(present_schema);
     if (present_schema)
       builder.append(schema);
+
+    boolean present_if_not_exists = true;
+    builder.append(present_if_not_exists);
+    if (present_if_not_exists)
+      builder.append(if_not_exists);
 
     return builder.toHashCode();
   }
@@ -333,6 +393,14 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case IF_NOT_EXISTS:
+          if (field.type == TType.BOOL) {
+            this.if_not_exists = iprot.readBool();
+            setIf_not_existsIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -363,6 +431,9 @@ public class CreateEdgeReq implements TBase, java.io.Serializable, Cloneable {
       this.schema.write(oprot);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
+    oprot.writeBool(this.if_not_exists);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -415,6 +486,13 @@ String space = prettyPrint ? " " : "";
     } else {
       sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("if_not_exists");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -31,11 +31,14 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
   private static final TStruct STRUCT_DESC = new TStruct("Pair");
   private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)1);
   private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)2);
+  private static final TField EXPECTED_FIELD_DESC = new TField("expected", TType.STRING, (short)3);
 
   public String key;
   public String value;
+  public String expected;
   public static final int KEY = 1;
   public static final int VALUE = 2;
+  public static final int EXPECTED = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -46,6 +49,8 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     tmpMetaDataMap.put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(EXPECTED, new FieldMetaData("expected", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -66,6 +71,17 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     this.value = value;
   }
 
+  public Pair(
+    String key,
+    String value,
+    String expected)
+  {
+    this();
+    this.key = key;
+    this.value = value;
+    this.expected = expected;
+  }
+
   /**
    * Performs a deep copy on <i>other</i>.
    */
@@ -75,6 +91,9 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     }
     if (other.isSetValue()) {
       this.value = TBaseHelper.deepCopy(other.value);
+    }
+    if (other.isSetExpected()) {
+      this.expected = TBaseHelper.deepCopy(other.expected);
     }
   }
 
@@ -135,6 +154,30 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     }
   }
 
+  public String  getExpected() {
+    return this.expected;
+  }
+
+  public Pair setExpected(String expected) {
+    this.expected = expected;
+    return this;
+  }
+
+  public void unsetExpected() {
+    this.expected = null;
+  }
+
+  // Returns true if field expected is set (has been assigned a value) and false otherwise
+  public boolean isSetExpected() {
+    return this.expected != null;
+  }
+
+  public void setExpectedIsSet(boolean value) {
+    if (!value) {
+      this.expected = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case KEY:
@@ -153,6 +196,14 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
       }
       break;
 
+    case EXPECTED:
+      if (value == null) {
+        unsetExpected();
+      } else {
+        setExpected((String)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -166,6 +217,9 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     case VALUE:
       return getValue();
 
+    case EXPECTED:
+      return getExpected();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -178,6 +232,8 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
       return isSetKey();
     case VALUE:
       return isSetValue();
+    case EXPECTED:
+      return isSetExpected();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -216,6 +272,15 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
         return false;
     }
 
+    boolean this_present_expected = true && this.isSetExpected();
+    boolean that_present_expected = true && that.isSetExpected();
+    if (this_present_expected || that_present_expected) {
+      if (!(this_present_expected && that_present_expected))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.expected, that.expected))
+        return false;
+    }
+
     return true;
   }
 
@@ -232,6 +297,11 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     builder.append(present_value);
     if (present_value)
       builder.append(value);
+
+    boolean present_expected = true && (isSetExpected());
+    builder.append(present_expected);
+    if (present_expected)
+      builder.append(expected);
 
     return builder.toHashCode();
   }
@@ -264,6 +334,14 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetExpected()).compareTo(other.isSetExpected());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(expected, other.expected);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -288,6 +366,13 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
         case VALUE:
           if (field.type == TType.STRING) {
             this.value = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case EXPECTED:
+          if (field.type == TType.STRING) {
+            this.expected = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -318,6 +403,13 @@ public class Pair implements TBase, java.io.Serializable, Cloneable, Comparable<
       oprot.writeFieldBegin(VALUE_FIELD_DESC);
       oprot.writeString(this.value);
       oprot.writeFieldEnd();
+    }
+    if (this.expected != null) {
+      if (isSetExpected()) {
+        oprot.writeFieldBegin(EXPECTED_FIELD_DESC);
+        oprot.writeString(this.expected);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -365,6 +457,20 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getValue(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetExpected())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("expected");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getExpected() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getExpected(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

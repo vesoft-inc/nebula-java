@@ -456,29 +456,29 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
         case LEADER_PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map0 = iprot.readMapBegin();
-              this.leader_parts = new HashMap<String,List<Integer>>(Math.max(0, 2*_map0.size));
-              for (int _i1 = 0; 
-                   (_map0.size < 0) ? iprot.peekMap() : (_i1 < _map0.size); 
-                   ++_i1)
+              TMap _map18 = iprot.readMapBegin();
+              this.leader_parts = new HashMap<String,List<Integer>>(Math.max(0, 2*_map18.size));
+              for (int _i19 = 0; 
+                   (_map18.size < 0) ? iprot.peekMap() : (_i19 < _map18.size); 
+                   ++_i19)
               {
-                String _key2;
-                List<Integer> _val3;
-                _key2 = iprot.readString();
+                String _key20;
+                List<Integer> _val21;
+                _key20 = iprot.readString();
                 {
-                  TList _list4 = iprot.readListBegin();
-                  _val3 = new ArrayList<Integer>(Math.max(0, _list4.size));
-                  for (int _i5 = 0; 
-                       (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
-                       ++_i5)
+                  TList _list22 = iprot.readListBegin();
+                  _val21 = new ArrayList<Integer>(Math.max(0, _list22.size));
+                  for (int _i23 = 0; 
+                       (_list22.size < 0) ? iprot.peekList() : (_i23 < _list22.size); 
+                       ++_i23)
                   {
-                    int _elem6;
-                    _elem6 = iprot.readI32();
-                    _val3.add(_elem6);
+                    int _elem24;
+                    _elem24 = iprot.readI32();
+                    _val21.add(_elem24);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_parts.put(_key2, _val3);
+                this.leader_parts.put(_key20, _val21);
               }
               iprot.readMapEnd();
             }
@@ -489,29 +489,29 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
         case ALL_PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map7 = iprot.readMapBegin();
-              this.all_parts = new HashMap<String,List<Integer>>(Math.max(0, 2*_map7.size));
-              for (int _i8 = 0; 
-                   (_map7.size < 0) ? iprot.peekMap() : (_i8 < _map7.size); 
-                   ++_i8)
+              TMap _map25 = iprot.readMapBegin();
+              this.all_parts = new HashMap<String,List<Integer>>(Math.max(0, 2*_map25.size));
+              for (int _i26 = 0; 
+                   (_map25.size < 0) ? iprot.peekMap() : (_i26 < _map25.size); 
+                   ++_i26)
               {
-                String _key9;
-                List<Integer> _val10;
-                _key9 = iprot.readString();
+                String _key27;
+                List<Integer> _val28;
+                _key27 = iprot.readString();
                 {
-                  TList _list11 = iprot.readListBegin();
-                  _val10 = new ArrayList<Integer>(Math.max(0, _list11.size));
-                  for (int _i12 = 0; 
-                       (_list11.size < 0) ? iprot.peekList() : (_i12 < _list11.size); 
-                       ++_i12)
+                  TList _list29 = iprot.readListBegin();
+                  _val28 = new ArrayList<Integer>(Math.max(0, _list29.size));
+                  for (int _i30 = 0; 
+                       (_list29.size < 0) ? iprot.peekList() : (_i30 < _list29.size); 
+                       ++_i30)
                   {
-                    int _elem13;
-                    _elem13 = iprot.readI32();
-                    _val10.add(_elem13);
+                    int _elem31;
+                    _elem31 = iprot.readI32();
+                    _val28.add(_elem31);
                   }
                   iprot.readListEnd();
                 }
-                this.all_parts.put(_key9, _val10);
+                this.all_parts.put(_key27, _val28);
               }
               iprot.readMapEnd();
             }
@@ -548,12 +548,12 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.leader_parts.size()));
-        for (Map.Entry<String, List<Integer>> _iter14 : this.leader_parts.entrySet())        {
-          oprot.writeString(_iter14.getKey());
+        for (Map.Entry<String, List<Integer>> _iter32 : this.leader_parts.entrySet())        {
+          oprot.writeString(_iter32.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter14.getValue().size()));
-            for (int _iter15 : _iter14.getValue())            {
-              oprot.writeI32(_iter15);
+            oprot.writeListBegin(new TList(TType.I32, _iter32.getValue().size()));
+            for (int _iter33 : _iter32.getValue())            {
+              oprot.writeI32(_iter33);
             }
             oprot.writeListEnd();
           }
@@ -566,12 +566,12 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(ALL_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.all_parts.size()));
-        for (Map.Entry<String, List<Integer>> _iter16 : this.all_parts.entrySet())        {
-          oprot.writeString(_iter16.getKey());
+        for (Map.Entry<String, List<Integer>> _iter34 : this.all_parts.entrySet())        {
+          oprot.writeString(_iter34.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter16.getValue().size()));
-            for (int _iter17 : _iter16.getValue())            {
-              oprot.writeI32(_iter17);
+            oprot.writeListBegin(new TList(TType.I32, _iter34.getValue().size()));
+            for (int _iter35 : _iter34.getValue())            {
+              oprot.writeI32(_iter35);
             }
             oprot.writeListEnd();
           }

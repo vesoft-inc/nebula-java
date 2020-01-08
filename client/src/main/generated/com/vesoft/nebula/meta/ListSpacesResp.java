@@ -382,16 +382,16 @@ public class ListSpacesResp implements TBase, java.io.Serializable, Cloneable, C
         case SPACES:
           if (field.type == TType.LIST) {
             {
-              TList _list18 = iprot.readListBegin();
-              this.spaces = new ArrayList<IdName>(Math.max(0, _list18.size));
-              for (int _i19 = 0; 
-                   (_list18.size < 0) ? iprot.peekList() : (_i19 < _list18.size); 
-                   ++_i19)
+              TList _list36 = iprot.readListBegin();
+              this.spaces = new ArrayList<IdName>(Math.max(0, _list36.size));
+              for (int _i37 = 0; 
+                   (_list36.size < 0) ? iprot.peekList() : (_i37 < _list36.size); 
+                   ++_i37)
               {
-                IdName _elem20;
-                _elem20 = new IdName();
-                _elem20.read(iprot);
-                this.spaces.add(_elem20);
+                IdName _elem38;
+                _elem38 = new IdName();
+                _elem38.read(iprot);
+                this.spaces.add(_elem38);
               }
               iprot.readListEnd();
             }
@@ -428,8 +428,8 @@ public class ListSpacesResp implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(SPACES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.spaces.size()));
-        for (IdName _iter21 : this.spaces)        {
-          _iter21.write(oprot);
+        for (IdName _iter39 : this.spaces)        {
+          _iter39.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -453,7 +453,7 @@ public class ListSpacesResp implements TBase, java.io.Serializable, Cloneable, C
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-    String space = prettyPrint ? " " : "";
+String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ListSpacesResp");
     sb.append(space);
     sb.append("(");

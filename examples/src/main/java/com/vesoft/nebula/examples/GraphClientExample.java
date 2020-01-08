@@ -8,13 +8,15 @@ package com.vesoft.nebula.examples;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
-import com.vesoft.nebula.client.graph.ConnectionException;
-import com.vesoft.nebula.client.graph.GraphClient;
-import com.vesoft.nebula.client.graph.GraphClientImpl;
-import com.vesoft.nebula.client.graph.NGQLException;
-import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
+import com.vesoft.nebula.graph.client.ConnectionException;
+import com.vesoft.nebula.graph.client.GraphClient;
+import com.vesoft.nebula.graph.client.GraphClientImpl;
+import com.vesoft.nebula.graph.client.NGQLException;
+import com.vesoft.nebula.graph.client.ResultSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,14 +26,14 @@ public class GraphClientExample {
     private static final String SPACE_NAME = "test";
 
     private static final String[] createTags = {
-        "CREATE TAG IF NOT EXISTS course(name string, credits int);",
-        "CREATE TAG IF NOT EXISTS building(name string);",
-        "CREATE TAG IF NOT EXISTS student(name string, age int, gender string);",
+        "CREATE TAG course(name string, credits int);",
+        "CREATE TAG building(name string);",
+        "CREATE TAG student(name string, age int, gender string);",
     };
 
     private static final String[] createEdges = {
-        "CREATE EDGE IF NOT EXISTS like(likeness double);",
-        "CREATE EDGE IF NOT EXISTS select(grade int);"
+        "CREATE EDGE like(likeness double);",
+        "CREATE EDGE select(grade int);"
     };
 
     private static final String[] insertVertices = {
@@ -55,8 +57,8 @@ public class GraphClientExample {
     private static final String simpleQuery = "GO FROM 201 OVER like;";
 
     private static final String complexQuery = "GO FROM 201 OVER like "
-        + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
-        + "$$.student.age AS Age, $$.student.gender AS Gender;";
+            + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
+            + "$$.student.age AS Age, $$.student.gender AS Gender;";
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -65,92 +67,85 @@ public class GraphClientExample {
             return;
         }
 
-        try (GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]))) {
-            client.setUser("user");
-            client.setPassword("password");
-
-            client.connect();
-            int code = client.switchSpace(SPACE_NAME);
-            if (ErrorCode.SUCCEEDED != code) {
-                LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));
-                LOGGER.error(String.format("Please confirm %s have been created", SPACE_NAME));
-                System.exit(-1);
-            }
-
-            for (String statement : createTags) {
-                code = client.execute(statement);
-                LOGGER.info(statement);
-                if (ErrorCode.SUCCEEDED != code) {
-                    LOGGER.error(String.format("Create Tag Failed: %s", statement));
+        try {
+            try (GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]))) {
+                client.connect("user", "password");
+                int code = client.switchSpace(SPACE_NAME);
+                if (code != ErrorCode.SUCCEEDED) {
+                    LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));
+                    LOGGER.error(String.format("Please confirm %s have been created", SPACE_NAME));
                     System.exit(-1);
                 }
-            }
 
-            for (String statement : createEdges) {
-                LOGGER.info(statement);
-                code = client.execute(statement);
-                if (ErrorCode.SUCCEEDED != code) {
-                    LOGGER.error(String.format("Create Edge Failed: %s", statement));
-                    System.exit(-1);
+                for (String statement : createTags) {
+                    code = client.execute(statement);
+                    if (code != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Create Tag Failed: %s", statement));
+                        System.exit(-1);
+                    }
                 }
-            }
 
-            for (String statement : insertVertices) {
-                LOGGER.info(statement);
-                code = client.execute(statement);
-                if (ErrorCode.SUCCEEDED != code) {
-                    LOGGER.error(String.format("Insert Vertices Failed: %s", statement));
-                    System.exit(-1);
+                for (String statement : createEdges) {
+                    code = client.execute(statement);
+                    if (code != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Create Edge Failed: %s", statement));
+                        System.exit(-1);
+                    }
                 }
-            }
 
-            for (String statement : insertEdges) {
-                LOGGER.info(statement);
-                code = client.execute(statement);
-                if (ErrorCode.SUCCEEDED != code) {
-                    LOGGER.error(String.format("Insert Edges Failed: %s", statement));
-                    System.exit(-1);
+                for (String statement : insertVertices) {
+                    code = client.execute(statement);
+                    if (code != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Insert Vertices Failed: %s", statement));
+                        System.exit(-1);
+                    }
                 }
-            }
 
-            ResultSet resultSet = null;
-            try {
-                LOGGER.info(simpleQuery);
-                resultSet = client.executeQuery(simpleQuery);
-            } catch (ConnectionException e) {
-                LOGGER.error("Query Failed: ", e.getMessage());
-            } catch (TException e) {
-                e.printStackTrace();
-            } catch (NGQLException e) {
-                e.printStackTrace();
-            }
+                for (String statement : insertEdges) {
+                    code = client.execute(statement);
+                    if (code != ErrorCode.SUCCEEDED) {
+                        LOGGER.error(String.format("Insert Edges Failed: %s", statement));
+                        System.exit(-1);
+                    }
+                }
 
-            LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
+                ResultSet resultSet = null;
+                try {
+                    resultSet = client.executeQuery(simpleQuery);
+                } catch (ConnectionException | NGQLException | TException e) {
+                    LOGGER.error("Query Failed: ", e.getMessage());
+                }
+                List<String> columns = resultSet.getColumns()
+                        .stream()
+                        .map(String::new)
+                        .collect(Collectors.toList());
+                LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(columns)));
 
-            for (RowValue value : resultSet.getRows()) {
-                LOGGER.info("ID: {}", value.columns.get(0).getId());
-            }
+                for (RowValue value : resultSet.getRows()) {
+                    LOGGER.info("ID: %d", value.columns.get(0).getId());
+                }
 
-            try {
-                LOGGER.info(complexQuery);
-                resultSet = client.executeQuery(complexQuery);
-            } catch (NGQLException e) {
-                e.printStackTrace();
-            } catch (TException e) {
-                e.printStackTrace();
-            } catch (ConnectionException e) {
-                e.printStackTrace();
-            }
+                try {
+                    resultSet = client.executeQuery(complexQuery);
+                } catch (ConnectionException | NGQLException | TException e) {
+                    LOGGER.error("Query Failed: ", e.getMessage());
+                }
 
-            LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
+                columns = resultSet.getColumns()
+                        .stream()
+                        .map(String::new)
+                        .collect(Collectors.toList());
 
-            for (RowValue value : resultSet.getRows()) {
-                LOGGER.info(String.format("%s, %d, %s", new String(value.columns.get(0).getStr()),
-                                                        value.columns.get(1).getInteger(),
-                                                        new String(value.columns.get(2).getStr())));
+                LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(columns)));
+
+                for (RowValue value : resultSet.getRows()) {
+                    LOGGER.info("%s, %d, %s", new String(value.columns.get(0).getStr()),
+                            value.columns.get(1).getInteger(),
+                            new String(value.columns.get(2).getStr()));
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Connection Failed: ", e.getMessage());
         }
     }
 }

@@ -437,16 +437,16 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         case HOST_DEL:
           if (field.type == TType.LIST) {
             {
-              TList _list88 = iprot.readListBegin();
-              this.host_del = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list88.size));
-              for (int _i89 = 0; 
-                   (_list88.size < 0) ? iprot.peekList() : (_i89 < _list88.size); 
-                   ++_i89)
+              TList _list127 = iprot.readListBegin();
+              this.host_del = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list127.size));
+              for (int _i128 = 0; 
+                   (_list127.size < 0) ? iprot.peekList() : (_i128 < _list127.size); 
+                   ++_i128)
               {
-                com.vesoft.nebula.HostAddr _elem90;
-                _elem90 = new com.vesoft.nebula.HostAddr();
-                _elem90.read(iprot);
-                this.host_del.add(_elem90);
+                com.vesoft.nebula.HostAddr _elem129;
+                _elem129 = new com.vesoft.nebula.HostAddr();
+                _elem129.read(iprot);
+                this.host_del.add(_elem129);
               }
               iprot.readListEnd();
             }
@@ -494,8 +494,8 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         oprot.writeFieldBegin(HOST_DEL_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.host_del.size()));
-          for (com.vesoft.nebula.HostAddr _iter91 : this.host_del)          {
-            _iter91.write(oprot);
+          for (com.vesoft.nebula.HostAddr _iter130 : this.host_del)          {
+            _iter130.write(oprot);
           }
           oprot.writeListEnd();
         }

@@ -295,29 +295,29 @@ public class RemoveRequest implements TBase, java.io.Serializable, Cloneable, Co
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map156 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<String>>(Math.max(0, 2*_map156.size));
-              for (int _i157 = 0; 
-                   (_map156.size < 0) ? iprot.peekMap() : (_i157 < _map156.size); 
-                   ++_i157)
+              TMap _map142 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<String>>(Math.max(0, 2*_map142.size));
+              for (int _i143 = 0; 
+                   (_map142.size < 0) ? iprot.peekMap() : (_i143 < _map142.size); 
+                   ++_i143)
               {
-                int _key158;
-                List<String> _val159;
-                _key158 = iprot.readI32();
+                int _key144;
+                List<String> _val145;
+                _key144 = iprot.readI32();
                 {
-                  TList _list160 = iprot.readListBegin();
-                  _val159 = new ArrayList<String>(Math.max(0, _list160.size));
-                  for (int _i161 = 0; 
-                       (_list160.size < 0) ? iprot.peekList() : (_i161 < _list160.size); 
-                       ++_i161)
+                  TList _list146 = iprot.readListBegin();
+                  _val145 = new ArrayList<String>(Math.max(0, _list146.size));
+                  for (int _i147 = 0; 
+                       (_list146.size < 0) ? iprot.peekList() : (_i147 < _list146.size); 
+                       ++_i147)
                   {
-                    String _elem162;
-                    _elem162 = iprot.readString();
-                    _val159.add(_elem162);
+                    String _elem148;
+                    _elem148 = iprot.readString();
+                    _val145.add(_elem148);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key158, _val159);
+                this.parts.put(_key144, _val145);
               }
               iprot.readMapEnd();
             }
@@ -349,12 +349,12 @@ public class RemoveRequest implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<String>> _iter163 : this.parts.entrySet())        {
-          oprot.writeI32(_iter163.getKey());
+        for (Map.Entry<Integer, List<String>> _iter149 : this.parts.entrySet())        {
+          oprot.writeI32(_iter149.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRING, _iter163.getValue().size()));
-            for (String _iter164 : _iter163.getValue())            {
-              oprot.writeString(_iter164);
+            oprot.writeListBegin(new TList(TType.STRING, _iter149.getValue().size()));
+            for (String _iter150 : _iter149.getValue())            {
+              oprot.writeString(_iter150);
             }
             oprot.writeListEnd();
           }
