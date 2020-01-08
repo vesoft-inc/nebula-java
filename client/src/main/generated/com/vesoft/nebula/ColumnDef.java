@@ -31,11 +31,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("ColumnDef");
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)1);
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.STRUCT, (short)2);
+  private static final TField DEFAULT_VALUE_FIELD_DESC = new TField("default_value", TType.STRUCT, (short)3);
 
   public String name;
   public ValueType type;
+  public Value default_value;
   public static final int NAME = 1;
   public static final int TYPE = 2;
+  public static final int DEFAULT_VALUE = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -47,6 +50,8 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ValueType.class)));
+    tmpMetaDataMap.put(DEFAULT_VALUE, new FieldMetaData("default_value", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, Value.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -66,6 +71,17 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
     this.type = type;
   }
 
+  public ColumnDef(
+    String name,
+    ValueType type,
+    Value default_value)
+  {
+    this();
+    this.name = name;
+    this.type = type;
+    this.default_value = default_value;
+  }
+
   /**
    * Performs a deep copy on <i>other</i>.
    */
@@ -75,6 +91,9 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
     }
     if (other.isSetType()) {
       this.type = TBaseHelper.deepCopy(other.type);
+    }
+    if (other.isSetDefault_value()) {
+      this.default_value = TBaseHelper.deepCopy(other.default_value);
     }
   }
 
@@ -135,6 +154,30 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public Value  getDefault_value() {
+    return this.default_value;
+  }
+
+  public ColumnDef setDefault_value(Value default_value) {
+    this.default_value = default_value;
+    return this;
+  }
+
+  public void unsetDefault_value() {
+    this.default_value = null;
+  }
+
+  // Returns true if field default_value is set (has been assigned a value) and false otherwise
+  public boolean isSetDefault_value() {
+    return this.default_value != null;
+  }
+
+  public void setDefault_valueIsSet(boolean value) {
+    if (!value) {
+      this.default_value = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case NAME:
@@ -153,6 +196,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case DEFAULT_VALUE:
+      if (value == null) {
+        unsetDefault_value();
+      } else {
+        setDefault_value((Value)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -166,6 +217,9 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
     case TYPE:
       return getType();
 
+    case DEFAULT_VALUE:
+      return getDefault_value();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -178,6 +232,8 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
       return isSetName();
     case TYPE:
       return isSetType();
+    case DEFAULT_VALUE:
+      return isSetDefault_value();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -216,6 +272,15 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
+    boolean this_present_default_value = true && this.isSetDefault_value();
+    boolean that_present_default_value = true && that.isSetDefault_value();
+    if (this_present_default_value || that_present_default_value) {
+      if (!(this_present_default_value && that_present_default_value))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.default_value, that.default_value))
+        return false;
+    }
+
     return true;
   }
 
@@ -232,6 +297,11 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
     builder.append(present_type);
     if (present_type)
       builder.append(type);
+
+    boolean present_default_value = true && (isSetDefault_value());
+    builder.append(present_default_value);
+    if (present_default_value)
+      builder.append(default_value);
 
     return builder.toHashCode();
   }
@@ -262,6 +332,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case DEFAULT_VALUE:
+          if (field.type == TType.STRUCT) {
+            this.default_value = new Value();
+            this.default_value.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -288,6 +366,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(TYPE_FIELD_DESC);
       this.type.write(oprot);
       oprot.writeFieldEnd();
+    }
+    if (this.default_value != null) {
+      if (isSetDefault_value()) {
+        oprot.writeFieldBegin(DEFAULT_VALUE_FIELD_DESC);
+        this.default_value.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -335,6 +420,20 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getType(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetDefault_value())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("default_value");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getDefault_value() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getDefault_value(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

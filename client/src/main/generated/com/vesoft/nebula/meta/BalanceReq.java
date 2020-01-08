@@ -31,17 +31,24 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TStruct STRUCT_DESC = new TStruct("BalanceReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)2);
+  private static final TField HOST_DEL_FIELD_DESC = new TField("host_del", TType.LIST, (short)3);
+  private static final TField STOP_FIELD_DESC = new TField("stop", TType.BOOL, (short)4);
 
   public int space_id;
   public long id;
+  public List<com.vesoft.nebula.HostAddr> host_del;
+  public boolean stop;
   public static final int SPACE_ID = 1;
   public static final int ID = 2;
+  public static final int HOST_DEL = 3;
+  public static final int STOP = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __STOP_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -50,6 +57,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(HOST_DEL, new FieldMetaData("host_del", TFieldRequirementType.OPTIONAL, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(STOP, new FieldMetaData("stop", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -62,13 +74,18 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
 
   public BalanceReq(
     int space_id,
-    long id)
+    long id,
+    List<com.vesoft.nebula.HostAddr> host_del,
+    boolean stop)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.id = id;
     setIdIsSet(true);
+    this.host_del = host_del;
+    this.stop = stop;
+    setStopIsSet(true);
   }
 
   /**
@@ -79,6 +96,10 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     this.id = TBaseHelper.deepCopy(other.id);
+    if (other.isSetHost_del()) {
+      this.host_del = TBaseHelper.deepCopy(other.host_del);
+    }
+    this.stop = TBaseHelper.deepCopy(other.stop);
   }
 
   public BalanceReq deepCopy() {
@@ -136,6 +157,54 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__ID_ISSET_ID, value);
   }
 
+  public List<com.vesoft.nebula.HostAddr>  getHost_del() {
+    return this.host_del;
+  }
+
+  public BalanceReq setHost_del(List<com.vesoft.nebula.HostAddr> host_del) {
+    this.host_del = host_del;
+    return this;
+  }
+
+  public void unsetHost_del() {
+    this.host_del = null;
+  }
+
+  // Returns true if field host_del is set (has been assigned a value) and false otherwise
+  public boolean isSetHost_del() {
+    return this.host_del != null;
+  }
+
+  public void setHost_delIsSet(boolean value) {
+    if (!value) {
+      this.host_del = null;
+    }
+  }
+
+  public boolean  isStop() {
+    return this.stop;
+  }
+
+  public BalanceReq setStop(boolean stop) {
+    this.stop = stop;
+    setStopIsSet(true);
+    return this;
+  }
+
+  public void unsetStop() {
+    __isset_bit_vector.clear(__STOP_ISSET_ID);
+  }
+
+  // Returns true if field stop is set (has been assigned a value) and false otherwise
+  public boolean isSetStop() {
+    return __isset_bit_vector.get(__STOP_ISSET_ID);
+  }
+
+  public void setStopIsSet(boolean value) {
+    __isset_bit_vector.set(__STOP_ISSET_ID, value);
+  }
+
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -154,6 +223,22 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
+    case HOST_DEL:
+      if (value == null) {
+        unsetHost_del();
+      } else {
+        setHost_del((List<com.vesoft.nebula.HostAddr>)value);
+      }
+      break;
+
+    case STOP:
+      if (value == null) {
+        unsetStop();
+      } else {
+        setStop((Boolean)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -167,6 +252,12 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     case ID:
       return new Long(getId());
 
+    case HOST_DEL:
+      return getHost_del();
+
+    case STOP:
+      return new Boolean(isStop());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -179,6 +270,10 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return isSetSpace_id();
     case ID:
       return isSetId();
+    case HOST_DEL:
+      return isSetHost_del();
+    case STOP:
+      return isSetStop();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -217,6 +312,24 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         return false;
     }
 
+    boolean this_present_host_del = true && this.isSetHost_del();
+    boolean that_present_host_del = true && that.isSetHost_del();
+    if (this_present_host_del || that_present_host_del) {
+      if (!(this_present_host_del && that_present_host_del))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.host_del, that.host_del))
+        return false;
+    }
+
+    boolean this_present_stop = true && this.isSetStop();
+    boolean that_present_stop = true && that.isSetStop();
+    if (this_present_stop || that_present_stop) {
+      if (!(this_present_stop && that_present_stop))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.stop, that.stop))
+        return false;
+    }
+
     return true;
   }
 
@@ -233,6 +346,16 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     builder.append(present_id);
     if (present_id)
       builder.append(id);
+
+    boolean present_host_del = true && (isSetHost_del());
+    builder.append(present_host_del);
+    if (present_host_del)
+      builder.append(host_del);
+
+    boolean present_stop = true && (isSetStop());
+    builder.append(present_stop);
+    if (present_stop)
+      builder.append(stop);
 
     return builder.toHashCode();
   }
@@ -262,6 +385,22 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(id, other.id);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetHost_del()).compareTo(other.isSetHost_del());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(host_del, other.host_del);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetStop()).compareTo(other.isSetStop());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(stop, other.stop);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -295,6 +434,34 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case HOST_DEL:
+          if (field.type == TType.LIST) {
+            {
+              TList _list88 = iprot.readListBegin();
+              this.host_del = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list88.size));
+              for (int _i89 = 0; 
+                   (_list88.size < 0) ? iprot.peekList() : (_i89 < _list88.size); 
+                   ++_i89)
+              {
+                com.vesoft.nebula.HostAddr _elem90;
+                _elem90 = new com.vesoft.nebula.HostAddr();
+                _elem90.read(iprot);
+                this.host_del.add(_elem90);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case STOP:
+          if (field.type == TType.BOOL) {
+            this.stop = iprot.readBool();
+            setStopIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -320,6 +487,24 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     if (isSetId()) {
       oprot.writeFieldBegin(ID_FIELD_DESC);
       oprot.writeI64(this.id);
+      oprot.writeFieldEnd();
+    }
+    if (this.host_del != null) {
+      if (isSetHost_del()) {
+        oprot.writeFieldBegin(HOST_DEL_FIELD_DESC);
+        {
+          oprot.writeListBegin(new TList(TType.STRUCT, this.host_del.size()));
+          for (com.vesoft.nebula.HostAddr _iter91 : this.host_del)          {
+            _iter91.write(oprot);
+          }
+          oprot.writeListEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+    }
+    if (isSetStop()) {
+      oprot.writeFieldBegin(STOP_FIELD_DESC);
+      oprot.writeBool(this.stop);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -364,6 +549,30 @@ String space = prettyPrint ? " " : "";
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetHost_del())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("host_del");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getHost_del() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getHost_del(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetStop())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("stop");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. isStop(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

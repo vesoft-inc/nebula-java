@@ -6,8 +6,7 @@
 
 package com.vesoft.nebula.session;
 
-import com.vesoft.nebula.storage.client.StorageClient;
-import java.io.IOException;
+import com.vesoft.nebula.client.storage.StorageClient;
 
 public class SimpleStorageSession implements Session {
 
@@ -19,7 +18,7 @@ public class SimpleStorageSession implements Session {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws Exception {
         client.close();
     }
 }

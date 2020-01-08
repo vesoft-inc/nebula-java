@@ -6,8 +6,7 @@
 
 package com.vesoft.nebula.session;
 
-import com.vesoft.nebula.meta.client.MetaClient;
-import java.io.IOException;
+import com.vesoft.nebula.client.meta.MetaClient;
 
 public class SimpleMetaSession implements Session {
 
@@ -19,7 +18,7 @@ public class SimpleMetaSession implements Session {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws Exception {
         client.close();
     }
 }

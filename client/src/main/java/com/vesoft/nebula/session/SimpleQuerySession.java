@@ -6,8 +6,7 @@
 
 package com.vesoft.nebula.session;
 
-import com.vesoft.nebula.graph.client.GraphClient;
-import java.io.IOException;
+import com.vesoft.nebula.client.graph.GraphClient;
 
 /**
  *
@@ -29,7 +28,7 @@ public class SimpleQuerySession implements Session {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() throws Exception {
         client.close();
     }
 }

@@ -21,6 +21,7 @@ public class ConfigType {
   public static final int DOUBLE = 1;
   public static final int BOOL = 2;
   public static final int STRING = 3;
+  public static final int NESTED = 4;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();

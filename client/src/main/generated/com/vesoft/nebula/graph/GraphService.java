@@ -209,9 +209,9 @@ public class GraphService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void authenticate(String username, String password, AsyncMethodCallback resultHandler18) throws TException {
+    public void authenticate(String username, String password, AsyncMethodCallback resultHandler22) throws TException {
       checkReady();
-      authenticate_call method_call = new authenticate_call(username, password, resultHandler18, this, ___protocolFactory, ___transport);
+      authenticate_call method_call = new authenticate_call(username, password, resultHandler22, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -219,8 +219,8 @@ public class GraphService {
     public static class authenticate_call extends TAsyncMethodCall {
       private String username;
       private String password;
-      public authenticate_call(String username, String password, AsyncMethodCallback resultHandler19, TAsyncClient client15, TProtocolFactory protocolFactory16, TNonblockingTransport transport17) throws TException {
-        super(client15, protocolFactory16, transport17, resultHandler19, false);
+      public authenticate_call(String username, String password, AsyncMethodCallback resultHandler23, TAsyncClient client19, TProtocolFactory protocolFactory20, TNonblockingTransport transport21) throws TException {
+        super(client19, protocolFactory20, transport21, resultHandler23, false);
         this.username = username;
         this.password = password;
       }
@@ -244,17 +244,17 @@ public class GraphService {
       }
     }
 
-    public void signout(long sessionId, AsyncMethodCallback resultHandler23) throws TException {
+    public void signout(long sessionId, AsyncMethodCallback resultHandler27) throws TException {
       checkReady();
-      signout_call method_call = new signout_call(sessionId, resultHandler23, this, ___protocolFactory, ___transport);
+      signout_call method_call = new signout_call(sessionId, resultHandler27, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class signout_call extends TAsyncMethodCall {
       private long sessionId;
-      public signout_call(long sessionId, AsyncMethodCallback resultHandler24, TAsyncClient client20, TProtocolFactory protocolFactory21, TNonblockingTransport transport22) throws TException {
-        super(client20, protocolFactory21, transport22, resultHandler24, true);
+      public signout_call(long sessionId, AsyncMethodCallback resultHandler28, TAsyncClient client24, TProtocolFactory protocolFactory25, TNonblockingTransport transport26) throws TException {
+        super(client24, protocolFactory25, transport26, resultHandler28, true);
         this.sessionId = sessionId;
       }
 
@@ -275,9 +275,9 @@ public class GraphService {
       }
     }
 
-    public void execute(long sessionId, String stmt, AsyncMethodCallback resultHandler28) throws TException {
+    public void execute(long sessionId, String stmt, AsyncMethodCallback resultHandler32) throws TException {
       checkReady();
-      execute_call method_call = new execute_call(sessionId, stmt, resultHandler28, this, ___protocolFactory, ___transport);
+      execute_call method_call = new execute_call(sessionId, stmt, resultHandler32, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -285,8 +285,8 @@ public class GraphService {
     public static class execute_call extends TAsyncMethodCall {
       private long sessionId;
       private String stmt;
-      public execute_call(long sessionId, String stmt, AsyncMethodCallback resultHandler29, TAsyncClient client25, TProtocolFactory protocolFactory26, TNonblockingTransport transport27) throws TException {
-        super(client25, protocolFactory26, transport27, resultHandler29, false);
+      public execute_call(long sessionId, String stmt, AsyncMethodCallback resultHandler33, TAsyncClient client29, TProtocolFactory protocolFactory30, TNonblockingTransport transport31) throws TException {
+        super(client29, protocolFactory30, transport31, resultHandler33, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }

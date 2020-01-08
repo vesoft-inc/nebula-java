@@ -607,15 +607,15 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         case COLUMN_NAMES:
           if (field.type == TType.LIST) {
             {
-              TList _list4 = iprot.readListBegin();
-              this.column_names = new ArrayList<byte[]>(Math.max(0, _list4.size));
-              for (int _i5 = 0; 
-                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
-                   ++_i5)
+              TList _list8 = iprot.readListBegin();
+              this.column_names = new ArrayList<byte[]>(Math.max(0, _list8.size));
+              for (int _i9 = 0; 
+                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
+                   ++_i9)
               {
-                byte[] _elem6;
-                _elem6 = iprot.readBinary();
-                this.column_names.add(_elem6);
+                byte[] _elem10;
+                _elem10 = iprot.readBinary();
+                this.column_names.add(_elem10);
               }
               iprot.readListEnd();
             }
@@ -626,16 +626,16 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         case ROWS:
           if (field.type == TType.LIST) {
             {
-              TList _list7 = iprot.readListBegin();
-              this.rows = new ArrayList<RowValue>(Math.max(0, _list7.size));
-              for (int _i8 = 0; 
-                   (_list7.size < 0) ? iprot.peekList() : (_i8 < _list7.size); 
-                   ++_i8)
+              TList _list11 = iprot.readListBegin();
+              this.rows = new ArrayList<RowValue>(Math.max(0, _list11.size));
+              for (int _i12 = 0; 
+                   (_list11.size < 0) ? iprot.peekList() : (_i12 < _list11.size); 
+                   ++_i12)
               {
-                RowValue _elem9;
-                _elem9 = new RowValue();
-                _elem9.read(iprot);
-                this.rows.add(_elem9);
+                RowValue _elem13;
+                _elem13 = new RowValue();
+                _elem13.read(iprot);
+                this.rows.add(_elem13);
               }
               iprot.readListEnd();
             }
@@ -691,8 +691,8 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         oprot.writeFieldBegin(COLUMN_NAMES_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.column_names.size()));
-          for (byte[] _iter10 : this.column_names)          {
-            oprot.writeBinary(_iter10);
+          for (byte[] _iter14 : this.column_names)          {
+            oprot.writeBinary(_iter14);
           }
           oprot.writeListEnd();
         }
@@ -704,8 +704,8 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         oprot.writeFieldBegin(ROWS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.rows.size()));
-          for (RowValue _iter11 : this.rows)          {
-            _iter11.write(oprot);
+          for (RowValue _iter15 : this.rows)          {
+            _iter15.write(oprot);
           }
           oprot.writeListEnd();
         }

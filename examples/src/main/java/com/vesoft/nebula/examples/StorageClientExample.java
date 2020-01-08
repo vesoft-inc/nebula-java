@@ -7,15 +7,15 @@
 package com.vesoft.nebula.examples;
 
 import com.google.common.base.Optional;
-import com.vesoft.nebula.meta.client.MetaClientImpl;
-import com.vesoft.nebula.storage.client.StorageClient;
-import com.vesoft.nebula.storage.client.StorageClientImpl;
+import com.vesoft.nebula.client.meta.MetaClientImpl;
+import com.vesoft.nebula.client.storage.StorageClient;
+import com.vesoft.nebula.client.storage.StorageClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class StorageClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientExample.class);
-    private static final int SPACE = 1;
+    private static final String SPACE_NAME = "test";
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -26,16 +26,17 @@ public class StorageClientExample {
 
         try {
             MetaClientImpl metaClient = new MetaClientImpl(args[0], Integer.valueOf(args[1]));
+            metaClient.connect();
             StorageClient storageClient = new StorageClientImpl(metaClient);
             final int count = 1000;
             for (int i = 0; i < count; i++) {
-                if (!storageClient.put(SPACE, String.valueOf(i), String.valueOf(i))) {
+                if (!storageClient.put(SPACE_NAME, String.valueOf(i), String.valueOf(i))) {
                     LOGGER.info("put failed " + i);
                     return;
                 }
             }
             for (int i = 0; i < count; i++) {
-                Optional<String> valueOpt = storageClient.get(SPACE, String.valueOf(i));
+                Optional<String> valueOpt = storageClient.get(SPACE_NAME, String.valueOf(i));
                 if (!valueOpt.isPresent() || !valueOpt.get().equals(String.valueOf(i))) {
                     LOGGER.info("get failed " + i);
                     return;
