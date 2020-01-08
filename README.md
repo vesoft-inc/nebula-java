@@ -51,9 +51,9 @@ int code = client.execute("CREATE TAG course(name string, credits int);");
 
 If query executes seccuessfully, `0` will be returned. For a more complete example, refer to [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
 
-<!-- Not Ready RC2 Rlease
-### Meta Client Example
-### Storage Client Example
--->
+### Storage Client
 
+If you only use the interface of RPC, nothing to worry about.
+
+If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the `nebula-utils` jar, but if it doen't works in your environment, please compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). And `mvn install` the jni jar in your local maven repo.
 
