@@ -36,7 +36,6 @@ import com.vesoft.nebula.meta.TagItem;
 import com.vesoft.nebula.utils.AddressUtil;
 import com.vesoft.nebula.utils.NebulaTypeUtil;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,7 +56,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     // Use a lock to protect the cache
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private Map<String, Integer> spaceNameID = Maps.newHashMap();
+    private Map<String, Integer> spaceNameMap = Maps.newHashMap();
     private Map<String, Map<Integer, List<HostAndPort>>> spacePartLocation = Maps.newHashMap();
     private Map<String, Map<String, TagItem>> spaceTagItems = Maps.newHashMap();
     private Map<String, Map<String, EdgeItem>> spaceEdgeItems = Maps.newHashMap();
@@ -92,7 +91,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
         for (SpaceNameID space : listSpaces()) {
             String spaceName = space.getName();
-            spaceNameID.put(spaceName, space.getId());
+            spaceNameMap.put(spaceName, space.getId());
             spacePartLocation.put(spaceName, getPartsAlloc(spaceName));
 
             // Loading tag schema's cache
@@ -119,14 +118,14 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     }
 
     public Map<String, Integer> getSpaces() {
-        return spaceNameID;
+        return spaceNameMap;
     }
 
-    public int getSpaceIDFromCache(String name) {
-        if (!spaceNameID.containsKey(name)) {
+    public int getSpaceIdFromCache(String name) {
+        if (!spaceNameMap.containsKey(name)) {
             return -1;
         } else {
-            return spaceNameID.get(name);
+            return spaceNameMap.get(name);
         }
     }
 
@@ -184,7 +183,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     @Override
     public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
         GetPartsAllocReq request = new GetPartsAllocReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
+        int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
 
         GetPartsAllocResp response;
@@ -274,7 +273,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     @Override
     public List<TagItem> getTags(String spaceName) {
         ListTagsReq request = new ListTagsReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
+        int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
         ListTagsResp response;
         try {
@@ -295,33 +294,35 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     @Override
     public Schema getTag(String spaceName, String tagName) {
         GetTagReq request = new GetTagReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
+        int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
+        request.setTag_name(tagName);
+        request.setVersion(LATEST_SCHEMA_VERSION);
         GetTagResp response;
 
         try {
             response = client.getTag(request);
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
-            return new Schema();
+            return null;
         }
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
-            return new Schema();
+            return null;
         }
     }
 
     @Override
     public Map<String, Class> getTagSchema(String spaceName, String tagName, long version) {
         Map<String, Class> result = Maps.newHashMap();
-        if (!spaceNameID.containsKey(spaceName)) {
+        if (!spaceNameMap.containsKey(spaceName)) {
             return result;
         }
 
         GetTagReq request = new GetTagReq();
-        request.setSpace_id(spaceNameID.get(spaceName));
+        request.setSpace_id(spaceNameMap.get(spaceName));
         request.setTag_name(tagName);
         request.setVersion(version);
         GetTagResp response;
@@ -388,7 +389,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     @Override
     public List<EdgeItem> getEdges(String spaceName) {
         ListEdgesReq request = new ListEdgesReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
+        int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
 
         ListEdgesResp response;
@@ -410,33 +411,35 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     @Override
     public Schema getEdge(String spaceName, String edgeName) {
         GetEdgeReq request = new GetEdgeReq();
-        int spaceID = getSpaceIDFromCache(spaceName);
+        int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
+        request.setEdge_name(edgeName);
+        request.setVersion(LATEST_SCHEMA_VERSION);
         GetEdgeResp response;
 
         try {
             response = client.getEdge(request);
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
-            return new Schema();
+            return null;
         }
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
-            return new Schema();
+            return null;
         }
     }
 
     @Override
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName, long version) {
         Map<String, Class> result = Maps.newHashMap();
-        if (!spaceNameID.containsKey(spaceName)) {
+        if (!spaceNameMap.containsKey(spaceName)) {
             return result;
         }
 
         GetEdgeReq request = new GetEdgeReq();
-        request.setSpace_id(spaceNameID.get(spaceName));
+        request.setSpace_id(spaceNameMap.get(spaceName));
         request.setEdge_name(edgeName);
         request.setVersion(version);
 

@@ -31,18 +31,18 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
   private static final TStruct STRUCT_DESC = new TStruct("ScanVertexResponse");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
   private static final TField VERTEX_SCHEMA_FIELD_DESC = new TField("vertex_schema", TType.MAP, (short)2);
-  private static final TField TAG_DATA_FIELD_DESC = new TField("tag_data", TType.LIST, (short)3);
+  private static final TField VERTEX_DATA_FIELD_DESC = new TField("vertex_data", TType.LIST, (short)3);
   private static final TField HAS_NEXT_FIELD_DESC = new TField("has_next", TType.BOOL, (short)4);
   private static final TField NEXT_CURSOR_FIELD_DESC = new TField("next_cursor", TType.STRING, (short)5);
 
   public ResponseCommon result;
   public Map<Integer,com.vesoft.nebula.Schema> vertex_schema;
-  public List<ScanTag> tag_data;
+  public List<ScanVertex> vertex_data;
   public boolean has_next;
   public byte[] next_cursor;
   public static final int RESULT = 1;
   public static final int VERTEX_SCHEMA = 2;
-  public static final int TAG_DATA = 3;
+  public static final int VERTEX_DATA = 3;
   public static final int HAS_NEXT = 4;
   public static final int NEXT_CURSOR = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -56,13 +56,13 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(VERTEX_SCHEMA, new FieldMetaData("vertex_schema", TFieldRequirementType.OPTIONAL, 
+    tmpMetaDataMap.put(VERTEX_SCHEMA, new FieldMetaData("vertex_schema", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class))));
-    tmpMetaDataMap.put(TAG_DATA, new FieldMetaData("tag_data", TFieldRequirementType.OPTIONAL, 
+    tmpMetaDataMap.put(VERTEX_DATA, new FieldMetaData("vertex_data", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ScanTag.class))));
+            new StructMetaData(TType.STRUCT, ScanVertex.class))));
     tmpMetaDataMap.put(HAS_NEXT, new FieldMetaData("has_next", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(NEXT_CURSOR, new FieldMetaData("next_cursor", TFieldRequirementType.DEFAULT, 
@@ -86,27 +86,15 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
 
   public ScanVertexResponse(
     ResponseCommon result,
-    boolean has_next,
-    byte[] next_cursor)
-  {
-    this();
-    this.result = result;
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
-    this.next_cursor = next_cursor;
-  }
-
-  public ScanVertexResponse(
-    ResponseCommon result,
     Map<Integer,com.vesoft.nebula.Schema> vertex_schema,
-    List<ScanTag> tag_data,
+    List<ScanVertex> vertex_data,
     boolean has_next,
     byte[] next_cursor)
   {
     this();
     this.result = result;
     this.vertex_schema = vertex_schema;
-    this.tag_data = tag_data;
+    this.vertex_data = vertex_data;
     this.has_next = has_next;
     setHas_nextIsSet(true);
     this.next_cursor = next_cursor;
@@ -124,8 +112,8 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     if (other.isSetVertex_schema()) {
       this.vertex_schema = TBaseHelper.deepCopy(other.vertex_schema);
     }
-    if (other.isSetTag_data()) {
-      this.tag_data = TBaseHelper.deepCopy(other.tag_data);
+    if (other.isSetVertex_data()) {
+      this.vertex_data = TBaseHelper.deepCopy(other.vertex_data);
     }
     this.has_next = TBaseHelper.deepCopy(other.has_next);
     if (other.isSetNext_cursor()) {
@@ -190,27 +178,27 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public List<ScanTag>  getTag_data() {
-    return this.tag_data;
+  public List<ScanVertex>  getVertex_data() {
+    return this.vertex_data;
   }
 
-  public ScanVertexResponse setTag_data(List<ScanTag> tag_data) {
-    this.tag_data = tag_data;
+  public ScanVertexResponse setVertex_data(List<ScanVertex> vertex_data) {
+    this.vertex_data = vertex_data;
     return this;
   }
 
-  public void unsetTag_data() {
-    this.tag_data = null;
+  public void unsetVertex_data() {
+    this.vertex_data = null;
   }
 
-  // Returns true if field tag_data is set (has been assigned a value) and false otherwise
-  public boolean isSetTag_data() {
-    return this.tag_data != null;
+  // Returns true if field vertex_data is set (has been assigned a value) and false otherwise
+  public boolean isSetVertex_data() {
+    return this.vertex_data != null;
   }
 
-  public void setTag_dataIsSet(boolean value) {
+  public void setVertex_dataIsSet(boolean value) {
     if (!value) {
-      this.tag_data = null;
+      this.vertex_data = null;
     }
   }
 
@@ -280,11 +268,11 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case TAG_DATA:
+    case VERTEX_DATA:
       if (value == null) {
-        unsetTag_data();
+        unsetVertex_data();
       } else {
-        setTag_data((List<ScanTag>)value);
+        setVertex_data((List<ScanVertex>)value);
       }
       break;
 
@@ -317,8 +305,8 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     case VERTEX_SCHEMA:
       return getVertex_schema();
 
-    case TAG_DATA:
-      return getTag_data();
+    case VERTEX_DATA:
+      return getVertex_data();
 
     case HAS_NEXT:
       return new Boolean(isHas_next());
@@ -338,8 +326,8 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       return isSetResult();
     case VERTEX_SCHEMA:
       return isSetVertex_schema();
-    case TAG_DATA:
-      return isSetTag_data();
+    case VERTEX_DATA:
+      return isSetVertex_data();
     case HAS_NEXT:
       return isSetHas_next();
     case NEXT_CURSOR:
@@ -382,12 +370,12 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
         return false;
     }
 
-    boolean this_present_tag_data = true && this.isSetTag_data();
-    boolean that_present_tag_data = true && that.isSetTag_data();
-    if (this_present_tag_data || that_present_tag_data) {
-      if (!(this_present_tag_data && that_present_tag_data))
+    boolean this_present_vertex_data = true && this.isSetVertex_data();
+    boolean that_present_vertex_data = true && that.isSetVertex_data();
+    if (this_present_vertex_data || that_present_vertex_data) {
+      if (!(this_present_vertex_data && that_present_vertex_data))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_data, that.tag_data))
+      if (!TBaseHelper.equalsNobinary(this.vertex_data, that.vertex_data))
         return false;
     }
 
@@ -426,10 +414,10 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     if (present_vertex_schema)
       builder.append(vertex_schema);
 
-    boolean present_tag_data = true && (isSetTag_data());
-    builder.append(present_tag_data);
-    if (present_tag_data)
-      builder.append(tag_data);
+    boolean present_vertex_data = true && (isSetVertex_data());
+    builder.append(present_vertex_data);
+    if (present_vertex_data)
+      builder.append(vertex_data);
 
     boolean present_has_next = true;
     builder.append(present_has_next);
@@ -466,18 +454,18 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
         case VERTEX_SCHEMA:
           if (field.type == TType.MAP) {
             {
-              TMap _map138 = iprot.readMapBegin();
-              this.vertex_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map138.size));
-              for (int _i139 = 0; 
-                   (_map138.size < 0) ? iprot.peekMap() : (_i139 < _map138.size); 
-                   ++_i139)
+              TMap _map160 = iprot.readMapBegin();
+              this.vertex_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map160.size));
+              for (int _i161 = 0; 
+                   (_map160.size < 0) ? iprot.peekMap() : (_i161 < _map160.size); 
+                   ++_i161)
               {
-                int _key140;
-                com.vesoft.nebula.Schema _val141;
-                _key140 = iprot.readI32();
-                _val141 = new com.vesoft.nebula.Schema();
-                _val141.read(iprot);
-                this.vertex_schema.put(_key140, _val141);
+                int _key162;
+                com.vesoft.nebula.Schema _val163;
+                _key162 = iprot.readI32();
+                _val163 = new com.vesoft.nebula.Schema();
+                _val163.read(iprot);
+                this.vertex_schema.put(_key162, _val163);
               }
               iprot.readMapEnd();
             }
@@ -485,19 +473,19 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case TAG_DATA:
+        case VERTEX_DATA:
           if (field.type == TType.LIST) {
             {
-              TList _list142 = iprot.readListBegin();
-              this.tag_data = new ArrayList<ScanTag>(Math.max(0, _list142.size));
-              for (int _i143 = 0; 
-                   (_list142.size < 0) ? iprot.peekList() : (_i143 < _list142.size); 
-                   ++_i143)
+              TList _list164 = iprot.readListBegin();
+              this.vertex_data = new ArrayList<ScanVertex>(Math.max(0, _list164.size));
+              for (int _i165 = 0; 
+                   (_list164.size < 0) ? iprot.peekList() : (_i165 < _list164.size); 
+                   ++_i165)
               {
-                ScanTag _elem144;
-                _elem144 = new ScanTag();
-                _elem144.read(iprot);
-                this.tag_data.add(_elem144);
+                ScanVertex _elem166;
+                _elem166 = new ScanVertex();
+                _elem166.read(iprot);
+                this.vertex_data.add(_elem166);
               }
               iprot.readListEnd();
             }
@@ -543,31 +531,27 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldEnd();
     }
     if (this.vertex_schema != null) {
-      if (isSetVertex_schema()) {
-        oprot.writeFieldBegin(VERTEX_SCHEMA_FIELD_DESC);
-        {
-          oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.vertex_schema.size()));
-          for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter145 : this.vertex_schema.entrySet())          {
-            oprot.writeI32(_iter145.getKey());
-            _iter145.getValue().write(oprot);
-          }
-          oprot.writeMapEnd();
+      oprot.writeFieldBegin(VERTEX_SCHEMA_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.vertex_schema.size()));
+        for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter167 : this.vertex_schema.entrySet())        {
+          oprot.writeI32(_iter167.getKey());
+          _iter167.getValue().write(oprot);
         }
-        oprot.writeFieldEnd();
+        oprot.writeMapEnd();
       }
+      oprot.writeFieldEnd();
     }
-    if (this.tag_data != null) {
-      if (isSetTag_data()) {
-        oprot.writeFieldBegin(TAG_DATA_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.STRUCT, this.tag_data.size()));
-          for (ScanTag _iter146 : this.tag_data)          {
-            _iter146.write(oprot);
-          }
-          oprot.writeListEnd();
+    if (this.vertex_data != null) {
+      oprot.writeFieldBegin(VERTEX_DATA_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.vertex_data.size()));
+        for (ScanVertex _iter168 : this.vertex_data)        {
+          _iter168.write(oprot);
         }
-        oprot.writeFieldEnd();
+        oprot.writeListEnd();
       }
+      oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(HAS_NEXT_FIELD_DESC);
     oprot.writeBool(this.has_next);
@@ -612,34 +596,28 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetVertex_schema())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("vertex_schema");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getVertex_schema() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getVertex_schema(), indent + 1, prettyPrint));
-      }
-      first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("vertex_schema");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getVertex_schema() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getVertex_schema(), indent + 1, prettyPrint));
     }
-    if (isSetTag_data())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("tag_data");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getTag_data() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getTag_data(), indent + 1, prettyPrint));
-      }
-      first = false;
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("vertex_data");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getVertex_data() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getVertex_data(), indent + 1, prettyPrint));
     }
+    first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("has_next");

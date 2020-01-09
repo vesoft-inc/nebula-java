@@ -15,6 +15,7 @@ import com.vesoft.nebula.storage.AddVerticesRequest;
 import com.vesoft.nebula.storage.AdminExecResp;
 import com.vesoft.nebula.storage.BlockingSignRequest;
 import com.vesoft.nebula.storage.CatchUpDataReq;
+import com.vesoft.nebula.storage.CheckPeersReq;
 import com.vesoft.nebula.storage.CreateCPRequest;
 import com.vesoft.nebula.storage.DeleteEdgesRequest;
 import com.vesoft.nebula.storage.DeleteVertexRequest;
@@ -43,7 +44,7 @@ import com.vesoft.nebula.storage.ResultCode;
 import com.vesoft.nebula.storage.ScanEdge;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
-import com.vesoft.nebula.storage.ScanTag;
+import com.vesoft.nebula.storage.ScanVertex;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import com.vesoft.nebula.storage.StorageService;
@@ -153,7 +154,7 @@ public class NebulaStorageService implements StorageService.Iface {
         final ResponseCommon result = new ResponseCommon(resultCodes, latency);
         final ScanVertexResponse response = new ScanVertexResponse(result);
         response.vertex_schema = new HashMap<Integer, Schema>();
-        response.tag_data = new ArrayList<ScanTag>();
+        response.vertex_data = new ArrayList<ScanVertex>();
         if (nextCursorIt.hasNext()) {
             // Still has data in this part
             response.has_next = true;
@@ -194,6 +195,11 @@ public class NebulaStorageService implements StorageService.Iface {
 
     @Override
     public AdminExecResp memberChange(MemberChangeReq req) throws TException {
+        return null;
+    }
+
+    @Override
+    public AdminExecResp checkPeers(CheckPeersReq req) throws TException {
         return null;
     }
 

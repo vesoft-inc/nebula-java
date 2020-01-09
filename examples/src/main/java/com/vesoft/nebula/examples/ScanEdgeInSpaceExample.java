@@ -13,7 +13,13 @@ import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +29,20 @@ public class ScanEdgeInSpaceExample {
     private static StorageClient storageClient;
     private static ScanEdgeProcessor processor;
 
-    private static void scanEdge(String space) {
+    private static void scanEdge(String space, Map<String, List<String>> returnCols,
+                                 boolean allCols) {
         LOGGER.info("Start to scan space " + space);
         try {
             Iterator<ScanEdgeResponse> iterator =
-                    storageClient.scanEdge(space, 100, 0L, Long.MAX_VALUE);
+                    storageClient.scanEdge(space, returnCols, allCols, 100, 0L, Long.MAX_VALUE);
             ScanEdgeResponse result = iterator.next();
             process(space, result);
             while (iterator.hasNext()) {
                 ScanEdgeResponse response = iterator.next();
+                if (response == null) {
+                    LOGGER.error("Error occurs while scan edge");
+                    break;
+                }
                 process(space, response);
             }
         } catch (Exception e) {
@@ -46,7 +57,7 @@ public class ScanEdgeInSpaceExample {
 
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.out.println("Usage: + com.vesoft.nebula.examples.StorageClientExample "
+            System.out.println("Usage: + com.vesoft.nebula.examples.ScanEdgeInSpaceExample "
                     + "<meta_server_ip> <meta_server_port>");
             return;
         }
@@ -61,8 +72,19 @@ public class ScanEdgeInSpaceExample {
 
             processor = new ScanEdgeProcessor(metaClientImpl);
 
+            // Specify the edge name and prop name we need, Map<edgeName, List<propName>>
+            // If no property name is specified, none of the property returned. Or you can
+            // set the allCols to true, which will return all columns of edge types in returnCols
+            // no matter what in propNames
+            Map<String, List<String>> returnCols = new HashMap<>();
+            List<String> propNames = new ArrayList<>();
+            propNames.add("grade");
+            returnCols.put("select", propNames);
+
+            boolean allCols = false;
+
             for (String space : metaClient.getPartsAllocFromCache().keySet()) {
-                scanEdge(space);
+                scanEdge(space, returnCols, allCols);
             }
 
         } catch (Exception e) {

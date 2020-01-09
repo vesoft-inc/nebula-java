@@ -13,7 +13,7 @@ import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.data.RowReader;
 import com.vesoft.nebula.meta.TagItem;
-import com.vesoft.nebula.storage.ScanTag;
+import com.vesoft.nebula.storage.ScanVertex;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 
 import java.util.ArrayList;
@@ -53,14 +53,14 @@ public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
             }
         }
 
-        if (response.tag_data != null) {
-            for (ScanTag scanTag : response.tag_data) {
+        if (response.vertex_data != null) {
+            for (ScanVertex scanTag : response.vertex_data) {
                 int tagId = scanTag.tagId;
                 if (!readers.containsKey(tagId)) {
                     continue;
                 }
                 RowReader reader = readers.get(tagId);
-                Property[] defaultProperties = reader.decodeVertexKey(scanTag.key);
+                Property[] defaultProperties = reader.vertexKey(scanTag.vertexId, scanTag.tagId);
                 Property[] properties = reader.decodeValue(scanTag.value);
                 Result.RowDesc desc = vertexTypeIndex.get(tagId);
                 rows.get(desc).add(new Row(defaultProperties, properties));
