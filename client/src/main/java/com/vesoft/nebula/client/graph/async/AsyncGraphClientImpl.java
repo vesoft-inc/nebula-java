@@ -16,7 +16,6 @@ import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Optional;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.vesoft.nebula.AsyncAbstractClient;
 import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
@@ -37,8 +36,6 @@ public class AsyncGraphClientImpl extends AsyncAbstractClient
         implements AsyncGraphClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientImpl.class);
-
-    private ListeningExecutorService service;
 
     private long sessionID;
     private GraphService.AsyncClient client;

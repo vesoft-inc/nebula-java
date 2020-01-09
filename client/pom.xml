@@ -204,7 +204,7 @@
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>nebula-utils</artifactId>
-            <version>1.0.0-rc3</version>
+            <version>1.0.0-rc2</version>
         </dependency>
     </dependencies>
 </project>
