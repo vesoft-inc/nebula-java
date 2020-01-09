@@ -32,6 +32,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
   private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)3);
+  private static final TField LAST_UPDATE_TIME_IN_MS_FIELD_DESC = new TField("last_update_time_in_ms", TType.I64, (short)4);
 
   /**
    * 
@@ -40,15 +41,18 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   public int code;
   public com.vesoft.nebula.HostAddr leader;
   public long cluster_id;
+  public long last_update_time_in_ms;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int CLUSTER_ID = 3;
+  public static final int LAST_UPDATE_TIME_IN_MS = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __CODE_ISSET_ID = 0;
   private static final int __CLUSTER_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __LAST_UPDATE_TIME_IN_MS_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -58,6 +62,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(CLUSTER_ID, new FieldMetaData("cluster_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(LAST_UPDATE_TIME_IN_MS, new FieldMetaData("last_update_time_in_ms", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -72,7 +78,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   public HBResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    long cluster_id)
+    long cluster_id,
+    long last_update_time_in_ms)
   {
     this();
     this.code = code;
@@ -80,6 +87,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     this.leader = leader;
     this.cluster_id = cluster_id;
     setCluster_idIsSet(true);
+    this.last_update_time_in_ms = last_update_time_in_ms;
+    setLast_update_time_in_msIsSet(true);
   }
 
   /**
@@ -93,6 +102,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
     this.cluster_id = TBaseHelper.deepCopy(other.cluster_id);
+    this.last_update_time_in_ms = TBaseHelper.deepCopy(other.last_update_time_in_ms);
   }
 
   public HBResp deepCopy() {
@@ -182,6 +192,29 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     __isset_bit_vector.set(__CLUSTER_ID_ISSET_ID, value);
   }
 
+  public long  getLast_update_time_in_ms() {
+    return this.last_update_time_in_ms;
+  }
+
+  public HBResp setLast_update_time_in_ms(long last_update_time_in_ms) {
+    this.last_update_time_in_ms = last_update_time_in_ms;
+    setLast_update_time_in_msIsSet(true);
+    return this;
+  }
+
+  public void unsetLast_update_time_in_ms() {
+    __isset_bit_vector.clear(__LAST_UPDATE_TIME_IN_MS_ISSET_ID);
+  }
+
+  // Returns true if field last_update_time_in_ms is set (has been assigned a value) and false otherwise
+  public boolean isSetLast_update_time_in_ms() {
+    return __isset_bit_vector.get(__LAST_UPDATE_TIME_IN_MS_ISSET_ID);
+  }
+
+  public void setLast_update_time_in_msIsSet(boolean value) {
+    __isset_bit_vector.set(__LAST_UPDATE_TIME_IN_MS_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case CODE:
@@ -208,6 +241,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       }
       break;
 
+    case LAST_UPDATE_TIME_IN_MS:
+      if (value == null) {
+        unsetLast_update_time_in_ms();
+      } else {
+        setLast_update_time_in_ms((Long)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -224,6 +265,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     case CLUSTER_ID:
       return new Long(getCluster_id());
 
+    case LAST_UPDATE_TIME_IN_MS:
+      return new Long(getLast_update_time_in_ms());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -238,6 +282,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       return isSetLeader();
     case CLUSTER_ID:
       return isSetCluster_id();
+    case LAST_UPDATE_TIME_IN_MS:
+      return isSetLast_update_time_in_ms();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -285,6 +331,15 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
         return false;
     }
 
+    boolean this_present_last_update_time_in_ms = true;
+    boolean that_present_last_update_time_in_ms = true;
+    if (this_present_last_update_time_in_ms || that_present_last_update_time_in_ms) {
+      if (!(this_present_last_update_time_in_ms && that_present_last_update_time_in_ms))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.last_update_time_in_ms, that.last_update_time_in_ms))
+        return false;
+    }
+
     return true;
   }
 
@@ -306,6 +361,11 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     builder.append(present_cluster_id);
     if (present_cluster_id)
       builder.append(cluster_id);
+
+    boolean present_last_update_time_in_ms = true;
+    builder.append(present_last_update_time_in_ms);
+    if (present_last_update_time_in_ms)
+      builder.append(last_update_time_in_ms);
 
     return builder.toHashCode();
   }
@@ -343,6 +403,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(cluster_id, other.cluster_id);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLast_update_time_in_ms()).compareTo(other.isSetLast_update_time_in_ms());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(last_update_time_in_ms, other.last_update_time_in_ms);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -384,6 +452,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case LAST_UPDATE_TIME_IN_MS:
+          if (field.type == TType.I64) {
+            this.last_update_time_in_ms = iprot.readI64();
+            setLast_update_time_in_msIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -411,6 +487,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     }
     oprot.writeFieldBegin(CLUSTER_ID_FIELD_DESC);
     oprot.writeI64(this.cluster_id);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(LAST_UPDATE_TIME_IN_MS_FIELD_DESC);
+    oprot.writeI64(this.last_update_time_in_ms);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -468,6 +547,13 @@ String space = prettyPrint ? " " : "";
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getCluster_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("last_update_time_in_ms");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getLast_update_time_in_ms(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

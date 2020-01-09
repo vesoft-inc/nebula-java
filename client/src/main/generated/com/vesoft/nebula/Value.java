@@ -34,11 +34,13 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
   private static final TField BOOL_VALUE_FIELD_DESC = new TField("bool_value", TType.BOOL, (short)2);
   private static final TField DOUBLE_VALUE_FIELD_DESC = new TField("double_value", TType.DOUBLE, (short)3);
   private static final TField STRING_VALUE_FIELD_DESC = new TField("string_value", TType.STRING, (short)4);
+  private static final TField TIMESTAMP_FIELD_DESC = new TField("timestamp", TType.I64, (short)5);
 
   public static final int INT_VALUE = 1;
   public static final int BOOL_VALUE = 2;
   public static final int DOUBLE_VALUE = 3;
   public static final int STRING_VALUE = 4;
+  public static final int TIMESTAMP = 5;
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -51,6 +53,8 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
         new FieldValueMetaData(TType.DOUBLE)));
     tmpMetaDataMap.put(STRING_VALUE, new FieldMetaData("string_value", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(TIMESTAMP, new FieldMetaData("timestamp", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -93,6 +97,12 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
     return x;
   }
 
+  public static Value timestamp(long value) {
+    Value x = new Value();
+    x.setTimestamp(value);
+    return x;
+  }
+
 
   @Override
   protected void checkType(short setField, Object value) throws ClassCastException {
@@ -117,6 +127,11 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
           break;
         }
         throw new ClassCastException("Was expecting value of type String for field 'string_value', but got " + value.getClass().getSimpleName());
+      case TIMESTAMP:
+        if (value instanceof Long) {
+          break;
+        }
+        throw new ClassCastException("Was expecting value of type Long for field 'timestamp', but got " + value.getClass().getSimpleName());
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -151,6 +166,11 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
             break;
           case STRING_VALUE:
             if (field.type == STRING_VALUE_FIELD_DESC.type) {
+              setField_ = field.id;
+            }
+            break;
+          case TIMESTAMP:
+            if (field.type == TIMESTAMP_FIELD_DESC.type) {
               setField_ = field.id;
             }
             break;
@@ -202,6 +222,15 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
           TProtocolUtil.skip(iprot, field.type);
           return null;
         }
+      case TIMESTAMP:
+        if (field.type == TIMESTAMP_FIELD_DESC.type) {
+          Long timestamp;
+          timestamp = iprot.readI64();
+          return timestamp;
+        } else {
+          TProtocolUtil.skip(iprot, field.type);
+          return null;
+        }
       default:
         TProtocolUtil.skip(iprot, field.type);
         return null;
@@ -227,6 +256,10 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
         String string_value = (String)getFieldValue();
         oprot.writeString(string_value);
         return;
+      case TIMESTAMP:
+        Long timestamp = (Long)getFieldValue();
+        oprot.writeI64(timestamp);
+        return;
       default:
         throw new IllegalStateException("Cannot write union with unknown field " + setField);
     }
@@ -243,6 +276,8 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
         return DOUBLE_VALUE_FIELD_DESC;
       case STRING_VALUE:
         return STRING_VALUE_FIELD_DESC;
+      case TIMESTAMP:
+        return TIMESTAMP_FIELD_DESC;
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -303,6 +338,19 @@ public class Value extends TUnion<Value> implements Comparable<Value> {
   public void setString_value(String value) {
     if (value == null) throw new NullPointerException();
     setField_ = STRING_VALUE;
+    value_ = value;
+  }
+
+  public long  getTimestamp() {
+    if (getSetField() == TIMESTAMP) {
+      return (Long)getFieldValue();
+    } else {
+      throw new RuntimeException("Cannot get field 'timestamp' because union is currently set to " + getFieldDesc(getSetField()).name);
+    }
+  }
+
+  public void setTimestamp(long value) {
+    setField_ = TIMESTAMP;
     value_ = value;
   }
 
@@ -394,6 +442,17 @@ String space = prettyPrint ? " " : "";
       } else {
         sb.append(TBaseHelper.toString(this. getString_value(), indent + 1, prettyPrint));
       }
+      first = false;
+    }
+    // Only print this field if it is the set field
+    if (getSetField() == TIMESTAMP)
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("timestamp");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getTimestamp(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

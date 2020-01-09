@@ -61,7 +61,7 @@ public class GraphClientExample {
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Usage: "
-                    + "com.vesoft.nebula.examples.GraphClientExample <host> <port>");
+                    + "com.vesoft.nebula.examples.GraphClientExample <host> <graph service port>");
             return;
         }
 

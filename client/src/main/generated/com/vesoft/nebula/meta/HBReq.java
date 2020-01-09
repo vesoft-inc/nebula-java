@@ -29,26 +29,40 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable<HBReq> {
   private static final TStruct STRUCT_DESC = new TStruct("HBReq");
-  private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)1);
-  private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)2);
+  private static final TField IN_STORAGED_FIELD_DESC = new TField("in_storaged", TType.BOOL, (short)1);
+  private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)2);
+  private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)3);
+  private static final TField LEADER_PART_IDS_FIELD_DESC = new TField("leader_partIds", TType.MAP, (short)4);
 
+  public boolean in_storaged;
   public com.vesoft.nebula.HostAddr host;
   public long cluster_id;
-  public static final int HOST = 1;
-  public static final int CLUSTER_ID = 2;
+  public Map<Integer,List<Integer>> leader_partIds;
+  public static final int IN_STORAGED = 1;
+  public static final int HOST = 2;
+  public static final int CLUSTER_ID = 3;
+  public static final int LEADER_PARTIDS = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __CLUSTER_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __IN_STORAGED_ISSET_ID = 0;
+  private static final int __CLUSTER_ID_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(IN_STORAGED, new FieldMetaData("in_storaged", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(CLUSTER_ID, new FieldMetaData("cluster_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(LEADER_PARTIDS, new FieldMetaData("leader_partIds", TFieldRequirementType.OPTIONAL, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new FieldValueMetaData(TType.I32)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -60,13 +74,31 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   }
 
   public HBReq(
+    boolean in_storaged,
     com.vesoft.nebula.HostAddr host,
     long cluster_id)
   {
     this();
+    this.in_storaged = in_storaged;
+    setIn_storagedIsSet(true);
     this.host = host;
     this.cluster_id = cluster_id;
     setCluster_idIsSet(true);
+  }
+
+  public HBReq(
+    boolean in_storaged,
+    com.vesoft.nebula.HostAddr host,
+    long cluster_id,
+    Map<Integer,List<Integer>> leader_partIds)
+  {
+    this();
+    this.in_storaged = in_storaged;
+    setIn_storagedIsSet(true);
+    this.host = host;
+    this.cluster_id = cluster_id;
+    setCluster_idIsSet(true);
+    this.leader_partIds = leader_partIds;
   }
 
   /**
@@ -75,10 +107,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public HBReq(HBReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
+    this.in_storaged = TBaseHelper.deepCopy(other.in_storaged);
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
     }
     this.cluster_id = TBaseHelper.deepCopy(other.cluster_id);
+    if (other.isSetLeader_partIds()) {
+      this.leader_partIds = TBaseHelper.deepCopy(other.leader_partIds);
+    }
   }
 
   public HBReq deepCopy() {
@@ -88,6 +124,29 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   @Deprecated
   public HBReq clone() {
     return new HBReq(this);
+  }
+
+  public boolean  isIn_storaged() {
+    return this.in_storaged;
+  }
+
+  public HBReq setIn_storaged(boolean in_storaged) {
+    this.in_storaged = in_storaged;
+    setIn_storagedIsSet(true);
+    return this;
+  }
+
+  public void unsetIn_storaged() {
+    __isset_bit_vector.clear(__IN_STORAGED_ISSET_ID);
+  }
+
+  // Returns true if field in_storaged is set (has been assigned a value) and false otherwise
+  public boolean isSetIn_storaged() {
+    return __isset_bit_vector.get(__IN_STORAGED_ISSET_ID);
+  }
+
+  public void setIn_storagedIsSet(boolean value) {
+    __isset_bit_vector.set(__IN_STORAGED_ISSET_ID, value);
   }
 
   public com.vesoft.nebula.HostAddr  getHost() {
@@ -137,8 +196,41 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     __isset_bit_vector.set(__CLUSTER_ID_ISSET_ID, value);
   }
 
+  public Map<Integer,List<Integer>>  getLeader_partIds() {
+    return this.leader_partIds;
+  }
+
+  public HBReq setLeader_partIds(Map<Integer,List<Integer>> leader_partIds) {
+    this.leader_partIds = leader_partIds;
+    return this;
+  }
+
+  public void unsetLeader_partIds() {
+    this.leader_partIds = null;
+  }
+
+  // Returns true if field leader_partIds is set (has been assigned a value) and false otherwise
+  public boolean isSetLeader_partIds() {
+    return this.leader_partIds != null;
+  }
+
+  public void setLeader_partIdsIsSet(boolean value) {
+    if (!value) {
+      this.leader_partIds = null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
+    case IN_STORAGED:
+      if (value == null) {
+        unsetIn_storaged();
+      } else {
+        setIn_storaged((Boolean)value);
+      }
+      break;
+
     case HOST:
       if (value == null) {
         unsetHost();
@@ -155,6 +247,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       break;
 
+    case LEADER_PARTIDS:
+      if (value == null) {
+        unsetLeader_partIds();
+      } else {
+        setLeader_partIds((Map<Integer,List<Integer>>)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -162,11 +262,17 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case IN_STORAGED:
+      return new Boolean(isIn_storaged());
+
     case HOST:
       return getHost();
 
     case CLUSTER_ID:
       return new Long(getCluster_id());
+
+    case LEADER_PARTIDS:
+      return getLeader_partIds();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -176,10 +282,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
+    case IN_STORAGED:
+      return isSetIn_storaged();
     case HOST:
       return isSetHost();
     case CLUSTER_ID:
       return isSetCluster_id();
+    case LEADER_PARTIDS:
+      return isSetLeader_partIds();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -200,6 +310,15 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     if (this == that)
       return true;
 
+    boolean this_present_in_storaged = true;
+    boolean that_present_in_storaged = true;
+    if (this_present_in_storaged || that_present_in_storaged) {
+      if (!(this_present_in_storaged && that_present_in_storaged))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.in_storaged, that.in_storaged))
+        return false;
+    }
+
     boolean this_present_host = true && this.isSetHost();
     boolean that_present_host = true && that.isSetHost();
     if (this_present_host || that_present_host) {
@@ -218,12 +337,26 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         return false;
     }
 
+    boolean this_present_leader_partIds = true && this.isSetLeader_partIds();
+    boolean that_present_leader_partIds = true && that.isSetLeader_partIds();
+    if (this_present_leader_partIds || that_present_leader_partIds) {
+      if (!(this_present_leader_partIds && that_present_leader_partIds))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.leader_partIds, that.leader_partIds))
+        return false;
+    }
+
     return true;
   }
 
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
+
+    boolean present_in_storaged = true;
+    builder.append(present_in_storaged);
+    if (present_in_storaged)
+      builder.append(in_storaged);
 
     boolean present_host = true && (isSetHost());
     builder.append(present_host);
@@ -234,6 +367,11 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     builder.append(present_cluster_id);
     if (present_cluster_id)
       builder.append(cluster_id);
+
+    boolean present_leader_partIds = true && (isSetLeader_partIds());
+    builder.append(present_leader_partIds);
+    if (present_leader_partIds)
+      builder.append(leader_partIds);
 
     return builder.toHashCode();
   }
@@ -250,6 +388,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetIn_storaged()).compareTo(other.isSetIn_storaged());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(in_storaged, other.in_storaged);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
     if (lastComparison != 0) {
       return lastComparison;
@@ -263,6 +409,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(cluster_id, other.cluster_id);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLeader_partIds()).compareTo(other.isSetLeader_partIds());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(leader_partIds, other.leader_partIds);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -280,6 +434,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       switch (field.id)
       {
+        case IN_STORAGED:
+          if (field.type == TType.BOOL) {
+            this.in_storaged = iprot.readBool();
+            setIn_storagedIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         case HOST:
           if (field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
@@ -292,6 +454,39 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
           if (field.type == TType.I64) {
             this.cluster_id = iprot.readI64();
             setCluster_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case LEADER_PARTIDS:
+          if (field.type == TType.MAP) {
+            {
+              TMap _map101 = iprot.readMapBegin();
+              this.leader_partIds = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map101.size));
+              for (int _i102 = 0; 
+                   (_map101.size < 0) ? iprot.peekMap() : (_i102 < _map101.size); 
+                   ++_i102)
+              {
+                int _key103;
+                List<Integer> _val104;
+                _key103 = iprot.readI32();
+                {
+                  TList _list105 = iprot.readListBegin();
+                  _val104 = new ArrayList<Integer>(Math.max(0, _list105.size));
+                  for (int _i106 = 0; 
+                       (_list105.size < 0) ? iprot.peekList() : (_i106 < _list105.size); 
+                       ++_i106)
+                  {
+                    int _elem107;
+                    _elem107 = iprot.readI32();
+                    _val104.add(_elem107);
+                  }
+                  iprot.readListEnd();
+                }
+                this.leader_partIds.put(_key103, _val104);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -313,6 +508,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    oprot.writeFieldBegin(IN_STORAGED_FIELD_DESC);
+    oprot.writeBool(this.in_storaged);
+    oprot.writeFieldEnd();
     if (this.host != null) {
       oprot.writeFieldBegin(HOST_FIELD_DESC);
       this.host.write(oprot);
@@ -321,6 +519,26 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     oprot.writeFieldBegin(CLUSTER_ID_FIELD_DESC);
     oprot.writeI64(this.cluster_id);
     oprot.writeFieldEnd();
+    if (this.leader_partIds != null) {
+      if (isSetLeader_partIds()) {
+        oprot.writeFieldBegin(LEADER_PART_IDS_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_partIds.size()));
+          for (Map.Entry<Integer, List<Integer>> _iter108 : this.leader_partIds.entrySet())          {
+            oprot.writeI32(_iter108.getKey());
+            {
+              oprot.writeListBegin(new TList(TType.I32, _iter108.getValue().size()));
+              for (int _iter109 : _iter108.getValue())              {
+                oprot.writeI32(_iter109);
+              }
+              oprot.writeListEnd();
+            }
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -347,6 +565,13 @@ String space = prettyPrint ? " " : "";
     boolean first = true;
 
     sb.append(indentStr);
+    sb.append("in_storaged");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isIn_storaged(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
     sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
@@ -363,6 +588,20 @@ String space = prettyPrint ? " " : "";
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getCluster_id(), indent + 1, prettyPrint));
     first = false;
+    if (isSetLeader_partIds())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("leader_partIds");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getLeader_partIds() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getLeader_partIds(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
