@@ -13,7 +13,7 @@ import com.facebook.thrift.TException;
  */
 public interface Client extends AutoCloseable {
 
-    public static enum ErrorCode {
+    public static enum NebulaCode {
         SUCCEEDED(0);
 
         int code;
@@ -22,11 +22,11 @@ public interface Client extends AutoCloseable {
             return code;
         }
 
-        private ErrorCode() {
+        private NebulaCode() {
 
         }
 
-        ErrorCode(int code) {
+        NebulaCode(int code) {
             this.code = code;
         }
     }
