@@ -37,8 +37,8 @@ public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
     @Override
     public Result process(String spaceName, ScanVertexResponse response) {
         Map<Integer, RowReader> readers = new HashMap<>();
-        Map<Result.RowDesc, List<Row>> rows = new HashMap<>();
-        Map<Integer, Result.RowDesc> vertexTypeIndex = new HashMap<>();
+        Map<String, List<Row>> rows = new HashMap<>();
+        Map<Integer, String> tagIdNameMap = new HashMap<>();
         if (response.vertex_schema != null) {
             for (Map.Entry<Integer, Schema> entry : response.vertex_schema.entrySet()) {
                 int tagId = entry.getKey();
@@ -47,9 +47,8 @@ public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
                 TagItem tagItem = metaClient.getTagItemFromCache(spaceName, tagName);
                 long schemaVersion = tagItem.version;
                 readers.put(tagId, new RowReader(schema, schemaVersion));
-                Result.RowDesc desc = new Result.RowDesc(Result.RowType.VERTEX, tagName);
-                rows.put(desc, new ArrayList<>());
-                vertexTypeIndex.put(tagId, desc);
+                rows.put(tagName, new ArrayList<>());
+                tagIdNameMap.put(tagId, tagName);
             }
         }
 
@@ -62,8 +61,8 @@ public class ScanVertexProcessor implements Processor<ScanVertexResponse> {
                 RowReader reader = readers.get(tagId);
                 Property[] defaultProperties = reader.vertexKey(scanTag.vertexId, scanTag.tagId);
                 Property[] properties = reader.decodeValue(scanTag.value);
-                Result.RowDesc desc = vertexTypeIndex.get(tagId);
-                rows.get(desc).add(new Row(defaultProperties, properties));
+                String tagName = tagIdNameMap.get(tagId);
+                rows.get(tagName).add(new Row(defaultProperties, properties));
             }
         }
         return new Result(rows);

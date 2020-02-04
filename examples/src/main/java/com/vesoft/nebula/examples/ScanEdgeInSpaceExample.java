@@ -12,14 +12,19 @@ import com.vesoft.nebula.client.storage.StorageClient;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Result;
+import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +33,9 @@ public class ScanEdgeInSpaceExample {
     private static MetaClient metaClient;
     private static StorageClient storageClient;
     private static ScanEdgeProcessor processor;
+    private static String CSV_PATH = "edge.csv";
+    private static FileWriter fileWriter;
+    private static CSVPrinter csvPrinter;
 
     private static void scanEdge(String space, Map<String, List<String>> returnCols,
                                  boolean allCols) {
@@ -50,8 +58,16 @@ public class ScanEdgeInSpaceExample {
         }
     }
 
-    private static void process(String space, ScanEdgeResponse response) {
+    private static void process(String space, ScanEdgeResponse response) throws IOException {
         Result result = processor.process(space, response);
+        List<Row> edgeRows = result.getRows("select");
+        for (Row row : edgeRows) {
+            List<String> fields = new ArrayList<>();
+            fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
+            fields.add(String.valueOf(row.getDefaultProperties()[2].getValue()));
+            fields.add(String.valueOf(row.getProperties()[0].getValue()));
+            csvPrinter.printRecord(fields);
+        }
         LOGGER.info("process " + result.getSize() + " edges");
     }
 
@@ -83,10 +99,17 @@ public class ScanEdgeInSpaceExample {
 
             boolean allCols = false;
 
+            CSVFormat csvFormat = CSVFormat.DEFAULT;
+            fileWriter = new FileWriter(CSV_PATH);
+            csvPrinter = new CSVPrinter(fileWriter, csvFormat);
+
             for (String space : metaClient.getPartsAllocFromCache().keySet()) {
                 scanEdge(space, returnCols, allCols);
             }
 
+            fileWriter.flush();
+            fileWriter.close();
+            csvPrinter.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
