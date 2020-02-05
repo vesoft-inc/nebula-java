@@ -58,13 +58,18 @@ public class ScanEdgeInSpaceExample {
         }
     }
 
+    // Put result into a csv file
     private static void process(String space, ScanEdgeResponse response) throws IOException {
+        // Convert the response to a Result
         Result result = processor.process(space, response);
+        // Get the corresponding rows by edgeName
         List<Row> edgeRows = result.getRows("select");
         for (Row row : edgeRows) {
             List<String> fields = new ArrayList<>();
+            // For an edge, we have 3 default properties: src, type, dst,
             fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
             fields.add(String.valueOf(row.getDefaultProperties()[2].getValue()));
+            // Get the specified property: "grade"
             fields.add(String.valueOf(row.getProperties()[0].getValue()));
             csvPrinter.printRecord(fields);
         }
