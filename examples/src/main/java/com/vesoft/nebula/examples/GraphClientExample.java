@@ -15,6 +15,7 @@ import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,6 +149,26 @@ public class GraphClientExample {
                 LOGGER.info(String.format("%s, %d, %s", new String(value.columns.get(0).getStr()),
                                                         value.columns.get(1).getInteger(),
                                                         new String(value.columns.get(2).getStr())));
+            }
+
+            // Batch insert some edges for ScanEdgeInSpaceExample and SparkExample
+            for (long src = 1; src <= 10; src++) {
+                StringBuilder stringBuilder = new StringBuilder();
+                long dst = 1000 - src;
+                // batch insert edges, we generate 10 edges for each src vertex
+                for (int count = 0; count < 10; count++) {
+                    Random random = new Random();
+                    int value = random.nextInt(100);
+                    stringBuilder.append(String.format(
+                            "INSERT EDGE select(grade) VALUES %d -> %d:(%d);", src, dst, value));
+                }
+
+                String batchStatement = stringBuilder.toString();
+                code = client.execute(batchStatement);
+                if (ErrorCode.SUCCEEDED != code) {
+                    LOGGER.error(String.format("Batch insert edges failed: %s", batchStatement));
+                    System.exit(-1);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
