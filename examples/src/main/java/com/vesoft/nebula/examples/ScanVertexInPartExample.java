@@ -40,7 +40,7 @@ public class ScanVertexInPartExample {
             while (iterator.hasNext()) {
                 ScanVertexResponse response = iterator.next();
                 if (response == null) {
-                    LOGGER.error("Error occurs while scan edge");
+                    LOGGER.error("Error occurs while scan vertex");
                     break;
                 }
                 process(space, response);
@@ -52,7 +52,7 @@ public class ScanVertexInPartExample {
 
     private static void process(String space, ScanVertexResponse response) {
         Result result = processor.process(space, response);
-        LOGGER.info("process " + result.getSize() + " edges");
+        LOGGER.info("process " + result.getSize() + " vertices");
     }
 
     public static void main(String[] args) {
