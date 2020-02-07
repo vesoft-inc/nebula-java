@@ -11,7 +11,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
-
 import com.vesoft.nebula.session.Session;
 import java.util.List;
 

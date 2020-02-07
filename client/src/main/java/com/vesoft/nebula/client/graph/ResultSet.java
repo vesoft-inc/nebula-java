@@ -8,7 +8,6 @@ package com.vesoft.nebula.client.graph;
 
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.RowValue;
-
 import java.util.Iterator;
 import java.util.List;
 

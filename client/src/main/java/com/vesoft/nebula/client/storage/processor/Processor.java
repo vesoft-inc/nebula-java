@@ -9,7 +9,6 @@ package com.vesoft.nebula.client.storage.processor;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
-
 import java.util.List;
 import java.util.Map;
 

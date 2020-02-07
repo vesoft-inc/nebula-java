@@ -12,7 +12,6 @@ import com.vesoft.nebula.NebulaCodec.Pair;
 import com.vesoft.nebula.Schema;
 import com.vesoft.nebula.data.PropertyDef.PropertyType;
 import com.vesoft.nebula.utils.NativeUtils;
-
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
