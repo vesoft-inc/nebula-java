@@ -32,6 +32,9 @@ import com.vesoft.nebula.storage.GetNeighborsRequest;
 import com.vesoft.nebula.storage.GetRequest;
 import com.vesoft.nebula.storage.GetUUIDReq;
 import com.vesoft.nebula.storage.GetUUIDResp;
+import com.vesoft.nebula.storage.LookUpEdgeIndexResp;
+import com.vesoft.nebula.storage.LookUpIndexRequest;
+import com.vesoft.nebula.storage.LookUpVertexIndexResp;
 import com.vesoft.nebula.storage.MemberChangeReq;
 import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.QueryResponse;
@@ -245,6 +248,16 @@ public class NebulaStorageService implements StorageService.Iface {
 
     @Override
     public GetUUIDResp getUUID(GetUUIDReq req) throws TException {
+        return null;
+    }
+
+    @Override
+    public LookUpVertexIndexResp lookUpVertexIndex(LookUpIndexRequest req) throws TException {
+        return null;
+    }
+
+    @Override
+    public LookUpEdgeIndexResp lookUpEdgeIndex(LookUpIndexRequest req) throws TException {
         return null;
     }
 

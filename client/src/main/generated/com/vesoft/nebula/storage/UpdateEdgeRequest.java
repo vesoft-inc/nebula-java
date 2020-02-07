@@ -660,16 +660,16 @@ public class UpdateEdgeRequest implements TBase, java.io.Serializable, Cloneable
         case UPDATE_ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list125 = iprot.readListBegin();
-              this.update_items = new ArrayList<UpdateItem>(Math.max(0, _list125.size));
-              for (int _i126 = 0; 
-                   (_list125.size < 0) ? iprot.peekList() : (_i126 < _list125.size); 
-                   ++_i126)
+              TList _list129 = iprot.readListBegin();
+              this.update_items = new ArrayList<UpdateItem>(Math.max(0, _list129.size));
+              for (int _i130 = 0; 
+                   (_list129.size < 0) ? iprot.peekList() : (_i130 < _list129.size); 
+                   ++_i130)
               {
-                UpdateItem _elem127;
-                _elem127 = new UpdateItem();
-                _elem127.read(iprot);
-                this.update_items.add(_elem127);
+                UpdateItem _elem131;
+                _elem131 = new UpdateItem();
+                _elem131.read(iprot);
+                this.update_items.add(_elem131);
               }
               iprot.readListEnd();
             }
@@ -680,15 +680,15 @@ public class UpdateEdgeRequest implements TBase, java.io.Serializable, Cloneable
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list128 = iprot.readListBegin();
-              this.return_columns = new ArrayList<byte[]>(Math.max(0, _list128.size));
-              for (int _i129 = 0; 
-                   (_list128.size < 0) ? iprot.peekList() : (_i129 < _list128.size); 
-                   ++_i129)
+              TList _list132 = iprot.readListBegin();
+              this.return_columns = new ArrayList<byte[]>(Math.max(0, _list132.size));
+              for (int _i133 = 0; 
+                   (_list132.size < 0) ? iprot.peekList() : (_i133 < _list132.size); 
+                   ++_i133)
               {
-                byte[] _elem130;
-                _elem130 = iprot.readBinary();
-                this.return_columns.add(_elem130);
+                byte[] _elem134;
+                _elem134 = iprot.readBinary();
+                this.return_columns.add(_elem134);
               }
               iprot.readListEnd();
             }
@@ -741,8 +741,8 @@ public class UpdateEdgeRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(UPDATE_ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.update_items.size()));
-        for (UpdateItem _iter131 : this.update_items)        {
-          _iter131.write(oprot);
+        for (UpdateItem _iter135 : this.update_items)        {
+          _iter135.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -752,8 +752,8 @@ public class UpdateEdgeRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
-        for (byte[] _iter132 : this.return_columns)        {
-          oprot.writeBinary(_iter132);
+        for (byte[] _iter136 : this.return_columns)        {
+          oprot.writeBinary(_iter136);
         }
         oprot.writeListEnd();
       }

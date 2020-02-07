@@ -363,16 +363,16 @@ public class VertexData implements TBase, java.io.Serializable, Cloneable, Compa
         case TAG_DATA:
           if (field.type == TType.LIST) {
             {
-              TList _list0 = iprot.readListBegin();
-              this.tag_data = new ArrayList<TagData>(Math.max(0, _list0.size));
-              for (int _i1 = 0; 
-                   (_list0.size < 0) ? iprot.peekList() : (_i1 < _list0.size); 
-                   ++_i1)
+              TList _list4 = iprot.readListBegin();
+              this.tag_data = new ArrayList<TagData>(Math.max(0, _list4.size));
+              for (int _i5 = 0; 
+                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
+                   ++_i5)
               {
-                TagData _elem2;
-                _elem2 = new TagData();
-                _elem2.read(iprot);
-                this.tag_data.add(_elem2);
+                TagData _elem6;
+                _elem6 = new TagData();
+                _elem6.read(iprot);
+                this.tag_data.add(_elem6);
               }
               iprot.readListEnd();
             }
@@ -383,16 +383,16 @@ public class VertexData implements TBase, java.io.Serializable, Cloneable, Compa
         case EDGE_DATA:
           if (field.type == TType.LIST) {
             {
-              TList _list3 = iprot.readListBegin();
-              this.edge_data = new ArrayList<EdgeData>(Math.max(0, _list3.size));
-              for (int _i4 = 0; 
-                   (_list3.size < 0) ? iprot.peekList() : (_i4 < _list3.size); 
-                   ++_i4)
+              TList _list7 = iprot.readListBegin();
+              this.edge_data = new ArrayList<EdgeData>(Math.max(0, _list7.size));
+              for (int _i8 = 0; 
+                   (_list7.size < 0) ? iprot.peekList() : (_i8 < _list7.size); 
+                   ++_i8)
               {
-                EdgeData _elem5;
-                _elem5 = new EdgeData();
-                _elem5.read(iprot);
-                this.edge_data.add(_elem5);
+                EdgeData _elem9;
+                _elem9 = new EdgeData();
+                _elem9.read(iprot);
+                this.edge_data.add(_elem9);
               }
               iprot.readListEnd();
             }
@@ -424,8 +424,8 @@ public class VertexData implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(TAG_DATA_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tag_data.size()));
-        for (TagData _iter6 : this.tag_data)        {
-          _iter6.write(oprot);
+        for (TagData _iter10 : this.tag_data)        {
+          _iter10.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -435,8 +435,8 @@ public class VertexData implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(EDGE_DATA_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.edge_data.size()));
-        for (EdgeData _iter7 : this.edge_data)        {
-          _iter7.write(oprot);
+        for (EdgeData _iter11 : this.edge_data)        {
+          _iter11.write(oprot);
         }
         oprot.writeListEnd();
       }
