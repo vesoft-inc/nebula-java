@@ -11,12 +11,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TTransport;
-
 import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.graph.ErrorCode;
-
 import java.util.ArrayList;
 import java.util.List;
 
