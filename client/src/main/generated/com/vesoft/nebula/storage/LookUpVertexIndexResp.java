@@ -27,15 +27,18 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, Comparable<EdgeKeyResponse> {
-  private static final TStruct STRUCT_DESC = new TStruct("EdgeKeyResponse");
+public class LookUpVertexIndexResp implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("LookUpVertexIndexResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField EDGE_KEYS_FIELD_DESC = new TField("edge_keys", TType.LIST, (short)2);
+  private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)2);
+  private static final TField ROWS_FIELD_DESC = new TField("rows", TType.LIST, (short)3);
 
   public ResponseCommon result;
-  public List<EdgeKey> edge_keys;
+  public com.vesoft.nebula.Schema schema;
+  public List<VertexIndexData> rows;
   public static final int RESULT = 1;
-  public static final int EDGE_KEYS = 2;
+  public static final int SCHEMA = 2;
+  public static final int ROWS = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -45,61 +48,68 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(EDGE_KEYS, new FieldMetaData("edge_keys", TFieldRequirementType.OPTIONAL, 
+    tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+    tmpMetaDataMap.put(ROWS, new FieldMetaData("rows", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, EdgeKey.class))));
+            new StructMetaData(TType.STRUCT, VertexIndexData.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(EdgeKeyResponse.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(LookUpVertexIndexResp.class, metaDataMap);
   }
 
-  public EdgeKeyResponse() {
+  public LookUpVertexIndexResp() {
   }
 
-  public EdgeKeyResponse(
+  public LookUpVertexIndexResp(
     ResponseCommon result)
   {
     this();
     this.result = result;
   }
 
-  public EdgeKeyResponse(
+  public LookUpVertexIndexResp(
     ResponseCommon result,
-    List<EdgeKey> edge_keys)
+    com.vesoft.nebula.Schema schema,
+    List<VertexIndexData> rows)
   {
     this();
     this.result = result;
-    this.edge_keys = edge_keys;
+    this.schema = schema;
+    this.rows = rows;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public EdgeKeyResponse(EdgeKeyResponse other) {
+  public LookUpVertexIndexResp(LookUpVertexIndexResp other) {
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetEdge_keys()) {
-      this.edge_keys = TBaseHelper.deepCopy(other.edge_keys);
+    if (other.isSetSchema()) {
+      this.schema = TBaseHelper.deepCopy(other.schema);
+    }
+    if (other.isSetRows()) {
+      this.rows = TBaseHelper.deepCopy(other.rows);
     }
   }
 
-  public EdgeKeyResponse deepCopy() {
-    return new EdgeKeyResponse(this);
+  public LookUpVertexIndexResp deepCopy() {
+    return new LookUpVertexIndexResp(this);
   }
 
   @Deprecated
-  public EdgeKeyResponse clone() {
-    return new EdgeKeyResponse(this);
+  public LookUpVertexIndexResp clone() {
+    return new LookUpVertexIndexResp(this);
   }
 
   public ResponseCommon  getResult() {
     return this.result;
   }
 
-  public EdgeKeyResponse setResult(ResponseCommon result) {
+  public LookUpVertexIndexResp setResult(ResponseCommon result) {
     this.result = result;
     return this;
   }
@@ -119,27 +129,51 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  public List<EdgeKey>  getEdge_keys() {
-    return this.edge_keys;
+  public com.vesoft.nebula.Schema  getSchema() {
+    return this.schema;
   }
 
-  public EdgeKeyResponse setEdge_keys(List<EdgeKey> edge_keys) {
-    this.edge_keys = edge_keys;
+  public LookUpVertexIndexResp setSchema(com.vesoft.nebula.Schema schema) {
+    this.schema = schema;
     return this;
   }
 
-  public void unsetEdge_keys() {
-    this.edge_keys = null;
+  public void unsetSchema() {
+    this.schema = null;
   }
 
-  // Returns true if field edge_keys is set (has been assigned a value) and false otherwise
-  public boolean isSetEdge_keys() {
-    return this.edge_keys != null;
+  // Returns true if field schema is set (has been assigned a value) and false otherwise
+  public boolean isSetSchema() {
+    return this.schema != null;
   }
 
-  public void setEdge_keysIsSet(boolean value) {
+  public void setSchemaIsSet(boolean value) {
     if (!value) {
-      this.edge_keys = null;
+      this.schema = null;
+    }
+  }
+
+  public List<VertexIndexData>  getRows() {
+    return this.rows;
+  }
+
+  public LookUpVertexIndexResp setRows(List<VertexIndexData> rows) {
+    this.rows = rows;
+    return this;
+  }
+
+  public void unsetRows() {
+    this.rows = null;
+  }
+
+  // Returns true if field rows is set (has been assigned a value) and false otherwise
+  public boolean isSetRows() {
+    return this.rows != null;
+  }
+
+  public void setRowsIsSet(boolean value) {
+    if (!value) {
+      this.rows = null;
     }
   }
 
@@ -154,11 +188,19 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
-    case EDGE_KEYS:
+    case SCHEMA:
       if (value == null) {
-        unsetEdge_keys();
+        unsetSchema();
       } else {
-        setEdge_keys((List<EdgeKey>)value);
+        setSchema((com.vesoft.nebula.Schema)value);
+      }
+      break;
+
+    case ROWS:
+      if (value == null) {
+        unsetRows();
+      } else {
+        setRows((List<VertexIndexData>)value);
       }
       break;
 
@@ -172,8 +214,11 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
     case RESULT:
       return getResult();
 
-    case EDGE_KEYS:
-      return getEdge_keys();
+    case SCHEMA:
+      return getSchema();
+
+    case ROWS:
+      return getRows();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -185,8 +230,10 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
     switch (fieldID) {
     case RESULT:
       return isSetResult();
-    case EDGE_KEYS:
-      return isSetEdge_keys();
+    case SCHEMA:
+      return isSetSchema();
+    case ROWS:
+      return isSetRows();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -196,12 +243,12 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof EdgeKeyResponse)
-      return this.equals((EdgeKeyResponse)that);
+    if (that instanceof LookUpVertexIndexResp)
+      return this.equals((LookUpVertexIndexResp)that);
     return false;
   }
 
-  public boolean equals(EdgeKeyResponse that) {
+  public boolean equals(LookUpVertexIndexResp that) {
     if (that == null)
       return false;
     if (this == that)
@@ -216,12 +263,21 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
         return false;
     }
 
-    boolean this_present_edge_keys = true && this.isSetEdge_keys();
-    boolean that_present_edge_keys = true && that.isSetEdge_keys();
-    if (this_present_edge_keys || that_present_edge_keys) {
-      if (!(this_present_edge_keys && that_present_edge_keys))
+    boolean this_present_schema = true && this.isSetSchema();
+    boolean that_present_schema = true && that.isSetSchema();
+    if (this_present_schema || that_present_schema) {
+      if (!(this_present_schema && that_present_schema))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_keys, that.edge_keys))
+      if (!TBaseHelper.equalsNobinary(this.schema, that.schema))
+        return false;
+    }
+
+    boolean this_present_rows = true && this.isSetRows();
+    boolean that_present_rows = true && that.isSetRows();
+    if (this_present_rows || that_present_rows) {
+      if (!(this_present_rows && that_present_rows))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.rows, that.rows))
         return false;
     }
 
@@ -237,43 +293,17 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
     if (present_result)
       builder.append(result);
 
-    boolean present_edge_keys = true && (isSetEdge_keys());
-    builder.append(present_edge_keys);
-    if (present_edge_keys)
-      builder.append(edge_keys);
+    boolean present_schema = true && (isSetSchema());
+    builder.append(present_schema);
+    if (present_schema)
+      builder.append(schema);
+
+    boolean present_rows = true && (isSetRows());
+    builder.append(present_rows);
+    if (present_rows)
+      builder.append(rows);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(EdgeKeyResponse other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetResult()).compareTo(other.isSetResult());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetEdge_keys()).compareTo(other.isSetEdge_keys());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(edge_keys, other.edge_keys);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -295,19 +325,27 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case EDGE_KEYS:
+        case SCHEMA:
+          if (field.type == TType.STRUCT) {
+            this.schema = new com.vesoft.nebula.Schema();
+            this.schema.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case ROWS:
           if (field.type == TType.LIST) {
             {
-              TList _list30 = iprot.readListBegin();
-              this.edge_keys = new ArrayList<EdgeKey>(Math.max(0, _list30.size));
-              for (int _i31 = 0; 
-                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
-                   ++_i31)
+              TList _list224 = iprot.readListBegin();
+              this.rows = new ArrayList<VertexIndexData>(Math.max(0, _list224.size));
+              for (int _i225 = 0; 
+                   (_list224.size < 0) ? iprot.peekList() : (_i225 < _list224.size); 
+                   ++_i225)
               {
-                EdgeKey _elem32;
-                _elem32 = new EdgeKey();
-                _elem32.read(iprot);
-                this.edge_keys.add(_elem32);
+                VertexIndexData _elem226;
+                _elem226 = new VertexIndexData();
+                _elem226.read(iprot);
+                this.rows.add(_elem226);
               }
               iprot.readListEnd();
             }
@@ -337,13 +375,20 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.edge_keys != null) {
-      if (isSetEdge_keys()) {
-        oprot.writeFieldBegin(EDGE_KEYS_FIELD_DESC);
+    if (this.schema != null) {
+      if (isSetSchema()) {
+        oprot.writeFieldBegin(SCHEMA_FIELD_DESC);
+        this.schema.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.rows != null) {
+      if (isSetRows()) {
+        oprot.writeFieldBegin(ROWS_FIELD_DESC);
         {
-          oprot.writeListBegin(new TList(TType.STRUCT, this.edge_keys.size()));
-          for (EdgeKey _iter33 : this.edge_keys)          {
-            _iter33.write(oprot);
+          oprot.writeListBegin(new TList(TType.STRUCT, this.rows.size()));
+          for (VertexIndexData _iter227 : this.rows)          {
+            _iter227.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -369,7 +414,7 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("EdgeKeyResponse");
+    StringBuilder sb = new StringBuilder("LookUpVertexIndexResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -385,17 +430,31 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetEdge_keys())
+    if (isSetSchema())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("edge_keys");
+      sb.append("schema");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getEdge_keys() == null) {
+      if (this. getSchema() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getEdge_keys(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetRows())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("rows");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getRows() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getRows(), indent + 1, prettyPrint));
       }
       first = false;
     }

@@ -33,18 +33,23 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
   private static final TField VERTEX_SCHEMA_FIELD_DESC = new TField("vertex_schema", TType.MAP, (short)2);
   private static final TField EDGE_SCHEMA_FIELD_DESC = new TField("edge_schema", TType.MAP, (short)3);
   private static final TField VERTICES_FIELD_DESC = new TField("vertices", TType.LIST, (short)4);
+  private static final TField TOTAL_EDGES_FIELD_DESC = new TField("total_edges", TType.I32, (short)5);
 
   public ResponseCommon result;
   public Map<Integer,com.vesoft.nebula.Schema> vertex_schema;
   public Map<Integer,com.vesoft.nebula.Schema> edge_schema;
   public List<VertexData> vertices;
+  public int total_edges;
   public static final int RESULT = 1;
   public static final int VERTEX_SCHEMA = 2;
   public static final int EDGE_SCHEMA = 3;
   public static final int VERTICES = 4;
+  public static final int TOTAL_EDGES = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
+  private static final int __TOTAL_EDGES_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -62,6 +67,8 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(VERTICES, new FieldMetaData("vertices", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, VertexData.class))));
+    tmpMetaDataMap.put(TOTAL_EDGES, new FieldMetaData("total_edges", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -83,19 +90,24 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
     ResponseCommon result,
     Map<Integer,com.vesoft.nebula.Schema> vertex_schema,
     Map<Integer,com.vesoft.nebula.Schema> edge_schema,
-    List<VertexData> vertices)
+    List<VertexData> vertices,
+    int total_edges)
   {
     this();
     this.result = result;
     this.vertex_schema = vertex_schema;
     this.edge_schema = edge_schema;
     this.vertices = vertices;
+    this.total_edges = total_edges;
+    setTotal_edgesIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public QueryResponse(QueryResponse other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
@@ -108,6 +120,7 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
     if (other.isSetVertices()) {
       this.vertices = TBaseHelper.deepCopy(other.vertices);
     }
+    this.total_edges = TBaseHelper.deepCopy(other.total_edges);
   }
 
   public QueryResponse deepCopy() {
@@ -215,6 +228,29 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public int  getTotal_edges() {
+    return this.total_edges;
+  }
+
+  public QueryResponse setTotal_edges(int total_edges) {
+    this.total_edges = total_edges;
+    setTotal_edgesIsSet(true);
+    return this;
+  }
+
+  public void unsetTotal_edges() {
+    __isset_bit_vector.clear(__TOTAL_EDGES_ISSET_ID);
+  }
+
+  // Returns true if field total_edges is set (has been assigned a value) and false otherwise
+  public boolean isSetTotal_edges() {
+    return __isset_bit_vector.get(__TOTAL_EDGES_ISSET_ID);
+  }
+
+  public void setTotal_edgesIsSet(boolean value) {
+    __isset_bit_vector.set(__TOTAL_EDGES_ISSET_ID, value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -250,6 +286,14 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case TOTAL_EDGES:
+      if (value == null) {
+        unsetTotal_edges();
+      } else {
+        setTotal_edges((Integer)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -269,6 +313,9 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
     case VERTICES:
       return getVertices();
 
+    case TOTAL_EDGES:
+      return new Integer(getTotal_edges());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -285,6 +332,8 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
       return isSetEdge_schema();
     case VERTICES:
       return isSetVertices();
+    case TOTAL_EDGES:
+      return isSetTotal_edges();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -341,6 +390,15 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
+    boolean this_present_total_edges = true && this.isSetTotal_edges();
+    boolean that_present_total_edges = true && that.isSetTotal_edges();
+    if (this_present_total_edges || that_present_total_edges) {
+      if (!(this_present_total_edges && that_present_total_edges))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.total_edges, that.total_edges))
+        return false;
+    }
+
     return true;
   }
 
@@ -368,6 +426,11 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
     if (present_vertices)
       builder.append(vertices);
 
+    boolean present_total_edges = true && (isSetTotal_edges());
+    builder.append(present_total_edges);
+    if (present_total_edges)
+      builder.append(total_edges);
+
     return builder.toHashCode();
   }
 
@@ -393,18 +456,18 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         case VERTEX_SCHEMA:
           if (field.type == TType.MAP) {
             {
-              TMap _map12 = iprot.readMapBegin();
-              this.vertex_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map12.size));
-              for (int _i13 = 0; 
-                   (_map12.size < 0) ? iprot.peekMap() : (_i13 < _map12.size); 
-                   ++_i13)
+              TMap _map16 = iprot.readMapBegin();
+              this.vertex_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map16.size));
+              for (int _i17 = 0; 
+                   (_map16.size < 0) ? iprot.peekMap() : (_i17 < _map16.size); 
+                   ++_i17)
               {
-                int _key14;
-                com.vesoft.nebula.Schema _val15;
-                _key14 = iprot.readI32();
-                _val15 = new com.vesoft.nebula.Schema();
-                _val15.read(iprot);
-                this.vertex_schema.put(_key14, _val15);
+                int _key18;
+                com.vesoft.nebula.Schema _val19;
+                _key18 = iprot.readI32();
+                _val19 = new com.vesoft.nebula.Schema();
+                _val19.read(iprot);
+                this.vertex_schema.put(_key18, _val19);
               }
               iprot.readMapEnd();
             }
@@ -415,18 +478,18 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         case EDGE_SCHEMA:
           if (field.type == TType.MAP) {
             {
-              TMap _map16 = iprot.readMapBegin();
-              this.edge_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map16.size));
-              for (int _i17 = 0; 
-                   (_map16.size < 0) ? iprot.peekMap() : (_i17 < _map16.size); 
-                   ++_i17)
+              TMap _map20 = iprot.readMapBegin();
+              this.edge_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map20.size));
+              for (int _i21 = 0; 
+                   (_map20.size < 0) ? iprot.peekMap() : (_i21 < _map20.size); 
+                   ++_i21)
               {
-                int _key18;
-                com.vesoft.nebula.Schema _val19;
-                _key18 = iprot.readI32();
-                _val19 = new com.vesoft.nebula.Schema();
-                _val19.read(iprot);
-                this.edge_schema.put(_key18, _val19);
+                int _key22;
+                com.vesoft.nebula.Schema _val23;
+                _key22 = iprot.readI32();
+                _val23 = new com.vesoft.nebula.Schema();
+                _val23.read(iprot);
+                this.edge_schema.put(_key22, _val23);
               }
               iprot.readMapEnd();
             }
@@ -437,19 +500,27 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         case VERTICES:
           if (field.type == TType.LIST) {
             {
-              TList _list20 = iprot.readListBegin();
-              this.vertices = new ArrayList<VertexData>(Math.max(0, _list20.size));
-              for (int _i21 = 0; 
-                   (_list20.size < 0) ? iprot.peekList() : (_i21 < _list20.size); 
-                   ++_i21)
+              TList _list24 = iprot.readListBegin();
+              this.vertices = new ArrayList<VertexData>(Math.max(0, _list24.size));
+              for (int _i25 = 0; 
+                   (_list24.size < 0) ? iprot.peekList() : (_i25 < _list24.size); 
+                   ++_i25)
               {
-                VertexData _elem22;
-                _elem22 = new VertexData();
-                _elem22.read(iprot);
-                this.vertices.add(_elem22);
+                VertexData _elem26;
+                _elem26 = new VertexData();
+                _elem26.read(iprot);
+                this.vertices.add(_elem26);
               }
               iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case TOTAL_EDGES:
+          if (field.type == TType.I32) {
+            this.total_edges = iprot.readI32();
+            setTotal_edgesIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -481,9 +552,9 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(VERTEX_SCHEMA_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.vertex_schema.size()));
-          for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter23 : this.vertex_schema.entrySet())          {
-            oprot.writeI32(_iter23.getKey());
-            _iter23.getValue().write(oprot);
+          for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter27 : this.vertex_schema.entrySet())          {
+            oprot.writeI32(_iter27.getKey());
+            _iter27.getValue().write(oprot);
           }
           oprot.writeMapEnd();
         }
@@ -495,9 +566,9 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(EDGE_SCHEMA_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.edge_schema.size()));
-          for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter24 : this.edge_schema.entrySet())          {
-            oprot.writeI32(_iter24.getKey());
-            _iter24.getValue().write(oprot);
+          for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter28 : this.edge_schema.entrySet())          {
+            oprot.writeI32(_iter28.getKey());
+            _iter28.getValue().write(oprot);
           }
           oprot.writeMapEnd();
         }
@@ -509,13 +580,18 @@ public class QueryResponse implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(VERTICES_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.vertices.size()));
-          for (VertexData _iter25 : this.vertices)          {
-            _iter25.write(oprot);
+          for (VertexData _iter29 : this.vertices)          {
+            _iter29.write(oprot);
           }
           oprot.writeListEnd();
         }
         oprot.writeFieldEnd();
       }
+    }
+    if (isSetTotal_edges()) {
+      oprot.writeFieldBegin(TOTAL_EDGES_FIELD_DESC);
+      oprot.writeI32(this.total_edges);
+      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -592,6 +668,16 @@ String space = prettyPrint ? " " : "";
       } else {
         sb.append(TBaseHelper.toString(this. getVertices(), indent + 1, prettyPrint));
       }
+      first = false;
+    }
+    if (isSetTotal_edges())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("total_edges");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getTotal_edges(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -363,30 +363,30 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map77 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Vertex>>(Math.max(0, 2*_map77.size));
-              for (int _i78 = 0; 
-                   (_map77.size < 0) ? iprot.peekMap() : (_i78 < _map77.size); 
-                   ++_i78)
+              TMap _map81 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Vertex>>(Math.max(0, 2*_map81.size));
+              for (int _i82 = 0; 
+                   (_map81.size < 0) ? iprot.peekMap() : (_i82 < _map81.size); 
+                   ++_i82)
               {
-                int _key79;
-                List<Vertex> _val80;
-                _key79 = iprot.readI32();
+                int _key83;
+                List<Vertex> _val84;
+                _key83 = iprot.readI32();
                 {
-                  TList _list81 = iprot.readListBegin();
-                  _val80 = new ArrayList<Vertex>(Math.max(0, _list81.size));
-                  for (int _i82 = 0; 
-                       (_list81.size < 0) ? iprot.peekList() : (_i82 < _list81.size); 
-                       ++_i82)
+                  TList _list85 = iprot.readListBegin();
+                  _val84 = new ArrayList<Vertex>(Math.max(0, _list85.size));
+                  for (int _i86 = 0; 
+                       (_list85.size < 0) ? iprot.peekList() : (_i86 < _list85.size); 
+                       ++_i86)
                   {
-                    Vertex _elem83;
-                    _elem83 = new Vertex();
-                    _elem83.read(iprot);
-                    _val80.add(_elem83);
+                    Vertex _elem87;
+                    _elem87 = new Vertex();
+                    _elem87.read(iprot);
+                    _val84.add(_elem87);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key79, _val80);
+                this.parts.put(_key83, _val84);
               }
               iprot.readMapEnd();
             }
@@ -426,12 +426,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Vertex>> _iter84 : this.parts.entrySet())        {
-          oprot.writeI32(_iter84.getKey());
+        for (Map.Entry<Integer, List<Vertex>> _iter88 : this.parts.entrySet())        {
+          oprot.writeI32(_iter88.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter84.getValue().size()));
-            for (Vertex _iter85 : _iter84.getValue())            {
-              _iter85.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter88.getValue().size()));
+            for (Vertex _iter89 : _iter88.getValue())            {
+              _iter89.write(oprot);
             }
             oprot.writeListEnd();
           }
