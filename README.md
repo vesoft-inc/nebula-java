@@ -12,8 +12,8 @@ Depending on the version of Nebula Graph that you are connecting to, you will ha
 
 | Nebula version | Nebula Java version |
 |:--------------:|:-----------------:|
-|     1.0.0-rc2     |      1.0.0-rc2     |
-|     1.0.0-rc3     |      1.0.0-rc3     |
+|     rc2     |      1.0.0-rc2     |
+|     rc3     |      1.0.0-rc3.20200207     |
 
 ## Nebula Graph Java Driver
 
@@ -23,7 +23,7 @@ When using Maven, add this to your pom.xml file:
 <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>${VERSION}</version>
+    <version>1.0.0-rc3.20200207</version>
 </dependency>
 ```
 
