@@ -27,84 +27,107 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparable<ScanTag> {
-  private static final TStruct STRUCT_DESC = new TStruct("ScanTag");
-  private static final TField TAG_ID_FIELD_DESC = new TField("tagId", TType.I32, (short)1);
-  private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
+public class ScanVertex implements TBase, java.io.Serializable, Cloneable, Comparable<ScanVertex> {
+  private static final TStruct STRUCT_DESC = new TStruct("ScanVertex");
+  private static final TField VERTEX_ID_FIELD_DESC = new TField("vertexId", TType.I64, (short)1);
+  private static final TField TAG_ID_FIELD_DESC = new TField("tagId", TType.I32, (short)2);
   private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
 
+  public long vertexId;
   public int tagId;
-  public byte[] key;
   public byte[] value;
-  public static final int TAGID = 1;
-  public static final int KEY = 2;
+  public static final int VERTEXID = 1;
+  public static final int TAGID = 2;
   public static final int VALUE = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __TAGID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __VERTEXID_ISSET_ID = 0;
+  private static final int __TAGID_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(VERTEXID, new FieldMetaData("vertexId", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(TAGID, new FieldMetaData("tagId", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ScanTag.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ScanVertex.class, metaDataMap);
   }
 
-  public ScanTag() {
+  public ScanVertex() {
   }
 
-  public ScanTag(
+  public ScanVertex(
+    long vertexId,
     int tagId,
-    byte[] key,
     byte[] value)
   {
     this();
+    this.vertexId = vertexId;
+    setVertexIdIsSet(true);
     this.tagId = tagId;
     setTagIdIsSet(true);
-    this.key = key;
     this.value = value;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ScanTag(ScanTag other) {
+  public ScanVertex(ScanVertex other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
+    this.vertexId = TBaseHelper.deepCopy(other.vertexId);
     this.tagId = TBaseHelper.deepCopy(other.tagId);
-    if (other.isSetKey()) {
-      this.key = TBaseHelper.deepCopy(other.key);
-    }
     if (other.isSetValue()) {
       this.value = TBaseHelper.deepCopy(other.value);
     }
   }
 
-  public ScanTag deepCopy() {
-    return new ScanTag(this);
+  public ScanVertex deepCopy() {
+    return new ScanVertex(this);
   }
 
   @Deprecated
-  public ScanTag clone() {
-    return new ScanTag(this);
+  public ScanVertex clone() {
+    return new ScanVertex(this);
+  }
+
+  public long  getVertexId() {
+    return this.vertexId;
+  }
+
+  public ScanVertex setVertexId(long vertexId) {
+    this.vertexId = vertexId;
+    setVertexIdIsSet(true);
+    return this;
+  }
+
+  public void unsetVertexId() {
+    __isset_bit_vector.clear(__VERTEXID_ISSET_ID);
+  }
+
+  // Returns true if field vertexId is set (has been assigned a value) and false otherwise
+  public boolean isSetVertexId() {
+    return __isset_bit_vector.get(__VERTEXID_ISSET_ID);
+  }
+
+  public void setVertexIdIsSet(boolean value) {
+    __isset_bit_vector.set(__VERTEXID_ISSET_ID, value);
   }
 
   public int  getTagId() {
     return this.tagId;
   }
 
-  public ScanTag setTagId(int tagId) {
+  public ScanVertex setTagId(int tagId) {
     this.tagId = tagId;
     setTagIdIsSet(true);
     return this;
@@ -123,35 +146,11 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
     __isset_bit_vector.set(__TAGID_ISSET_ID, value);
   }
 
-  public byte[]  getKey() {
-    return this.key;
-  }
-
-  public ScanTag setKey(byte[] key) {
-    this.key = key;
-    return this;
-  }
-
-  public void unsetKey() {
-    this.key = null;
-  }
-
-  // Returns true if field key is set (has been assigned a value) and false otherwise
-  public boolean isSetKey() {
-    return this.key != null;
-  }
-
-  public void setKeyIsSet(boolean value) {
-    if (!value) {
-      this.key = null;
-    }
-  }
-
   public byte[]  getValue() {
     return this.value;
   }
 
-  public ScanTag setValue(byte[] value) {
+  public ScanVertex setValue(byte[] value) {
     this.value = value;
     return this;
   }
@@ -173,19 +172,19 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
+    case VERTEXID:
+      if (value == null) {
+        unsetVertexId();
+      } else {
+        setVertexId((Long)value);
+      }
+      break;
+
     case TAGID:
       if (value == null) {
         unsetTagId();
       } else {
         setTagId((Integer)value);
-      }
-      break;
-
-    case KEY:
-      if (value == null) {
-        unsetKey();
-      } else {
-        setKey((byte[])value);
       }
       break;
 
@@ -204,11 +203,11 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case VERTEXID:
+      return new Long(getVertexId());
+
     case TAGID:
       return new Integer(getTagId());
-
-    case KEY:
-      return getKey();
 
     case VALUE:
       return getValue();
@@ -221,10 +220,10 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
+    case VERTEXID:
+      return isSetVertexId();
     case TAGID:
       return isSetTagId();
-    case KEY:
-      return isSetKey();
     case VALUE:
       return isSetValue();
     default:
@@ -236,16 +235,25 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ScanTag)
-      return this.equals((ScanTag)that);
+    if (that instanceof ScanVertex)
+      return this.equals((ScanVertex)that);
     return false;
   }
 
-  public boolean equals(ScanTag that) {
+  public boolean equals(ScanVertex that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
+
+    boolean this_present_vertexId = true;
+    boolean that_present_vertexId = true;
+    if (this_present_vertexId || that_present_vertexId) {
+      if (!(this_present_vertexId && that_present_vertexId))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.vertexId, that.vertexId))
+        return false;
+    }
 
     boolean this_present_tagId = true;
     boolean that_present_tagId = true;
@@ -253,15 +261,6 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
       if (!(this_present_tagId && that_present_tagId))
         return false;
       if (!TBaseHelper.equalsNobinary(this.tagId, that.tagId))
-        return false;
-    }
-
-    boolean this_present_key = true && this.isSetKey();
-    boolean that_present_key = true && that.isSetKey();
-    if (this_present_key || that_present_key) {
-      if (!(this_present_key && that_present_key))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.key, that.key))
         return false;
     }
 
@@ -281,15 +280,15 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
+    boolean present_vertexId = true;
+    builder.append(present_vertexId);
+    if (present_vertexId)
+      builder.append(vertexId);
+
     boolean present_tagId = true;
     builder.append(present_tagId);
     if (present_tagId)
       builder.append(tagId);
-
-    boolean present_key = true && (isSetKey());
-    builder.append(present_key);
-    if (present_key)
-      builder.append(key);
 
     boolean present_value = true && (isSetValue());
     builder.append(present_value);
@@ -300,7 +299,7 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
   }
 
   @Override
-  public int compareTo(ScanTag other) {
+  public int compareTo(ScanVertex other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -311,19 +310,19 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetVertexId()).compareTo(other.isSetVertexId());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(vertexId, other.vertexId);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetTagId()).compareTo(other.isSetTagId());
     if (lastComparison != 0) {
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(tagId, other.tagId);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetKey()).compareTo(other.isSetKey());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(key, other.key);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -349,17 +348,18 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
       }
       switch (field.id)
       {
-        case TAGID:
-          if (field.type == TType.I32) {
-            this.tagId = iprot.readI32();
-            setTagIdIsSet(true);
+        case VERTEXID:
+          if (field.type == TType.I64) {
+            this.vertexId = iprot.readI64();
+            setVertexIdIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case KEY:
-          if (field.type == TType.STRING) {
-            this.key = iprot.readBinary();
+        case TAGID:
+          if (field.type == TType.I32) {
+            this.tagId = iprot.readI32();
+            setTagIdIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -388,14 +388,12 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    oprot.writeFieldBegin(VERTEX_ID_FIELD_DESC);
+    oprot.writeI64(this.vertexId);
+    oprot.writeFieldEnd();
     oprot.writeFieldBegin(TAG_ID_FIELD_DESC);
     oprot.writeI32(this.tagId);
     oprot.writeFieldEnd();
-    if (this.key != null) {
-      oprot.writeFieldBegin(KEY_FIELD_DESC);
-      oprot.writeBinary(this.key);
-      oprot.writeFieldEnd();
-    }
     if (this.value != null) {
       oprot.writeFieldBegin(VALUE_FIELD_DESC);
       oprot.writeBinary(this.value);
@@ -420,33 +418,24 @@ public class ScanTag implements TBase, java.io.Serializable, Cloneable, Comparab
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ScanTag");
+    StringBuilder sb = new StringBuilder("ScanVertex");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
+    sb.append("vertexId");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getVertexId(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
     sb.append("tagId");
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getTagId(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("key");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getKey() == null) {
-      sb.append("null");
-    } else {
-        int __key_size = Math.min(this. getKey().length, 128);
-        for (int i = 0; i < __key_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getKey()[i]).length() > 1 ? Integer.toHexString(this. getKey()[i]).substring(Integer.toHexString(this. getKey()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getKey()[i]).toUpperCase());
-        }
-        if (this. getKey().length > 128) sb.append(" ...");
-    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

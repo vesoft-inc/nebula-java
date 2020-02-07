@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface StorageClient extends AutoCloseable {
+    public static final boolean DEFAULT_RETURN_ALL_COLUMNS = false;
     public static final int DEFAULT_SCAN_ROW_LIMIT = 1000;
     public static final long DEFAULT_SCAN_START_TIME = 0;
     public static final long DEFAULT_SCAN_END_TIME = Long.MAX_VALUE;
@@ -32,24 +33,31 @@ public interface StorageClient extends AutoCloseable {
 
     public boolean remove(String space, List<String> keys);
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space) throws IOException;
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space, int rowLimit,
-                                               long startTime, long endTime) throws IOException;
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException;
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space, int part) throws IOException;
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, int part, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanEdgeResponse> scanEdge(String space, int part, int rowLimit,
-                                               long startTime, long endTime) throws IOException;
+    public Iterator<ScanEdgeResponse> scanEdge(
+            String space, int part, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(String space) throws IOException;
+    public Iterator<ScanVertexResponse> scanVertex(
+            String space, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(String space, int rowLimit,
-                                                   long startTime, long endTime) throws IOException;
+    public Iterator<ScanVertexResponse> scanVertex(
+            String space, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(String space, int part) throws IOException;
+    public Iterator<ScanVertexResponse> scanVertex(
+            String space, int part, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(String space, int part, int rowLimit,
-                                                   long startTime, long endTime) throws IOException;
-
+    public Iterator<ScanVertexResponse> scanVertex(
+            String space, int part, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException;
 }

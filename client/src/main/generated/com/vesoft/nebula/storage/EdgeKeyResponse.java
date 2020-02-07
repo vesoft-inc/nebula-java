@@ -298,16 +298,16 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
         case EDGE_KEYS:
           if (field.type == TType.LIST) {
             {
-              TList _list26 = iprot.readListBegin();
-              this.edge_keys = new ArrayList<EdgeKey>(Math.max(0, _list26.size));
-              for (int _i27 = 0; 
-                   (_list26.size < 0) ? iprot.peekList() : (_i27 < _list26.size); 
-                   ++_i27)
+              TList _list30 = iprot.readListBegin();
+              this.edge_keys = new ArrayList<EdgeKey>(Math.max(0, _list30.size));
+              for (int _i31 = 0; 
+                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
+                   ++_i31)
               {
-                EdgeKey _elem28;
-                _elem28 = new EdgeKey();
-                _elem28.read(iprot);
-                this.edge_keys.add(_elem28);
+                EdgeKey _elem32;
+                _elem32 = new EdgeKey();
+                _elem32.read(iprot);
+                this.edge_keys.add(_elem32);
               }
               iprot.readListEnd();
             }
@@ -342,8 +342,8 @@ public class EdgeKeyResponse implements TBase, java.io.Serializable, Cloneable, 
         oprot.writeFieldBegin(EDGE_KEYS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.edge_keys.size()));
-          for (EdgeKey _iter29 : this.edge_keys)          {
-            _iter29.write(oprot);
+          for (EdgeKey _iter33 : this.edge_keys)          {
+            _iter33.write(oprot);
           }
           oprot.writeListEnd();
         }

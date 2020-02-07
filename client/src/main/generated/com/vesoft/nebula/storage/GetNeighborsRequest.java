@@ -504,29 +504,29 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map34 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map34.size));
-              for (int _i35 = 0; 
-                   (_map34.size < 0) ? iprot.peekMap() : (_i35 < _map34.size); 
-                   ++_i35)
+              TMap _map38 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map38.size));
+              for (int _i39 = 0; 
+                   (_map38.size < 0) ? iprot.peekMap() : (_i39 < _map38.size); 
+                   ++_i39)
               {
-                int _key36;
-                List<Long> _val37;
-                _key36 = iprot.readI32();
+                int _key40;
+                List<Long> _val41;
+                _key40 = iprot.readI32();
                 {
-                  TList _list38 = iprot.readListBegin();
-                  _val37 = new ArrayList<Long>(Math.max(0, _list38.size));
-                  for (int _i39 = 0; 
-                       (_list38.size < 0) ? iprot.peekList() : (_i39 < _list38.size); 
-                       ++_i39)
+                  TList _list42 = iprot.readListBegin();
+                  _val41 = new ArrayList<Long>(Math.max(0, _list42.size));
+                  for (int _i43 = 0; 
+                       (_list42.size < 0) ? iprot.peekList() : (_i43 < _list42.size); 
+                       ++_i43)
                   {
-                    long _elem40;
-                    _elem40 = iprot.readI64();
-                    _val37.add(_elem40);
+                    long _elem44;
+                    _elem44 = iprot.readI64();
+                    _val41.add(_elem44);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key36, _val37);
+                this.parts.put(_key40, _val41);
               }
               iprot.readMapEnd();
             }
@@ -537,15 +537,15 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         case EDGE_TYPES:
           if (field.type == TType.LIST) {
             {
-              TList _list41 = iprot.readListBegin();
-              this.edge_types = new ArrayList<Integer>(Math.max(0, _list41.size));
-              for (int _i42 = 0; 
-                   (_list41.size < 0) ? iprot.peekList() : (_i42 < _list41.size); 
-                   ++_i42)
+              TList _list45 = iprot.readListBegin();
+              this.edge_types = new ArrayList<Integer>(Math.max(0, _list45.size));
+              for (int _i46 = 0; 
+                   (_list45.size < 0) ? iprot.peekList() : (_i46 < _list45.size); 
+                   ++_i46)
               {
-                int _elem43;
-                _elem43 = iprot.readI32();
-                this.edge_types.add(_elem43);
+                int _elem47;
+                _elem47 = iprot.readI32();
+                this.edge_types.add(_elem47);
               }
               iprot.readListEnd();
             }
@@ -563,16 +563,16 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list44 = iprot.readListBegin();
-              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list44.size));
-              for (int _i45 = 0; 
-                   (_list44.size < 0) ? iprot.peekList() : (_i45 < _list44.size); 
-                   ++_i45)
+              TList _list48 = iprot.readListBegin();
+              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list48.size));
+              for (int _i49 = 0; 
+                   (_list48.size < 0) ? iprot.peekList() : (_i49 < _list48.size); 
+                   ++_i49)
               {
-                PropDef _elem46;
-                _elem46 = new PropDef();
-                _elem46.read(iprot);
-                this.return_columns.add(_elem46);
+                PropDef _elem50;
+                _elem50 = new PropDef();
+                _elem50.read(iprot);
+                this.return_columns.add(_elem50);
               }
               iprot.readListEnd();
             }
@@ -604,12 +604,12 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Long>> _iter47 : this.parts.entrySet())        {
-          oprot.writeI32(_iter47.getKey());
+        for (Map.Entry<Integer, List<Long>> _iter51 : this.parts.entrySet())        {
+          oprot.writeI32(_iter51.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I64, _iter47.getValue().size()));
-            for (long _iter48 : _iter47.getValue())            {
-              oprot.writeI64(_iter48);
+            oprot.writeListBegin(new TList(TType.I64, _iter51.getValue().size()));
+            for (long _iter52 : _iter51.getValue())            {
+              oprot.writeI64(_iter52);
             }
             oprot.writeListEnd();
           }
@@ -622,8 +622,8 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(EDGE_TYPES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.edge_types.size()));
-        for (int _iter49 : this.edge_types)        {
-          oprot.writeI32(_iter49);
+        for (int _iter53 : this.edge_types)        {
+          oprot.writeI32(_iter53);
         }
         oprot.writeListEnd();
       }
@@ -638,8 +638,8 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (PropDef _iter50 : this.return_columns)        {
-          _iter50.write(oprot);
+        for (PropDef _iter54 : this.return_columns)        {
+          _iter54.write(oprot);
         }
         oprot.writeListEnd();
       }

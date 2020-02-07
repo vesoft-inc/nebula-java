@@ -295,30 +295,30 @@ public class RemoveRangeRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map165 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Pair>>(Math.max(0, 2*_map165.size));
-              for (int _i166 = 0; 
-                   (_map165.size < 0) ? iprot.peekMap() : (_i166 < _map165.size); 
-                   ++_i166)
+              TMap _map191 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Pair>>(Math.max(0, 2*_map191.size));
+              for (int _i192 = 0; 
+                   (_map191.size < 0) ? iprot.peekMap() : (_i192 < _map191.size); 
+                   ++_i192)
               {
-                int _key167;
-                List<com.vesoft.nebula.Pair> _val168;
-                _key167 = iprot.readI32();
+                int _key193;
+                List<com.vesoft.nebula.Pair> _val194;
+                _key193 = iprot.readI32();
                 {
-                  TList _list169 = iprot.readListBegin();
-                  _val168 = new ArrayList<com.vesoft.nebula.Pair>(Math.max(0, _list169.size));
-                  for (int _i170 = 0; 
-                       (_list169.size < 0) ? iprot.peekList() : (_i170 < _list169.size); 
-                       ++_i170)
+                  TList _list195 = iprot.readListBegin();
+                  _val194 = new ArrayList<com.vesoft.nebula.Pair>(Math.max(0, _list195.size));
+                  for (int _i196 = 0; 
+                       (_list195.size < 0) ? iprot.peekList() : (_i196 < _list195.size); 
+                       ++_i196)
                   {
-                    com.vesoft.nebula.Pair _elem171;
-                    _elem171 = new com.vesoft.nebula.Pair();
-                    _elem171.read(iprot);
-                    _val168.add(_elem171);
+                    com.vesoft.nebula.Pair _elem197;
+                    _elem197 = new com.vesoft.nebula.Pair();
+                    _elem197.read(iprot);
+                    _val194.add(_elem197);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key167, _val168);
+                this.parts.put(_key193, _val194);
               }
               iprot.readMapEnd();
             }
@@ -350,12 +350,12 @@ public class RemoveRangeRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Pair>> _iter172 : this.parts.entrySet())        {
-          oprot.writeI32(_iter172.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Pair>> _iter198 : this.parts.entrySet())        {
+          oprot.writeI32(_iter198.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter172.getValue().size()));
-            for (com.vesoft.nebula.Pair _iter173 : _iter172.getValue())            {
-              _iter173.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter198.getValue().size()));
+            for (com.vesoft.nebula.Pair _iter199 : _iter198.getValue())            {
+              _iter199.write(oprot);
             }
             oprot.writeListEnd();
           }

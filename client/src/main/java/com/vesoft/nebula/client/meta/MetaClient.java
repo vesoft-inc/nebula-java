@@ -18,7 +18,7 @@ public interface MetaClient extends AutoCloseable {
 
     public static final int LATEST_SCHEMA_VERSION = -1;
 
-    public int getSpaceIDFromCache(String spaceName);
+    public int getSpaceIdFromCache(String spaceName);
 
     public List<SpaceNameID> listSpaces();
 

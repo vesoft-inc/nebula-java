@@ -32,39 +32,38 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField CURSOR_FIELD_DESC = new TField("cursor", TType.STRING, (short)3);
-  private static final TField VERTEX_ID_FIELD_DESC = new TField("vertex_id", TType.I64, (short)4);
-  private static final TField ROW_LIMIT_FIELD_DESC = new TField("row_limit", TType.I32, (short)5);
-  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)6);
-  private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)7);
-  private static final TField MAX_VERSIONS_FIELD_DESC = new TField("max_versions", TType.I32, (short)8);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.MAP, (short)4);
+  private static final TField ALL_COLUMNS_FIELD_DESC = new TField("all_columns", TType.BOOL, (short)5);
+  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)6);
+  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)7);
+  private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)8);
 
   public int space_id;
   public int part_id;
   public byte[] cursor;
-  public long vertex_id;
-  public int row_limit;
+  public Map<Integer,List<PropDef>> return_columns;
+  public boolean all_columns;
+  public int limit;
   public long start_time;
   public long end_time;
-  public int max_versions;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int CURSOR = 3;
-  public static final int VERTEX_ID = 4;
-  public static final int ROW_LIMIT = 5;
-  public static final int START_TIME = 6;
-  public static final int END_TIME = 7;
-  public static final int MAX_VERSIONS = 8;
+  public static final int RETURN_COLUMNS = 4;
+  public static final int ALL_COLUMNS = 5;
+  public static final int LIMIT = 6;
+  public static final int START_TIME = 7;
+  public static final int END_TIME = 8;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __PART_ID_ISSET_ID = 1;
-  private static final int __VERTEX_ID_ISSET_ID = 2;
-  private static final int __ROW_LIMIT_ISSET_ID = 3;
+  private static final int __ALL_COLUMNS_ISSET_ID = 2;
+  private static final int __LIMIT_ISSET_ID = 3;
   private static final int __START_TIME_ISSET_ID = 4;
   private static final int __END_TIME_ISSET_ID = 5;
-  private static final int __MAX_VERSIONS_ISSET_ID = 6;
-  private BitSet __isset_bit_vector = new BitSet(7);
+  private BitSet __isset_bit_vector = new BitSet(6);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -75,16 +74,19 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(CURSOR, new FieldMetaData("cursor", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(VERTEX_ID, new FieldMetaData("vertex_id", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(ROW_LIMIT, new FieldMetaData("row_limit", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new StructMetaData(TType.STRUCT, PropDef.class)))));
+    tmpMetaDataMap.put(ALL_COLUMNS, new FieldMetaData("all_columns", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(END_TIME, new FieldMetaData("end_time", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(MAX_VERSIONS, new FieldMetaData("max_versions", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -98,35 +100,37 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public ScanVertexRequest(
     int space_id,
     int part_id,
-    int row_limit,
+    Map<Integer,List<PropDef>> return_columns,
+    boolean all_columns,
+    int limit,
     long start_time,
-    long end_time,
-    int max_versions)
+    long end_time)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.part_id = part_id;
     setPart_idIsSet(true);
-    this.row_limit = row_limit;
-    setRow_limitIsSet(true);
+    this.return_columns = return_columns;
+    this.all_columns = all_columns;
+    setAll_columnsIsSet(true);
+    this.limit = limit;
+    setLimitIsSet(true);
     this.start_time = start_time;
     setStart_timeIsSet(true);
     this.end_time = end_time;
     setEnd_timeIsSet(true);
-    this.max_versions = max_versions;
-    setMax_versionsIsSet(true);
   }
 
   public ScanVertexRequest(
     int space_id,
     int part_id,
     byte[] cursor,
-    long vertex_id,
-    int row_limit,
+    Map<Integer,List<PropDef>> return_columns,
+    boolean all_columns,
+    int limit,
     long start_time,
-    long end_time,
-    int max_versions)
+    long end_time)
   {
     this();
     this.space_id = space_id;
@@ -134,16 +138,15 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.cursor = cursor;
-    this.vertex_id = vertex_id;
-    setVertex_idIsSet(true);
-    this.row_limit = row_limit;
-    setRow_limitIsSet(true);
+    this.return_columns = return_columns;
+    this.all_columns = all_columns;
+    setAll_columnsIsSet(true);
+    this.limit = limit;
+    setLimitIsSet(true);
     this.start_time = start_time;
     setStart_timeIsSet(true);
     this.end_time = end_time;
     setEnd_timeIsSet(true);
-    this.max_versions = max_versions;
-    setMax_versionsIsSet(true);
   }
 
   /**
@@ -157,11 +160,13 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (other.isSetCursor()) {
       this.cursor = TBaseHelper.deepCopy(other.cursor);
     }
-    this.vertex_id = TBaseHelper.deepCopy(other.vertex_id);
-    this.row_limit = TBaseHelper.deepCopy(other.row_limit);
+    if (other.isSetReturn_columns()) {
+      this.return_columns = TBaseHelper.deepCopy(other.return_columns);
+    }
+    this.all_columns = TBaseHelper.deepCopy(other.all_columns);
+    this.limit = TBaseHelper.deepCopy(other.limit);
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.end_time = TBaseHelper.deepCopy(other.end_time);
-    this.max_versions = TBaseHelper.deepCopy(other.max_versions);
   }
 
   public ScanVertexRequest deepCopy() {
@@ -243,50 +248,74 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public long  getVertex_id() {
-    return this.vertex_id;
+  public Map<Integer,List<PropDef>>  getReturn_columns() {
+    return this.return_columns;
   }
 
-  public ScanVertexRequest setVertex_id(long vertex_id) {
-    this.vertex_id = vertex_id;
-    setVertex_idIsSet(true);
+  public ScanVertexRequest setReturn_columns(Map<Integer,List<PropDef>> return_columns) {
+    this.return_columns = return_columns;
     return this;
   }
 
-  public void unsetVertex_id() {
-    __isset_bit_vector.clear(__VERTEX_ID_ISSET_ID);
+  public void unsetReturn_columns() {
+    this.return_columns = null;
   }
 
-  // Returns true if field vertex_id is set (has been assigned a value) and false otherwise
-  public boolean isSetVertex_id() {
-    return __isset_bit_vector.get(__VERTEX_ID_ISSET_ID);
+  // Returns true if field return_columns is set (has been assigned a value) and false otherwise
+  public boolean isSetReturn_columns() {
+    return this.return_columns != null;
   }
 
-  public void setVertex_idIsSet(boolean value) {
-    __isset_bit_vector.set(__VERTEX_ID_ISSET_ID, value);
+  public void setReturn_columnsIsSet(boolean value) {
+    if (!value) {
+      this.return_columns = null;
+    }
   }
 
-  public int  getRow_limit() {
-    return this.row_limit;
+  public boolean  isAll_columns() {
+    return this.all_columns;
   }
 
-  public ScanVertexRequest setRow_limit(int row_limit) {
-    this.row_limit = row_limit;
-    setRow_limitIsSet(true);
+  public ScanVertexRequest setAll_columns(boolean all_columns) {
+    this.all_columns = all_columns;
+    setAll_columnsIsSet(true);
     return this;
   }
 
-  public void unsetRow_limit() {
-    __isset_bit_vector.clear(__ROW_LIMIT_ISSET_ID);
+  public void unsetAll_columns() {
+    __isset_bit_vector.clear(__ALL_COLUMNS_ISSET_ID);
   }
 
-  // Returns true if field row_limit is set (has been assigned a value) and false otherwise
-  public boolean isSetRow_limit() {
-    return __isset_bit_vector.get(__ROW_LIMIT_ISSET_ID);
+  // Returns true if field all_columns is set (has been assigned a value) and false otherwise
+  public boolean isSetAll_columns() {
+    return __isset_bit_vector.get(__ALL_COLUMNS_ISSET_ID);
   }
 
-  public void setRow_limitIsSet(boolean value) {
-    __isset_bit_vector.set(__ROW_LIMIT_ISSET_ID, value);
+  public void setAll_columnsIsSet(boolean value) {
+    __isset_bit_vector.set(__ALL_COLUMNS_ISSET_ID, value);
+  }
+
+  public int  getLimit() {
+    return this.limit;
+  }
+
+  public ScanVertexRequest setLimit(int limit) {
+    this.limit = limit;
+    setLimitIsSet(true);
+    return this;
+  }
+
+  public void unsetLimit() {
+    __isset_bit_vector.clear(__LIMIT_ISSET_ID);
+  }
+
+  // Returns true if field limit is set (has been assigned a value) and false otherwise
+  public boolean isSetLimit() {
+    return __isset_bit_vector.get(__LIMIT_ISSET_ID);
+  }
+
+  public void setLimitIsSet(boolean value) {
+    __isset_bit_vector.set(__LIMIT_ISSET_ID, value);
   }
 
   public long  getStart_time() {
@@ -335,29 +364,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__END_TIME_ISSET_ID, value);
   }
 
-  public int  getMax_versions() {
-    return this.max_versions;
-  }
-
-  public ScanVertexRequest setMax_versions(int max_versions) {
-    this.max_versions = max_versions;
-    setMax_versionsIsSet(true);
-    return this;
-  }
-
-  public void unsetMax_versions() {
-    __isset_bit_vector.clear(__MAX_VERSIONS_ISSET_ID);
-  }
-
-  // Returns true if field max_versions is set (has been assigned a value) and false otherwise
-  public boolean isSetMax_versions() {
-    return __isset_bit_vector.get(__MAX_VERSIONS_ISSET_ID);
-  }
-
-  public void setMax_versionsIsSet(boolean value) {
-    __isset_bit_vector.set(__MAX_VERSIONS_ISSET_ID, value);
-  }
-
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -384,19 +391,27 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case VERTEX_ID:
+    case RETURN_COLUMNS:
       if (value == null) {
-        unsetVertex_id();
+        unsetReturn_columns();
       } else {
-        setVertex_id((Long)value);
+        setReturn_columns((Map<Integer,List<PropDef>>)value);
       }
       break;
 
-    case ROW_LIMIT:
+    case ALL_COLUMNS:
       if (value == null) {
-        unsetRow_limit();
+        unsetAll_columns();
       } else {
-        setRow_limit((Integer)value);
+        setAll_columns((Boolean)value);
+      }
+      break;
+
+    case LIMIT:
+      if (value == null) {
+        unsetLimit();
+      } else {
+        setLimit((Integer)value);
       }
       break;
 
@@ -416,14 +431,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case MAX_VERSIONS:
-      if (value == null) {
-        unsetMax_versions();
-      } else {
-        setMax_versions((Integer)value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -440,20 +447,20 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     case CURSOR:
       return getCursor();
 
-    case VERTEX_ID:
-      return new Long(getVertex_id());
+    case RETURN_COLUMNS:
+      return getReturn_columns();
 
-    case ROW_LIMIT:
-      return new Integer(getRow_limit());
+    case ALL_COLUMNS:
+      return new Boolean(isAll_columns());
+
+    case LIMIT:
+      return new Integer(getLimit());
 
     case START_TIME:
       return new Long(getStart_time());
 
     case END_TIME:
       return new Long(getEnd_time());
-
-    case MAX_VERSIONS:
-      return new Integer(getMax_versions());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -469,16 +476,16 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return isSetPart_id();
     case CURSOR:
       return isSetCursor();
-    case VERTEX_ID:
-      return isSetVertex_id();
-    case ROW_LIMIT:
-      return isSetRow_limit();
+    case RETURN_COLUMNS:
+      return isSetReturn_columns();
+    case ALL_COLUMNS:
+      return isSetAll_columns();
+    case LIMIT:
+      return isSetLimit();
     case START_TIME:
       return isSetStart_time();
     case END_TIME:
       return isSetEnd_time();
-    case MAX_VERSIONS:
-      return isSetMax_versions();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -526,21 +533,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_vertex_id = true && this.isSetVertex_id();
-    boolean that_present_vertex_id = true && that.isSetVertex_id();
-    if (this_present_vertex_id || that_present_vertex_id) {
-      if (!(this_present_vertex_id && that_present_vertex_id))
+    boolean this_present_return_columns = true && this.isSetReturn_columns();
+    boolean that_present_return_columns = true && that.isSetReturn_columns();
+    if (this_present_return_columns || that_present_return_columns) {
+      if (!(this_present_return_columns && that_present_return_columns))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.vertex_id, that.vertex_id))
+      if (!TBaseHelper.equalsNobinary(this.return_columns, that.return_columns))
         return false;
     }
 
-    boolean this_present_row_limit = true;
-    boolean that_present_row_limit = true;
-    if (this_present_row_limit || that_present_row_limit) {
-      if (!(this_present_row_limit && that_present_row_limit))
+    boolean this_present_all_columns = true;
+    boolean that_present_all_columns = true;
+    if (this_present_all_columns || that_present_all_columns) {
+      if (!(this_present_all_columns && that_present_all_columns))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.row_limit, that.row_limit))
+      if (!TBaseHelper.equalsNobinary(this.all_columns, that.all_columns))
+        return false;
+    }
+
+    boolean this_present_limit = true;
+    boolean that_present_limit = true;
+    if (this_present_limit || that_present_limit) {
+      if (!(this_present_limit && that_present_limit))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.limit, that.limit))
         return false;
     }
 
@@ -559,15 +575,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       if (!(this_present_end_time && that_present_end_time))
         return false;
       if (!TBaseHelper.equalsNobinary(this.end_time, that.end_time))
-        return false;
-    }
-
-    boolean this_present_max_versions = true;
-    boolean that_present_max_versions = true;
-    if (this_present_max_versions || that_present_max_versions) {
-      if (!(this_present_max_versions && that_present_max_versions))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.max_versions, that.max_versions))
         return false;
     }
 
@@ -593,15 +600,20 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (present_cursor)
       builder.append(cursor);
 
-    boolean present_vertex_id = true && (isSetVertex_id());
-    builder.append(present_vertex_id);
-    if (present_vertex_id)
-      builder.append(vertex_id);
+    boolean present_return_columns = true && (isSetReturn_columns());
+    builder.append(present_return_columns);
+    if (present_return_columns)
+      builder.append(return_columns);
 
-    boolean present_row_limit = true;
-    builder.append(present_row_limit);
-    if (present_row_limit)
-      builder.append(row_limit);
+    boolean present_all_columns = true;
+    builder.append(present_all_columns);
+    if (present_all_columns)
+      builder.append(all_columns);
+
+    boolean present_limit = true;
+    builder.append(present_limit);
+    if (present_limit)
+      builder.append(limit);
 
     boolean present_start_time = true;
     builder.append(present_start_time);
@@ -612,11 +624,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     builder.append(present_end_time);
     if (present_end_time)
       builder.append(end_time);
-
-    boolean present_max_versions = true;
-    builder.append(present_max_versions);
-    if (present_max_versions)
-      builder.append(max_versions);
 
     return builder.toHashCode();
   }
@@ -657,19 +664,27 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetVertex_id()).compareTo(other.isSetVertex_id());
+    lastComparison = Boolean.valueOf(isSetReturn_columns()).compareTo(other.isSetReturn_columns());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(vertex_id, other.vertex_id);
+    lastComparison = TBaseHelper.compareTo(return_columns, other.return_columns);
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetRow_limit()).compareTo(other.isSetRow_limit());
+    lastComparison = Boolean.valueOf(isSetAll_columns()).compareTo(other.isSetAll_columns());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(row_limit, other.row_limit);
+    lastComparison = TBaseHelper.compareTo(all_columns, other.all_columns);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLimit()).compareTo(other.isSetLimit());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(limit, other.limit);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -686,14 +701,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(end_time, other.end_time);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetMax_versions()).compareTo(other.isSetMax_versions());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(max_versions, other.max_versions);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -734,18 +741,52 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case VERTEX_ID:
-          if (field.type == TType.I64) {
-            this.vertex_id = iprot.readI64();
-            setVertex_idIsSet(true);
+        case RETURN_COLUMNS:
+          if (field.type == TType.MAP) {
+            {
+              TMap _map155 = iprot.readMapBegin();
+              this.return_columns = new HashMap<Integer,List<PropDef>>(Math.max(0, 2*_map155.size));
+              for (int _i156 = 0; 
+                   (_map155.size < 0) ? iprot.peekMap() : (_i156 < _map155.size); 
+                   ++_i156)
+              {
+                int _key157;
+                List<PropDef> _val158;
+                _key157 = iprot.readI32();
+                {
+                  TList _list159 = iprot.readListBegin();
+                  _val158 = new ArrayList<PropDef>(Math.max(0, _list159.size));
+                  for (int _i160 = 0; 
+                       (_list159.size < 0) ? iprot.peekList() : (_i160 < _list159.size); 
+                       ++_i160)
+                  {
+                    PropDef _elem161;
+                    _elem161 = new PropDef();
+                    _elem161.read(iprot);
+                    _val158.add(_elem161);
+                  }
+                  iprot.readListEnd();
+                }
+                this.return_columns.put(_key157, _val158);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ROW_LIMIT:
+        case ALL_COLUMNS:
+          if (field.type == TType.BOOL) {
+            this.all_columns = iprot.readBool();
+            setAll_columnsIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case LIMIT:
           if (field.type == TType.I32) {
-            this.row_limit = iprot.readI32();
-            setRow_limitIsSet(true);
+            this.limit = iprot.readI32();
+            setLimitIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -762,14 +803,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
           if (field.type == TType.I64) {
             this.end_time = iprot.readI64();
             setEnd_timeIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case MAX_VERSIONS:
-          if (field.type == TType.I32) {
-            this.max_versions = iprot.readI32();
-            setMax_versionsIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -804,22 +837,35 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         oprot.writeFieldEnd();
       }
     }
-    if (isSetVertex_id()) {
-      oprot.writeFieldBegin(VERTEX_ID_FIELD_DESC);
-      oprot.writeI64(this.vertex_id);
+    if (this.return_columns != null) {
+      oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.return_columns.size()));
+        for (Map.Entry<Integer, List<PropDef>> _iter162 : this.return_columns.entrySet())        {
+          oprot.writeI32(_iter162.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter162.getValue().size()));
+            for (PropDef _iter163 : _iter162.getValue())            {
+              _iter163.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+        }
+        oprot.writeMapEnd();
+      }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(ROW_LIMIT_FIELD_DESC);
-    oprot.writeI32(this.row_limit);
+    oprot.writeFieldBegin(ALL_COLUMNS_FIELD_DESC);
+    oprot.writeBool(this.all_columns);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(LIMIT_FIELD_DESC);
+    oprot.writeI32(this.limit);
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(START_TIME_FIELD_DESC);
     oprot.writeI64(this.start_time);
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(END_TIME_FIELD_DESC);
     oprot.writeI64(this.end_time);
-    oprot.writeFieldEnd();
-    oprot.writeFieldBegin(MAX_VERSIONS_FIELD_DESC);
-    oprot.writeI32(this.max_versions);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -878,22 +924,30 @@ String space = prettyPrint ? " " : "";
       }
       first = false;
     }
-    if (isSetVertex_id())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("vertex_id");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getVertex_id(), indent + 1, prettyPrint));
-      first = false;
-    }
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("row_limit");
+    sb.append("return_columns");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getRow_limit(), indent + 1, prettyPrint));
+    if (this. getReturn_columns() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("all_columns");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isAll_columns(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("limit");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getLimit(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
@@ -908,13 +962,6 @@ String space = prettyPrint ? " " : "";
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getEnd_time(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("max_versions");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMax_versions(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

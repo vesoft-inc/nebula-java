@@ -117,6 +117,22 @@ public class RowReader {
         return properties;
     }
 
+    public Property[] vertexKey(long vertexId, int tagId) {
+        Property[] properties = new Property[2];
+        properties[0] =  new Property(PropertyType.VERTEX_ID, "_vertexId", vertexId);
+        properties[1] =  new Property(PropertyType.TAG_ID, "_tagId", tagId);
+        return properties;
+    }
+
+    public Property[] edgeKey(long srcId, int edgeType, long dstId) {
+        Property[] properties = new Property[3];
+        properties[0] =  new Property(PropertyType.SRC_ID, "_srcId", srcId);
+        properties[1] =  new Property(PropertyType.EDGE_TYPE, "_edgeType", edgeType);
+        properties[2] =  new Property(PropertyType.DST_ID, "_dstId", dstId);
+        return properties;
+    }
+
+    // unused
     public Property[] decodeVertexKey(byte[] key) {
         Property[] properties = new Property[2];
         ByteBuffer buffer = ByteBuffer.wrap(key);
@@ -134,6 +150,7 @@ public class RowReader {
         return null;
     }
 
+    // unused
     public Property[] decodeEdgeKey(byte[] key) {
         Property[] properties = new Property[4];
         ByteBuffer buffer = ByteBuffer.wrap(key);
@@ -147,7 +164,7 @@ public class RowReader {
             properties[0] =  new Property(PropertyType.SRC_ID, "_srcId", srcId);
             properties[1] =  new Property(PropertyType.EDGE_TYPE, "_edgeType", edgeType);
             properties[2] =  new Property(PropertyType.EDGE_RANK, "_rank", rank);
-            properties[3] =  new Property(PropertyType.DST_ID, "_dstIt", dstId);
+            properties[3] =  new Property(PropertyType.DST_ID, "_dstId", dstId);
             return properties;
         } catch (BufferUnderflowException e) {
             LOGGER.error("Decode key failed: " + e.getMessage());

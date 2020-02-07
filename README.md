@@ -13,6 +13,7 @@ Depending on the version of Nebula Graph that you are connecting to, you will ha
 | Nebula version | Nebula Java version |
 |:--------------:|:-----------------:|
 |     1.0.0-rc2     |      1.0.0-rc2     |
+|     1.0.0-rc3     |      1.0.0-rc3     |
 
 ## Nebula Graph Java Driver
 

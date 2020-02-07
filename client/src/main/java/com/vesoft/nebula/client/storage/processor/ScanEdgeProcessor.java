@@ -34,8 +34,8 @@ public class ScanEdgeProcessor implements Processor<ScanEdgeResponse> {
     @Override
     public Result process(String spaceName, ScanEdgeResponse response) {
         Map<Integer, RowReader> readers = new HashMap<>();
-        Map<Result.RowDesc, List<Row>> rows = new HashMap<>();
-        Map<Integer, Result.RowDesc> edgeTypeIndex = new HashMap<>();
+        Map<String, List<Row>> rows = new HashMap<>();
+        Map<Integer, String> edgeTypeNameMap = new HashMap<>();
         if (response.edge_schema != null) {
             for (Map.Entry<Integer, Schema> entry : response.edge_schema.entrySet()) {
                 int edgeType = entry.getKey();
@@ -44,9 +44,8 @@ public class ScanEdgeProcessor implements Processor<ScanEdgeResponse> {
                 EdgeItem edgeItem = metaClient.getEdgeItemFromCache(spaceName, edgeName);
                 long schemaVersion = edgeItem.version;
                 readers.put(edgeType, new RowReader(schema, schemaVersion));
-                Result.RowDesc desc = new Result.RowDesc(Result.RowType.EDGE, edgeName);
-                rows.put(desc, new ArrayList<>());
-                edgeTypeIndex.put(edgeType, desc);
+                rows.put(edgeName, new ArrayList<>());
+                edgeTypeNameMap.put(edgeType, edgeName);
             }
         }
 
@@ -57,10 +56,11 @@ public class ScanEdgeProcessor implements Processor<ScanEdgeResponse> {
                     continue;
                 }
                 RowReader reader = readers.get(edgeType);
-                Property[] defaultProperties = reader.decodeEdgeKey(scanEdge.key);
+                Property[] defaultProperties = reader.edgeKey(
+                        scanEdge.src, scanEdge.type, scanEdge.dst);
                 Property[] properties = reader.decodeValue(scanEdge.value);
-                Result.RowDesc desc = edgeTypeIndex.get(edgeType);
-                rows.get(desc).add(new Row(defaultProperties, properties));
+                String edgeName = edgeTypeNameMap.get(edgeType);
+                rows.get(edgeName).add(new Row(defaultProperties, properties));
             }
         }
         return new Result(rows);

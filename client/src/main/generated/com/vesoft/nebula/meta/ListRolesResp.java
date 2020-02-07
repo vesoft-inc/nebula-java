@@ -382,16 +382,16 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
         case ROLES:
           if (field.type == TType.LIST) {
             {
-              TList _list84 = iprot.readListBegin();
-              this.roles = new ArrayList<RoleItem>(Math.max(0, _list84.size));
-              for (int _i85 = 0; 
-                   (_list84.size < 0) ? iprot.peekList() : (_i85 < _list84.size); 
-                   ++_i85)
+              TList _list113 = iprot.readListBegin();
+              this.roles = new ArrayList<RoleItem>(Math.max(0, _list113.size));
+              for (int _i114 = 0; 
+                   (_list113.size < 0) ? iprot.peekList() : (_i114 < _list113.size); 
+                   ++_i114)
               {
-                RoleItem _elem86;
-                _elem86 = new RoleItem();
-                _elem86.read(iprot);
-                this.roles.add(_elem86);
+                RoleItem _elem115;
+                _elem115 = new RoleItem();
+                _elem115.read(iprot);
+                this.roles.add(_elem115);
               }
               iprot.readListEnd();
             }
@@ -428,8 +428,8 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(ROLES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.roles.size()));
-        for (RoleItem _iter87 : this.roles)        {
-          _iter87.write(oprot);
+        for (RoleItem _iter116 : this.roles)        {
+          _iter116.write(oprot);
         }
         oprot.writeListEnd();
       }

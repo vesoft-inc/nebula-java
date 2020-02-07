@@ -33,14 +33,16 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField TAG_ID_FIELD_DESC = new TField("tag_id", TType.I32, (short)2);
   private static final TField EDGE_TYPE_FIELD_DESC = new TField("edge_type", TType.I32, (short)3);
-  private static final TField USER_ID_FIELD_DESC = new TField("user_id", TType.I32, (short)4);
-  private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)5);
+  private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)4);
+  private static final TField USER_ID_FIELD_DESC = new TField("user_id", TType.I32, (short)5);
+  private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)6);
 
   public static final int SPACE_ID = 1;
   public static final int TAG_ID = 2;
   public static final int EDGE_TYPE = 3;
-  public static final int USER_ID = 4;
-  public static final int CLUSTER_ID = 5;
+  public static final int INDEX_ID = 4;
+  public static final int USER_ID = 5;
+  public static final int CLUSTER_ID = 6;
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -50,6 +52,8 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
     tmpMetaDataMap.put(TAG_ID, new FieldMetaData("tag_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(EDGE_TYPE, new FieldMetaData("edge_type", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(INDEX_ID, new FieldMetaData("index_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(USER_ID, new FieldMetaData("user_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
@@ -91,6 +95,12 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
     return x;
   }
 
+  public static ID index_id(int value) {
+    ID x = new ID();
+    x.setIndex_id(value);
+    return x;
+  }
+
   public static ID user_id(int value) {
     ID x = new ID();
     x.setUser_id(value);
@@ -122,6 +132,11 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
           break;
         }
         throw new ClassCastException("Was expecting value of type Integer for field 'edge_type', but got " + value.getClass().getSimpleName());
+      case INDEX_ID:
+        if (value instanceof Integer) {
+          break;
+        }
+        throw new ClassCastException("Was expecting value of type Integer for field 'index_id', but got " + value.getClass().getSimpleName());
       case USER_ID:
         if (value instanceof Integer) {
           break;
@@ -161,6 +176,11 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
             break;
           case EDGE_TYPE:
             if (field.type == EDGE_TYPE_FIELD_DESC.type) {
+              setField_ = field.id;
+            }
+            break;
+          case INDEX_ID:
+            if (field.type == INDEX_ID_FIELD_DESC.type) {
               setField_ = field.id;
             }
             break;
@@ -213,6 +233,15 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
           TProtocolUtil.skip(iprot, field.type);
           return null;
         }
+      case INDEX_ID:
+        if (field.type == INDEX_ID_FIELD_DESC.type) {
+          Integer index_id;
+          index_id = iprot.readI32();
+          return index_id;
+        } else {
+          TProtocolUtil.skip(iprot, field.type);
+          return null;
+        }
       case USER_ID:
         if (field.type == USER_ID_FIELD_DESC.type) {
           Integer user_id;
@@ -252,6 +281,10 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
         Integer edge_type = (Integer)getFieldValue();
         oprot.writeI32(edge_type);
         return;
+      case INDEX_ID:
+        Integer index_id = (Integer)getFieldValue();
+        oprot.writeI32(index_id);
+        return;
       case USER_ID:
         Integer user_id = (Integer)getFieldValue();
         oprot.writeI32(user_id);
@@ -274,6 +307,8 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
         return TAG_ID_FIELD_DESC;
       case EDGE_TYPE:
         return EDGE_TYPE_FIELD_DESC;
+      case INDEX_ID:
+        return INDEX_ID_FIELD_DESC;
       case USER_ID:
         return USER_ID_FIELD_DESC;
       case CLUSTER_ID:
@@ -324,6 +359,19 @@ public class ID extends TUnion<ID> implements Comparable<ID> {
 
   public void setEdge_type(int value) {
     setField_ = EDGE_TYPE;
+    value_ = value;
+  }
+
+  public int  getIndex_id() {
+    if (getSetField() == INDEX_ID) {
+      return (Integer)getFieldValue();
+    } else {
+      throw new RuntimeException("Cannot get field 'index_id' because union is currently set to " + getFieldDesc(getSetField()).name);
+    }
+  }
+
+  public void setIndex_id(int value) {
+    setField_ = INDEX_ID;
     value_ = value;
   }
 
@@ -426,6 +474,17 @@ String space = prettyPrint ? " " : "";
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this. getEdge_type(), indent + 1, prettyPrint));
+      first = false;
+    }
+    // Only print this field if it is the set field
+    if (getSetField() == INDEX_ID)
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("index_id");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getIndex_id(), indent + 1, prettyPrint));
       first = false;
     }
     // Only print this field if it is the set field

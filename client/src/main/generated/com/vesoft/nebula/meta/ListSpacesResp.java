@@ -453,7 +453,7 @@ public class ListSpacesResp implements TBase, java.io.Serializable, Cloneable, C
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-    String space = prettyPrint ? " " : "";
+String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ListSpacesResp");
     sb.append(space);
     sb.append("(");

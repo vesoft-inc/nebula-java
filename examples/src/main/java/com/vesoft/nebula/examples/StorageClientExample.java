@@ -19,8 +19,8 @@ public class StorageClientExample {
 
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.out.println("Usage: "
-                    + "com.vesoft.nebula.examples.StorageClientExample <host> <port>");
+            System.out.println("Usage: com.vesoft.nebula.examples.StorageClientExample "
+                    + "<meta_server_ip> <meta_server_port>");
             return;
         }
 
