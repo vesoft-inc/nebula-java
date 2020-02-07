@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
+package com.vesoft.nebula;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
@@ -27,18 +27,24 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("EdgeIndexItem");
+public class IndexItem implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("IndexItem");
   private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)1);
   private static final TField INDEX_NAME_FIELD_DESC = new TField("index_name", TType.STRING, (short)2);
-  private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.STRUCT, (short)3);
+  private static final TField SCHEMA_ID_FIELD_DESC = new TField("schema_id", TType.STRUCT, (short)3);
+  private static final TField SCHEMA_NAME_FIELD_DESC = new TField("schema_name", TType.STRING, (short)4);
+  private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)5);
 
   public int index_id;
   public String index_name;
-  public IndexFields fields;
+  public SchemaID schema_id;
+  public String schema_name;
+  public List<ColumnDef> fields;
   public static final int INDEX_ID = 1;
   public static final int INDEX_NAME = 2;
-  public static final int FIELDS = 3;
+  public static final int SCHEMA_ID = 3;
+  public static final int SCHEMA_NAME = 4;
+  public static final int FIELDS = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -52,59 +58,74 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(INDEX_NAME, new FieldMetaData("index_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(SCHEMA_ID, new FieldMetaData("schema_id", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, SchemaID.class)));
+    tmpMetaDataMap.put(SCHEMA_NAME, new FieldMetaData("schema_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, IndexFields.class)));
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, ColumnDef.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(EdgeIndexItem.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(IndexItem.class, metaDataMap);
   }
 
-  public EdgeIndexItem() {
+  public IndexItem() {
   }
 
-  public EdgeIndexItem(
+  public IndexItem(
     int index_id,
     String index_name,
-    IndexFields fields)
+    SchemaID schema_id,
+    String schema_name,
+    List<ColumnDef> fields)
   {
     this();
     this.index_id = index_id;
     setIndex_idIsSet(true);
     this.index_name = index_name;
+    this.schema_id = schema_id;
+    this.schema_name = schema_name;
     this.fields = fields;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public EdgeIndexItem(EdgeIndexItem other) {
+  public IndexItem(IndexItem other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.index_id = TBaseHelper.deepCopy(other.index_id);
     if (other.isSetIndex_name()) {
       this.index_name = TBaseHelper.deepCopy(other.index_name);
     }
+    if (other.isSetSchema_id()) {
+      this.schema_id = TBaseHelper.deepCopy(other.schema_id);
+    }
+    if (other.isSetSchema_name()) {
+      this.schema_name = TBaseHelper.deepCopy(other.schema_name);
+    }
     if (other.isSetFields()) {
       this.fields = TBaseHelper.deepCopy(other.fields);
     }
   }
 
-  public EdgeIndexItem deepCopy() {
-    return new EdgeIndexItem(this);
+  public IndexItem deepCopy() {
+    return new IndexItem(this);
   }
 
   @Deprecated
-  public EdgeIndexItem clone() {
-    return new EdgeIndexItem(this);
+  public IndexItem clone() {
+    return new IndexItem(this);
   }
 
   public int  getIndex_id() {
     return this.index_id;
   }
 
-  public EdgeIndexItem setIndex_id(int index_id) {
+  public IndexItem setIndex_id(int index_id) {
     this.index_id = index_id;
     setIndex_idIsSet(true);
     return this;
@@ -127,7 +148,7 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
     return this.index_name;
   }
 
-  public EdgeIndexItem setIndex_name(String index_name) {
+  public IndexItem setIndex_name(String index_name) {
     this.index_name = index_name;
     return this;
   }
@@ -147,11 +168,59 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public IndexFields  getFields() {
+  public SchemaID  getSchema_id() {
+    return this.schema_id;
+  }
+
+  public IndexItem setSchema_id(SchemaID schema_id) {
+    this.schema_id = schema_id;
+    return this;
+  }
+
+  public void unsetSchema_id() {
+    this.schema_id = null;
+  }
+
+  // Returns true if field schema_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSchema_id() {
+    return this.schema_id != null;
+  }
+
+  public void setSchema_idIsSet(boolean value) {
+    if (!value) {
+      this.schema_id = null;
+    }
+  }
+
+  public String  getSchema_name() {
+    return this.schema_name;
+  }
+
+  public IndexItem setSchema_name(String schema_name) {
+    this.schema_name = schema_name;
+    return this;
+  }
+
+  public void unsetSchema_name() {
+    this.schema_name = null;
+  }
+
+  // Returns true if field schema_name is set (has been assigned a value) and false otherwise
+  public boolean isSetSchema_name() {
+    return this.schema_name != null;
+  }
+
+  public void setSchema_nameIsSet(boolean value) {
+    if (!value) {
+      this.schema_name = null;
+    }
+  }
+
+  public List<ColumnDef>  getFields() {
     return this.fields;
   }
 
-  public EdgeIndexItem setFields(IndexFields fields) {
+  public IndexItem setFields(List<ColumnDef> fields) {
     this.fields = fields;
     return this;
   }
@@ -171,6 +240,7 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case INDEX_ID:
@@ -189,11 +259,27 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case SCHEMA_ID:
+      if (value == null) {
+        unsetSchema_id();
+      } else {
+        setSchema_id((SchemaID)value);
+      }
+      break;
+
+    case SCHEMA_NAME:
+      if (value == null) {
+        unsetSchema_name();
+      } else {
+        setSchema_name((String)value);
+      }
+      break;
+
     case FIELDS:
       if (value == null) {
         unsetFields();
       } else {
-        setFields((IndexFields)value);
+        setFields((List<ColumnDef>)value);
       }
       break;
 
@@ -210,6 +296,12 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
     case INDEX_NAME:
       return getIndex_name();
 
+    case SCHEMA_ID:
+      return getSchema_id();
+
+    case SCHEMA_NAME:
+      return getSchema_name();
+
     case FIELDS:
       return getFields();
 
@@ -225,6 +317,10 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
       return isSetIndex_id();
     case INDEX_NAME:
       return isSetIndex_name();
+    case SCHEMA_ID:
+      return isSetSchema_id();
+    case SCHEMA_NAME:
+      return isSetSchema_name();
     case FIELDS:
       return isSetFields();
     default:
@@ -236,12 +332,12 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof EdgeIndexItem)
-      return this.equals((EdgeIndexItem)that);
+    if (that instanceof IndexItem)
+      return this.equals((IndexItem)that);
     return false;
   }
 
-  public boolean equals(EdgeIndexItem that) {
+  public boolean equals(IndexItem that) {
     if (that == null)
       return false;
     if (this == that)
@@ -262,6 +358,24 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
       if (!(this_present_index_name && that_present_index_name))
         return false;
       if (!TBaseHelper.equalsNobinary(this.index_name, that.index_name))
+        return false;
+    }
+
+    boolean this_present_schema_id = true && this.isSetSchema_id();
+    boolean that_present_schema_id = true && that.isSetSchema_id();
+    if (this_present_schema_id || that_present_schema_id) {
+      if (!(this_present_schema_id && that_present_schema_id))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.schema_id, that.schema_id))
+        return false;
+    }
+
+    boolean this_present_schema_name = true && this.isSetSchema_name();
+    boolean that_present_schema_name = true && that.isSetSchema_name();
+    if (this_present_schema_name || that_present_schema_name) {
+      if (!(this_present_schema_name && that_present_schema_name))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.schema_name, that.schema_name))
         return false;
     }
 
@@ -290,6 +404,16 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
     builder.append(present_index_name);
     if (present_index_name)
       builder.append(index_name);
+
+    boolean present_schema_id = true && (isSetSchema_id());
+    builder.append(present_schema_id);
+    if (present_schema_id)
+      builder.append(schema_id);
+
+    boolean present_schema_name = true && (isSetSchema_name());
+    builder.append(present_schema_name);
+    if (present_schema_name)
+      builder.append(schema_name);
 
     boolean present_fields = true && (isSetFields());
     builder.append(present_fields);
@@ -325,10 +449,37 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case FIELDS:
+        case SCHEMA_ID:
           if (field.type == TType.STRUCT) {
-            this.fields = new IndexFields();
-            this.fields.read(iprot);
+            this.schema_id = new SchemaID();
+            this.schema_id.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case SCHEMA_NAME:
+          if (field.type == TType.STRING) {
+            this.schema_name = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case FIELDS:
+          if (field.type == TType.LIST) {
+            {
+              TList _list4 = iprot.readListBegin();
+              this.fields = new ArrayList<ColumnDef>(Math.max(0, _list4.size));
+              for (int _i5 = 0; 
+                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
+                   ++_i5)
+              {
+                ColumnDef _elem6;
+                _elem6 = new ColumnDef();
+                _elem6.read(iprot);
+                this.fields.add(_elem6);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -358,9 +509,25 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
       oprot.writeString(this.index_name);
       oprot.writeFieldEnd();
     }
+    if (this.schema_id != null) {
+      oprot.writeFieldBegin(SCHEMA_ID_FIELD_DESC);
+      this.schema_id.write(oprot);
+      oprot.writeFieldEnd();
+    }
+    if (this.schema_name != null) {
+      oprot.writeFieldBegin(SCHEMA_NAME_FIELD_DESC);
+      oprot.writeString(this.schema_name);
+      oprot.writeFieldEnd();
+    }
     if (this.fields != null) {
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
-      this.fields.write(oprot);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
+        for (ColumnDef _iter7 : this.fields)        {
+          _iter7.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -382,7 +549,7 @@ public class EdgeIndexItem implements TBase, java.io.Serializable, Cloneable {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("EdgeIndexItem");
+    StringBuilder sb = new StringBuilder("IndexItem");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -403,6 +570,28 @@ String space = prettyPrint ? " " : "";
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this. getIndex_name(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("schema_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getSchema_id() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getSchema_id(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("schema_name");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getSchema_name() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getSchema_name(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

@@ -294,17 +294,17 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map205 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,String>(Math.max(0, 2*_map205.size));
-              for (int _i206 = 0; 
-                   (_map205.size < 0) ? iprot.peekMap() : (_i206 < _map205.size); 
-                   ++_i206)
+              TMap _map209 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,String>(Math.max(0, 2*_map209.size));
+              for (int _i210 = 0; 
+                   (_map209.size < 0) ? iprot.peekMap() : (_i210 < _map209.size); 
+                   ++_i210)
               {
-                int _key207;
-                String _val208;
-                _key207 = iprot.readI32();
-                _val208 = iprot.readString();
-                this.parts.put(_key207, _val208);
+                int _key211;
+                String _val212;
+                _key211 = iprot.readI32();
+                _val212 = iprot.readString();
+                this.parts.put(_key211, _val212);
               }
               iprot.readMapEnd();
             }
@@ -336,9 +336,9 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRING, this.parts.size()));
-        for (Map.Entry<Integer, String> _iter209 : this.parts.entrySet())        {
-          oprot.writeI32(_iter209.getKey());
-          oprot.writeString(_iter209.getValue());
+        for (Map.Entry<Integer, String> _iter213 : this.parts.entrySet())        {
+          oprot.writeI32(_iter213.getKey());
+          oprot.writeString(_iter213.getValue());
         }
         oprot.writeMapEnd();
       }

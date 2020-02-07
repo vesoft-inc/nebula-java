@@ -41,6 +41,7 @@ public class ErrorCode {
   public static final int E_LOAD_META_FAILED = -41;
   public static final int E_FAILED_TO_CHECKPOINT = -50;
   public static final int E_CHECKPOINT_BLOCKED = -51;
+  public static final int E_INDEX_NOT_FOUND = -60;
   public static final int E_UNKNOWN = -100;
 
   public static final IntRangeSet VALID_VALUES;

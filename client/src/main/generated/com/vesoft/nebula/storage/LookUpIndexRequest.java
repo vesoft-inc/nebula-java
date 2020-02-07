@@ -27,23 +27,30 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable, Comparable<VertexPropRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("VertexPropRequest");
+public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneable, Comparable<LookUpIndexRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("LookUpIndexRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)3);
+  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.LIST, (short)2);
+  private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)3);
+  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)4);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)5);
 
   public int space_id;
-  public Map<Integer,List<Long>> parts;
-  public List<PropDef> return_columns;
+  public List<Integer> parts;
+  public int index_id;
+  public byte[] filter;
+  public List<String> return_columns;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
-  public static final int RETURN_COLUMNS = 3;
+  public static final int INDEX_ID = 3;
+  public static final int FILTER = 4;
+  public static final int RETURN_COLUMNS = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __INDEX_ID_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -51,64 +58,75 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.I64)))));
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I32))));
+    tmpMetaDataMap.put(INDEX_ID, new FieldMetaData("index_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(FILTER, new FieldMetaData("filter", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, PropDef.class))));
+            new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(VertexPropRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(LookUpIndexRequest.class, metaDataMap);
   }
 
-  public VertexPropRequest() {
+  public LookUpIndexRequest() {
   }
 
-  public VertexPropRequest(
+  public LookUpIndexRequest(
     int space_id,
-    Map<Integer,List<Long>> parts,
-    List<PropDef> return_columns)
+    List<Integer> parts,
+    int index_id,
+    byte[] filter,
+    List<String> return_columns)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
+    this.index_id = index_id;
+    setIndex_idIsSet(true);
+    this.filter = filter;
     this.return_columns = return_columns;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public VertexPropRequest(VertexPropRequest other) {
+  public LookUpIndexRequest(LookUpIndexRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
+    this.index_id = TBaseHelper.deepCopy(other.index_id);
+    if (other.isSetFilter()) {
+      this.filter = TBaseHelper.deepCopy(other.filter);
+    }
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
     }
   }
 
-  public VertexPropRequest deepCopy() {
-    return new VertexPropRequest(this);
+  public LookUpIndexRequest deepCopy() {
+    return new LookUpIndexRequest(this);
   }
 
   @Deprecated
-  public VertexPropRequest clone() {
-    return new VertexPropRequest(this);
+  public LookUpIndexRequest clone() {
+    return new LookUpIndexRequest(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public VertexPropRequest setSpace_id(int space_id) {
+  public LookUpIndexRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -127,11 +145,11 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,List<Long>>  getParts() {
+  public List<Integer>  getParts() {
     return this.parts;
   }
 
-  public VertexPropRequest setParts(Map<Integer,List<Long>> parts) {
+  public LookUpIndexRequest setParts(List<Integer> parts) {
     this.parts = parts;
     return this;
   }
@@ -151,11 +169,58 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<PropDef>  getReturn_columns() {
+  public int  getIndex_id() {
+    return this.index_id;
+  }
+
+  public LookUpIndexRequest setIndex_id(int index_id) {
+    this.index_id = index_id;
+    setIndex_idIsSet(true);
+    return this;
+  }
+
+  public void unsetIndex_id() {
+    __isset_bit_vector.clear(__INDEX_ID_ISSET_ID);
+  }
+
+  // Returns true if field index_id is set (has been assigned a value) and false otherwise
+  public boolean isSetIndex_id() {
+    return __isset_bit_vector.get(__INDEX_ID_ISSET_ID);
+  }
+
+  public void setIndex_idIsSet(boolean value) {
+    __isset_bit_vector.set(__INDEX_ID_ISSET_ID, value);
+  }
+
+  public byte[]  getFilter() {
+    return this.filter;
+  }
+
+  public LookUpIndexRequest setFilter(byte[] filter) {
+    this.filter = filter;
+    return this;
+  }
+
+  public void unsetFilter() {
+    this.filter = null;
+  }
+
+  // Returns true if field filter is set (has been assigned a value) and false otherwise
+  public boolean isSetFilter() {
+    return this.filter != null;
+  }
+
+  public void setFilterIsSet(boolean value) {
+    if (!value) {
+      this.filter = null;
+    }
+  }
+
+  public List<String>  getReturn_columns() {
     return this.return_columns;
   }
 
-  public VertexPropRequest setReturn_columns(List<PropDef> return_columns) {
+  public LookUpIndexRequest setReturn_columns(List<String> return_columns) {
     this.return_columns = return_columns;
     return this;
   }
@@ -190,7 +255,23 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<Long>>)value);
+        setParts((List<Integer>)value);
+      }
+      break;
+
+    case INDEX_ID:
+      if (value == null) {
+        unsetIndex_id();
+      } else {
+        setIndex_id((Integer)value);
+      }
+      break;
+
+    case FILTER:
+      if (value == null) {
+        unsetFilter();
+      } else {
+        setFilter((byte[])value);
       }
       break;
 
@@ -198,7 +279,7 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((List<PropDef>)value);
+        setReturn_columns((List<String>)value);
       }
       break;
 
@@ -215,6 +296,12 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     case PARTS:
       return getParts();
 
+    case INDEX_ID:
+      return new Integer(getIndex_id());
+
+    case FILTER:
+      return getFilter();
+
     case RETURN_COLUMNS:
       return getReturn_columns();
 
@@ -230,6 +317,10 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       return isSetSpace_id();
     case PARTS:
       return isSetParts();
+    case INDEX_ID:
+      return isSetIndex_id();
+    case FILTER:
+      return isSetFilter();
     case RETURN_COLUMNS:
       return isSetReturn_columns();
     default:
@@ -241,12 +332,12 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof VertexPropRequest)
-      return this.equals((VertexPropRequest)that);
+    if (that instanceof LookUpIndexRequest)
+      return this.equals((LookUpIndexRequest)that);
     return false;
   }
 
-  public boolean equals(VertexPropRequest that) {
+  public boolean equals(LookUpIndexRequest that) {
     if (that == null)
       return false;
     if (this == that)
@@ -267,6 +358,24 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       if (!(this_present_parts && that_present_parts))
         return false;
       if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
+        return false;
+    }
+
+    boolean this_present_index_id = true;
+    boolean that_present_index_id = true;
+    if (this_present_index_id || that_present_index_id) {
+      if (!(this_present_index_id && that_present_index_id))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.index_id, that.index_id))
+        return false;
+    }
+
+    boolean this_present_filter = true && this.isSetFilter();
+    boolean that_present_filter = true && that.isSetFilter();
+    if (this_present_filter || that_present_filter) {
+      if (!(this_present_filter && that_present_filter))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
         return false;
     }
 
@@ -296,6 +405,16 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     if (present_parts)
       builder.append(parts);
 
+    boolean present_index_id = true;
+    builder.append(present_index_id);
+    if (present_index_id)
+      builder.append(index_id);
+
+    boolean present_filter = true && (isSetFilter());
+    builder.append(present_filter);
+    if (present_filter)
+      builder.append(filter);
+
     boolean present_return_columns = true && (isSetReturn_columns());
     builder.append(present_return_columns);
     if (present_return_columns)
@@ -305,7 +424,7 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
   }
 
   @Override
-  public int compareTo(VertexPropRequest other) {
+  public int compareTo(LookUpIndexRequest other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -329,6 +448,22 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(parts, other.parts);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetIndex_id()).compareTo(other.isSetIndex_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(index_id, other.index_id);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetFilter()).compareTo(other.isSetFilter());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(filter, other.filter);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -363,34 +498,35 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
           }
           break;
         case PARTS:
-          if (field.type == TType.MAP) {
+          if (field.type == TType.LIST) {
             {
-              TMap _map55 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map55.size));
-              for (int _i56 = 0; 
-                   (_map55.size < 0) ? iprot.peekMap() : (_i56 < _map55.size); 
-                   ++_i56)
+              TList _list232 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list232.size));
+              for (int _i233 = 0; 
+                   (_list232.size < 0) ? iprot.peekList() : (_i233 < _list232.size); 
+                   ++_i233)
               {
-                int _key57;
-                List<Long> _val58;
-                _key57 = iprot.readI32();
-                {
-                  TList _list59 = iprot.readListBegin();
-                  _val58 = new ArrayList<Long>(Math.max(0, _list59.size));
-                  for (int _i60 = 0; 
-                       (_list59.size < 0) ? iprot.peekList() : (_i60 < _list59.size); 
-                       ++_i60)
-                  {
-                    long _elem61;
-                    _elem61 = iprot.readI64();
-                    _val58.add(_elem61);
-                  }
-                  iprot.readListEnd();
-                }
-                this.parts.put(_key57, _val58);
+                int _elem234;
+                _elem234 = iprot.readI32();
+                this.parts.add(_elem234);
               }
-              iprot.readMapEnd();
+              iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case INDEX_ID:
+          if (field.type == TType.I32) {
+            this.index_id = iprot.readI32();
+            setIndex_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case FILTER:
+          if (field.type == TType.STRING) {
+            this.filter = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -398,16 +534,15 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list62 = iprot.readListBegin();
-              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list62.size));
-              for (int _i63 = 0; 
-                   (_list62.size < 0) ? iprot.peekList() : (_i63 < _list62.size); 
-                   ++_i63)
+              TList _list235 = iprot.readListBegin();
+              this.return_columns = new ArrayList<String>(Math.max(0, _list235.size));
+              for (int _i236 = 0; 
+                   (_list235.size < 0) ? iprot.peekList() : (_i236 < _list235.size); 
+                   ++_i236)
               {
-                PropDef _elem64;
-                _elem64 = new PropDef();
-                _elem64.read(iprot);
-                this.return_columns.add(_elem64);
+                String _elem237;
+                _elem237 = iprot.readString();
+                this.return_columns.add(_elem237);
               }
               iprot.readListEnd();
             }
@@ -438,27 +573,28 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     if (this.parts != null) {
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Long>> _iter65 : this.parts.entrySet())        {
-          oprot.writeI32(_iter65.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.I64, _iter65.getValue().size()));
-            for (long _iter66 : _iter65.getValue())            {
-              oprot.writeI64(_iter66);
-            }
-            oprot.writeListEnd();
-          }
+        oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
+        for (int _iter238 : this.parts)        {
+          oprot.writeI32(_iter238);
         }
-        oprot.writeMapEnd();
+        oprot.writeListEnd();
       }
+      oprot.writeFieldEnd();
+    }
+    oprot.writeFieldBegin(INDEX_ID_FIELD_DESC);
+    oprot.writeI32(this.index_id);
+    oprot.writeFieldEnd();
+    if (this.filter != null) {
+      oprot.writeFieldBegin(FILTER_FIELD_DESC);
+      oprot.writeBinary(this.filter);
       oprot.writeFieldEnd();
     }
     if (this.return_columns != null) {
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (PropDef _iter67 : this.return_columns)        {
-          _iter67.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
+        for (String _iter239 : this.return_columns)        {
+          oprot.writeString(_iter239);
         }
         oprot.writeListEnd();
       }
@@ -483,7 +619,7 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("VertexPropRequest");
+    StringBuilder sb = new StringBuilder("LookUpIndexRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -504,6 +640,29 @@ String space = prettyPrint ? " " : "";
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("index_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getIndex_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("filter");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getFilter() == null) {
+      sb.append("null");
+    } else {
+        int __filter_size = Math.min(this. getFilter().length, 128);
+        for (int i = 0; i < __filter_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
+        }
+        if (this. getFilter().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

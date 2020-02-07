@@ -285,16 +285,16 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
         case FAILED_CODES:
           if (field.type == TType.LIST) {
             {
-              TList _list8 = iprot.readListBegin();
-              this.failed_codes = new ArrayList<ResultCode>(Math.max(0, _list8.size));
-              for (int _i9 = 0; 
-                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
-                   ++_i9)
+              TList _list12 = iprot.readListBegin();
+              this.failed_codes = new ArrayList<ResultCode>(Math.max(0, _list12.size));
+              for (int _i13 = 0; 
+                   (_list12.size < 0) ? iprot.peekList() : (_i13 < _list12.size); 
+                   ++_i13)
               {
-                ResultCode _elem10;
-                _elem10 = new ResultCode();
-                _elem10.read(iprot);
-                this.failed_codes.add(_elem10);
+                ResultCode _elem14;
+                _elem14 = new ResultCode();
+                _elem14.read(iprot);
+                this.failed_codes.add(_elem14);
               }
               iprot.readListEnd();
             }
@@ -334,8 +334,8 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(FAILED_CODES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.failed_codes.size()));
-        for (ResultCode _iter11 : this.failed_codes)        {
-          _iter11.write(oprot);
+        for (ResultCode _iter15 : this.failed_codes)        {
+          _iter15.write(oprot);
         }
         oprot.writeListEnd();
       }

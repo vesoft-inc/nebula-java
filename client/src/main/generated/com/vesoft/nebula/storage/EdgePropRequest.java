@@ -502,30 +502,30 @@ public class EdgePropRequest implements TBase, java.io.Serializable, Cloneable, 
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map64 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map64.size));
-              for (int _i65 = 0; 
-                   (_map64.size < 0) ? iprot.peekMap() : (_i65 < _map64.size); 
-                   ++_i65)
+              TMap _map68 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map68.size));
+              for (int _i69 = 0; 
+                   (_map68.size < 0) ? iprot.peekMap() : (_i69 < _map68.size); 
+                   ++_i69)
               {
-                int _key66;
-                List<EdgeKey> _val67;
-                _key66 = iprot.readI32();
+                int _key70;
+                List<EdgeKey> _val71;
+                _key70 = iprot.readI32();
                 {
-                  TList _list68 = iprot.readListBegin();
-                  _val67 = new ArrayList<EdgeKey>(Math.max(0, _list68.size));
-                  for (int _i69 = 0; 
-                       (_list68.size < 0) ? iprot.peekList() : (_i69 < _list68.size); 
-                       ++_i69)
+                  TList _list72 = iprot.readListBegin();
+                  _val71 = new ArrayList<EdgeKey>(Math.max(0, _list72.size));
+                  for (int _i73 = 0; 
+                       (_list72.size < 0) ? iprot.peekList() : (_i73 < _list72.size); 
+                       ++_i73)
                   {
-                    EdgeKey _elem70;
-                    _elem70 = new EdgeKey();
-                    _elem70.read(iprot);
-                    _val67.add(_elem70);
+                    EdgeKey _elem74;
+                    _elem74 = new EdgeKey();
+                    _elem74.read(iprot);
+                    _val71.add(_elem74);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key66, _val67);
+                this.parts.put(_key70, _val71);
               }
               iprot.readMapEnd();
             }
@@ -551,16 +551,16 @@ public class EdgePropRequest implements TBase, java.io.Serializable, Cloneable, 
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list71 = iprot.readListBegin();
-              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list71.size));
-              for (int _i72 = 0; 
-                   (_list71.size < 0) ? iprot.peekList() : (_i72 < _list71.size); 
-                   ++_i72)
+              TList _list75 = iprot.readListBegin();
+              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list75.size));
+              for (int _i76 = 0; 
+                   (_list75.size < 0) ? iprot.peekList() : (_i76 < _list75.size); 
+                   ++_i76)
               {
-                PropDef _elem73;
-                _elem73 = new PropDef();
-                _elem73.read(iprot);
-                this.return_columns.add(_elem73);
+                PropDef _elem77;
+                _elem77 = new PropDef();
+                _elem77.read(iprot);
+                this.return_columns.add(_elem77);
               }
               iprot.readListEnd();
             }
@@ -592,12 +592,12 @@ public class EdgePropRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<EdgeKey>> _iter74 : this.parts.entrySet())        {
-          oprot.writeI32(_iter74.getKey());
+        for (Map.Entry<Integer, List<EdgeKey>> _iter78 : this.parts.entrySet())        {
+          oprot.writeI32(_iter78.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter74.getValue().size()));
-            for (EdgeKey _iter75 : _iter74.getValue())            {
-              _iter75.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter78.getValue().size()));
+            for (EdgeKey _iter79 : _iter78.getValue())            {
+              _iter79.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -618,8 +618,8 @@ public class EdgePropRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (PropDef _iter76 : this.return_columns)        {
-          _iter76.write(oprot);
+        for (PropDef _iter80 : this.return_columns)        {
+          _iter80.write(oprot);
         }
         oprot.writeListEnd();
       }
