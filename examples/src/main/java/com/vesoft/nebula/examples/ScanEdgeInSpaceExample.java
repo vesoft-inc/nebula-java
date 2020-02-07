@@ -14,7 +14,6 @@ import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;

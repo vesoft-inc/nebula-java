@@ -8,7 +8,6 @@ package com.vesoft.nebula.client.meta.entry;
 
 import com.google.common.collect.Maps;
 import com.vesoft.nebula.meta.TagItem;
-
 import java.util.Map;
 
 public class ListTagsResult {

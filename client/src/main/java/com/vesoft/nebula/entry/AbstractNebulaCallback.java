@@ -11,9 +11,7 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.async.AsyncMethodCallback;
 import com.facebook.thrift.async.TAsyncMethodCall;
 import com.google.common.base.Optional;
-
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
