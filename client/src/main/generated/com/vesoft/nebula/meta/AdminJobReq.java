@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.storage;
+package com.vesoft.nebula.meta;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
@@ -27,133 +27,145 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparable<Vertex> {
-  private static final TStruct STRUCT_DESC = new TStruct("Vertex");
-  private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)1);
-  private static final TField TAGS_FIELD_DESC = new TField("tags", TType.LIST, (short)2);
+public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comparable<AdminJobReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("AdminJobReq");
+  private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)1);
+  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)2);
 
-  public long id;
-  public List<Tag> tags;
-  public static final int ID = 1;
-  public static final int TAGS = 2;
+  /**
+   * 
+   * @see AdminJobOp
+   */
+  public int op;
+  public List<String> paras;
+  public static final int OP = 1;
+  public static final int PARAS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __ID_ISSET_ID = 0;
+  private static final int __OP_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(TAGS, new FieldMetaData("tags", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(PARAS, new FieldMetaData("paras", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, Tag.class))));
+            new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(Vertex.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(AdminJobReq.class, metaDataMap);
   }
 
-  public Vertex() {
+  public AdminJobReq() {
   }
 
-  public Vertex(
-    long id,
-    List<Tag> tags)
+  public AdminJobReq(
+    int op,
+    List<String> paras)
   {
     this();
-    this.id = id;
-    setIdIsSet(true);
-    this.tags = tags;
+    this.op = op;
+    setOpIsSet(true);
+    this.paras = paras;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public Vertex(Vertex other) {
+  public AdminJobReq(AdminJobReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.id = TBaseHelper.deepCopy(other.id);
-    if (other.isSetTags()) {
-      this.tags = TBaseHelper.deepCopy(other.tags);
+    this.op = TBaseHelper.deepCopy(other.op);
+    if (other.isSetParas()) {
+      this.paras = TBaseHelper.deepCopy(other.paras);
     }
   }
 
-  public Vertex deepCopy() {
-    return new Vertex(this);
+  public AdminJobReq deepCopy() {
+    return new AdminJobReq(this);
   }
 
   @Deprecated
-  public Vertex clone() {
-    return new Vertex(this);
+  public AdminJobReq clone() {
+    return new AdminJobReq(this);
   }
 
-  public long  getId() {
-    return this.id;
+  /**
+   * 
+   * @see AdminJobOp
+   */
+  public int  getOp() {
+    return this.op;
   }
 
-  public Vertex setId(long id) {
-    this.id = id;
-    setIdIsSet(true);
+  /**
+   * 
+   * @see AdminJobOp
+   */
+  public AdminJobReq setOp(int op) {
+    this.op = op;
+    setOpIsSet(true);
     return this;
   }
 
-  public void unsetId() {
-    __isset_bit_vector.clear(__ID_ISSET_ID);
+  public void unsetOp() {
+    __isset_bit_vector.clear(__OP_ISSET_ID);
   }
 
-  // Returns true if field id is set (has been assigned a value) and false otherwise
-  public boolean isSetId() {
-    return __isset_bit_vector.get(__ID_ISSET_ID);
+  // Returns true if field op is set (has been assigned a value) and false otherwise
+  public boolean isSetOp() {
+    return __isset_bit_vector.get(__OP_ISSET_ID);
   }
 
-  public void setIdIsSet(boolean value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, value);
+  public void setOpIsSet(boolean value) {
+    __isset_bit_vector.set(__OP_ISSET_ID, value);
   }
 
-  public List<Tag>  getTags() {
-    return this.tags;
+  public List<String>  getParas() {
+    return this.paras;
   }
 
-  public Vertex setTags(List<Tag> tags) {
-    this.tags = tags;
+  public AdminJobReq setParas(List<String> paras) {
+    this.paras = paras;
     return this;
   }
 
-  public void unsetTags() {
-    this.tags = null;
+  public void unsetParas() {
+    this.paras = null;
   }
 
-  // Returns true if field tags is set (has been assigned a value) and false otherwise
-  public boolean isSetTags() {
-    return this.tags != null;
+  // Returns true if field paras is set (has been assigned a value) and false otherwise
+  public boolean isSetParas() {
+    return this.paras != null;
   }
 
-  public void setTagsIsSet(boolean value) {
+  public void setParasIsSet(boolean value) {
     if (!value) {
-      this.tags = null;
+      this.paras = null;
     }
   }
 
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case ID:
+    case OP:
       if (value == null) {
-        unsetId();
+        unsetOp();
       } else {
-        setId((Long)value);
+        setOp((Integer)value);
       }
       break;
 
-    case TAGS:
+    case PARAS:
       if (value == null) {
-        unsetTags();
+        unsetParas();
       } else {
-        setTags((List<Tag>)value);
+        setParas((List<String>)value);
       }
       break;
 
@@ -164,11 +176,11 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ID:
-      return new Long(getId());
+    case OP:
+      return getOp();
 
-    case TAGS:
-      return getTags();
+    case PARAS:
+      return getParas();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -178,10 +190,10 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case ID:
-      return isSetId();
-    case TAGS:
-      return isSetTags();
+    case OP:
+      return isSetOp();
+    case PARAS:
+      return isSetParas();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -191,32 +203,32 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof Vertex)
-      return this.equals((Vertex)that);
+    if (that instanceof AdminJobReq)
+      return this.equals((AdminJobReq)that);
     return false;
   }
 
-  public boolean equals(Vertex that) {
+  public boolean equals(AdminJobReq that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_id = true;
-    boolean that_present_id = true;
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
+    boolean this_present_op = true;
+    boolean that_present_op = true;
+    if (this_present_op || that_present_op) {
+      if (!(this_present_op && that_present_op))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
+      if (!TBaseHelper.equalsNobinary(this.op, that.op))
         return false;
     }
 
-    boolean this_present_tags = true && this.isSetTags();
-    boolean that_present_tags = true && that.isSetTags();
-    if (this_present_tags || that_present_tags) {
-      if (!(this_present_tags && that_present_tags))
+    boolean this_present_paras = true && this.isSetParas();
+    boolean that_present_paras = true && that.isSetParas();
+    if (this_present_paras || that_present_paras) {
+      if (!(this_present_paras && that_present_paras))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tags, that.tags))
+      if (!TBaseHelper.equalsNobinary(this.paras, that.paras))
         return false;
     }
 
@@ -227,21 +239,21 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_id = true;
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
+    boolean present_op = true;
+    builder.append(present_op);
+    if (present_op)
+      builder.append(op);
 
-    boolean present_tags = true && (isSetTags());
-    builder.append(present_tags);
-    if (present_tags)
-      builder.append(tags);
+    boolean present_paras = true && (isSetParas());
+    builder.append(present_paras);
+    if (present_paras)
+      builder.append(paras);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(Vertex other) {
+  public int compareTo(AdminJobReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -252,19 +264,19 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+    lastComparison = Boolean.valueOf(isSetOp()).compareTo(other.isSetOp());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(id, other.id);
+    lastComparison = TBaseHelper.compareTo(op, other.op);
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetTags()).compareTo(other.isSetTags());
+    lastComparison = Boolean.valueOf(isSetParas()).compareTo(other.isSetParas());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(tags, other.tags);
+    lastComparison = TBaseHelper.compareTo(paras, other.paras);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -282,27 +294,26 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
       }
       switch (field.id)
       {
-        case ID:
-          if (field.type == TType.I64) {
-            this.id = iprot.readI64();
-            setIdIsSet(true);
+        case OP:
+          if (field.type == TType.I32) {
+            this.op = iprot.readI32();
+            setOpIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case TAGS:
+        case PARAS:
           if (field.type == TType.LIST) {
             {
-              TList _list30 = iprot.readListBegin();
-              this.tags = new ArrayList<Tag>(Math.max(0, _list30.size));
-              for (int _i31 = 0; 
-                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
-                   ++_i31)
+              TList _list18 = iprot.readListBegin();
+              this.paras = new ArrayList<String>(Math.max(0, _list18.size));
+              for (int _i19 = 0; 
+                   (_list18.size < 0) ? iprot.peekList() : (_i19 < _list18.size); 
+                   ++_i19)
               {
-                Tag _elem32;
-                _elem32 = new Tag();
-                _elem32.read(iprot);
-                this.tags.add(_elem32);
+                String _elem20;
+                _elem20 = iprot.readString();
+                this.paras.add(_elem20);
               }
               iprot.readListEnd();
             }
@@ -327,15 +338,15 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(ID_FIELD_DESC);
-    oprot.writeI64(this.id);
+    oprot.writeFieldBegin(OP_FIELD_DESC);
+    oprot.writeI32(this.op);
     oprot.writeFieldEnd();
-    if (this.tags != null) {
-      oprot.writeFieldBegin(TAGS_FIELD_DESC);
+    if (this.paras != null) {
+      oprot.writeFieldBegin(PARAS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.tags.size()));
-        for (Tag _iter33 : this.tags)        {
-          _iter33.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRING, this.paras.size()));
+        for (String _iter21 : this.paras)        {
+          oprot.writeString(_iter21);
         }
         oprot.writeListEnd();
       }
@@ -360,27 +371,35 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable, Comparabl
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("Vertex");
+    StringBuilder sb = new StringBuilder("AdminJobReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("id");
+    sb.append("op");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+    String op_name = AdminJobOp.VALUES_TO_NAMES.get(this. getOp());
+    if (op_name != null) {
+      sb.append(op_name);
+      sb.append(" (");
+    }
+    sb.append(this. getOp());
+    if (op_name != null) {
+      sb.append(")");
+    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("tags");
+    sb.append("paras");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTags() == null) {
+    if (this. getParas() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTags(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getParas(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -391,6 +410,9 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
+    if (isSetOp() && !AdminJobOp.VALID_VALUES.contains(op)){
+      throw new TProtocolException("The field 'op' has been assigned the invalid value " + op);
+    }
   }
 
 }

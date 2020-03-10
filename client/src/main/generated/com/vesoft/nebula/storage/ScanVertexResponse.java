@@ -454,18 +454,18 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
         case VERTEX_SCHEMA:
           if (field.type == TType.MAP) {
             {
-              TMap _map164 = iprot.readMapBegin();
-              this.vertex_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map164.size));
-              for (int _i165 = 0; 
-                   (_map164.size < 0) ? iprot.peekMap() : (_i165 < _map164.size); 
-                   ++_i165)
+              TMap _map187 = iprot.readMapBegin();
+              this.vertex_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map187.size));
+              for (int _i188 = 0; 
+                   (_map187.size < 0) ? iprot.peekMap() : (_i188 < _map187.size); 
+                   ++_i188)
               {
-                int _key166;
-                com.vesoft.nebula.Schema _val167;
-                _key166 = iprot.readI32();
-                _val167 = new com.vesoft.nebula.Schema();
-                _val167.read(iprot);
-                this.vertex_schema.put(_key166, _val167);
+                int _key189;
+                com.vesoft.nebula.Schema _val190;
+                _key189 = iprot.readI32();
+                _val190 = new com.vesoft.nebula.Schema();
+                _val190.read(iprot);
+                this.vertex_schema.put(_key189, _val190);
               }
               iprot.readMapEnd();
             }
@@ -476,16 +476,16 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
         case VERTEX_DATA:
           if (field.type == TType.LIST) {
             {
-              TList _list168 = iprot.readListBegin();
-              this.vertex_data = new ArrayList<ScanVertex>(Math.max(0, _list168.size));
-              for (int _i169 = 0; 
-                   (_list168.size < 0) ? iprot.peekList() : (_i169 < _list168.size); 
-                   ++_i169)
+              TList _list191 = iprot.readListBegin();
+              this.vertex_data = new ArrayList<ScanVertex>(Math.max(0, _list191.size));
+              for (int _i192 = 0; 
+                   (_list191.size < 0) ? iprot.peekList() : (_i192 < _list191.size); 
+                   ++_i192)
               {
-                ScanVertex _elem170;
-                _elem170 = new ScanVertex();
-                _elem170.read(iprot);
-                this.vertex_data.add(_elem170);
+                ScanVertex _elem193;
+                _elem193 = new ScanVertex();
+                _elem193.read(iprot);
+                this.vertex_data.add(_elem193);
               }
               iprot.readListEnd();
             }
@@ -534,9 +534,9 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(VERTEX_SCHEMA_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.vertex_schema.size()));
-        for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter171 : this.vertex_schema.entrySet())        {
-          oprot.writeI32(_iter171.getKey());
-          _iter171.getValue().write(oprot);
+        for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter194 : this.vertex_schema.entrySet())        {
+          oprot.writeI32(_iter194.getKey());
+          _iter194.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -546,8 +546,8 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(VERTEX_DATA_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.vertex_data.size()));
-        for (ScanVertex _iter172 : this.vertex_data)        {
-          _iter172.write(oprot);
+        for (ScanVertex _iter195 : this.vertex_data)        {
+          _iter195.write(oprot);
         }
         oprot.writeListEnd();
       }

@@ -27,13 +27,13 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Comparable<PrefixRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("PrefixRequest");
+public class DeleteVerticesRequest implements TBase, java.io.Serializable, Cloneable, Comparable<DeleteVerticesRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("DeleteVerticesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
 
   public int space_id;
-  public Map<Integer,String> parts;
+  public Map<Integer,List<Long>> parts;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -50,20 +50,21 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
-            new FieldValueMetaData(TType.STRING))));
+            new ListMetaData(TType.LIST, 
+                new FieldValueMetaData(TType.I64)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(PrefixRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(DeleteVerticesRequest.class, metaDataMap);
   }
 
-  public PrefixRequest() {
+  public DeleteVerticesRequest() {
   }
 
-  public PrefixRequest(
+  public DeleteVerticesRequest(
     int space_id,
-    Map<Integer,String> parts)
+    Map<Integer,List<Long>> parts)
   {
     this();
     this.space_id = space_id;
@@ -74,7 +75,7 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public PrefixRequest(PrefixRequest other) {
+  public DeleteVerticesRequest(DeleteVerticesRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
@@ -83,20 +84,20 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public PrefixRequest deepCopy() {
-    return new PrefixRequest(this);
+  public DeleteVerticesRequest deepCopy() {
+    return new DeleteVerticesRequest(this);
   }
 
   @Deprecated
-  public PrefixRequest clone() {
-    return new PrefixRequest(this);
+  public DeleteVerticesRequest clone() {
+    return new DeleteVerticesRequest(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public PrefixRequest setSpace_id(int space_id) {
+  public DeleteVerticesRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -115,11 +116,11 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,String>  getParts() {
+  public Map<Integer,List<Long>>  getParts() {
     return this.parts;
   }
 
-  public PrefixRequest setParts(Map<Integer,String> parts) {
+  public DeleteVerticesRequest setParts(Map<Integer,List<Long>> parts) {
     this.parts = parts;
     return this;
   }
@@ -154,7 +155,7 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
       if (value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,String>)value);
+        setParts((Map<Integer,List<Long>>)value);
       }
       break;
 
@@ -192,12 +193,12 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof PrefixRequest)
-      return this.equals((PrefixRequest)that);
+    if (that instanceof DeleteVerticesRequest)
+      return this.equals((DeleteVerticesRequest)that);
     return false;
   }
 
-  public boolean equals(PrefixRequest that) {
+  public boolean equals(DeleteVerticesRequest that) {
     if (that == null)
       return false;
     if (this == that)
@@ -242,7 +243,7 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   @Override
-  public int compareTo(PrefixRequest other) {
+  public int compareTo(DeleteVerticesRequest other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -294,17 +295,29 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map232 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,String>(Math.max(0, 2*_map232.size));
-              for (int _i233 = 0; 
-                   (_map232.size < 0) ? iprot.peekMap() : (_i233 < _map232.size); 
-                   ++_i233)
+              TMap _map113 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map113.size));
+              for (int _i114 = 0; 
+                   (_map113.size < 0) ? iprot.peekMap() : (_i114 < _map113.size); 
+                   ++_i114)
               {
-                int _key234;
-                String _val235;
-                _key234 = iprot.readI32();
-                _val235 = iprot.readString();
-                this.parts.put(_key234, _val235);
+                int _key115;
+                List<Long> _val116;
+                _key115 = iprot.readI32();
+                {
+                  TList _list117 = iprot.readListBegin();
+                  _val116 = new ArrayList<Long>(Math.max(0, _list117.size));
+                  for (int _i118 = 0; 
+                       (_list117.size < 0) ? iprot.peekList() : (_i118 < _list117.size); 
+                       ++_i118)
+                  {
+                    long _elem119;
+                    _elem119 = iprot.readI64();
+                    _val116.add(_elem119);
+                  }
+                  iprot.readListEnd();
+                }
+                this.parts.put(_key115, _val116);
               }
               iprot.readMapEnd();
             }
@@ -335,10 +348,16 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     if (this.parts != null) {
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRING, this.parts.size()));
-        for (Map.Entry<Integer, String> _iter236 : this.parts.entrySet())        {
-          oprot.writeI32(_iter236.getKey());
-          oprot.writeString(_iter236.getValue());
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
+        for (Map.Entry<Integer, List<Long>> _iter120 : this.parts.entrySet())        {
+          oprot.writeI32(_iter120.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.I64, _iter120.getValue().size()));
+            for (long _iter121 : _iter120.getValue())            {
+              oprot.writeI64(_iter121);
+            }
+            oprot.writeListEnd();
+          }
         }
         oprot.writeMapEnd();
       }
@@ -363,7 +382,7 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("PrefixRequest");
+    StringBuilder sb = new StringBuilder("DeleteVerticesRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

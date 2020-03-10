@@ -18,10 +18,10 @@ import com.vesoft.nebula.storage.CatchUpDataReq;
 import com.vesoft.nebula.storage.CheckPeersReq;
 import com.vesoft.nebula.storage.CreateCPRequest;
 import com.vesoft.nebula.storage.DeleteEdgesRequest;
-import com.vesoft.nebula.storage.DeleteVertexRequest;
+import com.vesoft.nebula.storage.DeleteVerticesRequest;
 import com.vesoft.nebula.storage.DropCPRequest;
-import com.vesoft.nebula.storage.EdgeKeyRequest;
-import com.vesoft.nebula.storage.EdgeKeyResponse;
+import com.vesoft.nebula.storage.EdgeKeysRequest;
+import com.vesoft.nebula.storage.EdgeKeysResponse;
 import com.vesoft.nebula.storage.EdgePropRequest;
 import com.vesoft.nebula.storage.EdgePropResponse;
 import com.vesoft.nebula.storage.ExecResponse;
@@ -105,7 +105,7 @@ public class NebulaStorageService implements StorageService.Iface {
     }
 
     @Override
-    public EdgeKeyResponse getEdgeKeys(EdgeKeyRequest req) throws TException {
+    public EdgeKeysResponse getEdgeKeys(EdgeKeysRequest req) throws TException {
         return null;
     }
 
@@ -115,7 +115,7 @@ public class NebulaStorageService implements StorageService.Iface {
     }
 
     @Override
-    public ExecResponse deleteVertex(DeleteVertexRequest req) throws TException {
+    public ExecResponse deleteVertices(DeleteVerticesRequest req) throws TException {
         return null;
     }
 
@@ -269,3 +269,4 @@ public class NebulaStorageService implements StorageService.Iface {
         nextCursorIt = nextCursors.iterator();
     }
 }
+

@@ -32,13 +32,19 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
   private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)1);
   private static final TField PARTITION_NUM_FIELD_DESC = new TField("partition_num", TType.I32, (short)2);
   private static final TField REPLICA_FACTOR_FIELD_DESC = new TField("replica_factor", TType.I32, (short)3);
+  private static final TField CHARSET_NAME_FIELD_DESC = new TField("charset_name", TType.STRING, (short)4);
+  private static final TField COLLATE_NAME_FIELD_DESC = new TField("collate_name", TType.STRING, (short)5);
 
   public String space_name;
   public int partition_num;
   public int replica_factor;
+  public String charset_name;
+  public String collate_name;
   public static final int SPACE_NAME = 1;
   public static final int PARTITION_NUM = 2;
   public static final int REPLICA_FACTOR = 3;
+  public static final int CHARSET_NAME = 4;
+  public static final int COLLATE_NAME = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -55,6 +61,10 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(REPLICA_FACTOR, new FieldMetaData("replica_factor", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(CHARSET_NAME, new FieldMetaData("charset_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(COLLATE_NAME, new FieldMetaData("collate_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -68,7 +78,9 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
   public SpaceProperties(
     String space_name,
     int partition_num,
-    int replica_factor)
+    int replica_factor,
+    String charset_name,
+    String collate_name)
   {
     this();
     this.space_name = space_name;
@@ -76,6 +88,8 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     setPartition_numIsSet(true);
     this.replica_factor = replica_factor;
     setReplica_factorIsSet(true);
+    this.charset_name = charset_name;
+    this.collate_name = collate_name;
   }
 
   /**
@@ -89,6 +103,12 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     }
     this.partition_num = TBaseHelper.deepCopy(other.partition_num);
     this.replica_factor = TBaseHelper.deepCopy(other.replica_factor);
+    if (other.isSetCharset_name()) {
+      this.charset_name = TBaseHelper.deepCopy(other.charset_name);
+    }
+    if (other.isSetCollate_name()) {
+      this.collate_name = TBaseHelper.deepCopy(other.collate_name);
+    }
   }
 
   public SpaceProperties deepCopy() {
@@ -170,6 +190,54 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__REPLICA_FACTOR_ISSET_ID, value);
   }
 
+  public String  getCharset_name() {
+    return this.charset_name;
+  }
+
+  public SpaceProperties setCharset_name(String charset_name) {
+    this.charset_name = charset_name;
+    return this;
+  }
+
+  public void unsetCharset_name() {
+    this.charset_name = null;
+  }
+
+  // Returns true if field charset_name is set (has been assigned a value) and false otherwise
+  public boolean isSetCharset_name() {
+    return this.charset_name != null;
+  }
+
+  public void setCharset_nameIsSet(boolean value) {
+    if (!value) {
+      this.charset_name = null;
+    }
+  }
+
+  public String  getCollate_name() {
+    return this.collate_name;
+  }
+
+  public SpaceProperties setCollate_name(String collate_name) {
+    this.collate_name = collate_name;
+    return this;
+  }
+
+  public void unsetCollate_name() {
+    this.collate_name = null;
+  }
+
+  // Returns true if field collate_name is set (has been assigned a value) and false otherwise
+  public boolean isSetCollate_name() {
+    return this.collate_name != null;
+  }
+
+  public void setCollate_nameIsSet(boolean value) {
+    if (!value) {
+      this.collate_name = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_NAME:
@@ -196,6 +264,22 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
+    case CHARSET_NAME:
+      if (value == null) {
+        unsetCharset_name();
+      } else {
+        setCharset_name((String)value);
+      }
+      break;
+
+    case COLLATE_NAME:
+      if (value == null) {
+        unsetCollate_name();
+      } else {
+        setCollate_name((String)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -212,6 +296,12 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     case REPLICA_FACTOR:
       return new Integer(getReplica_factor());
 
+    case CHARSET_NAME:
+      return getCharset_name();
+
+    case COLLATE_NAME:
+      return getCollate_name();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -226,6 +316,10 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       return isSetPartition_num();
     case REPLICA_FACTOR:
       return isSetReplica_factor();
+    case CHARSET_NAME:
+      return isSetCharset_name();
+    case COLLATE_NAME:
+      return isSetCollate_name();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -273,6 +367,24 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
         return false;
     }
 
+    boolean this_present_charset_name = true && this.isSetCharset_name();
+    boolean that_present_charset_name = true && that.isSetCharset_name();
+    if (this_present_charset_name || that_present_charset_name) {
+      if (!(this_present_charset_name && that_present_charset_name))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.charset_name, that.charset_name))
+        return false;
+    }
+
+    boolean this_present_collate_name = true && this.isSetCollate_name();
+    boolean that_present_collate_name = true && that.isSetCollate_name();
+    if (this_present_collate_name || that_present_collate_name) {
+      if (!(this_present_collate_name && that_present_collate_name))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.collate_name, that.collate_name))
+        return false;
+    }
+
     return true;
   }
 
@@ -294,6 +406,16 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     builder.append(present_replica_factor);
     if (present_replica_factor)
       builder.append(replica_factor);
+
+    boolean present_charset_name = true && (isSetCharset_name());
+    builder.append(present_charset_name);
+    if (present_charset_name)
+      builder.append(charset_name);
+
+    boolean present_collate_name = true && (isSetCollate_name());
+    builder.append(present_collate_name);
+    if (present_collate_name)
+      builder.append(collate_name);
 
     return builder.toHashCode();
   }
@@ -334,6 +456,22 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetCharset_name()).compareTo(other.isSetCharset_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(charset_name, other.charset_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCollate_name()).compareTo(other.isSetCollate_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(collate_name, other.collate_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -371,6 +509,20 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case CHARSET_NAME:
+          if (field.type == TType.STRING) {
+            this.charset_name = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case COLLATE_NAME:
+          if (field.type == TType.STRING) {
+            this.collate_name = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -399,6 +551,16 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldBegin(REPLICA_FACTOR_FIELD_DESC);
     oprot.writeI32(this.replica_factor);
     oprot.writeFieldEnd();
+    if (this.charset_name != null) {
+      oprot.writeFieldBegin(CHARSET_NAME_FIELD_DESC);
+      oprot.writeString(this.charset_name);
+      oprot.writeFieldEnd();
+    }
+    if (this.collate_name != null) {
+      oprot.writeFieldBegin(COLLATE_NAME_FIELD_DESC);
+      oprot.writeString(this.collate_name);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -447,6 +609,28 @@ String space = prettyPrint ? " " : "";
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getReplica_factor(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("charset_name");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getCharset_name() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getCharset_name(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("collate_name");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getCollate_name() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getCollate_name(), indent + 1, prettyPrint));
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
