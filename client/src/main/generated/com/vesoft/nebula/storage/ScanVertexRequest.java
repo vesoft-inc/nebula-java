@@ -744,30 +744,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         case RETURN_COLUMNS:
           if (field.type == TType.MAP) {
             {
-              TMap _map155 = iprot.readMapBegin();
-              this.return_columns = new HashMap<Integer,List<PropDef>>(Math.max(0, 2*_map155.size));
-              for (int _i156 = 0; 
-                   (_map155.size < 0) ? iprot.peekMap() : (_i156 < _map155.size); 
-                   ++_i156)
+              TMap _map178 = iprot.readMapBegin();
+              this.return_columns = new HashMap<Integer,List<PropDef>>(Math.max(0, 2*_map178.size));
+              for (int _i179 = 0; 
+                   (_map178.size < 0) ? iprot.peekMap() : (_i179 < _map178.size); 
+                   ++_i179)
               {
-                int _key157;
-                List<PropDef> _val158;
-                _key157 = iprot.readI32();
+                int _key180;
+                List<PropDef> _val181;
+                _key180 = iprot.readI32();
                 {
-                  TList _list159 = iprot.readListBegin();
-                  _val158 = new ArrayList<PropDef>(Math.max(0, _list159.size));
-                  for (int _i160 = 0; 
-                       (_list159.size < 0) ? iprot.peekList() : (_i160 < _list159.size); 
-                       ++_i160)
+                  TList _list182 = iprot.readListBegin();
+                  _val181 = new ArrayList<PropDef>(Math.max(0, _list182.size));
+                  for (int _i183 = 0; 
+                       (_list182.size < 0) ? iprot.peekList() : (_i183 < _list182.size); 
+                       ++_i183)
                   {
-                    PropDef _elem161;
-                    _elem161 = new PropDef();
-                    _elem161.read(iprot);
-                    _val158.add(_elem161);
+                    PropDef _elem184;
+                    _elem184 = new PropDef();
+                    _elem184.read(iprot);
+                    _val181.add(_elem184);
                   }
                   iprot.readListEnd();
                 }
-                this.return_columns.put(_key157, _val158);
+                this.return_columns.put(_key180, _val181);
               }
               iprot.readMapEnd();
             }
@@ -841,12 +841,12 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.return_columns.size()));
-        for (Map.Entry<Integer, List<PropDef>> _iter162 : this.return_columns.entrySet())        {
-          oprot.writeI32(_iter162.getKey());
+        for (Map.Entry<Integer, List<PropDef>> _iter185 : this.return_columns.entrySet())        {
+          oprot.writeI32(_iter185.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter162.getValue().size()));
-            for (PropDef _iter163 : _iter162.getValue())            {
-              _iter163.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter185.getValue().size()));
+            for (PropDef _iter186 : _iter185.getValue())            {
+              _iter186.write(oprot);
             }
             oprot.writeListEnd();
           }

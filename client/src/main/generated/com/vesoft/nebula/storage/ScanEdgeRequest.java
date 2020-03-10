@@ -744,30 +744,30 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
         case RETURN_COLUMNS:
           if (field.type == TType.MAP) {
             {
-              TMap _map137 = iprot.readMapBegin();
-              this.return_columns = new HashMap<Integer,List<PropDef>>(Math.max(0, 2*_map137.size));
-              for (int _i138 = 0; 
-                   (_map137.size < 0) ? iprot.peekMap() : (_i138 < _map137.size); 
-                   ++_i138)
+              TMap _map160 = iprot.readMapBegin();
+              this.return_columns = new HashMap<Integer,List<PropDef>>(Math.max(0, 2*_map160.size));
+              for (int _i161 = 0; 
+                   (_map160.size < 0) ? iprot.peekMap() : (_i161 < _map160.size); 
+                   ++_i161)
               {
-                int _key139;
-                List<PropDef> _val140;
-                _key139 = iprot.readI32();
+                int _key162;
+                List<PropDef> _val163;
+                _key162 = iprot.readI32();
                 {
-                  TList _list141 = iprot.readListBegin();
-                  _val140 = new ArrayList<PropDef>(Math.max(0, _list141.size));
-                  for (int _i142 = 0; 
-                       (_list141.size < 0) ? iprot.peekList() : (_i142 < _list141.size); 
-                       ++_i142)
+                  TList _list164 = iprot.readListBegin();
+                  _val163 = new ArrayList<PropDef>(Math.max(0, _list164.size));
+                  for (int _i165 = 0; 
+                       (_list164.size < 0) ? iprot.peekList() : (_i165 < _list164.size); 
+                       ++_i165)
                   {
-                    PropDef _elem143;
-                    _elem143 = new PropDef();
-                    _elem143.read(iprot);
-                    _val140.add(_elem143);
+                    PropDef _elem166;
+                    _elem166 = new PropDef();
+                    _elem166.read(iprot);
+                    _val163.add(_elem166);
                   }
                   iprot.readListEnd();
                 }
-                this.return_columns.put(_key139, _val140);
+                this.return_columns.put(_key162, _val163);
               }
               iprot.readMapEnd();
             }
@@ -841,12 +841,12 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.return_columns.size()));
-        for (Map.Entry<Integer, List<PropDef>> _iter144 : this.return_columns.entrySet())        {
-          oprot.writeI32(_iter144.getKey());
+        for (Map.Entry<Integer, List<PropDef>> _iter167 : this.return_columns.entrySet())        {
+          oprot.writeI32(_iter167.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter144.getValue().size()));
-            for (PropDef _iter145 : _iter144.getValue())            {
-              _iter145.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter167.getValue().size()));
+            for (PropDef _iter168 : _iter167.getValue())            {
+              _iter168.write(oprot);
             }
             oprot.writeListEnd();
           }

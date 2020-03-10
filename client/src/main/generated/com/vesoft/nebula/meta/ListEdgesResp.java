@@ -343,16 +343,16 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable {
         case EDGES:
           if (field.type == TType.LIST) {
             {
-              TList _list34 = iprot.readListBegin();
-              this.edges = new ArrayList<EdgeItem>(Math.max(0, _list34.size));
-              for (int _i35 = 0; 
-                   (_list34.size < 0) ? iprot.peekList() : (_i35 < _list34.size); 
-                   ++_i35)
+              TList _list50 = iprot.readListBegin();
+              this.edges = new ArrayList<EdgeItem>(Math.max(0, _list50.size));
+              for (int _i51 = 0; 
+                   (_list50.size < 0) ? iprot.peekList() : (_i51 < _list50.size); 
+                   ++_i51)
               {
-                EdgeItem _elem36;
-                _elem36 = new EdgeItem();
-                _elem36.read(iprot);
-                this.edges.add(_elem36);
+                EdgeItem _elem52;
+                _elem52 = new EdgeItem();
+                _elem52.read(iprot);
+                this.edges.add(_elem52);
               }
               iprot.readListEnd();
             }
@@ -389,8 +389,8 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(EDGES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.edges.size()));
-        for (EdgeItem _iter37 : this.edges)        {
-          _iter37.write(oprot);
+        for (EdgeItem _iter53 : this.edges)        {
+          _iter53.write(oprot);
         }
         oprot.writeListEnd();
       }

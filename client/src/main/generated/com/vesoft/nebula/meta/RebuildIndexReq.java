@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.storage;
+package com.vesoft.nebula.meta;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
@@ -27,76 +27,84 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Comparable<PrefixRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("PrefixRequest");
+public class RebuildIndexReq implements TBase, java.io.Serializable, Cloneable, Comparable<RebuildIndexReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("RebuildIndexReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField INDEX_NAME_FIELD_DESC = new TField("index_name", TType.STRING, (short)2);
+  private static final TField IS_OFFLINE_FIELD_DESC = new TField("is_offline", TType.BOOL, (short)3);
 
   public int space_id;
-  public Map<Integer,String> parts;
+  public String index_name;
+  public boolean is_offline;
   public static final int SPACE_ID = 1;
-  public static final int PARTS = 2;
+  public static final int INDEX_NAME = 2;
+  public static final int IS_OFFLINE = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __IS_OFFLINE_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(INDEX_NAME, new FieldMetaData("index_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(IS_OFFLINE, new FieldMetaData("is_offline", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(PrefixRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(RebuildIndexReq.class, metaDataMap);
   }
 
-  public PrefixRequest() {
+  public RebuildIndexReq() {
   }
 
-  public PrefixRequest(
+  public RebuildIndexReq(
     int space_id,
-    Map<Integer,String> parts)
+    String index_name,
+    boolean is_offline)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.parts = parts;
+    this.index_name = index_name;
+    this.is_offline = is_offline;
+    setIs_offlineIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public PrefixRequest(PrefixRequest other) {
+  public RebuildIndexReq(RebuildIndexReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetParts()) {
-      this.parts = TBaseHelper.deepCopy(other.parts);
+    if (other.isSetIndex_name()) {
+      this.index_name = TBaseHelper.deepCopy(other.index_name);
     }
+    this.is_offline = TBaseHelper.deepCopy(other.is_offline);
   }
 
-  public PrefixRequest deepCopy() {
-    return new PrefixRequest(this);
+  public RebuildIndexReq deepCopy() {
+    return new RebuildIndexReq(this);
   }
 
   @Deprecated
-  public PrefixRequest clone() {
-    return new PrefixRequest(this);
+  public RebuildIndexReq clone() {
+    return new RebuildIndexReq(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public PrefixRequest setSpace_id(int space_id) {
+  public RebuildIndexReq setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -115,31 +123,53 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,String>  getParts() {
-    return this.parts;
+  public String  getIndex_name() {
+    return this.index_name;
   }
 
-  public PrefixRequest setParts(Map<Integer,String> parts) {
-    this.parts = parts;
+  public RebuildIndexReq setIndex_name(String index_name) {
+    this.index_name = index_name;
     return this;
   }
 
-  public void unsetParts() {
-    this.parts = null;
+  public void unsetIndex_name() {
+    this.index_name = null;
   }
 
-  // Returns true if field parts is set (has been assigned a value) and false otherwise
-  public boolean isSetParts() {
-    return this.parts != null;
+  // Returns true if field index_name is set (has been assigned a value) and false otherwise
+  public boolean isSetIndex_name() {
+    return this.index_name != null;
   }
 
-  public void setPartsIsSet(boolean value) {
+  public void setIndex_nameIsSet(boolean value) {
     if (!value) {
-      this.parts = null;
+      this.index_name = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
+  public boolean  isIs_offline() {
+    return this.is_offline;
+  }
+
+  public RebuildIndexReq setIs_offline(boolean is_offline) {
+    this.is_offline = is_offline;
+    setIs_offlineIsSet(true);
+    return this;
+  }
+
+  public void unsetIs_offline() {
+    __isset_bit_vector.clear(__IS_OFFLINE_ISSET_ID);
+  }
+
+  // Returns true if field is_offline is set (has been assigned a value) and false otherwise
+  public boolean isSetIs_offline() {
+    return __isset_bit_vector.get(__IS_OFFLINE_ISSET_ID);
+  }
+
+  public void setIs_offlineIsSet(boolean value) {
+    __isset_bit_vector.set(__IS_OFFLINE_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -150,11 +180,19 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case PARTS:
+    case INDEX_NAME:
       if (value == null) {
-        unsetParts();
+        unsetIndex_name();
       } else {
-        setParts((Map<Integer,String>)value);
+        setIndex_name((String)value);
+      }
+      break;
+
+    case IS_OFFLINE:
+      if (value == null) {
+        unsetIs_offline();
+      } else {
+        setIs_offline((Boolean)value);
       }
       break;
 
@@ -168,8 +206,11 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PARTS:
-      return getParts();
+    case INDEX_NAME:
+      return getIndex_name();
+
+    case IS_OFFLINE:
+      return new Boolean(isIs_offline());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -181,8 +222,10 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     switch (fieldID) {
     case SPACE_ID:
       return isSetSpace_id();
-    case PARTS:
-      return isSetParts();
+    case INDEX_NAME:
+      return isSetIndex_name();
+    case IS_OFFLINE:
+      return isSetIs_offline();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -192,12 +235,12 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof PrefixRequest)
-      return this.equals((PrefixRequest)that);
+    if (that instanceof RebuildIndexReq)
+      return this.equals((RebuildIndexReq)that);
     return false;
   }
 
-  public boolean equals(PrefixRequest that) {
+  public boolean equals(RebuildIndexReq that) {
     if (that == null)
       return false;
     if (this == that)
@@ -212,12 +255,21 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
         return false;
     }
 
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
+    boolean this_present_index_name = true && this.isSetIndex_name();
+    boolean that_present_index_name = true && that.isSetIndex_name();
+    if (this_present_index_name || that_present_index_name) {
+      if (!(this_present_index_name && that_present_index_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
+      if (!TBaseHelper.equalsNobinary(this.index_name, that.index_name))
+        return false;
+    }
+
+    boolean this_present_is_offline = true;
+    boolean that_present_is_offline = true;
+    if (this_present_is_offline || that_present_is_offline) {
+      if (!(this_present_is_offline && that_present_is_offline))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.is_offline, that.is_offline))
         return false;
     }
 
@@ -233,16 +285,21 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     if (present_space_id)
       builder.append(space_id);
 
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
+    boolean present_index_name = true && (isSetIndex_name());
+    builder.append(present_index_name);
+    if (present_index_name)
+      builder.append(index_name);
+
+    boolean present_is_offline = true;
+    builder.append(present_is_offline);
+    if (present_is_offline)
+      builder.append(is_offline);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(PrefixRequest other) {
+  public int compareTo(RebuildIndexReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -261,11 +318,19 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
+    lastComparison = Boolean.valueOf(isSetIndex_name()).compareTo(other.isSetIndex_name());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
+    lastComparison = TBaseHelper.compareTo(index_name, other.index_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetIs_offline()).compareTo(other.isSetIs_offline());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(is_offline, other.is_offline);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -291,23 +356,17 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case PARTS:
-          if (field.type == TType.MAP) {
-            {
-              TMap _map232 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,String>(Math.max(0, 2*_map232.size));
-              for (int _i233 = 0; 
-                   (_map232.size < 0) ? iprot.peekMap() : (_i233 < _map232.size); 
-                   ++_i233)
-              {
-                int _key234;
-                String _val235;
-                _key234 = iprot.readI32();
-                _val235 = iprot.readString();
-                this.parts.put(_key234, _val235);
-              }
-              iprot.readMapEnd();
-            }
+        case INDEX_NAME:
+          if (field.type == TType.STRING) {
+            this.index_name = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case IS_OFFLINE:
+          if (field.type == TType.BOOL) {
+            this.is_offline = iprot.readBool();
+            setIs_offlineIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -332,18 +391,14 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.parts != null) {
-      oprot.writeFieldBegin(PARTS_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRING, this.parts.size()));
-        for (Map.Entry<Integer, String> _iter236 : this.parts.entrySet())        {
-          oprot.writeI32(_iter236.getKey());
-          oprot.writeString(_iter236.getValue());
-        }
-        oprot.writeMapEnd();
-      }
+    if (this.index_name != null) {
+      oprot.writeFieldBegin(INDEX_NAME_FIELD_DESC);
+      oprot.writeString(this.index_name);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(IS_OFFLINE_FIELD_DESC);
+    oprot.writeBool(this.is_offline);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -363,7 +418,7 @@ public class PrefixRequest implements TBase, java.io.Serializable, Cloneable, Co
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("PrefixRequest");
+    StringBuilder sb = new StringBuilder("RebuildIndexReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -377,14 +432,21 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("parts");
+    sb.append("index_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getParts() == null) {
+    if (this. getIndex_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getIndex_name(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("is_offline");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isIs_offline(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

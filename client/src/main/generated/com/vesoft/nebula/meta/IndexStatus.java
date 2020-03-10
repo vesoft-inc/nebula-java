@@ -27,15 +27,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comparable<MultiGetReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("MultiGetReq");
-  private static final TField SEGMENT_FIELD_DESC = new TField("segment", TType.STRING, (short)1);
-  private static final TField KEYS_FIELD_DESC = new TField("keys", TType.LIST, (short)2);
+public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comparable<IndexStatus> {
+  private static final TStruct STRUCT_DESC = new TStruct("IndexStatus");
+  private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)1);
+  private static final TField STATUS_FIELD_DESC = new TField("status", TType.STRING, (short)2);
 
-  public String segment;
-  public List<String> keys;
-  public static final int SEGMENT = 1;
-  public static final int KEYS = 2;
+  public String name;
+  public String status;
+  public static final int NAME = 1;
+  public static final int STATUS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -43,115 +43,113 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(SEGMENT, new FieldMetaData("segment", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(KEYS, new FieldMetaData("keys", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(STATUS, new FieldMetaData("status", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(MultiGetReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(IndexStatus.class, metaDataMap);
   }
 
-  public MultiGetReq() {
+  public IndexStatus() {
   }
 
-  public MultiGetReq(
-    String segment,
-    List<String> keys)
+  public IndexStatus(
+    String name,
+    String status)
   {
     this();
-    this.segment = segment;
-    this.keys = keys;
+    this.name = name;
+    this.status = status;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public MultiGetReq(MultiGetReq other) {
-    if (other.isSetSegment()) {
-      this.segment = TBaseHelper.deepCopy(other.segment);
+  public IndexStatus(IndexStatus other) {
+    if (other.isSetName()) {
+      this.name = TBaseHelper.deepCopy(other.name);
     }
-    if (other.isSetKeys()) {
-      this.keys = TBaseHelper.deepCopy(other.keys);
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
     }
   }
 
-  public MultiGetReq deepCopy() {
-    return new MultiGetReq(this);
+  public IndexStatus deepCopy() {
+    return new IndexStatus(this);
   }
 
   @Deprecated
-  public MultiGetReq clone() {
-    return new MultiGetReq(this);
+  public IndexStatus clone() {
+    return new IndexStatus(this);
   }
 
-  public String  getSegment() {
-    return this.segment;
+  public String  getName() {
+    return this.name;
   }
 
-  public MultiGetReq setSegment(String segment) {
-    this.segment = segment;
+  public IndexStatus setName(String name) {
+    this.name = name;
     return this;
   }
 
-  public void unsetSegment() {
-    this.segment = null;
+  public void unsetName() {
+    this.name = null;
   }
 
-  // Returns true if field segment is set (has been assigned a value) and false otherwise
-  public boolean isSetSegment() {
-    return this.segment != null;
+  // Returns true if field name is set (has been assigned a value) and false otherwise
+  public boolean isSetName() {
+    return this.name != null;
   }
 
-  public void setSegmentIsSet(boolean value) {
+  public void setNameIsSet(boolean value) {
     if (!value) {
-      this.segment = null;
+      this.name = null;
     }
   }
 
-  public List<String>  getKeys() {
-    return this.keys;
+  public String  getStatus() {
+    return this.status;
   }
 
-  public MultiGetReq setKeys(List<String> keys) {
-    this.keys = keys;
+  public IndexStatus setStatus(String status) {
+    this.status = status;
     return this;
   }
 
-  public void unsetKeys() {
-    this.keys = null;
+  public void unsetStatus() {
+    this.status = null;
   }
 
-  // Returns true if field keys is set (has been assigned a value) and false otherwise
-  public boolean isSetKeys() {
-    return this.keys != null;
+  // Returns true if field status is set (has been assigned a value) and false otherwise
+  public boolean isSetStatus() {
+    return this.status != null;
   }
 
-  public void setKeysIsSet(boolean value) {
+  public void setStatusIsSet(boolean value) {
     if (!value) {
-      this.keys = null;
+      this.status = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case SEGMENT:
+    case NAME:
       if (value == null) {
-        unsetSegment();
+        unsetName();
       } else {
-        setSegment((String)value);
+        setName((String)value);
       }
       break;
 
-    case KEYS:
+    case STATUS:
       if (value == null) {
-        unsetKeys();
+        unsetStatus();
       } else {
-        setKeys((List<String>)value);
+        setStatus((String)value);
       }
       break;
 
@@ -162,11 +160,11 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case SEGMENT:
-      return getSegment();
+    case NAME:
+      return getName();
 
-    case KEYS:
-      return getKeys();
+    case STATUS:
+      return getStatus();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -176,10 +174,10 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case SEGMENT:
-      return isSetSegment();
-    case KEYS:
-      return isSetKeys();
+    case NAME:
+      return isSetName();
+    case STATUS:
+      return isSetStatus();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -189,32 +187,32 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof MultiGetReq)
-      return this.equals((MultiGetReq)that);
+    if (that instanceof IndexStatus)
+      return this.equals((IndexStatus)that);
     return false;
   }
 
-  public boolean equals(MultiGetReq that) {
+  public boolean equals(IndexStatus that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_segment = true && this.isSetSegment();
-    boolean that_present_segment = true && that.isSetSegment();
-    if (this_present_segment || that_present_segment) {
-      if (!(this_present_segment && that_present_segment))
+    boolean this_present_name = true && this.isSetName();
+    boolean that_present_name = true && that.isSetName();
+    if (this_present_name || that_present_name) {
+      if (!(this_present_name && that_present_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.segment, that.segment))
+      if (!TBaseHelper.equalsNobinary(this.name, that.name))
         return false;
     }
 
-    boolean this_present_keys = true && this.isSetKeys();
-    boolean that_present_keys = true && that.isSetKeys();
-    if (this_present_keys || that_present_keys) {
-      if (!(this_present_keys && that_present_keys))
+    boolean this_present_status = true && this.isSetStatus();
+    boolean that_present_status = true && that.isSetStatus();
+    if (this_present_status || that_present_status) {
+      if (!(this_present_status && that_present_status))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.keys, that.keys))
+      if (!TBaseHelper.equalsNobinary(this.status, that.status))
         return false;
     }
 
@@ -225,21 +223,21 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_segment = true && (isSetSegment());
-    builder.append(present_segment);
-    if (present_segment)
-      builder.append(segment);
+    boolean present_name = true && (isSetName());
+    builder.append(present_name);
+    if (present_name)
+      builder.append(name);
 
-    boolean present_keys = true && (isSetKeys());
-    builder.append(present_keys);
-    if (present_keys)
-      builder.append(keys);
+    boolean present_status = true && (isSetStatus());
+    builder.append(present_status);
+    if (present_status)
+      builder.append(status);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(MultiGetReq other) {
+  public int compareTo(IndexStatus other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -250,19 +248,19 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetSegment()).compareTo(other.isSetSegment());
+    lastComparison = Boolean.valueOf(isSetName()).compareTo(other.isSetName());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(segment, other.segment);
+    lastComparison = TBaseHelper.compareTo(name, other.name);
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetKeys()).compareTo(other.isSetKeys());
+    lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(keys, other.keys);
+    lastComparison = TBaseHelper.compareTo(status, other.status);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -280,28 +278,16 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       switch (field.id)
       {
-        case SEGMENT:
+        case NAME:
           if (field.type == TType.STRING) {
-            this.segment = iprot.readString();
+            this.name = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case KEYS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list87 = iprot.readListBegin();
-              this.keys = new ArrayList<String>(Math.max(0, _list87.size));
-              for (int _i88 = 0; 
-                   (_list87.size < 0) ? iprot.peekList() : (_i88 < _list87.size); 
-                   ++_i88)
-              {
-                String _elem89;
-                _elem89 = iprot.readString();
-                this.keys.add(_elem89);
-              }
-              iprot.readListEnd();
-            }
+        case STATUS:
+          if (field.type == TType.STRING) {
+            this.status = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -323,20 +309,14 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.segment != null) {
-      oprot.writeFieldBegin(SEGMENT_FIELD_DESC);
-      oprot.writeString(this.segment);
+    if (this.name != null) {
+      oprot.writeFieldBegin(NAME_FIELD_DESC);
+      oprot.writeString(this.name);
       oprot.writeFieldEnd();
     }
-    if (this.keys != null) {
-      oprot.writeFieldBegin(KEYS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRING, this.keys.size()));
-        for (String _iter90 : this.keys)        {
-          oprot.writeString(_iter90);
-        }
-        oprot.writeListEnd();
-      }
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeString(this.status);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -358,31 +338,31 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("MultiGetReq");
+    StringBuilder sb = new StringBuilder("IndexStatus");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("segment");
+    sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSegment() == null) {
+    if (this. getName() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSegment(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getName(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("keys");
+    sb.append("status");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getKeys() == null) {
+    if (this. getStatus() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getKeys(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getStatus(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

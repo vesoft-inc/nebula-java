@@ -42,7 +42,14 @@ public class ErrorCode {
   public static final int E_CORRUPTTED_BALANCE_PLAN = -38;
   public static final int E_INVALID_PASSWORD = -41;
   public static final int E_INPROPER_ROLE = -42;
+  public static final int E_INVALID_PARTITION_NUM = -43;
+  public static final int E_INVALID_REPLICA_FACTOR = -44;
+  public static final int E_INVALID_CHARSET = -45;
+  public static final int E_INVALID_COLLATE = -46;
+  public static final int E_CHARSET_COLLATE_NOT_MATCH = -47;
   public static final int E_SNAPSHOT_FAILURE = -51;
+  public static final int E_INDEX_CONFLICT = -61;
+  public static final int E_INDEX_WITH_TTL = -62;
   public static final int E_UNKNOWN = -99;
 
   public static final IntRangeSet VALID_VALUES;

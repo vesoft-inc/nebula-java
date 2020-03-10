@@ -295,29 +295,29 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map200 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<String>>(Math.max(0, 2*_map200.size));
-              for (int _i201 = 0; 
-                   (_map200.size < 0) ? iprot.peekMap() : (_i201 < _map200.size); 
-                   ++_i201)
+              TMap _map223 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<String>>(Math.max(0, 2*_map223.size));
+              for (int _i224 = 0; 
+                   (_map223.size < 0) ? iprot.peekMap() : (_i224 < _map223.size); 
+                   ++_i224)
               {
-                int _key202;
-                List<String> _val203;
-                _key202 = iprot.readI32();
+                int _key225;
+                List<String> _val226;
+                _key225 = iprot.readI32();
                 {
-                  TList _list204 = iprot.readListBegin();
-                  _val203 = new ArrayList<String>(Math.max(0, _list204.size));
-                  for (int _i205 = 0; 
-                       (_list204.size < 0) ? iprot.peekList() : (_i205 < _list204.size); 
-                       ++_i205)
+                  TList _list227 = iprot.readListBegin();
+                  _val226 = new ArrayList<String>(Math.max(0, _list227.size));
+                  for (int _i228 = 0; 
+                       (_list227.size < 0) ? iprot.peekList() : (_i228 < _list227.size); 
+                       ++_i228)
                   {
-                    String _elem206;
-                    _elem206 = iprot.readString();
-                    _val203.add(_elem206);
+                    String _elem229;
+                    _elem229 = iprot.readString();
+                    _val226.add(_elem229);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key202, _val203);
+                this.parts.put(_key225, _val226);
               }
               iprot.readMapEnd();
             }
@@ -349,12 +349,12 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<String>> _iter207 : this.parts.entrySet())        {
-          oprot.writeI32(_iter207.getKey());
+        for (Map.Entry<Integer, List<String>> _iter230 : this.parts.entrySet())        {
+          oprot.writeI32(_iter230.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRING, _iter207.getValue().size()));
-            for (String _iter208 : _iter207.getValue())            {
-              oprot.writeString(_iter208);
+            oprot.writeListBegin(new TList(TType.STRING, _iter230.getValue().size()));
+            for (String _iter231 : _iter230.getValue())            {
+              oprot.writeString(_iter231);
             }
             oprot.writeListEnd();
           }
