@@ -336,16 +336,16 @@ public class LookUpVertexIndexResp implements TBase, java.io.Serializable, Clone
         case ROWS:
           if (field.type == TType.LIST) {
             {
-              TList _list224 = iprot.readListBegin();
-              this.rows = new ArrayList<VertexIndexData>(Math.max(0, _list224.size));
-              for (int _i225 = 0; 
-                   (_list224.size < 0) ? iprot.peekList() : (_i225 < _list224.size); 
-                   ++_i225)
+              TList _list247 = iprot.readListBegin();
+              this.rows = new ArrayList<VertexIndexData>(Math.max(0, _list247.size));
+              for (int _i248 = 0; 
+                   (_list247.size < 0) ? iprot.peekList() : (_i248 < _list247.size); 
+                   ++_i248)
               {
-                VertexIndexData _elem226;
-                _elem226 = new VertexIndexData();
-                _elem226.read(iprot);
-                this.rows.add(_elem226);
+                VertexIndexData _elem249;
+                _elem249 = new VertexIndexData();
+                _elem249.read(iprot);
+                this.rows.add(_elem249);
               }
               iprot.readListEnd();
             }
@@ -387,8 +387,8 @@ public class LookUpVertexIndexResp implements TBase, java.io.Serializable, Clone
         oprot.writeFieldBegin(ROWS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.rows.size()));
-          for (VertexIndexData _iter227 : this.rows)          {
-            _iter227.write(oprot);
+          for (VertexIndexData _iter250 : this.rows)          {
+            _iter250.write(oprot);
           }
           oprot.writeListEnd();
         }

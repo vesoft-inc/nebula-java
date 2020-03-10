@@ -27,15 +27,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetLeaderResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("GetLeaderResp");
+public class EdgeKeysResponse implements TBase, java.io.Serializable, Cloneable, Comparable<EdgeKeysResponse> {
+  private static final TStruct STRUCT_DESC = new TStruct("EdgeKeysResponse");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField LEADER_PARTS_FIELD_DESC = new TField("leader_parts", TType.MAP, (short)2);
+  private static final TField EDGE_KEYS_FIELD_DESC = new TField("edge_keys", TType.MAP, (short)2);
 
   public ResponseCommon result;
-  public Map<Integer,List<Integer>> leader_parts;
+  public Map<Long,List<EdgeKey>> edge_keys;
   public static final int RESULT = 1;
-  public static final int LEADER_PARTS = 2;
+  public static final int EDGE_KEYS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -45,63 +45,63 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(LEADER_PARTS, new FieldMetaData("leader_parts", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(EDGE_KEYS, new FieldMetaData("edge_keys", TFieldRequirementType.OPTIONAL, 
         new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
+            new FieldValueMetaData(TType.I64), 
             new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.I32)))));
+                new StructMetaData(TType.STRUCT, EdgeKey.class)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(GetLeaderResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(EdgeKeysResponse.class, metaDataMap);
   }
 
-  public GetLeaderResp() {
+  public EdgeKeysResponse() {
   }
 
-  public GetLeaderResp(
+  public EdgeKeysResponse(
     ResponseCommon result)
   {
     this();
     this.result = result;
   }
 
-  public GetLeaderResp(
+  public EdgeKeysResponse(
     ResponseCommon result,
-    Map<Integer,List<Integer>> leader_parts)
+    Map<Long,List<EdgeKey>> edge_keys)
   {
     this();
     this.result = result;
-    this.leader_parts = leader_parts;
+    this.edge_keys = edge_keys;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public GetLeaderResp(GetLeaderResp other) {
+  public EdgeKeysResponse(EdgeKeysResponse other) {
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetLeader_parts()) {
-      this.leader_parts = TBaseHelper.deepCopy(other.leader_parts);
+    if (other.isSetEdge_keys()) {
+      this.edge_keys = TBaseHelper.deepCopy(other.edge_keys);
     }
   }
 
-  public GetLeaderResp deepCopy() {
-    return new GetLeaderResp(this);
+  public EdgeKeysResponse deepCopy() {
+    return new EdgeKeysResponse(this);
   }
 
   @Deprecated
-  public GetLeaderResp clone() {
-    return new GetLeaderResp(this);
+  public EdgeKeysResponse clone() {
+    return new EdgeKeysResponse(this);
   }
 
   public ResponseCommon  getResult() {
     return this.result;
   }
 
-  public GetLeaderResp setResult(ResponseCommon result) {
+  public EdgeKeysResponse setResult(ResponseCommon result) {
     this.result = result;
     return this;
   }
@@ -121,27 +121,27 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public Map<Integer,List<Integer>>  getLeader_parts() {
-    return this.leader_parts;
+  public Map<Long,List<EdgeKey>>  getEdge_keys() {
+    return this.edge_keys;
   }
 
-  public GetLeaderResp setLeader_parts(Map<Integer,List<Integer>> leader_parts) {
-    this.leader_parts = leader_parts;
+  public EdgeKeysResponse setEdge_keys(Map<Long,List<EdgeKey>> edge_keys) {
+    this.edge_keys = edge_keys;
     return this;
   }
 
-  public void unsetLeader_parts() {
-    this.leader_parts = null;
+  public void unsetEdge_keys() {
+    this.edge_keys = null;
   }
 
-  // Returns true if field leader_parts is set (has been assigned a value) and false otherwise
-  public boolean isSetLeader_parts() {
-    return this.leader_parts != null;
+  // Returns true if field edge_keys is set (has been assigned a value) and false otherwise
+  public boolean isSetEdge_keys() {
+    return this.edge_keys != null;
   }
 
-  public void setLeader_partsIsSet(boolean value) {
+  public void setEdge_keysIsSet(boolean value) {
     if (!value) {
-      this.leader_parts = null;
+      this.edge_keys = null;
     }
   }
 
@@ -156,11 +156,11 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case LEADER_PARTS:
+    case EDGE_KEYS:
       if (value == null) {
-        unsetLeader_parts();
+        unsetEdge_keys();
       } else {
-        setLeader_parts((Map<Integer,List<Integer>>)value);
+        setEdge_keys((Map<Long,List<EdgeKey>>)value);
       }
       break;
 
@@ -174,8 +174,8 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     case RESULT:
       return getResult();
 
-    case LEADER_PARTS:
-      return getLeader_parts();
+    case EDGE_KEYS:
+      return getEdge_keys();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -187,8 +187,8 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     switch (fieldID) {
     case RESULT:
       return isSetResult();
-    case LEADER_PARTS:
-      return isSetLeader_parts();
+    case EDGE_KEYS:
+      return isSetEdge_keys();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -198,12 +198,12 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof GetLeaderResp)
-      return this.equals((GetLeaderResp)that);
+    if (that instanceof EdgeKeysResponse)
+      return this.equals((EdgeKeysResponse)that);
     return false;
   }
 
-  public boolean equals(GetLeaderResp that) {
+  public boolean equals(EdgeKeysResponse that) {
     if (that == null)
       return false;
     if (this == that)
@@ -218,12 +218,12 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
         return false;
     }
 
-    boolean this_present_leader_parts = true && this.isSetLeader_parts();
-    boolean that_present_leader_parts = true && that.isSetLeader_parts();
-    if (this_present_leader_parts || that_present_leader_parts) {
-      if (!(this_present_leader_parts && that_present_leader_parts))
+    boolean this_present_edge_keys = true && this.isSetEdge_keys();
+    boolean that_present_edge_keys = true && that.isSetEdge_keys();
+    if (this_present_edge_keys || that_present_edge_keys) {
+      if (!(this_present_edge_keys && that_present_edge_keys))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_parts, that.leader_parts))
+      if (!TBaseHelper.equalsNobinary(this.edge_keys, that.edge_keys))
         return false;
     }
 
@@ -239,16 +239,16 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     if (present_result)
       builder.append(result);
 
-    boolean present_leader_parts = true && (isSetLeader_parts());
-    builder.append(present_leader_parts);
-    if (present_leader_parts)
-      builder.append(leader_parts);
+    boolean present_edge_keys = true && (isSetEdge_keys());
+    builder.append(present_edge_keys);
+    if (present_edge_keys)
+      builder.append(edge_keys);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(GetLeaderResp other) {
+  public int compareTo(EdgeKeysResponse other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -267,11 +267,11 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetLeader_parts()).compareTo(other.isSetLeader_parts());
+    lastComparison = Boolean.valueOf(isSetEdge_keys()).compareTo(other.isSetEdge_keys());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(leader_parts, other.leader_parts);
+    lastComparison = TBaseHelper.compareTo(edge_keys, other.edge_keys);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -297,32 +297,33 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case LEADER_PARTS:
+        case EDGE_KEYS:
           if (field.type == TType.MAP) {
             {
-              TMap _map135 = iprot.readMapBegin();
-              this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map135.size));
-              for (int _i136 = 0; 
-                   (_map135.size < 0) ? iprot.peekMap() : (_i136 < _map135.size); 
-                   ++_i136)
+              TMap _map104 = iprot.readMapBegin();
+              this.edge_keys = new HashMap<Long,List<EdgeKey>>(Math.max(0, 2*_map104.size));
+              for (int _i105 = 0; 
+                   (_map104.size < 0) ? iprot.peekMap() : (_i105 < _map104.size); 
+                   ++_i105)
               {
-                int _key137;
-                List<Integer> _val138;
-                _key137 = iprot.readI32();
+                long _key106;
+                List<EdgeKey> _val107;
+                _key106 = iprot.readI64();
                 {
-                  TList _list139 = iprot.readListBegin();
-                  _val138 = new ArrayList<Integer>(Math.max(0, _list139.size));
-                  for (int _i140 = 0; 
-                       (_list139.size < 0) ? iprot.peekList() : (_i140 < _list139.size); 
-                       ++_i140)
+                  TList _list108 = iprot.readListBegin();
+                  _val107 = new ArrayList<EdgeKey>(Math.max(0, _list108.size));
+                  for (int _i109 = 0; 
+                       (_list108.size < 0) ? iprot.peekList() : (_i109 < _list108.size); 
+                       ++_i109)
                   {
-                    int _elem141;
-                    _elem141 = iprot.readI32();
-                    _val138.add(_elem141);
+                    EdgeKey _elem110;
+                    _elem110 = new EdgeKey();
+                    _elem110.read(iprot);
+                    _val107.add(_elem110);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_parts.put(_key137, _val138);
+                this.edge_keys.put(_key106, _val107);
               }
               iprot.readMapEnd();
             }
@@ -352,23 +353,25 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.leader_parts != null) {
-      oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_parts.size()));
-        for (Map.Entry<Integer, List<Integer>> _iter142 : this.leader_parts.entrySet())        {
-          oprot.writeI32(_iter142.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.I32, _iter142.getValue().size()));
-            for (int _iter143 : _iter142.getValue())            {
-              oprot.writeI32(_iter143);
+    if (this.edge_keys != null) {
+      if (isSetEdge_keys()) {
+        oprot.writeFieldBegin(EDGE_KEYS_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.I64, TType.LIST, this.edge_keys.size()));
+          for (Map.Entry<Long, List<EdgeKey>> _iter111 : this.edge_keys.entrySet())          {
+            oprot.writeI64(_iter111.getKey());
+            {
+              oprot.writeListBegin(new TList(TType.STRUCT, _iter111.getValue().size()));
+              for (EdgeKey _iter112 : _iter111.getValue())              {
+                _iter112.write(oprot);
+              }
+              oprot.writeListEnd();
             }
-            oprot.writeListEnd();
           }
+          oprot.writeMapEnd();
         }
-        oprot.writeMapEnd();
+        oprot.writeFieldEnd();
       }
-      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -389,7 +392,7 @@ public class GetLeaderResp implements TBase, java.io.Serializable, Cloneable, Co
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("GetLeaderResp");
+    StringBuilder sb = new StringBuilder("EdgeKeysResponse");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -405,17 +408,20 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
     }
     first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("leader_parts");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getLeader_parts() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getLeader_parts(), indent + 1, prettyPrint));
+    if (isSetEdge_keys())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("edge_keys");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getEdge_keys() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getEdge_keys(), indent + 1, prettyPrint));
+      }
+      first = false;
     }
-    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

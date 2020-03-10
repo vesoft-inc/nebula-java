@@ -365,29 +365,29 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map55 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map55.size));
-              for (int _i56 = 0; 
-                   (_map55.size < 0) ? iprot.peekMap() : (_i56 < _map55.size); 
-                   ++_i56)
+              TMap _map51 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map51.size));
+              for (int _i52 = 0; 
+                   (_map51.size < 0) ? iprot.peekMap() : (_i52 < _map51.size); 
+                   ++_i52)
               {
-                int _key57;
-                List<Long> _val58;
-                _key57 = iprot.readI32();
+                int _key53;
+                List<Long> _val54;
+                _key53 = iprot.readI32();
                 {
-                  TList _list59 = iprot.readListBegin();
-                  _val58 = new ArrayList<Long>(Math.max(0, _list59.size));
-                  for (int _i60 = 0; 
-                       (_list59.size < 0) ? iprot.peekList() : (_i60 < _list59.size); 
-                       ++_i60)
+                  TList _list55 = iprot.readListBegin();
+                  _val54 = new ArrayList<Long>(Math.max(0, _list55.size));
+                  for (int _i56 = 0; 
+                       (_list55.size < 0) ? iprot.peekList() : (_i56 < _list55.size); 
+                       ++_i56)
                   {
-                    long _elem61;
-                    _elem61 = iprot.readI64();
-                    _val58.add(_elem61);
+                    long _elem57;
+                    _elem57 = iprot.readI64();
+                    _val54.add(_elem57);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key57, _val58);
+                this.parts.put(_key53, _val54);
               }
               iprot.readMapEnd();
             }
@@ -398,16 +398,16 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list62 = iprot.readListBegin();
-              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list62.size));
-              for (int _i63 = 0; 
-                   (_list62.size < 0) ? iprot.peekList() : (_i63 < _list62.size); 
-                   ++_i63)
+              TList _list58 = iprot.readListBegin();
+              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list58.size));
+              for (int _i59 = 0; 
+                   (_list58.size < 0) ? iprot.peekList() : (_i59 < _list58.size); 
+                   ++_i59)
               {
-                PropDef _elem64;
-                _elem64 = new PropDef();
-                _elem64.read(iprot);
-                this.return_columns.add(_elem64);
+                PropDef _elem60;
+                _elem60 = new PropDef();
+                _elem60.read(iprot);
+                this.return_columns.add(_elem60);
               }
               iprot.readListEnd();
             }
@@ -439,12 +439,12 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Long>> _iter65 : this.parts.entrySet())        {
-          oprot.writeI32(_iter65.getKey());
+        for (Map.Entry<Integer, List<Long>> _iter61 : this.parts.entrySet())        {
+          oprot.writeI32(_iter61.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I64, _iter65.getValue().size()));
-            for (long _iter66 : _iter65.getValue())            {
-              oprot.writeI64(_iter66);
+            oprot.writeListBegin(new TList(TType.I64, _iter61.getValue().size()));
+            for (long _iter62 : _iter61.getValue())            {
+              oprot.writeI64(_iter62);
             }
             oprot.writeListEnd();
           }
@@ -457,8 +457,8 @@ public class VertexPropRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (PropDef _iter67 : this.return_columns)        {
-          _iter67.write(oprot);
+        for (PropDef _iter63 : this.return_columns)        {
+          _iter63.write(oprot);
         }
         oprot.writeListEnd();
       }

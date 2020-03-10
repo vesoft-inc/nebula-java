@@ -43,11 +43,11 @@ public class StorageService {
 
     public ExecResponse addEdges(AddEdgesRequest req) throws TException;
 
-    public EdgeKeyResponse getEdgeKeys(EdgeKeyRequest req) throws TException;
+    public EdgeKeysResponse getEdgeKeys(EdgeKeysRequest req) throws TException;
 
     public ExecResponse deleteEdges(DeleteEdgesRequest req) throws TException;
 
-    public ExecResponse deleteVertex(DeleteVertexRequest req) throws TException;
+    public ExecResponse deleteVertices(DeleteVerticesRequest req) throws TException;
 
     public UpdateResponse updateVertex(UpdateVertexRequest req) throws TException;
 
@@ -109,11 +109,11 @@ public class StorageService {
 
     public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void getEdgeKeys(EdgeKeyRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void getEdgeKeys(EdgeKeysRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void deleteVertex(DeleteVertexRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void deleteVertices(DeleteVerticesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler) throws TException;
 
@@ -460,7 +460,7 @@ public class StorageService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "addEdges failed: unknown result");
     }
 
-    public EdgeKeyResponse getEdgeKeys(EdgeKeyRequest req) throws TException
+    public EdgeKeysResponse getEdgeKeys(EdgeKeysRequest req) throws TException
     {
       ContextStack ctx = getContextStack("StorageService.getEdgeKeys", null);
       this.setContextStack(ctx);
@@ -468,7 +468,7 @@ public class StorageService {
       return recv_getEdgeKeys();
     }
 
-    public void send_getEdgeKeys(EdgeKeyRequest req) throws TException
+    public void send_getEdgeKeys(EdgeKeysRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
       super.preWrite(ctx, "StorageService.getEdgeKeys", null);
@@ -482,7 +482,7 @@ public class StorageService {
       return;
     }
 
-    public EdgeKeyResponse recv_getEdgeKeys() throws TException
+    public EdgeKeysResponse recv_getEdgeKeys() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
@@ -550,49 +550,49 @@ public class StorageService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "deleteEdges failed: unknown result");
     }
 
-    public ExecResponse deleteVertex(DeleteVertexRequest req) throws TException
+    public ExecResponse deleteVertices(DeleteVerticesRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("StorageService.deleteVertex", null);
+      ContextStack ctx = getContextStack("StorageService.deleteVertices", null);
       this.setContextStack(ctx);
-      send_deleteVertex(req);
-      return recv_deleteVertex();
+      send_deleteVertices(req);
+      return recv_deleteVertices();
     }
 
-    public void send_deleteVertex(DeleteVertexRequest req) throws TException
+    public void send_deleteVertices(DeleteVerticesRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "StorageService.deleteVertex", null);
-      oprot_.writeMessageBegin(new TMessage("deleteVertex", TMessageType.CALL, seqid_));
-      deleteVertex_args args = new deleteVertex_args();
+      super.preWrite(ctx, "StorageService.deleteVertices", null);
+      oprot_.writeMessageBegin(new TMessage("deleteVertices", TMessageType.CALL, seqid_));
+      deleteVertices_args args = new deleteVertices_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "StorageService.deleteVertex", args);
+      super.postWrite(ctx, "StorageService.deleteVertices", args);
       return;
     }
 
-    public ExecResponse recv_deleteVertex() throws TException
+    public ExecResponse recv_deleteVertices() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "StorageService.deleteVertex");
+      super.preRead(ctx, "StorageService.deleteVertices");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      deleteVertex_result result = new deleteVertex_result();
+      deleteVertices_result result = new deleteVertices_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "StorageService.deleteVertex", result);
+      super.postRead(ctx, "StorageService.deleteVertices", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "deleteVertex failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "deleteVertices failed: unknown result");
     }
 
     public UpdateResponse updateVertex(UpdateVertexRequest req) throws TException
@@ -1603,17 +1603,17 @@ public class StorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void getBound(GetNeighborsRequest req, AsyncMethodCallback resultHandler274) throws TException {
+    public void getBound(GetNeighborsRequest req, AsyncMethodCallback resultHandler297) throws TException {
       checkReady();
-      getBound_call method_call = new getBound_call(req, resultHandler274, this, ___protocolFactory, ___transport);
+      getBound_call method_call = new getBound_call(req, resultHandler297, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getBound_call extends TAsyncMethodCall {
       private GetNeighborsRequest req;
-      public getBound_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler275, TAsyncClient client271, TProtocolFactory protocolFactory272, TNonblockingTransport transport273) throws TException {
-        super(client271, protocolFactory272, transport273, resultHandler275, false);
+      public getBound_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler298, TAsyncClient client294, TProtocolFactory protocolFactory295, TNonblockingTransport transport296) throws TException {
+        super(client294, protocolFactory295, transport296, resultHandler298, false);
         this.req = req;
       }
 
@@ -1635,17 +1635,17 @@ public class StorageService {
       }
     }
 
-    public void boundStats(GetNeighborsRequest req, AsyncMethodCallback resultHandler279) throws TException {
+    public void boundStats(GetNeighborsRequest req, AsyncMethodCallback resultHandler302) throws TException {
       checkReady();
-      boundStats_call method_call = new boundStats_call(req, resultHandler279, this, ___protocolFactory, ___transport);
+      boundStats_call method_call = new boundStats_call(req, resultHandler302, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class boundStats_call extends TAsyncMethodCall {
       private GetNeighborsRequest req;
-      public boundStats_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler280, TAsyncClient client276, TProtocolFactory protocolFactory277, TNonblockingTransport transport278) throws TException {
-        super(client276, protocolFactory277, transport278, resultHandler280, false);
+      public boundStats_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler303, TAsyncClient client299, TProtocolFactory protocolFactory300, TNonblockingTransport transport301) throws TException {
+        super(client299, protocolFactory300, transport301, resultHandler303, false);
         this.req = req;
       }
 
@@ -1667,17 +1667,17 @@ public class StorageService {
       }
     }
 
-    public void getProps(VertexPropRequest req, AsyncMethodCallback resultHandler284) throws TException {
+    public void getProps(VertexPropRequest req, AsyncMethodCallback resultHandler307) throws TException {
       checkReady();
-      getProps_call method_call = new getProps_call(req, resultHandler284, this, ___protocolFactory, ___transport);
+      getProps_call method_call = new getProps_call(req, resultHandler307, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getProps_call extends TAsyncMethodCall {
       private VertexPropRequest req;
-      public getProps_call(VertexPropRequest req, AsyncMethodCallback resultHandler285, TAsyncClient client281, TProtocolFactory protocolFactory282, TNonblockingTransport transport283) throws TException {
-        super(client281, protocolFactory282, transport283, resultHandler285, false);
+      public getProps_call(VertexPropRequest req, AsyncMethodCallback resultHandler308, TAsyncClient client304, TProtocolFactory protocolFactory305, TNonblockingTransport transport306) throws TException {
+        super(client304, protocolFactory305, transport306, resultHandler308, false);
         this.req = req;
       }
 
@@ -1699,17 +1699,17 @@ public class StorageService {
       }
     }
 
-    public void getEdgeProps(EdgePropRequest req, AsyncMethodCallback resultHandler289) throws TException {
+    public void getEdgeProps(EdgePropRequest req, AsyncMethodCallback resultHandler312) throws TException {
       checkReady();
-      getEdgeProps_call method_call = new getEdgeProps_call(req, resultHandler289, this, ___protocolFactory, ___transport);
+      getEdgeProps_call method_call = new getEdgeProps_call(req, resultHandler312, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getEdgeProps_call extends TAsyncMethodCall {
       private EdgePropRequest req;
-      public getEdgeProps_call(EdgePropRequest req, AsyncMethodCallback resultHandler290, TAsyncClient client286, TProtocolFactory protocolFactory287, TNonblockingTransport transport288) throws TException {
-        super(client286, protocolFactory287, transport288, resultHandler290, false);
+      public getEdgeProps_call(EdgePropRequest req, AsyncMethodCallback resultHandler313, TAsyncClient client309, TProtocolFactory protocolFactory310, TNonblockingTransport transport311) throws TException {
+        super(client309, protocolFactory310, transport311, resultHandler313, false);
         this.req = req;
       }
 
@@ -1731,17 +1731,17 @@ public class StorageService {
       }
     }
 
-    public void addVertices(AddVerticesRequest req, AsyncMethodCallback resultHandler294) throws TException {
+    public void addVertices(AddVerticesRequest req, AsyncMethodCallback resultHandler317) throws TException {
       checkReady();
-      addVertices_call method_call = new addVertices_call(req, resultHandler294, this, ___protocolFactory, ___transport);
+      addVertices_call method_call = new addVertices_call(req, resultHandler317, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addVertices_call extends TAsyncMethodCall {
       private AddVerticesRequest req;
-      public addVertices_call(AddVerticesRequest req, AsyncMethodCallback resultHandler295, TAsyncClient client291, TProtocolFactory protocolFactory292, TNonblockingTransport transport293) throws TException {
-        super(client291, protocolFactory292, transport293, resultHandler295, false);
+      public addVertices_call(AddVerticesRequest req, AsyncMethodCallback resultHandler318, TAsyncClient client314, TProtocolFactory protocolFactory315, TNonblockingTransport transport316) throws TException {
+        super(client314, protocolFactory315, transport316, resultHandler318, false);
         this.req = req;
       }
 
@@ -1763,17 +1763,17 @@ public class StorageService {
       }
     }
 
-    public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler299) throws TException {
+    public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler322) throws TException {
       checkReady();
-      addEdges_call method_call = new addEdges_call(req, resultHandler299, this, ___protocolFactory, ___transport);
+      addEdges_call method_call = new addEdges_call(req, resultHandler322, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addEdges_call extends TAsyncMethodCall {
       private AddEdgesRequest req;
-      public addEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler300, TAsyncClient client296, TProtocolFactory protocolFactory297, TNonblockingTransport transport298) throws TException {
-        super(client296, protocolFactory297, transport298, resultHandler300, false);
+      public addEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler323, TAsyncClient client319, TProtocolFactory protocolFactory320, TNonblockingTransport transport321) throws TException {
+        super(client319, protocolFactory320, transport321, resultHandler323, false);
         this.req = req;
       }
 
@@ -1795,17 +1795,17 @@ public class StorageService {
       }
     }
 
-    public void getEdgeKeys(EdgeKeyRequest req, AsyncMethodCallback resultHandler304) throws TException {
+    public void getEdgeKeys(EdgeKeysRequest req, AsyncMethodCallback resultHandler327) throws TException {
       checkReady();
-      getEdgeKeys_call method_call = new getEdgeKeys_call(req, resultHandler304, this, ___protocolFactory, ___transport);
+      getEdgeKeys_call method_call = new getEdgeKeys_call(req, resultHandler327, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getEdgeKeys_call extends TAsyncMethodCall {
-      private EdgeKeyRequest req;
-      public getEdgeKeys_call(EdgeKeyRequest req, AsyncMethodCallback resultHandler305, TAsyncClient client301, TProtocolFactory protocolFactory302, TNonblockingTransport transport303) throws TException {
-        super(client301, protocolFactory302, transport303, resultHandler305, false);
+      private EdgeKeysRequest req;
+      public getEdgeKeys_call(EdgeKeysRequest req, AsyncMethodCallback resultHandler328, TAsyncClient client324, TProtocolFactory protocolFactory325, TNonblockingTransport transport326) throws TException {
+        super(client324, protocolFactory325, transport326, resultHandler328, false);
         this.req = req;
       }
 
@@ -1817,7 +1817,7 @@ public class StorageService {
         prot.writeMessageEnd();
       }
 
-      public EdgeKeyResponse getResult() throws TException {
+      public EdgeKeysResponse getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1827,17 +1827,17 @@ public class StorageService {
       }
     }
 
-    public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler309) throws TException {
+    public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler332) throws TException {
       checkReady();
-      deleteEdges_call method_call = new deleteEdges_call(req, resultHandler309, this, ___protocolFactory, ___transport);
+      deleteEdges_call method_call = new deleteEdges_call(req, resultHandler332, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class deleteEdges_call extends TAsyncMethodCall {
       private DeleteEdgesRequest req;
-      public deleteEdges_call(DeleteEdgesRequest req, AsyncMethodCallback resultHandler310, TAsyncClient client306, TProtocolFactory protocolFactory307, TNonblockingTransport transport308) throws TException {
-        super(client306, protocolFactory307, transport308, resultHandler310, false);
+      public deleteEdges_call(DeleteEdgesRequest req, AsyncMethodCallback resultHandler333, TAsyncClient client329, TProtocolFactory protocolFactory330, TNonblockingTransport transport331) throws TException {
+        super(client329, protocolFactory330, transport331, resultHandler333, false);
         this.req = req;
       }
 
@@ -1859,23 +1859,23 @@ public class StorageService {
       }
     }
 
-    public void deleteVertex(DeleteVertexRequest req, AsyncMethodCallback resultHandler314) throws TException {
+    public void deleteVertices(DeleteVerticesRequest req, AsyncMethodCallback resultHandler337) throws TException {
       checkReady();
-      deleteVertex_call method_call = new deleteVertex_call(req, resultHandler314, this, ___protocolFactory, ___transport);
+      deleteVertices_call method_call = new deleteVertices_call(req, resultHandler337, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class deleteVertex_call extends TAsyncMethodCall {
-      private DeleteVertexRequest req;
-      public deleteVertex_call(DeleteVertexRequest req, AsyncMethodCallback resultHandler315, TAsyncClient client311, TProtocolFactory protocolFactory312, TNonblockingTransport transport313) throws TException {
-        super(client311, protocolFactory312, transport313, resultHandler315, false);
+    public static class deleteVertices_call extends TAsyncMethodCall {
+      private DeleteVerticesRequest req;
+      public deleteVertices_call(DeleteVerticesRequest req, AsyncMethodCallback resultHandler338, TAsyncClient client334, TProtocolFactory protocolFactory335, TNonblockingTransport transport336) throws TException {
+        super(client334, protocolFactory335, transport336, resultHandler338, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("deleteVertex", TMessageType.CALL, 0));
-        deleteVertex_args args = new deleteVertex_args();
+        prot.writeMessageBegin(new TMessage("deleteVertices", TMessageType.CALL, 0));
+        deleteVertices_args args = new deleteVertices_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
@@ -1887,21 +1887,21 @@ public class StorageService {
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_deleteVertex();
+        return (new Client(prot)).recv_deleteVertices();
       }
     }
 
-    public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler319) throws TException {
+    public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler342) throws TException {
       checkReady();
-      updateVertex_call method_call = new updateVertex_call(req, resultHandler319, this, ___protocolFactory, ___transport);
+      updateVertex_call method_call = new updateVertex_call(req, resultHandler342, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class updateVertex_call extends TAsyncMethodCall {
       private UpdateVertexRequest req;
-      public updateVertex_call(UpdateVertexRequest req, AsyncMethodCallback resultHandler320, TAsyncClient client316, TProtocolFactory protocolFactory317, TNonblockingTransport transport318) throws TException {
-        super(client316, protocolFactory317, transport318, resultHandler320, false);
+      public updateVertex_call(UpdateVertexRequest req, AsyncMethodCallback resultHandler343, TAsyncClient client339, TProtocolFactory protocolFactory340, TNonblockingTransport transport341) throws TException {
+        super(client339, protocolFactory340, transport341, resultHandler343, false);
         this.req = req;
       }
 
@@ -1923,17 +1923,17 @@ public class StorageService {
       }
     }
 
-    public void updateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler324) throws TException {
+    public void updateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler347) throws TException {
       checkReady();
-      updateEdge_call method_call = new updateEdge_call(req, resultHandler324, this, ___protocolFactory, ___transport);
+      updateEdge_call method_call = new updateEdge_call(req, resultHandler347, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class updateEdge_call extends TAsyncMethodCall {
       private UpdateEdgeRequest req;
-      public updateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler325, TAsyncClient client321, TProtocolFactory protocolFactory322, TNonblockingTransport transport323) throws TException {
-        super(client321, protocolFactory322, transport323, resultHandler325, false);
+      public updateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler348, TAsyncClient client344, TProtocolFactory protocolFactory345, TNonblockingTransport transport346) throws TException {
+        super(client344, protocolFactory345, transport346, resultHandler348, false);
         this.req = req;
       }
 
@@ -1955,17 +1955,17 @@ public class StorageService {
       }
     }
 
-    public void scanEdge(ScanEdgeRequest req, AsyncMethodCallback resultHandler329) throws TException {
+    public void scanEdge(ScanEdgeRequest req, AsyncMethodCallback resultHandler352) throws TException {
       checkReady();
-      scanEdge_call method_call = new scanEdge_call(req, resultHandler329, this, ___protocolFactory, ___transport);
+      scanEdge_call method_call = new scanEdge_call(req, resultHandler352, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scanEdge_call extends TAsyncMethodCall {
       private ScanEdgeRequest req;
-      public scanEdge_call(ScanEdgeRequest req, AsyncMethodCallback resultHandler330, TAsyncClient client326, TProtocolFactory protocolFactory327, TNonblockingTransport transport328) throws TException {
-        super(client326, protocolFactory327, transport328, resultHandler330, false);
+      public scanEdge_call(ScanEdgeRequest req, AsyncMethodCallback resultHandler353, TAsyncClient client349, TProtocolFactory protocolFactory350, TNonblockingTransport transport351) throws TException {
+        super(client349, protocolFactory350, transport351, resultHandler353, false);
         this.req = req;
       }
 
@@ -1987,17 +1987,17 @@ public class StorageService {
       }
     }
 
-    public void scanVertex(ScanVertexRequest req, AsyncMethodCallback resultHandler334) throws TException {
+    public void scanVertex(ScanVertexRequest req, AsyncMethodCallback resultHandler357) throws TException {
       checkReady();
-      scanVertex_call method_call = new scanVertex_call(req, resultHandler334, this, ___protocolFactory, ___transport);
+      scanVertex_call method_call = new scanVertex_call(req, resultHandler357, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scanVertex_call extends TAsyncMethodCall {
       private ScanVertexRequest req;
-      public scanVertex_call(ScanVertexRequest req, AsyncMethodCallback resultHandler335, TAsyncClient client331, TProtocolFactory protocolFactory332, TNonblockingTransport transport333) throws TException {
-        super(client331, protocolFactory332, transport333, resultHandler335, false);
+      public scanVertex_call(ScanVertexRequest req, AsyncMethodCallback resultHandler358, TAsyncClient client354, TProtocolFactory protocolFactory355, TNonblockingTransport transport356) throws TException {
+        super(client354, protocolFactory355, transport356, resultHandler358, false);
         this.req = req;
       }
 
@@ -2019,17 +2019,17 @@ public class StorageService {
       }
     }
 
-    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler339) throws TException {
+    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler362) throws TException {
       checkReady();
-      transLeader_call method_call = new transLeader_call(req, resultHandler339, this, ___protocolFactory, ___transport);
+      transLeader_call method_call = new transLeader_call(req, resultHandler362, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class transLeader_call extends TAsyncMethodCall {
       private TransLeaderReq req;
-      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler340, TAsyncClient client336, TProtocolFactory protocolFactory337, TNonblockingTransport transport338) throws TException {
-        super(client336, protocolFactory337, transport338, resultHandler340, false);
+      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler363, TAsyncClient client359, TProtocolFactory protocolFactory360, TNonblockingTransport transport361) throws TException {
+        super(client359, protocolFactory360, transport361, resultHandler363, false);
         this.req = req;
       }
 
@@ -2051,17 +2051,17 @@ public class StorageService {
       }
     }
 
-    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler344) throws TException {
+    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler367) throws TException {
       checkReady();
-      addPart_call method_call = new addPart_call(req, resultHandler344, this, ___protocolFactory, ___transport);
+      addPart_call method_call = new addPart_call(req, resultHandler367, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addPart_call extends TAsyncMethodCall {
       private AddPartReq req;
-      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler345, TAsyncClient client341, TProtocolFactory protocolFactory342, TNonblockingTransport transport343) throws TException {
-        super(client341, protocolFactory342, transport343, resultHandler345, false);
+      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler368, TAsyncClient client364, TProtocolFactory protocolFactory365, TNonblockingTransport transport366) throws TException {
+        super(client364, protocolFactory365, transport366, resultHandler368, false);
         this.req = req;
       }
 
@@ -2083,17 +2083,17 @@ public class StorageService {
       }
     }
 
-    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler349) throws TException {
+    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler372) throws TException {
       checkReady();
-      addLearner_call method_call = new addLearner_call(req, resultHandler349, this, ___protocolFactory, ___transport);
+      addLearner_call method_call = new addLearner_call(req, resultHandler372, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addLearner_call extends TAsyncMethodCall {
       private AddLearnerReq req;
-      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler350, TAsyncClient client346, TProtocolFactory protocolFactory347, TNonblockingTransport transport348) throws TException {
-        super(client346, protocolFactory347, transport348, resultHandler350, false);
+      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler373, TAsyncClient client369, TProtocolFactory protocolFactory370, TNonblockingTransport transport371) throws TException {
+        super(client369, protocolFactory370, transport371, resultHandler373, false);
         this.req = req;
       }
 
@@ -2115,17 +2115,17 @@ public class StorageService {
       }
     }
 
-    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler354) throws TException {
+    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler377) throws TException {
       checkReady();
-      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler354, this, ___protocolFactory, ___transport);
+      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler377, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class waitingForCatchUpData_call extends TAsyncMethodCall {
       private CatchUpDataReq req;
-      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler355, TAsyncClient client351, TProtocolFactory protocolFactory352, TNonblockingTransport transport353) throws TException {
-        super(client351, protocolFactory352, transport353, resultHandler355, false);
+      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler378, TAsyncClient client374, TProtocolFactory protocolFactory375, TNonblockingTransport transport376) throws TException {
+        super(client374, protocolFactory375, transport376, resultHandler378, false);
         this.req = req;
       }
 
@@ -2147,17 +2147,17 @@ public class StorageService {
       }
     }
 
-    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler359) throws TException {
+    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler382) throws TException {
       checkReady();
-      removePart_call method_call = new removePart_call(req, resultHandler359, this, ___protocolFactory, ___transport);
+      removePart_call method_call = new removePart_call(req, resultHandler382, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class removePart_call extends TAsyncMethodCall {
       private RemovePartReq req;
-      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler360, TAsyncClient client356, TProtocolFactory protocolFactory357, TNonblockingTransport transport358) throws TException {
-        super(client356, protocolFactory357, transport358, resultHandler360, false);
+      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler383, TAsyncClient client379, TProtocolFactory protocolFactory380, TNonblockingTransport transport381) throws TException {
+        super(client379, protocolFactory380, transport381, resultHandler383, false);
         this.req = req;
       }
 
@@ -2179,17 +2179,17 @@ public class StorageService {
       }
     }
 
-    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler364) throws TException {
+    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler387) throws TException {
       checkReady();
-      memberChange_call method_call = new memberChange_call(req, resultHandler364, this, ___protocolFactory, ___transport);
+      memberChange_call method_call = new memberChange_call(req, resultHandler387, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class memberChange_call extends TAsyncMethodCall {
       private MemberChangeReq req;
-      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler365, TAsyncClient client361, TProtocolFactory protocolFactory362, TNonblockingTransport transport363) throws TException {
-        super(client361, protocolFactory362, transport363, resultHandler365, false);
+      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler388, TAsyncClient client384, TProtocolFactory protocolFactory385, TNonblockingTransport transport386) throws TException {
+        super(client384, protocolFactory385, transport386, resultHandler388, false);
         this.req = req;
       }
 
@@ -2211,17 +2211,17 @@ public class StorageService {
       }
     }
 
-    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler369) throws TException {
+    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler392) throws TException {
       checkReady();
-      checkPeers_call method_call = new checkPeers_call(req, resultHandler369, this, ___protocolFactory, ___transport);
+      checkPeers_call method_call = new checkPeers_call(req, resultHandler392, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class checkPeers_call extends TAsyncMethodCall {
       private CheckPeersReq req;
-      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler370, TAsyncClient client366, TProtocolFactory protocolFactory367, TNonblockingTransport transport368) throws TException {
-        super(client366, protocolFactory367, transport368, resultHandler370, false);
+      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler393, TAsyncClient client389, TProtocolFactory protocolFactory390, TNonblockingTransport transport391) throws TException {
+        super(client389, protocolFactory390, transport391, resultHandler393, false);
         this.req = req;
       }
 
@@ -2243,17 +2243,17 @@ public class StorageService {
       }
     }
 
-    public void getLeaderPart(GetLeaderReq req, AsyncMethodCallback resultHandler374) throws TException {
+    public void getLeaderPart(GetLeaderReq req, AsyncMethodCallback resultHandler397) throws TException {
       checkReady();
-      getLeaderPart_call method_call = new getLeaderPart_call(req, resultHandler374, this, ___protocolFactory, ___transport);
+      getLeaderPart_call method_call = new getLeaderPart_call(req, resultHandler397, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getLeaderPart_call extends TAsyncMethodCall {
       private GetLeaderReq req;
-      public getLeaderPart_call(GetLeaderReq req, AsyncMethodCallback resultHandler375, TAsyncClient client371, TProtocolFactory protocolFactory372, TNonblockingTransport transport373) throws TException {
-        super(client371, protocolFactory372, transport373, resultHandler375, false);
+      public getLeaderPart_call(GetLeaderReq req, AsyncMethodCallback resultHandler398, TAsyncClient client394, TProtocolFactory protocolFactory395, TNonblockingTransport transport396) throws TException {
+        super(client394, protocolFactory395, transport396, resultHandler398, false);
         this.req = req;
       }
 
@@ -2275,17 +2275,17 @@ public class StorageService {
       }
     }
 
-    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler379) throws TException {
+    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler402) throws TException {
       checkReady();
-      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler379, this, ___protocolFactory, ___transport);
+      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler402, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createCheckpoint_call extends TAsyncMethodCall {
       private CreateCPRequest req;
-      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler380, TAsyncClient client376, TProtocolFactory protocolFactory377, TNonblockingTransport transport378) throws TException {
-        super(client376, protocolFactory377, transport378, resultHandler380, false);
+      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler403, TAsyncClient client399, TProtocolFactory protocolFactory400, TNonblockingTransport transport401) throws TException {
+        super(client399, protocolFactory400, transport401, resultHandler403, false);
         this.req = req;
       }
 
@@ -2307,17 +2307,17 @@ public class StorageService {
       }
     }
 
-    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler384) throws TException {
+    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler407) throws TException {
       checkReady();
-      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler384, this, ___protocolFactory, ___transport);
+      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler407, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropCheckpoint_call extends TAsyncMethodCall {
       private DropCPRequest req;
-      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler385, TAsyncClient client381, TProtocolFactory protocolFactory382, TNonblockingTransport transport383) throws TException {
-        super(client381, protocolFactory382, transport383, resultHandler385, false);
+      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler408, TAsyncClient client404, TProtocolFactory protocolFactory405, TNonblockingTransport transport406) throws TException {
+        super(client404, protocolFactory405, transport406, resultHandler408, false);
         this.req = req;
       }
 
@@ -2339,17 +2339,17 @@ public class StorageService {
       }
     }
 
-    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler389) throws TException {
+    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler412) throws TException {
       checkReady();
-      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler389, this, ___protocolFactory, ___transport);
+      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler412, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class blockingWrites_call extends TAsyncMethodCall {
       private BlockingSignRequest req;
-      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler390, TAsyncClient client386, TProtocolFactory protocolFactory387, TNonblockingTransport transport388) throws TException {
-        super(client386, protocolFactory387, transport388, resultHandler390, false);
+      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler413, TAsyncClient client409, TProtocolFactory protocolFactory410, TNonblockingTransport transport411) throws TException {
+        super(client409, protocolFactory410, transport411, resultHandler413, false);
         this.req = req;
       }
 
@@ -2371,17 +2371,17 @@ public class StorageService {
       }
     }
 
-    public void put(PutRequest req, AsyncMethodCallback resultHandler394) throws TException {
+    public void put(PutRequest req, AsyncMethodCallback resultHandler417) throws TException {
       checkReady();
-      put_call method_call = new put_call(req, resultHandler394, this, ___protocolFactory, ___transport);
+      put_call method_call = new put_call(req, resultHandler417, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class put_call extends TAsyncMethodCall {
       private PutRequest req;
-      public put_call(PutRequest req, AsyncMethodCallback resultHandler395, TAsyncClient client391, TProtocolFactory protocolFactory392, TNonblockingTransport transport393) throws TException {
-        super(client391, protocolFactory392, transport393, resultHandler395, false);
+      public put_call(PutRequest req, AsyncMethodCallback resultHandler418, TAsyncClient client414, TProtocolFactory protocolFactory415, TNonblockingTransport transport416) throws TException {
+        super(client414, protocolFactory415, transport416, resultHandler418, false);
         this.req = req;
       }
 
@@ -2403,17 +2403,17 @@ public class StorageService {
       }
     }
 
-    public void get(GetRequest req, AsyncMethodCallback resultHandler399) throws TException {
+    public void get(GetRequest req, AsyncMethodCallback resultHandler422) throws TException {
       checkReady();
-      get_call method_call = new get_call(req, resultHandler399, this, ___protocolFactory, ___transport);
+      get_call method_call = new get_call(req, resultHandler422, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class get_call extends TAsyncMethodCall {
       private GetRequest req;
-      public get_call(GetRequest req, AsyncMethodCallback resultHandler400, TAsyncClient client396, TProtocolFactory protocolFactory397, TNonblockingTransport transport398) throws TException {
-        super(client396, protocolFactory397, transport398, resultHandler400, false);
+      public get_call(GetRequest req, AsyncMethodCallback resultHandler423, TAsyncClient client419, TProtocolFactory protocolFactory420, TNonblockingTransport transport421) throws TException {
+        super(client419, protocolFactory420, transport421, resultHandler423, false);
         this.req = req;
       }
 
@@ -2435,17 +2435,17 @@ public class StorageService {
       }
     }
 
-    public void remove(RemoveRequest req, AsyncMethodCallback resultHandler404) throws TException {
+    public void remove(RemoveRequest req, AsyncMethodCallback resultHandler427) throws TException {
       checkReady();
-      remove_call method_call = new remove_call(req, resultHandler404, this, ___protocolFactory, ___transport);
+      remove_call method_call = new remove_call(req, resultHandler427, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class remove_call extends TAsyncMethodCall {
       private RemoveRequest req;
-      public remove_call(RemoveRequest req, AsyncMethodCallback resultHandler405, TAsyncClient client401, TProtocolFactory protocolFactory402, TNonblockingTransport transport403) throws TException {
-        super(client401, protocolFactory402, transport403, resultHandler405, false);
+      public remove_call(RemoveRequest req, AsyncMethodCallback resultHandler428, TAsyncClient client424, TProtocolFactory protocolFactory425, TNonblockingTransport transport426) throws TException {
+        super(client424, protocolFactory425, transport426, resultHandler428, false);
         this.req = req;
       }
 
@@ -2467,17 +2467,17 @@ public class StorageService {
       }
     }
 
-    public void removeRange(RemoveRangeRequest req, AsyncMethodCallback resultHandler409) throws TException {
+    public void removeRange(RemoveRangeRequest req, AsyncMethodCallback resultHandler432) throws TException {
       checkReady();
-      removeRange_call method_call = new removeRange_call(req, resultHandler409, this, ___protocolFactory, ___transport);
+      removeRange_call method_call = new removeRange_call(req, resultHandler432, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class removeRange_call extends TAsyncMethodCall {
       private RemoveRangeRequest req;
-      public removeRange_call(RemoveRangeRequest req, AsyncMethodCallback resultHandler410, TAsyncClient client406, TProtocolFactory protocolFactory407, TNonblockingTransport transport408) throws TException {
-        super(client406, protocolFactory407, transport408, resultHandler410, false);
+      public removeRange_call(RemoveRangeRequest req, AsyncMethodCallback resultHandler433, TAsyncClient client429, TProtocolFactory protocolFactory430, TNonblockingTransport transport431) throws TException {
+        super(client429, protocolFactory430, transport431, resultHandler433, false);
         this.req = req;
       }
 
@@ -2499,17 +2499,17 @@ public class StorageService {
       }
     }
 
-    public void getUUID(GetUUIDReq req, AsyncMethodCallback resultHandler414) throws TException {
+    public void getUUID(GetUUIDReq req, AsyncMethodCallback resultHandler437) throws TException {
       checkReady();
-      getUUID_call method_call = new getUUID_call(req, resultHandler414, this, ___protocolFactory, ___transport);
+      getUUID_call method_call = new getUUID_call(req, resultHandler437, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getUUID_call extends TAsyncMethodCall {
       private GetUUIDReq req;
-      public getUUID_call(GetUUIDReq req, AsyncMethodCallback resultHandler415, TAsyncClient client411, TProtocolFactory protocolFactory412, TNonblockingTransport transport413) throws TException {
-        super(client411, protocolFactory412, transport413, resultHandler415, false);
+      public getUUID_call(GetUUIDReq req, AsyncMethodCallback resultHandler438, TAsyncClient client434, TProtocolFactory protocolFactory435, TNonblockingTransport transport436) throws TException {
+        super(client434, protocolFactory435, transport436, resultHandler438, false);
         this.req = req;
       }
 
@@ -2531,17 +2531,17 @@ public class StorageService {
       }
     }
 
-    public void lookUpVertexIndex(LookUpIndexRequest req, AsyncMethodCallback resultHandler419) throws TException {
+    public void lookUpVertexIndex(LookUpIndexRequest req, AsyncMethodCallback resultHandler442) throws TException {
       checkReady();
-      lookUpVertexIndex_call method_call = new lookUpVertexIndex_call(req, resultHandler419, this, ___protocolFactory, ___transport);
+      lookUpVertexIndex_call method_call = new lookUpVertexIndex_call(req, resultHandler442, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class lookUpVertexIndex_call extends TAsyncMethodCall {
       private LookUpIndexRequest req;
-      public lookUpVertexIndex_call(LookUpIndexRequest req, AsyncMethodCallback resultHandler420, TAsyncClient client416, TProtocolFactory protocolFactory417, TNonblockingTransport transport418) throws TException {
-        super(client416, protocolFactory417, transport418, resultHandler420, false);
+      public lookUpVertexIndex_call(LookUpIndexRequest req, AsyncMethodCallback resultHandler443, TAsyncClient client439, TProtocolFactory protocolFactory440, TNonblockingTransport transport441) throws TException {
+        super(client439, protocolFactory440, transport441, resultHandler443, false);
         this.req = req;
       }
 
@@ -2563,17 +2563,17 @@ public class StorageService {
       }
     }
 
-    public void lookUpEdgeIndex(LookUpIndexRequest req, AsyncMethodCallback resultHandler424) throws TException {
+    public void lookUpEdgeIndex(LookUpIndexRequest req, AsyncMethodCallback resultHandler447) throws TException {
       checkReady();
-      lookUpEdgeIndex_call method_call = new lookUpEdgeIndex_call(req, resultHandler424, this, ___protocolFactory, ___transport);
+      lookUpEdgeIndex_call method_call = new lookUpEdgeIndex_call(req, resultHandler447, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class lookUpEdgeIndex_call extends TAsyncMethodCall {
       private LookUpIndexRequest req;
-      public lookUpEdgeIndex_call(LookUpIndexRequest req, AsyncMethodCallback resultHandler425, TAsyncClient client421, TProtocolFactory protocolFactory422, TNonblockingTransport transport423) throws TException {
-        super(client421, protocolFactory422, transport423, resultHandler425, false);
+      public lookUpEdgeIndex_call(LookUpIndexRequest req, AsyncMethodCallback resultHandler448, TAsyncClient client444, TProtocolFactory protocolFactory445, TNonblockingTransport transport446) throws TException {
+        super(client444, protocolFactory445, transport446, resultHandler448, false);
         this.req = req;
       }
 
@@ -2611,7 +2611,7 @@ public class StorageService {
       processMap_.put("addEdges", new addEdges());
       processMap_.put("getEdgeKeys", new getEdgeKeys());
       processMap_.put("deleteEdges", new deleteEdges());
-      processMap_.put("deleteVertex", new deleteVertex());
+      processMap_.put("deleteVertices", new deleteVertices());
       processMap_.put("updateVertex", new updateVertex());
       processMap_.put("updateEdge", new updateEdge());
       processMap_.put("scanEdge", new scanEdge());
@@ -2834,23 +2834,23 @@ public class StorageService {
 
     }
 
-    private class deleteVertex implements ProcessFunction {
+    private class deleteVertices implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("StorageService.deleteVertex", server_ctx);
-        deleteVertex_args args = new deleteVertex_args();
-        event_handler_.preRead(handler_ctx, "StorageService.deleteVertex");
+        Object handler_ctx = event_handler_.getContext("StorageService.deleteVertices", server_ctx);
+        deleteVertices_args args = new deleteVertices_args();
+        event_handler_.preRead(handler_ctx, "StorageService.deleteVertices");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "StorageService.deleteVertex", args);
-        deleteVertex_result result = new deleteVertex_result();
-        result.success = iface_.deleteVertex(args.req);
-        event_handler_.preWrite(handler_ctx, "StorageService.deleteVertex", result);
-        oprot.writeMessageBegin(new TMessage("deleteVertex", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "StorageService.deleteVertices", args);
+        deleteVertices_result result = new deleteVertices_result();
+        result.success = iface_.deleteVertices(args.req);
+        event_handler_.preWrite(handler_ctx, "StorageService.deleteVertices", result);
+        oprot.writeMessageBegin(new TMessage("deleteVertices", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "StorageService.deleteVertex", result);
+        event_handler_.postWrite(handler_ctx, "StorageService.deleteVertices", result);
       }
 
     }
@@ -6333,7 +6333,7 @@ String space = prettyPrint ? " " : "";
     private static final TStruct STRUCT_DESC = new TStruct("getEdgeKeys_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public EdgeKeyRequest req;
+    public EdgeKeysRequest req;
     public static final int REQ = 1;
     public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -6343,7 +6343,7 @@ String space = prettyPrint ? " " : "";
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, EdgeKeyRequest.class)));
+          new StructMetaData(TType.STRUCT, EdgeKeysRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -6355,7 +6355,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public getEdgeKeys_args(
-      EdgeKeyRequest req)
+      EdgeKeysRequest req)
     {
       this();
       this.req = req;
@@ -6379,11 +6379,11 @@ String space = prettyPrint ? " " : "";
       return new getEdgeKeys_args(this);
     }
 
-    public EdgeKeyRequest  getReq() {
+    public EdgeKeysRequest  getReq() {
       return this.req;
     }
 
-    public getEdgeKeys_args setReq(EdgeKeyRequest req) {
+    public getEdgeKeys_args setReq(EdgeKeysRequest req) {
       this.req = req;
       return this;
     }
@@ -6409,7 +6409,7 @@ String space = prettyPrint ? " " : "";
         if (value == null) {
           unsetReq();
         } else {
-          setReq((EdgeKeyRequest)value);
+          setReq((EdgeKeysRequest)value);
         }
         break;
 
@@ -6513,7 +6513,7 @@ String space = prettyPrint ? " " : "";
         {
           case REQ:
             if (field.type == TType.STRUCT) {
-              this.req = new EdgeKeyRequest();
+              this.req = new EdgeKeysRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
@@ -6592,7 +6592,7 @@ String space = prettyPrint ? " " : "";
     private static final TStruct STRUCT_DESC = new TStruct("getEdgeKeys_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public EdgeKeyResponse success;
+    public EdgeKeysResponse success;
     public static final int SUCCESS = 0;
     public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -6602,7 +6602,7 @@ String space = prettyPrint ? " " : "";
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, EdgeKeyResponse.class)));
+          new StructMetaData(TType.STRUCT, EdgeKeysResponse.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -6614,7 +6614,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public getEdgeKeys_result(
-      EdgeKeyResponse success)
+      EdgeKeysResponse success)
     {
       this();
       this.success = success;
@@ -6638,11 +6638,11 @@ String space = prettyPrint ? " " : "";
       return new getEdgeKeys_result(this);
     }
 
-    public EdgeKeyResponse  getSuccess() {
+    public EdgeKeysResponse  getSuccess() {
       return this.success;
     }
 
-    public getEdgeKeys_result setSuccess(EdgeKeyResponse success) {
+    public getEdgeKeys_result setSuccess(EdgeKeysResponse success) {
       this.success = success;
       return this;
     }
@@ -6668,7 +6668,7 @@ String space = prettyPrint ? " " : "";
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((EdgeKeyResponse)value);
+          setSuccess((EdgeKeysResponse)value);
         }
         break;
 
@@ -6772,7 +6772,7 @@ String space = prettyPrint ? " " : "";
         {
           case SUCCESS:
             if (field.type == TType.STRUCT) {
-              this.success = new EdgeKeyResponse();
+              this.success = new EdgeKeysResponse();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
@@ -7363,11 +7363,11 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class deleteVertex_args implements TBase, java.io.Serializable, Cloneable, Comparable<deleteVertex_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("deleteVertex_args");
+  public static class deleteVertices_args implements TBase, java.io.Serializable, Cloneable, Comparable<deleteVertices_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("deleteVertices_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public DeleteVertexRequest req;
+    public DeleteVerticesRequest req;
     public static final int REQ = 1;
     public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -7377,19 +7377,19 @@ String space = prettyPrint ? " " : "";
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, DeleteVertexRequest.class)));
+          new StructMetaData(TType.STRUCT, DeleteVerticesRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(deleteVertex_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(deleteVertices_args.class, metaDataMap);
     }
 
-    public deleteVertex_args() {
+    public deleteVertices_args() {
     }
 
-    public deleteVertex_args(
-      DeleteVertexRequest req)
+    public deleteVertices_args(
+      DeleteVerticesRequest req)
     {
       this();
       this.req = req;
@@ -7398,26 +7398,26 @@ String space = prettyPrint ? " " : "";
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public deleteVertex_args(deleteVertex_args other) {
+    public deleteVertices_args(deleteVertices_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public deleteVertex_args deepCopy() {
-      return new deleteVertex_args(this);
+    public deleteVertices_args deepCopy() {
+      return new deleteVertices_args(this);
     }
 
     @Deprecated
-    public deleteVertex_args clone() {
-      return new deleteVertex_args(this);
+    public deleteVertices_args clone() {
+      return new deleteVertices_args(this);
     }
 
-    public DeleteVertexRequest  getReq() {
+    public DeleteVerticesRequest  getReq() {
       return this.req;
     }
 
-    public deleteVertex_args setReq(DeleteVertexRequest req) {
+    public deleteVertices_args setReq(DeleteVerticesRequest req) {
       this.req = req;
       return this;
     }
@@ -7443,7 +7443,7 @@ String space = prettyPrint ? " " : "";
         if (value == null) {
           unsetReq();
         } else {
-          setReq((DeleteVertexRequest)value);
+          setReq((DeleteVerticesRequest)value);
         }
         break;
 
@@ -7476,12 +7476,12 @@ String space = prettyPrint ? " " : "";
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof deleteVertex_args)
-        return this.equals((deleteVertex_args)that);
+      if (that instanceof deleteVertices_args)
+        return this.equals((deleteVertices_args)that);
       return false;
     }
 
-    public boolean equals(deleteVertex_args that) {
+    public boolean equals(deleteVertices_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -7512,7 +7512,7 @@ String space = prettyPrint ? " " : "";
     }
 
     @Override
-    public int compareTo(deleteVertex_args other) {
+    public int compareTo(deleteVertices_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -7547,7 +7547,7 @@ String space = prettyPrint ? " " : "";
         {
           case REQ:
             if (field.type == TType.STRUCT) {
-              this.req = new DeleteVertexRequest();
+              this.req = new DeleteVerticesRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
@@ -7594,7 +7594,7 @@ String space = prettyPrint ? " " : "";
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("deleteVertex_args");
+      StringBuilder sb = new StringBuilder("deleteVertices_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -7622,8 +7622,8 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class deleteVertex_result implements TBase, java.io.Serializable, Cloneable, Comparable<deleteVertex_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("deleteVertex_result");
+  public static class deleteVertices_result implements TBase, java.io.Serializable, Cloneable, Comparable<deleteVertices_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("deleteVertices_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
     public ExecResponse success;
@@ -7641,13 +7641,13 @@ String space = prettyPrint ? " " : "";
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(deleteVertex_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(deleteVertices_result.class, metaDataMap);
     }
 
-    public deleteVertex_result() {
+    public deleteVertices_result() {
     }
 
-    public deleteVertex_result(
+    public deleteVertices_result(
       ExecResponse success)
     {
       this();
@@ -7657,26 +7657,26 @@ String space = prettyPrint ? " " : "";
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public deleteVertex_result(deleteVertex_result other) {
+    public deleteVertices_result(deleteVertices_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public deleteVertex_result deepCopy() {
-      return new deleteVertex_result(this);
+    public deleteVertices_result deepCopy() {
+      return new deleteVertices_result(this);
     }
 
     @Deprecated
-    public deleteVertex_result clone() {
-      return new deleteVertex_result(this);
+    public deleteVertices_result clone() {
+      return new deleteVertices_result(this);
     }
 
     public ExecResponse  getSuccess() {
       return this.success;
     }
 
-    public deleteVertex_result setSuccess(ExecResponse success) {
+    public deleteVertices_result setSuccess(ExecResponse success) {
       this.success = success;
       return this;
     }
@@ -7735,12 +7735,12 @@ String space = prettyPrint ? " " : "";
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof deleteVertex_result)
-        return this.equals((deleteVertex_result)that);
+      if (that instanceof deleteVertices_result)
+        return this.equals((deleteVertices_result)that);
       return false;
     }
 
-    public boolean equals(deleteVertex_result that) {
+    public boolean equals(deleteVertices_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -7771,7 +7771,7 @@ String space = prettyPrint ? " " : "";
     }
 
     @Override
-    public int compareTo(deleteVertex_result other) {
+    public int compareTo(deleteVertices_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -7852,7 +7852,7 @@ String space = prettyPrint ? " " : "";
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("deleteVertex_result");
+      StringBuilder sb = new StringBuilder("deleteVertices_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

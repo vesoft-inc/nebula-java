@@ -500,15 +500,15 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.LIST) {
             {
-              TList _list232 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list232.size));
-              for (int _i233 = 0; 
-                   (_list232.size < 0) ? iprot.peekList() : (_i233 < _list232.size); 
-                   ++_i233)
+              TList _list255 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list255.size));
+              for (int _i256 = 0; 
+                   (_list255.size < 0) ? iprot.peekList() : (_i256 < _list255.size); 
+                   ++_i256)
               {
-                int _elem234;
-                _elem234 = iprot.readI32();
-                this.parts.add(_elem234);
+                int _elem257;
+                _elem257 = iprot.readI32();
+                this.parts.add(_elem257);
               }
               iprot.readListEnd();
             }
@@ -534,15 +534,15 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list235 = iprot.readListBegin();
-              this.return_columns = new ArrayList<String>(Math.max(0, _list235.size));
-              for (int _i236 = 0; 
-                   (_list235.size < 0) ? iprot.peekList() : (_i236 < _list235.size); 
-                   ++_i236)
+              TList _list258 = iprot.readListBegin();
+              this.return_columns = new ArrayList<String>(Math.max(0, _list258.size));
+              for (int _i259 = 0; 
+                   (_list258.size < 0) ? iprot.peekList() : (_i259 < _list258.size); 
+                   ++_i259)
               {
-                String _elem237;
-                _elem237 = iprot.readString();
-                this.return_columns.add(_elem237);
+                String _elem260;
+                _elem260 = iprot.readString();
+                this.return_columns.add(_elem260);
               }
               iprot.readListEnd();
             }
@@ -574,8 +574,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter238 : this.parts)        {
-          oprot.writeI32(_iter238);
+        for (int _iter261 : this.parts)        {
+          oprot.writeI32(_iter261);
         }
         oprot.writeListEnd();
       }
@@ -593,8 +593,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
-        for (String _iter239 : this.return_columns)        {
-          oprot.writeString(_iter239);
+        for (String _iter262 : this.return_columns)        {
+          oprot.writeString(_iter262);
         }
         oprot.writeListEnd();
       }

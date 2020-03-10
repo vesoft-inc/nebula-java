@@ -343,16 +343,16 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
         case ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list104 = iprot.readListBegin();
-              this.items = new ArrayList<com.vesoft.nebula.IndexItem>(Math.max(0, _list104.size));
-              for (int _i105 = 0; 
-                   (_list104.size < 0) ? iprot.peekList() : (_i105 < _list104.size); 
-                   ++_i105)
+              TList _list120 = iprot.readListBegin();
+              this.items = new ArrayList<com.vesoft.nebula.IndexItem>(Math.max(0, _list120.size));
+              for (int _i121 = 0; 
+                   (_list120.size < 0) ? iprot.peekList() : (_i121 < _list120.size); 
+                   ++_i121)
               {
-                com.vesoft.nebula.IndexItem _elem106;
-                _elem106 = new com.vesoft.nebula.IndexItem();
-                _elem106.read(iprot);
-                this.items.add(_elem106);
+                com.vesoft.nebula.IndexItem _elem122;
+                _elem122 = new com.vesoft.nebula.IndexItem();
+                _elem122.read(iprot);
+                this.items.add(_elem122);
               }
               iprot.readListEnd();
             }
@@ -389,8 +389,8 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (com.vesoft.nebula.IndexItem _iter107 : this.items)        {
-          _iter107.write(oprot);
+        for (com.vesoft.nebula.IndexItem _iter123 : this.items)        {
+          _iter123.write(oprot);
         }
         oprot.writeListEnd();
       }

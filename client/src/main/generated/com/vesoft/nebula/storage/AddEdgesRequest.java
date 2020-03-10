@@ -363,30 +363,30 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map90 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Edge>>(Math.max(0, 2*_map90.size));
-              for (int _i91 = 0; 
-                   (_map90.size < 0) ? iprot.peekMap() : (_i91 < _map90.size); 
-                   ++_i91)
+              TMap _map86 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Edge>>(Math.max(0, 2*_map86.size));
+              for (int _i87 = 0; 
+                   (_map86.size < 0) ? iprot.peekMap() : (_i87 < _map86.size); 
+                   ++_i87)
               {
-                int _key92;
-                List<Edge> _val93;
-                _key92 = iprot.readI32();
+                int _key88;
+                List<Edge> _val89;
+                _key88 = iprot.readI32();
                 {
-                  TList _list94 = iprot.readListBegin();
-                  _val93 = new ArrayList<Edge>(Math.max(0, _list94.size));
-                  for (int _i95 = 0; 
-                       (_list94.size < 0) ? iprot.peekList() : (_i95 < _list94.size); 
-                       ++_i95)
+                  TList _list90 = iprot.readListBegin();
+                  _val89 = new ArrayList<Edge>(Math.max(0, _list90.size));
+                  for (int _i91 = 0; 
+                       (_list90.size < 0) ? iprot.peekList() : (_i91 < _list90.size); 
+                       ++_i91)
                   {
-                    Edge _elem96;
-                    _elem96 = new Edge();
-                    _elem96.read(iprot);
-                    _val93.add(_elem96);
+                    Edge _elem92;
+                    _elem92 = new Edge();
+                    _elem92.read(iprot);
+                    _val89.add(_elem92);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key92, _val93);
+                this.parts.put(_key88, _val89);
               }
               iprot.readMapEnd();
             }
@@ -426,12 +426,12 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Edge>> _iter97 : this.parts.entrySet())        {
-          oprot.writeI32(_iter97.getKey());
+        for (Map.Entry<Integer, List<Edge>> _iter93 : this.parts.entrySet())        {
+          oprot.writeI32(_iter93.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter97.getValue().size()));
-            for (Edge _iter98 : _iter97.getValue())            {
-              _iter98.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter93.getValue().size()));
+            for (Edge _iter94 : _iter93.getValue())            {
+              _iter94.write(oprot);
             }
             oprot.writeListEnd();
           }
