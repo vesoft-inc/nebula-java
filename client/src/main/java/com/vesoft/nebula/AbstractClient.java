@@ -15,7 +15,6 @@ import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.graph.ErrorCode;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractClient implements Client {

@@ -32,8 +32,7 @@ import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AsyncGraphClientImpl extends AsyncAbstractClient
-        implements AsyncGraphClient {
+public class AsyncGraphClientImpl extends AsyncGraphClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AsyncGraphClientImpl.class);
 
@@ -66,61 +65,48 @@ public class AsyncGraphClientImpl extends AsyncAbstractClient
     }
 
     @Override
-    public int doConnect(List<HostAndPort> address) throws TException {
-        return 0;
-    }
+    public int doConnect(List<HostAndPort> addresses) throws TException {
+        Random random = new Random(System.currentTimeMillis());
+        int position = random.nextInt(addresses.size());
+        HostAndPort address = addresses.get(position);
 
-    /**
-     * Connect to the Graph Services.
-     *
-     * @return The ErrorCode of status, 0 is succeeded.
-     */
-    @Override
-    public int connect() {
-        int retry = connectionRetry;
-        while (retry-- != 0) {
-            Random random = new Random(System.currentTimeMillis());
-            int position = random.nextInt(addresses.size());
-            HostAndPort address = addresses.get(position);
-
-            try {
-                manager = new TAsyncClientManager();
-                transport = new TNonblockingSocket(address.getHostText(),
-                        address.getPort(), timeout);
-                TProtocolFactory protocol = new TBinaryProtocol.Factory();
-                client = new GraphService.AsyncClient(protocol, manager, transport);
-                AuthenticateCallback callback = new AuthenticateCallback();
-                client.authenticate(user, password, callback);
-                Optional<TBase> respOption = Optional.absent();
-                while (!callback.checkReady()) {
-                    respOption = (Optional<TBase>) callback.getResult();
-                }
-                if (respOption.isPresent()) {
-                    AuthResponse result = (AuthResponse) respOption.get();
-                    if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
-                        LOGGER.error("User name or password error");
-                        return ErrorCode.E_BAD_USERNAME_PASSWORD;
-                    }
-
-                    if (result.getError_code() != ErrorCode.SUCCEEDED) {
-                        LOGGER.error(String.format("Connect address %s failed : %s",
-                                address.toString(), result.getError_msg()));
-                    } else {
-                        sessionID = result.getSession_id();
-                        return ErrorCode.SUCCEEDED;
-                    }
-                } else {
-                    LOGGER.info(String.format("Auth not founded"));
-                }
-            } catch (TTransportException tte) {
-                LOGGER.error("Connect failed: " + tte.getMessage());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        try {
+            manager = new TAsyncClientManager();
+            transport = new TNonblockingSocket(address.getHostText(),
+                    address.getPort(), timeout);
+            TProtocolFactory protocol = new TBinaryProtocol.Factory();
+            client = new GraphService.AsyncClient(protocol, manager, transport);
+            AuthenticateCallback callback = new AuthenticateCallback();
+            client.authenticate(user, password, callback);
+            Optional<TBase> respOption = Optional.absent();
+            while (!callback.checkReady()) {
+                respOption = (Optional<TBase>) callback.getResult();
             }
+            if (respOption.isPresent()) {
+                AuthResponse result = (AuthResponse) respOption.get();
+                if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
+                    LOGGER.error("User name or password error");
+                    return ErrorCode.E_BAD_USERNAME_PASSWORD;
+                }
+
+                if (result.getError_code() != ErrorCode.SUCCEEDED) {
+                    LOGGER.error(String.format("Connect address %s failed : %s",
+                            address.toString(), result.getError_msg()));
+                } else {
+                    sessionID = result.getSession_id();
+                    return ErrorCode.SUCCEEDED;
+                }
+            } else {
+                LOGGER.info(String.format("Auth not founded"));
+            }
+        } catch (TTransportException tte) {
+            LOGGER.error("Connect failed: " + tte.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return ErrorCode.E_FAIL_TO_CONNECT;
     }
