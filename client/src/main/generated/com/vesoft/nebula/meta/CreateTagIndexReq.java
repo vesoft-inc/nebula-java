@@ -31,17 +31,20 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
   private static final TStruct STRUCT_DESC = new TStruct("CreateTagIndexReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField INDEX_NAME_FIELD_DESC = new TField("index_name", TType.STRING, (short)2);
-  private static final TField PROPERTIES_FIELD_DESC = new TField("properties", TType.STRUCT, (short)3);
-  private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
+  private static final TField TAG_NAME_FIELD_DESC = new TField("tag_name", TType.STRING, (short)3);
+  private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)4);
+  private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)5);
 
   public int space_id;
   public String index_name;
-  public IndexProperties properties;
+  public String tag_name;
+  public List<String> fields;
   public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
-  public static final int PROPERTIES = 3;
-  public static final int IF_NOT_EXISTS = 4;
+  public static final int TAG_NAME = 3;
+  public static final int FIELDS = 4;
+  public static final int IF_NOT_EXISTS = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,8 +59,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(INDEX_NAME, new FieldMetaData("index_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(PROPERTIES, new FieldMetaData("properties", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, IndexProperties.class)));
+    tmpMetaDataMap.put(TAG_NAME, new FieldMetaData("tag_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -73,14 +79,16 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
   public CreateTagIndexReq(
     int space_id,
     String index_name,
-    IndexProperties properties,
+    String tag_name,
+    List<String> fields,
     boolean if_not_exists)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.index_name = index_name;
-    this.properties = properties;
+    this.tag_name = tag_name;
+    this.fields = fields;
     this.if_not_exists = if_not_exists;
     setIf_not_existsIsSet(true);
   }
@@ -95,8 +103,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (other.isSetIndex_name()) {
       this.index_name = TBaseHelper.deepCopy(other.index_name);
     }
-    if (other.isSetProperties()) {
-      this.properties = TBaseHelper.deepCopy(other.properties);
+    if (other.isSetTag_name()) {
+      this.tag_name = TBaseHelper.deepCopy(other.tag_name);
+    }
+    if (other.isSetFields()) {
+      this.fields = TBaseHelper.deepCopy(other.fields);
     }
     this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
   }
@@ -157,27 +168,51 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public IndexProperties  getProperties() {
-    return this.properties;
+  public String  getTag_name() {
+    return this.tag_name;
   }
 
-  public CreateTagIndexReq setProperties(IndexProperties properties) {
-    this.properties = properties;
+  public CreateTagIndexReq setTag_name(String tag_name) {
+    this.tag_name = tag_name;
     return this;
   }
 
-  public void unsetProperties() {
-    this.properties = null;
+  public void unsetTag_name() {
+    this.tag_name = null;
   }
 
-  // Returns true if field properties is set (has been assigned a value) and false otherwise
-  public boolean isSetProperties() {
-    return this.properties != null;
+  // Returns true if field tag_name is set (has been assigned a value) and false otherwise
+  public boolean isSetTag_name() {
+    return this.tag_name != null;
   }
 
-  public void setPropertiesIsSet(boolean value) {
+  public void setTag_nameIsSet(boolean value) {
     if (!value) {
-      this.properties = null;
+      this.tag_name = null;
+    }
+  }
+
+  public List<String>  getFields() {
+    return this.fields;
+  }
+
+  public CreateTagIndexReq setFields(List<String> fields) {
+    this.fields = fields;
+    return this;
+  }
+
+  public void unsetFields() {
+    this.fields = null;
+  }
+
+  // Returns true if field fields is set (has been assigned a value) and false otherwise
+  public boolean isSetFields() {
+    return this.fields != null;
+  }
+
+  public void setFieldsIsSet(boolean value) {
+    if (!value) {
+      this.fields = null;
     }
   }
 
@@ -204,6 +239,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, value);
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -222,11 +258,19 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case PROPERTIES:
+    case TAG_NAME:
       if (value == null) {
-        unsetProperties();
+        unsetTag_name();
       } else {
-        setProperties((IndexProperties)value);
+        setTag_name((String)value);
+      }
+      break;
+
+    case FIELDS:
+      if (value == null) {
+        unsetFields();
+      } else {
+        setFields((List<String>)value);
       }
       break;
 
@@ -251,8 +295,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     case INDEX_NAME:
       return getIndex_name();
 
-    case PROPERTIES:
-      return getProperties();
+    case TAG_NAME:
+      return getTag_name();
+
+    case FIELDS:
+      return getFields();
 
     case IF_NOT_EXISTS:
       return new Boolean(isIf_not_exists());
@@ -269,8 +316,10 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       return isSetSpace_id();
     case INDEX_NAME:
       return isSetIndex_name();
-    case PROPERTIES:
-      return isSetProperties();
+    case TAG_NAME:
+      return isSetTag_name();
+    case FIELDS:
+      return isSetFields();
     case IF_NOT_EXISTS:
       return isSetIf_not_exists();
     default:
@@ -311,12 +360,21 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_properties = true && this.isSetProperties();
-    boolean that_present_properties = true && that.isSetProperties();
-    if (this_present_properties || that_present_properties) {
-      if (!(this_present_properties && that_present_properties))
+    boolean this_present_tag_name = true && this.isSetTag_name();
+    boolean that_present_tag_name = true && that.isSetTag_name();
+    if (this_present_tag_name || that_present_tag_name) {
+      if (!(this_present_tag_name && that_present_tag_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.properties, that.properties))
+      if (!TBaseHelper.equalsNobinary(this.tag_name, that.tag_name))
+        return false;
+    }
+
+    boolean this_present_fields = true && this.isSetFields();
+    boolean that_present_fields = true && that.isSetFields();
+    if (this_present_fields || that_present_fields) {
+      if (!(this_present_fields && that_present_fields))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
         return false;
     }
 
@@ -346,10 +404,15 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (present_index_name)
       builder.append(index_name);
 
-    boolean present_properties = true && (isSetProperties());
-    builder.append(present_properties);
-    if (present_properties)
-      builder.append(properties);
+    boolean present_tag_name = true && (isSetTag_name());
+    builder.append(present_tag_name);
+    if (present_tag_name)
+      builder.append(tag_name);
+
+    boolean present_fields = true && (isSetFields());
+    builder.append(present_fields);
+    if (present_fields)
+      builder.append(fields);
 
     boolean present_if_not_exists = true;
     builder.append(present_if_not_exists);
@@ -387,11 +450,19 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetProperties()).compareTo(other.isSetProperties());
+    lastComparison = Boolean.valueOf(isSetTag_name()).compareTo(other.isSetTag_name());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(properties, other.properties);
+    lastComparison = TBaseHelper.compareTo(tag_name, other.tag_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetFields()).compareTo(other.isSetFields());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(fields, other.fields);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -432,10 +503,28 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case PROPERTIES:
-          if (field.type == TType.STRUCT) {
-            this.properties = new IndexProperties();
-            this.properties.read(iprot);
+        case TAG_NAME:
+          if (field.type == TType.STRING) {
+            this.tag_name = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case FIELDS:
+          if (field.type == TType.LIST) {
+            {
+              TList _list108 = iprot.readListBegin();
+              this.fields = new ArrayList<String>(Math.max(0, _list108.size));
+              for (int _i109 = 0; 
+                   (_list108.size < 0) ? iprot.peekList() : (_i109 < _list108.size); 
+                   ++_i109)
+              {
+                String _elem110;
+                _elem110 = iprot.readString();
+                this.fields.add(_elem110);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -473,9 +562,20 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       oprot.writeString(this.index_name);
       oprot.writeFieldEnd();
     }
-    if (this.properties != null) {
-      oprot.writeFieldBegin(PROPERTIES_FIELD_DESC);
-      this.properties.write(oprot);
+    if (this.tag_name != null) {
+      oprot.writeFieldBegin(TAG_NAME_FIELD_DESC);
+      oprot.writeString(this.tag_name);
+      oprot.writeFieldEnd();
+    }
+    if (this.fields != null) {
+      oprot.writeFieldBegin(FIELDS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
+        for (String _iter111 : this.fields)        {
+          oprot.writeString(_iter111);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
@@ -525,13 +625,24 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("properties");
+    sb.append("tag_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProperties() == null) {
+    if (this. getTag_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProperties(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getTag_name(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("fields");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getFields() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getFields(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

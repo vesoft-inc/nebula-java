@@ -461,29 +461,29 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         case LEADER_PARTIDS:
           if (field.type == TType.MAP) {
             {
-              TMap _map101 = iprot.readMapBegin();
-              this.leader_partIds = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map101.size));
-              for (int _i102 = 0; 
-                   (_map101.size < 0) ? iprot.peekMap() : (_i102 < _map101.size); 
-                   ++_i102)
+              TMap _map99 = iprot.readMapBegin();
+              this.leader_partIds = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map99.size));
+              for (int _i100 = 0; 
+                   (_map99.size < 0) ? iprot.peekMap() : (_i100 < _map99.size); 
+                   ++_i100)
               {
-                int _key103;
-                List<Integer> _val104;
-                _key103 = iprot.readI32();
+                int _key101;
+                List<Integer> _val102;
+                _key101 = iprot.readI32();
                 {
-                  TList _list105 = iprot.readListBegin();
-                  _val104 = new ArrayList<Integer>(Math.max(0, _list105.size));
-                  for (int _i106 = 0; 
-                       (_list105.size < 0) ? iprot.peekList() : (_i106 < _list105.size); 
-                       ++_i106)
+                  TList _list103 = iprot.readListBegin();
+                  _val102 = new ArrayList<Integer>(Math.max(0, _list103.size));
+                  for (int _i104 = 0; 
+                       (_list103.size < 0) ? iprot.peekList() : (_i104 < _list103.size); 
+                       ++_i104)
                   {
-                    int _elem107;
-                    _elem107 = iprot.readI32();
-                    _val104.add(_elem107);
+                    int _elem105;
+                    _elem105 = iprot.readI32();
+                    _val102.add(_elem105);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_partIds.put(_key103, _val104);
+                this.leader_partIds.put(_key101, _val102);
               }
               iprot.readMapEnd();
             }
@@ -524,12 +524,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         oprot.writeFieldBegin(LEADER_PART_IDS_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_partIds.size()));
-          for (Map.Entry<Integer, List<Integer>> _iter108 : this.leader_partIds.entrySet())          {
-            oprot.writeI32(_iter108.getKey());
+          for (Map.Entry<Integer, List<Integer>> _iter106 : this.leader_partIds.entrySet())          {
+            oprot.writeI32(_iter106.getKey());
             {
-              oprot.writeListBegin(new TList(TType.I32, _iter108.getValue().size()));
-              for (int _iter109 : _iter108.getValue())              {
-                oprot.writeI32(_iter109);
+              oprot.writeListBegin(new TList(TType.I32, _iter106.getValue().size()));
+              for (int _iter107 : _iter106.getValue())              {
+                oprot.writeI32(_iter107);
               }
               oprot.writeListEnd();
             }

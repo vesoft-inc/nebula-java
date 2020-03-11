@@ -295,30 +295,30 @@ public class PutRequest implements TBase, java.io.Serializable, Cloneable, Compa
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map133 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Pair>>(Math.max(0, 2*_map133.size));
-              for (int _i134 = 0; 
-                   (_map133.size < 0) ? iprot.peekMap() : (_i134 < _map133.size); 
-                   ++_i134)
+              TMap _map178 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Pair>>(Math.max(0, 2*_map178.size));
+              for (int _i179 = 0; 
+                   (_map178.size < 0) ? iprot.peekMap() : (_i179 < _map178.size); 
+                   ++_i179)
               {
-                int _key135;
-                List<com.vesoft.nebula.Pair> _val136;
-                _key135 = iprot.readI32();
+                int _key180;
+                List<com.vesoft.nebula.Pair> _val181;
+                _key180 = iprot.readI32();
                 {
-                  TList _list137 = iprot.readListBegin();
-                  _val136 = new ArrayList<com.vesoft.nebula.Pair>(Math.max(0, _list137.size));
-                  for (int _i138 = 0; 
-                       (_list137.size < 0) ? iprot.peekList() : (_i138 < _list137.size); 
-                       ++_i138)
+                  TList _list182 = iprot.readListBegin();
+                  _val181 = new ArrayList<com.vesoft.nebula.Pair>(Math.max(0, _list182.size));
+                  for (int _i183 = 0; 
+                       (_list182.size < 0) ? iprot.peekList() : (_i183 < _list182.size); 
+                       ++_i183)
                   {
-                    com.vesoft.nebula.Pair _elem139;
-                    _elem139 = new com.vesoft.nebula.Pair();
-                    _elem139.read(iprot);
-                    _val136.add(_elem139);
+                    com.vesoft.nebula.Pair _elem184;
+                    _elem184 = new com.vesoft.nebula.Pair();
+                    _elem184.read(iprot);
+                    _val181.add(_elem184);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key135, _val136);
+                this.parts.put(_key180, _val181);
               }
               iprot.readMapEnd();
             }
@@ -350,12 +350,12 @@ public class PutRequest implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Pair>> _iter140 : this.parts.entrySet())        {
-          oprot.writeI32(_iter140.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Pair>> _iter185 : this.parts.entrySet())        {
+          oprot.writeI32(_iter185.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter140.getValue().size()));
-            for (com.vesoft.nebula.Pair _iter141 : _iter140.getValue())            {
-              _iter141.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter185.getValue().size()));
+            for (com.vesoft.nebula.Pair _iter186 : _iter185.getValue())            {
+              _iter186.write(oprot);
             }
             oprot.writeListEnd();
           }

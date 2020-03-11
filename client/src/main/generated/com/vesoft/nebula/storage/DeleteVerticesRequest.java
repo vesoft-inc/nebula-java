@@ -27,13 +27,13 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class CasRequest implements TBase, java.io.Serializable, Cloneable, Comparable<CasRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("CasRequest");
+public class DeleteVerticesRequest implements TBase, java.io.Serializable, Cloneable, Comparable<DeleteVerticesRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("DeleteVerticesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
 
   public int space_id;
-  public Map<Integer,List<com.vesoft.nebula.Pair>> parts;
+  public Map<Integer,List<Long>> parts;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -51,20 +51,20 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, com.vesoft.nebula.Pair.class)))));
+                new FieldValueMetaData(TType.I64)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(CasRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(DeleteVerticesRequest.class, metaDataMap);
   }
 
-  public CasRequest() {
+  public DeleteVerticesRequest() {
   }
 
-  public CasRequest(
+  public DeleteVerticesRequest(
     int space_id,
-    Map<Integer,List<com.vesoft.nebula.Pair>> parts)
+    Map<Integer,List<Long>> parts)
   {
     this();
     this.space_id = space_id;
@@ -75,7 +75,7 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public CasRequest(CasRequest other) {
+  public DeleteVerticesRequest(DeleteVerticesRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
@@ -84,20 +84,20 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  public CasRequest deepCopy() {
-    return new CasRequest(this);
+  public DeleteVerticesRequest deepCopy() {
+    return new DeleteVerticesRequest(this);
   }
 
   @Deprecated
-  public CasRequest clone() {
-    return new CasRequest(this);
+  public DeleteVerticesRequest clone() {
+    return new DeleteVerticesRequest(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public CasRequest setSpace_id(int space_id) {
+  public DeleteVerticesRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -116,11 +116,11 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,List<com.vesoft.nebula.Pair>>  getParts() {
+  public Map<Integer,List<Long>>  getParts() {
     return this.parts;
   }
 
-  public CasRequest setParts(Map<Integer,List<com.vesoft.nebula.Pair>> parts) {
+  public DeleteVerticesRequest setParts(Map<Integer,List<Long>> parts) {
     this.parts = parts;
     return this;
   }
@@ -155,7 +155,7 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
       if (value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<com.vesoft.nebula.Pair>>)value);
+        setParts((Map<Integer,List<Long>>)value);
       }
       break;
 
@@ -193,12 +193,12 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof CasRequest)
-      return this.equals((CasRequest)that);
+    if (that instanceof DeleteVerticesRequest)
+      return this.equals((DeleteVerticesRequest)that);
     return false;
   }
 
-  public boolean equals(CasRequest that) {
+  public boolean equals(DeleteVerticesRequest that) {
     if (that == null)
       return false;
     if (this == that)
@@ -243,7 +243,7 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   @Override
-  public int compareTo(CasRequest other) {
+  public int compareTo(DeleteVerticesRequest other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -295,30 +295,29 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map179 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Pair>>(Math.max(0, 2*_map179.size));
-              for (int _i180 = 0; 
-                   (_map179.size < 0) ? iprot.peekMap() : (_i180 < _map179.size); 
-                   ++_i180)
+              TMap _map95 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map95.size));
+              for (int _i96 = 0; 
+                   (_map95.size < 0) ? iprot.peekMap() : (_i96 < _map95.size); 
+                   ++_i96)
               {
-                int _key181;
-                List<com.vesoft.nebula.Pair> _val182;
-                _key181 = iprot.readI32();
+                int _key97;
+                List<Long> _val98;
+                _key97 = iprot.readI32();
                 {
-                  TList _list183 = iprot.readListBegin();
-                  _val182 = new ArrayList<com.vesoft.nebula.Pair>(Math.max(0, _list183.size));
-                  for (int _i184 = 0; 
-                       (_list183.size < 0) ? iprot.peekList() : (_i184 < _list183.size); 
-                       ++_i184)
+                  TList _list99 = iprot.readListBegin();
+                  _val98 = new ArrayList<Long>(Math.max(0, _list99.size));
+                  for (int _i100 = 0; 
+                       (_list99.size < 0) ? iprot.peekList() : (_i100 < _list99.size); 
+                       ++_i100)
                   {
-                    com.vesoft.nebula.Pair _elem185;
-                    _elem185 = new com.vesoft.nebula.Pair();
-                    _elem185.read(iprot);
-                    _val182.add(_elem185);
+                    long _elem101;
+                    _elem101 = iprot.readI64();
+                    _val98.add(_elem101);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key181, _val182);
+                this.parts.put(_key97, _val98);
               }
               iprot.readMapEnd();
             }
@@ -350,12 +349,12 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Pair>> _iter186 : this.parts.entrySet())        {
-          oprot.writeI32(_iter186.getKey());
+        for (Map.Entry<Integer, List<Long>> _iter102 : this.parts.entrySet())        {
+          oprot.writeI32(_iter102.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter186.getValue().size()));
-            for (com.vesoft.nebula.Pair _iter187 : _iter186.getValue())            {
-              _iter187.write(oprot);
+            oprot.writeListBegin(new TList(TType.I64, _iter102.getValue().size()));
+            for (long _iter103 : _iter102.getValue())            {
+              oprot.writeI64(_iter103);
             }
             oprot.writeListEnd();
           }
@@ -383,7 +382,7 @@ public class CasRequest implements TBase, java.io.Serializable, Cloneable, Compa
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("CasRequest");
+    StringBuilder sb = new StringBuilder("DeleteVerticesRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

@@ -299,17 +299,17 @@ public class GeneralResponse implements TBase, java.io.Serializable, Cloneable, 
         case VALUES:
           if (field.type == TType.MAP) {
             {
-              TMap _map188 = iprot.readMapBegin();
-              this.values = new HashMap<String,String>(Math.max(0, 2*_map188.size));
-              for (int _i189 = 0; 
-                   (_map188.size < 0) ? iprot.peekMap() : (_i189 < _map188.size); 
-                   ++_i189)
+              TMap _map224 = iprot.readMapBegin();
+              this.values = new HashMap<String,String>(Math.max(0, 2*_map224.size));
+              for (int _i225 = 0; 
+                   (_map224.size < 0) ? iprot.peekMap() : (_i225 < _map224.size); 
+                   ++_i225)
               {
-                String _key190;
-                String _val191;
-                _key190 = iprot.readString();
-                _val191 = iprot.readString();
-                this.values.put(_key190, _val191);
+                String _key226;
+                String _val227;
+                _key226 = iprot.readString();
+                _val227 = iprot.readString();
+                this.values.put(_key226, _val227);
               }
               iprot.readMapEnd();
             }
@@ -343,9 +343,9 @@ public class GeneralResponse implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(VALUES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRING, this.values.size()));
-        for (Map.Entry<String, String> _iter192 : this.values.entrySet())        {
-          oprot.writeString(_iter192.getKey());
-          oprot.writeString(_iter192.getValue());
+        for (Map.Entry<String, String> _iter228 : this.values.entrySet())        {
+          oprot.writeString(_iter228.getKey());
+          oprot.writeString(_iter228.getValue());
         }
         oprot.writeMapEnd();
       }

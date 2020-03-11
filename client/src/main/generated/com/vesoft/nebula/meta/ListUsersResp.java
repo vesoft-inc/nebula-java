@@ -383,18 +383,18 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
         case USERS:
           if (field.type == TType.MAP) {
             {
-              TMap _map118 = iprot.readMapBegin();
-              this.users = new HashMap<Integer,UserItem>(Math.max(0, 2*_map118.size));
-              for (int _i119 = 0; 
-                   (_map118.size < 0) ? iprot.peekMap() : (_i119 < _map118.size); 
-                   ++_i119)
+              TMap _map124 = iprot.readMapBegin();
+              this.users = new HashMap<Integer,UserItem>(Math.max(0, 2*_map124.size));
+              for (int _i125 = 0; 
+                   (_map124.size < 0) ? iprot.peekMap() : (_i125 < _map124.size); 
+                   ++_i125)
               {
-                int _key120;
-                UserItem _val121;
-                _key120 = iprot.readI32();
-                _val121 = new UserItem();
-                _val121.read(iprot);
-                this.users.put(_key120, _val121);
+                int _key126;
+                UserItem _val127;
+                _key126 = iprot.readI32();
+                _val127 = new UserItem();
+                _val127.read(iprot);
+                this.users.put(_key126, _val127);
               }
               iprot.readMapEnd();
             }
@@ -431,9 +431,9 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(USERS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.users.size()));
-        for (Map.Entry<Integer, UserItem> _iter122 : this.users.entrySet())        {
-          oprot.writeI32(_iter122.getKey());
-          _iter122.getValue().write(oprot);
+        for (Map.Entry<Integer, UserItem> _iter128 : this.users.entrySet())        {
+          oprot.writeI32(_iter128.getKey());
+          _iter128.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

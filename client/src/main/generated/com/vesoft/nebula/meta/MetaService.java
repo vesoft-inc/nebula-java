@@ -85,6 +85,10 @@ public class MetaService {
 
     public ListTagIndexesResp listTagIndexes(ListTagIndexesReq req) throws TException;
 
+    public ExecResp rebuildTagIndex(RebuildIndexReq req) throws TException;
+
+    public ListIndexStatusResp listTagIndexStatus(ListIndexStatusReq req) throws TException;
+
     public ExecResp createEdgeIndex(CreateEdgeIndexReq req) throws TException;
 
     public ExecResp dropEdgeIndex(DropEdgeIndexReq req) throws TException;
@@ -92,6 +96,10 @@ public class MetaService {
     public GetEdgeIndexResp getEdgeIndex(GetEdgeIndexReq req) throws TException;
 
     public ListEdgeIndexesResp listEdgeIndexes(ListEdgeIndexesReq req) throws TException;
+
+    public ExecResp rebuildEdgeIndex(RebuildIndexReq req) throws TException;
+
+    public ListIndexStatusResp listEdgeIndexStatus(ListIndexStatusReq req) throws TException;
 
     public ExecResp createUser(CreateUserReq req) throws TException;
 
@@ -132,6 +140,8 @@ public class MetaService {
     public ExecResp dropSnapshot(DropSnapshotReq req) throws TException;
 
     public ListSnapshotsResp listSnapshots(ListSnapshotsReq req) throws TException;
+
+    public AdminJobResp runAdminJob(AdminJobReq req) throws TException;
 
   }
 
@@ -191,6 +201,10 @@ public class MetaService {
 
     public void listTagIndexes(ListTagIndexesReq req, AsyncMethodCallback resultHandler) throws TException;
 
+    public void rebuildTagIndex(RebuildIndexReq req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void listTagIndexStatus(ListIndexStatusReq req, AsyncMethodCallback resultHandler) throws TException;
+
     public void createEdgeIndex(CreateEdgeIndexReq req, AsyncMethodCallback resultHandler) throws TException;
 
     public void dropEdgeIndex(DropEdgeIndexReq req, AsyncMethodCallback resultHandler) throws TException;
@@ -198,6 +212,10 @@ public class MetaService {
     public void getEdgeIndex(GetEdgeIndexReq req, AsyncMethodCallback resultHandler) throws TException;
 
     public void listEdgeIndexes(ListEdgeIndexesReq req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void rebuildEdgeIndex(RebuildIndexReq req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void listEdgeIndexStatus(ListIndexStatusReq req, AsyncMethodCallback resultHandler) throws TException;
 
     public void createUser(CreateUserReq req, AsyncMethodCallback resultHandler) throws TException;
 
@@ -238,6 +256,8 @@ public class MetaService {
     public void dropSnapshot(DropSnapshotReq req, AsyncMethodCallback resultHandler) throws TException;
 
     public void listSnapshots(ListSnapshotsReq req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void runAdminJob(AdminJobReq req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -1485,6 +1505,96 @@ public class MetaService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "listTagIndexes failed: unknown result");
     }
 
+    public ExecResp rebuildTagIndex(RebuildIndexReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("MetaService.rebuildTagIndex", null);
+      this.setContextStack(ctx);
+      send_rebuildTagIndex(req);
+      return recv_rebuildTagIndex();
+    }
+
+    public void send_rebuildTagIndex(RebuildIndexReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "MetaService.rebuildTagIndex", null);
+      oprot_.writeMessageBegin(new TMessage("rebuildTagIndex", TMessageType.CALL, seqid_));
+      rebuildTagIndex_args args = new rebuildTagIndex_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "MetaService.rebuildTagIndex", args);
+      return;
+    }
+
+    public ExecResp recv_rebuildTagIndex() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "MetaService.rebuildTagIndex");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      rebuildTagIndex_result result = new rebuildTagIndex_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "MetaService.rebuildTagIndex", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "rebuildTagIndex failed: unknown result");
+    }
+
+    public ListIndexStatusResp listTagIndexStatus(ListIndexStatusReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("MetaService.listTagIndexStatus", null);
+      this.setContextStack(ctx);
+      send_listTagIndexStatus(req);
+      return recv_listTagIndexStatus();
+    }
+
+    public void send_listTagIndexStatus(ListIndexStatusReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "MetaService.listTagIndexStatus", null);
+      oprot_.writeMessageBegin(new TMessage("listTagIndexStatus", TMessageType.CALL, seqid_));
+      listTagIndexStatus_args args = new listTagIndexStatus_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "MetaService.listTagIndexStatus", args);
+      return;
+    }
+
+    public ListIndexStatusResp recv_listTagIndexStatus() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "MetaService.listTagIndexStatus");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      listTagIndexStatus_result result = new listTagIndexStatus_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "MetaService.listTagIndexStatus", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "listTagIndexStatus failed: unknown result");
+    }
+
     public ExecResp createEdgeIndex(CreateEdgeIndexReq req) throws TException
     {
       ContextStack ctx = getContextStack("MetaService.createEdgeIndex", null);
@@ -1663,6 +1773,96 @@ public class MetaService {
         return result.success;
       }
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "listEdgeIndexes failed: unknown result");
+    }
+
+    public ExecResp rebuildEdgeIndex(RebuildIndexReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("MetaService.rebuildEdgeIndex", null);
+      this.setContextStack(ctx);
+      send_rebuildEdgeIndex(req);
+      return recv_rebuildEdgeIndex();
+    }
+
+    public void send_rebuildEdgeIndex(RebuildIndexReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "MetaService.rebuildEdgeIndex", null);
+      oprot_.writeMessageBegin(new TMessage("rebuildEdgeIndex", TMessageType.CALL, seqid_));
+      rebuildEdgeIndex_args args = new rebuildEdgeIndex_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "MetaService.rebuildEdgeIndex", args);
+      return;
+    }
+
+    public ExecResp recv_rebuildEdgeIndex() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "MetaService.rebuildEdgeIndex");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      rebuildEdgeIndex_result result = new rebuildEdgeIndex_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "MetaService.rebuildEdgeIndex", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "rebuildEdgeIndex failed: unknown result");
+    }
+
+    public ListIndexStatusResp listEdgeIndexStatus(ListIndexStatusReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("MetaService.listEdgeIndexStatus", null);
+      this.setContextStack(ctx);
+      send_listEdgeIndexStatus(req);
+      return recv_listEdgeIndexStatus();
+    }
+
+    public void send_listEdgeIndexStatus(ListIndexStatusReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "MetaService.listEdgeIndexStatus", null);
+      oprot_.writeMessageBegin(new TMessage("listEdgeIndexStatus", TMessageType.CALL, seqid_));
+      listEdgeIndexStatus_args args = new listEdgeIndexStatus_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "MetaService.listEdgeIndexStatus", args);
+      return;
+    }
+
+    public ListIndexStatusResp recv_listEdgeIndexStatus() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "MetaService.listEdgeIndexStatus");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      listEdgeIndexStatus_result result = new listEdgeIndexStatus_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "MetaService.listEdgeIndexStatus", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "listEdgeIndexStatus failed: unknown result");
     }
 
     public ExecResp createUser(CreateUserReq req) throws TException
@@ -2565,6 +2765,51 @@ public class MetaService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "listSnapshots failed: unknown result");
     }
 
+    public AdminJobResp runAdminJob(AdminJobReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("MetaService.runAdminJob", null);
+      this.setContextStack(ctx);
+      send_runAdminJob(req);
+      return recv_runAdminJob();
+    }
+
+    public void send_runAdminJob(AdminJobReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "MetaService.runAdminJob", null);
+      oprot_.writeMessageBegin(new TMessage("runAdminJob", TMessageType.CALL, seqid_));
+      runAdminJob_args args = new runAdminJob_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "MetaService.runAdminJob", args);
+      return;
+    }
+
+    public AdminJobResp recv_runAdminJob() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "MetaService.runAdminJob");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      runAdminJob_result result = new runAdminJob_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "MetaService.runAdminJob", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "runAdminJob failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -2583,17 +2828,17 @@ public class MetaService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void createSpace(CreateSpaceReq req, AsyncMethodCallback resultHandler205) throws TException {
+    public void createSpace(CreateSpaceReq req, AsyncMethodCallback resultHandler220) throws TException {
       checkReady();
-      createSpace_call method_call = new createSpace_call(req, resultHandler205, this, ___protocolFactory, ___transport);
+      createSpace_call method_call = new createSpace_call(req, resultHandler220, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createSpace_call extends TAsyncMethodCall {
       private CreateSpaceReq req;
-      public createSpace_call(CreateSpaceReq req, AsyncMethodCallback resultHandler206, TAsyncClient client202, TProtocolFactory protocolFactory203, TNonblockingTransport transport204) throws TException {
-        super(client202, protocolFactory203, transport204, resultHandler206, false);
+      public createSpace_call(CreateSpaceReq req, AsyncMethodCallback resultHandler221, TAsyncClient client217, TProtocolFactory protocolFactory218, TNonblockingTransport transport219) throws TException {
+        super(client217, protocolFactory218, transport219, resultHandler221, false);
         this.req = req;
       }
 
@@ -2615,17 +2860,17 @@ public class MetaService {
       }
     }
 
-    public void dropSpace(DropSpaceReq req, AsyncMethodCallback resultHandler210) throws TException {
+    public void dropSpace(DropSpaceReq req, AsyncMethodCallback resultHandler225) throws TException {
       checkReady();
-      dropSpace_call method_call = new dropSpace_call(req, resultHandler210, this, ___protocolFactory, ___transport);
+      dropSpace_call method_call = new dropSpace_call(req, resultHandler225, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropSpace_call extends TAsyncMethodCall {
       private DropSpaceReq req;
-      public dropSpace_call(DropSpaceReq req, AsyncMethodCallback resultHandler211, TAsyncClient client207, TProtocolFactory protocolFactory208, TNonblockingTransport transport209) throws TException {
-        super(client207, protocolFactory208, transport209, resultHandler211, false);
+      public dropSpace_call(DropSpaceReq req, AsyncMethodCallback resultHandler226, TAsyncClient client222, TProtocolFactory protocolFactory223, TNonblockingTransport transport224) throws TException {
+        super(client222, protocolFactory223, transport224, resultHandler226, false);
         this.req = req;
       }
 
@@ -2647,17 +2892,17 @@ public class MetaService {
       }
     }
 
-    public void getSpace(GetSpaceReq req, AsyncMethodCallback resultHandler215) throws TException {
+    public void getSpace(GetSpaceReq req, AsyncMethodCallback resultHandler230) throws TException {
       checkReady();
-      getSpace_call method_call = new getSpace_call(req, resultHandler215, this, ___protocolFactory, ___transport);
+      getSpace_call method_call = new getSpace_call(req, resultHandler230, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getSpace_call extends TAsyncMethodCall {
       private GetSpaceReq req;
-      public getSpace_call(GetSpaceReq req, AsyncMethodCallback resultHandler216, TAsyncClient client212, TProtocolFactory protocolFactory213, TNonblockingTransport transport214) throws TException {
-        super(client212, protocolFactory213, transport214, resultHandler216, false);
+      public getSpace_call(GetSpaceReq req, AsyncMethodCallback resultHandler231, TAsyncClient client227, TProtocolFactory protocolFactory228, TNonblockingTransport transport229) throws TException {
+        super(client227, protocolFactory228, transport229, resultHandler231, false);
         this.req = req;
       }
 
@@ -2679,17 +2924,17 @@ public class MetaService {
       }
     }
 
-    public void listSpaces(ListSpacesReq req, AsyncMethodCallback resultHandler220) throws TException {
+    public void listSpaces(ListSpacesReq req, AsyncMethodCallback resultHandler235) throws TException {
       checkReady();
-      listSpaces_call method_call = new listSpaces_call(req, resultHandler220, this, ___protocolFactory, ___transport);
+      listSpaces_call method_call = new listSpaces_call(req, resultHandler235, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listSpaces_call extends TAsyncMethodCall {
       private ListSpacesReq req;
-      public listSpaces_call(ListSpacesReq req, AsyncMethodCallback resultHandler221, TAsyncClient client217, TProtocolFactory protocolFactory218, TNonblockingTransport transport219) throws TException {
-        super(client217, protocolFactory218, transport219, resultHandler221, false);
+      public listSpaces_call(ListSpacesReq req, AsyncMethodCallback resultHandler236, TAsyncClient client232, TProtocolFactory protocolFactory233, TNonblockingTransport transport234) throws TException {
+        super(client232, protocolFactory233, transport234, resultHandler236, false);
         this.req = req;
       }
 
@@ -2711,17 +2956,17 @@ public class MetaService {
       }
     }
 
-    public void createTag(CreateTagReq req, AsyncMethodCallback resultHandler225) throws TException {
+    public void createTag(CreateTagReq req, AsyncMethodCallback resultHandler240) throws TException {
       checkReady();
-      createTag_call method_call = new createTag_call(req, resultHandler225, this, ___protocolFactory, ___transport);
+      createTag_call method_call = new createTag_call(req, resultHandler240, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createTag_call extends TAsyncMethodCall {
       private CreateTagReq req;
-      public createTag_call(CreateTagReq req, AsyncMethodCallback resultHandler226, TAsyncClient client222, TProtocolFactory protocolFactory223, TNonblockingTransport transport224) throws TException {
-        super(client222, protocolFactory223, transport224, resultHandler226, false);
+      public createTag_call(CreateTagReq req, AsyncMethodCallback resultHandler241, TAsyncClient client237, TProtocolFactory protocolFactory238, TNonblockingTransport transport239) throws TException {
+        super(client237, protocolFactory238, transport239, resultHandler241, false);
         this.req = req;
       }
 
@@ -2743,17 +2988,17 @@ public class MetaService {
       }
     }
 
-    public void alterTag(AlterTagReq req, AsyncMethodCallback resultHandler230) throws TException {
+    public void alterTag(AlterTagReq req, AsyncMethodCallback resultHandler245) throws TException {
       checkReady();
-      alterTag_call method_call = new alterTag_call(req, resultHandler230, this, ___protocolFactory, ___transport);
+      alterTag_call method_call = new alterTag_call(req, resultHandler245, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class alterTag_call extends TAsyncMethodCall {
       private AlterTagReq req;
-      public alterTag_call(AlterTagReq req, AsyncMethodCallback resultHandler231, TAsyncClient client227, TProtocolFactory protocolFactory228, TNonblockingTransport transport229) throws TException {
-        super(client227, protocolFactory228, transport229, resultHandler231, false);
+      public alterTag_call(AlterTagReq req, AsyncMethodCallback resultHandler246, TAsyncClient client242, TProtocolFactory protocolFactory243, TNonblockingTransport transport244) throws TException {
+        super(client242, protocolFactory243, transport244, resultHandler246, false);
         this.req = req;
       }
 
@@ -2775,17 +3020,17 @@ public class MetaService {
       }
     }
 
-    public void dropTag(DropTagReq req, AsyncMethodCallback resultHandler235) throws TException {
+    public void dropTag(DropTagReq req, AsyncMethodCallback resultHandler250) throws TException {
       checkReady();
-      dropTag_call method_call = new dropTag_call(req, resultHandler235, this, ___protocolFactory, ___transport);
+      dropTag_call method_call = new dropTag_call(req, resultHandler250, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropTag_call extends TAsyncMethodCall {
       private DropTagReq req;
-      public dropTag_call(DropTagReq req, AsyncMethodCallback resultHandler236, TAsyncClient client232, TProtocolFactory protocolFactory233, TNonblockingTransport transport234) throws TException {
-        super(client232, protocolFactory233, transport234, resultHandler236, false);
+      public dropTag_call(DropTagReq req, AsyncMethodCallback resultHandler251, TAsyncClient client247, TProtocolFactory protocolFactory248, TNonblockingTransport transport249) throws TException {
+        super(client247, protocolFactory248, transport249, resultHandler251, false);
         this.req = req;
       }
 
@@ -2807,17 +3052,17 @@ public class MetaService {
       }
     }
 
-    public void getTag(GetTagReq req, AsyncMethodCallback resultHandler240) throws TException {
+    public void getTag(GetTagReq req, AsyncMethodCallback resultHandler255) throws TException {
       checkReady();
-      getTag_call method_call = new getTag_call(req, resultHandler240, this, ___protocolFactory, ___transport);
+      getTag_call method_call = new getTag_call(req, resultHandler255, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getTag_call extends TAsyncMethodCall {
       private GetTagReq req;
-      public getTag_call(GetTagReq req, AsyncMethodCallback resultHandler241, TAsyncClient client237, TProtocolFactory protocolFactory238, TNonblockingTransport transport239) throws TException {
-        super(client237, protocolFactory238, transport239, resultHandler241, false);
+      public getTag_call(GetTagReq req, AsyncMethodCallback resultHandler256, TAsyncClient client252, TProtocolFactory protocolFactory253, TNonblockingTransport transport254) throws TException {
+        super(client252, protocolFactory253, transport254, resultHandler256, false);
         this.req = req;
       }
 
@@ -2839,17 +3084,17 @@ public class MetaService {
       }
     }
 
-    public void listTags(ListTagsReq req, AsyncMethodCallback resultHandler245) throws TException {
+    public void listTags(ListTagsReq req, AsyncMethodCallback resultHandler260) throws TException {
       checkReady();
-      listTags_call method_call = new listTags_call(req, resultHandler245, this, ___protocolFactory, ___transport);
+      listTags_call method_call = new listTags_call(req, resultHandler260, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listTags_call extends TAsyncMethodCall {
       private ListTagsReq req;
-      public listTags_call(ListTagsReq req, AsyncMethodCallback resultHandler246, TAsyncClient client242, TProtocolFactory protocolFactory243, TNonblockingTransport transport244) throws TException {
-        super(client242, protocolFactory243, transport244, resultHandler246, false);
+      public listTags_call(ListTagsReq req, AsyncMethodCallback resultHandler261, TAsyncClient client257, TProtocolFactory protocolFactory258, TNonblockingTransport transport259) throws TException {
+        super(client257, protocolFactory258, transport259, resultHandler261, false);
         this.req = req;
       }
 
@@ -2871,17 +3116,17 @@ public class MetaService {
       }
     }
 
-    public void createEdge(CreateEdgeReq req, AsyncMethodCallback resultHandler250) throws TException {
+    public void createEdge(CreateEdgeReq req, AsyncMethodCallback resultHandler265) throws TException {
       checkReady();
-      createEdge_call method_call = new createEdge_call(req, resultHandler250, this, ___protocolFactory, ___transport);
+      createEdge_call method_call = new createEdge_call(req, resultHandler265, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createEdge_call extends TAsyncMethodCall {
       private CreateEdgeReq req;
-      public createEdge_call(CreateEdgeReq req, AsyncMethodCallback resultHandler251, TAsyncClient client247, TProtocolFactory protocolFactory248, TNonblockingTransport transport249) throws TException {
-        super(client247, protocolFactory248, transport249, resultHandler251, false);
+      public createEdge_call(CreateEdgeReq req, AsyncMethodCallback resultHandler266, TAsyncClient client262, TProtocolFactory protocolFactory263, TNonblockingTransport transport264) throws TException {
+        super(client262, protocolFactory263, transport264, resultHandler266, false);
         this.req = req;
       }
 
@@ -2903,17 +3148,17 @@ public class MetaService {
       }
     }
 
-    public void alterEdge(AlterEdgeReq req, AsyncMethodCallback resultHandler255) throws TException {
+    public void alterEdge(AlterEdgeReq req, AsyncMethodCallback resultHandler270) throws TException {
       checkReady();
-      alterEdge_call method_call = new alterEdge_call(req, resultHandler255, this, ___protocolFactory, ___transport);
+      alterEdge_call method_call = new alterEdge_call(req, resultHandler270, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class alterEdge_call extends TAsyncMethodCall {
       private AlterEdgeReq req;
-      public alterEdge_call(AlterEdgeReq req, AsyncMethodCallback resultHandler256, TAsyncClient client252, TProtocolFactory protocolFactory253, TNonblockingTransport transport254) throws TException {
-        super(client252, protocolFactory253, transport254, resultHandler256, false);
+      public alterEdge_call(AlterEdgeReq req, AsyncMethodCallback resultHandler271, TAsyncClient client267, TProtocolFactory protocolFactory268, TNonblockingTransport transport269) throws TException {
+        super(client267, protocolFactory268, transport269, resultHandler271, false);
         this.req = req;
       }
 
@@ -2935,17 +3180,17 @@ public class MetaService {
       }
     }
 
-    public void dropEdge(DropEdgeReq req, AsyncMethodCallback resultHandler260) throws TException {
+    public void dropEdge(DropEdgeReq req, AsyncMethodCallback resultHandler275) throws TException {
       checkReady();
-      dropEdge_call method_call = new dropEdge_call(req, resultHandler260, this, ___protocolFactory, ___transport);
+      dropEdge_call method_call = new dropEdge_call(req, resultHandler275, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropEdge_call extends TAsyncMethodCall {
       private DropEdgeReq req;
-      public dropEdge_call(DropEdgeReq req, AsyncMethodCallback resultHandler261, TAsyncClient client257, TProtocolFactory protocolFactory258, TNonblockingTransport transport259) throws TException {
-        super(client257, protocolFactory258, transport259, resultHandler261, false);
+      public dropEdge_call(DropEdgeReq req, AsyncMethodCallback resultHandler276, TAsyncClient client272, TProtocolFactory protocolFactory273, TNonblockingTransport transport274) throws TException {
+        super(client272, protocolFactory273, transport274, resultHandler276, false);
         this.req = req;
       }
 
@@ -2967,17 +3212,17 @@ public class MetaService {
       }
     }
 
-    public void getEdge(GetEdgeReq req, AsyncMethodCallback resultHandler265) throws TException {
+    public void getEdge(GetEdgeReq req, AsyncMethodCallback resultHandler280) throws TException {
       checkReady();
-      getEdge_call method_call = new getEdge_call(req, resultHandler265, this, ___protocolFactory, ___transport);
+      getEdge_call method_call = new getEdge_call(req, resultHandler280, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getEdge_call extends TAsyncMethodCall {
       private GetEdgeReq req;
-      public getEdge_call(GetEdgeReq req, AsyncMethodCallback resultHandler266, TAsyncClient client262, TProtocolFactory protocolFactory263, TNonblockingTransport transport264) throws TException {
-        super(client262, protocolFactory263, transport264, resultHandler266, false);
+      public getEdge_call(GetEdgeReq req, AsyncMethodCallback resultHandler281, TAsyncClient client277, TProtocolFactory protocolFactory278, TNonblockingTransport transport279) throws TException {
+        super(client277, protocolFactory278, transport279, resultHandler281, false);
         this.req = req;
       }
 
@@ -2999,17 +3244,17 @@ public class MetaService {
       }
     }
 
-    public void listEdges(ListEdgesReq req, AsyncMethodCallback resultHandler270) throws TException {
+    public void listEdges(ListEdgesReq req, AsyncMethodCallback resultHandler285) throws TException {
       checkReady();
-      listEdges_call method_call = new listEdges_call(req, resultHandler270, this, ___protocolFactory, ___transport);
+      listEdges_call method_call = new listEdges_call(req, resultHandler285, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listEdges_call extends TAsyncMethodCall {
       private ListEdgesReq req;
-      public listEdges_call(ListEdgesReq req, AsyncMethodCallback resultHandler271, TAsyncClient client267, TProtocolFactory protocolFactory268, TNonblockingTransport transport269) throws TException {
-        super(client267, protocolFactory268, transport269, resultHandler271, false);
+      public listEdges_call(ListEdgesReq req, AsyncMethodCallback resultHandler286, TAsyncClient client282, TProtocolFactory protocolFactory283, TNonblockingTransport transport284) throws TException {
+        super(client282, protocolFactory283, transport284, resultHandler286, false);
         this.req = req;
       }
 
@@ -3031,17 +3276,17 @@ public class MetaService {
       }
     }
 
-    public void listHosts(ListHostsReq req, AsyncMethodCallback resultHandler275) throws TException {
+    public void listHosts(ListHostsReq req, AsyncMethodCallback resultHandler290) throws TException {
       checkReady();
-      listHosts_call method_call = new listHosts_call(req, resultHandler275, this, ___protocolFactory, ___transport);
+      listHosts_call method_call = new listHosts_call(req, resultHandler290, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listHosts_call extends TAsyncMethodCall {
       private ListHostsReq req;
-      public listHosts_call(ListHostsReq req, AsyncMethodCallback resultHandler276, TAsyncClient client272, TProtocolFactory protocolFactory273, TNonblockingTransport transport274) throws TException {
-        super(client272, protocolFactory273, transport274, resultHandler276, false);
+      public listHosts_call(ListHostsReq req, AsyncMethodCallback resultHandler291, TAsyncClient client287, TProtocolFactory protocolFactory288, TNonblockingTransport transport289) throws TException {
+        super(client287, protocolFactory288, transport289, resultHandler291, false);
         this.req = req;
       }
 
@@ -3063,17 +3308,17 @@ public class MetaService {
       }
     }
 
-    public void getPartsAlloc(GetPartsAllocReq req, AsyncMethodCallback resultHandler280) throws TException {
+    public void getPartsAlloc(GetPartsAllocReq req, AsyncMethodCallback resultHandler295) throws TException {
       checkReady();
-      getPartsAlloc_call method_call = new getPartsAlloc_call(req, resultHandler280, this, ___protocolFactory, ___transport);
+      getPartsAlloc_call method_call = new getPartsAlloc_call(req, resultHandler295, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getPartsAlloc_call extends TAsyncMethodCall {
       private GetPartsAllocReq req;
-      public getPartsAlloc_call(GetPartsAllocReq req, AsyncMethodCallback resultHandler281, TAsyncClient client277, TProtocolFactory protocolFactory278, TNonblockingTransport transport279) throws TException {
-        super(client277, protocolFactory278, transport279, resultHandler281, false);
+      public getPartsAlloc_call(GetPartsAllocReq req, AsyncMethodCallback resultHandler296, TAsyncClient client292, TProtocolFactory protocolFactory293, TNonblockingTransport transport294) throws TException {
+        super(client292, protocolFactory293, transport294, resultHandler296, false);
         this.req = req;
       }
 
@@ -3095,17 +3340,17 @@ public class MetaService {
       }
     }
 
-    public void listParts(ListPartsReq req, AsyncMethodCallback resultHandler285) throws TException {
+    public void listParts(ListPartsReq req, AsyncMethodCallback resultHandler300) throws TException {
       checkReady();
-      listParts_call method_call = new listParts_call(req, resultHandler285, this, ___protocolFactory, ___transport);
+      listParts_call method_call = new listParts_call(req, resultHandler300, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listParts_call extends TAsyncMethodCall {
       private ListPartsReq req;
-      public listParts_call(ListPartsReq req, AsyncMethodCallback resultHandler286, TAsyncClient client282, TProtocolFactory protocolFactory283, TNonblockingTransport transport284) throws TException {
-        super(client282, protocolFactory283, transport284, resultHandler286, false);
+      public listParts_call(ListPartsReq req, AsyncMethodCallback resultHandler301, TAsyncClient client297, TProtocolFactory protocolFactory298, TNonblockingTransport transport299) throws TException {
+        super(client297, protocolFactory298, transport299, resultHandler301, false);
         this.req = req;
       }
 
@@ -3127,17 +3372,17 @@ public class MetaService {
       }
     }
 
-    public void multiPut(MultiPutReq req, AsyncMethodCallback resultHandler290) throws TException {
+    public void multiPut(MultiPutReq req, AsyncMethodCallback resultHandler305) throws TException {
       checkReady();
-      multiPut_call method_call = new multiPut_call(req, resultHandler290, this, ___protocolFactory, ___transport);
+      multiPut_call method_call = new multiPut_call(req, resultHandler305, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class multiPut_call extends TAsyncMethodCall {
       private MultiPutReq req;
-      public multiPut_call(MultiPutReq req, AsyncMethodCallback resultHandler291, TAsyncClient client287, TProtocolFactory protocolFactory288, TNonblockingTransport transport289) throws TException {
-        super(client287, protocolFactory288, transport289, resultHandler291, false);
+      public multiPut_call(MultiPutReq req, AsyncMethodCallback resultHandler306, TAsyncClient client302, TProtocolFactory protocolFactory303, TNonblockingTransport transport304) throws TException {
+        super(client302, protocolFactory303, transport304, resultHandler306, false);
         this.req = req;
       }
 
@@ -3159,17 +3404,17 @@ public class MetaService {
       }
     }
 
-    public void get(GetReq req, AsyncMethodCallback resultHandler295) throws TException {
+    public void get(GetReq req, AsyncMethodCallback resultHandler310) throws TException {
       checkReady();
-      get_call method_call = new get_call(req, resultHandler295, this, ___protocolFactory, ___transport);
+      get_call method_call = new get_call(req, resultHandler310, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class get_call extends TAsyncMethodCall {
       private GetReq req;
-      public get_call(GetReq req, AsyncMethodCallback resultHandler296, TAsyncClient client292, TProtocolFactory protocolFactory293, TNonblockingTransport transport294) throws TException {
-        super(client292, protocolFactory293, transport294, resultHandler296, false);
+      public get_call(GetReq req, AsyncMethodCallback resultHandler311, TAsyncClient client307, TProtocolFactory protocolFactory308, TNonblockingTransport transport309) throws TException {
+        super(client307, protocolFactory308, transport309, resultHandler311, false);
         this.req = req;
       }
 
@@ -3191,17 +3436,17 @@ public class MetaService {
       }
     }
 
-    public void multiGet(MultiGetReq req, AsyncMethodCallback resultHandler300) throws TException {
+    public void multiGet(MultiGetReq req, AsyncMethodCallback resultHandler315) throws TException {
       checkReady();
-      multiGet_call method_call = new multiGet_call(req, resultHandler300, this, ___protocolFactory, ___transport);
+      multiGet_call method_call = new multiGet_call(req, resultHandler315, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class multiGet_call extends TAsyncMethodCall {
       private MultiGetReq req;
-      public multiGet_call(MultiGetReq req, AsyncMethodCallback resultHandler301, TAsyncClient client297, TProtocolFactory protocolFactory298, TNonblockingTransport transport299) throws TException {
-        super(client297, protocolFactory298, transport299, resultHandler301, false);
+      public multiGet_call(MultiGetReq req, AsyncMethodCallback resultHandler316, TAsyncClient client312, TProtocolFactory protocolFactory313, TNonblockingTransport transport314) throws TException {
+        super(client312, protocolFactory313, transport314, resultHandler316, false);
         this.req = req;
       }
 
@@ -3223,17 +3468,17 @@ public class MetaService {
       }
     }
 
-    public void remove(RemoveReq req, AsyncMethodCallback resultHandler305) throws TException {
+    public void remove(RemoveReq req, AsyncMethodCallback resultHandler320) throws TException {
       checkReady();
-      remove_call method_call = new remove_call(req, resultHandler305, this, ___protocolFactory, ___transport);
+      remove_call method_call = new remove_call(req, resultHandler320, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class remove_call extends TAsyncMethodCall {
       private RemoveReq req;
-      public remove_call(RemoveReq req, AsyncMethodCallback resultHandler306, TAsyncClient client302, TProtocolFactory protocolFactory303, TNonblockingTransport transport304) throws TException {
-        super(client302, protocolFactory303, transport304, resultHandler306, false);
+      public remove_call(RemoveReq req, AsyncMethodCallback resultHandler321, TAsyncClient client317, TProtocolFactory protocolFactory318, TNonblockingTransport transport319) throws TException {
+        super(client317, protocolFactory318, transport319, resultHandler321, false);
         this.req = req;
       }
 
@@ -3255,17 +3500,17 @@ public class MetaService {
       }
     }
 
-    public void removeRange(RemoveRangeReq req, AsyncMethodCallback resultHandler310) throws TException {
+    public void removeRange(RemoveRangeReq req, AsyncMethodCallback resultHandler325) throws TException {
       checkReady();
-      removeRange_call method_call = new removeRange_call(req, resultHandler310, this, ___protocolFactory, ___transport);
+      removeRange_call method_call = new removeRange_call(req, resultHandler325, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class removeRange_call extends TAsyncMethodCall {
       private RemoveRangeReq req;
-      public removeRange_call(RemoveRangeReq req, AsyncMethodCallback resultHandler311, TAsyncClient client307, TProtocolFactory protocolFactory308, TNonblockingTransport transport309) throws TException {
-        super(client307, protocolFactory308, transport309, resultHandler311, false);
+      public removeRange_call(RemoveRangeReq req, AsyncMethodCallback resultHandler326, TAsyncClient client322, TProtocolFactory protocolFactory323, TNonblockingTransport transport324) throws TException {
+        super(client322, protocolFactory323, transport324, resultHandler326, false);
         this.req = req;
       }
 
@@ -3287,17 +3532,17 @@ public class MetaService {
       }
     }
 
-    public void scan(ScanReq req, AsyncMethodCallback resultHandler315) throws TException {
+    public void scan(ScanReq req, AsyncMethodCallback resultHandler330) throws TException {
       checkReady();
-      scan_call method_call = new scan_call(req, resultHandler315, this, ___protocolFactory, ___transport);
+      scan_call method_call = new scan_call(req, resultHandler330, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scan_call extends TAsyncMethodCall {
       private ScanReq req;
-      public scan_call(ScanReq req, AsyncMethodCallback resultHandler316, TAsyncClient client312, TProtocolFactory protocolFactory313, TNonblockingTransport transport314) throws TException {
-        super(client312, protocolFactory313, transport314, resultHandler316, false);
+      public scan_call(ScanReq req, AsyncMethodCallback resultHandler331, TAsyncClient client327, TProtocolFactory protocolFactory328, TNonblockingTransport transport329) throws TException {
+        super(client327, protocolFactory328, transport329, resultHandler331, false);
         this.req = req;
       }
 
@@ -3319,17 +3564,17 @@ public class MetaService {
       }
     }
 
-    public void createTagIndex(CreateTagIndexReq req, AsyncMethodCallback resultHandler320) throws TException {
+    public void createTagIndex(CreateTagIndexReq req, AsyncMethodCallback resultHandler335) throws TException {
       checkReady();
-      createTagIndex_call method_call = new createTagIndex_call(req, resultHandler320, this, ___protocolFactory, ___transport);
+      createTagIndex_call method_call = new createTagIndex_call(req, resultHandler335, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createTagIndex_call extends TAsyncMethodCall {
       private CreateTagIndexReq req;
-      public createTagIndex_call(CreateTagIndexReq req, AsyncMethodCallback resultHandler321, TAsyncClient client317, TProtocolFactory protocolFactory318, TNonblockingTransport transport319) throws TException {
-        super(client317, protocolFactory318, transport319, resultHandler321, false);
+      public createTagIndex_call(CreateTagIndexReq req, AsyncMethodCallback resultHandler336, TAsyncClient client332, TProtocolFactory protocolFactory333, TNonblockingTransport transport334) throws TException {
+        super(client332, protocolFactory333, transport334, resultHandler336, false);
         this.req = req;
       }
 
@@ -3351,17 +3596,17 @@ public class MetaService {
       }
     }
 
-    public void dropTagIndex(DropTagIndexReq req, AsyncMethodCallback resultHandler325) throws TException {
+    public void dropTagIndex(DropTagIndexReq req, AsyncMethodCallback resultHandler340) throws TException {
       checkReady();
-      dropTagIndex_call method_call = new dropTagIndex_call(req, resultHandler325, this, ___protocolFactory, ___transport);
+      dropTagIndex_call method_call = new dropTagIndex_call(req, resultHandler340, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropTagIndex_call extends TAsyncMethodCall {
       private DropTagIndexReq req;
-      public dropTagIndex_call(DropTagIndexReq req, AsyncMethodCallback resultHandler326, TAsyncClient client322, TProtocolFactory protocolFactory323, TNonblockingTransport transport324) throws TException {
-        super(client322, protocolFactory323, transport324, resultHandler326, false);
+      public dropTagIndex_call(DropTagIndexReq req, AsyncMethodCallback resultHandler341, TAsyncClient client337, TProtocolFactory protocolFactory338, TNonblockingTransport transport339) throws TException {
+        super(client337, protocolFactory338, transport339, resultHandler341, false);
         this.req = req;
       }
 
@@ -3383,17 +3628,17 @@ public class MetaService {
       }
     }
 
-    public void getTagIndex(GetTagIndexReq req, AsyncMethodCallback resultHandler330) throws TException {
+    public void getTagIndex(GetTagIndexReq req, AsyncMethodCallback resultHandler345) throws TException {
       checkReady();
-      getTagIndex_call method_call = new getTagIndex_call(req, resultHandler330, this, ___protocolFactory, ___transport);
+      getTagIndex_call method_call = new getTagIndex_call(req, resultHandler345, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getTagIndex_call extends TAsyncMethodCall {
       private GetTagIndexReq req;
-      public getTagIndex_call(GetTagIndexReq req, AsyncMethodCallback resultHandler331, TAsyncClient client327, TProtocolFactory protocolFactory328, TNonblockingTransport transport329) throws TException {
-        super(client327, protocolFactory328, transport329, resultHandler331, false);
+      public getTagIndex_call(GetTagIndexReq req, AsyncMethodCallback resultHandler346, TAsyncClient client342, TProtocolFactory protocolFactory343, TNonblockingTransport transport344) throws TException {
+        super(client342, protocolFactory343, transport344, resultHandler346, false);
         this.req = req;
       }
 
@@ -3415,17 +3660,17 @@ public class MetaService {
       }
     }
 
-    public void listTagIndexes(ListTagIndexesReq req, AsyncMethodCallback resultHandler335) throws TException {
+    public void listTagIndexes(ListTagIndexesReq req, AsyncMethodCallback resultHandler350) throws TException {
       checkReady();
-      listTagIndexes_call method_call = new listTagIndexes_call(req, resultHandler335, this, ___protocolFactory, ___transport);
+      listTagIndexes_call method_call = new listTagIndexes_call(req, resultHandler350, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listTagIndexes_call extends TAsyncMethodCall {
       private ListTagIndexesReq req;
-      public listTagIndexes_call(ListTagIndexesReq req, AsyncMethodCallback resultHandler336, TAsyncClient client332, TProtocolFactory protocolFactory333, TNonblockingTransport transport334) throws TException {
-        super(client332, protocolFactory333, transport334, resultHandler336, false);
+      public listTagIndexes_call(ListTagIndexesReq req, AsyncMethodCallback resultHandler351, TAsyncClient client347, TProtocolFactory protocolFactory348, TNonblockingTransport transport349) throws TException {
+        super(client347, protocolFactory348, transport349, resultHandler351, false);
         this.req = req;
       }
 
@@ -3447,17 +3692,81 @@ public class MetaService {
       }
     }
 
-    public void createEdgeIndex(CreateEdgeIndexReq req, AsyncMethodCallback resultHandler340) throws TException {
+    public void rebuildTagIndex(RebuildIndexReq req, AsyncMethodCallback resultHandler355) throws TException {
       checkReady();
-      createEdgeIndex_call method_call = new createEdgeIndex_call(req, resultHandler340, this, ___protocolFactory, ___transport);
+      rebuildTagIndex_call method_call = new rebuildTagIndex_call(req, resultHandler355, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class rebuildTagIndex_call extends TAsyncMethodCall {
+      private RebuildIndexReq req;
+      public rebuildTagIndex_call(RebuildIndexReq req, AsyncMethodCallback resultHandler356, TAsyncClient client352, TProtocolFactory protocolFactory353, TNonblockingTransport transport354) throws TException {
+        super(client352, protocolFactory353, transport354, resultHandler356, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("rebuildTagIndex", TMessageType.CALL, 0));
+        rebuildTagIndex_args args = new rebuildTagIndex_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ExecResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_rebuildTagIndex();
+      }
+    }
+
+    public void listTagIndexStatus(ListIndexStatusReq req, AsyncMethodCallback resultHandler360) throws TException {
+      checkReady();
+      listTagIndexStatus_call method_call = new listTagIndexStatus_call(req, resultHandler360, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class listTagIndexStatus_call extends TAsyncMethodCall {
+      private ListIndexStatusReq req;
+      public listTagIndexStatus_call(ListIndexStatusReq req, AsyncMethodCallback resultHandler361, TAsyncClient client357, TProtocolFactory protocolFactory358, TNonblockingTransport transport359) throws TException {
+        super(client357, protocolFactory358, transport359, resultHandler361, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("listTagIndexStatus", TMessageType.CALL, 0));
+        listTagIndexStatus_args args = new listTagIndexStatus_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ListIndexStatusResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_listTagIndexStatus();
+      }
+    }
+
+    public void createEdgeIndex(CreateEdgeIndexReq req, AsyncMethodCallback resultHandler365) throws TException {
+      checkReady();
+      createEdgeIndex_call method_call = new createEdgeIndex_call(req, resultHandler365, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createEdgeIndex_call extends TAsyncMethodCall {
       private CreateEdgeIndexReq req;
-      public createEdgeIndex_call(CreateEdgeIndexReq req, AsyncMethodCallback resultHandler341, TAsyncClient client337, TProtocolFactory protocolFactory338, TNonblockingTransport transport339) throws TException {
-        super(client337, protocolFactory338, transport339, resultHandler341, false);
+      public createEdgeIndex_call(CreateEdgeIndexReq req, AsyncMethodCallback resultHandler366, TAsyncClient client362, TProtocolFactory protocolFactory363, TNonblockingTransport transport364) throws TException {
+        super(client362, protocolFactory363, transport364, resultHandler366, false);
         this.req = req;
       }
 
@@ -3479,17 +3788,17 @@ public class MetaService {
       }
     }
 
-    public void dropEdgeIndex(DropEdgeIndexReq req, AsyncMethodCallback resultHandler345) throws TException {
+    public void dropEdgeIndex(DropEdgeIndexReq req, AsyncMethodCallback resultHandler370) throws TException {
       checkReady();
-      dropEdgeIndex_call method_call = new dropEdgeIndex_call(req, resultHandler345, this, ___protocolFactory, ___transport);
+      dropEdgeIndex_call method_call = new dropEdgeIndex_call(req, resultHandler370, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropEdgeIndex_call extends TAsyncMethodCall {
       private DropEdgeIndexReq req;
-      public dropEdgeIndex_call(DropEdgeIndexReq req, AsyncMethodCallback resultHandler346, TAsyncClient client342, TProtocolFactory protocolFactory343, TNonblockingTransport transport344) throws TException {
-        super(client342, protocolFactory343, transport344, resultHandler346, false);
+      public dropEdgeIndex_call(DropEdgeIndexReq req, AsyncMethodCallback resultHandler371, TAsyncClient client367, TProtocolFactory protocolFactory368, TNonblockingTransport transport369) throws TException {
+        super(client367, protocolFactory368, transport369, resultHandler371, false);
         this.req = req;
       }
 
@@ -3511,17 +3820,17 @@ public class MetaService {
       }
     }
 
-    public void getEdgeIndex(GetEdgeIndexReq req, AsyncMethodCallback resultHandler350) throws TException {
+    public void getEdgeIndex(GetEdgeIndexReq req, AsyncMethodCallback resultHandler375) throws TException {
       checkReady();
-      getEdgeIndex_call method_call = new getEdgeIndex_call(req, resultHandler350, this, ___protocolFactory, ___transport);
+      getEdgeIndex_call method_call = new getEdgeIndex_call(req, resultHandler375, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getEdgeIndex_call extends TAsyncMethodCall {
       private GetEdgeIndexReq req;
-      public getEdgeIndex_call(GetEdgeIndexReq req, AsyncMethodCallback resultHandler351, TAsyncClient client347, TProtocolFactory protocolFactory348, TNonblockingTransport transport349) throws TException {
-        super(client347, protocolFactory348, transport349, resultHandler351, false);
+      public getEdgeIndex_call(GetEdgeIndexReq req, AsyncMethodCallback resultHandler376, TAsyncClient client372, TProtocolFactory protocolFactory373, TNonblockingTransport transport374) throws TException {
+        super(client372, protocolFactory373, transport374, resultHandler376, false);
         this.req = req;
       }
 
@@ -3543,17 +3852,17 @@ public class MetaService {
       }
     }
 
-    public void listEdgeIndexes(ListEdgeIndexesReq req, AsyncMethodCallback resultHandler355) throws TException {
+    public void listEdgeIndexes(ListEdgeIndexesReq req, AsyncMethodCallback resultHandler380) throws TException {
       checkReady();
-      listEdgeIndexes_call method_call = new listEdgeIndexes_call(req, resultHandler355, this, ___protocolFactory, ___transport);
+      listEdgeIndexes_call method_call = new listEdgeIndexes_call(req, resultHandler380, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listEdgeIndexes_call extends TAsyncMethodCall {
       private ListEdgeIndexesReq req;
-      public listEdgeIndexes_call(ListEdgeIndexesReq req, AsyncMethodCallback resultHandler356, TAsyncClient client352, TProtocolFactory protocolFactory353, TNonblockingTransport transport354) throws TException {
-        super(client352, protocolFactory353, transport354, resultHandler356, false);
+      public listEdgeIndexes_call(ListEdgeIndexesReq req, AsyncMethodCallback resultHandler381, TAsyncClient client377, TProtocolFactory protocolFactory378, TNonblockingTransport transport379) throws TException {
+        super(client377, protocolFactory378, transport379, resultHandler381, false);
         this.req = req;
       }
 
@@ -3575,17 +3884,81 @@ public class MetaService {
       }
     }
 
-    public void createUser(CreateUserReq req, AsyncMethodCallback resultHandler360) throws TException {
+    public void rebuildEdgeIndex(RebuildIndexReq req, AsyncMethodCallback resultHandler385) throws TException {
       checkReady();
-      createUser_call method_call = new createUser_call(req, resultHandler360, this, ___protocolFactory, ___transport);
+      rebuildEdgeIndex_call method_call = new rebuildEdgeIndex_call(req, resultHandler385, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class rebuildEdgeIndex_call extends TAsyncMethodCall {
+      private RebuildIndexReq req;
+      public rebuildEdgeIndex_call(RebuildIndexReq req, AsyncMethodCallback resultHandler386, TAsyncClient client382, TProtocolFactory protocolFactory383, TNonblockingTransport transport384) throws TException {
+        super(client382, protocolFactory383, transport384, resultHandler386, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("rebuildEdgeIndex", TMessageType.CALL, 0));
+        rebuildEdgeIndex_args args = new rebuildEdgeIndex_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ExecResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_rebuildEdgeIndex();
+      }
+    }
+
+    public void listEdgeIndexStatus(ListIndexStatusReq req, AsyncMethodCallback resultHandler390) throws TException {
+      checkReady();
+      listEdgeIndexStatus_call method_call = new listEdgeIndexStatus_call(req, resultHandler390, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class listEdgeIndexStatus_call extends TAsyncMethodCall {
+      private ListIndexStatusReq req;
+      public listEdgeIndexStatus_call(ListIndexStatusReq req, AsyncMethodCallback resultHandler391, TAsyncClient client387, TProtocolFactory protocolFactory388, TNonblockingTransport transport389) throws TException {
+        super(client387, protocolFactory388, transport389, resultHandler391, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("listEdgeIndexStatus", TMessageType.CALL, 0));
+        listEdgeIndexStatus_args args = new listEdgeIndexStatus_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ListIndexStatusResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_listEdgeIndexStatus();
+      }
+    }
+
+    public void createUser(CreateUserReq req, AsyncMethodCallback resultHandler395) throws TException {
+      checkReady();
+      createUser_call method_call = new createUser_call(req, resultHandler395, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createUser_call extends TAsyncMethodCall {
       private CreateUserReq req;
-      public createUser_call(CreateUserReq req, AsyncMethodCallback resultHandler361, TAsyncClient client357, TProtocolFactory protocolFactory358, TNonblockingTransport transport359) throws TException {
-        super(client357, protocolFactory358, transport359, resultHandler361, false);
+      public createUser_call(CreateUserReq req, AsyncMethodCallback resultHandler396, TAsyncClient client392, TProtocolFactory protocolFactory393, TNonblockingTransport transport394) throws TException {
+        super(client392, protocolFactory393, transport394, resultHandler396, false);
         this.req = req;
       }
 
@@ -3607,17 +3980,17 @@ public class MetaService {
       }
     }
 
-    public void dropUser(DropUserReq req, AsyncMethodCallback resultHandler365) throws TException {
+    public void dropUser(DropUserReq req, AsyncMethodCallback resultHandler400) throws TException {
       checkReady();
-      dropUser_call method_call = new dropUser_call(req, resultHandler365, this, ___protocolFactory, ___transport);
+      dropUser_call method_call = new dropUser_call(req, resultHandler400, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropUser_call extends TAsyncMethodCall {
       private DropUserReq req;
-      public dropUser_call(DropUserReq req, AsyncMethodCallback resultHandler366, TAsyncClient client362, TProtocolFactory protocolFactory363, TNonblockingTransport transport364) throws TException {
-        super(client362, protocolFactory363, transport364, resultHandler366, false);
+      public dropUser_call(DropUserReq req, AsyncMethodCallback resultHandler401, TAsyncClient client397, TProtocolFactory protocolFactory398, TNonblockingTransport transport399) throws TException {
+        super(client397, protocolFactory398, transport399, resultHandler401, false);
         this.req = req;
       }
 
@@ -3639,17 +4012,17 @@ public class MetaService {
       }
     }
 
-    public void alterUser(AlterUserReq req, AsyncMethodCallback resultHandler370) throws TException {
+    public void alterUser(AlterUserReq req, AsyncMethodCallback resultHandler405) throws TException {
       checkReady();
-      alterUser_call method_call = new alterUser_call(req, resultHandler370, this, ___protocolFactory, ___transport);
+      alterUser_call method_call = new alterUser_call(req, resultHandler405, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class alterUser_call extends TAsyncMethodCall {
       private AlterUserReq req;
-      public alterUser_call(AlterUserReq req, AsyncMethodCallback resultHandler371, TAsyncClient client367, TProtocolFactory protocolFactory368, TNonblockingTransport transport369) throws TException {
-        super(client367, protocolFactory368, transport369, resultHandler371, false);
+      public alterUser_call(AlterUserReq req, AsyncMethodCallback resultHandler406, TAsyncClient client402, TProtocolFactory protocolFactory403, TNonblockingTransport transport404) throws TException {
+        super(client402, protocolFactory403, transport404, resultHandler406, false);
         this.req = req;
       }
 
@@ -3671,17 +4044,17 @@ public class MetaService {
       }
     }
 
-    public void grantRole(GrantRoleReq req, AsyncMethodCallback resultHandler375) throws TException {
+    public void grantRole(GrantRoleReq req, AsyncMethodCallback resultHandler410) throws TException {
       checkReady();
-      grantRole_call method_call = new grantRole_call(req, resultHandler375, this, ___protocolFactory, ___transport);
+      grantRole_call method_call = new grantRole_call(req, resultHandler410, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class grantRole_call extends TAsyncMethodCall {
       private GrantRoleReq req;
-      public grantRole_call(GrantRoleReq req, AsyncMethodCallback resultHandler376, TAsyncClient client372, TProtocolFactory protocolFactory373, TNonblockingTransport transport374) throws TException {
-        super(client372, protocolFactory373, transport374, resultHandler376, false);
+      public grantRole_call(GrantRoleReq req, AsyncMethodCallback resultHandler411, TAsyncClient client407, TProtocolFactory protocolFactory408, TNonblockingTransport transport409) throws TException {
+        super(client407, protocolFactory408, transport409, resultHandler411, false);
         this.req = req;
       }
 
@@ -3703,17 +4076,17 @@ public class MetaService {
       }
     }
 
-    public void revokeRole(RevokeRoleReq req, AsyncMethodCallback resultHandler380) throws TException {
+    public void revokeRole(RevokeRoleReq req, AsyncMethodCallback resultHandler415) throws TException {
       checkReady();
-      revokeRole_call method_call = new revokeRole_call(req, resultHandler380, this, ___protocolFactory, ___transport);
+      revokeRole_call method_call = new revokeRole_call(req, resultHandler415, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class revokeRole_call extends TAsyncMethodCall {
       private RevokeRoleReq req;
-      public revokeRole_call(RevokeRoleReq req, AsyncMethodCallback resultHandler381, TAsyncClient client377, TProtocolFactory protocolFactory378, TNonblockingTransport transport379) throws TException {
-        super(client377, protocolFactory378, transport379, resultHandler381, false);
+      public revokeRole_call(RevokeRoleReq req, AsyncMethodCallback resultHandler416, TAsyncClient client412, TProtocolFactory protocolFactory413, TNonblockingTransport transport414) throws TException {
+        super(client412, protocolFactory413, transport414, resultHandler416, false);
         this.req = req;
       }
 
@@ -3735,17 +4108,17 @@ public class MetaService {
       }
     }
 
-    public void getUser(GetUserReq req, AsyncMethodCallback resultHandler385) throws TException {
+    public void getUser(GetUserReq req, AsyncMethodCallback resultHandler420) throws TException {
       checkReady();
-      getUser_call method_call = new getUser_call(req, resultHandler385, this, ___protocolFactory, ___transport);
+      getUser_call method_call = new getUser_call(req, resultHandler420, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getUser_call extends TAsyncMethodCall {
       private GetUserReq req;
-      public getUser_call(GetUserReq req, AsyncMethodCallback resultHandler386, TAsyncClient client382, TProtocolFactory protocolFactory383, TNonblockingTransport transport384) throws TException {
-        super(client382, protocolFactory383, transport384, resultHandler386, false);
+      public getUser_call(GetUserReq req, AsyncMethodCallback resultHandler421, TAsyncClient client417, TProtocolFactory protocolFactory418, TNonblockingTransport transport419) throws TException {
+        super(client417, protocolFactory418, transport419, resultHandler421, false);
         this.req = req;
       }
 
@@ -3767,17 +4140,17 @@ public class MetaService {
       }
     }
 
-    public void listUsers(ListUsersReq req, AsyncMethodCallback resultHandler390) throws TException {
+    public void listUsers(ListUsersReq req, AsyncMethodCallback resultHandler425) throws TException {
       checkReady();
-      listUsers_call method_call = new listUsers_call(req, resultHandler390, this, ___protocolFactory, ___transport);
+      listUsers_call method_call = new listUsers_call(req, resultHandler425, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listUsers_call extends TAsyncMethodCall {
       private ListUsersReq req;
-      public listUsers_call(ListUsersReq req, AsyncMethodCallback resultHandler391, TAsyncClient client387, TProtocolFactory protocolFactory388, TNonblockingTransport transport389) throws TException {
-        super(client387, protocolFactory388, transport389, resultHandler391, false);
+      public listUsers_call(ListUsersReq req, AsyncMethodCallback resultHandler426, TAsyncClient client422, TProtocolFactory protocolFactory423, TNonblockingTransport transport424) throws TException {
+        super(client422, protocolFactory423, transport424, resultHandler426, false);
         this.req = req;
       }
 
@@ -3799,17 +4172,17 @@ public class MetaService {
       }
     }
 
-    public void listRoles(ListRolesReq req, AsyncMethodCallback resultHandler395) throws TException {
+    public void listRoles(ListRolesReq req, AsyncMethodCallback resultHandler430) throws TException {
       checkReady();
-      listRoles_call method_call = new listRoles_call(req, resultHandler395, this, ___protocolFactory, ___transport);
+      listRoles_call method_call = new listRoles_call(req, resultHandler430, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listRoles_call extends TAsyncMethodCall {
       private ListRolesReq req;
-      public listRoles_call(ListRolesReq req, AsyncMethodCallback resultHandler396, TAsyncClient client392, TProtocolFactory protocolFactory393, TNonblockingTransport transport394) throws TException {
-        super(client392, protocolFactory393, transport394, resultHandler396, false);
+      public listRoles_call(ListRolesReq req, AsyncMethodCallback resultHandler431, TAsyncClient client427, TProtocolFactory protocolFactory428, TNonblockingTransport transport429) throws TException {
+        super(client427, protocolFactory428, transport429, resultHandler431, false);
         this.req = req;
       }
 
@@ -3831,17 +4204,17 @@ public class MetaService {
       }
     }
 
-    public void changePassword(ChangePasswordReq req, AsyncMethodCallback resultHandler400) throws TException {
+    public void changePassword(ChangePasswordReq req, AsyncMethodCallback resultHandler435) throws TException {
       checkReady();
-      changePassword_call method_call = new changePassword_call(req, resultHandler400, this, ___protocolFactory, ___transport);
+      changePassword_call method_call = new changePassword_call(req, resultHandler435, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class changePassword_call extends TAsyncMethodCall {
       private ChangePasswordReq req;
-      public changePassword_call(ChangePasswordReq req, AsyncMethodCallback resultHandler401, TAsyncClient client397, TProtocolFactory protocolFactory398, TNonblockingTransport transport399) throws TException {
-        super(client397, protocolFactory398, transport399, resultHandler401, false);
+      public changePassword_call(ChangePasswordReq req, AsyncMethodCallback resultHandler436, TAsyncClient client432, TProtocolFactory protocolFactory433, TNonblockingTransport transport434) throws TException {
+        super(client432, protocolFactory433, transport434, resultHandler436, false);
         this.req = req;
       }
 
@@ -3863,17 +4236,17 @@ public class MetaService {
       }
     }
 
-    public void checkPassword(CheckPasswordReq req, AsyncMethodCallback resultHandler405) throws TException {
+    public void checkPassword(CheckPasswordReq req, AsyncMethodCallback resultHandler440) throws TException {
       checkReady();
-      checkPassword_call method_call = new checkPassword_call(req, resultHandler405, this, ___protocolFactory, ___transport);
+      checkPassword_call method_call = new checkPassword_call(req, resultHandler440, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class checkPassword_call extends TAsyncMethodCall {
       private CheckPasswordReq req;
-      public checkPassword_call(CheckPasswordReq req, AsyncMethodCallback resultHandler406, TAsyncClient client402, TProtocolFactory protocolFactory403, TNonblockingTransport transport404) throws TException {
-        super(client402, protocolFactory403, transport404, resultHandler406, false);
+      public checkPassword_call(CheckPasswordReq req, AsyncMethodCallback resultHandler441, TAsyncClient client437, TProtocolFactory protocolFactory438, TNonblockingTransport transport439) throws TException {
+        super(client437, protocolFactory438, transport439, resultHandler441, false);
         this.req = req;
       }
 
@@ -3895,17 +4268,17 @@ public class MetaService {
       }
     }
 
-    public void heartBeat(HBReq req, AsyncMethodCallback resultHandler410) throws TException {
+    public void heartBeat(HBReq req, AsyncMethodCallback resultHandler445) throws TException {
       checkReady();
-      heartBeat_call method_call = new heartBeat_call(req, resultHandler410, this, ___protocolFactory, ___transport);
+      heartBeat_call method_call = new heartBeat_call(req, resultHandler445, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class heartBeat_call extends TAsyncMethodCall {
       private HBReq req;
-      public heartBeat_call(HBReq req, AsyncMethodCallback resultHandler411, TAsyncClient client407, TProtocolFactory protocolFactory408, TNonblockingTransport transport409) throws TException {
-        super(client407, protocolFactory408, transport409, resultHandler411, false);
+      public heartBeat_call(HBReq req, AsyncMethodCallback resultHandler446, TAsyncClient client442, TProtocolFactory protocolFactory443, TNonblockingTransport transport444) throws TException {
+        super(client442, protocolFactory443, transport444, resultHandler446, false);
         this.req = req;
       }
 
@@ -3927,17 +4300,17 @@ public class MetaService {
       }
     }
 
-    public void balance(BalanceReq req, AsyncMethodCallback resultHandler415) throws TException {
+    public void balance(BalanceReq req, AsyncMethodCallback resultHandler450) throws TException {
       checkReady();
-      balance_call method_call = new balance_call(req, resultHandler415, this, ___protocolFactory, ___transport);
+      balance_call method_call = new balance_call(req, resultHandler450, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class balance_call extends TAsyncMethodCall {
       private BalanceReq req;
-      public balance_call(BalanceReq req, AsyncMethodCallback resultHandler416, TAsyncClient client412, TProtocolFactory protocolFactory413, TNonblockingTransport transport414) throws TException {
-        super(client412, protocolFactory413, transport414, resultHandler416, false);
+      public balance_call(BalanceReq req, AsyncMethodCallback resultHandler451, TAsyncClient client447, TProtocolFactory protocolFactory448, TNonblockingTransport transport449) throws TException {
+        super(client447, protocolFactory448, transport449, resultHandler451, false);
         this.req = req;
       }
 
@@ -3959,17 +4332,17 @@ public class MetaService {
       }
     }
 
-    public void leaderBalance(LeaderBalanceReq req, AsyncMethodCallback resultHandler420) throws TException {
+    public void leaderBalance(LeaderBalanceReq req, AsyncMethodCallback resultHandler455) throws TException {
       checkReady();
-      leaderBalance_call method_call = new leaderBalance_call(req, resultHandler420, this, ___protocolFactory, ___transport);
+      leaderBalance_call method_call = new leaderBalance_call(req, resultHandler455, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class leaderBalance_call extends TAsyncMethodCall {
       private LeaderBalanceReq req;
-      public leaderBalance_call(LeaderBalanceReq req, AsyncMethodCallback resultHandler421, TAsyncClient client417, TProtocolFactory protocolFactory418, TNonblockingTransport transport419) throws TException {
-        super(client417, protocolFactory418, transport419, resultHandler421, false);
+      public leaderBalance_call(LeaderBalanceReq req, AsyncMethodCallback resultHandler456, TAsyncClient client452, TProtocolFactory protocolFactory453, TNonblockingTransport transport454) throws TException {
+        super(client452, protocolFactory453, transport454, resultHandler456, false);
         this.req = req;
       }
 
@@ -3991,17 +4364,17 @@ public class MetaService {
       }
     }
 
-    public void regConfig(RegConfigReq req, AsyncMethodCallback resultHandler425) throws TException {
+    public void regConfig(RegConfigReq req, AsyncMethodCallback resultHandler460) throws TException {
       checkReady();
-      regConfig_call method_call = new regConfig_call(req, resultHandler425, this, ___protocolFactory, ___transport);
+      regConfig_call method_call = new regConfig_call(req, resultHandler460, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class regConfig_call extends TAsyncMethodCall {
       private RegConfigReq req;
-      public regConfig_call(RegConfigReq req, AsyncMethodCallback resultHandler426, TAsyncClient client422, TProtocolFactory protocolFactory423, TNonblockingTransport transport424) throws TException {
-        super(client422, protocolFactory423, transport424, resultHandler426, false);
+      public regConfig_call(RegConfigReq req, AsyncMethodCallback resultHandler461, TAsyncClient client457, TProtocolFactory protocolFactory458, TNonblockingTransport transport459) throws TException {
+        super(client457, protocolFactory458, transport459, resultHandler461, false);
         this.req = req;
       }
 
@@ -4023,17 +4396,17 @@ public class MetaService {
       }
     }
 
-    public void getConfig(GetConfigReq req, AsyncMethodCallback resultHandler430) throws TException {
+    public void getConfig(GetConfigReq req, AsyncMethodCallback resultHandler465) throws TException {
       checkReady();
-      getConfig_call method_call = new getConfig_call(req, resultHandler430, this, ___protocolFactory, ___transport);
+      getConfig_call method_call = new getConfig_call(req, resultHandler465, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getConfig_call extends TAsyncMethodCall {
       private GetConfigReq req;
-      public getConfig_call(GetConfigReq req, AsyncMethodCallback resultHandler431, TAsyncClient client427, TProtocolFactory protocolFactory428, TNonblockingTransport transport429) throws TException {
-        super(client427, protocolFactory428, transport429, resultHandler431, false);
+      public getConfig_call(GetConfigReq req, AsyncMethodCallback resultHandler466, TAsyncClient client462, TProtocolFactory protocolFactory463, TNonblockingTransport transport464) throws TException {
+        super(client462, protocolFactory463, transport464, resultHandler466, false);
         this.req = req;
       }
 
@@ -4055,17 +4428,17 @@ public class MetaService {
       }
     }
 
-    public void setConfig(SetConfigReq req, AsyncMethodCallback resultHandler435) throws TException {
+    public void setConfig(SetConfigReq req, AsyncMethodCallback resultHandler470) throws TException {
       checkReady();
-      setConfig_call method_call = new setConfig_call(req, resultHandler435, this, ___protocolFactory, ___transport);
+      setConfig_call method_call = new setConfig_call(req, resultHandler470, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class setConfig_call extends TAsyncMethodCall {
       private SetConfigReq req;
-      public setConfig_call(SetConfigReq req, AsyncMethodCallback resultHandler436, TAsyncClient client432, TProtocolFactory protocolFactory433, TNonblockingTransport transport434) throws TException {
-        super(client432, protocolFactory433, transport434, resultHandler436, false);
+      public setConfig_call(SetConfigReq req, AsyncMethodCallback resultHandler471, TAsyncClient client467, TProtocolFactory protocolFactory468, TNonblockingTransport transport469) throws TException {
+        super(client467, protocolFactory468, transport469, resultHandler471, false);
         this.req = req;
       }
 
@@ -4087,17 +4460,17 @@ public class MetaService {
       }
     }
 
-    public void listConfigs(ListConfigsReq req, AsyncMethodCallback resultHandler440) throws TException {
+    public void listConfigs(ListConfigsReq req, AsyncMethodCallback resultHandler475) throws TException {
       checkReady();
-      listConfigs_call method_call = new listConfigs_call(req, resultHandler440, this, ___protocolFactory, ___transport);
+      listConfigs_call method_call = new listConfigs_call(req, resultHandler475, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listConfigs_call extends TAsyncMethodCall {
       private ListConfigsReq req;
-      public listConfigs_call(ListConfigsReq req, AsyncMethodCallback resultHandler441, TAsyncClient client437, TProtocolFactory protocolFactory438, TNonblockingTransport transport439) throws TException {
-        super(client437, protocolFactory438, transport439, resultHandler441, false);
+      public listConfigs_call(ListConfigsReq req, AsyncMethodCallback resultHandler476, TAsyncClient client472, TProtocolFactory protocolFactory473, TNonblockingTransport transport474) throws TException {
+        super(client472, protocolFactory473, transport474, resultHandler476, false);
         this.req = req;
       }
 
@@ -4119,17 +4492,17 @@ public class MetaService {
       }
     }
 
-    public void createSnapshot(CreateSnapshotReq req, AsyncMethodCallback resultHandler445) throws TException {
+    public void createSnapshot(CreateSnapshotReq req, AsyncMethodCallback resultHandler480) throws TException {
       checkReady();
-      createSnapshot_call method_call = new createSnapshot_call(req, resultHandler445, this, ___protocolFactory, ___transport);
+      createSnapshot_call method_call = new createSnapshot_call(req, resultHandler480, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createSnapshot_call extends TAsyncMethodCall {
       private CreateSnapshotReq req;
-      public createSnapshot_call(CreateSnapshotReq req, AsyncMethodCallback resultHandler446, TAsyncClient client442, TProtocolFactory protocolFactory443, TNonblockingTransport transport444) throws TException {
-        super(client442, protocolFactory443, transport444, resultHandler446, false);
+      public createSnapshot_call(CreateSnapshotReq req, AsyncMethodCallback resultHandler481, TAsyncClient client477, TProtocolFactory protocolFactory478, TNonblockingTransport transport479) throws TException {
+        super(client477, protocolFactory478, transport479, resultHandler481, false);
         this.req = req;
       }
 
@@ -4151,17 +4524,17 @@ public class MetaService {
       }
     }
 
-    public void dropSnapshot(DropSnapshotReq req, AsyncMethodCallback resultHandler450) throws TException {
+    public void dropSnapshot(DropSnapshotReq req, AsyncMethodCallback resultHandler485) throws TException {
       checkReady();
-      dropSnapshot_call method_call = new dropSnapshot_call(req, resultHandler450, this, ___protocolFactory, ___transport);
+      dropSnapshot_call method_call = new dropSnapshot_call(req, resultHandler485, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropSnapshot_call extends TAsyncMethodCall {
       private DropSnapshotReq req;
-      public dropSnapshot_call(DropSnapshotReq req, AsyncMethodCallback resultHandler451, TAsyncClient client447, TProtocolFactory protocolFactory448, TNonblockingTransport transport449) throws TException {
-        super(client447, protocolFactory448, transport449, resultHandler451, false);
+      public dropSnapshot_call(DropSnapshotReq req, AsyncMethodCallback resultHandler486, TAsyncClient client482, TProtocolFactory protocolFactory483, TNonblockingTransport transport484) throws TException {
+        super(client482, protocolFactory483, transport484, resultHandler486, false);
         this.req = req;
       }
 
@@ -4183,17 +4556,17 @@ public class MetaService {
       }
     }
 
-    public void listSnapshots(ListSnapshotsReq req, AsyncMethodCallback resultHandler455) throws TException {
+    public void listSnapshots(ListSnapshotsReq req, AsyncMethodCallback resultHandler490) throws TException {
       checkReady();
-      listSnapshots_call method_call = new listSnapshots_call(req, resultHandler455, this, ___protocolFactory, ___transport);
+      listSnapshots_call method_call = new listSnapshots_call(req, resultHandler490, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listSnapshots_call extends TAsyncMethodCall {
       private ListSnapshotsReq req;
-      public listSnapshots_call(ListSnapshotsReq req, AsyncMethodCallback resultHandler456, TAsyncClient client452, TProtocolFactory protocolFactory453, TNonblockingTransport transport454) throws TException {
-        super(client452, protocolFactory453, transport454, resultHandler456, false);
+      public listSnapshots_call(ListSnapshotsReq req, AsyncMethodCallback resultHandler491, TAsyncClient client487, TProtocolFactory protocolFactory488, TNonblockingTransport transport489) throws TException {
+        super(client487, protocolFactory488, transport489, resultHandler491, false);
         this.req = req;
       }
 
@@ -4212,6 +4585,38 @@ public class MetaService {
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
         return (new Client(prot)).recv_listSnapshots();
+      }
+    }
+
+    public void runAdminJob(AdminJobReq req, AsyncMethodCallback resultHandler495) throws TException {
+      checkReady();
+      runAdminJob_call method_call = new runAdminJob_call(req, resultHandler495, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class runAdminJob_call extends TAsyncMethodCall {
+      private AdminJobReq req;
+      public runAdminJob_call(AdminJobReq req, AsyncMethodCallback resultHandler496, TAsyncClient client492, TProtocolFactory protocolFactory493, TNonblockingTransport transport494) throws TException {
+        super(client492, protocolFactory493, transport494, resultHandler496, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("runAdminJob", TMessageType.CALL, 0));
+        runAdminJob_args args = new runAdminJob_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public AdminJobResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_runAdminJob();
       }
     }
 
@@ -4250,10 +4655,14 @@ public class MetaService {
       processMap_.put("dropTagIndex", new dropTagIndex());
       processMap_.put("getTagIndex", new getTagIndex());
       processMap_.put("listTagIndexes", new listTagIndexes());
+      processMap_.put("rebuildTagIndex", new rebuildTagIndex());
+      processMap_.put("listTagIndexStatus", new listTagIndexStatus());
       processMap_.put("createEdgeIndex", new createEdgeIndex());
       processMap_.put("dropEdgeIndex", new dropEdgeIndex());
       processMap_.put("getEdgeIndex", new getEdgeIndex());
       processMap_.put("listEdgeIndexes", new listEdgeIndexes());
+      processMap_.put("rebuildEdgeIndex", new rebuildEdgeIndex());
+      processMap_.put("listEdgeIndexStatus", new listEdgeIndexStatus());
       processMap_.put("createUser", new createUser());
       processMap_.put("dropUser", new dropUser());
       processMap_.put("alterUser", new alterUser());
@@ -4274,6 +4683,7 @@ public class MetaService {
       processMap_.put("createSnapshot", new createSnapshot());
       processMap_.put("dropSnapshot", new dropSnapshot());
       processMap_.put("listSnapshots", new listSnapshots());
+      processMap_.put("runAdminJob", new runAdminJob());
     }
 
     protected static interface ProcessFunction {
@@ -4873,6 +5283,48 @@ public class MetaService {
 
     }
 
+    private class rebuildTagIndex implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("MetaService.rebuildTagIndex", server_ctx);
+        rebuildTagIndex_args args = new rebuildTagIndex_args();
+        event_handler_.preRead(handler_ctx, "MetaService.rebuildTagIndex");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "MetaService.rebuildTagIndex", args);
+        rebuildTagIndex_result result = new rebuildTagIndex_result();
+        result.success = iface_.rebuildTagIndex(args.req);
+        event_handler_.preWrite(handler_ctx, "MetaService.rebuildTagIndex", result);
+        oprot.writeMessageBegin(new TMessage("rebuildTagIndex", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "MetaService.rebuildTagIndex", result);
+      }
+
+    }
+
+    private class listTagIndexStatus implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("MetaService.listTagIndexStatus", server_ctx);
+        listTagIndexStatus_args args = new listTagIndexStatus_args();
+        event_handler_.preRead(handler_ctx, "MetaService.listTagIndexStatus");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "MetaService.listTagIndexStatus", args);
+        listTagIndexStatus_result result = new listTagIndexStatus_result();
+        result.success = iface_.listTagIndexStatus(args.req);
+        event_handler_.preWrite(handler_ctx, "MetaService.listTagIndexStatus", result);
+        oprot.writeMessageBegin(new TMessage("listTagIndexStatus", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "MetaService.listTagIndexStatus", result);
+      }
+
+    }
+
     private class createEdgeIndex implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
@@ -4953,6 +5405,48 @@ public class MetaService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "MetaService.listEdgeIndexes", result);
+      }
+
+    }
+
+    private class rebuildEdgeIndex implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("MetaService.rebuildEdgeIndex", server_ctx);
+        rebuildEdgeIndex_args args = new rebuildEdgeIndex_args();
+        event_handler_.preRead(handler_ctx, "MetaService.rebuildEdgeIndex");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "MetaService.rebuildEdgeIndex", args);
+        rebuildEdgeIndex_result result = new rebuildEdgeIndex_result();
+        result.success = iface_.rebuildEdgeIndex(args.req);
+        event_handler_.preWrite(handler_ctx, "MetaService.rebuildEdgeIndex", result);
+        oprot.writeMessageBegin(new TMessage("rebuildEdgeIndex", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "MetaService.rebuildEdgeIndex", result);
+      }
+
+    }
+
+    private class listEdgeIndexStatus implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("MetaService.listEdgeIndexStatus", server_ctx);
+        listEdgeIndexStatus_args args = new listEdgeIndexStatus_args();
+        event_handler_.preRead(handler_ctx, "MetaService.listEdgeIndexStatus");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "MetaService.listEdgeIndexStatus", args);
+        listEdgeIndexStatus_result result = new listEdgeIndexStatus_result();
+        result.success = iface_.listEdgeIndexStatus(args.req);
+        event_handler_.preWrite(handler_ctx, "MetaService.listEdgeIndexStatus", result);
+        oprot.writeMessageBegin(new TMessage("listEdgeIndexStatus", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "MetaService.listEdgeIndexStatus", result);
       }
 
     }
@@ -5373,6 +5867,27 @@ public class MetaService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "MetaService.listSnapshots", result);
+      }
+
+    }
+
+    private class runAdminJob implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("MetaService.runAdminJob", server_ctx);
+        runAdminJob_args args = new runAdminJob_args();
+        event_handler_.preRead(handler_ctx, "MetaService.runAdminJob");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "MetaService.runAdminJob", args);
+        runAdminJob_result result = new runAdminJob_result();
+        result.success = iface_.runAdminJob(args.req);
+        event_handler_.preWrite(handler_ctx, "MetaService.runAdminJob", result);
+        oprot.writeMessageBegin(new TMessage("runAdminJob", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "MetaService.runAdminJob", result);
       }
 
     }
@@ -19108,6 +19623,1040 @@ String space = prettyPrint ? " " : "";
 
   }
 
+  public static class rebuildTagIndex_args implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildTagIndex_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("rebuildTagIndex_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public RebuildIndexReq req;
+    public static final int REQ = 1;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, RebuildIndexReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(rebuildTagIndex_args.class, metaDataMap);
+    }
+
+    public rebuildTagIndex_args() {
+    }
+
+    public rebuildTagIndex_args(
+      RebuildIndexReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public rebuildTagIndex_args(rebuildTagIndex_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public rebuildTagIndex_args deepCopy() {
+      return new rebuildTagIndex_args(this);
+    }
+
+    @Deprecated
+    public rebuildTagIndex_args clone() {
+      return new rebuildTagIndex_args(this);
+    }
+
+    public RebuildIndexReq  getReq() {
+      return this.req;
+    }
+
+    public rebuildTagIndex_args setReq(RebuildIndexReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((RebuildIndexReq)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return isSetReq();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof rebuildTagIndex_args)
+        return this.equals((rebuildTagIndex_args)that);
+      return false;
+    }
+
+    public boolean equals(rebuildTagIndex_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.req, that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_req = true && (isSetReq());
+      builder.append(present_req);
+      if (present_req)
+        builder.append(req);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(rebuildTagIndex_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case REQ:
+            if (field.type == TType.STRUCT) {
+              this.req = new RebuildIndexReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("rebuildTagIndex_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class rebuildTagIndex_result implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildTagIndex_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("rebuildTagIndex_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ExecResp success;
+    public static final int SUCCESS = 0;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ExecResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(rebuildTagIndex_result.class, metaDataMap);
+    }
+
+    public rebuildTagIndex_result() {
+    }
+
+    public rebuildTagIndex_result(
+      ExecResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public rebuildTagIndex_result(rebuildTagIndex_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public rebuildTagIndex_result deepCopy() {
+      return new rebuildTagIndex_result(this);
+    }
+
+    @Deprecated
+    public rebuildTagIndex_result clone() {
+      return new rebuildTagIndex_result(this);
+    }
+
+    public ExecResp  getSuccess() {
+      return this.success;
+    }
+
+    public rebuildTagIndex_result setSuccess(ExecResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ExecResp)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return isSetSuccess();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof rebuildTagIndex_result)
+        return this.equals((rebuildTagIndex_result)that);
+      return false;
+    }
+
+    public boolean equals(rebuildTagIndex_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.success, that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_success = true && (isSetSuccess());
+      builder.append(present_success);
+      if (present_success)
+        builder.append(success);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(rebuildTagIndex_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SUCCESS:
+            if (field.type == TType.STRUCT) {
+              this.success = new ExecResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("rebuildTagIndex_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class listTagIndexStatus_args implements TBase, java.io.Serializable, Cloneable, Comparable<listTagIndexStatus_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("listTagIndexStatus_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public ListIndexStatusReq req;
+    public static final int REQ = 1;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ListIndexStatusReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(listTagIndexStatus_args.class, metaDataMap);
+    }
+
+    public listTagIndexStatus_args() {
+    }
+
+    public listTagIndexStatus_args(
+      ListIndexStatusReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listTagIndexStatus_args(listTagIndexStatus_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public listTagIndexStatus_args deepCopy() {
+      return new listTagIndexStatus_args(this);
+    }
+
+    @Deprecated
+    public listTagIndexStatus_args clone() {
+      return new listTagIndexStatus_args(this);
+    }
+
+    public ListIndexStatusReq  getReq() {
+      return this.req;
+    }
+
+    public listTagIndexStatus_args setReq(ListIndexStatusReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((ListIndexStatusReq)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return isSetReq();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listTagIndexStatus_args)
+        return this.equals((listTagIndexStatus_args)that);
+      return false;
+    }
+
+    public boolean equals(listTagIndexStatus_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.req, that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_req = true && (isSetReq());
+      builder.append(present_req);
+      if (present_req)
+        builder.append(req);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(listTagIndexStatus_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case REQ:
+            if (field.type == TType.STRUCT) {
+              this.req = new ListIndexStatusReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("listTagIndexStatus_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class listTagIndexStatus_result implements TBase, java.io.Serializable, Cloneable, Comparable<listTagIndexStatus_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("listTagIndexStatus_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ListIndexStatusResp success;
+    public static final int SUCCESS = 0;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ListIndexStatusResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(listTagIndexStatus_result.class, metaDataMap);
+    }
+
+    public listTagIndexStatus_result() {
+    }
+
+    public listTagIndexStatus_result(
+      ListIndexStatusResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listTagIndexStatus_result(listTagIndexStatus_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public listTagIndexStatus_result deepCopy() {
+      return new listTagIndexStatus_result(this);
+    }
+
+    @Deprecated
+    public listTagIndexStatus_result clone() {
+      return new listTagIndexStatus_result(this);
+    }
+
+    public ListIndexStatusResp  getSuccess() {
+      return this.success;
+    }
+
+    public listTagIndexStatus_result setSuccess(ListIndexStatusResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ListIndexStatusResp)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return isSetSuccess();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listTagIndexStatus_result)
+        return this.equals((listTagIndexStatus_result)that);
+      return false;
+    }
+
+    public boolean equals(listTagIndexStatus_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.success, that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_success = true && (isSetSuccess());
+      builder.append(present_success);
+      if (present_success)
+        builder.append(success);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(listTagIndexStatus_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SUCCESS:
+            if (field.type == TType.STRUCT) {
+              this.success = new ListIndexStatusResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("listTagIndexStatus_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
   public static class createEdgeIndex_args implements TBase, java.io.Serializable, Cloneable, Comparable<createEdgeIndex_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("createEdgeIndex_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
@@ -21103,6 +22652,1040 @@ String space = prettyPrint ? " " : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("listEdgeIndexes_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class rebuildEdgeIndex_args implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildEdgeIndex_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("rebuildEdgeIndex_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public RebuildIndexReq req;
+    public static final int REQ = 1;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, RebuildIndexReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(rebuildEdgeIndex_args.class, metaDataMap);
+    }
+
+    public rebuildEdgeIndex_args() {
+    }
+
+    public rebuildEdgeIndex_args(
+      RebuildIndexReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public rebuildEdgeIndex_args(rebuildEdgeIndex_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public rebuildEdgeIndex_args deepCopy() {
+      return new rebuildEdgeIndex_args(this);
+    }
+
+    @Deprecated
+    public rebuildEdgeIndex_args clone() {
+      return new rebuildEdgeIndex_args(this);
+    }
+
+    public RebuildIndexReq  getReq() {
+      return this.req;
+    }
+
+    public rebuildEdgeIndex_args setReq(RebuildIndexReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((RebuildIndexReq)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return isSetReq();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof rebuildEdgeIndex_args)
+        return this.equals((rebuildEdgeIndex_args)that);
+      return false;
+    }
+
+    public boolean equals(rebuildEdgeIndex_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.req, that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_req = true && (isSetReq());
+      builder.append(present_req);
+      if (present_req)
+        builder.append(req);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(rebuildEdgeIndex_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case REQ:
+            if (field.type == TType.STRUCT) {
+              this.req = new RebuildIndexReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("rebuildEdgeIndex_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class rebuildEdgeIndex_result implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildEdgeIndex_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("rebuildEdgeIndex_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ExecResp success;
+    public static final int SUCCESS = 0;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ExecResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(rebuildEdgeIndex_result.class, metaDataMap);
+    }
+
+    public rebuildEdgeIndex_result() {
+    }
+
+    public rebuildEdgeIndex_result(
+      ExecResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public rebuildEdgeIndex_result(rebuildEdgeIndex_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public rebuildEdgeIndex_result deepCopy() {
+      return new rebuildEdgeIndex_result(this);
+    }
+
+    @Deprecated
+    public rebuildEdgeIndex_result clone() {
+      return new rebuildEdgeIndex_result(this);
+    }
+
+    public ExecResp  getSuccess() {
+      return this.success;
+    }
+
+    public rebuildEdgeIndex_result setSuccess(ExecResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ExecResp)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return isSetSuccess();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof rebuildEdgeIndex_result)
+        return this.equals((rebuildEdgeIndex_result)that);
+      return false;
+    }
+
+    public boolean equals(rebuildEdgeIndex_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.success, that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_success = true && (isSetSuccess());
+      builder.append(present_success);
+      if (present_success)
+        builder.append(success);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(rebuildEdgeIndex_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SUCCESS:
+            if (field.type == TType.STRUCT) {
+              this.success = new ExecResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("rebuildEdgeIndex_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class listEdgeIndexStatus_args implements TBase, java.io.Serializable, Cloneable, Comparable<listEdgeIndexStatus_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("listEdgeIndexStatus_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public ListIndexStatusReq req;
+    public static final int REQ = 1;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ListIndexStatusReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(listEdgeIndexStatus_args.class, metaDataMap);
+    }
+
+    public listEdgeIndexStatus_args() {
+    }
+
+    public listEdgeIndexStatus_args(
+      ListIndexStatusReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listEdgeIndexStatus_args(listEdgeIndexStatus_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public listEdgeIndexStatus_args deepCopy() {
+      return new listEdgeIndexStatus_args(this);
+    }
+
+    @Deprecated
+    public listEdgeIndexStatus_args clone() {
+      return new listEdgeIndexStatus_args(this);
+    }
+
+    public ListIndexStatusReq  getReq() {
+      return this.req;
+    }
+
+    public listEdgeIndexStatus_args setReq(ListIndexStatusReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((ListIndexStatusReq)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return isSetReq();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listEdgeIndexStatus_args)
+        return this.equals((listEdgeIndexStatus_args)that);
+      return false;
+    }
+
+    public boolean equals(listEdgeIndexStatus_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.req, that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_req = true && (isSetReq());
+      builder.append(present_req);
+      if (present_req)
+        builder.append(req);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(listEdgeIndexStatus_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case REQ:
+            if (field.type == TType.STRUCT) {
+              this.req = new ListIndexStatusReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("listEdgeIndexStatus_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class listEdgeIndexStatus_result implements TBase, java.io.Serializable, Cloneable, Comparable<listEdgeIndexStatus_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("listEdgeIndexStatus_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ListIndexStatusResp success;
+    public static final int SUCCESS = 0;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ListIndexStatusResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(listEdgeIndexStatus_result.class, metaDataMap);
+    }
+
+    public listEdgeIndexStatus_result() {
+    }
+
+    public listEdgeIndexStatus_result(
+      ListIndexStatusResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listEdgeIndexStatus_result(listEdgeIndexStatus_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public listEdgeIndexStatus_result deepCopy() {
+      return new listEdgeIndexStatus_result(this);
+    }
+
+    @Deprecated
+    public listEdgeIndexStatus_result clone() {
+      return new listEdgeIndexStatus_result(this);
+    }
+
+    public ListIndexStatusResp  getSuccess() {
+      return this.success;
+    }
+
+    public listEdgeIndexStatus_result setSuccess(ListIndexStatusResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ListIndexStatusResp)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return isSetSuccess();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listEdgeIndexStatus_result)
+        return this.equals((listEdgeIndexStatus_result)that);
+      return false;
+    }
+
+    public boolean equals(listEdgeIndexStatus_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.success, that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_success = true && (isSetSuccess());
+      builder.append(present_success);
+      if (present_success)
+        builder.append(success);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(listEdgeIndexStatus_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SUCCESS:
+            if (field.type == TType.STRUCT) {
+              this.success = new ListIndexStatusResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("listEdgeIndexStatus_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -31443,6 +34026,523 @@ String space = prettyPrint ? " " : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("listSnapshots_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class runAdminJob_args implements TBase, java.io.Serializable, Cloneable, Comparable<runAdminJob_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("runAdminJob_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public AdminJobReq req;
+    public static final int REQ = 1;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, AdminJobReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(runAdminJob_args.class, metaDataMap);
+    }
+
+    public runAdminJob_args() {
+    }
+
+    public runAdminJob_args(
+      AdminJobReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public runAdminJob_args(runAdminJob_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public runAdminJob_args deepCopy() {
+      return new runAdminJob_args(this);
+    }
+
+    @Deprecated
+    public runAdminJob_args clone() {
+      return new runAdminJob_args(this);
+    }
+
+    public AdminJobReq  getReq() {
+      return this.req;
+    }
+
+    public runAdminJob_args setReq(AdminJobReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((AdminJobReq)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return isSetReq();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof runAdminJob_args)
+        return this.equals((runAdminJob_args)that);
+      return false;
+    }
+
+    public boolean equals(runAdminJob_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.req, that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_req = true && (isSetReq());
+      builder.append(present_req);
+      if (present_req)
+        builder.append(req);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(runAdminJob_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case REQ:
+            if (field.type == TType.STRUCT) {
+              this.req = new AdminJobReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("runAdminJob_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class runAdminJob_result implements TBase, java.io.Serializable, Cloneable, Comparable<runAdminJob_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("runAdminJob_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public AdminJobResp success;
+    public static final int SUCCESS = 0;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, AdminJobResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(runAdminJob_result.class, metaDataMap);
+    }
+
+    public runAdminJob_result() {
+    }
+
+    public runAdminJob_result(
+      AdminJobResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public runAdminJob_result(runAdminJob_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public runAdminJob_result deepCopy() {
+      return new runAdminJob_result(this);
+    }
+
+    @Deprecated
+    public runAdminJob_result clone() {
+      return new runAdminJob_result(this);
+    }
+
+    public AdminJobResp  getSuccess() {
+      return this.success;
+    }
+
+    public runAdminJob_result setSuccess(AdminJobResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((AdminJobResp)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return isSetSuccess();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof runAdminJob_result)
+        return this.equals((runAdminJob_result)that);
+      return false;
+    }
+
+    public boolean equals(runAdminJob_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.success, that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_success = true && (isSetSuccess());
+      builder.append(present_success);
+      if (present_success)
+        builder.append(success);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(runAdminJob_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SUCCESS:
+            if (field.type == TType.STRUCT) {
+              this.success = new AdminJobResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("runAdminJob_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

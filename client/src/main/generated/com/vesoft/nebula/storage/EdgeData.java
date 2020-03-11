@@ -30,12 +30,12 @@ import com.facebook.thrift.protocol.*;
 public class EdgeData implements TBase, java.io.Serializable, Cloneable, Comparable<EdgeData> {
   private static final TStruct STRUCT_DESC = new TStruct("EdgeData");
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
-  private static final TField DATA_FIELD_DESC = new TField("data", TType.STRING, (short)2);
+  private static final TField EDGES_FIELD_DESC = new TField("edges", TType.LIST, (short)3);
 
   public int type;
-  public byte[] data;
+  public List<IdAndProp> edges;
   public static final int TYPE = 1;
-  public static final int DATA = 2;
+  public static final int EDGES = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -47,8 +47,9 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(EDGES, new FieldMetaData("edges", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, IdAndProp.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -61,12 +62,12 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
 
   public EdgeData(
     int type,
-    byte[] data)
+    List<IdAndProp> edges)
   {
     this();
     this.type = type;
     setTypeIsSet(true);
-    this.data = data;
+    this.edges = edges;
   }
 
   /**
@@ -76,8 +77,8 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.type = TBaseHelper.deepCopy(other.type);
-    if (other.isSetData()) {
-      this.data = TBaseHelper.deepCopy(other.data);
+    if (other.isSetEdges()) {
+      this.edges = TBaseHelper.deepCopy(other.edges);
     }
   }
 
@@ -113,30 +114,31 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.set(__TYPE_ISSET_ID, value);
   }
 
-  public byte[]  getData() {
-    return this.data;
+  public List<IdAndProp>  getEdges() {
+    return this.edges;
   }
 
-  public EdgeData setData(byte[] data) {
-    this.data = data;
+  public EdgeData setEdges(List<IdAndProp> edges) {
+    this.edges = edges;
     return this;
   }
 
-  public void unsetData() {
-    this.data = null;
+  public void unsetEdges() {
+    this.edges = null;
   }
 
-  // Returns true if field data is set (has been assigned a value) and false otherwise
-  public boolean isSetData() {
-    return this.data != null;
+  // Returns true if field edges is set (has been assigned a value) and false otherwise
+  public boolean isSetEdges() {
+    return this.edges != null;
   }
 
-  public void setDataIsSet(boolean value) {
+  public void setEdgesIsSet(boolean value) {
     if (!value) {
-      this.data = null;
+      this.edges = null;
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case TYPE:
@@ -147,11 +149,11 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
-    case DATA:
+    case EDGES:
       if (value == null) {
-        unsetData();
+        unsetEdges();
       } else {
-        setData((byte[])value);
+        setEdges((List<IdAndProp>)value);
       }
       break;
 
@@ -165,8 +167,8 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     case TYPE:
       return new Integer(getType());
 
-    case DATA:
-      return getData();
+    case EDGES:
+      return getEdges();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -178,8 +180,8 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     switch (fieldID) {
     case TYPE:
       return isSetType();
-    case DATA:
-      return isSetData();
+    case EDGES:
+      return isSetEdges();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -209,12 +211,12 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
         return false;
     }
 
-    boolean this_present_data = true && this.isSetData();
-    boolean that_present_data = true && that.isSetData();
-    if (this_present_data || that_present_data) {
-      if (!(this_present_data && that_present_data))
+    boolean this_present_edges = true && this.isSetEdges();
+    boolean that_present_edges = true && that.isSetEdges();
+    if (this_present_edges || that_present_edges) {
+      if (!(this_present_edges && that_present_edges))
         return false;
-      if (!TBaseHelper.equalsSlow(this.data, that.data))
+      if (!TBaseHelper.equalsNobinary(this.edges, that.edges))
         return false;
     }
 
@@ -230,10 +232,10 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     if (present_type)
       builder.append(type);
 
-    boolean present_data = true && (isSetData());
-    builder.append(present_data);
-    if (present_data)
-      builder.append(data);
+    boolean present_edges = true && (isSetEdges());
+    builder.append(present_edges);
+    if (present_edges)
+      builder.append(edges);
 
     return builder.toHashCode();
   }
@@ -258,11 +260,11 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetData()).compareTo(other.isSetData());
+    lastComparison = Boolean.valueOf(isSetEdges()).compareTo(other.isSetEdges());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(data, other.data);
+    lastComparison = TBaseHelper.compareTo(edges, other.edges);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -288,9 +290,22 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case DATA:
-          if (field.type == TType.STRING) {
-            this.data = iprot.readBinary();
+        case EDGES:
+          if (field.type == TType.LIST) {
+            {
+              TList _list0 = iprot.readListBegin();
+              this.edges = new ArrayList<IdAndProp>(Math.max(0, _list0.size));
+              for (int _i1 = 0; 
+                   (_list0.size < 0) ? iprot.peekList() : (_i1 < _list0.size); 
+                   ++_i1)
+              {
+                IdAndProp _elem2;
+                _elem2 = new IdAndProp();
+                _elem2.read(iprot);
+                this.edges.add(_elem2);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -315,9 +330,15 @@ public class EdgeData implements TBase, java.io.Serializable, Cloneable, Compara
     oprot.writeFieldBegin(TYPE_FIELD_DESC);
     oprot.writeI32(this.type);
     oprot.writeFieldEnd();
-    if (this.data != null) {
-      oprot.writeFieldBegin(DATA_FIELD_DESC);
-      oprot.writeBinary(this.data);
+    if (this.edges != null) {
+      oprot.writeFieldBegin(EDGES_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.edges.size()));
+        for (IdAndProp _iter3 : this.edges)        {
+          _iter3.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -353,18 +374,13 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("data");
+    sb.append("edges");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getData() == null) {
+    if (this. getEdges() == null) {
       sb.append("null");
     } else {
-        int __data_size = Math.min(this. getData().length, 128);
-        for (int i = 0; i < __data_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getData()[i]).length() > 1 ? Integer.toHexString(this. getData()[i]).substring(Integer.toHexString(this. getData()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getData()[i]).toUpperCase());
-        }
-        if (this. getData().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getEdges(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

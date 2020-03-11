@@ -384,30 +384,30 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map76 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.HostAddr>>(Math.max(0, 2*_map76.size));
-              for (int _i77 = 0; 
-                   (_map76.size < 0) ? iprot.peekMap() : (_i77 < _map76.size); 
-                   ++_i77)
+              TMap _map74 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.HostAddr>>(Math.max(0, 2*_map74.size));
+              for (int _i75 = 0; 
+                   (_map74.size < 0) ? iprot.peekMap() : (_i75 < _map74.size); 
+                   ++_i75)
               {
-                int _key78;
-                List<com.vesoft.nebula.HostAddr> _val79;
-                _key78 = iprot.readI32();
+                int _key76;
+                List<com.vesoft.nebula.HostAddr> _val77;
+                _key76 = iprot.readI32();
                 {
-                  TList _list80 = iprot.readListBegin();
-                  _val79 = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list80.size));
-                  for (int _i81 = 0; 
-                       (_list80.size < 0) ? iprot.peekList() : (_i81 < _list80.size); 
-                       ++_i81)
+                  TList _list78 = iprot.readListBegin();
+                  _val77 = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list78.size));
+                  for (int _i79 = 0; 
+                       (_list78.size < 0) ? iprot.peekList() : (_i79 < _list78.size); 
+                       ++_i79)
                   {
-                    com.vesoft.nebula.HostAddr _elem82;
-                    _elem82 = new com.vesoft.nebula.HostAddr();
-                    _elem82.read(iprot);
-                    _val79.add(_elem82);
+                    com.vesoft.nebula.HostAddr _elem80;
+                    _elem80 = new com.vesoft.nebula.HostAddr();
+                    _elem80.read(iprot);
+                    _val77.add(_elem80);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key78, _val79);
+                this.parts.put(_key76, _val77);
               }
               iprot.readMapEnd();
             }
@@ -444,12 +444,12 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.HostAddr>> _iter83 : this.parts.entrySet())        {
-          oprot.writeI32(_iter83.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.HostAddr>> _iter81 : this.parts.entrySet())        {
+          oprot.writeI32(_iter81.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter83.getValue().size()));
-            for (com.vesoft.nebula.HostAddr _iter84 : _iter83.getValue())            {
-              _iter84.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter81.getValue().size()));
+            for (com.vesoft.nebula.HostAddr _iter82 : _iter81.getValue())            {
+              _iter82.write(oprot);
             }
             oprot.writeListEnd();
           }
