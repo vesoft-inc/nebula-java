@@ -173,9 +173,6 @@ public class StorageClientImpl implements StorageClient {
                                 LOGGER.info("LEADER UNKNOWN");
                                 switchLeader(space, part);
                             }
-                        } else if (code.getCode() == ErrorCode.E_TIMEOUT){
-                            LOGGER.info("TIME OUT");
-                            return TIMEOUT;
                         } else {
                             LOGGER.info("Code: " + code.getCode());
                         }
@@ -255,9 +252,6 @@ public class StorageClientImpl implements StorageClient {
                                 LOGGER.info("LEADER UNKNOWN");
                                 switchLeader(space, part);
                             }
-                        } else if (code.getCode() == ErrorCode.E_TIMEOUT) {
-                            LOGGER.info("TIME OUT");
-                            return TIMEOUT;
                         } else {
                             LOGGER.info("Code: " + code.getCode());
                         }
@@ -280,6 +274,7 @@ public class StorageClientImpl implements StorageClient {
         return FAIL;
     }
 
+    /*
     public int cas(int space, int key, int expected, int value) {
         return cas(space, String.valueOf(key), String.valueOf(expected), String.valueOf(value));
     }
@@ -287,6 +282,7 @@ public class StorageClientImpl implements StorageClient {
     public int cas(int space, String key, int expected, int value) {
         return cas(space, key, String.valueOf(expected), String.valueOf(value));
     }
+     */
 
     /**
      * CAS
@@ -295,6 +291,7 @@ public class StorageClientImpl implements StorageClient {
      * @param key   nebula key
      * @return
      */
+    /*
     public int cas(int space, String key, String expected, String value) {
         int part = keyToPartId(space, key);
         int retry = connectionRetry + 1;
@@ -368,6 +365,7 @@ public class StorageClientImpl implements StorageClient {
         }
         return FAIL;
     }
+     */
 
     /**
      * Check the response is successfully

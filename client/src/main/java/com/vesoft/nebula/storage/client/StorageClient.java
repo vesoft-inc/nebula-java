@@ -18,5 +18,5 @@ public interface StorageClient extends Client {
 
     public int get(int space, String key);
 
-    public int cas(int space, String key, int expected , int value);
+    // public int cas(int space, String key, int expected , int value);
 }
