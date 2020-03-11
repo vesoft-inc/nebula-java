@@ -45,7 +45,7 @@ public abstract class AsyncAbstractClient extends AbstractClient {
                 break;
             }
         }
-        return -1;
+        return 0;
     }
 
     @Override
