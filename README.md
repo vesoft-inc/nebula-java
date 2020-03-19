@@ -3,12 +3,11 @@
 
 # nebula-java
 
-This guide provides an overview of options for connecting to Nebula Graph for Java developer.
+This guide provides instructions and options for connecting **Nebula Graph** for Java developer.
 
 ## Prerequisites
 
-When developing with this Java driver, please use Java 8+. 
-Depending on the version of Nebula Graph that you are connecting to, you will have to use a different version of this client.
+When developing with this Java driver, please use Java 8+. Depending on the version of **Nebula Graph** that you are connecting to, you will have to use a different version of this client.
 
 | Nebula version | Nebula Java version |
 |:--------------:|:-----------------:|
@@ -17,9 +16,9 @@ Depending on the version of Nebula Graph that you are connecting to, you will ha
 
 ## Nebula Graph Java Driver
 
-When using Maven, add this to your pom.xml file:
+When using Maven, add dependency to your `pom.xml` file:
 
-```
+```xml
 <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
@@ -27,7 +26,7 @@ When using Maven, add this to your pom.xml file:
 </dependency>
 ```
 
-change ${VERSION} here. For more versions, please refer to [releases](https://github.com/vesoft-inc/nebula-java/releases).
+Change the `${VERSION}` here. For more information about versions, please refer to [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ### Graph Client Example
 
@@ -50,11 +49,10 @@ Execute a query:
 int code = client.execute("CREATE TAG course(name string, credits int);");
 ```
 
-If query executes seccuessfully, `0` will be returned. For a more complete example, refer to [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
+If query executes successfully, `0` will be returned. For a more complete example, refer to [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
 
 ### Storage Client
 
 If you only use the interface of RPC, nothing to worry about.
 
-If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the `nebula-utils` jar, but if it doen't works in your environment, please compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). And `mvn install` the jni jar in your local maven repo.
-
+If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the `nebula-utils` jar, but if it doesn't works in your environment, please compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). And `mvn install` the jni jar in your local maven repo.
