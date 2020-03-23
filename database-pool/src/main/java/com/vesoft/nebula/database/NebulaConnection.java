@@ -1,3 +1,9 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.database;
 
 
@@ -10,7 +16,7 @@ import com.vesoft.nebula.client.graph.ResultSet;
 /**
  * @author huangzhaolai-jk
  * @version 1.0.0
- * @Description NebulaConnection is used for
+ * @Description NebulaConnection
  * @Date 2020/3/17 - 14:00
  */
 public interface NebulaConnection {
