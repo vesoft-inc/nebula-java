@@ -10,5 +10,5 @@ Software: Nebula Graph [Software in this repository]
 
 License: Apache 2.0 [https://www.apache.org/licenses/LICENSE-2.0.html]
 
-Licensor: vesoft inc.
+Licensor: com.vesoft inc.
 

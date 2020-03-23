@@ -11,17 +11,22 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven_compiler_plugin_version>2.5.1</maven_compiler_plugin_version>
+        <java_source_version>1.8</java_source_version>
+        <java_target_version>1.8</java_target_version>
+        <file_encoding>UTF-8</file_encoding>
+        <spring-boot-autoconfigure.version>2.1.11.RELEASE</spring-boot-autoconfigure.version>
     </properties>
 
 
     <!-- More Project Information -->
     <name>nebula-java</name>
     <description>Nebula Java Client</description>
-    <url>https://github.com/vesoft-inc/nebula-java</url>
+    <url>https://github.com/com.vesoft-inc/nebula-java</url>
     <scm>
-        <connection>scm:git:https://github.com/vesoft-inc/nebula</connection>
-        <url>https://github.com/vesoft-inc/nebula</url>
-        <developerConnection>scm:git:https://github.com/vesoft-inc/nebula</developerConnection>
+        <connection>scm:git:https://github.com/com.vesoft-inc/nebula</connection>
+        <url>https://github.com/com.vesoft-inc/nebula</url>
+        <developerConnection>scm:git:https://github.com/com.vesoft-inc/nebula</developerConnection>
     </scm>
     <licenses>
         <license>
@@ -37,7 +42,7 @@
             <id>wcg</id>
             <name>Wang Chenguang</name>
             <email>jdoe@example.com</email>
-            <organization>vesoft</organization>
+            <organization>com.vesoft</organization>
             <roles>
                 <role>architect</role>
                 <role>developer</role>
@@ -49,6 +54,8 @@
     <modules>
         <module>client</module>
         <module>examples</module>
+        <module>database-pool</module>
+        <module>database-starter</module>
     </modules>
 
     <distributionManagement>
@@ -64,6 +71,16 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven_compiler_plugin_version}</version>
+                <configuration>
+                    <source>${java_source_version}</source>
+                    <target>${java_target_version}</target>
+                    <encoding>${file_encoding}</encoding>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>

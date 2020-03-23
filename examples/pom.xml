@@ -101,7 +101,7 @@
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>client</artifactId>
-            <version>1.0.0-rc3.20200311</version>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -118,5 +118,12 @@
             <artifactId>spark-sql_2.11</artifactId>
             <version>2.4.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.vesoft</groupId>
+            <artifactId>database-starter</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
