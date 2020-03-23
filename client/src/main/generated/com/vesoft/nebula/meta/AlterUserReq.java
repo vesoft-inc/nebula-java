@@ -29,10 +29,13 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Comparable<AlterUserReq> {
   private static final TStruct STRUCT_DESC = new TStruct("AlterUserReq");
-  private static final TField USER_ITEM_FIELD_DESC = new TField("user_item", TType.STRUCT, (short)1);
+  private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
+  private static final TField ENCODED_PWD_FIELD_DESC = new TField("encoded_pwd", TType.STRING, (short)2);
 
-  public UserItem user_item;
-  public static final int USER_ITEM = 1;
+  public String account;
+  public String encoded_pwd;
+  public static final int ACCOUNT = 1;
+  public static final int ENCODED_PWD = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -40,8 +43,10 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(USER_ITEM, new FieldMetaData("user_item", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, UserItem.class)));
+    tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(ENCODED_PWD, new FieldMetaData("encoded_pwd", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -53,18 +58,23 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public AlterUserReq(
-    UserItem user_item)
+    String account,
+    String encoded_pwd)
   {
     this();
-    this.user_item = user_item;
+    this.account = account;
+    this.encoded_pwd = encoded_pwd;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public AlterUserReq(AlterUserReq other) {
-    if (other.isSetUser_item()) {
-      this.user_item = TBaseHelper.deepCopy(other.user_item);
+    if (other.isSetAccount()) {
+      this.account = TBaseHelper.deepCopy(other.account);
+    }
+    if (other.isSetEncoded_pwd()) {
+      this.encoded_pwd = TBaseHelper.deepCopy(other.encoded_pwd);
     }
   }
 
@@ -77,37 +87,69 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     return new AlterUserReq(this);
   }
 
-  public UserItem  getUser_item() {
-    return this.user_item;
+  public String  getAccount() {
+    return this.account;
   }
 
-  public AlterUserReq setUser_item(UserItem user_item) {
-    this.user_item = user_item;
+  public AlterUserReq setAccount(String account) {
+    this.account = account;
     return this;
   }
 
-  public void unsetUser_item() {
-    this.user_item = null;
+  public void unsetAccount() {
+    this.account = null;
   }
 
-  // Returns true if field user_item is set (has been assigned a value) and false otherwise
-  public boolean isSetUser_item() {
-    return this.user_item != null;
+  // Returns true if field account is set (has been assigned a value) and false otherwise
+  public boolean isSetAccount() {
+    return this.account != null;
   }
 
-  public void setUser_itemIsSet(boolean value) {
+  public void setAccountIsSet(boolean value) {
     if (!value) {
-      this.user_item = null;
+      this.account = null;
+    }
+  }
+
+  public String  getEncoded_pwd() {
+    return this.encoded_pwd;
+  }
+
+  public AlterUserReq setEncoded_pwd(String encoded_pwd) {
+    this.encoded_pwd = encoded_pwd;
+    return this;
+  }
+
+  public void unsetEncoded_pwd() {
+    this.encoded_pwd = null;
+  }
+
+  // Returns true if field encoded_pwd is set (has been assigned a value) and false otherwise
+  public boolean isSetEncoded_pwd() {
+    return this.encoded_pwd != null;
+  }
+
+  public void setEncoded_pwdIsSet(boolean value) {
+    if (!value) {
+      this.encoded_pwd = null;
     }
   }
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case USER_ITEM:
+    case ACCOUNT:
       if (value == null) {
-        unsetUser_item();
+        unsetAccount();
       } else {
-        setUser_item((UserItem)value);
+        setAccount((String)value);
+      }
+      break;
+
+    case ENCODED_PWD:
+      if (value == null) {
+        unsetEncoded_pwd();
+      } else {
+        setEncoded_pwd((String)value);
       }
       break;
 
@@ -118,8 +160,11 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case USER_ITEM:
-      return getUser_item();
+    case ACCOUNT:
+      return getAccount();
+
+    case ENCODED_PWD:
+      return getEncoded_pwd();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -129,8 +174,10 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case USER_ITEM:
-      return isSetUser_item();
+    case ACCOUNT:
+      return isSetAccount();
+    case ENCODED_PWD:
+      return isSetEncoded_pwd();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -151,12 +198,21 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     if (this == that)
       return true;
 
-    boolean this_present_user_item = true && this.isSetUser_item();
-    boolean that_present_user_item = true && that.isSetUser_item();
-    if (this_present_user_item || that_present_user_item) {
-      if (!(this_present_user_item && that_present_user_item))
+    boolean this_present_account = true && this.isSetAccount();
+    boolean that_present_account = true && that.isSetAccount();
+    if (this_present_account || that_present_account) {
+      if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.user_item, that.user_item))
+      if (!TBaseHelper.equalsNobinary(this.account, that.account))
+        return false;
+    }
+
+    boolean this_present_encoded_pwd = true && this.isSetEncoded_pwd();
+    boolean that_present_encoded_pwd = true && that.isSetEncoded_pwd();
+    if (this_present_encoded_pwd || that_present_encoded_pwd) {
+      if (!(this_present_encoded_pwd && that_present_encoded_pwd))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.encoded_pwd, that.encoded_pwd))
         return false;
     }
 
@@ -167,10 +223,15 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_user_item = true && (isSetUser_item());
-    builder.append(present_user_item);
-    if (present_user_item)
-      builder.append(user_item);
+    boolean present_account = true && (isSetAccount());
+    builder.append(present_account);
+    if (present_account)
+      builder.append(account);
+
+    boolean present_encoded_pwd = true && (isSetEncoded_pwd());
+    builder.append(present_encoded_pwd);
+    if (present_encoded_pwd)
+      builder.append(encoded_pwd);
 
     return builder.toHashCode();
   }
@@ -187,11 +248,19 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetUser_item()).compareTo(other.isSetUser_item());
+    lastComparison = Boolean.valueOf(isSetAccount()).compareTo(other.isSetAccount());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(user_item, other.user_item);
+    lastComparison = TBaseHelper.compareTo(account, other.account);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetEncoded_pwd()).compareTo(other.isSetEncoded_pwd());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(encoded_pwd, other.encoded_pwd);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -209,10 +278,16 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (field.id)
       {
-        case USER_ITEM:
-          if (field.type == TType.STRUCT) {
-            this.user_item = new UserItem();
-            this.user_item.read(iprot);
+        case ACCOUNT:
+          if (field.type == TType.STRING) {
+            this.account = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case ENCODED_PWD:
+          if (field.type == TType.STRING) {
+            this.encoded_pwd = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -234,9 +309,14 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.user_item != null) {
-      oprot.writeFieldBegin(USER_ITEM_FIELD_DESC);
-      this.user_item.write(oprot);
+    if (this.account != null) {
+      oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
+      oprot.writeString(this.account);
+      oprot.writeFieldEnd();
+    }
+    if (this.encoded_pwd != null) {
+      oprot.writeFieldBegin(ENCODED_PWD_FIELD_DESC);
+      oprot.writeString(this.encoded_pwd);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -265,13 +345,24 @@ String space = prettyPrint ? " " : "";
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("user_item");
+    sb.append("account");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getUser_item() == null) {
+    if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getUser_item(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("encoded_pwd");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getEncoded_pwd() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getEncoded_pwd(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

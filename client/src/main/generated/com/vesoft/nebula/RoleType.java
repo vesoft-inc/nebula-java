@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.graph;
+package com.vesoft.nebula;
 
 
 import java.lang.reflect.*;
@@ -16,26 +16,19 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class ErrorCode {
-  public static final int SUCCEEDED = 0;
-  public static final int E_DISCONNECTED = -1;
-  public static final int E_FAIL_TO_CONNECT = -2;
-  public static final int E_RPC_FAILURE = -3;
-  public static final int E_BAD_USERNAME_PASSWORD = -4;
-  public static final int E_SESSION_INVALID = -5;
-  public static final int E_SESSION_TIMEOUT = -6;
-  public static final int E_SYNTAX_ERROR = -7;
-  public static final int E_EXECUTION_ERROR = -8;
-  public static final int E_STATEMENT_EMTPY = -9;
-  public static final int E_USER_NOT_FOUND = -10;
-  public static final int E_BAD_PERMISSION = -11;
+public class RoleType {
+  public static final int GOD = 1;
+  public static final int ADMIN = 2;
+  public static final int DBA = 3;
+  public static final int USER = 4;
+  public static final int GUEST = 5;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
 
   static {
     try {
-      Class<?> klass = ErrorCode.class;
+      Class<?> klass = RoleType.class;
       for (Field f : klass.getDeclaredFields()) {
         if (f.getType() == Integer.TYPE) {
           VALUES_TO_NAMES.put(f.getInt(null), f.getName());

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vesoft</groupId>
         <artifactId>nebula</artifactId>
-        <version>1.0.0-rc3.20200311</version>
+        <version>1.0.0-rc4.20200323</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
