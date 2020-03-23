@@ -7,10 +7,9 @@
 package com.vesoft.nebula.examples.database;
 
 import com.vesoft.nebula.database.NebulaDataSource;
+import javax.annotation.Resource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-
-import javax.annotation.Resource;
 
 /**
  * @author huangzhaolai-jk
@@ -20,23 +19,27 @@ import javax.annotation.Resource;
  */
 public class TestConnect implements ApplicationRunner {
 
-    public static void main(String[] args){
+    /**
+     * nebulaDataSource NonEmpty
+     * insert datasource
+     */
+    @Resource private NebulaDataSource nebulaDataSource;
+
+    public static void main(String[] args) {
 
     }
 
-    @Resource
-    private NebulaDataSource nebulaDataSource;
-
     /**
      * to run ExampleApplication than auto test this method
-     * @param args
-     * @throws Exception
+     *
+     * @param args NonEmpty
+     * @throws Exception connection exception
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("start run！");
         for (int i = 0; i < 100; i++) {
-            new Thread(new NebulaDatabasePoolTestTh(nebulaDataSource,i)).start();
+            new Thread(new NebulaDatabasePoolTestTh(nebulaDataSource, i)).start();
         }
     }
 }

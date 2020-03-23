@@ -18,21 +18,23 @@ import com.vesoft.nebula.database.NebulaDataSource;
 public class NebulaDatabasePoolTestTh implements Runnable {
 
     private NebulaDataSource nebulaDataSource;
-    private int i;
+    private int no;
 
-    public NebulaDatabasePoolTestTh(NebulaDataSource nebulaDataSource, int i){
+    public NebulaDatabasePoolTestTh(NebulaDataSource nebulaDataSource, int no) {
         this.nebulaDataSource = nebulaDataSource;
-        this.i = i;
+        this.no = no;
     }
 
     @Override
     public void run() {
         NebulaConnection connection = nebulaDataSource.getConnection();
-        System.out.println("connection:::" + connection + ",maxsize:" + nebulaDataSource.maxPoolSize() + ",currentsize:" + nebulaDataSource.currentPoolSize()
-         + ",freesize:" + nebulaDataSource.freePoolSize());
+        System.out.println("connection:::" + connection
+                + ",maxSize:" + nebulaDataSource.maxPoolSize()
+                + ",currentSize:" + nebulaDataSource.currentPoolSize()
+                + ",freeSize:" + nebulaDataSource.freePoolSize());
         connection.switchSpace("test");
         int code = connection.execute("CREATE TAG test_tag(name string, credits int);");
         nebulaDataSource.release(connection);
-        System.out.println("running！" + i);
+        System.out.println("running！" + no);
     }
 }
