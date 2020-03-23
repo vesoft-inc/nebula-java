@@ -21,6 +21,11 @@ public class TestConnect implements ApplicationRunner {
     @Resource
     private NebulaDataSource nebulaDataSource;
 
+    /**
+     * to run ExampleApplication than auto test this method
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("启动中！");

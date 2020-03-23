@@ -2,14 +2,13 @@ package com.vesoft.nebula.database.pool;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.transport.TTransport;
+import com.vesoft.nebula.client.graph.ConnectionException;
+import com.vesoft.nebula.client.graph.NGQLException;
+import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.database.NebulaConnection;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.GraphClient;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;

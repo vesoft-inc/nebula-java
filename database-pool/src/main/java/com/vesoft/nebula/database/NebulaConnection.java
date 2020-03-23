@@ -2,9 +2,10 @@ package com.vesoft.nebula.database;
 
 
 import com.facebook.thrift.TException;
-import com.vesoft.nebula.graph.client.ConnectionException;
-import com.vesoft.nebula.graph.client.NGQLException;
-import com.vesoft.nebula.graph.client.ResultSet;
+import com.vesoft.nebula.client.graph.ConnectionException;
+import com.vesoft.nebula.client.graph.NGQLException;
+import com.vesoft.nebula.client.graph.ResultSet;
+
 
 /**
  * @author huangzhaolai-jk

@@ -10,12 +10,15 @@
     <version>1.0.0-rc3.20200311</version>
 
     <properties>
+        <nebula.version>1.0.0-rc3</nebula.version>
+        <spring-boot-autoconfigure.version>2.1.11.RELEASE</spring-boot-autoconfigure.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven_compiler_plugin_version>2.5.1</maven_compiler_plugin_version>
         <java_source_version>1.8</java_source_version>
         <java_target_version>1.8</java_target_version>
         <file_encoding>UTF-8</file_encoding>
-        <spring-boot-autoconfigure.version>2.1.11.RELEASE</spring-boot-autoconfigure.version>
+
     </properties>
 
 
