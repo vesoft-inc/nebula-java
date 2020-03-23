@@ -30,16 +30,16 @@ import com.facebook.thrift.protocol.*;
 public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comparable<DropUserReq> {
   private static final TStruct STRUCT_DESC = new TStruct("DropUserReq");
   private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
-  private static final TField MISSING_OK_FIELD_DESC = new TField("missing_ok", TType.BOOL, (short)2);
+  private static final TField IF_EXISTS_FIELD_DESC = new TField("if_exists", TType.BOOL, (short)2);
 
   public String account;
-  public boolean missing_ok;
+  public boolean if_exists;
   public static final int ACCOUNT = 1;
-  public static final int MISSING_OK = 2;
+  public static final int IF_EXISTS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __MISSING_OK_ISSET_ID = 0;
+  private static final int __IF_EXISTS_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
@@ -47,7 +47,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(MISSING_OK, new FieldMetaData("missing_ok", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(IF_EXISTS, new FieldMetaData("if_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -61,12 +61,12 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public DropUserReq(
     String account,
-    boolean missing_ok)
+    boolean if_exists)
   {
     this();
     this.account = account;
-    this.missing_ok = missing_ok;
-    setMissing_okIsSet(true);
+    this.if_exists = if_exists;
+    setIf_existsIsSet(true);
   }
 
   /**
@@ -78,7 +78,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (other.isSetAccount()) {
       this.account = TBaseHelper.deepCopy(other.account);
     }
-    this.missing_ok = TBaseHelper.deepCopy(other.missing_ok);
+    this.if_exists = TBaseHelper.deepCopy(other.if_exists);
   }
 
   public DropUserReq deepCopy() {
@@ -114,27 +114,27 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public boolean  isMissing_ok() {
-    return this.missing_ok;
+  public boolean  isIf_exists() {
+    return this.if_exists;
   }
 
-  public DropUserReq setMissing_ok(boolean missing_ok) {
-    this.missing_ok = missing_ok;
-    setMissing_okIsSet(true);
+  public DropUserReq setIf_exists(boolean if_exists) {
+    this.if_exists = if_exists;
+    setIf_existsIsSet(true);
     return this;
   }
 
-  public void unsetMissing_ok() {
-    __isset_bit_vector.clear(__MISSING_OK_ISSET_ID);
+  public void unsetIf_exists() {
+    __isset_bit_vector.clear(__IF_EXISTS_ISSET_ID);
   }
 
-  // Returns true if field missing_ok is set (has been assigned a value) and false otherwise
-  public boolean isSetMissing_ok() {
-    return __isset_bit_vector.get(__MISSING_OK_ISSET_ID);
+  // Returns true if field if_exists is set (has been assigned a value) and false otherwise
+  public boolean isSetIf_exists() {
+    return __isset_bit_vector.get(__IF_EXISTS_ISSET_ID);
   }
 
-  public void setMissing_okIsSet(boolean value) {
-    __isset_bit_vector.set(__MISSING_OK_ISSET_ID, value);
+  public void setIf_existsIsSet(boolean value) {
+    __isset_bit_vector.set(__IF_EXISTS_ISSET_ID, value);
   }
 
   public void setFieldValue(int fieldID, Object value) {
@@ -147,11 +147,11 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       break;
 
-    case MISSING_OK:
+    case IF_EXISTS:
       if (value == null) {
-        unsetMissing_ok();
+        unsetIf_exists();
       } else {
-        setMissing_ok((Boolean)value);
+        setIf_exists((Boolean)value);
       }
       break;
 
@@ -165,8 +165,8 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     case ACCOUNT:
       return getAccount();
 
-    case MISSING_OK:
-      return new Boolean(isMissing_ok());
+    case IF_EXISTS:
+      return new Boolean(isIf_exists());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -178,8 +178,8 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     switch (fieldID) {
     case ACCOUNT:
       return isSetAccount();
-    case MISSING_OK:
-      return isSetMissing_ok();
+    case IF_EXISTS:
+      return isSetIf_exists();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -209,12 +209,12 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
         return false;
     }
 
-    boolean this_present_missing_ok = true;
-    boolean that_present_missing_ok = true;
-    if (this_present_missing_ok || that_present_missing_ok) {
-      if (!(this_present_missing_ok && that_present_missing_ok))
+    boolean this_present_if_exists = true;
+    boolean that_present_if_exists = true;
+    if (this_present_if_exists || that_present_if_exists) {
+      if (!(this_present_if_exists && that_present_if_exists))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.missing_ok, that.missing_ok))
+      if (!TBaseHelper.equalsNobinary(this.if_exists, that.if_exists))
         return false;
     }
 
@@ -230,10 +230,10 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (present_account)
       builder.append(account);
 
-    boolean present_missing_ok = true;
-    builder.append(present_missing_ok);
-    if (present_missing_ok)
-      builder.append(missing_ok);
+    boolean present_if_exists = true;
+    builder.append(present_if_exists);
+    if (present_if_exists)
+      builder.append(if_exists);
 
     return builder.toHashCode();
   }
@@ -258,11 +258,11 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetMissing_ok()).compareTo(other.isSetMissing_ok());
+    lastComparison = Boolean.valueOf(isSetIf_exists()).compareTo(other.isSetIf_exists());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(missing_ok, other.missing_ok);
+    lastComparison = TBaseHelper.compareTo(if_exists, other.if_exists);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -287,10 +287,10 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case MISSING_OK:
+        case IF_EXISTS:
           if (field.type == TType.BOOL) {
-            this.missing_ok = iprot.readBool();
-            setMissing_okIsSet(true);
+            this.if_exists = iprot.readBool();
+            setIf_existsIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -317,8 +317,8 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeString(this.account);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(MISSING_OK_FIELD_DESC);
-    oprot.writeBool(this.missing_ok);
+    oprot.writeFieldBegin(IF_EXISTS_FIELD_DESC);
+    oprot.writeBool(this.if_exists);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -357,10 +357,10 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("missing_ok");
+    sb.append("if_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isMissing_ok(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this. isIf_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

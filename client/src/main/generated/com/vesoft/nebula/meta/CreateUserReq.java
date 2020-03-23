@@ -29,30 +29,30 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Comparable<CreateUserReq> {
   private static final TStruct STRUCT_DESC = new TStruct("CreateUserReq");
-  private static final TField USER_FIELD_DESC = new TField("user", TType.STRUCT, (short)1);
+  private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
   private static final TField ENCODED_PWD_FIELD_DESC = new TField("encoded_pwd", TType.STRING, (short)2);
-  private static final TField MISSING_OK_FIELD_DESC = new TField("missing_ok", TType.BOOL, (short)3);
+  private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)3);
 
-  public UserItem user;
+  public String account;
   public String encoded_pwd;
-  public boolean missing_ok;
-  public static final int USER = 1;
+  public boolean if_not_exists;
+  public static final int ACCOUNT = 1;
   public static final int ENCODED_PWD = 2;
-  public static final int MISSING_OK = 3;
+  public static final int IF_NOT_EXISTS = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __MISSING_OK_ISSET_ID = 0;
+  private static final int __IF_NOT_EXISTS_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(USER, new FieldMetaData("user", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, UserItem.class)));
+    tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(ENCODED_PWD, new FieldMetaData("encoded_pwd", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(MISSING_OK, new FieldMetaData("missing_ok", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -65,15 +65,15 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public CreateUserReq(
-    UserItem user,
+    String account,
     String encoded_pwd,
-    boolean missing_ok)
+    boolean if_not_exists)
   {
     this();
-    this.user = user;
+    this.account = account;
     this.encoded_pwd = encoded_pwd;
-    this.missing_ok = missing_ok;
-    setMissing_okIsSet(true);
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
   }
 
   /**
@@ -82,13 +82,13 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
   public CreateUserReq(CreateUserReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    if (other.isSetUser()) {
-      this.user = TBaseHelper.deepCopy(other.user);
+    if (other.isSetAccount()) {
+      this.account = TBaseHelper.deepCopy(other.account);
     }
     if (other.isSetEncoded_pwd()) {
       this.encoded_pwd = TBaseHelper.deepCopy(other.encoded_pwd);
     }
-    this.missing_ok = TBaseHelper.deepCopy(other.missing_ok);
+    this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
   }
 
   public CreateUserReq deepCopy() {
@@ -100,27 +100,27 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     return new CreateUserReq(this);
   }
 
-  public UserItem  getUser() {
-    return this.user;
+  public String  getAccount() {
+    return this.account;
   }
 
-  public CreateUserReq setUser(UserItem user) {
-    this.user = user;
+  public CreateUserReq setAccount(String account) {
+    this.account = account;
     return this;
   }
 
-  public void unsetUser() {
-    this.user = null;
+  public void unsetAccount() {
+    this.account = null;
   }
 
-  // Returns true if field user is set (has been assigned a value) and false otherwise
-  public boolean isSetUser() {
-    return this.user != null;
+  // Returns true if field account is set (has been assigned a value) and false otherwise
+  public boolean isSetAccount() {
+    return this.account != null;
   }
 
-  public void setUserIsSet(boolean value) {
+  public void setAccountIsSet(boolean value) {
     if (!value) {
-      this.user = null;
+      this.account = null;
     }
   }
 
@@ -148,36 +148,36 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public boolean  isMissing_ok() {
-    return this.missing_ok;
+  public boolean  isIf_not_exists() {
+    return this.if_not_exists;
   }
 
-  public CreateUserReq setMissing_ok(boolean missing_ok) {
-    this.missing_ok = missing_ok;
-    setMissing_okIsSet(true);
+  public CreateUserReq setIf_not_exists(boolean if_not_exists) {
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
     return this;
   }
 
-  public void unsetMissing_ok() {
-    __isset_bit_vector.clear(__MISSING_OK_ISSET_ID);
+  public void unsetIf_not_exists() {
+    __isset_bit_vector.clear(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  // Returns true if field missing_ok is set (has been assigned a value) and false otherwise
-  public boolean isSetMissing_ok() {
-    return __isset_bit_vector.get(__MISSING_OK_ISSET_ID);
+  // Returns true if field if_not_exists is set (has been assigned a value) and false otherwise
+  public boolean isSetIf_not_exists() {
+    return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  public void setMissing_okIsSet(boolean value) {
-    __isset_bit_vector.set(__MISSING_OK_ISSET_ID, value);
+  public void setIf_not_existsIsSet(boolean value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, value);
   }
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case USER:
+    case ACCOUNT:
       if (value == null) {
-        unsetUser();
+        unsetAccount();
       } else {
-        setUser((UserItem)value);
+        setAccount((String)value);
       }
       break;
 
@@ -189,11 +189,11 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case MISSING_OK:
+    case IF_NOT_EXISTS:
       if (value == null) {
-        unsetMissing_ok();
+        unsetIf_not_exists();
       } else {
-        setMissing_ok((Boolean)value);
+        setIf_not_exists((Boolean)value);
       }
       break;
 
@@ -204,14 +204,14 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case USER:
-      return getUser();
+    case ACCOUNT:
+      return getAccount();
 
     case ENCODED_PWD:
       return getEncoded_pwd();
 
-    case MISSING_OK:
-      return new Boolean(isMissing_ok());
+    case IF_NOT_EXISTS:
+      return new Boolean(isIf_not_exists());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -221,12 +221,12 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case USER:
-      return isSetUser();
+    case ACCOUNT:
+      return isSetAccount();
     case ENCODED_PWD:
       return isSetEncoded_pwd();
-    case MISSING_OK:
-      return isSetMissing_ok();
+    case IF_NOT_EXISTS:
+      return isSetIf_not_exists();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -247,12 +247,12 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     if (this == that)
       return true;
 
-    boolean this_present_user = true && this.isSetUser();
-    boolean that_present_user = true && that.isSetUser();
-    if (this_present_user || that_present_user) {
-      if (!(this_present_user && that_present_user))
+    boolean this_present_account = true && this.isSetAccount();
+    boolean that_present_account = true && that.isSetAccount();
+    if (this_present_account || that_present_account) {
+      if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.user, that.user))
+      if (!TBaseHelper.equalsNobinary(this.account, that.account))
         return false;
     }
 
@@ -265,12 +265,12 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
         return false;
     }
 
-    boolean this_present_missing_ok = true;
-    boolean that_present_missing_ok = true;
-    if (this_present_missing_ok || that_present_missing_ok) {
-      if (!(this_present_missing_ok && that_present_missing_ok))
+    boolean this_present_if_not_exists = true;
+    boolean that_present_if_not_exists = true;
+    if (this_present_if_not_exists || that_present_if_not_exists) {
+      if (!(this_present_if_not_exists && that_present_if_not_exists))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.missing_ok, that.missing_ok))
+      if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists))
         return false;
     }
 
@@ -281,20 +281,20 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_user = true && (isSetUser());
-    builder.append(present_user);
-    if (present_user)
-      builder.append(user);
+    boolean present_account = true && (isSetAccount());
+    builder.append(present_account);
+    if (present_account)
+      builder.append(account);
 
     boolean present_encoded_pwd = true && (isSetEncoded_pwd());
     builder.append(present_encoded_pwd);
     if (present_encoded_pwd)
       builder.append(encoded_pwd);
 
-    boolean present_missing_ok = true;
-    builder.append(present_missing_ok);
-    if (present_missing_ok)
-      builder.append(missing_ok);
+    boolean present_if_not_exists = true;
+    builder.append(present_if_not_exists);
+    if (present_if_not_exists)
+      builder.append(if_not_exists);
 
     return builder.toHashCode();
   }
@@ -311,11 +311,11 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetUser()).compareTo(other.isSetUser());
+    lastComparison = Boolean.valueOf(isSetAccount()).compareTo(other.isSetAccount());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(user, other.user);
+    lastComparison = TBaseHelper.compareTo(account, other.account);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -327,11 +327,11 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetMissing_ok()).compareTo(other.isSetMissing_ok());
+    lastComparison = Boolean.valueOf(isSetIf_not_exists()).compareTo(other.isSetIf_not_exists());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(missing_ok, other.missing_ok);
+    lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -349,10 +349,9 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       }
       switch (field.id)
       {
-        case USER:
-          if (field.type == TType.STRUCT) {
-            this.user = new UserItem();
-            this.user.read(iprot);
+        case ACCOUNT:
+          if (field.type == TType.STRING) {
+            this.account = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -364,10 +363,10 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case MISSING_OK:
+        case IF_NOT_EXISTS:
           if (field.type == TType.BOOL) {
-            this.missing_ok = iprot.readBool();
-            setMissing_okIsSet(true);
+            this.if_not_exists = iprot.readBool();
+            setIf_not_existsIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -389,9 +388,9 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.user != null) {
-      oprot.writeFieldBegin(USER_FIELD_DESC);
-      this.user.write(oprot);
+    if (this.account != null) {
+      oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
+      oprot.writeString(this.account);
       oprot.writeFieldEnd();
     }
     if (this.encoded_pwd != null) {
@@ -399,8 +398,8 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeString(this.encoded_pwd);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(MISSING_OK_FIELD_DESC);
-    oprot.writeBool(this.missing_ok);
+    oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
+    oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -428,13 +427,13 @@ String space = prettyPrint ? " " : "";
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("user");
+    sb.append("account");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getUser() == null) {
+    if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getUser(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -450,10 +449,10 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("missing_ok");
+    sb.append("if_not_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isMissing_ok(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this. isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
