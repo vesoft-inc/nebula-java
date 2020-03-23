@@ -27,12 +27,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Comparable<GrantRoleReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("GrantRoleReq");
-  private static final TField ROLE_ITEM_FIELD_DESC = new TField("role_item", TType.STRUCT, (short)1);
+public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetUserRolesReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetUserRolesReq");
+  private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
 
-  public com.vesoft.nebula.RoleItem role_item;
-  public static final int ROLE_ITEM = 1;
+  public String account;
+  public static final int ACCOUNT = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -40,74 +40,74 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ROLE_ITEM, new FieldMetaData("role_item", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.RoleItem.class)));
+    tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(GrantRoleReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetUserRolesReq.class, metaDataMap);
   }
 
-  public GrantRoleReq() {
+  public GetUserRolesReq() {
   }
 
-  public GrantRoleReq(
-    com.vesoft.nebula.RoleItem role_item)
+  public GetUserRolesReq(
+    String account)
   {
     this();
-    this.role_item = role_item;
+    this.account = account;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public GrantRoleReq(GrantRoleReq other) {
-    if (other.isSetRole_item()) {
-      this.role_item = TBaseHelper.deepCopy(other.role_item);
+  public GetUserRolesReq(GetUserRolesReq other) {
+    if (other.isSetAccount()) {
+      this.account = TBaseHelper.deepCopy(other.account);
     }
   }
 
-  public GrantRoleReq deepCopy() {
-    return new GrantRoleReq(this);
+  public GetUserRolesReq deepCopy() {
+    return new GetUserRolesReq(this);
   }
 
   @Deprecated
-  public GrantRoleReq clone() {
-    return new GrantRoleReq(this);
+  public GetUserRolesReq clone() {
+    return new GetUserRolesReq(this);
   }
 
-  public com.vesoft.nebula.RoleItem  getRole_item() {
-    return this.role_item;
+  public String  getAccount() {
+    return this.account;
   }
 
-  public GrantRoleReq setRole_item(com.vesoft.nebula.RoleItem role_item) {
-    this.role_item = role_item;
+  public GetUserRolesReq setAccount(String account) {
+    this.account = account;
     return this;
   }
 
-  public void unsetRole_item() {
-    this.role_item = null;
+  public void unsetAccount() {
+    this.account = null;
   }
 
-  // Returns true if field role_item is set (has been assigned a value) and false otherwise
-  public boolean isSetRole_item() {
-    return this.role_item != null;
+  // Returns true if field account is set (has been assigned a value) and false otherwise
+  public boolean isSetAccount() {
+    return this.account != null;
   }
 
-  public void setRole_itemIsSet(boolean value) {
+  public void setAccountIsSet(boolean value) {
     if (!value) {
-      this.role_item = null;
+      this.account = null;
     }
   }
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case ROLE_ITEM:
+    case ACCOUNT:
       if (value == null) {
-        unsetRole_item();
+        unsetAccount();
       } else {
-        setRole_item((com.vesoft.nebula.RoleItem)value);
+        setAccount((String)value);
       }
       break;
 
@@ -118,8 +118,8 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ROLE_ITEM:
-      return getRole_item();
+    case ACCOUNT:
+      return getAccount();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -129,8 +129,8 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case ROLE_ITEM:
-      return isSetRole_item();
+    case ACCOUNT:
+      return isSetAccount();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -140,23 +140,23 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof GrantRoleReq)
-      return this.equals((GrantRoleReq)that);
+    if (that instanceof GetUserRolesReq)
+      return this.equals((GetUserRolesReq)that);
     return false;
   }
 
-  public boolean equals(GrantRoleReq that) {
+  public boolean equals(GetUserRolesReq that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_role_item = true && this.isSetRole_item();
-    boolean that_present_role_item = true && that.isSetRole_item();
-    if (this_present_role_item || that_present_role_item) {
-      if (!(this_present_role_item && that_present_role_item))
+    boolean this_present_account = true && this.isSetAccount();
+    boolean that_present_account = true && that.isSetAccount();
+    if (this_present_account || that_present_account) {
+      if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.role_item, that.role_item))
+      if (!TBaseHelper.equalsNobinary(this.account, that.account))
         return false;
     }
 
@@ -167,16 +167,16 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_role_item = true && (isSetRole_item());
-    builder.append(present_role_item);
-    if (present_role_item)
-      builder.append(role_item);
+    boolean present_account = true && (isSetAccount());
+    builder.append(present_account);
+    if (present_account)
+      builder.append(account);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(GrantRoleReq other) {
+  public int compareTo(GetUserRolesReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -187,11 +187,11 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetRole_item()).compareTo(other.isSetRole_item());
+    lastComparison = Boolean.valueOf(isSetAccount()).compareTo(other.isSetAccount());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(role_item, other.role_item);
+    lastComparison = TBaseHelper.compareTo(account, other.account);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -209,10 +209,9 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (field.id)
       {
-        case ROLE_ITEM:
-          if (field.type == TType.STRUCT) {
-            this.role_item = new com.vesoft.nebula.RoleItem();
-            this.role_item.read(iprot);
+        case ACCOUNT:
+          if (field.type == TType.STRING) {
+            this.account = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -234,9 +233,9 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.role_item != null) {
-      oprot.writeFieldBegin(ROLE_ITEM_FIELD_DESC);
-      this.role_item.write(oprot);
+    if (this.account != null) {
+      oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
+      oprot.writeString(this.account);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -258,20 +257,20 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("GrantRoleReq");
+    StringBuilder sb = new StringBuilder("GetUserRolesReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("role_item");
+    sb.append("account");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getRole_item() == null) {
+    if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getRole_item(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
