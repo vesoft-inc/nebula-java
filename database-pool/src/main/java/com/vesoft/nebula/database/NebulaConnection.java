@@ -22,14 +22,14 @@ import com.vesoft.nebula.client.graph.ResultSet;
 public interface NebulaConnection {
     /**
      * Switch the space
-     * @param space
+     * @param space space
      * @return result
      */
     int switchSpace(String space);
 
     /**
      * execute
-     * @param statement
+     * @param statement statement
      * @return result
      */
     int execute(String statement);
@@ -42,11 +42,11 @@ public interface NebulaConnection {
 
     /**
      * execute query
-     * @param statement
-     * @return result
-     * @throws ConnectionException
-     * @throws NGQLException
-     * @throws TException
+     * @param statement statement
+     * @return result result
+     * @throws ConnectionException ConnectionException
+     * @throws NGQLException NGQLException
+     * @throws TException TException
      */
     ResultSet executeQuery(String statement)throws ConnectionException,
             NGQLException, TException;

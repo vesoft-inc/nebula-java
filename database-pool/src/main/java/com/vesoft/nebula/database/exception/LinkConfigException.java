@@ -14,33 +14,33 @@ import com.vesoft.nebula.database.constant.ErrorEnum;
  * @Description LinkConfigException
  * @Date 2020/3/19 - 15:42
  */
-public class LinkConfigException extends RuntimeException{
+public class LinkConfigException extends RuntimeException {
 
     private int code;
 
     private String msg;
 
 
-    public LinkConfigException(int code,String msg){
+    public LinkConfigException(int code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;
     }
 
-    public LinkConfigException(int code,String msg,Throwable cause){
-        super(msg,cause);
+    public LinkConfigException(int code, String msg, Throwable cause) {
+        super(msg, cause);
         this.code = code;
         this.msg = msg;
     }
 
-    public LinkConfigException(ErrorEnum errorEnum){
+    public LinkConfigException(ErrorEnum errorEnum) {
         super(errorEnum.getMsg());
         this.code = errorEnum.getCode();
         this.msg = errorEnum.getMsg();
     }
 
-    public LinkConfigException(ErrorEnum errorEnum,Throwable cause){
-        super(errorEnum.getMsg(),cause);
+    public LinkConfigException(ErrorEnum errorEnum, Throwable cause) {
+        super(errorEnum.getMsg(), cause);
         this.code = errorEnum.getCode();
         this.msg = errorEnum.getMsg();
     }

@@ -6,9 +6,10 @@
 
 package com.vesoft.nebula.database.entity;
 
-import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Data;
 
 /**
  * @author huangzhaolai-jk
@@ -40,9 +41,9 @@ public class LinkDomain implements Serializable {
             return false;
         }
         LinkDomain that = (LinkDomain) o;
-        return port == that.port &&
-                Objects.equals(host, that.host) &&
-                Objects.equals(userName, that.userName);
+        return port == that.port
+                && Objects.equals(host, that.host)
+                && Objects.equals(userName, that.userName);
     }
 
     @Override
@@ -52,10 +53,10 @@ public class LinkDomain implements Serializable {
 
     @Override
     public String toString() {
-        return "LinkDomain{" +
-                "host='" + host + '\'' +
-                ", port=" + port +
-                ", userName='" + userName + '\'' +
-                '}';
+        return "LinkDomain{"
+                + "host='" + host + '\''
+                + ", port=" + port
+                + ", userName='" + userName + '\''
+                + '}';
     }
 }
