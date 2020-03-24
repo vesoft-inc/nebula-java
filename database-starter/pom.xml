@@ -14,7 +14,7 @@
     <dependencies>
 
         <dependency>
-            <artifactId>database-pool</artifactId>
+            <artifactId>client</artifactId>
             <groupId>com.vesoft</groupId>
             <version>${parent.version}</version>
         </dependency>

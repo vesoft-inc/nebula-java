@@ -81,6 +81,7 @@ public abstract class AbstractClient implements Client {
 
     protected abstract int doConnect(List<HostAndPort> addresses) throws TException;
 
+    @Override
     public int connect() throws TException {
         int retry = connectionRetry;
         while (retry-- != 0) {
@@ -93,8 +94,9 @@ public abstract class AbstractClient implements Client {
     }
 
     /**
-     * @return
+     * @return isConnected
      */
+    @Override
     public boolean isConnected() {
         return transport.isOpen();
     }

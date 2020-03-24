@@ -4,19 +4,19 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.database.pool;
+package com.vesoft.nebula.client.graph.pool;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.transport.TTransport;
 import com.vesoft.nebula.client.graph.ConnectionException;
+import com.vesoft.nebula.client.graph.ExecuteUtils;
 import com.vesoft.nebula.client.graph.NGQLException;
+import com.vesoft.nebula.client.graph.NebulaConnection;
 import com.vesoft.nebula.client.graph.ResultSet;
-import com.vesoft.nebula.database.NebulaConnection;
-import com.vesoft.nebula.graph.ErrorCode;
-import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 import java.util.Objects;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * @author huangzhaolai-jk
@@ -24,8 +24,9 @@ import lombok.extern.slf4j.Slf4j;
  * @Description NebulaPoolConnection
  * @Date 2020/3/17 - 13:57
  */
-@Slf4j
 public class NebulaPoolConnection implements NebulaConnection {
+
+    private final Logger log = LogManager.getLogger(NebulaPoolConnection.class);
 
     private GraphService.Client graphClient;
 
@@ -52,46 +53,13 @@ public class NebulaPoolConnection implements NebulaConnection {
 
     @Override
     public int execute(String statement) {
-        if (checkTransportClosed(transport)) {
-            return ErrorCode.E_DISCONNECTED;
-        }
-        int retry = executionRetry;
-        while (retry-- >= 0) {
-            try {
-                ExecutionResponse executionResponse = graphClient.execute(sessionId, statement);
-                if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
-                    log.error("execute error: " + executionResponse.getError_msg());
-                }
-                return executionResponse.getError_code();
-            } catch (TException e) {
-                log.error("Thrift rpc call failed: " + e.getMessage());
-                return ErrorCode.E_RPC_FAILURE;
-            }
-        }
-        return ErrorCode.E_RPC_FAILURE;
-    }
-
-    private boolean checkTransportClosed(TTransport transport) {
-        return transport == null || !transport.isOpen();
+        return ExecuteUtils.execute(transport, graphClient, sessionId, statement, executionRetry);
     }
 
     @Override
     public ResultSet executeQuery(String statement) throws ConnectionException,
             NGQLException, TException {
-        if (checkTransportClosed(transport)) {
-            log.error("Thrift rpc call failed");
-            throw new ConnectionException();
-        }
-
-        ExecutionResponse executionResponse = graphClient.execute(sessionId, statement);
-        int code = executionResponse.getError_code();
-        if (code == ErrorCode.SUCCEEDED) {
-            return new ResultSet(executionResponse.getColumn_names(),
-                    executionResponse.getRows());
-        } else {
-            log.error("Execute error: " + executionResponse.getError_msg());
-            throw new NGQLException(code);
-        }
+        return ExecuteUtils.executeQuery(transport, graphClient, sessionId, statement);
     }
 
     @Override

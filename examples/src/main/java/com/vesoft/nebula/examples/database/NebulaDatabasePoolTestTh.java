@@ -6,8 +6,9 @@
 
 package com.vesoft.nebula.examples.database;
 
-import com.vesoft.nebula.database.NebulaConnection;
-import com.vesoft.nebula.database.NebulaDataSource;
+
+import com.vesoft.nebula.client.graph.NebulaConnection;
+import com.vesoft.nebula.client.graph.pool.NebulaConnectionPool;
 
 /**
  * @author huangzhaolai-jk
@@ -17,25 +18,28 @@ import com.vesoft.nebula.database.NebulaDataSource;
  */
 public class NebulaDatabasePoolTestTh implements Runnable {
 
-    private NebulaDataSource nebulaDataSource;
+    private NebulaConnectionPool nebulaConnectionPool;
     private int no;
 
-    public NebulaDatabasePoolTestTh(NebulaDataSource nebulaDataSource, int no) {
-        this.nebulaDataSource = nebulaDataSource;
+    public NebulaDatabasePoolTestTh(NebulaConnectionPool nebulaConnectionPool, int no) {
+        this.nebulaConnectionPool = nebulaConnectionPool;
         this.no = no;
     }
 
     @Override
     public void run() {
-        NebulaConnection connection = nebulaDataSource.getConnection();
+        NebulaConnection connection = null;
+        try {
+            connection = nebulaConnectionPool.borrowObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println("connection:::"
                 + connection + ",maxSize:"
-                + nebulaDataSource.maxPoolSize() + ",currentSize:"
-                + nebulaDataSource.currentPoolSize()
-                + ",freeSize:" + nebulaDataSource.freePoolSize());
+                + nebulaConnectionPool.getMaxTotal());
         connection.switchSpace("test");
         int code = connection.execute("CREATE TAG test_tag(name string, credits int);");
-        nebulaDataSource.release(connection);
+        nebulaConnectionPool.returnObject(connection);
         System.out.println("running！" + no);
     }
 }

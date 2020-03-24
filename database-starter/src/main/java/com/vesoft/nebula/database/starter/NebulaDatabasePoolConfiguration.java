@@ -6,13 +6,15 @@
 
 package com.vesoft.nebula.database.starter;
 
-import com.vesoft.nebula.database.NebulaConnection;
-import com.vesoft.nebula.database.NebulaDataSource;
-import com.vesoft.nebula.database.constant.ErrorEnum;
-import com.vesoft.nebula.database.entity.LinkDomain;
-import com.vesoft.nebula.database.exception.LinkConfigException;
-import com.vesoft.nebula.database.pool.NebulaPoolDataSource;
+import com.vesoft.nebula.client.graph.NebulaConnection;
+import com.vesoft.nebula.client.graph.pool.NebulaConnectionPool;
+import com.vesoft.nebula.client.graph.pool.NebulaPoolConnectionFactory;
+import com.vesoft.nebula.client.graph.pool.config.NebulaConnectionPoolConfig;
+import com.vesoft.nebula.client.graph.pool.constant.ErrorEnum;
+import com.vesoft.nebula.client.graph.pool.entity.LinkDomain;
+import com.vesoft.nebula.client.graph.pool.exception.LinkConfigException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -41,6 +43,15 @@ public class NebulaDatabasePoolConfiguration {
     @Value("${nebula.password:password}")
     private String password;
 
+    @Value("${nebula.pool.maxIdle:20}")
+    private int maxIdle;
+
+    @Value("${nebula.pool.minIdle:2}")
+    private int minIdle;
+
+    @Value("${nebula.pool.maxTotal:50}")
+    private int maxTotal;
+
     /**
      * multi address configuration
      * eg  127.0.0.1::3699@@user::paassword;;192.168.180.1::3699@@user::paassword
@@ -54,48 +65,45 @@ public class NebulaDatabasePoolConfiguration {
     @Value("${nebula.connectionRetry:3}")
     private int connectionRetry;
 
-    @Value("${nebula.databasePoolSize:50}")
-    private int poolSize;
-
     private static final String NULL = "null";
 
-    @Bean(name = "nebulaPoolDataSource")
-    public NebulaDataSource configNebulaDataSource() throws LinkConfigException {
-        NebulaPoolDataSource nebulaPoolDataSource = null;
+    private static final String LOCAL = "127.0.0.1";
+
+    private static final int DEFAULT_PORT = 3699;
+
+    private NebulaConnectionPool createDefaultPool(List<LinkDomain> linkDomains) {
+        NebulaConnectionPoolConfig poolConfig =
+                new NebulaConnectionPoolConfig(linkDomains,
+                        connectionRetry, timeout, maxIdle, minIdle, maxTotal);
+        NebulaPoolConnectionFactory nebulaPoolConnectionFactory =
+                new NebulaPoolConnectionFactory(poolConfig);
+        return new NebulaConnectionPool(nebulaPoolConnectionFactory);
+    }
+
+    @Bean(name = "nebulaConnectionPool")
+    public NebulaConnectionPool configNebulaConnectionPool() throws Exception {
+        NebulaConnectionPool nebulaConnectionPool;
         if (!NULL.equals(host) && port > 0) {
-            LinkDomain linkDomain = new LinkDomain();
-            linkDomain.setHost(host);
-            linkDomain.setPort(port);
-            linkDomain.setUserName(userName);
-            linkDomain.setPassword(password);
-            nebulaPoolDataSource = new NebulaPoolDataSource(linkDomain,
-                    timeout,
-                    connectionRetry,
-                    poolSize);
+            LinkDomain linkDomain = new LinkDomain(host, port, userName, password);
+            nebulaConnectionPool = createDefaultPool(Arrays.asList(linkDomain));
         } else {
             if (!NULL.equals(links)) {
                 //split address
                 List<LinkDomain> address = splitLinks();
-                nebulaPoolDataSource = new NebulaPoolDataSource(address,
-                        timeout,
-                        connectionRetry,
-                        poolSize);
+                NebulaConnectionPoolConfig poolConfig =
+                        new NebulaConnectionPoolConfig(address,
+                                connectionRetry, timeout, maxIdle, minIdle, maxTotal);
+                NebulaPoolConnectionFactory nebulaPoolConnectionFactory =
+                        new NebulaPoolConnectionFactory(poolConfig);
+                return new NebulaConnectionPool(nebulaPoolConnectionFactory);
             } else {
-                LinkDomain linkDomain = new LinkDomain();
-                linkDomain.setHost("127.0.0.1");
-                linkDomain.setPort(3699);
-                linkDomain.setUserName(userName);
-                linkDomain.setPassword(password);
-                nebulaPoolDataSource = new NebulaPoolDataSource(linkDomain,
-                        timeout,
-                        connectionRetry,
-                        poolSize);
+                LinkDomain linkDomain = new LinkDomain(LOCAL, DEFAULT_PORT, userName, password);
+                nebulaConnectionPool = createDefaultPool(Arrays.asList(linkDomain));
             }
         }
-        //try connect once
-        NebulaConnection connection = nebulaPoolDataSource.getConnection();
-        nebulaPoolDataSource.release(connection);
-        return nebulaPoolDataSource;
+        NebulaConnection nebulaConnection = nebulaConnectionPool.borrowObject();
+        nebulaConnectionPool.returnObject(nebulaConnection);
+        return nebulaConnectionPool;
     }
 
     private List<LinkDomain> splitLinks() throws LinkConfigException {

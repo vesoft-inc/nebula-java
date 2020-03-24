@@ -4,12 +4,13 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.database.entity;
+package com.vesoft.nebula.client.graph.pool.entity;
 
+
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Objects;
-import lombok.Data;
 
 /**
  * @author huangzhaolai-jk

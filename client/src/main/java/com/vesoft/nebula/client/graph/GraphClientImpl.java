@@ -13,7 +13,6 @@ import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.AbstractClient;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
-import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 import java.util.List;
 import java.util.Random;
@@ -75,6 +74,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      * @param space The space name
      * @return The ErrorCode of status, 0 is succeeded.
      */
+    @Override
     public int switchSpace(String space) {
         return execute(String.format("USE %s", space));
     }
@@ -87,24 +87,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      */
     @Override
     public int execute(String statement) {
-        if (!checkTransportOpened(transport)) {
-            return ErrorCode.E_DISCONNECTED;
-        }
-
-        int retry = executionRetry;
-        while (retry-- > 0) {
-            try {
-                ExecutionResponse executionResponse = client.execute(sessionID, statement);
-                if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
-                    LOGGER.error("execute error: " + executionResponse.getError_msg());
-                }
-                return executionResponse.getError_code();
-            } catch (TException e) {
-                LOGGER.error("Thrift rpc call failed: " + e.getMessage());
-                return ErrorCode.E_RPC_FAILURE;
-            }
-        }
-        return ErrorCode.E_RPC_FAILURE;
+        return ExecuteUtils.execute(transport, client, sessionID, statement, executionRetry);
     }
 
     /**
@@ -116,26 +99,14 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
     @Override
     public ResultSet executeQuery(String statement) throws ConnectionException,
             NGQLException, TException {
-        if (!checkTransportOpened(transport)) {
-            LOGGER.error("Thrift rpc call failed");
-            throw new ConnectionException();
-        }
-
-        ExecutionResponse executionResponse = client.execute(sessionID, statement);
-        int code = executionResponse.getError_code();
-        if (code == ErrorCode.SUCCEEDED) {
-            return new ResultSet(executionResponse.getColumn_names(),
-                    executionResponse.getRows());
-        } else {
-            LOGGER.error("Execute error: " + executionResponse.getError_msg());
-            throw new NGQLException(code);
-        }
+        return ExecuteUtils.executeQuery(transport, client, sessionID, statement);
     }
 
 
     /**
      * Sign out from Graph Services.
      */
+    @Override
     public void close() {
         super.close();
         try {
