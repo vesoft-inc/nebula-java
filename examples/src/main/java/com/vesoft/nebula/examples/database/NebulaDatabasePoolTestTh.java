@@ -28,9 +28,10 @@ public class NebulaDatabasePoolTestTh implements Runnable {
     @Override
     public void run() {
         NebulaConnection connection = nebulaDataSource.getConnection();
-        System.out.println("connection:::" + connection
-                + ",maxSize:" + nebulaDataSource.maxPoolSize()
-                + ",currentSize:" + nebulaDataSource.currentPoolSize()
+        System.out.println("connection:::"
+                + connection + ",maxSize:"
+                + nebulaDataSource.maxPoolSize() + ",currentSize:"
+                + nebulaDataSource.currentPoolSize()
                 + ",freeSize:" + nebulaDataSource.freePoolSize());
         connection.switchSpace("test");
         int code = connection.execute("CREATE TAG test_tag(name string, credits int);");

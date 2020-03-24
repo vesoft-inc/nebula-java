@@ -31,9 +31,8 @@ public class TestConnect implements ApplicationRunner {
 
     /**
      * to run ExampleApplication than auto test this method
-     *
-     * @param args NonEmpty
-     * @throws Exception connection exception
+     * @param args args
+     * @throws Exception Exception
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {

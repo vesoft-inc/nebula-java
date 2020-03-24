@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.database.pool;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.TProtocol;
@@ -24,11 +26,10 @@ import com.vesoft.nebula.database.exception.ConnectException;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.GraphService;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Random;
-import static com.google.common.base.Preconditions.checkArgument;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author huangzhaolai-jk
@@ -62,21 +63,28 @@ public class NebulaPoolDataSource implements NebulaDataSource {
 
     private int port;
 
-    public NebulaPoolDataSource(LinkDomain linkDomain, int timeout, int connectionRetry, int poolSize) {
+    public NebulaPoolDataSource(LinkDomain linkDomain,
+                                int timeout,
+                                int connectionRetry,
+                                int poolSize) {
         this(Lists.newArrayList(linkDomain), timeout, connectionRetry, poolSize);
     }
 
     /**
      * Parameter constructor
      *
-     * @param timeout
-     * @param connectionRetry
+     * @param timeout timeout
+     * @param connectionRetry connectionRetry
      */
-    public NebulaPoolDataSource(List<LinkDomain> addresses, int timeout, int connectionRetry, int poolSize) {
+    public NebulaPoolDataSource(List<LinkDomain> addresses,
+                                int timeout,
+                                int connectionRetry,
+                                int poolSize) {
 
         checkArgument(timeout > DataBaseConstant.ZERO);
         checkArgument(connectionRetry > DataBaseConstant.ZERO);
-        checkArgument(addresses != null && addresses.size() > DataBaseConstant.ZERO);
+        checkArgument(addresses != null
+                && addresses.size() > DataBaseConstant.ZERO);
         for (LinkDomain linkDomain : addresses) {
             String host = linkDomain.getHost();
             int port = linkDomain.getPort();
@@ -102,7 +110,8 @@ public class NebulaPoolDataSource implements NebulaDataSource {
     public NebulaConnection getConnection() throws ConnectException {
         NebulaConnection connection = null;
         int retry = connectionRetry;
-        while (connection == null && retry-- >= DataBaseConstant.ZERO) {
+        while (connection == null
+                && retry-- >= DataBaseConstant.ZERO) {
             //get from connectionManager
             connection = connectionManager.getConnection();
             if (connection != null) {
@@ -112,7 +121,9 @@ public class NebulaPoolDataSource implements NebulaDataSource {
                 //create a new connection
                 synchronized (connectionManager) {
                     connection = connect();
-                    if (connection != null && connection.isOpened() && connectionManager.canAddConnection()) {
+                    if (connection != null
+                            && connection.isOpened()
+                            && connectionManager.canAddConnection()) {
                         boolean added = connectionManager.addConnection(connection);
                         if (!added) {
                             connection = null;
@@ -153,7 +164,7 @@ public class NebulaPoolDataSource implements NebulaDataSource {
     /**
      * connect to nebula
      *
-     * @return
+     * @return  NebulaConnection
      */
     private NebulaConnection connect() {
         GraphService.Client client;
@@ -166,7 +177,8 @@ public class NebulaPoolDataSource implements NebulaDataSource {
         try {
             transport.open();
             client = new GraphService.Client(protocol);
-            AuthResponse result = client.authenticate(linkDomain.getUserName(), linkDomain.getPassword());
+            AuthResponse result = client.authenticate(linkDomain.getUserName(),
+                    linkDomain.getPassword());
             if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
                 log.error("User name or password error");
             }

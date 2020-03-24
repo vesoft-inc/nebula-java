@@ -16,12 +16,12 @@ public enum ErrorEnum {
     /**
      * lack connection
      */
-    CONNECT_LACK(10001,"lack connection"),
+    CONNECT_LACK(10001, "lack connection"),
 
-    LINK_ERROR(10002,"nebula address configuration error，format：host1::port1@@user1::password1;;host2::port2@@user2::password2")
-    ;
+    LINK_ERROR(10002, "nebula address configuration error，"
+            + "format：host1::port1@@user1::password1;;host2::port2@@user2::password2");
 
-    ErrorEnum(int code,String msg){
+    ErrorEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -35,11 +35,11 @@ public enum ErrorEnum {
      */
     private String msg;
 
-    public int getCode(){
+    public int getCode() {
         return this.code;
     }
 
-    public String getMsg(){
+    public String getMsg() {
         return this.msg;
     }
 

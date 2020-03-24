@@ -12,12 +12,12 @@ import com.vesoft.nebula.database.constant.ErrorEnum;
 import com.vesoft.nebula.database.entity.LinkDomain;
 import com.vesoft.nebula.database.exception.LinkConfigException;
 import com.vesoft.nebula.database.pool.NebulaPoolDataSource;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Anyzm
@@ -60,7 +60,7 @@ public class NebulaDatabasePoolConfiguration {
     private static final String NULL = "null";
 
     @Bean(name = "nebulaPoolDataSource")
-    public NebulaDataSource configNebulaDataSource() throws LinkConfigException{
+    public NebulaDataSource configNebulaDataSource() throws LinkConfigException {
         NebulaPoolDataSource nebulaPoolDataSource = null;
         if (!NULL.equals(host) && port > 0) {
             LinkDomain linkDomain = new LinkDomain();
@@ -68,19 +68,28 @@ public class NebulaDatabasePoolConfiguration {
             linkDomain.setPort(port);
             linkDomain.setUserName(userName);
             linkDomain.setPassword(password);
-            nebulaPoolDataSource =  new NebulaPoolDataSource(linkDomain, timeout, connectionRetry, poolSize);
+            nebulaPoolDataSource = new NebulaPoolDataSource(linkDomain,
+                    timeout,
+                    connectionRetry,
+                    poolSize);
         } else {
             if (!NULL.equals(links)) {
                 //split address
                 List<LinkDomain> address = splitLinks();
-                nebulaPoolDataSource = new NebulaPoolDataSource(address, timeout, connectionRetry, poolSize);
-            }else{
+                nebulaPoolDataSource = new NebulaPoolDataSource(address,
+                        timeout,
+                        connectionRetry,
+                        poolSize);
+            } else {
                 LinkDomain linkDomain = new LinkDomain();
                 linkDomain.setHost("127.0.0.1");
                 linkDomain.setPort(3699);
                 linkDomain.setUserName(userName);
                 linkDomain.setPassword(password);
-                nebulaPoolDataSource = new NebulaPoolDataSource(linkDomain, timeout, connectionRetry, poolSize);
+                nebulaPoolDataSource = new NebulaPoolDataSource(linkDomain,
+                        timeout,
+                        connectionRetry,
+                        poolSize);
             }
         }
         //try connect once
@@ -89,18 +98,18 @@ public class NebulaDatabasePoolConfiguration {
         return nebulaPoolDataSource;
     }
 
-    private List<LinkDomain> splitLinks() throws LinkConfigException{
+    private List<LinkDomain> splitLinks() throws LinkConfigException {
         List<LinkDomain> address = new ArrayList<>();
         String[] linkArray = links.split(";;");
-        for(String link : linkArray){
+        for (String link : linkArray) {
             LinkDomain linkDomain = new LinkDomain();
-            String[] aLink = link.split("@@");
-            if(aLink.length != 2){
+            String[] linkGroup = link.split("@@");
+            if (linkGroup.length != 2) {
                 //configuration error
                 throw new LinkConfigException(ErrorEnum.LINK_ERROR);
             }
-            String[] hostPort = aLink[0].split("::");
-            if(hostPort.length != 2){
+            String[] hostPort = linkGroup[0].split("::");
+            if (hostPort.length != 2) {
                 //configuration error
                 throw new LinkConfigException(ErrorEnum.LINK_ERROR);
             }
@@ -108,12 +117,12 @@ public class NebulaDatabasePoolConfiguration {
             try {
                 int port = Integer.parseInt(hostPort[1]);
                 linkDomain.setPort(port);
-            }catch (Exception e){
+            } catch (Exception e) {
                 //configuration port error
                 throw new LinkConfigException(ErrorEnum.LINK_ERROR);
             }
-            String[] userInfo = aLink[1].split("::");
-            if(userInfo.length != 2){
+            String[] userInfo = linkGroup[1].split("::");
+            if (userInfo.length != 2) {
                 //configuration user or password error
                 throw new LinkConfigException(ErrorEnum.LINK_ERROR);
             }

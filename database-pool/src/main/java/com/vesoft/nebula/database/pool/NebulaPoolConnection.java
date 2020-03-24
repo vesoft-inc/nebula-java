@@ -15,9 +15,8 @@ import com.vesoft.nebula.database.NebulaConnection;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author huangzhaolai-jk
@@ -36,7 +35,10 @@ public class NebulaPoolConnection implements NebulaConnection {
 
     private int executionRetry;
 
-    NebulaPoolConnection(GraphService.Client graphClient, TTransport transport, long sessionId, int executionRetry) {
+    NebulaPoolConnection(GraphService.Client graphClient,
+                         TTransport transport,
+                         long sessionId,
+                         int executionRetry) {
         this.graphClient = graphClient;
         this.transport = transport;
         this.sessionId = sessionId;
@@ -106,9 +108,9 @@ public class NebulaPoolConnection implements NebulaConnection {
             return false;
         }
         NebulaPoolConnection that = (NebulaPoolConnection) o;
-        return sessionId == that.sessionId &&
-                Objects.equals(graphClient, that.graphClient) &&
-                Objects.equals(transport, that.transport);
+        return sessionId == that.sessionId
+                && Objects.equals(graphClient, that.graphClient)
+                && Objects.equals(transport, that.transport);
     }
 
     @Override
