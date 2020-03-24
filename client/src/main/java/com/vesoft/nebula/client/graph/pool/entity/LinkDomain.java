@@ -6,9 +6,6 @@
 
 package com.vesoft.nebula.client.graph.pool.entity;
 
-
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -18,7 +15,6 @@ import java.util.Objects;
  * @Description LinkDomain is used for store the information of the link
  * @Date 2020/3/19 - 10:19
  */
-@Data
 public class LinkDomain implements Serializable {
     /**
      * nebula host
@@ -32,6 +28,48 @@ public class LinkDomain implements Serializable {
     private String userName;
 
     private String password;
+
+    public LinkDomain() {
+    }
+
+    public LinkDomain(String host, int port, String userName, String password) {
+        this.host = host;
+        this.port = port;
+        this.userName = userName;
+        this.password = password;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public boolean equals(Object o) {

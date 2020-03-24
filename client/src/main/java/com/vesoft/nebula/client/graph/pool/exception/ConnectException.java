@@ -4,10 +4,9 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.database.exception;
+package com.vesoft.nebula.client.graph.pool.exception;
 
-import com.vesoft.nebula.database.constant.ErrorEnum;
-import lombok.Data;
+import com.vesoft.nebula.client.graph.pool.constant.ErrorEnum;
 
 /**
  * @author huangzhaolai-jk
@@ -15,7 +14,6 @@ import lombok.Data;
  * @Description ConnectException
  * @Date 2020/3/19 - 10:29
  */
-@Data
 public class ConnectException extends RuntimeException {
 
     private int code;
@@ -45,6 +43,22 @@ public class ConnectException extends RuntimeException {
         super(errorEnum.getMsg(), cause);
         this.code = errorEnum.getCode();
         this.msg = errorEnum.getMsg();
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
 

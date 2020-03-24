@@ -4,9 +4,10 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.database.exception;
+package com.vesoft.nebula.client.graph.pool.exception;
 
-import com.vesoft.nebula.database.constant.ErrorEnum;
+
+import com.vesoft.nebula.client.graph.pool.constant.ErrorEnum;
 
 /**
  * @author huangzhaolai-jk
@@ -45,4 +46,19 @@ public class LinkConfigException extends RuntimeException {
         this.msg = errorEnum.getMsg();
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }

@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.database.constant;
+package com.vesoft.nebula.client.graph.pool.constant;
 
 /**
  * @author huangzhaolai-jk
