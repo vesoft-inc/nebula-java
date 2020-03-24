@@ -131,7 +131,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                 e.printStackTrace();
             }
             while (!callback.checkReady()) {
-                Thread.sleep(100);
+                Thread.sleep(1);
             }
             if (callback.getResult().isPresent()) {
                 ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
@@ -157,7 +157,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                     e.printStackTrace();
                 }
                 while (!callback.checkReady()) {
-                    Thread.sleep(100);
+                    Thread.sleep(1);
                 }
                 if (callback.getResult().isPresent()) {
                     ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
