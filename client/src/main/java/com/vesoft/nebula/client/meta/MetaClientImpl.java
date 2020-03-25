@@ -52,8 +52,6 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
-    private HostAndPort leader;
-
     // Use a lock to protect the cache
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Map<String, Integer> spaceNameMap = Maps.newHashMap();
@@ -62,7 +60,6 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     private Map<String, Map<String, EdgeItem>> spaceEdgeItems = Maps.newHashMap();
     private Map<String, Map<Integer, String>> tagNameMap = Maps.newHashMap();
     private Map<String, Map<Integer, String>> edgeNameMap = Maps.newHashMap();
-
 
     private MetaService.Client client;
 
@@ -460,11 +457,5 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName) {
         return getEdgeSchema(spaceName, edgeName, LATEST_SCHEMA_VERSION);
     }
-
-
-    public HostAndPort getLeader() {
-        return leader;
-    }
-
 }
 
