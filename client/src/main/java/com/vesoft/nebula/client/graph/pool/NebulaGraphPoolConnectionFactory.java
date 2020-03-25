@@ -82,7 +82,7 @@ public class NebulaGraphPoolConnectionFactory
 
     @Override
     public PooledObject<NebulaGraphPoolConnection> wrap(
-                NebulaGraphPoolConnection nebulaPoolConnection) {
+            NebulaGraphPoolConnection nebulaPoolConnection) {
         return new DefaultPooledObject<>(nebulaPoolConnection);
     }
 
@@ -94,6 +94,15 @@ public class NebulaGraphPoolConnectionFactory
         NebulaGraphPoolConnection object = p.getObject();
         return object != null && object.isOpened();
     }
+
+    @Override
+    public void destroyObject(PooledObject<NebulaGraphPoolConnection> p) throws Exception {
+        if (p != null) {
+            NebulaGraphPoolConnection object = p.getObject();
+            object.close();
+        }
+    }
+
 
     public NebulaConnectionPoolConfig getConfig() {
         return config;

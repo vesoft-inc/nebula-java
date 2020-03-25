@@ -51,4 +51,9 @@ public interface NebulaGraphConnection {
     ResultSet executeQuery(String statement)throws ConnectionException,
             NGQLException, TException;
 
+    /**
+     * close
+     */
+    void close();
+
 }

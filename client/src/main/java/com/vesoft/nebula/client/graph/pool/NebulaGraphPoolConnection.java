@@ -64,6 +64,17 @@ public class NebulaGraphPoolConnection implements NebulaGraphConnection {
     }
 
     @Override
+    public void close() {
+        try {
+            graphClient.signout(sessionId);
+        } catch (TException e) {
+            log.error("Disconnect error: " + e.getMessage());
+        } finally {
+            transport.close();
+        }
+    }
+
+    @Override
     public boolean isOpened() {
         return transport != null && transport.isOpen();
     }
