@@ -136,7 +136,12 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <doclint>none</doclint>
+                            <encoding>UTF-8</encoding>
+                            <charset>UTF-8</charset>
+                            <additionalOptions>
+                                <additionalparam>--source 8</additionalparam>
+                                <additionalOption>-Xdoclint:none</additionalOption>
+                            </additionalOptions>
                         </configuration>
                     </execution>
                 </executions>
