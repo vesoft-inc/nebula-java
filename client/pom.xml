@@ -124,7 +124,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <configuration>
                     <excludePackageNames>com.facebook.thrift:com.facebook.thrift.*</excludePackageNames>
                 </configuration>
@@ -144,7 +144,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.5</version>
+                <version>3.0.6-SNAPSHOT</version>
                 <configuration>
                     <threshold>High</threshold>
                     <effort>Default</effort>
