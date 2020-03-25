@@ -9,9 +9,9 @@ package com.vesoft.nebula.client.graph.pool;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.transport.TTransport;
 import com.vesoft.nebula.client.graph.ConnectionException;
-import com.vesoft.nebula.client.graph.ExecuteUtils;
+import com.vesoft.nebula.client.graph.GraphExecuteUtils;
 import com.vesoft.nebula.client.graph.NGQLException;
-import com.vesoft.nebula.client.graph.NebulaConnection;
+import com.vesoft.nebula.client.graph.NebulaGraphConnection;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.graph.GraphService;
 import java.util.Objects;
@@ -21,12 +21,12 @@ import org.apache.log4j.Logger;
 /**
  * @author huangzhaolai-jk
  * @version 1.0.0
- * @Description NebulaPoolConnection
+ * @Description NebulaGraphPoolConnection
  * @Date 2020/3/17 - 13:57
  */
-public class NebulaPoolConnection implements NebulaConnection {
+public class NebulaGraphPoolConnection implements NebulaGraphConnection {
 
-    private final Logger log = LogManager.getLogger(NebulaPoolConnection.class);
+    private final Logger log = LogManager.getLogger(NebulaGraphPoolConnection.class);
 
     private GraphService.Client graphClient;
 
@@ -36,10 +36,10 @@ public class NebulaPoolConnection implements NebulaConnection {
 
     private int executionRetry;
 
-    NebulaPoolConnection(GraphService.Client graphClient,
-                         TTransport transport,
-                         long sessionId,
-                         int executionRetry) {
+    NebulaGraphPoolConnection(GraphService.Client graphClient,
+                              TTransport transport,
+                              long sessionId,
+                              int executionRetry) {
         this.graphClient = graphClient;
         this.transport = transport;
         this.sessionId = sessionId;
@@ -53,13 +53,14 @@ public class NebulaPoolConnection implements NebulaConnection {
 
     @Override
     public int execute(String statement) {
-        return ExecuteUtils.execute(transport, graphClient, sessionId, statement, executionRetry);
+        return GraphExecuteUtils.execute(transport, graphClient,
+                sessionId, statement, executionRetry);
     }
 
     @Override
     public ResultSet executeQuery(String statement) throws ConnectionException,
             NGQLException, TException {
-        return ExecuteUtils.executeQuery(transport, graphClient, sessionId, statement);
+        return GraphExecuteUtils.executeQuery(transport, graphClient, sessionId, statement);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class NebulaPoolConnection implements NebulaConnection {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NebulaPoolConnection that = (NebulaPoolConnection) o;
+        NebulaGraphPoolConnection that = (NebulaGraphPoolConnection) o;
         return sessionId == that.sessionId
                 && Objects.equals(graphClient, that.graphClient)
                 && Objects.equals(transport, that.transport);

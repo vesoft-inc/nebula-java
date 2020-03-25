@@ -1,6 +1,6 @@
 package com.vesoft.nebula.client.graph.pool.config;
 
-import com.vesoft.nebula.client.graph.NebulaConnection;
+import com.vesoft.nebula.client.graph.NebulaGraphConnection;
 import com.vesoft.nebula.client.graph.pool.entity.LinkDomain;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @Description NebulaConnectionPoolConfig is used for
  * @Date 2020/3/24 - 15:42
  */
-public class NebulaConnectionPoolConfig extends GenericObjectPoolConfig<NebulaConnection> {
+public class NebulaConnectionPoolConfig extends GenericObjectPoolConfig<NebulaGraphConnection> {
 
     private int maxIdle = 20;
 

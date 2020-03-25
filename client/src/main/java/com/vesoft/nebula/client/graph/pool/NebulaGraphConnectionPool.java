@@ -1,6 +1,6 @@
 package com.vesoft.nebula.client.graph.pool;
 
-import com.vesoft.nebula.client.graph.NebulaConnection;
+import com.vesoft.nebula.client.graph.NebulaGraphConnection;
 import java.util.Objects;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -8,14 +8,14 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 /**
  * @author huangzhaolai-jk
  * @version 1.0.0
- * @Description NebulaConnectionPool is used for
+ * @Description NebulaGraphConnectionPool is used for
  * @Date 2020/3/24 - 15:43
  */
-public class NebulaConnectionPool extends GenericObjectPool<NebulaConnection> {
+public class NebulaGraphConnectionPool extends GenericObjectPool<NebulaGraphConnection> {
 
-    private NebulaPoolConnectionFactory factory;
+    private NebulaGraphPoolConnectionFactory factory;
 
-    public NebulaConnectionPool(NebulaPoolConnectionFactory factory) {
+    public NebulaGraphConnectionPool(NebulaGraphPoolConnectionFactory factory) {
         super((BasePooledObjectFactory) factory, factory.getConfig());
         this.factory = factory;
     }
@@ -28,7 +28,7 @@ public class NebulaConnectionPool extends GenericObjectPool<NebulaConnection> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NebulaConnectionPool that = (NebulaConnectionPool) o;
+        NebulaGraphConnectionPool that = (NebulaGraphConnectionPool) o;
         return Objects.equals(factory, that.factory);
     }
 

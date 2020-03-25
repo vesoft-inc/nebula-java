@@ -23,22 +23,23 @@ import org.apache.log4j.Logger;
 /**
  * @author huangzhaolai-jk
  * @version 1.0.0
- * @Description NebulaPoolConnectionFactory is used for
+ * @Description NebulaGraphPoolConnectionFactory is used for
  * @Date 2020/3/24 - 11:49
  */
-public class NebulaPoolConnectionFactory extends BasePooledObjectFactory<NebulaPoolConnection> {
+public class NebulaGraphPoolConnectionFactory
+        extends BasePooledObjectFactory<NebulaGraphPoolConnection> {
 
-    private final Logger log = LogManager.getLogger(NebulaPoolConnectionFactory.class);
+    private final Logger log = LogManager.getLogger(NebulaGraphPoolConnectionFactory.class);
 
     private NebulaConnectionPoolConfig config;
 
 
-    public NebulaPoolConnectionFactory(NebulaConnectionPoolConfig config) {
+    public NebulaGraphPoolConnectionFactory(NebulaConnectionPoolConfig config) {
         this.config = config;
     }
 
     @Override
-    public NebulaPoolConnection create() throws Exception {
+    public NebulaGraphPoolConnection create() throws Exception {
         if (config == null) {
             return null;
         }
@@ -68,7 +69,7 @@ public class NebulaPoolConnectionFactory extends BasePooledObjectFactory<NebulaP
             } else {
                 //succeed
                 long sessionId = result.getSession_id();
-                return new NebulaPoolConnection(client, transport,
+                return new NebulaGraphPoolConnection(client, transport,
                         sessionId, config.getConnectionRetry());
             }
         } catch (TTransportException tte) {
@@ -80,16 +81,17 @@ public class NebulaPoolConnectionFactory extends BasePooledObjectFactory<NebulaP
     }
 
     @Override
-    public PooledObject<NebulaPoolConnection> wrap(NebulaPoolConnection nebulaPoolConnection) {
+    public PooledObject<NebulaGraphPoolConnection> wrap(
+                NebulaGraphPoolConnection nebulaPoolConnection) {
         return new DefaultPooledObject<>(nebulaPoolConnection);
     }
 
     @Override
-    public boolean validateObject(PooledObject<NebulaPoolConnection> p) {
+    public boolean validateObject(PooledObject<NebulaGraphPoolConnection> p) {
         if (p == null) {
             return false;
         }
-        NebulaPoolConnection object = p.getObject();
+        NebulaGraphPoolConnection object = p.getObject();
         return object != null && object.isOpened();
     }
 
@@ -106,7 +108,7 @@ public class NebulaPoolConnectionFactory extends BasePooledObjectFactory<NebulaP
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        NebulaPoolConnectionFactory that = (NebulaPoolConnectionFactory) o;
+        NebulaGraphPoolConnectionFactory that = (NebulaGraphPoolConnectionFactory) o;
         return Objects.equals(config, that.config);
     }
 

@@ -53,7 +53,7 @@
 
     <modules>
         <module>client</module>
-        <module>database-starter</module>
+        <!--<module>database-starter</module>-->
         <module>examples</module>
     </modules>
 

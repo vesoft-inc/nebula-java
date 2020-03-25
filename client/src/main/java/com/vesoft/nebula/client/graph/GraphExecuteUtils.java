@@ -11,12 +11,12 @@ import org.slf4j.LoggerFactory;
 /**
  * @author huangzhaolai-jk
  * @version 1.0.0
- * @Description ExecuteUtils is used for
+ * @Description GraphExecuteUtils is used for
  * @Date 2020/3/24 - 14:34
  */
-public class ExecuteUtils {
+public class GraphExecuteUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphExecuteUtils.class);
 
 
     /**

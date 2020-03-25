@@ -87,7 +87,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      */
     @Override
     public int execute(String statement) {
-        return ExecuteUtils.execute(transport, client, sessionID, statement, executionRetry);
+        return GraphExecuteUtils.execute(transport, client, sessionID, statement, executionRetry);
     }
 
     /**
@@ -99,7 +99,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
     @Override
     public ResultSet executeQuery(String statement) throws ConnectionException,
             NGQLException, TException {
-        return ExecuteUtils.executeQuery(transport, client, sessionID, statement);
+        return GraphExecuteUtils.executeQuery(transport, client, sessionID, statement);
     }
 
 

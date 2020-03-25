@@ -16,10 +16,10 @@ import com.vesoft.nebula.client.graph.ResultSet;
 /**
  * @author huangzhaolai-jk
  * @version 1.0.0
- * @Description NebulaConnection
+ * @Description NebulaGraphConnection
  * @Date 2020/3/17 - 14:00
  */
-public interface NebulaConnection {
+public interface NebulaGraphConnection {
     /**
      * Switch the space
      * @param space space

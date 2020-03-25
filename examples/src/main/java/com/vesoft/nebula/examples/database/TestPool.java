@@ -1,8 +1,8 @@
 package com.vesoft.nebula.examples.database;
 
-import com.vesoft.nebula.client.graph.NebulaConnection;
-import com.vesoft.nebula.client.graph.pool.NebulaConnectionPool;
-import com.vesoft.nebula.client.graph.pool.NebulaPoolConnectionFactory;
+import com.vesoft.nebula.client.graph.NebulaGraphConnection;
+import com.vesoft.nebula.client.graph.pool.NebulaGraphConnectionPool;
+import com.vesoft.nebula.client.graph.pool.NebulaGraphPoolConnectionFactory;
 import com.vesoft.nebula.client.graph.pool.config.NebulaConnectionPoolConfig;
 import com.vesoft.nebula.client.graph.pool.entity.LinkDomain;
 import java.util.Arrays;
@@ -24,11 +24,12 @@ public class TestPool {
                 "user", "password");
         NebulaConnectionPoolConfig poolConfig =
                 new NebulaConnectionPoolConfig(Arrays.asList(linkDomain));
-        NebulaPoolConnectionFactory nebulaPoolConnectionFactory =
-                new NebulaPoolConnectionFactory(poolConfig);
-        NebulaConnectionPool objectPool = new NebulaConnectionPool(nebulaPoolConnectionFactory);
-        NebulaConnection nebulaConnection = objectPool.borrowObject();
-        System.out.println("test：" + nebulaConnection);
+        NebulaGraphPoolConnectionFactory nebulaGraphPoolConnectionFactory =
+                new NebulaGraphPoolConnectionFactory(poolConfig);
+        NebulaGraphConnectionPool objectPool =
+                new NebulaGraphConnectionPool(nebulaGraphPoolConnectionFactory);
+        NebulaGraphConnection nebulaGraphConnection = objectPool.borrowObject();
+        System.out.println("test：" + nebulaGraphConnection);
     }
 
     public static void test2() {
@@ -36,9 +37,10 @@ public class TestPool {
                 "user", "password");
         NebulaConnectionPoolConfig poolConfig =
                 new NebulaConnectionPoolConfig(Arrays.asList(linkDomain));
-        NebulaPoolConnectionFactory nebulaPoolConnectionFactory =
-                new NebulaPoolConnectionFactory(poolConfig);
-        NebulaConnectionPool objectPool = new NebulaConnectionPool(nebulaPoolConnectionFactory);
+        NebulaGraphPoolConnectionFactory nebulaGraphPoolConnectionFactory =
+                new NebulaGraphPoolConnectionFactory(poolConfig);
+        NebulaGraphConnectionPool objectPool =
+                new NebulaGraphConnectionPool(nebulaGraphPoolConnectionFactory);
         System.out.println("start run！");
         for (int i = 0; i < 1000; i++) {
             new Thread(new NebulaDatabasePoolTestTh(objectPool, i)).start();
