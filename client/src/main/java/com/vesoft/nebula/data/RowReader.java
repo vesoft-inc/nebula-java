@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.data;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.vesoft.nebula.ColumnDef;
 import com.vesoft.nebula.NebulaCodec;
 import com.vesoft.nebula.NebulaCodec.Pair;
@@ -16,8 +18,6 @@ import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 public class RowReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(RowReader.class);
     private long schemaVersion;
+    private Map<String, Integer> propertyNameIndex = Maps.newHashMap();
+    private List<Pair> defs = Lists.newLinkedList();
+    private List<PropertyType> types = Lists.newLinkedList();
 
     static {
         try {
@@ -34,10 +37,6 @@ public class RowReader {
             LOGGER.error(e.getMessage());
         }
     }
-
-    Map<String, Integer> propertyNameIndex = new HashMap<String, Integer>();
-    List<Pair> defs = new ArrayList<Pair>();
-    List<PropertyType> types = new ArrayList<PropertyType>();
 
     public RowReader(Schema schema) {
         this(schema, 0);
@@ -119,16 +118,16 @@ public class RowReader {
 
     public Property[] vertexKey(long vertexId, int tagId) {
         Property[] properties = new Property[2];
-        properties[0] =  new Property(PropertyType.VERTEX_ID, "_vertexId", vertexId);
-        properties[1] =  new Property(PropertyType.TAG_ID, "_tagId", tagId);
+        properties[0] = new Property(PropertyType.VERTEX_ID, "_vertexId", vertexId);
+        properties[1] = new Property(PropertyType.TAG_ID, "_tagId", tagId);
         return properties;
     }
 
     public Property[] edgeKey(long srcId, int edgeType, long dstId) {
         Property[] properties = new Property[3];
-        properties[0] =  new Property(PropertyType.SRC_ID, "_srcId", srcId);
-        properties[1] =  new Property(PropertyType.EDGE_TYPE, "_edgeType", edgeType);
-        properties[2] =  new Property(PropertyType.DST_ID, "_dstId", dstId);
+        properties[0] = new Property(PropertyType.SRC_ID, "_srcId", srcId);
+        properties[1] = new Property(PropertyType.EDGE_TYPE, "_edgeType", edgeType);
+        properties[2] = new Property(PropertyType.DST_ID, "_dstId", dstId);
         return properties;
     }
 
@@ -141,8 +140,8 @@ public class RowReader {
             buffer.getInt();
             long vertexId = buffer.getLong();
             int tagId = buffer.getInt();
-            properties[0] =  new Property(PropertyType.VERTEX_ID, "_vertexId", vertexId);
-            properties[1] =  new Property(PropertyType.TAG_ID, "_tagId", tagId);
+            properties[0] = new Property(PropertyType.VERTEX_ID, "_vertexId", vertexId);
+            properties[1] = new Property(PropertyType.TAG_ID, "_tagId", tagId);
             return properties;
         } catch (BufferUnderflowException e) {
             LOGGER.error("Decode key failed: " + e.getMessage());
@@ -152,19 +151,16 @@ public class RowReader {
 
     // unused
     public Property[] decodeEdgeKey(byte[] key) {
-        Property[] properties = new Property[4];
         ByteBuffer buffer = ByteBuffer.wrap(key);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
+
         try {
-            buffer.getInt();
-            final long srcId = buffer.getLong();
-            final int edgeType = buffer.getInt();
-            final long rank = buffer.getLong();
-            final long dstId = buffer.getLong();
-            properties[0] =  new Property(PropertyType.SRC_ID, "_srcId", srcId);
-            properties[1] =  new Property(PropertyType.EDGE_TYPE, "_edgeType", edgeType);
-            properties[2] =  new Property(PropertyType.EDGE_RANK, "_rank", rank);
-            properties[3] =  new Property(PropertyType.DST_ID, "_dstId", dstId);
+            Property[] properties = {
+                    new Property(PropertyType.SRC_ID, "_srcId", buffer.getLong()),
+                    new Property(PropertyType.EDGE_TYPE, "_edgeType", buffer.getInt()),
+                    new Property(PropertyType.EDGE_RANK, "_rank", buffer.getLong()),
+                    new Property(PropertyType.DST_ID, "_dstId", buffer.getLong()),
+            };
             return properties;
         } catch (BufferUnderflowException e) {
             LOGGER.error("Decode key failed: " + e.getMessage());

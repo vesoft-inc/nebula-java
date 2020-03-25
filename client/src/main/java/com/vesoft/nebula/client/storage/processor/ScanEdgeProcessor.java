@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.storage.processor;
 
+import com.google.common.collect.Maps;
 import com.vesoft.nebula.Schema;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.data.Property;
@@ -16,7 +17,6 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.storage.ScanEdge;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -33,9 +33,10 @@ public class ScanEdgeProcessor implements Processor<ScanEdgeResponse> {
 
     @Override
     public Result process(String spaceName, ScanEdgeResponse response) {
-        Map<Integer, RowReader> readers = new HashMap<>();
-        Map<String, List<Row>> rows = new HashMap<>();
-        Map<Integer, String> edgeTypeNameMap = new HashMap<>();
+        Map<Integer, RowReader> readers = Maps.newHashMap();
+        Map<String, List<Row>> rows = Maps.newHashMap();
+        Map<Integer, String> edgeTypeNameMap = Maps.newHashMap();
+
         if (response.edge_schema != null) {
             for (Map.Entry<Integer, Schema> entry : response.edge_schema.entrySet()) {
                 int edgeType = entry.getKey();
