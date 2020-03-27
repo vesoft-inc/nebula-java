@@ -33,7 +33,7 @@ public class ResultSet implements Iterator {
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
         this.columns = Lists.newArrayListWithCapacity(columns.size());
         for (byte[] column : columns) {
-            this.columns.add(new String(column));
+            this.columns.add(new String(column).intern());
         }
         this.rows = rows;
     }
