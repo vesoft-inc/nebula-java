@@ -122,7 +122,7 @@ public class AsyncMetaClientImpl extends AsyncAbstractClient implements AsyncMet
                 LOGGER.error(String.format("List Tags Call Error: %s", e.getMessage()));
             }
             while (!callback.checkReady()) {
-                Thread.sleep(100);
+                Thread.sleep(1);
             }
             if (callback.getResult().isPresent()) {
                 ListTagsResp resp = (ListTagsResp) callback.getResult().get();
@@ -151,7 +151,7 @@ public class AsyncMetaClientImpl extends AsyncAbstractClient implements AsyncMet
                 LOGGER.error(String.format("List Edges Call Error: %s", e.getMessage()));
             }
             while (!callback.checkReady()) {
-                Thread.sleep(100);
+                Thread.sleep(1);
             }
             if (callback.getResult().isPresent()) {
                 ListEdgesResp resp = (ListEdgesResp) callback.getResult().get();
