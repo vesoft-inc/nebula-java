@@ -55,6 +55,8 @@ public class GraphClientExample {
 
     private static final String simpleQuery = "GO FROM 201 OVER like;";
 
+    private static final String emptyQuery = "GO FROM 2020 OVER select;";
+
     private static final String complexQuery = "GO FROM 201 OVER like "
         + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
         + "$$.student.age AS Age, $$.student.gender AS Gender;";
@@ -156,6 +158,17 @@ public class GraphClientExample {
 
             for (RowValue value : resultSet.getRows()) {
                 LOGGER.info("ID: {}", value.columns.get(0).getId());
+            }
+
+            try {
+                LOGGER.info(emptyQuery);
+                resultSet = client.executeQuery(emptyQuery);
+            } catch (ConnectionException e) {
+                LOGGER.error("Query Failed: ", e.getMessage());
+            } catch (TException e) {
+                e.printStackTrace();
+            } catch (NGQLException e) {
+                e.printStackTrace();
             }
 
             try {

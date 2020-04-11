@@ -15,7 +15,9 @@ import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,8 +126,10 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         ExecutionResponse executionResponse = client.execute(sessionID, statement);
         int code = executionResponse.getError_code();
         if (code == ErrorCode.SUCCEEDED) {
-            return new ResultSet(executionResponse.getColumn_names(),
-                    executionResponse.getRows());
+            return new ResultSet(Optional.ofNullable(executionResponse.getColumn_names())
+                    .orElse(Collections.emptyList()),
+                    Optional.ofNullable(executionResponse.getRows())
+                            .orElse(Collections.emptyList()));
         } else {
             LOGGER.error("Execute error: " + executionResponse.getError_msg());
             throw new NGQLException(code);
