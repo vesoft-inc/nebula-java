@@ -8,6 +8,8 @@ package com.vesoft.nebula.client.graph;
 
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.RowValue;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,11 +33,20 @@ public class ResultSet implements Iterator {
      * @param rows    field values
      */
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
-        this.columns = Lists.newArrayListWithCapacity(columns.size());
-        for (byte[] column : columns) {
-            this.columns.add(new String(column).intern());
+        if (null != columns) {
+            this.columns = Lists.newArrayListWithCapacity(columns.size());
+            for (byte[] column : columns) {
+                this.columns.add(new String(column).intern());
+            }
+        }else {
+            this.columns = new ArrayList<>();
         }
-        this.rows = rows;
+
+        if (null != rows) {
+            this.rows = rows;
+        }else {
+            this.rows = new ArrayList<>();
+        }
     }
 
     /**
