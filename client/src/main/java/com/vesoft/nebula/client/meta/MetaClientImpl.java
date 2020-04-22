@@ -35,7 +35,6 @@ import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.TagItem;
 import com.vesoft.nebula.utils.AddressUtil;
 import com.vesoft.nebula.utils.NebulaTypeUtil;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -81,7 +80,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
-        transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        transport = new TSocket(address.getHost(), address.getPort(), timeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
