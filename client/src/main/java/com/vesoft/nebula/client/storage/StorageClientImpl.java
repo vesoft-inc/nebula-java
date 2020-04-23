@@ -91,7 +91,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     private StorageService.Client doConnect(HostAndPort address) throws TException {
-        TTransport transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        TTransport transport = new TSocket(address.getHost(), address.getPort(), timeout);
         transport.open();
 
         TProtocol protocol = new TCompactProtocol(transport);

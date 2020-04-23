@@ -16,7 +16,6 @@ import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Optional;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.vesoft.nebula.AsyncAbstractClient;
 import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.client.graph.async.entry.AuthenticateCallback;
@@ -72,7 +71,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
 
         try {
             manager = new TAsyncClientManager();
-            transport = new TNonblockingSocket(address.getHostText(),
+            transport = new TNonblockingSocket(address.getHost(),
                     address.getPort(), timeout);
             TProtocolFactory protocol = new TBinaryProtocol.Factory();
             client = new GraphService.AsyncClient(protocol, manager, transport);

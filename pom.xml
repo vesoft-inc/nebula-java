@@ -7,7 +7,7 @@
     <groupId>com.vesoft</groupId>
     <artifactId>nebula</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-rc4.20200323</version>
+    <version>1.0.0-rc4.20200422</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
