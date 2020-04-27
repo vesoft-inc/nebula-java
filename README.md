@@ -3,7 +3,7 @@
 
 # nebula-java
 
-This guide provides instructions and options for connecting **Nebula Graph** for Java developer.
+This guide provides instructions and options for connecting **Nebula Graph** for Java developer. However, Nebula Java is not not thread-safe.
 
 ## Prerequisites
 
