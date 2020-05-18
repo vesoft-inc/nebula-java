@@ -10,7 +10,7 @@ import com.facebook.thrift.TException;
 import com.vesoft.nebula.auth.AuthProvider;
 
 /**
- *
+ * Currently, The GraphClient is not thread safe.
  */
 public interface GraphClient extends AuthProvider, AutoCloseable {
 
