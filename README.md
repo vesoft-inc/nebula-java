@@ -56,7 +56,7 @@ If query executes successfully, `0` will be returned. For a more complete exampl
 
 If you only use the interface of RPC, nothing to worry about.
 
-If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the `nebula-utils` jar, but if it doesn't works in your environment, please compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). And `mvn install` the jni jar in your local maven repo.
+If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the `nebula-utils` jar, but if it doesn't work in your environment, please compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). And `mvn install` the jni jar in your local maven repo.
 
 See [Storage Client Example](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/StorageClientExample.java).
 
@@ -66,14 +66,16 @@ See [Meta Client Example](https://github.com/vesoft-inc/nebula-java/blob/master/
 
 ## FAQ
 
-Q: Error occurs when building from the source code `Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6:sign (default) on project client: Exit code: 2 -> [Help 1]
-org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6:sign (default) on project client: Exit code: 2`
+Q: Error occurs when building from the source code.
+
+```text
+Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6:sign (default) on project client: Exit code: 2 -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6:sign (default) on project client: Exit code: 2
+```
 
 A: This means that you need to have a key to sign the jars
 
-```
+```text
 gpg --gen-key #generate your key pair
 gpg --list-secret-keys #check if keys are generated successfully
 ```
-
-
