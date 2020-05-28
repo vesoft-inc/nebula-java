@@ -1,5 +1,4 @@
 # Examples
-<<<<<<< HEAD
 
 * MetaClientExample
 Please create a test space and tag/edge at first, you can do it in console:
@@ -34,5 +33,3 @@ nebula> INSERT VERTEX student(name, age, gender) VALUES 201:("a", 16, "female");
 * SparkExample
 A simple example of using data scanned from nebula in spark. Please make sure you have run `ScanEdgeInSpaceExample` before, which would generate a `edge.csv`.
 The parameter of `SparkExample` is spark master url and path of `edge.csv`.
-=======
->>>>>>> update doc
