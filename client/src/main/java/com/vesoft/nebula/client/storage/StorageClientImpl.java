@@ -51,7 +51,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.apache.commons.codec.digest.MurmurHash2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +81,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     public StorageClientImpl(MetaClientImpl client) {
         this.metaClient = client;
         this.partsAlloc = metaClient.getPartsAllocFromCache();
+        this.threadPool = Executors.newCachedThreadPool();
     }
 
     @Override

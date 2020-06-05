@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vesoft</groupId>
         <artifactId>nebula</artifactId>
-        <version>1.0.0-rc4.20200422</version>
+        <version>1.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -94,14 +94,9 @@
             <version>1.7.25</version>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>14.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>client</artifactId>
-            <version>1.0.0-rc4.20200323</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
