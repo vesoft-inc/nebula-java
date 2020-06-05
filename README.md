@@ -11,7 +11,7 @@ When developing with this Java driver, please use Java 8+. Depending on the vers
 
 | Nebula version | Nebula Java version |
 |:--------------:|:-----------------:|
-|     rc4     |      1.0.0-rc4.20200323     |
+|     1.0.0      |      1.0.0        |
 
 ## Nebula Graph Java Driver
 
@@ -21,7 +21,7 @@ When using Maven, add dependency to your `pom.xml` file:
 <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>1.0.0-rc4.20200323</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 

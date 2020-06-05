@@ -11,7 +11,7 @@
 
 | Nebula 版本 | Nebula Java 版本 |
 |:--------------:|:-----------------:|
-|     rc4     |      1.0.0-rc4.20200323     |
+|     1.0.0      |      1.0.0        |
 
 ## Nebula Graph Java Driver
 
@@ -21,7 +21,7 @@
 <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>1.0.0-rc4.20200323</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
