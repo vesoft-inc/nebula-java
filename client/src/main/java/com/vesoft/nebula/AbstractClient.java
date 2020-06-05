@@ -94,7 +94,7 @@ public abstract class AbstractClient implements Client {
     }
 
     /**
-     * @return isConnected
+     * @return Check the thrift connection is opened
      */
     @Override
     public boolean isConnected() {
