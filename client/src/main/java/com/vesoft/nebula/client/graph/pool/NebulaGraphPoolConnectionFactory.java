@@ -1,3 +1,8 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
 package com.vesoft.nebula.client.graph.pool;
 
 import com.facebook.thrift.TException;
@@ -11,14 +16,15 @@ import com.vesoft.nebula.client.graph.pool.entity.LinkDomain;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.GraphService;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author huangzhaolai-jk
@@ -115,7 +121,7 @@ public class NebulaGraphPoolConnectionFactory
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
         NebulaGraphPoolConnectionFactory that = (NebulaGraphPoolConnectionFactory) o;

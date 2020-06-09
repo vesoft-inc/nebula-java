@@ -1,3 +1,8 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
 package com.vesoft.nebula.examples.database;
 
 import com.vesoft.nebula.client.graph.NebulaGraphConnection;
@@ -5,6 +10,7 @@ import com.vesoft.nebula.client.graph.pool.NebulaGraphConnectionPool;
 import com.vesoft.nebula.client.graph.pool.NebulaGraphPoolConnectionFactory;
 import com.vesoft.nebula.client.graph.pool.config.NebulaConnectionPoolConfig;
 import com.vesoft.nebula.client.graph.pool.entity.LinkDomain;
+
 import java.util.Arrays;
 
 /**

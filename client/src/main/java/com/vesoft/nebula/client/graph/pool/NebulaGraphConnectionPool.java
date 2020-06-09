@@ -1,9 +1,15 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
 package com.vesoft.nebula.client.graph.pool;
 
 import com.vesoft.nebula.client.graph.NebulaGraphConnection;
-import java.util.Objects;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+
+import java.util.Objects;
 
 /**
  * @author huangzhaolai-jk
@@ -25,7 +31,7 @@ public class NebulaGraphConnectionPool extends GenericObjectPool<NebulaGraphConn
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
         NebulaGraphConnectionPool that = (NebulaGraphConnectionPool) o;
