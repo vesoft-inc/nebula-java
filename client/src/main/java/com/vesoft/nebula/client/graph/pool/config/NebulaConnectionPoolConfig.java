@@ -8,10 +8,9 @@ package com.vesoft.nebula.client.graph.pool.config;
 
 import com.vesoft.nebula.client.graph.NebulaGraphConnection;
 import com.vesoft.nebula.client.graph.pool.entity.LinkDomain;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * @author huangzhaolai-jk

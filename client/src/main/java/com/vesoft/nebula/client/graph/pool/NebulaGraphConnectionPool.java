@@ -3,13 +3,13 @@
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
+
 package com.vesoft.nebula.client.graph.pool;
 
 import com.vesoft.nebula.client.graph.NebulaGraphConnection;
+import java.util.Objects;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-
-import java.util.Objects;
 
 /**
  * @author huangzhaolai-jk
