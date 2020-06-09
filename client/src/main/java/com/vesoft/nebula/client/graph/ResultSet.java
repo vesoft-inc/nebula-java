@@ -31,7 +31,7 @@ public class ResultSet implements Iterator {
      * @param rows    field values
      */
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
-        if(columns == null){
+        if (columns == null) {
             columns = Lists.newArrayList();
         }
         this.columns = Lists.newArrayListWithCapacity(columns.size());
