@@ -31,6 +31,9 @@ public class ResultSet implements Iterator {
      * @param rows    field values
      */
     public ResultSet(List<byte[]> columns, List<RowValue> rows) {
+        if (columns == null) {
+            columns = Lists.newArrayList();
+        }
         this.columns = Lists.newArrayListWithCapacity(columns.size());
         for (byte[] column : columns) {
             this.columns.add(new String(column).intern());
@@ -44,11 +47,11 @@ public class ResultSet implements Iterator {
      * @return
      */
     public List<String> getColumns() {
-        return columns;
+        return this.columns;
     }
 
     public List<RowValue> getRows() {
-        return rows;
+        return this.rows;
     }
 
     @Override
@@ -69,8 +72,8 @@ public class ResultSet implements Iterator {
     @Override
     public String toString() {
         return "ResultSet{"
-                + "columns=" + columns
-                + ", rows=" + rows
+                + "columns=" + this.columns
+                + ", rows=" + this.rows
                 + '}';
     }
 }
