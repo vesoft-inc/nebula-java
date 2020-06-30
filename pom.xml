@@ -32,20 +32,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <id>wcg</id>
-            <name>Wang Chenguang</name>
-            <email>jdoe@example.com</email>
-            <organization>vesoft</organization>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
-
-
     <modules>
         <module>client</module>
         <module>examples</module>
