@@ -32,8 +32,8 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField SEGMENT_FIELD_DESC = new TField("segment", TType.STRING, (short)1);
   private static final TField PAIRS_FIELD_DESC = new TField("pairs", TType.LIST, (short)2);
 
-  public String segment;
-  public List<com.vesoft.nebula.Pair> pairs;
+  public byte[] segment;
+  public List<com.vesoft.nebula.KeyValue> pairs;
   public static final int SEGMENT = 1;
   public static final int PAIRS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -47,7 +47,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(PAIRS, new FieldMetaData("pairs", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.Pair.class))));
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.KeyValue.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -59,8 +59,8 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public MultiPutReq(
-    String segment,
-    List<com.vesoft.nebula.Pair> pairs)
+    byte[] segment,
+    List<com.vesoft.nebula.KeyValue> pairs)
   {
     this();
     this.segment = segment;
@@ -88,11 +88,11 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new MultiPutReq(this);
   }
 
-  public String  getSegment() {
+  public byte[]  getSegment() {
     return this.segment;
   }
 
-  public MultiPutReq setSegment(String segment) {
+  public MultiPutReq setSegment(byte[] segment) {
     this.segment = segment;
     return this;
   }
@@ -112,11 +112,11 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public List<com.vesoft.nebula.Pair>  getPairs() {
+  public List<com.vesoft.nebula.KeyValue>  getPairs() {
     return this.pairs;
   }
 
-  public MultiPutReq setPairs(List<com.vesoft.nebula.Pair> pairs) {
+  public MultiPutReq setPairs(List<com.vesoft.nebula.KeyValue> pairs) {
     this.pairs = pairs;
     return this;
   }
@@ -143,7 +143,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetSegment();
       } else {
-        setSegment((String)value);
+        setSegment((byte[])value);
       }
       break;
 
@@ -151,7 +151,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetPairs();
       } else {
-        setPairs((List<com.vesoft.nebula.Pair>)value);
+        setPairs((List<com.vesoft.nebula.KeyValue>)value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_segment || that_present_segment) {
       if (!(this_present_segment && that_present_segment))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.segment, that.segment))
+      if (!TBaseHelper.equalsSlow(this.segment, that.segment))
         return false;
     }
 
@@ -282,7 +282,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case SEGMENT:
           if (field.type == TType.STRING) {
-            this.segment = iprot.readString();
+            this.segment = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -290,16 +290,16 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
         case PAIRS:
           if (field.type == TType.LIST) {
             {
-              TList _list83 = iprot.readListBegin();
-              this.pairs = new ArrayList<com.vesoft.nebula.Pair>(Math.max(0, _list83.size));
-              for (int _i84 = 0; 
-                   (_list83.size < 0) ? iprot.peekList() : (_i84 < _list83.size); 
-                   ++_i84)
+              TList _list91 = iprot.readListBegin();
+              this.pairs = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list91.size));
+              for (int _i92 = 0; 
+                   (_list91.size < 0) ? iprot.peekList() : (_i92 < _list91.size); 
+                   ++_i92)
               {
-                com.vesoft.nebula.Pair _elem85;
-                _elem85 = new com.vesoft.nebula.Pair();
-                _elem85.read(iprot);
-                this.pairs.add(_elem85);
+                com.vesoft.nebula.KeyValue _elem93;
+                _elem93 = new com.vesoft.nebula.KeyValue();
+                _elem93.read(iprot);
+                this.pairs.add(_elem93);
               }
               iprot.readListEnd();
             }
@@ -326,15 +326,15 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.segment != null) {
       oprot.writeFieldBegin(SEGMENT_FIELD_DESC);
-      oprot.writeString(this.segment);
+      oprot.writeBinary(this.segment);
       oprot.writeFieldEnd();
     }
     if (this.pairs != null) {
       oprot.writeFieldBegin(PAIRS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.pairs.size()));
-        for (com.vesoft.nebula.Pair _iter86 : this.pairs)        {
-          _iter86.write(oprot);
+        for (com.vesoft.nebula.KeyValue _iter94 : this.pairs)        {
+          _iter94.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -372,7 +372,12 @@ String space = prettyPrint ? " " : "";
     if (this. getSegment() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSegment(), indent + 1, prettyPrint));
+        int __segment_size = Math.min(this. getSegment().length, 128);
+        for (int i = 0; i < __segment_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getSegment()[i]).length() > 1 ? Integer.toHexString(this. getSegment()[i]).substring(Integer.toHexString(this. getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSegment()[i]).toUpperCase());
+        }
+        if (this. getSegment().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

@@ -31,7 +31,7 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
   private static final TStruct STRUCT_DESC = new TStruct("GetUserRolesReq");
   private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
 
-  public String account;
+  public byte[] account;
   public static final int ACCOUNT = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -53,7 +53,7 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public GetUserRolesReq(
-    String account)
+    byte[] account)
   {
     this();
     this.account = account;
@@ -77,11 +77,11 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
     return new GetUserRolesReq(this);
   }
 
-  public String  getAccount() {
+  public byte[]  getAccount() {
     return this.account;
   }
 
-  public GetUserRolesReq setAccount(String account) {
+  public GetUserRolesReq setAccount(byte[] account) {
     this.account = account;
     return this;
   }
@@ -107,7 +107,7 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
       if (value == null) {
         unsetAccount();
       } else {
-        setAccount((String)value);
+        setAccount((byte[])value);
       }
       break;
 
@@ -156,7 +156,7 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
     if (this_present_account || that_present_account) {
       if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.account, that.account))
+      if (!TBaseHelper.equalsSlow(this.account, that.account))
         return false;
     }
 
@@ -211,7 +211,7 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
       {
         case ACCOUNT:
           if (field.type == TType.STRING) {
-            this.account = iprot.readString();
+            this.account = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -235,7 +235,7 @@ public class GetUserRolesReq implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.account != null) {
       oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
-      oprot.writeString(this.account);
+      oprot.writeBinary(this.account);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -270,7 +270,12 @@ String space = prettyPrint ? " " : "";
     if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
+        int __account_size = Math.min(this. getAccount().length, 128);
+        for (int i = 0; i < __account_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+        }
+        if (this. getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

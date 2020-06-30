@@ -29,11 +29,31 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListHostsReq> {
   private static final TStruct STRUCT_DESC = new TStruct("ListHostsReq");
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
+  private static final TField ROLE_FIELD_DESC = new TField("role", TType.I32, (short)2);
 
+  /**
+   * 
+   * @see ListHostType
+   */
+  public int type;
+  public int role;
+  public static final int TYPE = 1;
+  public static final int ROLE = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
+
+  // isset id assignments
+  private static final int __TYPE_ISSET_ID = 0;
+  private static final int __ROLE_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
+
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(ROLE, new FieldMetaData("role", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -44,10 +64,33 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
   public ListHostsReq() {
   }
 
+  public ListHostsReq(
+    int type)
+  {
+    this();
+    this.type = type;
+    setTypeIsSet(true);
+  }
+
+  public ListHostsReq(
+    int type,
+    int role)
+  {
+    this();
+    this.type = type;
+    setTypeIsSet(true);
+    this.role = role;
+    setRoleIsSet(true);
+  }
+
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public ListHostsReq(ListHostsReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.type = TBaseHelper.deepCopy(other.type);
+    this.role = TBaseHelper.deepCopy(other.role);
   }
 
   public ListHostsReq deepCopy() {
@@ -59,8 +102,78 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
     return new ListHostsReq(this);
   }
 
+  /**
+   * 
+   * @see ListHostType
+   */
+  public int  getType() {
+    return this.type;
+  }
+
+  /**
+   * 
+   * @see ListHostType
+   */
+  public ListHostsReq setType(int type) {
+    this.type = type;
+    setTypeIsSet(true);
+    return this;
+  }
+
+  public void unsetType() {
+    __isset_bit_vector.clear(__TYPE_ISSET_ID);
+  }
+
+  // Returns true if field type is set (has been assigned a value) and false otherwise
+  public boolean isSetType() {
+    return __isset_bit_vector.get(__TYPE_ISSET_ID);
+  }
+
+  public void setTypeIsSet(boolean value) {
+    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  }
+
+  public int  getRole() {
+    return this.role;
+  }
+
+  public ListHostsReq setRole(int role) {
+    this.role = role;
+    setRoleIsSet(true);
+    return this;
+  }
+
+  public void unsetRole() {
+    __isset_bit_vector.clear(__ROLE_ISSET_ID);
+  }
+
+  // Returns true if field role is set (has been assigned a value) and false otherwise
+  public boolean isSetRole() {
+    return __isset_bit_vector.get(__ROLE_ISSET_ID);
+  }
+
+  public void setRoleIsSet(boolean value) {
+    __isset_bit_vector.set(__ROLE_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
+    case TYPE:
+      if (value == null) {
+        unsetType();
+      } else {
+        setType((Integer)value);
+      }
+      break;
+
+    case ROLE:
+      if (value == null) {
+        unsetRole();
+      } else {
+        setRole((Integer)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -68,6 +181,12 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case TYPE:
+      return getType();
+
+    case ROLE:
+      return getRole();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -76,6 +195,10 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
+    case TYPE:
+      return isSetType();
+    case ROLE:
+      return isSetRole();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -96,12 +219,40 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
     if (this == that)
       return true;
 
+    boolean this_present_type = true;
+    boolean that_present_type = true;
+    if (this_present_type || that_present_type) {
+      if (!(this_present_type && that_present_type))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.type, that.type))
+        return false;
+    }
+
+    boolean this_present_role = true && this.isSetRole();
+    boolean that_present_role = true && that.isSetRole();
+    if (this_present_role || that_present_role) {
+      if (!(this_present_role && that_present_role))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.role, that.role))
+        return false;
+    }
+
     return true;
   }
 
   @Override
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
+
+    boolean present_type = true;
+    builder.append(present_type);
+    if (present_type)
+      builder.append(type);
+
+    boolean present_role = true && (isSetRole());
+    builder.append(present_role);
+    if (present_role)
+      builder.append(role);
 
     return builder.toHashCode();
   }
@@ -118,6 +269,22 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(type, other.type);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetRole()).compareTo(other.isSetRole());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(role, other.role);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -132,6 +299,22 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (field.id)
       {
+        case TYPE:
+          if (field.type == TType.I32) {
+            this.type = iprot.readI32();
+            setTypeIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case ROLE:
+          if (field.type == TType.I32) {
+            this.role = iprot.readI32();
+            setRoleIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -149,6 +332,14 @@ public class ListHostsReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    oprot.writeFieldBegin(TYPE_FIELD_DESC);
+    oprot.writeI32(this.type);
+    oprot.writeFieldEnd();
+    if (isSetRole()) {
+      oprot.writeFieldBegin(ROLE_FIELD_DESC);
+      oprot.writeI32(this.role);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -174,6 +365,38 @@ String space = prettyPrint ? " " : "";
     sb.append(newLine);
     boolean first = true;
 
+    sb.append(indentStr);
+    sb.append("type");
+    sb.append(space);
+    sb.append(":").append(space);
+    String type_name = ListHostType.VALUES_TO_NAMES.get(this. getType());
+    if (type_name != null) {
+      sb.append(type_name);
+      sb.append(" (");
+    }
+    sb.append(this. getType());
+    if (type_name != null) {
+      sb.append(")");
+    }
+    first = false;
+    if (isSetRole())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("role");
+      sb.append(space);
+      sb.append(":").append(space);
+      String role_name = HostRole.VALUES_TO_NAMES.get(this. getRole());
+      if (role_name != null) {
+        sb.append(role_name);
+        sb.append(" (");
+      }
+      sb.append(this. getRole());
+      if (role_name != null) {
+        sb.append(")");
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
@@ -182,6 +405,9 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
+    if (isSetType() && !ListHostType.VALID_VALUES.contains(type)){
+      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
+    }
   }
 
 }

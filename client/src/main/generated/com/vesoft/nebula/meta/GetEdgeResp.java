@@ -39,7 +39,7 @@ public class GetEdgeResp implements TBase, java.io.Serializable, Cloneable {
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public com.vesoft.nebula.Schema schema;
+  public Schema schema;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int SCHEMA = 3;
@@ -57,7 +57,7 @@ public class GetEdgeResp implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+        new StructMetaData(TType.STRUCT, Schema.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -71,7 +71,7 @@ public class GetEdgeResp implements TBase, java.io.Serializable, Cloneable {
   public GetEdgeResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    com.vesoft.nebula.Schema schema)
+    Schema schema)
   {
     this();
     this.code = code;
@@ -159,11 +159,11 @@ public class GetEdgeResp implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
+  public Schema  getSchema() {
     return this.schema;
   }
 
-  public GetEdgeResp setSchema(com.vesoft.nebula.Schema schema) {
+  public GetEdgeResp setSchema(Schema schema) {
     this.schema = schema;
     return this;
   }
@@ -205,7 +205,7 @@ public class GetEdgeResp implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSchema();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
+        setSchema((Schema)value);
       }
       break;
 
@@ -340,7 +340,7 @@ public class GetEdgeResp implements TBase, java.io.Serializable, Cloneable {
           break;
         case SCHEMA:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
+            this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

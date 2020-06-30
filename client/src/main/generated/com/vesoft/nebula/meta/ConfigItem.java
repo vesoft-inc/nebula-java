@@ -40,7 +40,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
    * @see ConfigModule
    */
   public int module;
-  public String name;
+  public byte[] name;
   /**
    * 
    * @see ConfigType
@@ -90,7 +90,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
 
   public ConfigItem(
     int module,
-    String name,
+    byte[] name,
     int type,
     int mode,
     byte[] value)
@@ -163,11 +163,11 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__MODULE_ISSET_ID, value);
   }
 
-  public String  getName() {
+  public byte[]  getName() {
     return this.name;
   }
 
-  public ConfigItem setName(String name) {
+  public ConfigItem setName(byte[] name) {
     this.name = name;
     return this;
   }
@@ -287,7 +287,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
       if (value == null) {
         unsetName();
       } else {
-        setName((String)value);
+        setName((byte[])value);
       }
       break;
 
@@ -389,7 +389,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     if (this_present_name || that_present_name) {
       if (!(this_present_name && that_present_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.name, that.name))
+      if (!TBaseHelper.equalsSlow(this.name, that.name))
         return false;
     }
 
@@ -531,7 +531,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
           break;
         case NAME:
           if (field.type == TType.STRING) {
-            this.name = iprot.readString();
+            this.name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -581,7 +581,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     oprot.writeFieldEnd();
     if (this.name != null) {
       oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeString(this.name);
+      oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(TYPE_FIELD_DESC);
@@ -642,7 +642,12 @@ String space = prettyPrint ? " " : "";
     if (this. getName() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getName(), indent + 1, prettyPrint));
+        int __name_size = Math.min(this. getName().length, 128);
+        for (int i = 0; i < __name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+        }
+        if (this. getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

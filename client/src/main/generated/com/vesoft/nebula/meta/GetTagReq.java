@@ -34,7 +34,7 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField VERSION_FIELD_DESC = new TField("version", TType.I64, (short)3);
 
   public int space_id;
-  public String tag_name;
+  public byte[] tag_name;
   public long version;
   public static final int SPACE_ID = 1;
   public static final int TAG_NAME = 2;
@@ -67,7 +67,7 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
 
   public GetTagReq(
     int space_id,
-    String tag_name,
+    byte[] tag_name,
     long version)
   {
     this();
@@ -123,11 +123,11 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getTag_name() {
+  public byte[]  getTag_name() {
     return this.tag_name;
   }
 
-  public GetTagReq setTag_name(String tag_name) {
+  public GetTagReq setTag_name(byte[] tag_name) {
     this.tag_name = tag_name;
     return this;
   }
@@ -184,7 +184,7 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
       if (value == null) {
         unsetTag_name();
       } else {
-        setTag_name((String)value);
+        setTag_name((byte[])value);
       }
       break;
 
@@ -260,7 +260,7 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
     if (this_present_tag_name || that_present_tag_name) {
       if (!(this_present_tag_name && that_present_tag_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_name, that.tag_name))
+      if (!TBaseHelper.equalsSlow(this.tag_name, that.tag_name))
         return false;
     }
 
@@ -358,7 +358,7 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
           break;
         case TAG_NAME:
           if (field.type == TType.STRING) {
-            this.tag_name = iprot.readString();
+            this.tag_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -393,7 +393,7 @@ public class GetTagReq implements TBase, java.io.Serializable, Cloneable, Compar
     oprot.writeFieldEnd();
     if (this.tag_name != null) {
       oprot.writeFieldBegin(TAG_NAME_FIELD_DESC);
-      oprot.writeString(this.tag_name);
+      oprot.writeBinary(this.tag_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(VERSION_FIELD_DESC);
@@ -438,7 +438,12 @@ String space = prettyPrint ? " " : "";
     if (this. getTag_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTag_name(), indent + 1, prettyPrint));
+        int __tag_name_size = Math.min(this. getTag_name().length, 128);
+        for (int i = 0; i < __tag_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getTag_name()[i]).length() > 1 ? Integer.toHexString(this. getTag_name()[i]).substring(Integer.toHexString(this. getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTag_name()[i]).toUpperCase());
+        }
+        if (this. getTag_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

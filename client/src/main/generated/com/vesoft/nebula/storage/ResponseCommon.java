@@ -29,12 +29,12 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, Comparable<ResponseCommon> {
   private static final TStruct STRUCT_DESC = new TStruct("ResponseCommon");
-  private static final TField FAILED_CODES_FIELD_DESC = new TField("failed_codes", TType.LIST, (short)1);
+  private static final TField FAILED_PARTS_FIELD_DESC = new TField("failed_parts", TType.LIST, (short)1);
   private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I32, (short)2);
 
-  public List<ResultCode> failed_codes;
+  public List<PartitionResult> failed_parts;
   public int latency_in_us;
-  public static final int FAILED_CODES = 1;
+  public static final int FAILED_PARTS = 1;
   public static final int LATENCY_IN_US = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -45,9 +45,9 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(FAILED_CODES, new FieldMetaData("failed_codes", TFieldRequirementType.REQUIRED, 
+    tmpMetaDataMap.put(FAILED_PARTS, new FieldMetaData("failed_parts", TFieldRequirementType.REQUIRED, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ResultCode.class))));
+            new StructMetaData(TType.STRUCT, PartitionResult.class))));
     tmpMetaDataMap.put(LATENCY_IN_US, new FieldMetaData("latency_in_us", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -61,11 +61,11 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public ResponseCommon(
-    List<ResultCode> failed_codes,
+    List<PartitionResult> failed_parts,
     int latency_in_us)
   {
     this();
-    this.failed_codes = failed_codes;
+    this.failed_parts = failed_parts;
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
   }
@@ -76,8 +76,8 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   public ResponseCommon(ResponseCommon other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    if (other.isSetFailed_codes()) {
-      this.failed_codes = TBaseHelper.deepCopy(other.failed_codes);
+    if (other.isSetFailed_parts()) {
+      this.failed_parts = TBaseHelper.deepCopy(other.failed_parts);
     }
     this.latency_in_us = TBaseHelper.deepCopy(other.latency_in_us);
   }
@@ -91,27 +91,27 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     return new ResponseCommon(this);
   }
 
-  public List<ResultCode>  getFailed_codes() {
-    return this.failed_codes;
+  public List<PartitionResult>  getFailed_parts() {
+    return this.failed_parts;
   }
 
-  public ResponseCommon setFailed_codes(List<ResultCode> failed_codes) {
-    this.failed_codes = failed_codes;
+  public ResponseCommon setFailed_parts(List<PartitionResult> failed_parts) {
+    this.failed_parts = failed_parts;
     return this;
   }
 
-  public void unsetFailed_codes() {
-    this.failed_codes = null;
+  public void unsetFailed_parts() {
+    this.failed_parts = null;
   }
 
-  // Returns true if field failed_codes is set (has been assigned a value) and false otherwise
-  public boolean isSetFailed_codes() {
-    return this.failed_codes != null;
+  // Returns true if field failed_parts is set (has been assigned a value) and false otherwise
+  public boolean isSetFailed_parts() {
+    return this.failed_parts != null;
   }
 
-  public void setFailed_codesIsSet(boolean value) {
+  public void setFailed_partsIsSet(boolean value) {
     if (!value) {
-      this.failed_codes = null;
+      this.failed_parts = null;
     }
   }
 
@@ -141,11 +141,11 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case FAILED_CODES:
+    case FAILED_PARTS:
       if (value == null) {
-        unsetFailed_codes();
+        unsetFailed_parts();
       } else {
-        setFailed_codes((List<ResultCode>)value);
+        setFailed_parts((List<PartitionResult>)value);
       }
       break;
 
@@ -164,8 +164,8 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case FAILED_CODES:
-      return getFailed_codes();
+    case FAILED_PARTS:
+      return getFailed_parts();
 
     case LATENCY_IN_US:
       return new Integer(getLatency_in_us());
@@ -178,8 +178,8 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case FAILED_CODES:
-      return isSetFailed_codes();
+    case FAILED_PARTS:
+      return isSetFailed_parts();
     case LATENCY_IN_US:
       return isSetLatency_in_us();
     default:
@@ -202,12 +202,12 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     if (this == that)
       return true;
 
-    boolean this_present_failed_codes = true && this.isSetFailed_codes();
-    boolean that_present_failed_codes = true && that.isSetFailed_codes();
-    if (this_present_failed_codes || that_present_failed_codes) {
-      if (!(this_present_failed_codes && that_present_failed_codes))
+    boolean this_present_failed_parts = true && this.isSetFailed_parts();
+    boolean that_present_failed_parts = true && that.isSetFailed_parts();
+    if (this_present_failed_parts || that_present_failed_parts) {
+      if (!(this_present_failed_parts && that_present_failed_parts))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.failed_codes, that.failed_codes))
+      if (!TBaseHelper.equalsNobinary(this.failed_parts, that.failed_parts))
         return false;
     }
 
@@ -227,10 +227,10 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_failed_codes = true && (isSetFailed_codes());
-    builder.append(present_failed_codes);
-    if (present_failed_codes)
-      builder.append(failed_codes);
+    boolean present_failed_parts = true && (isSetFailed_parts());
+    builder.append(present_failed_parts);
+    if (present_failed_parts)
+      builder.append(failed_parts);
 
     boolean present_latency_in_us = true;
     builder.append(present_latency_in_us);
@@ -252,11 +252,11 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetFailed_codes()).compareTo(other.isSetFailed_codes());
+    lastComparison = Boolean.valueOf(isSetFailed_parts()).compareTo(other.isSetFailed_parts());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(failed_codes, other.failed_codes);
+    lastComparison = TBaseHelper.compareTo(failed_parts, other.failed_parts);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -282,19 +282,19 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       }
       switch (field.id)
       {
-        case FAILED_CODES:
+        case FAILED_PARTS:
           if (field.type == TType.LIST) {
             {
-              TList _list12 = iprot.readListBegin();
-              this.failed_codes = new ArrayList<ResultCode>(Math.max(0, _list12.size));
-              for (int _i13 = 0; 
-                   (_list12.size < 0) ? iprot.peekList() : (_i13 < _list12.size); 
-                   ++_i13)
+              TList _list0 = iprot.readListBegin();
+              this.failed_parts = new ArrayList<PartitionResult>(Math.max(0, _list0.size));
+              for (int _i1 = 0; 
+                   (_list0.size < 0) ? iprot.peekList() : (_i1 < _list0.size); 
+                   ++_i1)
               {
-                ResultCode _elem14;
-                _elem14 = new ResultCode();
-                _elem14.read(iprot);
-                this.failed_codes.add(_elem14);
+                PartitionResult _elem2;
+                _elem2 = new PartitionResult();
+                _elem2.read(iprot);
+                this.failed_parts.add(_elem2);
               }
               iprot.readListEnd();
             }
@@ -330,12 +330,12 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.failed_codes != null) {
-      oprot.writeFieldBegin(FAILED_CODES_FIELD_DESC);
+    if (this.failed_parts != null) {
+      oprot.writeFieldBegin(FAILED_PARTS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.failed_codes.size()));
-        for (ResultCode _iter15 : this.failed_codes)        {
-          _iter15.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.failed_parts.size()));
+        for (PartitionResult _iter3 : this.failed_parts)        {
+          _iter3.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -370,13 +370,13 @@ String space = prettyPrint ? " " : "";
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("failed_codes");
+    sb.append("failed_parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFailed_codes() == null) {
+    if (this. getFailed_parts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getFailed_codes(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getFailed_parts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -393,8 +393,8 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    if (failed_codes == null) {
-      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'failed_codes' was not present! Struct: " + toString());
+    if (failed_parts == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'failed_parts' was not present! Struct: " + toString());
     }
     // alas, we cannot check 'latency_in_us' because it's a primitive and you chose the non-beans generator.
     // check that fields of type enum have valid values

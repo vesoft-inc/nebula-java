@@ -27,24 +27,21 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneable, Comparable<GetNeighborsRequest> {
+public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("GetNeighborsRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
-  private static final TField EDGE_TYPES_FIELD_DESC = new TField("edge_types", TType.LIST, (short)3);
-  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)4);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)5);
+  private static final TField COLUMN_NAMES_FIELD_DESC = new TField("column_names", TType.LIST, (short)2);
+  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)3);
+  private static final TField TRAVERSE_SPEC_FIELD_DESC = new TField("traverse_spec", TType.STRUCT, (short)4);
 
   public int space_id;
-  public Map<Integer,List<Long>> parts;
-  public List<Integer> edge_types;
-  public byte[] filter;
-  public List<PropDef> return_columns;
+  public List<byte[]> column_names;
+  public Map<Integer,List<com.vesoft.nebula.Row>> parts;
+  public TraverseSpec traverse_spec;
   public static final int SPACE_ID = 1;
-  public static final int PARTS = 2;
-  public static final int EDGE_TYPES = 3;
-  public static final int FILTER = 4;
-  public static final int RETURN_COLUMNS = 5;
+  public static final int COLUMN_NAMES = 2;
+  public static final int PARTS = 3;
+  public static final int TRAVERSE_SPEC = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,19 +53,16 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(COLUMN_NAMES, new FieldMetaData("column_names", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.I64)))));
-    tmpMetaDataMap.put(EDGE_TYPES, new FieldMetaData("edge_types", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.I32))));
-    tmpMetaDataMap.put(FILTER, new FieldMetaData("filter", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, PropDef.class))));
+                new StructMetaData(TType.STRUCT, com.vesoft.nebula.Row.class)))));
+    tmpMetaDataMap.put(TRAVERSE_SPEC, new FieldMetaData("traverse_spec", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, TraverseSpec.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -81,18 +75,16 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
 
   public GetNeighborsRequest(
     int space_id,
-    Map<Integer,List<Long>> parts,
-    List<Integer> edge_types,
-    byte[] filter,
-    List<PropDef> return_columns)
+    List<byte[]> column_names,
+    Map<Integer,List<com.vesoft.nebula.Row>> parts,
+    TraverseSpec traverse_spec)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
+    this.column_names = column_names;
     this.parts = parts;
-    this.edge_types = edge_types;
-    this.filter = filter;
-    this.return_columns = return_columns;
+    this.traverse_spec = traverse_spec;
   }
 
   /**
@@ -102,17 +94,14 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
+    if (other.isSetColumn_names()) {
+      this.column_names = TBaseHelper.deepCopy(other.column_names);
+    }
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
-    if (other.isSetEdge_types()) {
-      this.edge_types = TBaseHelper.deepCopy(other.edge_types);
-    }
-    if (other.isSetFilter()) {
-      this.filter = TBaseHelper.deepCopy(other.filter);
-    }
-    if (other.isSetReturn_columns()) {
-      this.return_columns = TBaseHelper.deepCopy(other.return_columns);
+    if (other.isSetTraverse_spec()) {
+      this.traverse_spec = TBaseHelper.deepCopy(other.traverse_spec);
     }
   }
 
@@ -148,11 +137,35 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,List<Long>>  getParts() {
+  public List<byte[]>  getColumn_names() {
+    return this.column_names;
+  }
+
+  public GetNeighborsRequest setColumn_names(List<byte[]> column_names) {
+    this.column_names = column_names;
+    return this;
+  }
+
+  public void unsetColumn_names() {
+    this.column_names = null;
+  }
+
+  // Returns true if field column_names is set (has been assigned a value) and false otherwise
+  public boolean isSetColumn_names() {
+    return this.column_names != null;
+  }
+
+  public void setColumn_namesIsSet(boolean value) {
+    if (!value) {
+      this.column_names = null;
+    }
+  }
+
+  public Map<Integer,List<com.vesoft.nebula.Row>>  getParts() {
     return this.parts;
   }
 
-  public GetNeighborsRequest setParts(Map<Integer,List<Long>> parts) {
+  public GetNeighborsRequest setParts(Map<Integer,List<com.vesoft.nebula.Row>> parts) {
     this.parts = parts;
     return this;
   }
@@ -172,75 +185,27 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  public List<Integer>  getEdge_types() {
-    return this.edge_types;
+  public TraverseSpec  getTraverse_spec() {
+    return this.traverse_spec;
   }
 
-  public GetNeighborsRequest setEdge_types(List<Integer> edge_types) {
-    this.edge_types = edge_types;
+  public GetNeighborsRequest setTraverse_spec(TraverseSpec traverse_spec) {
+    this.traverse_spec = traverse_spec;
     return this;
   }
 
-  public void unsetEdge_types() {
-    this.edge_types = null;
+  public void unsetTraverse_spec() {
+    this.traverse_spec = null;
   }
 
-  // Returns true if field edge_types is set (has been assigned a value) and false otherwise
-  public boolean isSetEdge_types() {
-    return this.edge_types != null;
+  // Returns true if field traverse_spec is set (has been assigned a value) and false otherwise
+  public boolean isSetTraverse_spec() {
+    return this.traverse_spec != null;
   }
 
-  public void setEdge_typesIsSet(boolean value) {
+  public void setTraverse_specIsSet(boolean value) {
     if (!value) {
-      this.edge_types = null;
-    }
-  }
-
-  public byte[]  getFilter() {
-    return this.filter;
-  }
-
-  public GetNeighborsRequest setFilter(byte[] filter) {
-    this.filter = filter;
-    return this;
-  }
-
-  public void unsetFilter() {
-    this.filter = null;
-  }
-
-  // Returns true if field filter is set (has been assigned a value) and false otherwise
-  public boolean isSetFilter() {
-    return this.filter != null;
-  }
-
-  public void setFilterIsSet(boolean value) {
-    if (!value) {
-      this.filter = null;
-    }
-  }
-
-  public List<PropDef>  getReturn_columns() {
-    return this.return_columns;
-  }
-
-  public GetNeighborsRequest setReturn_columns(List<PropDef> return_columns) {
-    this.return_columns = return_columns;
-    return this;
-  }
-
-  public void unsetReturn_columns() {
-    this.return_columns = null;
-  }
-
-  // Returns true if field return_columns is set (has been assigned a value) and false otherwise
-  public boolean isSetReturn_columns() {
-    return this.return_columns != null;
-  }
-
-  public void setReturn_columnsIsSet(boolean value) {
-    if (!value) {
-      this.return_columns = null;
+      this.traverse_spec = null;
     }
   }
 
@@ -255,35 +220,27 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
+    case COLUMN_NAMES:
+      if (value == null) {
+        unsetColumn_names();
+      } else {
+        setColumn_names((List<byte[]>)value);
+      }
+      break;
+
     case PARTS:
       if (value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<Long>>)value);
+        setParts((Map<Integer,List<com.vesoft.nebula.Row>>)value);
       }
       break;
 
-    case EDGE_TYPES:
+    case TRAVERSE_SPEC:
       if (value == null) {
-        unsetEdge_types();
+        unsetTraverse_spec();
       } else {
-        setEdge_types((List<Integer>)value);
-      }
-      break;
-
-    case FILTER:
-      if (value == null) {
-        unsetFilter();
-      } else {
-        setFilter((byte[])value);
-      }
-      break;
-
-    case RETURN_COLUMNS:
-      if (value == null) {
-        unsetReturn_columns();
-      } else {
-        setReturn_columns((List<PropDef>)value);
+        setTraverse_spec((TraverseSpec)value);
       }
       break;
 
@@ -297,17 +254,14 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     case SPACE_ID:
       return new Integer(getSpace_id());
 
+    case COLUMN_NAMES:
+      return getColumn_names();
+
     case PARTS:
       return getParts();
 
-    case EDGE_TYPES:
-      return getEdge_types();
-
-    case FILTER:
-      return getFilter();
-
-    case RETURN_COLUMNS:
-      return getReturn_columns();
+    case TRAVERSE_SPEC:
+      return getTraverse_spec();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -319,14 +273,12 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     switch (fieldID) {
     case SPACE_ID:
       return isSetSpace_id();
+    case COLUMN_NAMES:
+      return isSetColumn_names();
     case PARTS:
       return isSetParts();
-    case EDGE_TYPES:
-      return isSetEdge_types();
-    case FILTER:
-      return isSetFilter();
-    case RETURN_COLUMNS:
-      return isSetReturn_columns();
+    case TRAVERSE_SPEC:
+      return isSetTraverse_spec();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -356,6 +308,15 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         return false;
     }
 
+    boolean this_present_column_names = true && this.isSetColumn_names();
+    boolean that_present_column_names = true && that.isSetColumn_names();
+    if (this_present_column_names || that_present_column_names) {
+      if (!(this_present_column_names && that_present_column_names))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.column_names, that.column_names))
+        return false;
+    }
+
     boolean this_present_parts = true && this.isSetParts();
     boolean that_present_parts = true && that.isSetParts();
     if (this_present_parts || that_present_parts) {
@@ -365,30 +326,12 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         return false;
     }
 
-    boolean this_present_edge_types = true && this.isSetEdge_types();
-    boolean that_present_edge_types = true && that.isSetEdge_types();
-    if (this_present_edge_types || that_present_edge_types) {
-      if (!(this_present_edge_types && that_present_edge_types))
+    boolean this_present_traverse_spec = true && this.isSetTraverse_spec();
+    boolean that_present_traverse_spec = true && that.isSetTraverse_spec();
+    if (this_present_traverse_spec || that_present_traverse_spec) {
+      if (!(this_present_traverse_spec && that_present_traverse_spec))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_types, that.edge_types))
-        return false;
-    }
-
-    boolean this_present_filter = true && this.isSetFilter();
-    boolean that_present_filter = true && that.isSetFilter();
-    if (this_present_filter || that_present_filter) {
-      if (!(this_present_filter && that_present_filter))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
-        return false;
-    }
-
-    boolean this_present_return_columns = true && this.isSetReturn_columns();
-    boolean that_present_return_columns = true && that.isSetReturn_columns();
-    if (this_present_return_columns || that_present_return_columns) {
-      if (!(this_present_return_columns && that_present_return_columns))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.return_columns, that.return_columns))
+      if (!TBaseHelper.equalsNobinary(this.traverse_spec, that.traverse_spec))
         return false;
     }
 
@@ -404,82 +347,22 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     if (present_space_id)
       builder.append(space_id);
 
+    boolean present_column_names = true && (isSetColumn_names());
+    builder.append(present_column_names);
+    if (present_column_names)
+      builder.append(column_names);
+
     boolean present_parts = true && (isSetParts());
     builder.append(present_parts);
     if (present_parts)
       builder.append(parts);
 
-    boolean present_edge_types = true && (isSetEdge_types());
-    builder.append(present_edge_types);
-    if (present_edge_types)
-      builder.append(edge_types);
-
-    boolean present_filter = true && (isSetFilter());
-    builder.append(present_filter);
-    if (present_filter)
-      builder.append(filter);
-
-    boolean present_return_columns = true && (isSetReturn_columns());
-    builder.append(present_return_columns);
-    if (present_return_columns)
-      builder.append(return_columns);
+    boolean present_traverse_spec = true && (isSetTraverse_spec());
+    builder.append(present_traverse_spec);
+    if (present_traverse_spec)
+      builder.append(traverse_spec);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(GetNeighborsRequest other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetEdge_types()).compareTo(other.isSetEdge_types());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(edge_types, other.edge_types);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetFilter()).compareTo(other.isSetFilter());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(filter, other.filter);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetReturn_columns()).compareTo(other.isSetReturn_columns());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(return_columns, other.return_columns);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -501,32 +384,52 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case COLUMN_NAMES:
+          if (field.type == TType.LIST) {
+            {
+              TList _list36 = iprot.readListBegin();
+              this.column_names = new ArrayList<byte[]>(Math.max(0, _list36.size));
+              for (int _i37 = 0; 
+                   (_list36.size < 0) ? iprot.peekList() : (_i37 < _list36.size); 
+                   ++_i37)
+              {
+                byte[] _elem38;
+                _elem38 = iprot.readBinary();
+                this.column_names.add(_elem38);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map34 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map34.size));
-              for (int _i35 = 0; 
-                   (_map34.size < 0) ? iprot.peekMap() : (_i35 < _map34.size); 
-                   ++_i35)
+              TMap _map39 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map39.size));
+              for (int _i40 = 0; 
+                   (_map39.size < 0) ? iprot.peekMap() : (_i40 < _map39.size); 
+                   ++_i40)
               {
-                int _key36;
-                List<Long> _val37;
-                _key36 = iprot.readI32();
+                int _key41;
+                List<com.vesoft.nebula.Row> _val42;
+                _key41 = iprot.readI32();
                 {
-                  TList _list38 = iprot.readListBegin();
-                  _val37 = new ArrayList<Long>(Math.max(0, _list38.size));
-                  for (int _i39 = 0; 
-                       (_list38.size < 0) ? iprot.peekList() : (_i39 < _list38.size); 
-                       ++_i39)
+                  TList _list43 = iprot.readListBegin();
+                  _val42 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list43.size));
+                  for (int _i44 = 0; 
+                       (_list43.size < 0) ? iprot.peekList() : (_i44 < _list43.size); 
+                       ++_i44)
                   {
-                    long _elem40;
-                    _elem40 = iprot.readI64();
-                    _val37.add(_elem40);
+                    com.vesoft.nebula.Row _elem45;
+                    _elem45 = new com.vesoft.nebula.Row();
+                    _elem45.read(iprot);
+                    _val42.add(_elem45);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key36, _val37);
+                this.parts.put(_key41, _val42);
               }
               iprot.readMapEnd();
             }
@@ -534,48 +437,10 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case EDGE_TYPES:
-          if (field.type == TType.LIST) {
-            {
-              TList _list41 = iprot.readListBegin();
-              this.edge_types = new ArrayList<Integer>(Math.max(0, _list41.size));
-              for (int _i42 = 0; 
-                   (_list41.size < 0) ? iprot.peekList() : (_i42 < _list41.size); 
-                   ++_i42)
-              {
-                int _elem43;
-                _elem43 = iprot.readI32();
-                this.edge_types.add(_elem43);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case FILTER:
-          if (field.type == TType.STRING) {
-            this.filter = iprot.readBinary();
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case RETURN_COLUMNS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list44 = iprot.readListBegin();
-              this.return_columns = new ArrayList<PropDef>(Math.max(0, _list44.size));
-              for (int _i45 = 0; 
-                   (_list44.size < 0) ? iprot.peekList() : (_i45 < _list44.size); 
-                   ++_i45)
-              {
-                PropDef _elem46;
-                _elem46 = new PropDef();
-                _elem46.read(iprot);
-                this.return_columns.add(_elem46);
-              }
-              iprot.readListEnd();
-            }
+        case TRAVERSE_SPEC:
+          if (field.type == TType.STRUCT) {
+            this.traverse_spec = new TraverseSpec();
+            this.traverse_spec.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -600,16 +465,27 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
+    if (this.column_names != null) {
+      oprot.writeFieldBegin(COLUMN_NAMES_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.column_names.size()));
+        for (byte[] _iter46 : this.column_names)        {
+          oprot.writeBinary(_iter46);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
     if (this.parts != null) {
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Long>> _iter47 : this.parts.entrySet())        {
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter47 : this.parts.entrySet())        {
           oprot.writeI32(_iter47.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I64, _iter47.getValue().size()));
-            for (long _iter48 : _iter47.getValue())            {
-              oprot.writeI64(_iter48);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter47.getValue().size()));
+            for (com.vesoft.nebula.Row _iter48 : _iter47.getValue())            {
+              _iter48.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -618,31 +494,9 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       }
       oprot.writeFieldEnd();
     }
-    if (this.edge_types != null) {
-      oprot.writeFieldBegin(EDGE_TYPES_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.I32, this.edge_types.size()));
-        for (int _iter49 : this.edge_types)        {
-          oprot.writeI32(_iter49);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
-    if (this.filter != null) {
-      oprot.writeFieldBegin(FILTER_FIELD_DESC);
-      oprot.writeBinary(this.filter);
-      oprot.writeFieldEnd();
-    }
-    if (this.return_columns != null) {
-      oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (PropDef _iter50 : this.return_columns)        {
-          _iter50.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
+    if (this.traverse_spec != null) {
+      oprot.writeFieldBegin(TRAVERSE_SPEC_FIELD_DESC);
+      this.traverse_spec.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -678,6 +532,17 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
+    sb.append("column_names");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getColumn_names() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getColumn_names(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
     sb.append("parts");
     sb.append(space);
     sb.append(":").append(space);
@@ -689,40 +554,13 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("edge_types");
+    sb.append("traverse_spec");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_types() == null) {
+    if (this. getTraverse_spec() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdge_types(), indent + 1, prettyPrint));
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("filter");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getFilter() == null) {
-      sb.append("null");
-    } else {
-        int __filter_size = Math.min(this. getFilter().length, 128);
-        for (int i = 0; i < __filter_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
-        }
-        if (this. getFilter().length > 128) sb.append(" ...");
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("return_columns");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getReturn_columns() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getTraverse_spec(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -35,9 +35,9 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
   private static final TField SCHEMA_PROP_FIELD_DESC = new TField("schema_prop", TType.STRUCT, (short)4);
 
   public int space_id;
-  public String tag_name;
+  public byte[] tag_name;
   public List<AlterSchemaItem> tag_items;
-  public com.vesoft.nebula.SchemaProp schema_prop;
+  public SchemaProp schema_prop;
   public static final int SPACE_ID = 1;
   public static final int TAG_NAME = 2;
   public static final int TAG_ITEMS = 3;
@@ -59,7 +59,7 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, AlterSchemaItem.class))));
     tmpMetaDataMap.put(SCHEMA_PROP, new FieldMetaData("schema_prop", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.SchemaProp.class)));
+        new StructMetaData(TType.STRUCT, SchemaProp.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -72,9 +72,9 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
 
   public AlterTagReq(
     int space_id,
-    String tag_name,
+    byte[] tag_name,
     List<AlterSchemaItem> tag_items,
-    com.vesoft.nebula.SchemaProp schema_prop)
+    SchemaProp schema_prop)
   {
     this();
     this.space_id = space_id;
@@ -134,11 +134,11 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getTag_name() {
+  public byte[]  getTag_name() {
     return this.tag_name;
   }
 
-  public AlterTagReq setTag_name(String tag_name) {
+  public AlterTagReq setTag_name(byte[] tag_name) {
     this.tag_name = tag_name;
     return this;
   }
@@ -182,11 +182,11 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public com.vesoft.nebula.SchemaProp  getSchema_prop() {
+  public SchemaProp  getSchema_prop() {
     return this.schema_prop;
   }
 
-  public AlterTagReq setSchema_prop(com.vesoft.nebula.SchemaProp schema_prop) {
+  public AlterTagReq setSchema_prop(SchemaProp schema_prop) {
     this.schema_prop = schema_prop;
     return this;
   }
@@ -221,7 +221,7 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetTag_name();
       } else {
-        setTag_name((String)value);
+        setTag_name((byte[])value);
       }
       break;
 
@@ -237,7 +237,7 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSchema_prop();
       } else {
-        setSchema_prop((com.vesoft.nebula.SchemaProp)value);
+        setSchema_prop((SchemaProp)value);
       }
       break;
 
@@ -310,7 +310,7 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
     if (this_present_tag_name || that_present_tag_name) {
       if (!(this_present_tag_name && that_present_tag_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_name, that.tag_name))
+      if (!TBaseHelper.equalsSlow(this.tag_name, that.tag_name))
         return false;
     }
 
@@ -383,7 +383,7 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
           break;
         case TAG_NAME:
           if (field.type == TType.STRING) {
-            this.tag_name = iprot.readString();
+            this.tag_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -391,16 +391,16 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
         case TAG_ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list38 = iprot.readListBegin();
-              this.tag_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list38.size));
-              for (int _i39 = 0; 
-                   (_list38.size < 0) ? iprot.peekList() : (_i39 < _list38.size); 
-                   ++_i39)
+              TList _list46 = iprot.readListBegin();
+              this.tag_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list46.size));
+              for (int _i47 = 0; 
+                   (_list46.size < 0) ? iprot.peekList() : (_i47 < _list46.size); 
+                   ++_i47)
               {
-                AlterSchemaItem _elem40;
-                _elem40 = new AlterSchemaItem();
-                _elem40.read(iprot);
-                this.tag_items.add(_elem40);
+                AlterSchemaItem _elem48;
+                _elem48 = new AlterSchemaItem();
+                _elem48.read(iprot);
+                this.tag_items.add(_elem48);
               }
               iprot.readListEnd();
             }
@@ -410,7 +410,7 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
           break;
         case SCHEMA_PROP:
           if (field.type == TType.STRUCT) {
-            this.schema_prop = new com.vesoft.nebula.SchemaProp();
+            this.schema_prop = new SchemaProp();
             this.schema_prop.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -438,15 +438,15 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldEnd();
     if (this.tag_name != null) {
       oprot.writeFieldBegin(TAG_NAME_FIELD_DESC);
-      oprot.writeString(this.tag_name);
+      oprot.writeBinary(this.tag_name);
       oprot.writeFieldEnd();
     }
     if (this.tag_items != null) {
       oprot.writeFieldBegin(TAG_ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tag_items.size()));
-        for (AlterSchemaItem _iter41 : this.tag_items)        {
-          _iter41.write(oprot);
+        for (AlterSchemaItem _iter49 : this.tag_items)        {
+          _iter49.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -496,7 +496,12 @@ String space = prettyPrint ? " " : "";
     if (this. getTag_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTag_name(), indent + 1, prettyPrint));
+        int __tag_name_size = Math.min(this. getTag_name().length, 128);
+        for (int i = 0; i < __tag_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getTag_name()[i]).length() > 1 ? Integer.toHexString(this. getTag_name()[i]).substring(Integer.toHexString(this. getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTag_name()[i]).toUpperCase());
+        }
+        if (this. getTag_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
