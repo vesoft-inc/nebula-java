@@ -141,13 +141,12 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      * Sign out from Graph Services.
      */
     public void close() {
-        super.close();
         try {
             client.signout(sessionID);
         } catch (TException e) {
             LOGGER.error("Disconnect error: " + e.getMessage());
         } finally {
-            transport.close();
+            super.close();
         }
     }
 
