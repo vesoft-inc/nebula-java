@@ -7,11 +7,12 @@
 package com.vesoft.nebula;
 
 import com.facebook.thrift.TException;
+import java.io.Serializable;
 
 /**
  *
  */
-public interface Client extends AutoCloseable {
+public interface Client extends AutoCloseable, Serializable {
 
     public static enum NebulaCode {
         SUCCEEDED(0);
