@@ -51,7 +51,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.codec.digest.MurmurHash2;
@@ -94,7 +93,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
     }
 
     private StorageService.Client doConnect(HostAndPort address) throws TException {
-        TTransport transport = new TSocket(address.getHost(), address.getPort(), timeout);
+        TTransport transport = new TSocket(address.getHostText(), address.getPort(), timeout);
         transport.open();
 
         TProtocol protocol = new TCompactProtocol(transport);

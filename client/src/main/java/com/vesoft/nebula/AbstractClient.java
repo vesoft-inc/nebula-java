@@ -39,7 +39,7 @@ public abstract class AbstractClient implements Client {
         checkArgument(connectionRetry > 0);
         checkArgument(executionRetry > 0);
         for (HostAndPort address : addresses) {
-            String host = address.getHost();
+            String host = address.getHostText();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
