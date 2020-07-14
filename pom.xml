@@ -13,7 +13,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
     <!-- More Project Information -->
     <name>nebula-java</name>
     <description>Nebula Java Client</description>
@@ -48,6 +47,8 @@
     <modules>
         <module>client</module>
         <module>examples</module>
+        <module>tools</module>
+        <module>tools/spark-importer</module>
     </modules>
 
     <distributionManagement>
@@ -78,6 +79,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>

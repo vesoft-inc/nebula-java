@@ -381,7 +381,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      * Remove multi keys from part
      *
      * @param spaceName nebula space name
-     * @param keys  nebula keys
+     * @param keys      nebula keys
      * @return
      */
     @Override
@@ -679,8 +679,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     @Override
     public Iterator<ScanVertexResponse> scanVertex(
-        String space, int part, Map<String, List<String>> returnCols, boolean allCols,
-        int limit, long startTime, long endTime) throws IOException {
+            String space, int part, Map<String, List<String>> returnCols, boolean allCols,
+            int limit, long startTime, long endTime) throws IOException {
         HostAndPort leader = getLeader(space, part);
         if (Objects.isNull(leader)) {
             throw new IllegalArgumentException("Part " + part + " not found in space " + space);
