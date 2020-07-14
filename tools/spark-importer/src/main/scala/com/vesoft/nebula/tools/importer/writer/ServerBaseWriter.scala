@@ -97,6 +97,11 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
   override def writeEdges(edges: Edges): ListenableFuture[Optional[Integer]] = {
     val sentence = toExecuteSentence(config.name, edges)
     LOG.info(sentence)
+    if (client == null) {
+      LOG.info("Client is null")
+    } else {
+      LOG.info("Client is OK")
+    }
     client.execute(sentence)
   }
 

@@ -62,7 +62,7 @@ trait Writer extends Serializable {
             // TODO Check
             if (edges.sourcePolicy == None) {
               EDGE_VALUE_WITHOUT_RANKING_TEMPLATE
-                .format(source, edge.destination, edges.values.mkString(", "))
+                .format(source, edge.destination, edge.values.map(_.toString).mkString(", "))
             } else {
               val source = edges.sourcePolicy match {
                 case KeyPolicy.HASH =>
@@ -92,7 +92,7 @@ trait Writer extends Serializable {
                   edge.values.mkString(", "))
             }
       }
-      .mkString(", ")
+      .flatMap(_.toList).mkString(", ")
 
     BATCH_INSERT_TEMPLATE.format(Type.EDGE.toString, name, edges.propertyNames, values)
   }

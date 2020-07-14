@@ -47,23 +47,14 @@ class EdgeProcessor(data: DataFrame,
     data
       .map { row =>
         val sourceField = if (!edgeConfig.isGeo) {
-          if (edgeConfig.sourceField.isEmpty) {
-            row.getLong(row.schema.fieldIndex(edgeConfig.sourceField)).toString
-          } else {
-            row.getString(row.schema.fieldIndex(edgeConfig.sourceField))
-          }
+          row.get(row.schema.fieldIndex(edgeConfig.sourceField)).toString
         } else {
           val lat = row.getDouble(row.schema.fieldIndex(edgeConfig.latitude.get))
           val lng = row.getDouble(row.schema.fieldIndex(edgeConfig.longitude.get))
           indexCells(lat, lng).mkString(",")
         }
 
-        val targetField =
-          if (edgeConfig.targetField.isEmpty) {
-            row.getLong(row.schema.fieldIndex(edgeConfig.targetField)).toString
-          } else {
-            row.getString(row.schema.fieldIndex(edgeConfig.targetField))
-          }
+        val targetField = row.get(row.schema.fieldIndex(edgeConfig.targetField)).toString
 
         val values = for {
           property <- fieldValues if property.trim.length != 0
@@ -83,6 +74,7 @@ class EdgeProcessor(data: DataFrame,
                                                  config.connectionConfig,
                                                  config.executionConfig.retry,
                                                  edgeConfig)
+        writer.prepare()
 
         val futures     = new ProcessResult()
         val errorBuffer = ArrayBuffer[String]()

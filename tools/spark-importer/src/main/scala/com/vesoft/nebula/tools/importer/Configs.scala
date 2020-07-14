@@ -186,12 +186,18 @@ case class HiveSourceConfigEntry(override val category: SourceCategory.Value, ex
   */
 case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
                                   exec: String,
-                                  offset: Long = 0)
-    extends DataSourceConfigEntry {
-  require(exec.trim.length != 0 && offset >= 0)
+                                  server: String,
+                                  user: String,
+                                  password: String,
+                                  encryption: Boolean,
+                                  offset: Long
+                                  )
+  extends DataSourceConfigEntry {
+  require(exec.trim.length != 0 && offset >= 0 && user.trim.length != 0 && password.trim.length != 0)
 
   override def toString: String = {
-    s"Neo4J source exec: ${exec}"
+    s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
+      s" offset: ${offset}, exec: ${exec}"
   }
 }
 
@@ -555,7 +561,7 @@ object Configs {
         }
 
         val edgeName = edgeConfig.getString("name")
-        val fields   = config.getObject("fields").asScala
+        val fields   = edgeConfig.getObject("fields").asScala
         val isGeo = !edgeConfig.hasPath("source") &&
           edgeConfig.hasPath("latitude") &&
           edgeConfig.hasPath("longitude")
@@ -565,7 +571,7 @@ object Configs {
         LOG.info(s"Source Config ${sourceConfig}")
 
         val sinkCategory = toSinkCategory(edgeConfig.getString("sink.type"))
-        val sinkConfig   = dataSinkConfig(sinkCategory, edgeConfig)
+        val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
         val sourceField = if (!isGeo) {
@@ -702,12 +708,15 @@ object Configs {
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
-        if (config.hasPath("offset"))
-          Neo4JSourceConfigEntry(SourceCategory.NEO4J,
-                                 config.getString("exec"),
-                                 config.getLong("offset"))
-        else
-          Neo4JSourceConfigEntry(SourceCategory.NEO4J, config.getString("exec"))
+        val offset = if(config.hasPath("offset")) config.getLong("offset") else 0L
+        val encryption = if(config.hasPath("encryption")) config.getBoolean("encryption") else false
+        Neo4JSourceConfigEntry(SourceCategory.NEO4J,
+          config.getString("exec"),
+          config.getString("server"),
+          config.getString("user"),
+          config.getString("password"),
+          encryption, offset
+        )
       case SourceCategory.JANUS_GRAPH =>
         JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
       case SourceCategory.SOCKET =>

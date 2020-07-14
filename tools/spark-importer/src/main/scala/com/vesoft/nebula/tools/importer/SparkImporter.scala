@@ -16,19 +16,8 @@ import com.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
 import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}
-import com.vesoft.nebula.tools.importer.reader.{
-  CSVReader,
-  HiveReader,
-  JSONReader,
-  KafkaReader,
-  ORCReader,
-  ParquetReader,
-  SocketReader
-}
-import com.vesoft.nebula.tools.importer.writer.{
-  NebulaGraphClientWriter,
-  Writer
-}
+import com.vesoft.nebula.tools.importer.reader.{CSVReader, HiveReader, JSONReader, KafkaReader, Neo4JReader, ORCReader, ParquetReader, SocketReader}
+import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, Writer}
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
 
@@ -64,9 +53,12 @@ object SparkImporter {
     val configs = Configs.parse(c.config)
     LOG.info(s"Config ${configs}")
 
+    val preprocessingSparkConfig = preprocessingConfig(configs)
+
     val session = SparkSession
       .builder()
       .appName(PROGRAM_NAME)
+      .config(preprocessingSparkConfig)
       .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .config(
         new SparkConf()
@@ -167,7 +159,7 @@ object SparkImporter {
       for (edgeConfig <- configs.edgesConfig) {
         LOG.info(s"Processing Edge ${edgeConfig.name}")
 
-        val properties      = edgeConfig.fields.values.map(_.toString).toList
+        val properties      = edgeConfig.fields.values.map(_.unwrapped.toString).toList
         val valueProperties = edgeConfig.fields.keys.toList
         val data            = createDataSource(spark, edgeConfig.dataSourceConfigEntry)
         if (data.isDefined && !c.dry) {
@@ -247,6 +239,10 @@ object SparkImporter {
         val reader = new KafkaReader(session, kafkaConfig.server, kafkaConfig.topic)
         Some(reader.read())
       }
+      case SourceCategory.NEO4J =>
+        val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
+        val reader = new Neo4JReader(session, neo4jConfig.offset, neo4jConfig.exec)
+        Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")
         None
@@ -295,4 +291,35 @@ object SparkImporter {
     * @return
     */
   private[this] def isSuccessfully(code: Int) = code == ErrorCode.SUCCEEDED
+
+  private[this] def preprocessingConfig(configs: Configs): SparkConf = {
+    val sparkConf = new SparkConf()
+    def setAndJudge(sourceConfig: DataSourceConfigEntry) :Unit = {
+      val neo4JSourceConfig = sourceConfig.asInstanceOf[Neo4JSourceConfigEntry]
+      if (sparkConf.contains("spark.neo4j.url")){
+        if(sparkConf.get("spark.neo4j.url")!=neo4JSourceConfig.server
+          ||sparkConf.get("spark.neo4j.user")!=neo4JSourceConfig.user
+          ||sparkConf.get("spark.neo4j.password")!=neo4JSourceConfig.password
+          ||sparkConf.get("spark.neo4j.encryption")!=neo4JSourceConfig.encryption.toString)
+          throw new IllegalArgumentException("neo4j just support one server.")
+      }
+      else {
+        sparkConf.set("spark.neo4j.url", neo4JSourceConfig.server)
+        sparkConf.set("spark.neo4j.user", neo4JSourceConfig.user)
+        sparkConf.set("spark.neo4j.password", neo4JSourceConfig.password)
+        sparkConf.set("spark.neo4j.encryption", neo4JSourceConfig.encryption.toString)
+      }
+    }
+    val tagDataSourceConfigs = configs.tagsConfig
+      .filter(_.dataSourceConfigEntry.category==SourceCategory.NEO4J)
+      .map(_.dataSourceConfigEntry)
+    val edgeDataSourceConfigs = configs.edgesConfig
+      .filter(_.dataSourceConfigEntry.category==SourceCategory.NEO4J)
+      .map(_.dataSourceConfigEntry)
+    tagDataSourceConfigs
+      .union(edgeDataSourceConfigs)
+      .foreach(setAndJudge)
+
+    sparkConf
+  }
 }
