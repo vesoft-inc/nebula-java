@@ -19,7 +19,6 @@
 package com.facebook.thrift.async;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -37,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Contains selector thread which transitions method call objects
  */
-public class TAsyncClientManager implements Serializable {
+public class TAsyncClientManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(TAsyncClientManager.class.getName());
 
   private final SelectThread selectThread;
@@ -66,7 +65,7 @@ public class TAsyncClientManager implements Serializable {
     return selectThread.isAlive();
   }
 
-  private class SelectThread extends Thread implements Serializable {
+  private class SelectThread extends Thread {
     private final Selector selector;
     private volatile boolean running;
     private final TreeSet<TAsyncMethodCall> timeoutWatchSet = new TreeSet<TAsyncMethodCall>(new TAsyncMethodCallTimeoutComparator());
@@ -184,7 +183,7 @@ public class TAsyncClientManager implements Serializable {
   }
 
   /** Comparator used in TreeSet */
-  private static class TAsyncMethodCallTimeoutComparator implements Comparator<TAsyncMethodCall>, Serializable {
+  private static class TAsyncMethodCallTimeoutComparator implements Comparator<TAsyncMethodCall> {
     public int compare(TAsyncMethodCall left, TAsyncMethodCall right) {
       if (left.getTimeoutTimestamp() == right.getTimeoutTimestamp()) {
         return (int)(left.getSequenceId() - right.getSequenceId());
