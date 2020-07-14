@@ -15,8 +15,7 @@ import com.vesoft.nebula.tools.importer.{
 }
 import com.vesoft.nebula.tools.importer.writer.{
   NebulaGraphClientWriter,
-  NebulaWriterCallback,
-  Writer
+  NebulaWriterCallback
 }
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
@@ -25,8 +24,8 @@ import scala.collection.mutable.ArrayBuffer
 
 class EdgeProcessor(data: DataFrame,
                     edgeConfig: EdgeConfigEntry,
-                    sourceProperties: List[String],
-                    fieldValues: List[String],
+                    fieldKeys: List[String],
+                    nebulaKeys: List[String],
                     config: Configs,
                     batchSuccess: LongAccumulator,
                     batchFailure: LongAccumulator,
@@ -47,17 +46,28 @@ class EdgeProcessor(data: DataFrame,
     data
       .map { row =>
         val sourceField = if (!edgeConfig.isGeo) {
-          row.get(row.schema.fieldIndex(edgeConfig.sourceField)).toString
+          val sourceIndex = row.schema.fieldIndex(edgeConfig.sourceField)
+          if (edgeConfig.sourcePolicy.isEmpty) {
+            row.getLong(sourceIndex).toString
+          } else {
+            row.getString(sourceIndex)
+          }
         } else {
           val lat = row.getDouble(row.schema.fieldIndex(edgeConfig.latitude.get))
           val lng = row.getDouble(row.schema.fieldIndex(edgeConfig.longitude.get))
           indexCells(lat, lng).mkString(",")
         }
 
-        val targetField = row.get(row.schema.fieldIndex(edgeConfig.targetField)).toString
+        val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
+        val targetField =
+          if (edgeConfig.targetPolicy.isEmpty) {
+            row.getLong(targetIndex).toString
+          } else {
+            row.getString(targetIndex)
+          }
 
         val values = for {
-          property <- fieldValues if property.trim.length != 0
+          property <- fieldKeys if property.trim.length != 0
         } yield extraValue(row, property)
 
         if (edgeConfig.rankingField.isDefined) {
@@ -82,7 +92,7 @@ class EdgeProcessor(data: DataFrame,
         val service     = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
 
         iterator.grouped(edgeConfig.batch).foreach { edge =>
-          val edges = Edges(sourceProperties,
+          val edges = Edges(nebulaKeys,
                             edge.toList,
                             None,
                             edgeConfig.sourcePolicy,

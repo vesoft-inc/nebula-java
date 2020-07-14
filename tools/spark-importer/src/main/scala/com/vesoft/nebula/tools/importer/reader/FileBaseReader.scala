@@ -69,6 +69,7 @@ class JSONReader(override val session: SparkSession, override val path: String)
 
 /**
   * The CSVReader extend the FileBaseReader and support read csv file from HDFS.
+  * All types of the structure are StringType.
   *
   * @param session
   * @param path

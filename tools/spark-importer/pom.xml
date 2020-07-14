@@ -400,11 +400,6 @@
             <version>${scopt.version}</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.48</version>
-        </dependency>
-        <dependency>
             <groupId>io.sgr</groupId>
             <artifactId>s2-geometry-library-java</artifactId>
             <version>${s2.version}</version>
@@ -413,7 +408,6 @@
             <groupId>com.vesoft</groupId>
             <artifactId>client</artifactId>
             <version>${nebula.version}</version>
-<!--            <type>pom</type>-->
             <exclusions>
                 <exclusion>
                     <artifactId>commons-lang3</artifactId>

@@ -9,7 +9,7 @@ package com.vesoft.nebula.tools.importer.reader
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
-  *
+  * The Reader is used for create a DataFrame from the source. Such as Hive or HDFS.
   */
 trait Reader extends Serializable {
   def session: SparkSession

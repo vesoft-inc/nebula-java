@@ -68,7 +68,7 @@ package object importer {
       this(source, destination, None, values)
     }
 
-    def propertyValues: String = values.mkString(",")
+    def propertyValues: String = values.mkString(", ")
 
     override def toString: String = {
       s"Edge: ${source}->${destination}@${ranking} values: ${propertyValues}"

@@ -16,7 +16,16 @@ import com.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
 import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}
-import com.vesoft.nebula.tools.importer.reader.{CSVReader, HiveReader, JSONReader, KafkaReader, Neo4JReader, ORCReader, ParquetReader, SocketReader}
+import com.vesoft.nebula.tools.importer.reader.{
+  CSVReader,
+  HiveReader,
+  JSONReader,
+  KafkaReader,
+  ORCReader,
+  ParquetReader,
+  SocketReader,
+  Neo4JReader
+}
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, Writer}
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
@@ -131,8 +140,8 @@ object SparkImporter {
       for (tagConfig <- configs.tagsConfig) {
         LOG.info(s"Processing Tag ${tagConfig.name}")
 
-        val fieldKeys   = tagConfig.fields.keys.toList
-        val fieldValues = tagConfig.fields.values.map(_.unwrapped.toString).toList
+        val fieldKeys  = tagConfig.fields.keys.toList
+        val nebulaKeys = tagConfig.fields.values.map(_.unwrapped.toString).toList
 
         val data = createDataSource(spark, tagConfig.dataSourceConfigEntry)
         if (data.isDefined && !c.dry) {
@@ -143,7 +152,7 @@ object SparkImporter {
           val processor = new VerticesProcessor(repartition(data.get, tagConfig.partition),
                                                 tagConfig,
                                                 fieldKeys,
-                                                fieldValues,
+                                                nebulaKeys,
                                                 configs,
                                                 batchSuccess,
                                                 batchFailure)
@@ -159,17 +168,17 @@ object SparkImporter {
       for (edgeConfig <- configs.edgesConfig) {
         LOG.info(s"Processing Edge ${edgeConfig.name}")
 
-        val properties      = edgeConfig.fields.values.map(_.unwrapped.toString).toList
-        val valueProperties = edgeConfig.fields.keys.toList
-        val data            = createDataSource(spark, edgeConfig.dataSourceConfigEntry)
+        val fieldKeys  = edgeConfig.fields.keys.toList
+        val nebulaKeys = edgeConfig.fields.values.map(_.unwrapped.toString).toList
+        val data       = createDataSource(spark, edgeConfig.dataSourceConfigEntry)
         if (data.isDefined && !c.dry) {
           val batchSuccess = spark.sparkContext.longAccumulator(s"batchSuccess.${edgeConfig.name}")
           val batchFailure = spark.sparkContext.longAccumulator(s"batchFailure.${edgeConfig.name}")
 
           val processor = new EdgeProcessor(repartition(data.get, edgeConfig.partition),
                                             edgeConfig,
-                                            properties,
-                                            valueProperties,
+                                            fieldKeys,
+                                            nebulaKeys,
                                             configs,
                                             batchSuccess,
                                             batchFailure)

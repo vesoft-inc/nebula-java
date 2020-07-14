@@ -31,7 +31,77 @@ import org.apache.spark.util.LongAccumulator
 
 import scala.collection.JavaConverters._
 
-abstract class ServerBaseWriter {}
+abstract class ServerBaseWriter extends Writer {
+  private[this] val BATCH_INSERT_TEMPLATE               = "INSERT %s %s(%s) VALUES %s"
+  private[this] val INSERT_VALUE_TEMPLATE               = "%s: (%s)"
+  private[this] val INSERT_VALUE_TEMPLATE_WITH_POLICY   = "%s(\"%s\"): (%s)"
+  private[this] val ENDPOINT_TEMPLATE                   = "%s(\"%s\")"
+  private[this] val EDGE_VALUE_WITHOUT_RANKING_TEMPLATE = "%s->%s: (%s)"
+  private[this] val EDGE_VALUE_TEMPLATE                 = "%s->%s@%d: (%s)"
+
+  def toExecuteSentence(name: String, vertices: Vertices): String = {
+    BATCH_INSERT_TEMPLATE.format(
+      Type.VERTEX.toString,
+      name,
+      vertices.propertyNames,
+      vertices.values
+        .map { vertex =>
+          // TODO Check
+          if (vertices.policy.isEmpty) {
+            INSERT_VALUE_TEMPLATE.format(vertex.vertexID, vertex.propertyValues)
+          } else {
+            vertices.policy.get match {
+              case KeyPolicy.HASH =>
+                INSERT_VALUE_TEMPLATE_WITH_POLICY
+                  .format(KeyPolicy.HASH.toString, vertex.vertexID, vertex.propertyValues)
+              case KeyPolicy.UUID =>
+                INSERT_VALUE_TEMPLATE_WITH_POLICY
+                  .format(KeyPolicy.UUID.toString, vertex.vertexID, vertex.propertyValues)
+              case _ =>
+                throw new IllegalArgumentException("Not Support")
+            }
+          }
+        }
+        .mkString(", ")
+    )
+  }
+
+  def toExecuteSentence(name: String, edges: Edges): String = {
+    val values = edges.values
+      .map { edge =>
+        (for (element <- edge.source.split(","))
+          yield {
+            // TODO Check and Test
+            val source = edges.sourcePolicy match {
+              case Some(KeyPolicy.HASH) =>
+                ENDPOINT_TEMPLATE.format(KeyPolicy.HASH.toString, element)
+              case Some(KeyPolicy.UUID) =>
+                ENDPOINT_TEMPLATE.format(KeyPolicy.UUID.toString, element)
+              case None =>
+                element
+            }
+
+            val target = edges.targetPolicy match {
+              case Some(KeyPolicy.HASH) =>
+                ENDPOINT_TEMPLATE.format(KeyPolicy.HASH.toString, edge.destination)
+              case Some(KeyPolicy.UUID) =>
+                ENDPOINT_TEMPLATE.format(KeyPolicy.UUID.toString, edge.destination)
+              case None =>
+                edge.destination
+            }
+
+            if (edge.ranking.isEmpty)
+              EDGE_VALUE_WITHOUT_RANKING_TEMPLATE
+                .format(source, target, edge.propertyValues)
+            else
+              EDGE_VALUE_TEMPLATE.format(source, target, edge.ranking.get, edge.propertyValues)
+          }).mkString(", ")
+
+      }
+      .mkString(", ")
+    BATCH_INSERT_TEMPLATE.format(Type.EDGE.toString, name, edges.propertyNames, values)
+  }
+}
 
 /**
   *
@@ -41,8 +111,7 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
                               connectionConfigEntry: ConnectionConfigEntry,
                               executionRetry: Int,
                               config: SchemaConfigEntry)
-    extends ServerBaseWriter
-    with Writer {
+    extends ServerBaseWriter {
 
   require(dataBaseConfigEntry.addresses.size != 0 && dataBaseConfigEntry.space.trim.size != 0)
   require(userConfigEntry.user.trim.size != 0 && userConfigEntry.password.trim.size != 0)
@@ -72,12 +141,12 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
   def prepare(): Unit = {
     val code = client.connect()
     if (code != ErrorCode.SUCCEEDED) {
-      LOG.error("Connection Failed")
+      throw new RuntimeException("Connection Failed")
     }
 
     val switchCode = client.switchSpace(dataBaseConfigEntry.space).get().get()
     if (switchCode != ErrorCode.SUCCEEDED) {
-      LOG.error("Switch Failed")
+      throw new RuntimeException("Switch Failed")
     }
 
     LOG.info(s"Connection to ${dataBaseConfigEntry.addresses}")
@@ -86,22 +155,12 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
   override def writeVertices(vertices: Vertices): ListenableFuture[Optional[Integer]] = {
     val sentence = toExecuteSentence(config.name, vertices)
     LOG.info(sentence)
-    if (client == null) {
-      LOG.info("Client is null")
-    } else {
-      LOG.info("Client is OK")
-    }
     client.execute(sentence)
   }
 
   override def writeEdges(edges: Edges): ListenableFuture[Optional[Integer]] = {
     val sentence = toExecuteSentence(config.name, edges)
     LOG.info(sentence)
-    if (client == null) {
-      LOG.info("Client is null")
-    } else {
-      LOG.info("Client is OK")
-    }
     client.execute(sentence)
   }
 
@@ -147,8 +206,7 @@ class NebulaWriterCallback(latch: CountDownLatch,
   * @param space
   */
 class NebulaStorageClientWriter(addresses: List[(String, Int)], space: String)
-    extends ServerBaseWriter
-    with Writer {
+    extends ServerBaseWriter {
 
   require(addresses.size != 0)
 

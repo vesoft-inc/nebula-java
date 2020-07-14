@@ -25,10 +25,21 @@ import org.apache.spark.util.LongAccumulator
 
 import scala.collection.mutable.ArrayBuffer
 
+/**
+  *
+  * @param data
+  * @param tagConfig
+  * @param fieldKeys
+  * @param nebulaKeys
+  * @param config
+  * @param batchSuccess
+  * @param batchFailure
+  * @param saveCheckPoint
+  */
 class VerticesProcessor(data: DataFrame,
                         tagConfig: TagConfigEntry,
-                        sourceProperties: List[String],
-                        fieldValues: List[String],
+                        fieldKeys: List[String],
+                        nebulaKeys: List[String],
                         config: Configs,
                         batchSuccess: LongAccumulator,
                         batchFailure: LongAccumulator,
@@ -48,15 +59,15 @@ class VerticesProcessor(data: DataFrame,
           if (tagConfig.vertexPolicy.isEmpty) {
             val index = row.schema.fieldIndex(tagConfig.vertexField)
             if (row.schema.fields(index).dataType == LongType)
-              row.getLong(row.schema.fieldIndex(tagConfig.vertexField)).toString
+              row.getLong(index).toString
             else
-              row.getString(row.schema.fieldIndex(tagConfig.vertexField))
+              row.getString(index)
           } else {
             row.getString(row.schema.fieldIndex(tagConfig.vertexField))
           }
 
         val values = for {
-          property <- fieldValues if property.trim.length != 0
+          property <- fieldKeys if property.trim.length != 0
         } yield extraValue(row, property)
         Vertex(vertexID, values)
       }(Encoders.kryo[Vertex])
@@ -74,7 +85,7 @@ class VerticesProcessor(data: DataFrame,
         val rateLimiter = RateLimiter.create(config.rateConfig.limit)
         val service     = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
         iterator.grouped(tagConfig.batch).foreach { vertex =>
-          val vertices = Vertices(sourceProperties, vertex.toList, None, tagConfig.vertexPolicy)
+          val vertices = Vertices(nebulaKeys, vertex.toList, None, tagConfig.vertexPolicy)
           if (rateLimiter.tryAcquire(config.rateConfig.timeout, TimeUnit.MILLISECONDS)) {
             val future = writer.writeVertices(vertices)
             futures += future
