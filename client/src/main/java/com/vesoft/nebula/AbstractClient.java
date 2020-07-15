@@ -16,14 +16,17 @@ import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.util.List;
+import java.util.Random;
 
 public abstract class AbstractClient implements Client {
+    private static final long serialVersionUID = 7498696273130052807L;
     protected final List<HostAndPort> addresses;
     protected final int connectionRetry;
     protected final int executionRetry;
     protected final int timeout;
     protected TProtocol protocol;
     protected TTransport transport;
+    protected int addressPosition = 0;
 
     /**
      * The Constructor of Client.
@@ -51,6 +54,8 @@ public abstract class AbstractClient implements Client {
         this.timeout = timeout;
         this.connectionRetry = connectionRetry;
         this.executionRetry = executionRetry;
+        Random random = new Random(System.currentTimeMillis());
+        addressPosition = addresses.size() > 0 ? random.nextInt(addresses.size()) : 0;
     }
 
     /**

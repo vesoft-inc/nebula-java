@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.client.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
@@ -18,7 +20,6 @@ import com.vesoft.nebula.graph.GraphService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,13 +27,15 @@ import org.slf4j.LoggerFactory;
  * The Java thrift client wrapper.
  */
 public class GraphClientImpl extends AbstractClient implements GraphClient {
-
+    private static final long serialVersionUID = 2292352442303878017L;
     private static final Logger LOGGER = LoggerFactory.getLogger(GraphClientImpl.class);
 
     protected String user;
     protected String password;
     private long sessionID;
     private GraphService.Client client;
+    private HostAndPort address;
+    private String space;
 
     public GraphClientImpl(List<HostAndPort> addresses, int timeout,
                            int connectionRetry, int executionRetry) {
@@ -49,9 +52,10 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
 
     @Override
     public int doConnect(List<HostAndPort> addresses) throws TException {
-        Random random = new Random(System.currentTimeMillis());
-        int position = random.nextInt(addresses.size());
-        HostAndPort address = addresses.get(position);
+        checkArgument(!addresses.isEmpty());
+        int position = addressPosition % addresses.size();
+        addressPosition++; // when do retry, use a diffrent host
+        this.address = addresses.get(position);
         transport = new TSocket(address.getHostText(), address.getPort(), timeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
@@ -78,6 +82,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      * @return The ErrorCode of status, 0 is succeeded.
      */
     public int switchSpace(String space) {
+        this.space = space;
         return execute(String.format("USE %s", space));
     }
 
@@ -159,5 +164,13 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public HostAndPort getAddress() {
+        return address;
+    }
+
+    public String getUsedSpace() {
+        return this.space;
     }
 }

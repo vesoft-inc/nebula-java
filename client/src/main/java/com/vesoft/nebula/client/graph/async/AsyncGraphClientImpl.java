@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.client.graph.async;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.facebook.thrift.TBase;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.async.TAsyncClientManager;
@@ -26,7 +28,6 @@ import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +66,9 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
 
     @Override
     public int doConnect(List<HostAndPort> addresses) throws TException {
-        Random random = new Random(System.currentTimeMillis());
-        int position = random.nextInt(addresses.size());
+        checkArgument(!addresses.isEmpty());
+        int position = addressPosition % addresses.size();
+        addressPosition++; // when do retry, use a diffrent host
         HostAndPort address = addresses.get(position);
 
         try {
