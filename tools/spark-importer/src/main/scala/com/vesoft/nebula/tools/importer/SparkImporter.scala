@@ -301,33 +301,39 @@ object SparkImporter {
     */
   private[this] def isSuccessfully(code: Int) = code == ErrorCode.SUCCEEDED
 
+  /**
+   * preprocessing configs
+   *
+   * @param configs
+   * @return SparkConf
+   */
   private[this] def preprocessingConfig(configs: Configs): SparkConf = {
     val sparkConf = new SparkConf()
-    def setAndJudge(sourceConfig: DataSourceConfigEntry) :Unit = {
-      val neo4JSourceConfig = sourceConfig.asInstanceOf[Neo4JSourceConfigEntry]
-      if (sparkConf.contains("spark.neo4j.url")){
-        if(sparkConf.get("spark.neo4j.url")!=neo4JSourceConfig.server
-          ||sparkConf.get("spark.neo4j.user")!=neo4JSourceConfig.user
-          ||sparkConf.get("spark.neo4j.password")!=neo4JSourceConfig.password
-          ||sparkConf.get("spark.neo4j.encryption")!=neo4JSourceConfig.encryption.toString)
-          throw new IllegalArgumentException("neo4j just support one server.")
-      }
-      else {
-        sparkConf.set("spark.neo4j.url", neo4JSourceConfig.server)
-        sparkConf.set("spark.neo4j.user", neo4JSourceConfig.user)
-        sparkConf.set("spark.neo4j.password", neo4JSourceConfig.password)
-        sparkConf.set("spark.neo4j.encryption", neo4JSourceConfig.encryption.toString)
-      }
+
+    val tagNeo4jConfig = configs.tagsConfig
+      .filter(_.dataSourceConfigEntry.category==SourceCategory.NEO4J)
+    val edgeNeo4jConfig = configs.edgesConfig
+      .filter(_.dataSourceConfigEntry.category==SourceCategory.NEO4J)
+
+    val tagNeo4jDataSourceConfigs = tagNeo4jConfig
+      .map(_.dataSourceConfigEntry.asInstanceOf[Neo4JSourceConfigEntry])
+    val edgeNeo4jDataSourceConfigs = edgeNeo4jConfig
+      .map(_.dataSourceConfigEntry.asInstanceOf[Neo4JSourceConfigEntry])
+
+    val dataSourceConfig = tagNeo4jDataSourceConfigs.union(edgeNeo4jDataSourceConfigs)
+      .map(x=>(x.server,x.user,x.password,x.encryption.toString)).distinct
+    if (dataSourceConfig.length>1)
+      throw new IllegalArgumentException("neo4j only support one server.")
+    else if (dataSourceConfig.length==1){
+      sparkConf.set("spark.neo4j.url", dataSourceConfig.head._1)
+      sparkConf.set("spark.neo4j.user", dataSourceConfig.head._2)
+      sparkConf.set("spark.neo4j.password", dataSourceConfig.head._3)
+      sparkConf.set("spark.neo4j.encryption", dataSourceConfig.head._4)
     }
-    val tagDataSourceConfigs = configs.tagsConfig
-      .filter(_.dataSourceConfigEntry.category==SourceCategory.NEO4J)
-      .map(_.dataSourceConfigEntry)
-    val edgeDataSourceConfigs = configs.edgesConfig
-      .filter(_.dataSourceConfigEntry.category==SourceCategory.NEO4J)
-      .map(_.dataSourceConfigEntry)
-    tagDataSourceConfigs
-      .union(edgeDataSourceConfigs)
-      .foreach(setAndJudge)
+
+    // judge neo4j partition must eq 1
+    if (tagNeo4jConfig.exists(_.partition!=1)||edgeNeo4jConfig.exists(_.partition!=1))
+      throw new IllegalArgumentException("neo4j's partition must be 1.")
 
     sparkConf
   }
