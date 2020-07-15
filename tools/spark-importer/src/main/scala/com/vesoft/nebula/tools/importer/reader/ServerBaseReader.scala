@@ -80,26 +80,13 @@ class MySQLReader(override val session: SparkSession,
 /**
   * @{link Neo4JReader} extends the @{link ServerBaseReader}
   * @param session
-  * @param url
-  * @param user
-  * @param password
-  * @param encryptionStatus
   * @param sentence
   */
-class Neo4JReader(override val session: SparkSession,
-                  url: String,
-                  user: String,
-                  password: Option[String],
-                  encryptionStatus: Boolean,
-                  sentence: String)
+class Neo4JReader(override val session: SparkSession, offset: Long, sentence: String)
     extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = {
     val neo = Neo4j(session.sparkContext)
-    neo
-      .pattern("Person", Seq("KNOWS"), "Person")
-      .partitions(12)
-      .batch(100)
-      .loadDataFrame
+    neo.cypher(if (offset <= 0) sentence else sentence + s" SKIP ${offset}").loadDataFrame
   }
 }
 
