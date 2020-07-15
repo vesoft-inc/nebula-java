@@ -23,7 +23,8 @@ import com.vesoft.nebula.tools.importer.reader.{
   KafkaReader,
   ORCReader,
   ParquetReader,
-  SocketReader
+  SocketReader,
+  Neo4JReader
 }
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, Writer}
 import org.apache.log4j.Logger
@@ -61,9 +62,12 @@ object SparkImporter {
     val configs = Configs.parse(c.config)
     LOG.info(s"Config ${configs}")
 
+    val preprocessingSparkConfig = preprocessingConfig(configs)
+
     val session = SparkSession
       .builder()
       .appName(PROGRAM_NAME)
+      .config(preprocessingSparkConfig)
       .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .config(
         new SparkConf()
@@ -244,6 +248,10 @@ object SparkImporter {
         val reader = new KafkaReader(session, kafkaConfig.server, kafkaConfig.topic)
         Some(reader.read())
       }
+      case SourceCategory.NEO4J =>
+        val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
+        val reader      = new Neo4JReader(session, neo4jConfig.offset, neo4jConfig.exec)
+        Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")
         None
@@ -292,4 +300,43 @@ object SparkImporter {
     * @return
     */
   private[this] def isSuccessfully(code: Int) = code == ErrorCode.SUCCEEDED
+
+  /**
+    * preprocessing configs
+    *
+    * @param configs
+    * @return SparkConf
+    */
+  private[this] def preprocessingConfig(configs: Configs): SparkConf = {
+    val sparkConf = new SparkConf()
+
+    val tagNeo4jConfig = configs.tagsConfig
+      .filter(_.dataSourceConfigEntry.category == SourceCategory.NEO4J)
+    val edgeNeo4jConfig = configs.edgesConfig
+      .filter(_.dataSourceConfigEntry.category == SourceCategory.NEO4J)
+
+    val tagNeo4jDataSourceConfigs = tagNeo4jConfig
+      .map(_.dataSourceConfigEntry.asInstanceOf[Neo4JSourceConfigEntry])
+    val edgeNeo4jDataSourceConfigs = edgeNeo4jConfig
+      .map(_.dataSourceConfigEntry.asInstanceOf[Neo4JSourceConfigEntry])
+
+    val dataSourceConfig = tagNeo4jDataSourceConfigs
+      .union(edgeNeo4jDataSourceConfigs)
+      .map(x => (x.server, x.user, x.password, x.encryption.toString))
+      .distinct
+    if (dataSourceConfig.length > 1)
+      throw new IllegalArgumentException("neo4j only support one server.")
+    else if (dataSourceConfig.length == 1) {
+      sparkConf.set("spark.neo4j.url", dataSourceConfig.head._1)
+      sparkConf.set("spark.neo4j.user", dataSourceConfig.head._2)
+      sparkConf.set("spark.neo4j.password", dataSourceConfig.head._3)
+      sparkConf.set("spark.neo4j.encryption", dataSourceConfig.head._4)
+    }
+
+    // judge neo4j partition must eq 1
+    if (tagNeo4jConfig.exists(_.partition != 1) || edgeNeo4jConfig.exists(_.partition != 1))
+      throw new IllegalArgumentException("neo4j's partition must be 1.")
+
+    sparkConf
+  }
 }
