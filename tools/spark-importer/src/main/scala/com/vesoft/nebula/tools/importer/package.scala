@@ -13,20 +13,20 @@ import scala.collection.mutable.ListBuffer
 
 package object importer {
 
-  type GraphSpaceID = Int
-  type PartitionID = Int
-  type TagID = Int
-  type EdgeType = Int
-  type SchemaID = Either[TagID, EdgeType]
-  type TagVersion = Long
-  type EdgeVersion = Long
-  type SchemaVersion = Either[TagVersion, EdgeVersion]
-  type VertexID = Long
-  type VertexIDSlice = String
-  type EdgeRank = Long
-  type PropertyNames = List[String]
+  type GraphSpaceID   = Int
+  type PartitionID    = Int
+  type TagID          = Int
+  type EdgeType       = Int
+  type SchemaID       = Either[TagID, EdgeType]
+  type TagVersion     = Long
+  type EdgeVersion    = Long
+  type SchemaVersion  = Either[TagVersion, EdgeVersion]
+  type VertexID       = Long
+  type VertexIDSlice  = String
+  type EdgeRank       = Long
+  type PropertyNames  = List[String]
   type PropertyValues = List[Any]
-  type ProcessResult = ListBuffer[ListenableFuture[Optional[Integer]]]
+  type ProcessResult  = ListBuffer[ListenableFuture[Optional[Integer]]]
 
   case class Vertex(vertexID: VertexIDSlice, values: PropertyValues) {
 

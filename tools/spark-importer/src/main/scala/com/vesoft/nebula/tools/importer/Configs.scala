@@ -190,10 +190,10 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
                                   user: String,
                                   password: String,
                                   encryption: Boolean,
-                                  offset: Long
-                                  )
-  extends DataSourceConfigEntry {
-  require(exec.trim.length != 0 && offset >= 0 && user.trim.length != 0 && password.trim.length != 0)
+                                  offset: Long)
+    extends DataSourceConfigEntry {
+  require(
+    exec.trim.length != 0 && offset >= 0 && user.trim.length != 0 && password.trim.length != 0)
 
   override def toString: String = {
     s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
@@ -708,15 +708,16 @@ object Configs {
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
-        val offset = if(config.hasPath("offset")) config.getLong("offset") else 0L
-        val encryption = if(config.hasPath("encryption")) config.getBoolean("encryption") else false
+        val offset = if (config.hasPath("offset")) config.getLong("offset") else 0L
+        val encryption =
+          if (config.hasPath("encryption")) config.getBoolean("encryption") else false
         Neo4JSourceConfigEntry(SourceCategory.NEO4J,
-          config.getString("exec"),
-          config.getString("server"),
-          config.getString("user"),
-          config.getString("password"),
-          encryption, offset
-        )
+                               config.getString("exec"),
+                               config.getString("server"),
+                               config.getString("user"),
+                               config.getString("password"),
+                               encryption,
+                               offset)
       case SourceCategory.JANUS_GRAPH =>
         JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
       case SourceCategory.SOCKET =>
