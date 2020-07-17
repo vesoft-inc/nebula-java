@@ -158,6 +158,8 @@ object SparkImporter {
                                                 batchFailure)
 
           processor.process()
+          LOG.info(s"batchSuccess.${tagConfig.name}: ${batchSuccess.value}")
+          LOG.info(s"batchFailure.${tagConfig.name}: ${batchFailure.value}")
         }
       }
     } else {

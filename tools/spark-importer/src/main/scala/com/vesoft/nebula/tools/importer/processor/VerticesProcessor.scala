@@ -19,6 +19,7 @@ import com.vesoft.nebula.tools.importer.{
   Vertices
 }
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
+import org.apache.log4j.Logger
 import org.apache.spark.sql.types.LongType
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
@@ -45,6 +46,9 @@ class VerticesProcessor(data: DataFrame,
                         batchFailure: LongAccumulator,
                         saveCheckPoint: Boolean = false)
     extends Processor {
+
+  @transient lazy val LOG = Logger.getLogger(this.getClass)
+
   override def process(): Unit = {
     val checkPoint = if (!saveCheckPoint) {
       None
@@ -91,17 +95,15 @@ class VerticesProcessor(data: DataFrame,
             futures += future
 
             if (futures.size == 100) { // TODO configurable ?
-              val latch = new CountDownLatch(100)
-              for (future <- futures) {
-                Futures.addCallback(future,
-                                    new NebulaWriterCallback(latch,
-                                                             batchSuccess,
-                                                             batchFailure,
-                                                             checkPoint,
-                                                             tagConfig.batch),
-                                    service)
-              }
-              latch.await()
+              val latch      = new CountDownLatch(100)
+              val allFutures = Futures.allAsList(futures: _*)
+              Futures.addCallback(allFutures,
+                                  new NebulaWriterCallback(latch,
+                                                           batchSuccess,
+                                                           batchFailure,
+                                                           checkPoint,
+                                                           tagConfig.batch),
+                                  service)
               futures.clear()
             }
           } else {
@@ -119,16 +121,15 @@ class VerticesProcessor(data: DataFrame,
         }
 
         if (!futures.isEmpty) {
-          val latch = new CountDownLatch(futures.size)
-          for (future <- futures) {
-            Futures.addCallback(future,
-                                new NebulaWriterCallback(latch,
-                                                         batchSuccess,
-                                                         batchFailure,
-                                                         checkPoint,
-                                                         tagConfig.batch),
-                                service)
-          }
+          val latch      = new CountDownLatch(futures.size)
+          val allFutures = Futures.allAsList(futures: _*)
+          Futures.addCallback(allFutures,
+                              new NebulaWriterCallback(latch,
+                                                       batchSuccess,
+                                                       batchFailure,
+                                                       checkPoint,
+                                                       tagConfig.batch),
+                              service)
           latch.await()
         }
         service.shutdown()
@@ -136,5 +137,9 @@ class VerticesProcessor(data: DataFrame,
           Thread.sleep(10)
         }
       }
+
+    if (checkPoint.isDefined) {
+      LOG.info(s"checkPoint.${tagConfig.name}: ${checkPoint.get.value}")
+    }
   }
 }

@@ -174,28 +174,34 @@ class NebulaWriterCallback(latch: CountDownLatch,
                            batchFailure: LongAccumulator,
                            checkPointOpt: Option[LongAccumulator],
                            batchSize: Int)
-    extends FutureCallback[Optional[Integer]] {
+    extends FutureCallback[java.util.List[Optional[Integer]]] {
 
   private[this] val DEFAULT_ERROR_TIMES = 16
 
-  override def onSuccess(result: Optional[Integer]): Unit = {
+  override def onSuccess(results: java.util.List[Optional[Integer]]): Unit = {
     latch.countDown()
-    if (result.get() == ErrorCode.SUCCEEDED) {
-      batchSuccess.add(1)
-      if (checkPointOpt.isDefined) {
-        checkPointOpt.get.add(batchSize)
+    for (result <- results.asScala) {
+      if (result.get() == ErrorCode.SUCCEEDED) {
+        batchSuccess.add(1)
+        if (checkPointOpt.isDefined) {
+          checkPointOpt.get.add(batchSize)
+        }
+      } else {
+        batchFailure.add(1)
       }
-    } else {
-      batchFailure.add(1)
     }
   }
 
   override def onFailure(t: Throwable): Unit = {
     latch.countDown()
-    if (batchFailure.value > DEFAULT_ERROR_TIMES) {
-      throw TooManyErrorsException("too many errors")
+    if (checkPointOpt.isEmpty) {
+      if (batchFailure.value > DEFAULT_ERROR_TIMES) {
+        throw TooManyErrorsException("too many errors")
+      } else {
+        batchFailure.add(1)
+      }
     } else {
-      batchFailure.add(1)
+      throw new RuntimeException(s"Currently Offset is ${checkPointOpt.get.value}")
     }
   }
 }

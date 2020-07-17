@@ -1,3 +1,9 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.tools.importer.processor
 
 import java.util.concurrent.{CountDownLatch, Executors, TimeUnit}
@@ -13,10 +19,8 @@ import com.vesoft.nebula.tools.importer.{
   ProcessResult,
   TooManyErrorsException
 }
-import com.vesoft.nebula.tools.importer.writer.{
-  NebulaGraphClientWriter,
-  NebulaWriterCallback
-}
+import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
+import org.apache.log4j.Logger
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
 
@@ -31,6 +35,8 @@ class EdgeProcessor(data: DataFrame,
                     batchFailure: LongAccumulator,
                     saveCheckPoint: Boolean = false)
     extends Processor {
+
+  @transient lazy val LOG = Logger.getLogger(this.getClass)
 
   private[this] val DEFAULT_MIN_CELL_LEVEL = 10
   private[this] val DEFAULT_MAX_CELL_LEVEL = 18
@@ -92,27 +98,23 @@ class EdgeProcessor(data: DataFrame,
         val service     = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
 
         iterator.grouped(edgeConfig.batch).foreach { edge =>
-          val edges = Edges(nebulaKeys,
-                            edge.toList,
-                            None,
-                            edgeConfig.sourcePolicy,
-                            edgeConfig.targetPolicy)
+          val edges =
+            Edges(nebulaKeys, edge.toList, None, edgeConfig.sourcePolicy, edgeConfig.targetPolicy)
 
           if (rateLimiter.tryAcquire(config.rateConfig.timeout, TimeUnit.MILLISECONDS)) {
             val future = writer.writeEdges(edges)
             futures += future
 
             if (futures.size == 100) { // TODO configurable ?
-              val latch = new CountDownLatch(100)
-              for (future <- futures) {
-                Futures.addCallback(future,
-                                    new NebulaWriterCallback(latch,
-                                                             batchSuccess,
-                                                             batchFailure,
-                                                             checkPoint,
-                                                             edgeConfig.batch),
-                                    service)
-              }
+              val latch      = new CountDownLatch(100)
+              val allFutures = Futures.allAsList(futures: _*)
+              Futures.addCallback(allFutures,
+                                  new NebulaWriterCallback(latch,
+                                                           batchSuccess,
+                                                           batchFailure,
+                                                           checkPoint,
+                                                           edgeConfig.batch),
+                                  service)
               latch.await()
               futures.clear()
             }
@@ -131,16 +133,15 @@ class EdgeProcessor(data: DataFrame,
         }
 
         if (!futures.isEmpty) {
-          val latch = new CountDownLatch(futures.size)
-          for (future <- futures) {
-            Futures.addCallback(future,
-                                new NebulaWriterCallback(latch,
-                                                         batchSuccess,
-                                                         batchFailure,
-                                                         checkPoint,
-                                                         edgeConfig.batch),
-                                service)
-          }
+          val latch      = new CountDownLatch(futures.size)
+          val allFutures = Futures.allAsList(futures: _*)
+          Futures.addCallback(allFutures,
+                              new NebulaWriterCallback(latch,
+                                                       batchSuccess,
+                                                       batchFailure,
+                                                       checkPoint,
+                                                       edgeConfig.batch),
+                              service)
           latch.await()
         }
 
@@ -149,6 +150,10 @@ class EdgeProcessor(data: DataFrame,
           Thread.sleep(10)
         }
       }
+
+    if (checkPoint.isDefined) {
+      LOG.info(s"checkPoint.${edgeConfig.name}: ${checkPoint.get.value}")
+    }
   }
 
   private[this] def indexCells(lat: Double, lng: Double): IndexedSeq[Long] = {
