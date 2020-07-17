@@ -21,7 +21,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import scala.collection.immutable
 
 object Spark {
-  private val master  = "local[1]"
+  private val master = "local[1]"
   private val appName = "exchange_testing"
   val sparkSession: SparkSession =
     new SparkSession.Builder().appName(appName).master(master).getOrCreate()
@@ -29,9 +29,10 @@ object Spark {
 }
 
 object MockGraphData {
+
   import Spark.sparkSession.implicits._
 
-  private val numberVertex     = 5
+  private val numberVertex = 5
   private val numberEdgeDegree = 1
 
   val policyList = List(Some(KeyPolicy.HASH), Some(KeyPolicy.UUID), None)
@@ -67,8 +68,8 @@ object MockGraphData {
 
   val edgeData: Seq[(Long, Long, Long, String, Double, Boolean)] = {
     val fromVertexId = Range(0, numberVertex).map(_.toLong).toList
-    var toVertexId   = Range(0, numberVertex).map(_.toLong).toList
-    var id           = numberVertex
+    var toVertexId = Range(0, numberVertex).map(_.toLong).toList
+    var id = numberVertex
     for (_ <- Range(0, numberEdgeDegree)) yield {
       toVertexId = toVertexId.last :: toVertexId.init
       for (ids <- Range(0, numberVertex)) yield {
@@ -88,10 +89,12 @@ object MockGraphData {
     edgeData.map(x => (x._1.toString, x._2.toString, x._3, x._4, x._5, x._6))
 
   def vertexDataFrame: DataFrame = vertexData.toDF(vertexFieldName: _*)
+
   def vertexDataFrame(vertex: Option[KeyPolicy.Value]): DataFrame =
     if (vertex.isEmpty) vertexDataFrame else vertexDataIdString.toDF(vertexFieldName: _*)
 
   def edgeDataFrame: DataFrame = edgeData.toDF(edgeFieldName: _*)
+
   def edgeDataFrame(source: Option[KeyPolicy.Value], target: Option[KeyPolicy.Value]): DataFrame = {
     {
       if (source.isEmpty) {
@@ -108,12 +111,12 @@ object MockGraphData {
     keyPolicy match {
       case Some(KeyPolicy.HASH) => "hash(\"%d\")"
       case Some(KeyPolicy.UUID) => "uuid(\"%d\")"
-      case _                    => "%d"
+      case _ => "%d"
     }
 
   def createInsertVertexSentence(vertexPolicy: Option[KeyPolicy.Value]): String = {
     val vertexIdTemplate = getVertexIDTemplateFromKeyPolicy(vertexPolicy)
-    val s                = if (vertexPolicy.isEmpty) "" else "\""
+    val s = if (vertexPolicy.isEmpty) "" else "\""
 
     s"INSERT VERTEX ${vertexTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
       s"${vertexIdTemplate.format(0)}: (${s}0${s}, ${'"'}0${'"'}, 0.01, true), " +
@@ -126,8 +129,8 @@ object MockGraphData {
   def createInsertEdgeSentence(fromVertexPolicy: Option[KeyPolicy.Value],
                                toVertexPolicy: Option[KeyPolicy.Value],
                                hasRank: Boolean): String = {
-    val from     = getVertexIDTemplateFromKeyPolicy(fromVertexPolicy)
-    val to       = getVertexIDTemplateFromKeyPolicy(toVertexPolicy)
+    val from = getVertexIDTemplateFromKeyPolicy(fromVertexPolicy)
+    val to = getVertexIDTemplateFromKeyPolicy(toVertexPolicy)
     val rankList = for (i <- Range(5, 10)) yield if (hasRank) s"@${i}" else ""
 
     s"INSERT EDGE ${edgeTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
@@ -148,11 +151,14 @@ class MockGraphDataVertex(vertexPolicy: Option[KeyPolicy.Value] = None) {
         (property, fromAnyRef(property, ""))
       })
       .toMap
+
+    // TODO fields
     TagConfigEntry(
       MockGraphData.vertexTypeName,
       MockGraphData.dataSourceConfig,
       MockGraphData.dataSinkConfig,
-      fields,
+      Nil,
+      Nil,
       MockGraphData.vertexIdFieldName,
       vertexPolicy,
       MockGraphData.vertexData.size,
@@ -179,11 +185,14 @@ class MockGraphDataEdge(edgeSourcePolicy: Option[KeyPolicy.Value] = None,
       })
       .toMap
     val rankingField = if (rank) Some(MockGraphData.edgeRankFieldName) else None
+
+    // TODO fields
     EdgeConfigEntry(
       MockGraphData.edgeTypeName,
       MockGraphData.dataSourceConfig,
       MockGraphData.dataSinkConfig,
-      fields,
+      Nil,
+      Nil,
       MockGraphData.edgeFromFieldName,
       edgeSourcePolicy,
       rankingField,

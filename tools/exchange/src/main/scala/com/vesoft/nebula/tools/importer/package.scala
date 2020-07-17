@@ -17,16 +17,17 @@ package object importer {
   type PartitionID    = Int
   type TagID          = Int
   type EdgeType       = Int
-  type SchemaID       = Either[TagID, EdgeType]
+  type SchemaID       = (TagID, EdgeType)
   type TagVersion     = Long
   type EdgeVersion    = Long
-  type SchemaVersion  = Either[TagVersion, EdgeVersion]
+  type SchemaVersion  = (TagVersion, EdgeVersion)
   type VertexID       = Long
   type VertexIDSlice  = String
   type EdgeRank       = Long
   type PropertyNames  = List[String]
   type PropertyValues = List[Any]
-  type ProcessResult  = ListBuffer[ListenableFuture[Optional[Integer]]]
+  type ProcessResult  = ListBuffer[WriterResult]
+  type WriterResult   = ListenableFuture[Optional[Integer]]
 
   case class Vertex(vertexID: VertexIDSlice, values: PropertyValues) {
 
@@ -40,22 +41,15 @@ package object importer {
 
   case class Vertices(names: PropertyNames,
                       values: List[Vertex],
-                      tagID: Option[TagID] = None,
                       policy: Option[KeyPolicy.Value] = None) {
 
     def propertyNames: String = names.mkString(",")
 
     override def toString: String = {
-      if (tagID.isDefined) {
-        s"Tag ID: ${tagID}" +
-          s"Property Names: ${names.mkString(", ")}" +
-          s"Vertex: ${values.mkString(", ")} " +
-          s"with policy ${policy}"
-      } else {
+      s"Vertices: " +
         s"Property Names: ${names.mkString(", ")}" +
-          s"Vertex: ${values.mkString(", ")} " +
-          s"with policy ${policy}"
-      }
+        s"Vertex Values: ${values.mkString(", ")} " +
+        s"with policy ${policy}"
     }
   }
 
@@ -77,10 +71,16 @@ package object importer {
 
   case class Edges(names: PropertyNames,
                    values: List[Edge],
-                   edgeType: Option[EdgeType] = None,
                    sourcePolicy: Option[KeyPolicy.Value] = None,
                    targetPolicy: Option[KeyPolicy.Value] = None) {
     def propertyNames: String = names.mkString(",")
+
+    override def toString: String = {
+      "Edges:" +
+        s"Property Names: ${names.mkString(", ")}" +
+        s"with source policy ${sourcePolicy}" +
+        s"with target policy ${targetPolicy}"
+    }
   }
 
   object KeyPolicy extends Enumeration {

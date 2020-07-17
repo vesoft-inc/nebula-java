@@ -17,9 +17,6 @@ import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
 import com.vesoft.nebula.tools.importer.config.{
   Configs,
-  ConnectionConfigEntry,
-  DataBaseConfigEntry,
-  DataSinkConfigEntry,
   DataSourceConfigEntry,
   FileBaseSourceConfigEntry,
   HiveSourceConfigEntry,
@@ -27,11 +24,7 @@ import com.vesoft.nebula.tools.importer.config.{
   MySQLSourceConfigEntry,
   Neo4JSourceConfigEntry,
   PulsarSourceConfigEntry,
-  SchemaConfigEntry,
-  SinkCategory,
-  SocketSourceConfigEntry,
-  SourceCategory,
-  UserConfigEntry
+  SourceCategory
 }
 import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}
 import com.vesoft.nebula.tools.importer.reader.{
@@ -43,10 +36,8 @@ import com.vesoft.nebula.tools.importer.reader.{
   Neo4JReader,
   ORCReader,
   ParquetReader,
-  PulsarReader,
-  SocketReader
+  PulsarReader
 }
-import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, Writer}
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
 
@@ -85,6 +76,7 @@ object Exchange {
       .builder()
       .appName(PROGRAM_NAME)
       .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+      .config("spark.sql.shuffle.partitions", "1")
       .config(
         new SparkConf()
           .registerKryoClasses(
@@ -156,8 +148,9 @@ object Exchange {
       for (tagConfig <- configs.tagsConfig) {
         LOG.info(s"Processing Tag ${tagConfig.name}")
 
-        val fieldKeys  = tagConfig.fields.keys.toList
-        val nebulaKeys = tagConfig.fields.values.map(_.unwrapped.toString).toList
+        val fieldKeys = tagConfig.fields
+        LOG.info(fieldKeys.mkString(", "))
+        val nebulaKeys = tagConfig.nebulaFields
 
         val data = createDataSource(spark, tagConfig.dataSourceConfigEntry)
         if (data.isDefined && !c.dry) {
@@ -174,7 +167,6 @@ object Exchange {
             configs,
             batchSuccess,
             batchFailure)
-
           processor.process()
           LOG.info(s"batchSuccess.${tagConfig.name}: ${batchSuccess.value}")
           LOG.info(s"batchFailure.${tagConfig.name}: ${batchFailure.value}")
@@ -188,8 +180,8 @@ object Exchange {
       for (edgeConfig <- configs.edgesConfig) {
         LOG.info(s"Processing Edge ${edgeConfig.name}")
 
-        val fieldKeys  = edgeConfig.fields.keys.toList
-        val nebulaKeys = edgeConfig.fields.values.map(_.unwrapped.toString).toList
+        val fieldKeys  = edgeConfig.fields
+        val nebulaKeys = edgeConfig.nebulaFields
         val data       = createDataSource(spark, edgeConfig.dataSourceConfigEntry)
         if (data.isDefined && !c.dry) {
           val batchSuccess = spark.sparkContext.longAccumulator(s"batchSuccess.${edgeConfig.name}")
@@ -252,18 +244,12 @@ object Exchange {
         LOG.info(s"""Loading from Hive and exec ${hiveConfig.sentence}""")
         val reader = new HiveReader(session, hiveConfig)
         Some(reader.read())
-      // TODO: (darion.yaphet) Support Structured Streaming
-      case SourceCategory.SOCKET =>
-        val socketConfig = config.asInstanceOf[SocketSourceConfigEntry]
-        LOG.warn("Socket streaming mode is not suitable for production environment")
-        LOG.info(s"""Reading data stream from Socket ${socketConfig.host}:${socketConfig.port}""")
-        val reader = new SocketReader(session, socketConfig)
-        Some(reader.read())
-      case SourceCategory.KAFKA =>
+      case SourceCategory.KAFKA => {
         val kafkaConfig = config.asInstanceOf[KafkaSourceConfigEntry]
         LOG.info(s"""Loading from Kafka ${kafkaConfig.server} and subscribe ${kafkaConfig.topic}""")
         val reader = new KafkaReader(session, kafkaConfig)
         Some(reader.read())
+      }
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
         LOG.info(s"Loading from neo4j config: ${neo4jConfig}")
@@ -283,25 +269,6 @@ object Exchange {
         LOG.error(s"Data source ${config.category} not supported")
         None
       }
-    }
-  }
-
-  private[this] def createDataSink(entry: DataSinkConfigEntry,
-                                   dataBaseConfigEntry: DataBaseConfigEntry,
-                                   userConfigEntry: UserConfigEntry,
-                                   connectionConfigEntry: ConnectionConfigEntry,
-                                   executionRetry: Int,
-                                   config: SchemaConfigEntry): Writer = {
-    entry.category match {
-      case SinkCategory.CLIENT =>
-        LOG.info("Write to Nebula using Graph Client")
-        new NebulaGraphClientWriter(dataBaseConfigEntry,
-                                    userConfigEntry,
-                                    connectionConfigEntry,
-                                    executionRetry,
-                                    config)
-      case _ =>
-        throw new IllegalArgumentException("Not Support")
     }
   }
 
@@ -329,5 +296,4 @@ object Exchange {
     * @return
     */
   private[this] def isSuccessfully(code: Int) = code == ErrorCode.SUCCEEDED
-
 }

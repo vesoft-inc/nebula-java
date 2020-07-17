@@ -6,54 +6,51 @@
 
 package com.vesoft.nebula.tools.importer.writer
 
-import com.google.common.base
-import com.google.common.util.concurrent.ListenableFuture
-import com.vesoft.nebula.tools.importer.{Edges, PartitionID, SchemaVersion, Vertices}
-import com.vesoft.nebula.SchemaID
-import org.rocksdb.{EnvOptions, Options, RocksDB, Slice, SstFileWriter}
+import org.rocksdb.{
+  EnvOptions,
+  Options,
+  RocksDB,
+  SstFileWriter
+}
+import org.slf4j.LoggerFactory
 
 /**
- *
- * @param path
- * @param partition
- * @param schema
- * @param version
- */
-class NebulaSSTWriter(path: String,
-                      partition: PartitionID,
-                      schema: SchemaID,
-                      version: SchemaVersion)
-  extends Writer {
+  *
+  * @param path
+  */
+class NebulaSSTWriter(path: String) extends Writer {
   require(path.trim.size != 0)
 
-  RocksDB.loadLibrary
+  private val LOG = LoggerFactory.getLogger(getClass)
 
-  val options = new Options().setCreateIfMissing(true)
-  val env = new EnvOptions()
-  val writer = new SstFileWriter(env, options)
-  writer.open(path)
-
-  override def prepare(): Unit = {
-
+  try {
+    RocksDB.loadLibrary()
+    LOG.info("Loading RocksDB successfully")
+  } catch {
+    case _: Exception =>
+      LOG.error("Can't load RocksDB library!")
   }
 
-  /**
-   *
-   * @param vertices
-   */
-  override def writeVertices(vertices: Vertices): ListenableFuture[base.Optional[Integer]] = ???
+  // TODO More Config ...
+  val options = new Options()
+    .setCreateIfMissing(true)
 
-  /**
-   *
-   * @param edges
-   */
-  override def writeEdges(edges: Edges): ListenableFuture[base.Optional[Integer]] = ???
+  val env                   = new EnvOptions()
+  var writer: SstFileWriter = _
+
+  override def prepare(): Unit = {
+    writer = new SstFileWriter(env, options)
+    writer.open(path)
+  }
+
+  def write(key: Array[Byte], value: Array[Byte]): Unit = {
+    writer.put(key, value)
+  }
 
   override def close(): Unit = {
     writer.finish()
-    env.close()
-    options.close()
     writer.close()
+    options.close()
+    env.close()
   }
-
 }

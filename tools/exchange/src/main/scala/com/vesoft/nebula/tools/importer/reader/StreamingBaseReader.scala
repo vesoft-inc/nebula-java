@@ -8,8 +8,7 @@ package com.vesoft.nebula.tools.importer.reader
 
 import com.vesoft.nebula.tools.importer.config.{
   KafkaSourceConfigEntry,
-  PulsarSourceConfigEntry,
-  SocketSourceConfigEntry
+  PulsarSourceConfigEntry
 }
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
@@ -22,25 +21,6 @@ abstract class StreamingBaseReader(override val session: SparkSession) extends R
 
   override def close(): Unit = {
     session.close()
-  }
-}
-
-/**
-  *
-  * @param session
-  * @param socketConfig
-  */
-class SocketReader(override val session: SparkSession, socketConfig: SocketSourceConfigEntry)
-    extends StreamingBaseReader(session) {
-
-  require(socketConfig.host.trim.nonEmpty && socketConfig.port > 0)
-
-  override def read(): DataFrame = {
-    session.readStream
-      .format("socket")
-      .option("host", socketConfig.host)
-      .option("port", socketConfig.port)
-      .load()
   }
 }
 

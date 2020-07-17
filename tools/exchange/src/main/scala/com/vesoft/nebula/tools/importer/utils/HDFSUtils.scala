@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.tools.importer.utils
 
-import java.net.URI
 import java.nio.charset.Charset
 
 import org.apache.hadoop.conf.Configuration
@@ -16,31 +15,55 @@ import scala.io.Source
 
 object HDFSUtils {
 
-  def getFileSystem(path: String): FileSystem =
-    FileSystem.get(URI.create(path), new Configuration())
+  def getFileSystem(): FileSystem =
+    FileSystem.get(new Configuration())
 
   def list(path: String): List[String] = {
-    val system = getFileSystem(path)
-    system.listStatus(new Path(path)).map(_.getPath.getName).toList
+    val system = getFileSystem()
+    try {
+      system.listStatus(new Path(path)).map(_.getPath.getName).toList
+    } finally {
+      system.close()
+    }
   }
 
-  def exists(path: String): Boolean ={
-    val system = getFileSystem(path)
-    system.exists(new Path(path))
+  def exists(path: String): Boolean = {
+    val system = getFileSystem()
+    try {
+      system.exists(new Path(path))
+    } finally {
+      system.close()
+    }
   }
 
   def getContent(path: String): String = {
-    val system      = getFileSystem(path)
+    val system      = getFileSystem()
     val inputStream = system.open(new Path(path))
-    Source.fromInputStream(inputStream).mkString
+    try {
+      Source.fromInputStream(inputStream).mkString
+    } finally {
+      system.close()
+    }
   }
 
   def saveContent(path: String,
                   content: String,
                   charset: Charset = Charset.defaultCharset()): Unit = {
-    val system       = getFileSystem(path)
+    val system       = getFileSystem()
     val outputStream = system.create(new Path(path))
-    outputStream.write(content.getBytes(charset))
-    outputStream.close()
+    try {
+      outputStream.write(content.getBytes(charset))
+    } finally {
+      outputStream.close()
+    }
+  }
+
+  def upload(localPath: String, remotePath: String): Unit = {
+    val system = getFileSystem()
+    try {
+      system.copyFromLocalFile(new Path(localPath), new Path(remotePath))
+    } finally {
+      system.close()
+    }
   }
 }
