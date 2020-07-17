@@ -1,14 +1,22 @@
 # scripts for spark importer
 
-## mock_data.py
+## install dependence
 
-### overview mock_data
+```shell
+sudo pip3 install -r requirements.txt
+```
+
+## scripts introduction
+
+### mock_data.py
+
+#### overview of mock_data
 
 use to generate graph data(json format).
 
 it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA, xxedgeAB
 
-### parameter mock_data
+#### args of mock_data
 
 1. -o/--output
 
@@ -66,7 +74,7 @@ it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA,
 
     - overview: this use to the prefix in tag/edge name
 
-### output format
+#### output format
 
 ```json
 {
@@ -75,12 +83,9 @@ it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA,
             "data": [
                 {
                     "property_key": "property_value"
-                    ...
                 }
-                ...
             ]
         }
-        ...
     },
 
     "edge": {
@@ -101,26 +106,23 @@ it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA,
                     },
                     "data": {
                     "property_key": "property_value"
-                    ...
                     }
                 }
-                ...
             ]
         }
-        ...
     }
 }
 ```
 
-## json2neo4j.py
+### json2neo4j.py
 
-### overview json2neo4j
+#### overview of json2neo4j
 
 use to import json data to neo4j database.
 
 it will print the time of use.
 
-### parameter json2neo4j
+#### args of json2neo4j
 
 1. -f/--file
 
@@ -158,13 +160,13 @@ it will print the time of use.
 
     - overview: the thread number of import to neo4j use .
 
-## verify_nebula.py
+### verify_nebula.py
 
-### overview verify_nebula
+#### overview of verify_nebula
 
 use to verify nebula database data.
 
-### parameter verify_nebula
+#### args of verify_nebula
 
 1. -a/--address
 
