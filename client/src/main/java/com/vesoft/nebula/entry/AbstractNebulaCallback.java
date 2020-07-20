@@ -19,13 +19,16 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNebulaCallback.class);
 
-    protected TBase result;
+    protected volatile TBase result;
 
     protected AtomicBoolean isReady = new AtomicBoolean(false);
 
     public Optional<?> getResult() throws InterruptedException {
         while (!checkReady()) {
             Thread.sleep(100);
+        }
+        if (result == null) {
+            return Optional.absent();
         }
         return Optional.of(result);
     }
@@ -34,9 +37,10 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
     public void onComplete(TAsyncMethodCall response) {
         try {
             doComplete(response);
-            isReady.compareAndSet(false, true);
         } catch (TException e) {
             e.printStackTrace();
+        } finally {
+            isReady.compareAndSet(false, true);
         }
     }
 
@@ -54,5 +58,6 @@ public abstract class AbstractNebulaCallback implements AsyncMethodCallback {
     public void onError(Exception exception) {
         LOGGER.error(String.format("onError: %s", exception.toString()));
         exception.printStackTrace();
+        isReady.compareAndSet(false, true);
     }
 }
