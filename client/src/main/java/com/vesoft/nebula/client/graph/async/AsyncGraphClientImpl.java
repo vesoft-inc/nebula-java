@@ -75,6 +75,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                     address.getPort(), timeout);
             TProtocolFactory protocol = new TBinaryProtocol.Factory();
             client = new GraphService.AsyncClient(protocol, manager, transport);
+            client.setTimeout(timeout);
             AuthenticateCallback callback = new AuthenticateCallback();
             client.authenticate(user, password, callback);
             Optional<TBase> respOption = Optional.absent();
