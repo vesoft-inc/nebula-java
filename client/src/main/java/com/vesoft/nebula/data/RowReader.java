@@ -156,10 +156,10 @@ public class RowReader {
 
         try {
             Property[] properties = {
-                new Property(PropertyType.SRC_ID, "_srcId", buffer.getLong()),
-                new Property(PropertyType.EDGE_TYPE, "_edgeType", buffer.getInt()),
-                new Property(PropertyType.EDGE_RANK, "_rank", buffer.getLong()),
-                new Property(PropertyType.DST_ID, "_dstId", buffer.getLong()),
+                    new Property(PropertyType.SRC_ID, "_srcId", buffer.getLong()),
+                    new Property(PropertyType.EDGE_TYPE, "_edgeType", buffer.getInt()),
+                    new Property(PropertyType.EDGE_RANK, "_rank", buffer.getLong()),
+                    new Property(PropertyType.DST_ID, "_dstId", buffer.getLong()),
             };
             return properties;
         } catch (BufferUnderflowException e) {
