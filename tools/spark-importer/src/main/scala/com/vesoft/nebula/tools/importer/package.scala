@@ -89,4 +89,5 @@ package object importer {
     val UUID = Value("uuid")
   }
 
+  case class Offset(start: Int, size: Int)
 }
