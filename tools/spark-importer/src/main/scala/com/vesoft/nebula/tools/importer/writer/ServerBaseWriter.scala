@@ -15,6 +15,7 @@ import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
 import com.vesoft.nebula.graph.ErrorCode
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import com.vesoft.nebula.tools.importer.{
   ConnectionConfigEntry,
   DataBaseConfigEntry,
@@ -172,8 +173,7 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
 class NebulaWriterCallback(latch: CountDownLatch,
                            batchSuccess: LongAccumulator,
                            batchFailure: LongAccumulator,
-                           checkPointOpt: Option[LongAccumulator],
-                           batchSize: Int)
+                           pathAndOffset: Option[(String, Long)])
     extends FutureCallback[java.util.List[Optional[Integer]]] {
 
   private[this] val DEFAULT_ERROR_TIMES = 16
@@ -183,8 +183,8 @@ class NebulaWriterCallback(latch: CountDownLatch,
     for (result <- results.asScala) {
       if (result.get() == ErrorCode.SUCCEEDED) {
         batchSuccess.add(1)
-        if (checkPointOpt.isDefined) {
-          checkPointOpt.get.add(batchSize)
+        if (pathAndOffset.isDefined) {
+          HDFSUtils.saveContent(pathAndOffset.get._1, pathAndOffset.get._2.toString)
         }
       } else {
         batchFailure.add(1)
@@ -194,14 +194,14 @@ class NebulaWriterCallback(latch: CountDownLatch,
 
   override def onFailure(t: Throwable): Unit = {
     latch.countDown()
-    if (checkPointOpt.isEmpty) {
-      if (batchFailure.value > DEFAULT_ERROR_TIMES) {
-        throw TooManyErrorsException("too many errors")
-      } else {
-        batchFailure.add(1)
-      }
+    if (batchFailure.value > DEFAULT_ERROR_TIMES) {
+      throw TooManyErrorsException("too many errors")
     } else {
-      throw new RuntimeException(s"Currently Offset is ${checkPointOpt.get.value}")
+      batchFailure.add(1)
+    }
+
+    if (pathAndOffset.isDefined) {
+      HDFSUtils.saveContent(pathAndOffset.get._1, pathAndOffset.get._2.toString)
     }
   }
 }

@@ -286,7 +286,7 @@ sealed trait SchemaConfigEntry {
 
   def partition: Int
 
-  def saveCheckPoint: Boolean
+  def checkPointPath: Option[String]
 }
 
 /**
@@ -299,6 +299,7 @@ sealed trait SchemaConfigEntry {
   * @param vertexPolicy
   * @param batch
   * @param partition
+  * @param checkPointPath
   */
 case class TagConfigEntry(override val name: String,
                           override val dataSourceConfigEntry: DataSourceConfigEntry,
@@ -308,7 +309,7 @@ case class TagConfigEntry(override val name: String,
                           vertexPolicy: Option[KeyPolicy.Value],
                           override val batch: Int,
                           override val partition: Int,
-                          override val saveCheckPoint: Boolean)
+                          override val checkPointPath: Option[String])
     extends SchemaConfigEntry {
   require(name.trim.size != 0 && vertexField.trim.size != 0 && batch > 0)
 
@@ -323,6 +324,24 @@ case class TagConfigEntry(override val name: String,
   }
 }
 
+/**
+  *
+  * @param name
+  * @param dataSourceConfigEntry
+  * @param dataSinkConfigEntry
+  * @param fields
+  * @param sourceField
+  * @param sourcePolicy
+  * @param rankingField
+  * @param targetField
+  * @param targetPolicy
+  * @param isGeo
+  * @param latitude
+  * @param longitude
+  * @param batch
+  * @param partition
+  * @param checkPointPath
+  */
 case class EdgeConfigEntry(override val name: String,
                            override val dataSourceConfigEntry: DataSourceConfigEntry,
                            override val dataSinkConfigEntry: DataSinkConfigEntry,
@@ -337,7 +356,7 @@ case class EdgeConfigEntry(override val name: String,
                            longitude: Option[String],
                            override val batch: Int,
                            override val partition: Int,
-                           override val saveCheckPoint: Boolean)
+                           override val checkPointPath: Option[String])
     extends SchemaConfigEntry {
   require(
     name.trim.size != 0 && sourceField.trim.size != 0 &&
@@ -445,7 +464,7 @@ object Configs {
   private[this] val DEFAULT_EDGE_RANKING         = 0L
   private[this] val DEFAULT_BATCH                = 2
   private[this] val DEFAULT_PARTITION            = -1
-  private[this] val DEFAULT_SAVE_CHECK_POINT     = false
+  private[this] val DEFAULT_CHECK_POINT_PATH     = None
 
   /**
     *
@@ -533,7 +552,7 @@ object Configs {
 
         val batch          = getOrElse(tagConfig, "batch", DEFAULT_BATCH)
         val partition      = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
-        val saveCheckPoint = getOrElse(tagConfig, "save.check_point", DEFAULT_SAVE_CHECK_POINT)
+        val checkPointPath = getOrElse(tagConfig, "check_point", DEFAULT_CHECK_POINT_PATH)
         LOG.info(s"name ${tagName}  batch ${batch}")
         val entry = TagConfigEntry(tagName,
                                    sourceConfig,
@@ -543,7 +562,7 @@ object Configs {
                                    policyOpt,
                                    batch,
                                    partition,
-                                   saveCheckPoint)
+                                   checkPointPath)
         LOG.info(s"Tag Config: ${entry}")
         tags += entry
       }
@@ -628,7 +647,7 @@ object Configs {
 
         val batch          = getOrElse(edgeConfig, "batch", DEFAULT_BATCH)
         val partition      = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
-        val saveCheckPoint = getOrElse(edgeConfig, "save.check_point", DEFAULT_SAVE_CHECK_POINT)
+        val saveCheckPoint = getOrElse(edgeConfig, "save.check_point", DEFAULT_CHECK_POINT_PATH)
         val entry = EdgeConfigEntry(
           edgeName,
           sourceConfig,

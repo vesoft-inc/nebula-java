@@ -17,10 +17,12 @@ import com.vesoft.nebula.tools.importer.{
   Edges,
   ErrorHandler,
   ProcessResult,
+  SourceCategory,
   TooManyErrorsException
 }
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
 import org.apache.log4j.Logger
+import org.apache.spark.TaskContext
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
 
@@ -84,6 +86,8 @@ class EdgeProcessor(data: DataFrame,
         }
       }(Encoders.kryo[Edge])
       .foreachPartition { iterator: Iterator[Edge] =>
+        val taskID = TaskContext.get.taskAttemptId
+
         // TODO Support Multi Writer
         val writer = new NebulaGraphClientWriter(config.databaseConfig,
                                                  config.userConfig,
@@ -106,15 +110,21 @@ class EdgeProcessor(data: DataFrame,
             futures += future
 
             if (futures.size == 100) { // TODO configurable ?
+              val pathAndOffset =
+                if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
+                    edgeConfig.checkPointPath.isDefined) {
+                  val offset = fetchOffset(s"${edgeConfig.checkPointPath}/${taskID}")
+                  Some((edgeConfig.checkPointPath.get, offset))
+                } else {
+                  None
+                }
+
               val latch      = new CountDownLatch(100)
               val allFutures = Futures.allAsList(futures: _*)
-              Futures.addCallback(allFutures,
-                                  new NebulaWriterCallback(latch,
-                                                           batchSuccess,
-                                                           batchFailure,
-                                                           checkPoint,
-                                                           edgeConfig.batch),
-                                  service)
+              Futures.addCallback(
+                allFutures,
+                new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
+                service)
               latch.await()
               futures.clear()
             }
@@ -133,15 +143,21 @@ class EdgeProcessor(data: DataFrame,
         }
 
         if (!futures.isEmpty) {
+          val pathAndOffset =
+            if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
+              edgeConfig.checkPointPath.isDefined) {
+              val offset = fetchOffset(s"${edgeConfig.checkPointPath}/${taskID}")
+              Some((edgeConfig.checkPointPath.get, offset))
+            } else {
+              None
+            }
+
           val latch      = new CountDownLatch(futures.size)
           val allFutures = Futures.allAsList(futures: _*)
-          Futures.addCallback(allFutures,
-                              new NebulaWriterCallback(latch,
-                                                       batchSuccess,
-                                                       batchFailure,
-                                                       checkPoint,
-                                                       edgeConfig.batch),
-                              service)
+          Futures.addCallback(
+            allFutures,
+            new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
+            service)
           latch.await()
         }
 

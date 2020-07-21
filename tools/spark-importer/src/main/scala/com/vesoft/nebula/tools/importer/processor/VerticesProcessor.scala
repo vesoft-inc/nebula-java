@@ -9,10 +9,12 @@ package com.vesoft.nebula.tools.importer.processor
 import java.util.concurrent.{CountDownLatch, Executors, TimeUnit}
 
 import com.google.common.util.concurrent.{Futures, MoreExecutors, RateLimiter}
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import com.vesoft.nebula.tools.importer.{
   Configs,
   ErrorHandler,
   ProcessResult,
+  SourceCategory,
   TagConfigEntry,
   TooManyErrorsException,
   Vertex,
@@ -20,6 +22,7 @@ import com.vesoft.nebula.tools.importer.{
 }
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
 import org.apache.log4j.Logger
+import org.apache.spark.TaskContext
 import org.apache.spark.sql.types.LongType
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
@@ -35,7 +38,7 @@ import scala.collection.mutable.ArrayBuffer
   * @param config
   * @param batchSuccess
   * @param batchFailure
-  * @param saveCheckPoint
+  * @param checkPointPath
   */
 class VerticesProcessor(data: DataFrame,
                         tagConfig: TagConfigEntry,
@@ -44,19 +47,12 @@ class VerticesProcessor(data: DataFrame,
                         config: Configs,
                         batchSuccess: LongAccumulator,
                         batchFailure: LongAccumulator,
-                        saveCheckPoint: Boolean = false)
+                        checkPointPath: Option[String] = None)
     extends Processor {
 
   @transient lazy val LOG = Logger.getLogger(this.getClass)
 
   override def process(): Unit = {
-    val checkPoint = if (!saveCheckPoint) {
-      None
-    } else {
-      val context = data.sparkSession.sparkContext
-      Some(context.longAccumulator(s"checkPoint.${tagConfig.name}"))
-    }
-
     data
       .map { row =>
         val vertexID =
@@ -76,6 +72,8 @@ class VerticesProcessor(data: DataFrame,
         Vertex(vertexID, values)
       }(Encoders.kryo[Vertex])
       .foreachPartition { iterator: Iterator[Vertex] =>
+        val taskID = TaskContext.get.taskAttemptId
+
         // TODO Support Multi Writer
         val writer = new NebulaGraphClientWriter(config.databaseConfig,
                                                  config.userConfig,
@@ -95,15 +93,22 @@ class VerticesProcessor(data: DataFrame,
             futures += future
 
             if (futures.size == 100) { // TODO configurable ?
+
+              val pathAndOffset =
+                if (tagConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
+                    tagConfig.checkPointPath.isDefined) {
+                  val offset = fetchOffset(s"${tagConfig.checkPointPath}/${taskID}")
+                  Some((tagConfig.checkPointPath.get, offset))
+                } else {
+                  None
+                }
+
               val latch      = new CountDownLatch(100)
               val allFutures = Futures.allAsList(futures: _*)
-              Futures.addCallback(allFutures,
-                                  new NebulaWriterCallback(latch,
-                                                           batchSuccess,
-                                                           batchFailure,
-                                                           checkPoint,
-                                                           tagConfig.batch),
-                                  service)
+              Futures.addCallback(
+                allFutures,
+                new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
+                service)
               futures.clear()
             }
           } else {
@@ -121,15 +126,21 @@ class VerticesProcessor(data: DataFrame,
         }
 
         if (!futures.isEmpty) {
+          val pathAndOffset =
+            if (tagConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
+                tagConfig.checkPointPath.isDefined) {
+              val offset = fetchOffset(s"${tagConfig.checkPointPath}/${taskID}")
+              Some((tagConfig.checkPointPath.get, offset))
+            } else {
+              None
+            }
+
           val latch      = new CountDownLatch(futures.size)
           val allFutures = Futures.allAsList(futures: _*)
-          Futures.addCallback(allFutures,
-                              new NebulaWriterCallback(latch,
-                                                       batchSuccess,
-                                                       batchFailure,
-                                                       checkPoint,
-                                                       tagConfig.batch),
-                              service)
+          Futures.addCallback(
+            allFutures,
+            new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
+            service)
           latch.await()
         }
         service.shutdown()
@@ -137,9 +148,5 @@ class VerticesProcessor(data: DataFrame,
           Thread.sleep(10)
         }
       }
-
-    if (checkPoint.isDefined) {
-      LOG.info(s"checkPoint.${tagConfig.name}: ${checkPoint.get.value}")
-    }
   }
 }
