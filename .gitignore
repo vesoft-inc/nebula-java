@@ -29,3 +29,7 @@ target/
 .idea/
 .eclipse/
 *.iml
+
+spark-importer.ipr
+spark-importer.iws
+
