@@ -95,6 +95,6 @@ trait Processor extends Serializable {
   }
 
   def fetchOffset(path: String): Long = {
-    HDFSUtils.getContent(path).toLong
+    HDFSUtils.getContent(path).trim.toLong
   }
 }

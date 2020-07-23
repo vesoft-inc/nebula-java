@@ -86,7 +86,7 @@ class EdgeProcessor(data: DataFrame,
         }
       }(Encoders.kryo[Edge])
       .foreachPartition { iterator: Iterator[Edge] =>
-        val taskID = TaskContext.get.taskAttemptId
+        val partitionId = TaskContext.getPartitionId()
 
         // TODO Support Multi Writer
         val writer = new NebulaGraphClientWriter(config.databaseConfig,
@@ -96,10 +96,11 @@ class EdgeProcessor(data: DataFrame,
                                                  edgeConfig)
         writer.prepare()
 
-        val futures     = new ProcessResult()
-        val errorBuffer = ArrayBuffer[String]()
-        val rateLimiter = RateLimiter.create(config.rateConfig.limit)
-        val service     = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
+        val futures              = new ProcessResult()
+        val errorBuffer          = ArrayBuffer[String]()
+        val rateLimiter          = RateLimiter.create(config.rateConfig.limit)
+        val service              = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
+        var breakPointEdgesCount = 0L
 
         iterator.grouped(edgeConfig.batch).foreach { edge =>
           val edges =
@@ -108,17 +109,20 @@ class EdgeProcessor(data: DataFrame,
           if (rateLimiter.tryAcquire(config.rateConfig.timeout, TimeUnit.MILLISECONDS)) {
             val future = writer.writeEdges(edges)
             futures += future
+            breakPointEdgesCount += edges.values.length
 
             if (futures.size == 100) { // TODO configurable ?
               val pathAndOffset =
                 if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
                     edgeConfig.checkPointPath.isDefined) {
-                  val offset = fetchOffset(s"${edgeConfig.checkPointPath}/${taskID}")
-                  Some((edgeConfig.checkPointPath.get, offset))
+                  val path   = s"${edgeConfig.checkPointPath.get}/${edgeConfig.name}.${partitionId}"
+                  val offset = breakPointEdgesCount + fetchOffset(path)
+                  Some((path, offset))
                 } else {
                   None
                 }
 
+              breakPointEdgesCount = 0
               val latch      = new CountDownLatch(100)
               val allFutures = Futures.allAsList(futures: _*)
               Futures.addCallback(
@@ -134,6 +138,11 @@ class EdgeProcessor(data: DataFrame,
             if (errorBuffer.size == config.errorConfig.errorMaxSize) {
               throw TooManyErrorsException(s"Too Many Errors ${config.errorConfig.errorMaxSize}")
             }
+
+            if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
+                edgeConfig.checkPointPath.isDefined) {
+              throw new RuntimeException(s"Write edge${edgeConfig.name} errors")
+            }
           }
 
           if (!errorBuffer.isEmpty) {
@@ -145,13 +154,15 @@ class EdgeProcessor(data: DataFrame,
         if (!futures.isEmpty) {
           val pathAndOffset =
             if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
-              edgeConfig.checkPointPath.isDefined) {
-              val offset = fetchOffset(s"${edgeConfig.checkPointPath}/${taskID}")
-              Some((edgeConfig.checkPointPath.get, offset))
+                edgeConfig.checkPointPath.isDefined) {
+              val path   = s"${edgeConfig.checkPointPath.get}/${edgeConfig.name}.${partitionId}"
+              val offset = breakPointEdgesCount + fetchOffset(path)
+              Some((path, offset))
             } else {
               None
             }
 
+          breakPointEdgesCount = 0
           val latch      = new CountDownLatch(futures.size)
           val allFutures = Futures.allAsList(futures: _*)
           Futures.addCallback(

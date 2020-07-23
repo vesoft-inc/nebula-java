@@ -24,6 +24,11 @@ object HDFSUtils {
     system.listStatus(new Path(path)).map(_.getPath.getName).toList
   }
 
+  def exists(path: String): Boolean ={
+    val system = getFileSystem(path)
+    system.exists(new Path(path))
+  }
+
   def getContent(path: String): String = {
     val system      = getFileSystem(path)
     val inputStream = system.open(new Path(path))
@@ -36,5 +41,6 @@ object HDFSUtils {
     val system       = getFileSystem(path)
     val outputStream = system.create(new Path(path))
     outputStream.write(content.getBytes(charset))
+    outputStream.close()
   }
 }
