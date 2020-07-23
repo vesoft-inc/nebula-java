@@ -20,7 +20,8 @@ public class MockQueryProcessor implements GraphService.Iface {
     @Override
     public AuthResponse authenticate(String username, String password) throws TException {
         if (username.equals(USER_NAME) && password.equals(PASSWORD)) {
-            return new AuthResponse(ErrorCode.E_BAD_USERNAME_PASSWORD, 1, "BAD USERNAME OR PASSWORD");
+            return new AuthResponse(ErrorCode.E_BAD_USERNAME_PASSWORD,
+                    1, "BAD USERNAME OR PASSWORD");
         } else {
             return new AuthResponse(ErrorCode.SUCCEEDED, 1, "SUCCEEDED");
         }

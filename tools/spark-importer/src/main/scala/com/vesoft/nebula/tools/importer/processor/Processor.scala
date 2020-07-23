@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.tools.importer.processor
 
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{
   ArrayType,
@@ -103,5 +104,9 @@ trait Processor extends Serializable {
           "\"{}\""
         }
     }
+  }
+
+  def fetchOffset(path: String): Long = {
+    HDFSUtils.getContent(path).toLong
   }
 }
