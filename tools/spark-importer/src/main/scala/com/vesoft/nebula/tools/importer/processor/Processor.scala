@@ -7,9 +7,21 @@
 package com.vesoft.nebula.tools.importer.processor
 
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import org.apache.hadoop.fs.FileSystem
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{ArrayType, BooleanType, DateType, DecimalType, DoubleType, FloatType, IntegerType, LongType, MapType, ShortType, StringType, TimestampType}
+import org.apache.spark.sql.types.{
+  ArrayType,
+  BooleanType,
+  DateType,
+  DecimalType,
+  DoubleType,
+  FloatType,
+  IntegerType,
+  LongType,
+  MapType,
+  ShortType,
+  StringType,
+  TimestampType
+}
 
 trait Processor extends Serializable {
 

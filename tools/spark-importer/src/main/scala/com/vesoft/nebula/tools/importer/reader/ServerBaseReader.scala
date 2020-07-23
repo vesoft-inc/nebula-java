@@ -23,7 +23,6 @@ import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
 import org.neo4j.spark.Executor
 import org.neo4j.spark.dataframe.CypherTypes
-
 import scala.collection.JavaConverters._
 
 /**
