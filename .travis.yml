@@ -10,4 +10,4 @@ jdk:
   - openjdk8
   - openjdk11
 
-install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true
+install: mvn clean compile package install -Dgpg.skip -Dmaven.javadoc.skip=true

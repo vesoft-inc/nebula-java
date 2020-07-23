@@ -48,7 +48,7 @@
         <module>client</module>
         <module>examples</module>
         <module>tools</module>
-        <module>tools/spark-importer</module>
+        <module>tools/exchange</module>
     </modules>
 
     <distributionManagement>
