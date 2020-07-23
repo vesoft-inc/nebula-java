@@ -6,7 +6,8 @@
 
 package com.vesoft.nebula.tools.importer.reader
 
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import com.vesoft.nebula.tools.importer.{Neo4JSourceConfigEntry, Offset}
+import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
 import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
   ClusterCountMapReduce,
   PeerPressureVertexProgram
@@ -14,7 +15,8 @@ import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
 import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
-import org.neo4j.spark.Neo4j
+import org.neo4j.driver.{AuthTokens, GraphDatabase}
+import scala.collection.JavaConverters._
 
 /**
   * @{link ServerBaseReader} is the abstract class of
@@ -80,13 +82,29 @@ class MySQLReader(override val session: SparkSession,
 /**
   * @{link Neo4JReader} extends the @{link ServerBaseReader}
   * @param session
-  * @param sentence
+  * @param config
   */
-class Neo4JReader(override val session: SparkSession, offset: Long, sentence: String)
-    extends ServerBaseReader(session, sentence) {
+class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigEntry)
+    extends ServerBaseReader(session, config.exec) {
   override def read(): DataFrame = {
-    val neo = Neo4j(session.sparkContext)
-    neo.cypher(if (offset <= 0) sentence else sentence + s" SKIP ${offset}").loadDataFrame
+    // TODO get total size of Neo4J and partitions
+    val offsets = Seq(Offset(0, 100), Offset(101, 100))
+
+    session
+      .createDataset(offsets)(Encoders.kryo[Offset])
+      .repartition(offsets.size)
+      .flatMap { offset =>
+        val driver = GraphDatabase.driver(s"bolt://${config.server}",
+                                          AuthTokens.basic(config.user, config.password))
+        val neo4JSession = driver.session()
+        val result       = neo4JSession.run(s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}")
+        val fields       = result.keys().asScala
+
+        for {
+          record <- result.list().asScala
+          values = fields.map(record.get(_)) //TODO extra values
+        } yield Row(values)
+      }(Encoders.kryo[Row])
   }
 }
 
