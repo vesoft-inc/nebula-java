@@ -554,8 +554,13 @@ object Configs {
         val checkPointPath =
           if (tagConfig.hasPath("check_point")) Some(tagConfig.getString("check_point"))
           else DEFAULT_CHECK_POINT_PATH
-        val partition =
-          if (checkPointPath.isEmpty) getOrElse(tagConfig, "partition", DEFAULT_PARTITION) else -1
+
+        if (checkPointPath.isDefined && tagConfig.hasPath("partition") && tagConfig.getInt(
+              "partition") >= 0)
+          throw new IllegalArgumentException(
+            s"If you set check point path in ${tagName}, you must set partition<0 or not set!")
+        val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
+
         LOG.info(s"name ${tagName}  batch ${batch}")
         val entry = TagConfigEntry(tagName,
                                    sourceConfig,
@@ -652,8 +657,13 @@ object Configs {
         val checkPointPath =
           if (edgeConfig.hasPath("check_point")) Some(edgeConfig.getString("check_point"))
           else DEFAULT_CHECK_POINT_PATH
-        val partition =
-          if (checkPointPath.isEmpty) getOrElse(edgeConfig, "partition", DEFAULT_PARTITION) else -1
+
+        if (checkPointPath.isDefined && edgeConfig.hasPath("partition") && edgeConfig.getInt(
+              "partition") >= 0)
+          throw new IllegalArgumentException(
+            s"If you set check point path in ${edgeName}, you must set partition<0 or not set!")
+        val partition = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
+
         val entry = EdgeConfigEntry(
           edgeName,
           sourceConfig,
