@@ -182,7 +182,9 @@ class NebulaWriterCallback(latch: CountDownLatch,
     if (pathAndOffset.isDefined) {
       if (results.asScala.forall(_.get() == ErrorCode.SUCCEEDED))
         HDFSUtils.saveContent(pathAndOffset.get._1, pathAndOffset.get._2.toString)
-      else throw new RuntimeException(s"Some error appear")
+      else
+        throw new RuntimeException(
+          s"Some error code: ${results.asScala.filter(_.get() != ErrorCode.SUCCEEDED).head} appear")
     }
     for (result <- results.asScala) {
       latch.countDown()

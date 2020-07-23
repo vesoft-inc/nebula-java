@@ -139,7 +139,7 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
       }
       eachPartitionOffset.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
     }
-    LOG.info(s"offsets: ${offsets.mkString(",")}")
+    LOG.info(s"${config.name} offsets: ${offsets.mkString(",")}")
 
     if (offsets.forall(_.size == 0L)) {
       LOG.warn(s"${config.name} already write done from check point.")
@@ -150,13 +150,12 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
         s"Your check point file maybe broken. Please delete ${config.name}.* file")
 
     val rdd = session.sparkContext
-      .parallelize(offsets)
-      .repartition(offsets.size)
-      .flatMap { offset =>
-        if (config.checkPointPath.isDefined)
-          HDFSUtils.saveContent(
-            s"${config.checkPointPath.get}/${config.name}.${TaskContext.getPartitionId()}",
-            offset.start.toString)
+      .parallelize(offsets, offsets.size)
+      .flatMap(offset => {
+        if (config.checkPointPath.isDefined) {
+          val path = s"${config.checkPointPath.get}/${config.name}.${TaskContext.getPartitionId()}"
+          HDFSUtils.saveContent(path, offset.start.toString)
+        }
         val driver =
           GraphDatabase.driver(s"${config.server}", AuthTokens.basic(config.user, config.password))
         val neo4JSession = driver.session()
@@ -175,7 +174,7 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
             row.update(i, Executor.convert(record.get(i).asObject()))
           new GenericRowWithSchema(values = row, schema).asInstanceOf[Row]
         })
-      }
+      })
 
     if (rdd.isEmpty())
       throw new RuntimeException(
