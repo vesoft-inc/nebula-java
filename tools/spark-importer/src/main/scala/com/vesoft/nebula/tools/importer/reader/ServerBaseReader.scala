@@ -13,16 +13,14 @@ import org.apache.spark.TaskContext
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.StructType
-import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
-  ClusterCountMapReduce,
-  PeerPressureVertexProgram
-}
+import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{ClusterCountMapReduce, PeerPressureVertexProgram}
 import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
-import org.neo4j.spark.Executor
+import org.neo4j.spark.{Executor, Neo4jConfig}
 import org.neo4j.spark.dataframe.CypherTypes
+
 import scala.collection.JavaConverters._
 
 /**
@@ -148,6 +146,8 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
       throw new RuntimeException(
         s"Your check point file maybe broken. Please delete ${config.name}.* file")
 
+    val neo4jConfig = Neo4jConfig(session.sparkContext.getConf)
+
     val rdd = session.sparkContext
       .parallelize(offsets, offsets.size)
       .flatMap(offset => {
@@ -155,10 +155,8 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
           val path = s"${config.checkPointPath.get}/${config.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val driver =
-          GraphDatabase.driver(s"${config.server}", AuthTokens.basic(config.user, config.password))
-        val neo4JSession = driver.session()
-        val result       = neo4JSession.run(s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}")
+        val neo4jSession = neo4jConfig.driver().session(neo4jConfig.sessionConfig(false))
+        val result       = neo4jSession.run(s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}")
         val fields       = result.keys().asScala
         val schema =
           if (result.hasNext)
