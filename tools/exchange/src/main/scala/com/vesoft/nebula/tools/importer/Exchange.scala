@@ -43,7 +43,7 @@ final case class TooManyErrorsException(private val message: String) extends Exc
 /**
   * SparkClientGenerator is a simple spark job used to write data into Nebula Graph parallel.
   */
-object SparkImporter {
+object Exchange {
   private[this] val LOG = Logger.getLogger(this.getClass)
 
   private[this] val DEFAULT_ERROR_TIMES = 16
@@ -252,7 +252,7 @@ object SparkImporter {
       }
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
-        val reader      = new Neo4JReader(session, neo4jConfig.offset, neo4jConfig.exec)
+        val reader      = new Neo4JReader(session, neo4jConfig)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")
