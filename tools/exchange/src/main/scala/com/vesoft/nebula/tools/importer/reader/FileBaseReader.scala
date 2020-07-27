@@ -31,7 +31,7 @@ abstract class FileBaseReader(val session: SparkSession, val path: String) exten
   * @param session
   * @param path
   */
-class ParquetReader(override val session: SparkSession, override val path: String)
+final class ParquetReader(override val session: SparkSession, override val path: String)
     extends FileBaseReader(session, path) {
 
   override def read(): DataFrame = {
@@ -45,7 +45,7 @@ class ParquetReader(override val session: SparkSession, override val path: Strin
   * @param session
   * @param path
   */
-class ORCReader(override val session: SparkSession, override val path: String)
+final class ORCReader(override val session: SparkSession, override val path: String)
     extends FileBaseReader(session, path) {
 
   override def read(): DataFrame = {
@@ -59,7 +59,7 @@ class ORCReader(override val session: SparkSession, override val path: String)
   * @param session
   * @param path
   */
-class JSONReader(override val session: SparkSession, override val path: String)
+final class JSONReader(override val session: SparkSession, override val path: String)
     extends FileBaseReader(session, path) {
 
   override def read(): DataFrame = {
@@ -74,10 +74,10 @@ class JSONReader(override val session: SparkSession, override val path: String)
   * @param session
   * @param path
   */
-class CSVReader(override val session: SparkSession,
-                override val path: String,
-                separator: String = ",",
-                header: Boolean = false)
+final class CSVReader(override val session: SparkSession,
+                      override val path: String,
+                      separator: String = ",",
+                      header: Boolean = false)
     extends FileBaseReader(session, path) {
 
   override def read(): DataFrame = {

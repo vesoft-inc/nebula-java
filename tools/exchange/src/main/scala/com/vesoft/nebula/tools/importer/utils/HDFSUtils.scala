@@ -32,7 +32,12 @@ object HDFSUtils {
   def getContent(path: String): String = {
     val system      = getFileSystem(path)
     val inputStream = system.open(new Path(path))
-    Source.fromInputStream(inputStream).mkString
+    try {
+      Source.fromInputStream(inputStream).mkString
+    } finally {
+      inputStream.close()
+      system.close()
+    }
   }
 
   def saveContent(path: String,
@@ -40,7 +45,11 @@ object HDFSUtils {
                   charset: Charset = Charset.defaultCharset()): Unit = {
     val system       = getFileSystem(path)
     val outputStream = system.create(new Path(path))
-    outputStream.write(content.getBytes(charset))
-    outputStream.close()
+    try {
+      outputStream.write(content.getBytes(charset))
+    } finally {
+      outputStream.close()
+      system.close()
+    }
   }
 }

@@ -107,11 +107,11 @@ abstract class ServerBaseWriter extends Writer {
 /**
   *
   */
-class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
-                              userConfigEntry: UserConfigEntry,
-                              connectionConfigEntry: ConnectionConfigEntry,
-                              executionRetry: Int,
-                              config: SchemaConfigEntry)
+final class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
+                                    userConfigEntry: UserConfigEntry,
+                                    connectionConfigEntry: ConnectionConfigEntry,
+                                    executionRetry: Int,
+                                    config: SchemaConfigEntry)
     extends ServerBaseWriter {
 
   require(dataBaseConfigEntry.addresses.size != 0 && dataBaseConfigEntry.space.trim.size != 0)
@@ -170,10 +170,10 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
   }
 }
 
-class NebulaWriterCallback(latch: CountDownLatch,
-                           batchSuccess: LongAccumulator,
-                           batchFailure: LongAccumulator,
-                           pathAndOffset: Option[(String, Long)])
+final class NebulaWriterCallback(latch: CountDownLatch,
+                                 batchSuccess: LongAccumulator,
+                                 batchFailure: LongAccumulator,
+                                 pathAndOffset: Option[(String, Long)])
     extends FutureCallback[java.util.List[Optional[Integer]]] {
 
   private[this] val DEFAULT_ERROR_TIMES = 16
@@ -215,7 +215,7 @@ class NebulaWriterCallback(latch: CountDownLatch,
   * @param addresses
   * @param space
   */
-class NebulaStorageClientWriter(addresses: List[(String, Int)], space: String)
+final class NebulaStorageClientWriter(addresses: List[(String, Int)], space: String)
     extends ServerBaseWriter {
 
   require(addresses.size != 0)

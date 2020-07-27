@@ -13,40 +13,38 @@ import com.vesoft.nebula.SchemaID
 import org.rocksdb.{EnvOptions, Options, RocksDB, Slice, SstFileWriter}
 
 /**
- *
- * @param path
- * @param partition
- * @param schema
- * @param version
- */
+  *
+  * @param path
+  * @param partition
+  * @param schema
+  * @param version
+  */
 class NebulaSSTWriter(path: String,
                       partition: PartitionID,
                       schema: SchemaID,
                       version: SchemaVersion)
-  extends Writer {
+    extends Writer {
   require(path.trim.size != 0)
 
   RocksDB.loadLibrary
 
   val options = new Options().setCreateIfMissing(true)
-  val env = new EnvOptions()
-  val writer = new SstFileWriter(env, options)
+  val env     = new EnvOptions()
+  val writer  = new SstFileWriter(env, options)
   writer.open(path)
 
-  override def prepare(): Unit = {
-
-  }
+  override def prepare(): Unit = {}
 
   /**
-   *
-   * @param vertices
-   */
+    *
+    * @param vertices
+    */
   override def writeVertices(vertices: Vertices): ListenableFuture[base.Optional[Integer]] = ???
 
   /**
-   *
-   * @param edges
-   */
+    *
+    * @param edges
+    */
   override def writeEdges(edges: Edges): ListenableFuture[base.Optional[Integer]] = ???
 
   override def close(): Unit = {

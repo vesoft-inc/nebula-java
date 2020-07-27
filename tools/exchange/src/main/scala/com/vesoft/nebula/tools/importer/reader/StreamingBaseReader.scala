@@ -26,7 +26,9 @@ abstract class StreamingBaseReader(override val session: SparkSession) extends R
   * @param host
   * @param port
   */
-class SocketReader(override val session: SparkSession, host: String = "127.0.0.1", port: Int = 8989)
+final class SocketReader(override val session: SparkSession,
+                         host: String = "127.0.0.1",
+                         port: Int = 8989)
     extends StreamingBaseReader(session) {
 
   require(host.trim.size != 0 && port > 0)
@@ -46,7 +48,9 @@ class SocketReader(override val session: SparkSession, host: String = "127.0.0.1
   * @param server
   * @param topic
   */
-class KafkaReader(override val session: SparkSession, server: String = "127.0.0.1:", topic: String)
+final class KafkaReader(override val session: SparkSession,
+                        server: String = "127.0.0.1:",
+                        topic: String)
     extends StreamingBaseReader(session) {
 
   require(server.trim.size != 0 && topic.trim.size != 0)

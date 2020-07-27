@@ -28,7 +28,7 @@ trait Processor extends Serializable {
   def process(): Unit
 
   def extraValue(row: Row, field: String): Any = {
-    // TODO
+    // TODO ?
     val index = row.schema.fieldIndex(field)
     row.schema.fields(index).dataType match {
       case StringType =>

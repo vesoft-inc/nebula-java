@@ -48,7 +48,7 @@ abstract class ServerBaseReader(override val session: SparkSession, sentence: St
   * @param session
   * @param sentence
   */
-class HiveReader(override val session: SparkSession, sentence: String)
+final class HiveReader(override val session: SparkSession, sentence: String)
     extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = {
     session.sql(sentence)
@@ -68,14 +68,14 @@ class HiveReader(override val session: SparkSession, sentence: String)
   * @param password
   * @param sentence
   */
-class MySQLReader(override val session: SparkSession,
-                  host: String = "127.0.0.1",
-                  port: Int = 3699,
-                  database: String,
-                  table: String,
-                  user: String,
-                  password: String,
-                  sentence: String)
+final class MySQLReader(override val session: SparkSession,
+                        host: String = "127.0.0.1",
+                        port: Int = 3699,
+                        database: String,
+                        table: String,
+                        user: String,
+                        password: String,
+                        sentence: String)
     extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = {
     val url = s"jdbc:mysql://${host}:${port}/${database}?useUnicode=true&characterEncoding=utf-8"
@@ -94,7 +94,7 @@ class MySQLReader(override val session: SparkSession,
   * @param session
   * @param config
   */
-class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigEntry)
+final class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigEntry)
     extends ServerBaseReader(session, config.exec) {
 
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
@@ -198,9 +198,9 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
   * @param sentence
   * @param isEdge
   */
-class JanusGraphReader(override val session: SparkSession,
-                       sentence: String,
-                       isEdge: Boolean = false)
+final class JanusGraphReader(override val session: SparkSession,
+                             sentence: String,
+                             isEdge: Boolean = false)
     extends ServerBaseReader(session, sentence) {
 
   override def read(): DataFrame = {
@@ -229,7 +229,7 @@ class JanusGraphReader(override val session: SparkSession,
   * @param session
   * @param sentence
   */
-class NebulaReader(override val session: SparkSession, sentence: String)
+final class NebulaReader(override val session: SparkSession, sentence: String)
     extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = ???
 }
