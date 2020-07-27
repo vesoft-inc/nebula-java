@@ -36,7 +36,12 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
 
     public GraphClientImpl(List<HostAndPort> addresses, int timeout,
                            int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
+        this(addresses, timeout, DEFAULT_CONN_TIMEOUT_MS, connectionRetry, executionRetry);
+    }
+
+    public GraphClientImpl(List<HostAndPort> addresses, int timeout, int connTimeout,
+        int connectionRetry, int executionRetry) {
+        super(addresses, timeout, connTimeout, connectionRetry, executionRetry);
     }
 
     public GraphClientImpl(List<HostAndPort> addresses) {
@@ -52,7 +57,8 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
-        transport = new TSocket(address.getHostText(), address.getPort(), timeout);
+        transport = new TSocket(address.getHostText(), address.getPort(), timeout,
+            connectionTimeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new GraphService.Client(protocol);

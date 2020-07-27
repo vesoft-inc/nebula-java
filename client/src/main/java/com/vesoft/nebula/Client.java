@@ -29,6 +29,7 @@ public interface Client extends AutoCloseable, Serializable {
     }
 
     int DEFAULT_TIMEOUT_MS = 1000;
+    int DEFAULT_CONN_TIMEOUT_MS = 3000;
     int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     int DEFAULT_EXECUTION_RETRY_SIZE = 3;
 
