@@ -194,11 +194,11 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
                                   parallel: Int,
                                   checkPointPath: Option[String])
     extends DataSourceConfigEntry {
-  require(exec.trim.length != 0 && user.trim.length != 0 && password.trim.length != 0)
+  require(exec.trim.length != 0 && user.trim.length != 0 && parallel > 0)
 
   override def toString: String = {
     s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
-      s" checkPointPath: ${checkPointPath}, exec: ${exec}"
+      s" checkPointPath: ${checkPointPath}, exec: ${exec}, parallel: ${parallel}, database: ${database}"
   }
 }
 
