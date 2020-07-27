@@ -189,6 +189,7 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
                                   server: String,
                                   user: String,
                                   password: String,
+                                  database: Option[String],
                                   encryption: Boolean,
                                   parallel: Int,
                                   checkPointPath: Option[String])
@@ -750,6 +751,7 @@ object Configs {
         val encryption =
           if (config.hasPath("encryption")) config.getBoolean("encryption") else false
         val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
+        val database = if (config.hasPath("database")) Some(config.getString("database")) else None
         Neo4JSourceConfigEntry(
           SourceCategory.NEO4J,
           name,
@@ -757,6 +759,7 @@ object Configs {
           config.getString("server"),
           config.getString("user"),
           config.getString("password"),
+          database,
           encryption,
           parallel,
           checkPointPath

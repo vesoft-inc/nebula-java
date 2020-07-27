@@ -13,13 +13,17 @@ import org.apache.spark.TaskContext
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.StructType
-import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{ClusterCountMapReduce, PeerPressureVertexProgram}
+import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
+  ClusterCountMapReduce,
+  PeerPressureVertexProgram
+}
 import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
 import org.neo4j.spark.{Executor, Neo4jConfig}
 import org.neo4j.spark.dataframe.CypherTypes
+import org.neo4j.spark.utils.Neo4jSessionAwareIterator
 
 import scala.collection.JavaConverters._
 
@@ -142,11 +146,15 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
       LOG.warn(s"${config.name} already write done from check point.")
       return session.createDataFrame(session.sparkContext.emptyRDD[Row], new StructType())
     }
-    if (offsets.forall(_.size < 0L))
+    if (offsets.exists(_.size < 0L))
       throw new RuntimeException(
         s"Your check point file maybe broken. Please delete ${config.name}.* file")
 
-    val neo4jConfig = Neo4jConfig(session.sparkContext.getConf)
+    val neo4jConfig = Neo4jConfig(config.server,
+                                  config.user,
+                                  Some(config.password),
+                                  config.database,
+                                  config.encryption)
 
     val rdd = session.sparkContext
       .parallelize(offsets, offsets.size)
@@ -155,9 +163,12 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
           val path = s"${config.checkPointPath.get}/${config.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val neo4jSession = neo4jConfig.driver().session(neo4jConfig.sessionConfig(false))
-        val result       = neo4jSession.run(s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}")
-        val fields       = result.keys().asScala
+        val query = s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}"
+        val result = new Neo4jSessionAwareIterator(neo4jConfig,
+                                                   query,
+                                                   new java.util.HashMap[String, AnyRef](),
+                                                   false)
+        val fields = if (result.hasNext) result.peek().keys().asScala else List()
         val schema =
           if (result.hasNext)
             StructType(
@@ -165,7 +176,7 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
                 .map(k => (k, result.peek().get(k).`type`()))
                 .map(keyType => CypherTypes.field(keyType)))
           else new StructType()
-        result.list.asScala.map(record => {
+        result.map(record => {
           val row = new Array[Any](record.keys().size())
           for (i <- row.indices)
             row.update(i, Executor.convert(record.get(i).asObject()))
