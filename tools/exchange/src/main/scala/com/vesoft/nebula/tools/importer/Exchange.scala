@@ -43,7 +43,7 @@ final case class TooManyErrorsException(private val message: String) extends Exc
 /**
   * SparkClientGenerator is a simple spark job used to write data into Nebula Graph parallel.
   */
-object SparkImporter {
+object Exchange {
   private[this] val LOG = Logger.getLogger(this.getClass)
 
   private[this] val DEFAULT_ERROR_TIMES = 16
