@@ -156,9 +156,6 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
       config.database,
       config.encryption)
 
-    val query = s"${config.exec} LIMIT 1"
-
-
     val rdd = session.sparkContext
       .parallelize(offsets, offsets.size)
       .flatMap(offset => {
