@@ -14,7 +14,10 @@ import org.apache.spark.TaskContext
 import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.StructType
-import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{ClusterCountMapReduce, PeerPressureVertexProgram}
+import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
+  ClusterCountMapReduce,
+  PeerPressureVertexProgram
+}
 import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
@@ -26,13 +29,13 @@ import org.neo4j.spark.utils.Neo4jSessionAwareIterator
 import scala.collection.JavaConverters._
 
 /**
- * @{link ServerBaseReader} is the abstract class of
- *        It include a spark session and a sentence which will sent to service.
- * @param session
- * @param sentence
- */
+  * @{link ServerBaseReader} is the abstract class of
+  *        It include a spark session and a sentence which will sent to service.
+  * @param session
+  * @param sentence
+  */
 abstract class ServerBaseReader(override val session: SparkSession, sentence: String)
-  extends Reader {
+    extends Reader {
 
   override def close(): Unit = {
     session.close()
@@ -40,31 +43,31 @@ abstract class ServerBaseReader(override val session: SparkSession, sentence: St
 }
 
 /**
- * @{link HiveReader} extends the @{link ServerBaseReader}.
- *        The HiveReader reading data from Apache Hive via sentence.
- * @param session
- * @param sentence
- */
+  * @{link HiveReader} extends the @{link ServerBaseReader}.
+  *        The HiveReader reading data from Apache Hive via sentence.
+  * @param session
+  * @param sentence
+  */
 class HiveReader(override val session: SparkSession, sentence: String)
-  extends ServerBaseReader(session, sentence) {
+    extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = {
     session.sql(sentence)
   }
 }
 
 /**
- * The @{link MySQLReader} extends the @{link ServerBaseReader}.
- * The MySQLReader reading data from MySQL via sentence.
- *
- * @param session
- * @param host
- * @param port
- * @param database
- * @param table
- * @param user
- * @param password
- * @param sentence
- */
+  * The @{link MySQLReader} extends the @{link ServerBaseReader}.
+  * The MySQLReader reading data from MySQL via sentence.
+  *
+  * @param session
+  * @param host
+  * @param port
+  * @param database
+  * @param table
+  * @param user
+  * @param password
+  * @param sentence
+  */
 class MySQLReader(override val session: SparkSession,
                   host: String = "127.0.0.1",
                   port: Int = 3699,
@@ -73,7 +76,7 @@ class MySQLReader(override val session: SparkSession,
                   user: String,
                   password: String,
                   sentence: String)
-  extends ServerBaseReader(session, sentence) {
+    extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = {
     val url = s"jdbc:mysql://${host}:${port}/${database}?useUnicode=true&characterEncoding=utf-8"
     session.read
@@ -87,18 +90,18 @@ class MySQLReader(override val session: SparkSession,
 }
 
 /**
- * @{link Neo4JReader} extends the @{link ServerBaseReader}
- * @param session
- * @param config
- */
+  * @{link Neo4JReader} extends the @{link ServerBaseReader}
+  * @param session
+  * @param config
+  */
 class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigEntry)
-  extends ServerBaseReader(session, config.exec) {
+    extends ServerBaseReader(session, config.exec) {
 
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
   override def read(): DataFrame = {
     val totalCount: Long = {
-      val returnIndex = config.exec.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
+      val returnIndex   = config.exec.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
       val countSentence = config.exec.substring(0, returnIndex) + " count(*)"
       val driver =
         GraphDatabase.driver(s"${config.server}", AuthTokens.basic(config.user, config.password))
@@ -151,10 +154,10 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
         s"Your check point file maybe broken. Please delete ${config.name}.* file")
 
     val neo4jConfig = Neo4jConfig(config.server,
-      config.user,
-      Some(config.password),
-      config.database,
-      config.encryption)
+                                  config.user,
+                                  Some(config.password),
+                                  config.database,
+                                  config.encryption)
 
     val rdd = session.sparkContext
       .parallelize(offsets, offsets.size)
@@ -163,11 +166,8 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
           val path = s"${config.checkPointPath.get}/${config.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val query = s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}"
-        val result = new Neo4jSessionAwareIterator(neo4jConfig,
-          query,
-          Maps.newHashMap(),
-          false)
+        val query  = s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}"
+        val result = new Neo4jSessionAwareIterator(neo4jConfig, query, Maps.newHashMap(), false)
         val fields = if (result.hasNext) result.peek().keys().asScala else List()
         val schema =
           if (result.hasNext)
@@ -193,15 +193,15 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
 }
 
 /**
- * @{link JanusGraphReader} extends the @{link ServerBaseReader}
- * @param session
- * @param sentence
- * @param isEdge
- */
+  * @{link JanusGraphReader} extends the @{link ServerBaseReader}
+  * @param session
+  * @param sentence
+  * @param isEdge
+  */
 class JanusGraphReader(override val session: SparkSession,
                        sentence: String,
                        isEdge: Boolean = false)
-  extends ServerBaseReader(session, sentence) {
+    extends ServerBaseReader(session, sentence) {
 
   override def read(): DataFrame = {
     val graph = GraphFactory.open("conf/hadoop/hadoop-gryo.properties")
@@ -225,11 +225,11 @@ class JanusGraphReader(override val session: SparkSession,
 }
 
 /**
- *
- * @param session
- * @param sentence
- */
+  *
+  * @param session
+  * @param sentence
+  */
 class NebulaReader(override val session: SparkSession, sentence: String)
-  extends ServerBaseReader(session, sentence) {
+    extends ServerBaseReader(session, sentence) {
   override def read(): DataFrame = ???
 }
