@@ -9,6 +9,7 @@ package com.vesoft.nebula.tools.importer.processor
 import java.util.concurrent.{CountDownLatch, Executors, TimeUnit}
 
 import com.google.common.util.concurrent.{Futures, MoreExecutors, RateLimiter}
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import com.vesoft.nebula.tools.importer.{
   Configs,
   ErrorHandler,
@@ -71,7 +72,7 @@ class VerticesProcessor(data: DataFrame,
         Vertex(vertexID, values)
       }(Encoders.kryo[Vertex])
       .foreachPartition { iterator: Iterator[Vertex] =>
-        val taskID = TaskContext.get.taskAttemptId
+        val partitionId = TaskContext.getPartitionId()
 
         // TODO Support Multi Writer
         val writer = new NebulaGraphClientWriter(config.databaseConfig,
@@ -81,33 +82,38 @@ class VerticesProcessor(data: DataFrame,
                                                  tagConfig)
         writer.prepare()
 
-        val futures     = new ProcessResult()
-        val errorBuffer = ArrayBuffer[String]()
-        val rateLimiter = RateLimiter.create(config.rateConfig.limit)
-        val service     = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
+        val futures                 = new ProcessResult()
+        val errorBuffer             = ArrayBuffer[String]()
+        val rateLimiter             = RateLimiter.create(config.rateConfig.limit)
+        val service                 = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1))
+        var breakPointVerticesCount = 0L
+
         iterator.grouped(tagConfig.batch).foreach { vertex =>
           val vertices = Vertices(nebulaKeys, vertex.toList, None, tagConfig.vertexPolicy)
           if (rateLimiter.tryAcquire(config.rateConfig.timeout, TimeUnit.MILLISECONDS)) {
             val future = writer.writeVertices(vertices)
             futures += future
+            breakPointVerticesCount += vertices.values.length
 
             if (futures.size == 100) { // TODO configurable ?
 
               val pathAndOffset =
                 if (tagConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
                     tagConfig.checkPointPath.isDefined) {
-                  val offset = fetchOffset(s"${tagConfig.checkPointPath}/${taskID}")
-                  Some((tagConfig.checkPointPath.get, offset))
+                  val path   = s"${tagConfig.checkPointPath.get}/${tagConfig.name}.${partitionId}"
+                  val offset = breakPointVerticesCount + fetchOffset(path)
+                  Some((path, offset))
                 } else {
                   None
                 }
-
+              breakPointVerticesCount = 0L
               val latch      = new CountDownLatch(100)
               val allFutures = Futures.allAsList(futures: _*)
               Futures.addCallback(
                 allFutures,
                 new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
                 service)
+              latch.await()
               futures.clear()
             }
           } else {
@@ -115,6 +121,10 @@ class VerticesProcessor(data: DataFrame,
             errorBuffer += writer.toExecuteSentence(tagConfig.name, vertices)
             if (errorBuffer.size == config.errorConfig.errorMaxSize) {
               throw TooManyErrorsException(s"Too Many Errors ${config.errorConfig.errorMaxSize}")
+            }
+            if (tagConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
+                tagConfig.checkPointPath.isDefined) {
+              throw new RuntimeException(s"Write tag ${tagConfig.name} errors")
             }
           }
 
@@ -128,12 +138,14 @@ class VerticesProcessor(data: DataFrame,
           val pathAndOffset =
             if (tagConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
                 tagConfig.checkPointPath.isDefined) {
-              val offset = fetchOffset(s"${tagConfig.checkPointPath}/${taskID}")
-              Some((tagConfig.checkPointPath.get, offset))
+              val path   = s"${tagConfig.checkPointPath.get}/${tagConfig.name}.${partitionId}"
+              val offset = breakPointVerticesCount + fetchOffset(path)
+              Some((path, offset))
             } else {
               None
             }
 
+          breakPointVerticesCount = 0L
           val latch      = new CountDownLatch(futures.size)
           val allFutures = Futures.allAsList(futures: _*)
           Futures.addCallback(
