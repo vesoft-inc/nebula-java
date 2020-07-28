@@ -182,22 +182,23 @@ case class HiveSourceConfigEntry(override val category: SourceCategory.Value, ex
 /**
   *
   * @param exec
-  * @param offset
   */
 case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
+                                  name: String,
                                   exec: String,
                                   server: String,
                                   user: String,
                                   password: String,
+                                  database: Option[String],
                                   encryption: Boolean,
-                                  offset: Long)
+                                  parallel: Int,
+                                  checkPointPath: Option[String])
     extends DataSourceConfigEntry {
-  require(
-    exec.trim.length != 0 && offset >= 0 && user.trim.length != 0 && password.trim.length != 0)
+  require(exec.trim.length != 0 && user.trim.length != 0 && parallel > 0)
 
   override def toString: String = {
     s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
-      s" offset: ${offset}, exec: ${exec}"
+      s" checkPointPath: ${checkPointPath}, exec: ${exec}, parallel: ${parallel}, database: ${database}"
   }
 }
 
@@ -550,9 +551,17 @@ object Configs {
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
-        val batch          = getOrElse(tagConfig, "batch", DEFAULT_BATCH)
-        val partition      = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
-        val checkPointPath = getOrElse(tagConfig, "check_point", DEFAULT_CHECK_POINT_PATH)
+        val batch = getOrElse(tagConfig, "batch", DEFAULT_BATCH)
+        val checkPointPath =
+          if (tagConfig.hasPath("check_point")) Some(tagConfig.getString("check_point"))
+          else DEFAULT_CHECK_POINT_PATH
+
+        if (checkPointPath.isDefined && tagConfig.hasPath("partition") && tagConfig.getInt(
+              "partition") >= 0)
+          throw new IllegalArgumentException(
+            s"If you set check point path in ${tagName}, you must set partition<0 or not set!")
+        val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
+
         LOG.info(s"name ${tagName}  batch ${batch}")
         val entry = TagConfigEntry(tagName,
                                    sourceConfig,
@@ -645,9 +654,17 @@ object Configs {
           None
         }
 
-        val batch          = getOrElse(edgeConfig, "batch", DEFAULT_BATCH)
-        val partition      = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
-        val checkPointPath = getOrElse(edgeConfig, "check_point", DEFAULT_CHECK_POINT_PATH)
+        val batch = getOrElse(edgeConfig, "batch", DEFAULT_BATCH)
+        val checkPointPath =
+          if (edgeConfig.hasPath("check_point")) Some(edgeConfig.getString("check_point"))
+          else DEFAULT_CHECK_POINT_PATH
+
+        if (checkPointPath.isDefined && edgeConfig.hasPath("partition") && edgeConfig.getInt(
+              "partition") >= 0)
+          throw new IllegalArgumentException(
+            s"If you set check point path in ${edgeName}, you must set partition<0 or not set!")
+        val partition = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
+
         val entry = EdgeConfigEntry(
           edgeName,
           sourceConfig,
@@ -727,16 +744,26 @@ object Configs {
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
-        val offset = if (config.hasPath("offset")) config.getLong("offset") else 0L
+        val name = config.getString("name")
+        val checkPointPath =
+          if (config.hasPath("check_point")) Some(config.getString("check_point"))
+          else DEFAULT_CHECK_POINT_PATH
         val encryption =
           if (config.hasPath("encryption")) config.getBoolean("encryption") else false
-        Neo4JSourceConfigEntry(SourceCategory.NEO4J,
-                               config.getString("exec"),
-                               config.getString("server"),
-                               config.getString("user"),
-                               config.getString("password"),
-                               encryption,
-                               offset)
+        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
+        val database = if (config.hasPath("database")) Some(config.getString("database")) else None
+        Neo4JSourceConfigEntry(
+          SourceCategory.NEO4J,
+          name,
+          config.getString("exec"),
+          config.getString("server"),
+          config.getString("user"),
+          config.getString("password"),
+          database,
+          encryption,
+          parallel,
+          checkPointPath
+        )
       case SourceCategory.JANUS_GRAPH =>
         JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
       case SourceCategory.SOCKET =>
