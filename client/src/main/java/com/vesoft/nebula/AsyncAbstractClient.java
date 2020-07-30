@@ -24,7 +24,7 @@ public abstract class AsyncAbstractClient extends AbstractClient {
 
     public AsyncAbstractClient(List<HostAndPort> addresses, int timeout,
                                int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connectionRetry, executionRetry);
+        super(addresses, timeout, DEFAULT_CONN_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
     public AsyncAbstractClient(List<HostAndPort> addresses) {
