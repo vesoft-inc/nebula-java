@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # --coding:utf-8--
 
-# Copyright (c) 2019 vesoft inc. All rights reserved.
+# Copyright (c) 2020 vesoft inc. All rights reserved.
 #
 # This source code is licensed under Apache 2.0 License,
 # attached with Common Clause Condition 1.0, found in the LICENSES directory.
+
+import collections
 
 
 def gen_property(id: int):
@@ -14,6 +16,20 @@ def gen_property(id: int):
         "tboolean": id % 2 == 0,
         "tdouble": id + 0.01
     }
+
+
+property_schema = collections.OrderedDict({
+    "idInt": "int",
+    "idString": "string",
+    "tboolean": "boolean",
+    "tdouble": "double"
+})
+
+edge_schema = {
+    "from": ["idFrom", "int"],
+    "to": ["idTo", "int"],
+    "property": property_schema
+}
 
 
 def gen_vertex(id: int):
@@ -45,13 +61,13 @@ def mock_data(start_id: int, prefix_name: str, tagA_num: int, tagB_num: int, a_a
     name_edgeAA = prefix_name + "edgeAA"
     name_edgeAB = prefix_name + "edgeAB"
     data = {"vertex": {
-        name_tagA: {"data": []},
-        name_tagB: {"data": []}
+        name_tagA: {"data": [], "schema": property_schema},
+        name_tagB: {"data": [], "schema": property_schema}
     },
         "edge": {
-            name_edgeAA: {"data": []},
-            name_edgeAB: {"data": []}
-        }}
+            name_edgeAA: {"data": [], "schema": edge_schema},
+            name_edgeAB: {"data": [], "schema": edge_schema}
+    }}
     tagA_data = data["vertex"][name_tagA]["data"]
     tagB_data = data["vertex"][name_tagB]["data"]
     edgeAA_data = data["edge"][name_edgeAA]["data"]
@@ -117,7 +133,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='generate graph json')
 
     parser.add_argument('-o', '--output',
-                        help='output path', type=str, required=True)
+                        help='output path prefix', type=str, required=True)
     parser.add_argument('-a', '--tagAnum',
                         help='tagA num', type=int, default=100)
     parser.add_argument('-b', '--tagBnum', help='tag b num',
@@ -128,13 +144,57 @@ if __name__ == '__main__':
                         type=int, default=100)
     parser.add_argument('-edge_count_type', '--edge_count_type', help="count: edge num, degree: edge degree",
                         choices=['count', 'degree'], default='count')
-    parser.add_argument('-p', '--prefix', help='tag/edge name prefix', type=str, default="")
+    parser.add_argument(
+        '-p', '--prefix', help='tag/edge name prefix', type=str, default="")
     parser.add_argument("-s", '--start_id',
                         help='start id', default=0, type=int)
+    parser.add_argument("-t", '--type', help="output format csv or json",
+                        choices=['json', 'csv'], default='json')
 
     args = parser.parse_args()
 
     data = mock_data(args.start_id, args.prefix, args.tagAnum,
                      args.tagBnum, args.edgeAAnum, args.edgeABnum, args.edge_count_type)
-    with open(args.output, "w") as f:
-        json.dump(data, f, indent=4)
+    if args.type == 'json':
+        with open(args.output+".json", "w") as f:
+            json.dump(data, f, indent=4)
+    elif args.type == 'csv':
+        import csv
+        import os
+        import_sentences = []
+        for name, v in data["vertex"].items():
+            path = args.output+"{}.vertex.csv".format(name)
+            import_sentences.append({
+                'name': name,
+                'hive_create': "CREATE TABLE {} ".format(name) + "({})".format(
+                    ','.join(map(lambda k, t: k+' '+t.upper(), v['schema'].keys(), v['schema'].values()))) +
+                ' row format serde \'org.apache.hadoop.hive.serde2.OpenCSVSerde\' with serdeproperties ("separatorChar"=",") stored as textfile;',
+                'hive_import': "LOAD DATA LOCAL INPATH '{}' OVERWRITE INTO TABLE {};".format(os.path.abspath(path), name)
+            })
+            rows = map(lambda x: x.values(), v['data'])
+            with open(path, 'w') as f:
+                csv_writer = csv.writer(f)
+                csv_writer.writerows(rows)
+
+        for name, e in data['edge'].items():
+            path = args.output+"{}.edge.csv".format(name)
+            import_sentences.append({
+                'name': name,
+                'hive_create': "CREATE TABLE {} ".format(name) + "({})".format(
+                    ','.join(list(map(lambda x:x[0]+" "+x[1].upper(), [e['schema']['from'], e['schema']['to']]))+list(map(lambda k, t: k+' '+t.upper(), e['schema']['property'].keys(), e['schema']['property'].values())))) +
+                ' row format serde \'org.apache.hadoop.hive.serde2.OpenCSVSerde\' with serdeproperties ("separatorChar"=",") stored as textfile;',
+                'hive_import': "LOAD DATA LOCAL INPATH '{}' OVERWRITE INTO TABLE {};".format(os.path.abspath(path), name)
+            })
+            rows = map(lambda x: [list(x['from']['match'].values())[0], list(
+                x['to']['match'].values())[0]]+list(x['data'].values()), e['data'])
+            with open(path, 'w') as f:
+                csv_writer = csv.writer(f)
+                csv_writer.writerows(rows)
+
+        with open(args.output+"import.sentence.txt", 'w') as f:
+            # json.dump(import_sentences, f, indent=4)
+            for item in import_sentences:
+                for k,v in item.items():
+                    f.write("{}:\n{}\n".format(k, v))
+                f.write("="*30+"\n")
+            
