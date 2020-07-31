@@ -15,7 +15,6 @@ import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,11 +182,10 @@ public class GraphClientExample {
             }
 
             LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
-
-            for (RowValue value : resultSet.getRows()) {
-                LOGGER.info(String.format("%s, %d, %s", new String(value.columns.get(0).getStr()),
-                                                        value.columns.get(1).getInteger(),
-                                                        new String(value.columns.get(2).getStr())));
+            for (ResultSet.Result value : resultSet.getResults()) {
+                LOGGER.info(String.format("%s, %d, %s", new String(value.get("Friend").getStr()),
+                        value.get("Age").getInteger(),
+                        new String(value.get("Gender").getStr())));
             }
 
             LOGGER.info(batchInsertEdges);
