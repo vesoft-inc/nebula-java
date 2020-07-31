@@ -8,6 +8,7 @@ package com.vesoft.nebula.client.graph;
 
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.ColumnValue;
+import com.vesoft.nebula.graph.DateTime;
 import com.vesoft.nebula.graph.RowValue;
 
 import java.io.Serializable;
@@ -38,6 +39,34 @@ public class ResultSet implements Serializable, Cloneable{
 
         public ColumnValue get(String key) {
             return this.row.columns.get(columns.indexOf(key));
+        }
+
+        public String getString(String key) {
+            return new String(this.get(key).getStr()).intern();
+        }
+
+        public long getInteger(String key){
+            return this.get(key).getInteger();
+        }
+
+        public long getId(String key){
+            return this.get(key).getId();
+        }
+
+        public double getDouble(String key){
+            return this.get(key).getDouble_precision();
+        }
+
+        public float getFloat(String key){
+            return this.get(key).getSingle_precision();
+        }
+
+        public DateTime getDateTime(String key){
+            return this.get(key).getDatetime();
+        }
+
+        public boolean getBoolean(String key){
+            return this.get(key).isBool_val();
         }
 
         public int size() {

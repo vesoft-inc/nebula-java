@@ -183,9 +183,9 @@ public class GraphClientExample {
 
             LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
             for (ResultSet.Result value : resultSet.getResults()) {
-                LOGGER.info(String.format("%s, %d, %s", new String(value.get("Friend").getStr()),
-                        value.get("Age").getInteger(),
-                        new String(value.get("Gender").getStr())));
+                LOGGER.info(String.format("%s, %d, %s", value.getString("Friend"),
+                        value.getInteger("Age"),
+                        value.getString("Gender")));
             }
 
             LOGGER.info(batchInsertEdges);
