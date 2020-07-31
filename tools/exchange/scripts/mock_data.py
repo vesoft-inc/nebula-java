@@ -19,15 +19,15 @@ def gen_property(id: int):
 
 
 property_schema = collections.OrderedDict({
-    "idInt": "int",
-    "idString": "string",
-    "tboolean": "boolean",
-    "tdouble": "double"
+    "idInt": {"hive": "int", "sql": "int"},
+    "idString": {"hive": "string", "sql": "text"},
+    "tboolean": {"hive": "boolean", "sql": "bool"},
+    "tdouble": {"hive": "double", "sql": "double"}
 })
 
 edge_schema = {
-    "from": ["idFrom", "int"],
-    "to": ["idTo", "int"],
+    "idFrom": {"hive": "int", "sql": "int"},
+    "idTo": {"hive": "int", "sql": "int"},
     "property": property_schema
 }
 
@@ -35,6 +35,10 @@ edge_schema = {
 def gen_vertex(id: int):
     return gen_property(id)
 
+def value2str(value):
+    if isinstance(value, str):
+        return '"{}"'.format(value)
+    return str(value)
 
 def gen_edge(id: int, from_tag: str, from_id: int, to_tag: str, to_id: int):
     return {
@@ -148,8 +152,8 @@ if __name__ == '__main__':
         '-p', '--prefix', help='tag/edge name prefix', type=str, default="")
     parser.add_argument("-s", '--start_id',
                         help='start id', default=0, type=int)
-    parser.add_argument("-t", '--type', help="output format csv or json",
-                        choices=['json', 'csv'], default='json')
+    parser.add_argument("-t", '--type', help="output format csv or json or sql",
+                        choices=['json', 'csv', 'sql'], default='json')
 
     args = parser.parse_args()
 
@@ -167,7 +171,7 @@ if __name__ == '__main__':
             import_sentences.append({
                 'name': name,
                 'hive_create': "CREATE TABLE {} ".format(name) + "({})".format(
-                    ','.join(map(lambda k, t: k+' '+t.upper(), v['schema'].keys(), v['schema'].values()))) +
+                    ','.join(map(lambda k, t: k+' '+t['hive'].upper(), v['schema'].keys(), v['schema'].values()))) +
                 ' row format serde \'org.apache.hadoop.hive.serde2.OpenCSVSerde\' with serdeproperties ("separatorChar"=",") stored as textfile;',
                 'hive_import': "LOAD DATA LOCAL INPATH '{}' OVERWRITE INTO TABLE {};".format(os.path.abspath(path), name)
             })
@@ -181,7 +185,7 @@ if __name__ == '__main__':
             import_sentences.append({
                 'name': name,
                 'hive_create': "CREATE TABLE {} ".format(name) + "({})".format(
-                    ','.join(list(map(lambda x:x[0]+" "+x[1].upper(), [e['schema']['from'], e['schema']['to']]))+list(map(lambda k, t: k+' '+t.upper(), e['schema']['property'].keys(), e['schema']['property'].values())))) +
+                    ','.join(list(['idFrom '+e['schema']['idFrom']['hive'].upper(), 'idTo '+e['schema']['idTo']['hive'].upper()])+list(map(lambda k, t: k+' '+t['hive'].upper(), e['schema']['property'].keys(), e['schema']['property'].values())))) +
                 ' row format serde \'org.apache.hadoop.hive.serde2.OpenCSVSerde\' with serdeproperties ("separatorChar"=",") stored as textfile;',
                 'hive_import': "LOAD DATA LOCAL INPATH '{}' OVERWRITE INTO TABLE {};".format(os.path.abspath(path), name)
             })
@@ -194,7 +198,33 @@ if __name__ == '__main__':
         with open(args.output+"import.sentence.txt", 'w') as f:
             # json.dump(import_sentences, f, indent=4)
             for item in import_sentences:
-                for k,v in item.items():
+                for k, v in item.items():
                     f.write("{}:\n{}\n".format(k, v))
                 f.write("="*30+"\n")
-            
+    elif args.type == 'sql':
+        batch_size = 10
+        path = args.output+".sql"
+        statements = []
+        for name, v in data["vertex"].items():
+            schema = v['schema']
+            create_statement = "CREATE TABLE {}".format(name) + "({})".format(','.join(
+                map(lambda k, t: k+" "+t['sql'].upper(), schema.keys(), schema.values())))
+            statements.append(create_statement)
+            for i in range(0, len(v['data'])//batch_size+(0 if len(v['data'])%batch_size==0 else 1)):
+                batch_data = v['data'][i*batch_size:(i+1)*batch_size]
+                insert_statement = "insert into {} values {}".format(name, ",".join(map(lambda x:'('+",".join(map(value2str,x.values()))+')', batch_data)))
+                statements.append(insert_statement)
+
+        for name, e in data['edge'].items():
+            schema = e['schema']
+            create_statement = "CREATE TABLE {}".format(name) + "({})".format(",".join(list(['idFrom '+schema['idFrom']['sql'].upper(
+            ), 'idTo '+schema['idTo']['sql'].upper()])+list(map(lambda k, t: k+" "+t['sql'].upper(), schema['property'].keys(), schema['property'].values()))))
+            statements.append(create_statement)
+
+            for i in range(0, len(v['data'])//batch_size+(0 if len(v['data'])%batch_size==0 else 1)):
+                batch_data = e['data'][i*batch_size:(i+1)*batch_size]
+                insert_statement = "insert into {} values {}".format(name, ",".join(map(lambda x:'('+",".join([str(list(x['from']['match'].values())[0]), str(list(x['to']['match'].values())[0])]+list(map(value2str,x['data'].values())))+')', batch_data)))
+                statements.append(insert_statement)
+        with open(path, 'w') as f:
+            f.writelines("\n".join(statements))
+
