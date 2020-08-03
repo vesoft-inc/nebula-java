@@ -10,19 +10,11 @@ import java.util.concurrent.{CountDownLatch, Executors, TimeUnit}
 
 import com.google.common.geometry.{S2CellId, S2LatLng}
 import com.google.common.util.concurrent.{Futures, MoreExecutors, RateLimiter}
-import com.vesoft.nebula.tools.importer.{
-  Configs,
-  Edge,
-  EdgeConfigEntry,
-  Edges,
-  ErrorHandler,
-  ProcessResult,
-  SourceCategory,
-  TooManyErrorsException
-}
+import com.vesoft.nebula.tools.importer.{Configs, Edge, EdgeConfigEntry, Edges, ErrorHandler, ProcessResult, SourceCategory, TooManyErrorsException}
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
+import org.apache.spark.sql.types.{IntegerType, LongType, ShortType}
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
 
@@ -56,7 +48,7 @@ class EdgeProcessor(data: DataFrame,
         val sourceField = if (!edgeConfig.isGeo) {
           val sourceIndex = row.schema.fieldIndex(edgeConfig.sourceField)
           if (edgeConfig.sourcePolicy.isEmpty) {
-            row.getLong(sourceIndex).toString
+            row.get(sourceIndex).toString
           } else {
             row.getString(sourceIndex)
           }
@@ -69,7 +61,7 @@ class EdgeProcessor(data: DataFrame,
         val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
         val targetField =
           if (edgeConfig.targetPolicy.isEmpty) {
-            row.getLong(targetIndex).toString
+            row.get(targetIndex).toString
           } else {
             row.getString(targetIndex)
           }
@@ -79,7 +71,13 @@ class EdgeProcessor(data: DataFrame,
         } yield extraValue(row, property)
 
         if (edgeConfig.rankingField.isDefined) {
-          val ranking = row.getLong(row.schema.fieldIndex(edgeConfig.rankingField.get))
+          val index = row.schema.fieldIndex(edgeConfig.rankingField.get)
+          val ranking = row.schema.fields(index).dataType match {
+            case LongType => row.getLong(index)
+            case IntegerType => row.getInt(index).toLong
+            case ShortType => row.getShort(index).toLong
+            case x => throw new RuntimeException(s"Not support ${x} type use as ranking")
+          }
           Edge(sourceField, targetField, Some(ranking), values)
         } else {
           Edge(sourceField, targetField, None, values)

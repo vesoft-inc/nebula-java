@@ -58,10 +58,7 @@ class VerticesProcessor(data: DataFrame,
         val vertexID =
           if (tagConfig.vertexPolicy.isEmpty) {
             val index = row.schema.fieldIndex(tagConfig.vertexField)
-            if (row.schema.fields(index).dataType == LongType)
-              row.getLong(index).toString
-            else
-              row.getString(index)
+            row.get(index).toString
           } else {
             row.getString(row.schema.fieldIndex(tagConfig.vertexField))
           }
