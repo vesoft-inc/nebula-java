@@ -21,10 +21,11 @@ import com.vesoft.nebula.tools.importer.reader.{
   HiveReader,
   JSONReader,
   KafkaReader,
+  MySQLReader,
+  Neo4JReader,
   ORCReader,
   ParquetReader,
-  SocketReader,
-  Neo4JReader
+  SocketReader
 }
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, Writer}
 import org.apache.log4j.Logger
@@ -250,6 +251,17 @@ object Exchange {
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
         val reader      = new Neo4JReader(session, neo4jConfig)
+        Some(reader.read())
+      case SourceCategory.MYSQL =>
+        val mysqlConfig = config.asInstanceOf[MySQLSourceConfigEntry]
+        val reader = new MySQLReader(session,
+                                     mysqlConfig.host,
+                                     mysqlConfig.port,
+                                     mysqlConfig.database,
+                                     mysqlConfig.table,
+                                     mysqlConfig.user,
+                                     mysqlConfig.password,
+                                     mysqlConfig.sentence)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")
