@@ -23,7 +23,7 @@ import com.vesoft.nebula.tools.importer.{
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
-import org.apache.spark.sql.types.LongType
+import org.apache.spark.sql.types.{IntegerType, LongType}
 import org.apache.spark.sql.{DataFrame, Encoders}
 import org.apache.spark.util.LongAccumulator
 
@@ -58,7 +58,11 @@ class VerticesProcessor(data: DataFrame,
         val vertexID =
           if (tagConfig.vertexPolicy.isEmpty) {
             val index = row.schema.fieldIndex(tagConfig.vertexField)
-            row.get(index).toString
+            row.schema.fields(index).dataType match {
+              case LongType    => row.getLong(index).toString
+              case IntegerType => row.getInt(index).toString
+              case x           => throw new RuntimeException(s"Not support ${x} type use as vertex field")
+            }
           } else {
             row.getString(row.schema.fieldIndex(tagConfig.vertexField))
           }

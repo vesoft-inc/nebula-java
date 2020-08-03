@@ -10,7 +10,16 @@ import java.util.concurrent.{CountDownLatch, Executors, TimeUnit}
 
 import com.google.common.geometry.{S2CellId, S2LatLng}
 import com.google.common.util.concurrent.{Futures, MoreExecutors, RateLimiter}
-import com.vesoft.nebula.tools.importer.{Configs, Edge, EdgeConfigEntry, Edges, ErrorHandler, ProcessResult, SourceCategory, TooManyErrorsException}
+import com.vesoft.nebula.tools.importer.{
+  Configs,
+  Edge,
+  EdgeConfigEntry,
+  Edges,
+  ErrorHandler,
+  ProcessResult,
+  SourceCategory,
+  TooManyErrorsException
+}
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
@@ -48,7 +57,11 @@ class EdgeProcessor(data: DataFrame,
         val sourceField = if (!edgeConfig.isGeo) {
           val sourceIndex = row.schema.fieldIndex(edgeConfig.sourceField)
           if (edgeConfig.sourcePolicy.isEmpty) {
-            row.get(sourceIndex).toString
+            row.schema.fields(sourceIndex).dataType match {
+              case LongType    => row.getLong(sourceIndex).toString
+              case IntegerType => row.getInt(sourceIndex).toString
+              case x           => throw new RuntimeException(s"Not support ${x} type use as source field")
+            }
           } else {
             row.getString(sourceIndex)
           }
@@ -61,7 +74,11 @@ class EdgeProcessor(data: DataFrame,
         val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
         val targetField =
           if (edgeConfig.targetPolicy.isEmpty) {
-            row.get(targetIndex).toString
+            row.schema.fields(targetIndex).dataType match {
+              case LongType    => row.getLong(targetIndex).toString
+              case IntegerType => row.getInt(targetIndex).toString
+              case x           => throw new RuntimeException(s"Not support ${x} type use as target field")
+            }
           } else {
             row.getString(targetIndex)
           }
@@ -73,10 +90,10 @@ class EdgeProcessor(data: DataFrame,
         if (edgeConfig.rankingField.isDefined) {
           val index = row.schema.fieldIndex(edgeConfig.rankingField.get)
           val ranking = row.schema.fields(index).dataType match {
-            case LongType => row.getLong(index)
+            case LongType    => row.getLong(index)
             case IntegerType => row.getInt(index).toLong
-            case ShortType => row.getShort(index).toLong
-            case x => throw new RuntimeException(s"Not support ${x} type use as ranking")
+            case ShortType   => row.getShort(index).toLong
+            case x           => throw new RuntimeException(s"Not support ${x} type use as ranking")
           }
           Edge(sourceField, targetField, Some(ranking), values)
         } else {
