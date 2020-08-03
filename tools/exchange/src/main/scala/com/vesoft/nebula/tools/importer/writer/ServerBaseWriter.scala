@@ -179,13 +179,17 @@ class NebulaWriterCallback(latch: CountDownLatch,
   private[this] val DEFAULT_ERROR_TIMES = 16
 
   override def onSuccess(results: java.util.List[Optional[Integer]]): Unit = {
-    latch.countDown()
+    if (pathAndOffset.isDefined) {
+      if (results.asScala.forall(_.get() == ErrorCode.SUCCEEDED))
+        HDFSUtils.saveContent(pathAndOffset.get._1, pathAndOffset.get._2.toString)
+      else
+        throw new RuntimeException(
+          s"Some error code: ${results.asScala.filter(_.get() != ErrorCode.SUCCEEDED).head} appear")
+    }
     for (result <- results.asScala) {
+      latch.countDown()
       if (result.get() == ErrorCode.SUCCEEDED) {
         batchSuccess.add(1)
-        if (pathAndOffset.isDefined) {
-          HDFSUtils.saveContent(pathAndOffset.get._1, pathAndOffset.get._2.toString)
-        }
       } else {
         batchFailure.add(1)
       }
@@ -201,7 +205,7 @@ class NebulaWriterCallback(latch: CountDownLatch,
     }
 
     if (pathAndOffset.isDefined) {
-      HDFSUtils.saveContent(pathAndOffset.get._1, pathAndOffset.get._2.toString)
+      throw new RuntimeException(s"Some error appear")
     }
   }
 }

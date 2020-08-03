@@ -22,20 +22,24 @@ public abstract class AbstractClient implements Client {
     protected final int connectionRetry;
     protected final int executionRetry;
     protected final int timeout;
+    // Note that it doesn't affect AsyncClients
+    protected final int connectionTimeout;
     protected TProtocol protocol;
     protected TTransport transport;
 
     /**
      * The Constructor of Client.
      *
-     * @param addresses       The addresses of graph services.
-     * @param timeout         The timeout of RPC request.
-     * @param connectionRetry The number of retries when connection failure.
-     * @param executionRetry  The number of retries when execution failure.
+     * @param addresses          The addresses of graph services.
+     * @param timeout            The timeout of RPC request.
+     * @param connectionTimeout  The timeout of RPC request.
+     * @param connectionRetry    The number of retries when connection failure.
+     * @param executionRetry     The number of retries when execution failure.
      */
-    public AbstractClient(List<HostAndPort> addresses, int timeout,
+    public AbstractClient(List<HostAndPort> addresses, int timeout, int connectionTimeout,
                           int connectionRetry, int executionRetry) {
         checkArgument(timeout > 0);
+        checkArgument(connectionTimeout >= 0);
         checkArgument(connectionRetry > 0);
         checkArgument(executionRetry > 0);
         for (HostAndPort address : addresses) {
@@ -49,6 +53,7 @@ public abstract class AbstractClient implements Client {
 
         this.addresses = addresses;
         this.timeout = timeout;
+        this.connectionTimeout = connectionTimeout;
         this.connectionRetry = connectionRetry;
         this.executionRetry = executionRetry;
     }
@@ -59,8 +64,8 @@ public abstract class AbstractClient implements Client {
      * @param addresses The addresses of graph services.
      */
     public AbstractClient(List<HostAndPort> addresses) {
-        this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE,
-                DEFAULT_EXECUTION_RETRY_SIZE);
+        this(addresses, DEFAULT_TIMEOUT_MS, DEFAULT_CONN_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE,
+            DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     /**
@@ -71,12 +76,12 @@ public abstract class AbstractClient implements Client {
      */
     public AbstractClient(String host, int port) {
         this(Lists.newArrayList(HostAndPort.fromParts(host, port)), DEFAULT_TIMEOUT_MS,
-                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_CONN_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     public AbstractClient() {
         this(Lists.newArrayList(), DEFAULT_TIMEOUT_MS,
-                DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
+            DEFAULT_CONN_TIMEOUT_MS, DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
     protected abstract int doConnect(List<HostAndPort> addresses) throws TException;

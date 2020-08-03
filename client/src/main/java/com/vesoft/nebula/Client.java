@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 public interface Client extends AutoCloseable, Serializable {
 
-    public static enum NebulaCode {
+    enum NebulaCode {
         SUCCEEDED(0);
 
         int code;
@@ -23,21 +23,18 @@ public interface Client extends AutoCloseable, Serializable {
             return code;
         }
 
-        private NebulaCode() {
-
-        }
-
         NebulaCode(int code) {
             this.code = code;
         }
     }
 
-    public static final int DEFAULT_TIMEOUT_MS = 1000;
-    public static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
-    public static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
+    int DEFAULT_TIMEOUT_MS = 1000;
+    int DEFAULT_CONN_TIMEOUT_MS = 3000;
+    int DEFAULT_CONNECTION_RETRY_SIZE = 3;
+    int DEFAULT_EXECUTION_RETRY_SIZE = 3;
 
-    public int connect() throws TException;
+    int connect() throws TException;
 
-    public boolean isConnected();
+    boolean isConnected();
 
 }

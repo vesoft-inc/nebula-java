@@ -232,4 +232,3 @@ if __name__ == '__main__':
                 statements.append(insert_statement)
         with open(path, 'w') as f:
             f.writelines(";\n".join(statements))
-
