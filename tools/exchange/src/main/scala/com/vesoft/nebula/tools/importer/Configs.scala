@@ -111,6 +111,7 @@ object SourceCategory extends Enumeration {
   val HIVE        = Value("HIVE")
   val NEO4J       = Value("NEO4J")
   val JANUS_GRAPH = Value("JANUS GRAPH")
+  val MYSQL       = Value("MYSQL")
 
   val SOCKET = Value("SOCKET")
   val KAFKA  = Value("KAFKA")
@@ -207,6 +208,19 @@ case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Val
   override def toString: String = {
     s"Neo4J source"
   }
+}
+
+case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
+                                  host: String,
+                                  port: Int,
+                                  database: String,
+                                  table: String,
+                                  user: String,
+                                  password: String,
+                                  sentence: String)
+    extends DataSourceConfigEntry {
+  require(
+    host.trim.length != 0 && port > 0 && database.trim.length > 0 && table.trim.length > 0 && user.trim.length > 0)
 }
 
 /**
@@ -556,8 +570,8 @@ object Configs {
           if (tagConfig.hasPath("check_point")) Some(tagConfig.getString("check_point"))
           else DEFAULT_CHECK_POINT_PATH
 
-        if (checkPointPath.isDefined && tagConfig.hasPath("partition") && tagConfig.getInt(
-              "partition") >= 0)
+        if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && tagConfig
+              .hasPath("partition") && tagConfig.getInt("partition") >= 0)
           throw new IllegalArgumentException(
             s"If you set check point path in ${tagName}, you must set partition<0 or not set!")
         val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
@@ -659,8 +673,8 @@ object Configs {
           if (edgeConfig.hasPath("check_point")) Some(edgeConfig.getString("check_point"))
           else DEFAULT_CHECK_POINT_PATH
 
-        if (checkPointPath.isDefined && edgeConfig.hasPath("partition") && edgeConfig.getInt(
-              "partition") >= 0)
+        if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && edgeConfig
+              .hasPath("partition") && edgeConfig.getInt("partition") >= 0)
           throw new IllegalArgumentException(
             s"If you set check point path in ${edgeName}, you must set partition<0 or not set!")
         val partition = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
@@ -708,6 +722,7 @@ object Configs {
       case "NEO4J"   => SourceCategory.NEO4J
       case "SOCKET"  => SourceCategory.SOCKET
       case "KAFKA"   => SourceCategory.KAFKA
+      case "MYSQL"   => SourceCategory.MYSQL
       case _         => throw new IllegalArgumentException(s"${category} not support")
     }
   }
@@ -766,6 +781,17 @@ object Configs {
         )
       case SourceCategory.JANUS_GRAPH =>
         JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
+      case SourceCategory.MYSQL =>
+        MySQLSourceConfigEntry(
+          SourceCategory.MYSQL,
+          config.getString("host"),
+          config.getInt("port"),
+          config.getString("database"),
+          config.getString("table"),
+          config.getString("user"),
+          config.getString("password"),
+          getOrElse(config, "sentence", "")
+        )
       case SourceCategory.SOCKET =>
         SocketSourceConfigEntry(SourceCategory.SOCKET,
                                 config.getString("host"),
