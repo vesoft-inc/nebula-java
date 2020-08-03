@@ -202,11 +202,14 @@ if __name__ == '__main__':
                     f.write("{}:\n{}\n".format(k, v))
                 f.write("="*30+"\n")
     elif args.type == 'sql':
+        database_name = 'test'
         batch_size = 10
         path = args.output+".sql"
-        statements = []
+        statements = ['create database if not exists {}'.format(database_name), 'use {}'.format(database_name)]
         for name, v in data["vertex"].items():
             schema = v['schema']
+            drop_statement = 'drop table IF EXISTS {}'.format(name)
+            statements.append(drop_statement)
             create_statement = "CREATE TABLE {}".format(name) + "({})".format(','.join(
                 map(lambda k, t: k+" "+t['sql'].upper(), schema.keys(), schema.values())))
             statements.append(create_statement)
@@ -217,6 +220,8 @@ if __name__ == '__main__':
 
         for name, e in data['edge'].items():
             schema = e['schema']
+            drop_statement = 'drop table IF EXISTS {}'.format(name)
+            statements.append(drop_statement)
             create_statement = "CREATE TABLE {}".format(name) + "({})".format(",".join(list(['idFrom '+schema['idFrom']['sql'].upper(
             ), 'idTo '+schema['idTo']['sql'].upper()])+list(map(lambda k, t: k+" "+t['sql'].upper(), schema['property'].keys(), schema['property'].values()))))
             statements.append(create_statement)
@@ -226,5 +231,5 @@ if __name__ == '__main__':
                 insert_statement = "insert into {} values {}".format(name, ",".join(map(lambda x:'('+",".join([str(list(x['from']['match'].values())[0]), str(list(x['to']['match'].values())[0])]+list(map(value2str,x['data'].values())))+')', batch_data)))
                 statements.append(insert_statement)
         with open(path, 'w') as f:
-            f.writelines("\n".join(statements))
+            f.writelines(";\n".join(statements))
 
