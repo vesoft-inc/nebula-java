@@ -115,6 +115,7 @@ object SourceCategory extends Enumeration {
 
   val SOCKET = Value("SOCKET")
   val KAFKA  = Value("KAFKA")
+  val PULSAR = Value("PULSAR")
 }
 
 class SourceCategory
@@ -253,6 +254,18 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
 
   override def toString: String = {
     s"Kafka source server: ${server} topic:${topic}"
+  }
+}
+
+case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
+                                   serviceUrl: String,
+                                   adminUrl: String,
+                                   topic: String)
+    extends DataSourceConfigEntry {
+  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty && topic.trim.nonEmpty)
+
+  override def toString: String = {
+    s"Pulsar source service url: ${serviceUrl} admin url: ${adminUrl} topic: ${topic}"
   }
 }
 
@@ -723,6 +736,7 @@ object Configs {
       case "SOCKET"  => SourceCategory.SOCKET
       case "KAFKA"   => SourceCategory.KAFKA
       case "MYSQL"   => SourceCategory.MYSQL
+      case "PULSAR"  => SourceCategory.PULSAR
       case _         => throw new IllegalArgumentException(s"${category} not support")
     }
   }
@@ -800,6 +814,11 @@ object Configs {
         KafkaSourceConfigEntry(SourceCategory.KAFKA,
                                config.getString("service"),
                                config.getString("topic"))
+      case SourceCategory.PULSAR =>
+        PulsarSourceConfigEntry(SourceCategory.PULSAR,
+                                config.getString("service"),
+                                config.getString("admin"),
+                                config.getString("topic"))
       case _ =>
         throw new IllegalArgumentException("")
     }
