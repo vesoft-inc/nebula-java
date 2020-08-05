@@ -164,16 +164,14 @@ class VerticesProcessor(data: DataFrame,
     if (data.isStreaming) {
       val streamingDataSourceConfig =
         tagConfig.dataSourceConfigEntry.asInstanceOf[StreamingDataSourceConfigEntry]
-      val query = vertexDataFrame.writeStream
+      vertexDataFrame.writeStream
         .foreachBatch((vertexSet, batchId) => {
           LOG.info(s"${tagConfig.name} tag start batch ${batchId}.")
           vertexSet.foreachPartition(processEachPartition _)
         })
-      if (streamingDataSourceConfig.intervalSeconds > 0L)
-        query.trigger(
-          Trigger.ProcessingTime(s"${streamingDataSourceConfig.intervalSeconds} seconds"))
-
-      query.start().awaitTermination()
+        .trigger(Trigger.ProcessingTime(s"${streamingDataSourceConfig.intervalSeconds} seconds"))
+        .start()
+        .awaitTermination()
     } else
       vertexDataFrame.foreachPartition(processEachPartition _)
   }

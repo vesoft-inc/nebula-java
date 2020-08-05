@@ -190,16 +190,14 @@ class EdgeProcessor(data: DataFrame,
     if (data.isStreaming) {
       val streamingDataSourceConfig =
         edgeConfig.dataSourceConfigEntry.asInstanceOf[StreamingDataSourceConfigEntry]
-      val query = edgeDataFrame.writeStream
+      edgeDataFrame.writeStream
         .foreachBatch((edgeSet, batchId) => {
           LOG.info(s"${edgeConfig.name} edge start batch ${batchId}.")
           edgeSet.foreachPartition(processEachPartition _)
         })
-      if (streamingDataSourceConfig.intervalSeconds > 0L)
-        query.trigger(
-          Trigger.ProcessingTime(s"${streamingDataSourceConfig.intervalSeconds} seconds"))
-
-      query.start().awaitTermination()
+        .trigger(Trigger.ProcessingTime(s"${streamingDataSourceConfig.intervalSeconds} seconds"))
+        .start()
+        .awaitTermination()
     } else
       edgeDataFrame.foreachPartition(processEachPartition _)
   }

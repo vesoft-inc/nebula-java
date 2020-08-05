@@ -267,7 +267,7 @@ case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
                                    adminUrl: String,
                                    options: Map[String, String])
     extends StreamingDataSourceConfigEntry {
-  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty)
+  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty && intervalSeconds >= 0)
   require(options.keys.count(key => List("topic", "topics", "topicsPattern").contains(key)) == 1)
 
   override def toString: String = {
