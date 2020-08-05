@@ -139,7 +139,7 @@ sealed trait DataSourceConfigEntry {
 }
 
 sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
-  def intervalSeconds: Long
+  def intervalSeconds: Int
 }
 
 /**
@@ -262,7 +262,7 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
 }
 
 case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
-                                   override val intervalSeconds: Long,
+                                   override val intervalSeconds: Int,
                                    serviceUrl: String,
                                    adminUrl: String,
                                    options: Map[String, String])
@@ -499,6 +499,7 @@ object Configs {
   private[this] val DEFAULT_BATCH                = 2
   private[this] val DEFAULT_PARTITION            = -1
   private[this] val DEFAULT_CHECK_POINT_PATH     = None
+  private[this] val DEFAULT_STREAM_INTERVAL      = 30
 
   /**
     *
@@ -824,7 +825,8 @@ object Configs {
         val options =
           config.getObject("options").unwrapped.asScala.map(x => x._1 -> x._2.toString).toMap
         val intervalSeconds =
-          if (config.hasPath("intervalSeconds")) config.getLong("interval.seconds") else -1L
+          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
+          else DEFAULT_STREAM_INTERVAL
         PulsarSourceConfigEntry(SourceCategory.PULSAR,
                                 intervalSeconds,
                                 config.getString("service"),
