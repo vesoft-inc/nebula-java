@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s-%(levelname)s-%(message)s')
 logger = logging.getLogger(__name__)
 
+
 class tagA(Record):
     idInt = Integer()
     idString = String()
@@ -33,7 +34,7 @@ class edgeAA(Record):
     tdouble = Double()
 
 
-class ProducerConfig:
+class Producer:
 
     schema_map = {
         "avro": AvroSchema,
@@ -46,8 +47,8 @@ class ProducerConfig:
     }
 
     record_gen_data_func_map = {
-        "tagA": lambda i,pid: tagA(idInt=i, idString='{}_{}'.format(pid, i), tboolean=i % 2 == 0, tdouble=i+0.1),
-        "edgeAA": lambda i,pid: edgeAA(idFrom=i, idTo=i, idInt=i, idString='{}_{}'.format(pid, i), tboolean=i % 2 == 0, tdouble=i+0.1)
+        "tagA": lambda i, pid: tagA(idInt=i, idString='{}_{}'.format(pid, i), tboolean=i % 2 == 0, tdouble=i+0.1),
+        "edgeAA": lambda i, pid: edgeAA(idFrom=i, idTo=i, idInt=i, idString='{}_{}'.format(pid, i), tboolean=i % 2 == 0, tdouble=i+0.1)
     }
 
     def __init__(self, topic: str, schema_name: str, record_name: str):
@@ -58,21 +59,21 @@ class ProducerConfig:
 
     def getProducer(self, client: pulsar.Client):
         if self.producer is None:
-            self.producer = client.create_producer(self.topic, schema=ProducerConfig.schema_map[self.schema_name](
-                ProducerConfig.record_map[self.record_name]))
+            self.producer = client.create_producer(self.topic, schema=Producer.schema_map[self.schema_name](
+                Producer.record_map[self.record_name]))
         return self.producer
 
-    def send(self, client: pulsar.Client, ids:int, producer_id:int):
+    def send(self, client: pulsar.Client, ids: int, producer_id: int):
         self.getProducer(client).send(
-            ProducerConfig.record_gen_data_func_map[self.record_name](ids, producer_id))
+            Producer.record_gen_data_func_map[self.record_name](ids, producer_id))
 
 
-def pulsar_streaming(client: pulsar.Client, producer_configs: list, batch_size: int, interval: int):
+def pulsar_streaming(client: pulsar.Client, producers: list, batch_size: int, interval: int):
     batch_count = 0
     batch_num = 0
     for i in range(sys.maxsize):
-        for pid,producer_config in enumerate(producer_configs):
-            producer_config.send(client, i, pid)
+        for pid, producer in enumerate(producers):
+            producer.send(client, i, pid)
         batch_count += 1
         if batch_count >= batch_size:
             time.sleep(interval)
@@ -99,8 +100,8 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--edge_topics', nargs="+", type=str, default=[])
     args = parser.parse_args()
     client = pulsar.Client(args.address)
-    producer_configs = list(map(lambda topic: ProducerConfig(topic, args.schema_type, "tagA"), args.tag_topics)) + \
-        list(map(lambda topic: ProducerConfig(
+    producers = list(map(lambda topic: Producer(topic, args.schema_type, "tagA"), args.tag_topics)) + \
+        list(map(lambda topic: Producer(
             topic, args.schema_type, "edgeAA"), args.edge_topics))
-    pulsar_streaming(client, producer_configs, args.batch_size, args.interval)
+    pulsar_streaming(client, producers, args.batch_size, args.interval)
     client.close()
