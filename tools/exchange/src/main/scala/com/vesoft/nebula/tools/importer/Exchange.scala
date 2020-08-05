@@ -252,7 +252,7 @@ object Exchange {
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
         LOG.info(s"Loading from neo4j config: ${neo4jConfig}")
-        val reader      = new Neo4JReader(session, neo4jConfig)
+        val reader = new Neo4JReader(session, neo4jConfig)
         Some(reader.read())
       case SourceCategory.MYSQL =>
         val mysqlConfig = config.asInstanceOf[MySQLSourceConfigEntry]
