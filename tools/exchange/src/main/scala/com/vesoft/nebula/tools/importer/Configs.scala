@@ -138,6 +138,10 @@ sealed trait DataSourceConfigEntry {
   def category: SourceCategory.Value
 }
 
+sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
+  def intervalSeconds: Long
+}
+
 /**
   * FileBaseSourceConfigEntry
   *
@@ -258,14 +262,16 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
 }
 
 case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
+                                   override val intervalSeconds: Long,
                                    serviceUrl: String,
                                    adminUrl: String,
-                                   topic: String)
-    extends DataSourceConfigEntry {
-  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty && topic.trim.nonEmpty)
+                                   options: Map[String, String])
+    extends StreamingDataSourceConfigEntry {
+  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty)
+  require(options.keys.count(key => List("topic", "topics", "topicsPattern").contains(key)) == 1)
 
   override def toString: String = {
-    s"Pulsar source service url: ${serviceUrl} admin url: ${adminUrl} topic: ${topic}"
+    s"Pulsar source service url: ${serviceUrl} admin url: ${adminUrl} options: ${options}"
   }
 }
 
@@ -815,10 +821,15 @@ object Configs {
                                config.getString("service"),
                                config.getString("topic"))
       case SourceCategory.PULSAR =>
+        val options =
+          config.getObject("options").unwrapped.asScala.map(x => x._1 -> x._2.toString).toMap
+        val intervalSeconds =
+          if (config.hasPath("intervalSeconds")) config.getLong("interval.seconds") else -1L
         PulsarSourceConfigEntry(SourceCategory.PULSAR,
+                                intervalSeconds,
                                 config.getString("service"),
                                 config.getString("admin"),
-                                config.getString("topic"))
+                                options)
       case _ =>
         throw new IllegalArgumentException("")
     }

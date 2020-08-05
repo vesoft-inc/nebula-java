@@ -30,7 +30,7 @@
         <neo.version>2.4.5-M1</neo.version>
         <gremlin.version>3.4.6</gremlin.version>
         <janusgraph.version>0.5.0</janusgraph.version>
-        <pulsar.version>2.4.2</pulsar.version>
+        <pulsar.version>2.4.5</pulsar.version>
     </properties>
 
     <build>

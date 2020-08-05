@@ -63,7 +63,7 @@ class KafkaReader(override val session: SparkSession, server: String = "127.0.0.
 class PulsarReader(override val session: SparkSession,
                    serviceUrl: String,
                    adminUrl: String,
-                   topic: String)
+                   options: Map[String,String])
     extends StreamingBaseReader(session) {
 
   override def read(): DataFrame = {
@@ -71,9 +71,8 @@ class PulsarReader(override val session: SparkSession,
       .format("pulsar")
       .option("service.url", serviceUrl)
       .option("admin.url", adminUrl)
-      .option(if (topic.contains(',')) "topics" else "topic", topic)
+      .options(options)
       .load()
-    df.writeStream.format("console").start().awaitTermination()
     df
   }
 }
