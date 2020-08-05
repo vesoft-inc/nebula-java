@@ -67,12 +67,11 @@ class PulsarReader(override val session: SparkSession,
     extends StreamingBaseReader(session) {
 
   override def read(): DataFrame = {
-    val df = session.readStream
+    session.readStream
       .format("pulsar")
       .option("service.url", serviceUrl)
       .option("admin.url", adminUrl)
       .options(options)
       .load()
-    df
   }
 }
