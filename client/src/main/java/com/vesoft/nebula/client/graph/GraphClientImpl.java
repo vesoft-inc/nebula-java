@@ -32,16 +32,16 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
     protected String user;
     protected String password;
     private long sessionID;
-    private GraphService.Client client;
+    private ThreadLocal<GraphService.Client> client = new ThreadLocal<>();
 
     public GraphClientImpl(List<HostAndPort> addresses, int timeout,
                            int connectionRetry, int executionRetry) {
-        this(addresses, timeout, DEFAULT_CONN_TIMEOUT_MS, connectionRetry, executionRetry);
+        this(addresses, timeout, DEFAULT_CONNECTION_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
-    public GraphClientImpl(List<HostAndPort> addresses, int timeout, int connTimeout,
-        int connectionRetry, int executionRetry) {
-        super(addresses, timeout, connTimeout, connectionRetry, executionRetry);
+    public GraphClientImpl(List<HostAndPort> addresses, int timeout, int connectionTimeout,
+                           int connectionRetry, int executionRetry) {
+        super(addresses, timeout, connectionTimeout, connectionRetry, executionRetry);
     }
 
     public GraphClientImpl(List<HostAndPort> addresses) {
@@ -58,11 +58,12 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
         transport = new TSocket(address.getHostText(), address.getPort(), timeout,
-            connectionTimeout);
+                connectionTimeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
-        client = new GraphService.Client(protocol);
-        AuthResponse result = client.authenticate(user, password);
+        GraphService.Client thriftClient = new GraphService.Client(protocol);
+        client.set(thriftClient);
+        AuthResponse result = client.get().authenticate(user, password);
         if (result.getError_code() == ErrorCode.E_BAD_USERNAME_PASSWORD) {
             LOGGER.error("User name or password error");
             return ErrorCode.E_BAD_USERNAME_PASSWORD;
@@ -102,7 +103,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         int retry = executionRetry;
         while (retry-- > 0) {
             try {
-                ExecutionResponse executionResponse = client.execute(sessionID, statement);
+                ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
                 if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
                     LOGGER.error("execute error: " + executionResponse.getError_msg());
                 }
@@ -129,7 +130,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
             throw new ConnectionException();
         }
 
-        ExecutionResponse executionResponse = client.execute(sessionID, statement);
+        ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
         int code = executionResponse.getError_code();
         if (code == ErrorCode.SUCCEEDED) {
             return new ResultSet(Optional.ofNullable(executionResponse.getColumn_names())
@@ -148,7 +149,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      */
     public void close() {
         try {
-            client.signout(sessionID);
+            client.get().signout(sessionID);
         } catch (TException e) {
             LOGGER.error("Disconnect error: " + e.getMessage());
         } finally {
