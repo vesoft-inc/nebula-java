@@ -10,6 +10,7 @@ import java.util.concurrent.{Executors, TimeUnit}
 
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.tools.importer.{
+  CheckPointHandler,
   Configs,
   ErrorHandler,
   ProcessResult,
@@ -19,9 +20,8 @@ import com.vesoft.nebula.tools.importer.{
   Vertex,
   Vertices
 }
-import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
+import com.vesoft.nebula.tools.importer.writer.NebulaGraphClientWriter
 import org.apache.log4j.Logger
-import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.{IntegerType, LongType}
 import org.apache.spark.sql.{DataFrame, Encoders}
@@ -88,7 +88,8 @@ class VerticesProcessor(data: DataFrame,
         if (errorBuffer.size == config.errorConfig.errorMaxSize) {
           throw TooManyErrorsException(s"Too Many Errors ${config.errorConfig.errorMaxSize}")
         }
-        if (tagConfig.dataSourceConfigEntry.canResume && tagConfig.checkPointPath.isDefined) {
+        if (CheckPointHandler
+              .checkSupportResume(tagConfig.dataSourceConfigEntry.category) && tagConfig.checkPointPath.isDefined) {
           throw new RuntimeException(s"Write tag ${tagConfig.name} errors")
         }
       }

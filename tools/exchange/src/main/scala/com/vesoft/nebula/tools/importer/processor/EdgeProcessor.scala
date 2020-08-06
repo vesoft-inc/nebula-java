@@ -11,6 +11,7 @@ import java.util.concurrent.{Executors, TimeUnit}
 import com.google.common.geometry.{S2CellId, S2LatLng}
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.tools.importer.{
+  CheckPointHandler,
   Configs,
   Edge,
   EdgeConfigEntry,
@@ -20,7 +21,7 @@ import com.vesoft.nebula.tools.importer.{
   StreamingDataSourceConfigEntry,
   TooManyErrorsException
 }
-import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
+import com.vesoft.nebula.tools.importer.writer.NebulaGraphClientWriter
 import org.apache.log4j.Logger
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.{IntegerType, LongType, ShortType}
@@ -84,7 +85,8 @@ class EdgeProcessor(data: DataFrame,
           throw TooManyErrorsException(s"Too Many Errors ${config.errorConfig.errorMaxSize}")
         }
 
-        if (edgeConfig.dataSourceConfigEntry.canResume && edgeConfig.checkPointPath.isDefined) {
+        if (CheckPointHandler
+              .checkSupportResume(edgeConfig.dataSourceConfigEntry.category) && edgeConfig.checkPointPath.isDefined) {
           throw new RuntimeException(s"Write edge${edgeConfig.name} errors")
         }
       }

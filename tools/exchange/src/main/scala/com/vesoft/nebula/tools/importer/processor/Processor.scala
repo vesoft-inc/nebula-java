@@ -9,10 +9,8 @@ package com.vesoft.nebula.tools.importer.processor
 import java.util.concurrent.{CountDownLatch, Executor}
 
 import com.google.common.util.concurrent.Futures
-import com.vesoft.nebula.tools.importer.{ProcessResult, SchemaConfigEntry}
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult, SchemaConfigEntry}
 import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
-import org.apache.spark.TaskContext
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{
   ArrayType,
@@ -40,16 +38,7 @@ trait Processor extends Serializable {
                            breakPointCount: Long,
                            batchSuccess: LongAccumulator,
                            batchFailure: LongAccumulator): Unit = {
-    val partitionId = TaskContext.getPartitionId()
-
-    val pathAndOffset =
-      if (schemaConfig.dataSourceConfigEntry.canResume && schemaConfig.checkPointPath.isDefined) {
-        val path   = s"${schemaConfig.checkPointPath.get}/${schemaConfig.name}.${partitionId}"
-        val offset = breakPointCount + fetchOffset(path)
-        Some((path, offset))
-      } else {
-        None
-      }
+    val pathAndOffset = CheckPointHandler.getPathAndOffset(schemaConfig, breakPointCount)
 
     val latch      = new CountDownLatch(futures.size)
     val allFutures = Futures.allAsList(futures: _*)
@@ -137,9 +126,5 @@ trait Processor extends Serializable {
           "\"{}\""
         }
     }
-  }
-
-  def fetchOffset(path: String): Long = {
-    HDFSUtils.getContent(path).toLong
   }
 }
