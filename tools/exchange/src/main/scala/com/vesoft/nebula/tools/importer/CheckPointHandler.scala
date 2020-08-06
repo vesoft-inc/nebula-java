@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.tools.importer
 
+import com.vesoft.nebula.tools.importer.config.{SchemaConfigEntry, SourceCategory}
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import org.apache.spark.TaskContext
 
@@ -30,7 +31,7 @@ object CheckPointHandler {
     }
   }
 
-  private def fetchOffset(path: String): Long = {
+  def fetchOffset(path: String): Long = {
     HDFSUtils.getContent(path).toLong
   }
 }

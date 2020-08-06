@@ -8,10 +8,11 @@ package com.vesoft.nebula.tools.importer.reader
 
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{Neo4JSourceConfigEntry, Offset}
+import com.vesoft.nebula.tools.importer.{CheckPointHandler, Offset}
+import com.vesoft.nebula.tools.importer.config.Neo4JSourceConfigEntry
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
-import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.StructType
 import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
@@ -100,51 +101,9 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
   override def read(): DataFrame = {
-    val totalCount: Long = {
-      val returnIndex   = config.exec.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
-      val countSentence = config.exec.substring(0, returnIndex) + " count(*)"
-      val driver =
-        GraphDatabase.driver(s"${config.server}", AuthTokens.basic(config.user, config.password))
-      val neo4JSession = driver.session()
-      neo4JSession.run(countSentence).single().get(0).asLong()
-    }
-    if (totalCount <= 0L) throw new RuntimeException(s"your cypher ${config.exec} return nothing!")
 
-    val partitionCount = config.parallel
-
-    val offsets = {
-      val batchSizes = List.fill((totalCount % partitionCount).toInt)(
-        totalCount / partitionCount + 1) ::: List.fill(
-        (partitionCount - totalCount % partitionCount).toInt)(totalCount / partitionCount)
-
-      val initEachPartitionOffset = {
-        var offset = 0L
-        0L :: (for (batchSize <- batchSizes.init) yield {
-          offset += batchSize
-          offset
-        })
-      }
-
-      val eachPartitionOffset = config.checkPointPath match {
-        case Some(path) =>
-          val files = Range(0, partitionCount).map(i => s"${path}/${config.name}.${i}").toList
-          if (files.forall(x => HDFSUtils.exists(x)))
-            files.map(file => HDFSUtils.getContent(file).trim.toLong).sorted
-          else initEachPartitionOffset
-        case _ => initEachPartitionOffset
-      }
-
-      val eachPartitionLimit = {
-        batchSizes
-          .zip(initEachPartitionOffset.zip(eachPartitionOffset))
-          .map(x => {
-            x._1 - (x._2._2 - x._2._1)
-          })
-      }
-      eachPartitionOffset.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
-    }
+    val offsets = getOffsets
     LOG.info(s"${config.name} offsets: ${offsets.mkString(",")}")
-
     if (offsets.forall(_.size == 0L)) {
       LOG.warn(s"${config.name} already write done from check point.")
       return session.createDataFrame(session.sparkContext.emptyRDD[Row], new StructType())
@@ -189,6 +148,53 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
         "Please check your cypher sentence. because use it search nothing!")
     val schema = rdd.repartition(1).first().schema
     session.createDataFrame(rdd, schema)
+  }
+
+  def getOffsets: List[Offset] = {
+
+    val totalCount: Long = {
+      val returnIndex   = config.exec.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
+      val countSentence = config.exec.substring(0, returnIndex) + " count(*)"
+      val driver =
+        GraphDatabase.driver(s"${config.server}", AuthTokens.basic(config.user, config.password))
+      val neo4JSession = driver.session()
+      neo4JSession.run(countSentence).single().get(0).asLong()
+    }
+    if (totalCount <= 0L) throw new RuntimeException(s"your cypher ${config.exec} return nothing!")
+
+    val partitionCount = config.parallel
+
+    val batchSizes = List.fill((totalCount % partitionCount).toInt)(totalCount / partitionCount + 1) ::: List
+      .fill((partitionCount - totalCount % partitionCount).toInt)(totalCount / partitionCount)
+
+    val initEachPartitionOffset = {
+      var offset = 0L
+      0L :: (for (batchSize <- batchSizes.init) yield {
+        offset += batchSize
+        offset
+      })
+    }
+
+    val eachPartitionOffset = config.checkPointPath match {
+      case Some(path) =>
+        val files = Range(0, partitionCount).map(i => s"${path}/${config.name}.${i}").toList
+        if (files.forall(x => HDFSUtils.exists(x)))
+          files.map(file => CheckPointHandler.fetchOffset(file)).sorted
+        else {
+          LOG.warn(s"Can't read ${config.name} offset in files, maybe this is first run or file of check point was missing.")
+          initEachPartitionOffset
+        }
+      case _ => initEachPartitionOffset
+    }
+
+    val eachPartitionLimit = {
+      batchSizes
+        .zip(initEachPartitionOffset.zip(eachPartitionOffset))
+        .map(x => {
+          x._1 - (x._2._2 - x._2._1)
+        })
+    }
+    eachPartitionOffset.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
   }
 }
 

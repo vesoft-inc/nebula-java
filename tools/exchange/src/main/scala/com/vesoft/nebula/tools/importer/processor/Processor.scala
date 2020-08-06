@@ -9,7 +9,8 @@ package com.vesoft.nebula.tools.importer.processor
 import java.util.concurrent.{CountDownLatch, Executor}
 
 import com.google.common.util.concurrent.Futures
-import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult, SchemaConfigEntry}
+import com.vesoft.nebula.tools.importer.config.SchemaConfigEntry
+import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult}
 import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{

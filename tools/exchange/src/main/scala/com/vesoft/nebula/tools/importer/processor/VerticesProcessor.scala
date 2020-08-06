@@ -9,13 +9,15 @@ package com.vesoft.nebula.tools.importer.processor
 import java.util.concurrent.{Executors, TimeUnit}
 
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
+import com.vesoft.nebula.tools.importer.config.{
+  Configs,
+  StreamingDataSourceConfigEntry,
+  TagConfigEntry
+}
 import com.vesoft.nebula.tools.importer.{
   CheckPointHandler,
-  Configs,
   ErrorHandler,
   ProcessResult,
-  StreamingDataSourceConfigEntry,
-  TagConfigEntry,
   TooManyErrorsException,
   Vertex,
   Vertices

@@ -10,15 +10,17 @@ import java.util.concurrent.{Executors, TimeUnit}
 
 import com.google.common.geometry.{S2CellId, S2LatLng}
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
+import com.vesoft.nebula.tools.importer.config.{
+  Configs,
+  EdgeConfigEntry,
+  StreamingDataSourceConfigEntry
+}
 import com.vesoft.nebula.tools.importer.{
   CheckPointHandler,
-  Configs,
   Edge,
-  EdgeConfigEntry,
   Edges,
   ErrorHandler,
   ProcessResult,
-  StreamingDataSourceConfigEntry,
   TooManyErrorsException
 }
 import com.vesoft.nebula.tools.importer.writer.NebulaGraphClientWriter
