@@ -25,6 +25,7 @@ import com.vesoft.nebula.tools.importer.reader.{
   Neo4JReader,
   ORCReader,
   ParquetReader,
+  PulsarReader,
   SocketReader
 }
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, Writer}
@@ -250,10 +251,12 @@ object Exchange {
       }
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
-        val reader      = new Neo4JReader(session, neo4jConfig)
+        LOG.info(s"Loading from neo4j config: ${neo4jConfig}")
+        val reader = new Neo4JReader(session, neo4jConfig)
         Some(reader.read())
       case SourceCategory.MYSQL =>
         val mysqlConfig = config.asInstanceOf[MySQLSourceConfigEntry]
+        LOG.info(s"Loading from mysql config: ${mysqlConfig}")
         val reader = new MySQLReader(session,
                                      mysqlConfig.host,
                                      mysqlConfig.port,
@@ -262,6 +265,14 @@ object Exchange {
                                      mysqlConfig.user,
                                      mysqlConfig.password,
                                      mysqlConfig.sentence)
+        Some(reader.read())
+      case SourceCategory.PULSAR =>
+        val pulsarConfig = config.asInstanceOf[PulsarSourceConfigEntry]
+        LOG.info(s"Loading from pulsar config: ${pulsarConfig}")
+        val reader = new PulsarReader(session,
+                                      pulsarConfig.serviceUrl,
+                                      pulsarConfig.adminUrl,
+                                      pulsarConfig.options)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")

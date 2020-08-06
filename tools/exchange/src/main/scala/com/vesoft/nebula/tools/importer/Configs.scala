@@ -115,6 +115,7 @@ object SourceCategory extends Enumeration {
 
   val SOCKET = Value("SOCKET")
   val KAFKA  = Value("KAFKA")
+  val PULSAR = Value("PULSAR")
 }
 
 class SourceCategory
@@ -135,6 +136,10 @@ class SinkCategory
   */
 sealed trait DataSourceConfigEntry {
   def category: SourceCategory.Value
+}
+
+sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
+  def intervalSeconds: Int
 }
 
 /**
@@ -253,6 +258,20 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
 
   override def toString: String = {
     s"Kafka source server: ${server} topic:${topic}"
+  }
+}
+
+case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
+                                   override val intervalSeconds: Int,
+                                   serviceUrl: String,
+                                   adminUrl: String,
+                                   options: Map[String, String])
+    extends StreamingDataSourceConfigEntry {
+  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty && intervalSeconds >= 0)
+  require(options.keys.count(key => List("topic", "topics", "topicsPattern").contains(key)) == 1)
+
+  override def toString: String = {
+    s"Pulsar source service url: ${serviceUrl} admin url: ${adminUrl} options: ${options}"
   }
 }
 
@@ -480,6 +499,7 @@ object Configs {
   private[this] val DEFAULT_BATCH                = 2
   private[this] val DEFAULT_PARTITION            = -1
   private[this] val DEFAULT_CHECK_POINT_PATH     = None
+  private[this] val DEFAULT_STREAM_INTERVAL      = 30
 
   /**
     *
@@ -723,6 +743,7 @@ object Configs {
       case "SOCKET"  => SourceCategory.SOCKET
       case "KAFKA"   => SourceCategory.KAFKA
       case "MYSQL"   => SourceCategory.MYSQL
+      case "PULSAR"  => SourceCategory.PULSAR
       case _         => throw new IllegalArgumentException(s"${category} not support")
     }
   }
@@ -800,6 +821,17 @@ object Configs {
         KafkaSourceConfigEntry(SourceCategory.KAFKA,
                                config.getString("service"),
                                config.getString("topic"))
+      case SourceCategory.PULSAR =>
+        val options =
+          config.getObject("options").unwrapped.asScala.map(x => x._1 -> x._2.toString).toMap
+        val intervalSeconds =
+          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
+          else DEFAULT_STREAM_INTERVAL
+        PulsarSourceConfigEntry(SourceCategory.PULSAR,
+                                intervalSeconds,
+                                config.getString("service"),
+                                config.getString("admin"),
+                                options)
       case _ =>
         throw new IllegalArgumentException("")
     }
