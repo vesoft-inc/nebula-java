@@ -64,11 +64,11 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     public MetaClientImpl(List<HostAndPort> addresses, int timeout,
                           int connectionRetry, int executionRetry) {
-        this(addresses, timeout, DEFAULT_CONN_TIMEOUT_MS, connectionRetry, executionRetry);
+        this(addresses, timeout, DEFAULT_CONNECTION_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
     public MetaClientImpl(List<HostAndPort> addresses, int timeout, int connTimeout,
-        int connectionRetry, int executionRetry) {
+                          int connectionRetry, int executionRetry) {
         super(addresses, timeout, connTimeout, connectionRetry, executionRetry);
     }
 
@@ -86,7 +86,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
         transport = new TSocket(address.getHostText(), address.getPort(), timeout,
-            connectionTimeout);
+                connectionTimeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);

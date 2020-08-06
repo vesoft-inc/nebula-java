@@ -10,21 +10,19 @@ import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.ColumnValue;
 import com.vesoft.nebula.graph.DateTime;
 import com.vesoft.nebula.graph.RowValue;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class ResultSet implements Serializable, Cloneable{
+public class ResultSet {
 
     private List<String> columns;
     private List<RowValue> rows;
     private List<Result> results;
 
-    public static class Result implements Serializable, Comparable<Result>, Cloneable {
+    public static class Result {
         private final RowValue row;
         private final List<String> columns;
 
@@ -45,27 +43,27 @@ public class ResultSet implements Serializable, Cloneable{
             return new String(this.get(key).getStr()).intern();
         }
 
-        public long getInteger(String key){
+        public long getInteger(String key) {
             return this.get(key).getInteger();
         }
 
-        public long getId(String key){
+        public long getId(String key) {
             return this.get(key).getId();
         }
 
-        public double getDouble(String key){
+        public double getDouble(String key) {
             return this.get(key).getDouble_precision();
         }
 
-        public float getFloat(String key){
+        public float getFloat(String key) {
             return this.get(key).getSingle_precision();
         }
 
-        public DateTime getDateTime(String key){
+        public DateTime getDateTime(String key) {
             return this.get(key).getDatetime();
         }
 
-        public boolean getBoolean(String key){
+        public boolean getBoolean(String key) {
             return this.get(key).isBool_val();
         }
 
@@ -76,12 +74,7 @@ public class ResultSet implements Serializable, Cloneable{
         public boolean contains(String key) {
             return columns.contains(key);
         }
-
-        @Override
-        public int compareTo(Result o) {
-            return this.row.compareTo(o.row);
-        }
-    }
+    }   
 
     /**
      * Constructor
