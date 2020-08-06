@@ -136,10 +136,13 @@ class SinkCategory
   */
 sealed trait DataSourceConfigEntry {
   def category: SourceCategory.Value
+  def canResume: Boolean
 }
 
 sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
   def intervalSeconds: Int
+
+  override def canResume: Boolean = false
 }
 
 /**
@@ -149,6 +152,7 @@ sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
   */
 case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value, path: String)
     extends DataSourceConfigEntry {
+  override def canResume: Boolean = false
   override def toString: String = {
     s"File source path: ${path}"
   }
@@ -166,6 +170,7 @@ case class CSVSourceConfigEntry(override val category: SourceCategory.Value,
                                 separator: String,
                                 header: Boolean)
     extends DataSourceConfigEntry {
+  override def canResume: Boolean = false
   override def toString: String = {
     s"CSV source path: ${path}, separator: ${separator}"
   }
@@ -178,8 +183,9 @@ case class CSVSourceConfigEntry(override val category: SourceCategory.Value,
   */
 case class HiveSourceConfigEntry(override val category: SourceCategory.Value, exec: String)
     extends DataSourceConfigEntry {
-  require(exec.trim.size != 0)
+  require(exec.trim.nonEmpty)
 
+  override def canResume: Boolean = false
   override def toString: String = {
     s"Hive source exec: ${exec}"
   }
@@ -202,6 +208,7 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
     extends DataSourceConfigEntry {
   require(exec.trim.length != 0 && user.trim.length != 0 && parallel > 0)
 
+  override def canResume: Boolean = true
   override def toString: String = {
     s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
       s" checkPointPath: ${checkPointPath}, exec: ${exec}, parallel: ${parallel}, database: ${database}"
@@ -210,8 +217,9 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
 
 case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value)
     extends DataSourceConfigEntry {
+  override def canResume: Boolean = false
   override def toString: String = {
-    s"Neo4J source"
+    s"Janus graph source"
   }
 }
 
@@ -226,6 +234,12 @@ case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
     extends DataSourceConfigEntry {
   require(
     host.trim.length != 0 && port > 0 && database.trim.length > 0 && table.trim.length > 0 && user.trim.length > 0)
+
+  override def canResume: Boolean = false
+  override def toString: String = {
+    s"MySql source host: ${host}, port: ${port}, database: ${database}, table: ${table}, " +
+      s"user: ${user}, password: ${password}, sentence: ${sentence}"
+  }
 }
 
 /**
@@ -239,6 +253,7 @@ case class SocketSourceConfigEntry(override val category: SourceCategory.Value,
     extends DataSourceConfigEntry {
   require(host.trim.size != 0 && port > 0)
 
+  override def canResume: Boolean = false
   override def toString: String = {
     s"Socket source address: ${host}:${port}"
   }
@@ -256,6 +271,7 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
     extends DataSourceConfigEntry {
   require(server.trim.size != 0 && topic.trim.size != 0)
 
+  override def canResume: Boolean = false
   override def toString: String = {
     s"Kafka source server: ${server} topic:${topic}"
   }

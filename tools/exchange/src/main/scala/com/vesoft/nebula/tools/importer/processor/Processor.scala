@@ -6,7 +6,13 @@
 
 package com.vesoft.nebula.tools.importer.processor
 
+import java.util.concurrent.{CountDownLatch, Executor}
+
+import com.google.common.util.concurrent.Futures
+import com.vesoft.nebula.tools.importer.{ProcessResult, SchemaConfigEntry}
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
+import org.apache.spark.TaskContext
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{
   ArrayType,
@@ -22,10 +28,37 @@ import org.apache.spark.sql.types.{
   StringType,
   TimestampType
 }
+import org.apache.spark.util.LongAccumulator
 
 trait Processor extends Serializable {
 
   def process(): Unit
+
+  def waitingFuturesFinish(futures: ProcessResult,
+                           service: Executor,
+                           schemaConfig: SchemaConfigEntry,
+                           breakPointCount: Long,
+                           batchSuccess: LongAccumulator,
+                           batchFailure: LongAccumulator): Unit = {
+    val partitionId = TaskContext.getPartitionId()
+
+    val pathAndOffset =
+      if (schemaConfig.dataSourceConfigEntry.canResume && schemaConfig.checkPointPath.isDefined) {
+        val path   = s"${schemaConfig.checkPointPath.get}/${schemaConfig.name}.${partitionId}"
+        val offset = breakPointCount + fetchOffset(path)
+        Some((path, offset))
+      } else {
+        None
+      }
+
+    val latch      = new CountDownLatch(futures.size)
+    val allFutures = Futures.allAsList(futures: _*)
+    Futures.addCallback(allFutures,
+                        new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
+                        service)
+    latch.await()
+    futures.clear()
+  }
 
   def extraValue(row: Row, field: String): Any = {
     // TODO
