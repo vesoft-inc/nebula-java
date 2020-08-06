@@ -30,6 +30,7 @@
         <neo.version>2.4.5-M1</neo.version>
         <gremlin.version>3.4.6</gremlin.version>
         <janusgraph.version>0.5.0</janusgraph.version>
+        <pulsar.version>2.4.5</pulsar.version>
     </properties>
 
     <build>
@@ -119,6 +120,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>io.streamnative.connectors</groupId>
+            <artifactId>pulsar-spark-connector_2.11</artifactId>
+            <version>${pulsar.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.11</artifactId>
@@ -552,6 +558,11 @@
         <repository>
             <id>SparkPackagesRepo</id>
             <url>http://dl.bintray.com/spark-packages/maven</url>
+        </repository>
+        <repository>
+            <id>bintray-streamnative-maven</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/streamnative/maven</url>
         </repository>
     </repositories>
 </project>
