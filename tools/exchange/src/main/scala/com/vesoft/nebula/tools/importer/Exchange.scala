@@ -98,7 +98,6 @@ object Exchange {
     } else {
       session.getOrCreate()
     }
-//    spark.sparkContext.setLogLevel("warn")
 
     // reload the execution sentence
     if (!c.reload.isEmpty) {
