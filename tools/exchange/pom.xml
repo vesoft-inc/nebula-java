@@ -20,7 +20,7 @@
         <scala.version>${scala.2.11.version}</scala.version>
         <version.scala.binary>2.12</version.scala.binary>
         <spark.version>2.4.4</spark.version>
-        <scalatest.version>3.0.8</scalatest.version>
+        <scalatest.version>3.2.0</scalatest.version>
         <rocksdb.version>6.7.3</rocksdb.version>
         <config.version>1.4.0</config.version>
         <scala-logging.version>3.9.2</scala-logging.version>
