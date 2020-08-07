@@ -24,7 +24,7 @@ public class MockQueryServer extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger(MockQueryServer.class);
     private TServer server;
 
-    public MockQueryServer(GraphService.Iface mockProcessor,final int port) {
+    public MockQueryServer(GraphService.Iface mockProcessor, final int port) {
         TProcessor processor = new GraphService.Processor(mockProcessor);
         TProcessorFactory factory = new TProcessorFactory(processor);
         TServerSocket serverSocket = null;
@@ -64,10 +64,10 @@ public class MockQueryServer extends Thread {
 
                             TRpcConnectionContext serverCtx = new TRpcConnectionContext(client,
                                     inputProtocol, outputProtocol);
-                            try{
-                                while(processor.process(inputProtocol, outputProtocol, serverCtx));
+                            try {
+                                while (processor.process(inputProtocol, outputProtocol, serverCtx)) ;
+                            } catch (TTransportException e) {
                             }
-                            catch (TTransportException e){}
 
                         }
                     } catch (Exception x) {

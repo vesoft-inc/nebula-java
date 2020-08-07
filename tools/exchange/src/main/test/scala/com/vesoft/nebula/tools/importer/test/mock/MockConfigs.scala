@@ -1,3 +1,9 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.tools.importer.test.mock
 
 import com.vesoft.nebula.tools.importer.{
@@ -19,9 +25,9 @@ object MockConfigs {
 
   val userConfig: UserConfigEntry = UserConfigEntry("user", "password")
 
-  val connectionConfig: ConnectionConfigEntry = ConnectionConfigEntry(1000, 3)
+  val connectionConfig: ConnectionConfigEntry = ConnectionConfigEntry(1, 1)
 
-  val executionConfig: ExecutionConfigEntry = ExecutionConfigEntry(1000, 3, 100)
+  val executionConfig: ExecutionConfigEntry = ExecutionConfigEntry(1, 1, 1)
 
   val errorConfig: ErrorConfigEntry = ErrorConfigEntry("/tmp/", 100)
 

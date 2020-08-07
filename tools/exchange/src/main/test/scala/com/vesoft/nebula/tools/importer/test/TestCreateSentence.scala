@@ -1,3 +1,9 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.tools.importer.test
 
 import com.google.common.base.Optional
@@ -70,7 +76,7 @@ class TestCreateSentence extends AnyFunSuite {
         val rank = row.getLong(row.schema.fieldIndex(MockGraphData.edgeRankFieldName))
 
         (Edge(sourceField, targetField, None, values),
-          Edge(sourceField, targetField, Some(rank), values))
+         Edge(sourceField, targetField, Some(rank), values))
       })
       .toList
     val edgeListWithoutRank = edgeList.map(_._1)
@@ -79,7 +85,7 @@ class TestCreateSentence extends AnyFunSuite {
     for (fromPolicy <- MockGraphData.policyList)
       for (toPolicy <- MockGraphData.policyList)
         for ((edgeListRank, hasRank) <- List(edgeListWithoutRank, edgeListWithRank).zip(
-          List(false, true))) {
+               List(false, true))) {
           val edges =
             Edges(MockGraphData.propertyFieldName, edgeListRank, None, fromPolicy, toPolicy)
           val mockGraphDataEdge = new MockGraphDataEdge(fromPolicy, toPolicy, hasRank)

@@ -1,3 +1,9 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.tools.importer.test.mock
 
 import com.typesafe.config.impl.ConfigImpl.fromAnyRef
@@ -102,14 +108,14 @@ object MockGraphData {
     keyPolicy match {
       case Some(KeyPolicy.HASH) => "hash(\"%d\")"
       case Some(KeyPolicy.UUID) => "uuid(\"%d\")"
-      case None                 => "%d"
+      case _                    => "%d"
     }
 
   private val q = "\""
 
   def createInsertVertexSentence(vertexPolicy: Option[KeyPolicy.Value]): String = {
     val vertexIdTemplate = getVertexIDTemplateFromKeyPolicy(vertexPolicy)
-    val s = if(vertexPolicy.isEmpty) "" else "\""
+    val s                = if (vertexPolicy.isEmpty) "" else "\""
 
     s"INSERT VERTEX ${vertexTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
       s"${vertexIdTemplate.format(0)}: (${s}0${s}, ${q}0${q}, 0.01, true), " +
