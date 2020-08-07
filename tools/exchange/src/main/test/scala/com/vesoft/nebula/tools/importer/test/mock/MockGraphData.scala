@@ -1,4 +1,4 @@
-package com.vesoft.nebula.tools.importer.test.utils
+package com.vesoft.nebula.tools.importer.test.mock
 
 import com.typesafe.config.impl.ConfigImpl.fromAnyRef
 import com.vesoft.nebula.tools.importer.{
@@ -15,7 +15,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import scala.collection.immutable
 
 object SparkSessionObject {
-  private val master  = "local[*]"
+  private val master  = "local[1]"
   private val appName = "data_load_testing"
   val sparkSession: SparkSession =
     new SparkSession.Builder().appName(appName).master(master).getOrCreate()
@@ -27,6 +27,8 @@ object MockGraphData {
 
   private val numberVertex     = 5
   private val numberEdgeDegree = 1
+
+  val policyList = List(Some(KeyPolicy.HASH), Some(KeyPolicy.UUID), None)
   val dataSourceConfig: FileBaseSourceConfigEntry =
     FileBaseSourceConfigEntry(SourceCategory.TEXT, "")
   val dataSinkConfig: NebulaSinkConfigEntry = NebulaSinkConfigEntry(SinkCategory.CLIENT, List(""))
@@ -54,6 +56,9 @@ object MockGraphData {
   val vertexData: Seq[(Long, String, Double, Boolean)] =
     Seq(for (ids <- Range(0, numberVertex)) yield genRow(ids)).flatMap(_.toList)
 
+  val vertexDataIdString: Seq[(String, String, Double, Boolean)] =
+    vertexData.map(x => (x._1.toString, x._2, x._3, x._4))
+
   val edgeData: Seq[(Long, Long, Long, String, Double, Boolean)] = {
     val fromVertexId = Range(0, numberVertex).map(_.toLong).toList
     var toVertexId   = Range(0, numberVertex).map(_.toLong).toList
@@ -68,9 +73,30 @@ object MockGraphData {
     }
   }.flatMap(_.toList).toList
 
-  val vertexDataFrame: DataFrame = vertexData.toDF(vertexFieldName: _*)
+  private val edgeDataIdString00: Seq[(Long, Long, Long, String, Double, Boolean)] = edgeData
+  private val edgeDataIdString01: Seq[(Long, String, Long, String, Double, Boolean)] =
+    edgeData.map(x => (x._1, x._2.toString, x._3, x._4, x._5, x._6))
+  private val edgeDataIdString10: Seq[(String, Long, Long, String, Double, Boolean)] =
+    edgeData.map(x => (x._1.toString, x._2, x._3, x._4, x._5, x._6))
+  private val edgeDataIdString11: Seq[(String, String, Long, String, Double, Boolean)] =
+    edgeData.map(x => (x._1.toString, x._2.toString, x._3, x._4, x._5, x._6))
 
-  val edgeDataFrame: DataFrame = edgeData.toDF(edgeFieldName: _*)
+  def vertexDataFrame: DataFrame = vertexData.toDF(vertexFieldName: _*)
+  def vertexDataFrame(vertex: Option[KeyPolicy.Value]): DataFrame =
+    if (vertex.isEmpty) vertexDataFrame else vertexDataIdString.toDF(vertexFieldName: _*)
+
+  def edgeDataFrame: DataFrame = edgeData.toDF(edgeFieldName: _*)
+  def edgeDataFrame(source: Option[KeyPolicy.Value], target: Option[KeyPolicy.Value]): DataFrame = {
+    {
+      if (source.isEmpty) {
+        if (target.isEmpty) edgeDataIdString00.toDF()
+        else edgeDataIdString01.toDF()
+      } else {
+        if (target.isEmpty) edgeDataIdString10.toDF()
+        else edgeDataIdString11.toDF()
+      }
+    }.toDF(edgeFieldName: _*)
+  }
 
   private def getVertexIDTemplateFromKeyPolicy(keyPolicy: Option[KeyPolicy.Value]) =
     keyPolicy match {
@@ -83,13 +109,14 @@ object MockGraphData {
 
   def createInsertVertexSentence(vertexPolicy: Option[KeyPolicy.Value]): String = {
     val vertexIdTemplate = getVertexIDTemplateFromKeyPolicy(vertexPolicy)
+    val s = if(vertexPolicy.isEmpty) "" else "\""
 
     s"INSERT VERTEX ${vertexTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
-      s"${vertexIdTemplate.format(0)}: (0, ${q}0${q}, 0.01, true), " +
-      s"${vertexIdTemplate.format(1)}: (1, ${q}1${q}, 1.01, false), " +
-      s"${vertexIdTemplate.format(2)}: (2, ${q}2${q}, 2.01, true), " +
-      s"${vertexIdTemplate.format(3)}: (3, ${q}3${q}, 3.01, false), " +
-      s"${vertexIdTemplate.format(4)}: (4, ${q}4${q}, 4.01, true)"
+      s"${vertexIdTemplate.format(0)}: (${s}0${s}, ${q}0${q}, 0.01, true), " +
+      s"${vertexIdTemplate.format(1)}: (${s}1${s}, ${q}1${q}, 1.01, false), " +
+      s"${vertexIdTemplate.format(2)}: (${s}2${s}, ${q}2${q}, 2.01, true), " +
+      s"${vertexIdTemplate.format(3)}: (${s}3${s}, ${q}3${q}, 3.01, false), " +
+      s"${vertexIdTemplate.format(4)}: (${s}4${s}, ${q}4${q}, 4.01, true)"
   }
 
   def createInsertEdgeSentence(fromVertexPolicy: Option[KeyPolicy.Value],
@@ -110,6 +137,7 @@ object MockGraphData {
 
 class MockGraphDataVertex(vertexPolicy: Option[KeyPolicy.Value] = None) {
 
+  val vertexDataFrame: DataFrame = MockGraphData.vertexDataFrame(vertexPolicy)
   val tagConfig: TagConfigEntry = {
     val fields = MockGraphData.propertyFieldName
       .map(property => {
@@ -123,7 +151,7 @@ class MockGraphDataVertex(vertexPolicy: Option[KeyPolicy.Value] = None) {
       fields,
       MockGraphData.vertexIdFieldName,
       vertexPolicy,
-      1,
+      MockGraphData.vertexData.size,
       1,
       None
     )
@@ -136,6 +164,9 @@ class MockGraphDataVertex(vertexPolicy: Option[KeyPolicy.Value] = None) {
 class MockGraphDataEdge(edgeSourcePolicy: Option[KeyPolicy.Value] = None,
                         edgeTargetPolicy: Option[KeyPolicy.Value] = None,
                         rank: Boolean = false) {
+
+  val edgeDataFrame: DataFrame =
+    MockGraphData.edgeDataFrame(edgeSourcePolicy, edgeTargetPolicy)
 
   val edgeConfig: EdgeConfigEntry = {
     val fields = MockGraphData.propertyFieldName
@@ -157,7 +188,7 @@ class MockGraphDataEdge(edgeSourcePolicy: Option[KeyPolicy.Value] = None,
       isGeo = false,
       None,
       None,
-      1,
+      MockGraphData.edgeData.size,
       1,
       None
     )

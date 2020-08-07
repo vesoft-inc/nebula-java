@@ -1,4 +1,4 @@
-package com.vesoft.nebula.tools.importer.test.utils
+package com.vesoft.nebula.tools.importer.test.mock
 
 import com.vesoft.nebula.tools.importer.{
   Configs,

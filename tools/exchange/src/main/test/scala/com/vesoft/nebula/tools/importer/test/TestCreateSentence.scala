@@ -7,7 +7,7 @@ import com.vesoft.nebula.tools.importer.{Edge, Edges, KeyPolicy, Vertex, Vertice
 import com.vesoft.nebula.tools.importer.writer.ServerBaseWriter
 import org.scalatest.funsuite.AnyFunSuite
 import com.vesoft.nebula.tools.importer.processor.Processor
-import utils.{MockGraphData, MockGraphDataEdge, MockGraphDataVertex}
+import mock.{MockGraphData, MockGraphDataEdge, MockGraphDataVertex}
 
 class TestCreateSentence extends AnyFunSuite {
 
@@ -25,8 +25,6 @@ class TestCreateSentence extends AnyFunSuite {
   private val processor = new Processor {
     override def process(): Unit = ???
   }
-
-  private val policyList = List(Some(KeyPolicy.HASH), Some(KeyPolicy.UUID), None)
 
   test("test toExecuteSentence") {
 
@@ -48,7 +46,7 @@ class TestCreateSentence extends AnyFunSuite {
         Vertex(vertexID, values)
       })
       .toList
-    for (vertexPolicy <- policyList) {
+    for (vertexPolicy <- MockGraphData.policyList) {
       val mockGraphData = new MockGraphDataVertex(vertexPolicy)
       val vertices      = Vertices(MockGraphData.propertyFieldName, vertexList, None, vertexPolicy)
       println(serverBaseWriter.toExecuteSentence("tagA", vertices))
@@ -78,8 +76,8 @@ class TestCreateSentence extends AnyFunSuite {
     val edgeListWithoutRank = edgeList.map(_._1)
     val edgeListWithRank    = edgeList.map(_._2)
 
-    for (fromPolicy <- policyList)
-      for (toPolicy <- policyList)
+    for (fromPolicy <- MockGraphData.policyList)
+      for (toPolicy <- MockGraphData.policyList)
         for ((edgeListRank, hasRank) <- List(edgeListWithoutRank, edgeListWithRank).zip(
           List(false, true))) {
           val edges =
