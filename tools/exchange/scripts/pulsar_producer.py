@@ -71,15 +71,16 @@ class Producer:
 def pulsar_streaming(client: pulsar.Client, producers: list, batch_size: int, interval: int):
     batch_count = 0
     batch_num = 0
-    for i in range(sys.maxsize):
-        for pid, producer in enumerate(producers):
-            producer.send(client, i, pid)
-        batch_count += 1
-        if batch_count >= batch_size:
-            time.sleep(interval)
-            batch_count = 0
-            batch_num += 1
-            logger.info('send {} batch to pulsar'.format(batch_num))
+    while True:
+        for i in range(sys.maxsize):
+            for pid, producer in enumerate(producers):
+                producer.send(client, i, pid)
+            batch_count += 1
+            if batch_count >= batch_size:
+                time.sleep(interval)
+                batch_count = 0
+                batch_num += 1
+                logger.info('send {} batch to pulsar'.format(batch_num))
 
 
 if __name__ == '__main__':
