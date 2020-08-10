@@ -14,8 +14,11 @@ import com.vesoft.nebula.tools.importer.writer.ServerBaseWriter
 import org.scalatest.funsuite.AnyFunSuite
 import com.vesoft.nebula.tools.importer.processor.Processor
 import mock.{MockGraphData, MockGraphDataEdge, MockGraphDataVertex}
+import org.apache.log4j.Logger
 
 class TestCreateSentence extends AnyFunSuite {
+
+  private[this] val LOG = Logger.getLogger(this.getClass)
 
   private val serverBaseWriter = new ServerBaseWriter {
     override def prepare(): Unit = ???
@@ -38,24 +41,24 @@ class TestCreateSentence extends AnyFunSuite {
     val values        = Range(0, 2).map(i => Vertex(i.toString, List(i, i.toString))).toList
     val vertices      = Vertices(propertyNames, values)
 
-    println(serverBaseWriter.toExecuteSentence("tagA", vertices))
+    LOG.info(serverBaseWriter.toExecuteSentence("tagA", vertices))
   }
 
   test("test vertex extraValue") {
-    val vertexList = MockGraphData.vertexDataFrame
-      .collect()
-      .map(row => {
-        val vertexID = row.get(row.schema.fieldIndex(MockGraphData.vertexIdFieldName)).toString
-        val values = for {
-          property <- MockGraphData.vertexFieldName
-        } yield processor.extraValue(row, property)
-        Vertex(vertexID, values)
-      })
-      .toList
     for (vertexPolicy <- MockGraphData.policyList) {
       val mockGraphData = new MockGraphDataVertex(vertexPolicy)
-      val vertices      = Vertices(MockGraphData.propertyFieldName, vertexList, None, vertexPolicy)
-      println(serverBaseWriter.toExecuteSentence("tagA", vertices))
+      val vertexList = mockGraphData.vertexDataFrame
+        .collect()
+        .map(row => {
+          val vertexID = row.get(row.schema.fieldIndex(MockGraphData.vertexIdFieldName)).toString
+          val values = for {
+            property <- MockGraphData.vertexFieldName
+          } yield processor.extraValue(row, property)
+          Vertex(vertexID, values)
+        })
+        .toList
+      val vertices = Vertices(MockGraphData.propertyFieldName, vertexList, None, vertexPolicy)
+      LOG.info(serverBaseWriter.toExecuteSentence("tagA", vertices))
       assertResult(mockGraphData.insertVertexSentence) {
         serverBaseWriter.toExecuteSentence(MockGraphData.vertexTypeName, vertices)
       }
@@ -89,7 +92,7 @@ class TestCreateSentence extends AnyFunSuite {
           val edges =
             Edges(MockGraphData.propertyFieldName, edgeListRank, None, fromPolicy, toPolicy)
           val mockGraphDataEdge = new MockGraphDataEdge(fromPolicy, toPolicy, hasRank)
-          println(serverBaseWriter.toExecuteSentence(MockGraphData.edgeTypeName, edges))
+          LOG.info(serverBaseWriter.toExecuteSentence(MockGraphData.edgeTypeName, edges))
           assertResult(mockGraphDataEdge.insertEdgeSentence) {
             serverBaseWriter.toExecuteSentence(MockGraphData.edgeTypeName, edges)
           }

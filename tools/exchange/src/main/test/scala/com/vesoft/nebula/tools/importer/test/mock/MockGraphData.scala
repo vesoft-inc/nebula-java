@@ -20,16 +20,16 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import scala.collection.immutable
 
-object SparkSessionObject {
+object Spark {
   private val master  = "local[1]"
-  private val appName = "data_load_testing"
+  private val appName = "exchange_testing"
   val sparkSession: SparkSession =
     new SparkSession.Builder().appName(appName).master(master).getOrCreate()
   sparkSession.sparkContext.setLogLevel("warn")
 }
 
 object MockGraphData {
-  import SparkSessionObject.sparkSession.implicits._
+  import Spark.sparkSession.implicits._
 
   private val numberVertex     = 5
   private val numberEdgeDegree = 1

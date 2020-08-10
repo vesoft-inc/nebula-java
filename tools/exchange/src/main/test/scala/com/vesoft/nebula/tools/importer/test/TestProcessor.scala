@@ -17,11 +17,13 @@ import com.vesoft.nebula.tools.importer.test.mock.{
   MockGraphDataVertex,
   MockQueryProcessor,
   MockQueryServer,
-  SparkSessionObject
+  Spark
 }
+import org.apache.log4j.Logger
 import org.apache.spark.SparkException
 
 class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
+  private[this] val LOG = Logger.getLogger(this.getClass)
 
   val mockServerPort: Int = MockConfigs.port
 
@@ -29,16 +31,19 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
 
   val mockServer = new MockQueryServer(mockQueryProcessor, mockServerPort)
 
+  private def getAccumulator =
+    (Spark.sparkSession.sparkContext
+       .longAccumulator(s"batchSuccess.${MockGraphData.vertexTypeName}"),
+     Spark.sparkSession.sparkContext
+       .longAccumulator(s"batchFailure.${MockGraphData.vertexTypeName}"))
+
   override protected def beforeAll(): Unit = {
     mockServer.start()
     mockServer.waitUntilStarted()
   }
 
   test("test processor vertex") {
-    val batchSuccess = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchSuccess.${MockGraphData.vertexTypeName}")
-    val batchFailure = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchFailure.${MockGraphData.vertexTypeName}")
+    val (batchSuccess, batchFailure) = getAccumulator
     for (vertexPolicy <- MockGraphData.policyList) {
       val mockGraphData = new MockGraphDataVertex(vertexPolicy)
       val verticesProcessor = new VerticesProcessor(
@@ -51,7 +56,7 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
         batchFailure
       )
       verticesProcessor.process()
-      println(mockQueryProcessor.queryStatement)
+      LOG.info(s"get query: ${mockQueryProcessor.queryStatement}")
       assertResult(mockGraphData.insertVertexSentence) {
         mockQueryProcessor.queryStatement
       }
@@ -67,10 +72,7 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("test processor edge") {
-    val batchSuccess = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchSuccess.${MockGraphData.edgeTypeName}")
-    val batchFailure = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchFailure.${MockGraphData.edgeTypeName}")
+    val (batchSuccess, batchFailure) = getAccumulator
 
     for (fromPolicy <- MockGraphData.policyList)
       for (toPolicy <- MockGraphData.policyList)
@@ -86,7 +88,7 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
             batchFailure
           )
           edgeProcessor.process()
-          println(mockQueryProcessor.queryStatement)
+          LOG.info(s"get query: ${mockQueryProcessor.queryStatement}")
           assertResult(mockGraphDataEdge.insertEdgeSentence) {
             mockQueryProcessor.queryStatement
           }
@@ -102,10 +104,7 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("test execute error") {
-    val batchSuccess = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchSuccess.${MockGraphData.vertexTypeName}")
-    val batchFailure = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchFailure.${MockGraphData.vertexTypeName}")
+    val (batchSuccess, batchFailure) = getAccumulator
 
     val successCount = 10
     val failureCount = 10
@@ -125,7 +124,10 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
       batchFailure
     )
     verticesProcessor.process()
-    println(s"batchSuccess: ${batchSuccess.value}, batchFailure: ${batchFailure.value}")
+    LOG.info(
+      s"vertex expect batchSuccess: ${successCount}, got batchSuccess: ${batchSuccess.value}")
+    LOG.info(
+      s"vertex expect batchFailure: ${failureCount}, got batchFailure: ${batchFailure.value}")
     assertResult(successCount.toLong) {
       batchSuccess.value
     }
@@ -150,7 +152,8 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
       batchFailure
     )
     edgeProcessor.process()
-    println(s"batchSuccess: ${batchSuccess.value}, batchFailure: ${batchFailure.value}")
+    LOG.info(s"edge expect batchSuccess: ${successCount}, got batchSuccess: ${batchSuccess.value}")
+    LOG.info(s"edge expect batchFailure: ${failureCount}, got batchFailure: ${batchFailure.value}")
     assertResult(successCount.toLong) {
       batchSuccess.value
     }
@@ -164,12 +167,9 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("test config error") {
+    val (batchSuccess, batchFailure) = getAccumulator
 
-    val batchSuccess = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchSuccess.${MockGraphData.vertexTypeName}")
-    val batchFailure = SparkSessionObject.sparkSession.sparkContext
-      .longAccumulator(s"batchFailure.${MockGraphData.vertexTypeName}")
-    val configs = MockConfigs.configs.copy(userConfig = UserConfigEntry("abc", "abc"))
+    val wrongConfigs = MockConfigs.configs.copy(userConfig = UserConfigEntry("abc", "abc"))
 
     val mockGraphData = new MockGraphDataVertex()
 
@@ -180,12 +180,14 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
         mockGraphData.tagConfig,
         MockGraphData.vertexFieldName,
         MockGraphData.vertexFieldName,
-        configs,
+        wrongConfigs,
         batchSuccess,
         batchFailure
       )
       verticesProcessor.process()
     }
+    batchSuccess.reset()
+    batchFailure.reset()
 
     // test use space sentence failure
     assertThrows[SparkException] {
@@ -201,11 +203,13 @@ class TestProcessor extends AnyFunSuite with BeforeAndAfterAll {
       )
       verticesProcessor.process()
     }
+    batchSuccess.reset()
+    batchFailure.reset()
     mockQueryProcessor.resetLatch()
   }
 
   override protected def afterAll(): Unit = {
     mockServer.stopServer()
-    SparkSessionObject.sparkSession.close()
+    Spark.sparkSession.close()
   }
 }
