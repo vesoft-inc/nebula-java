@@ -111,18 +111,16 @@ object MockGraphData {
       case _                    => "%d"
     }
 
-  private val q = "\""
-
   def createInsertVertexSentence(vertexPolicy: Option[KeyPolicy.Value]): String = {
     val vertexIdTemplate = getVertexIDTemplateFromKeyPolicy(vertexPolicy)
     val s                = if (vertexPolicy.isEmpty) "" else "\""
 
     s"INSERT VERTEX ${vertexTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
-      s"${vertexIdTemplate.format(0)}: (${s}0${s}, ${q}0${q}, 0.01, true), " +
-      s"${vertexIdTemplate.format(1)}: (${s}1${s}, ${q}1${q}, 1.01, false), " +
-      s"${vertexIdTemplate.format(2)}: (${s}2${s}, ${q}2${q}, 2.01, true), " +
-      s"${vertexIdTemplate.format(3)}: (${s}3${s}, ${q}3${q}, 3.01, false), " +
-      s"${vertexIdTemplate.format(4)}: (${s}4${s}, ${q}4${q}, 4.01, true)"
+      s"${vertexIdTemplate.format(0)}: (${s}0${s}, ${'"'}0${'"'}, 0.01, true), " +
+      s"${vertexIdTemplate.format(1)}: (${s}1${s}, ${'"'}1${'"'}, 1.01, false), " +
+      s"${vertexIdTemplate.format(2)}: (${s}2${s}, ${'"'}2${'"'}, 2.01, true), " +
+      s"${vertexIdTemplate.format(3)}: (${s}3${s}, ${'"'}3${'"'}, 3.01, false), " +
+      s"${vertexIdTemplate.format(4)}: (${s}4${s}, ${'"'}4${'"'}, 4.01, true)"
   }
 
   def createInsertEdgeSentence(fromVertexPolicy: Option[KeyPolicy.Value],
@@ -133,11 +131,11 @@ object MockGraphData {
     val rankList = for (i <- Range(5, 10)) yield if (hasRank) s"@${i}" else ""
 
     s"INSERT EDGE ${edgeTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
-      s"${from.format(0)}->${to.format(4)}${rankList(0)}: (5, ${q}5${q}, 5.01, false), " +
-      s"${from.format(1)}->${to.format(0)}${rankList(1)}: (6, ${q}6${q}, 6.01, true), " +
-      s"${from.format(2)}->${to.format(1)}${rankList(2)}: (7, ${q}7${q}, 7.01, false), " +
-      s"${from.format(3)}->${to.format(2)}${rankList(3)}: (8, ${q}8${q}, 8.01, true), " +
-      s"${from.format(4)}->${to.format(3)}${rankList(4)}: (9, ${q}9${q}, 9.01, false)"
+      s"${from.format(0)}->${to.format(4)}${rankList(0)}: (5, ${'"'}5${'"'}, 5.01, false), " +
+      s"${from.format(1)}->${to.format(0)}${rankList(1)}: (6, ${'"'}6${'"'}, 6.01, true), " +
+      s"${from.format(2)}->${to.format(1)}${rankList(2)}: (7, ${'"'}7${'"'}, 7.01, false), " +
+      s"${from.format(3)}->${to.format(2)}${rankList(3)}: (8, ${'"'}8${'"'}, 8.01, true), " +
+      s"${from.format(4)}->${to.format(3)}${rankList(4)}: (9, ${'"'}9${'"'}, 9.01, false)"
   }
 }
 

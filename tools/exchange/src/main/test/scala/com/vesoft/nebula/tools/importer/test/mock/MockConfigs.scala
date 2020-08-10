@@ -17,9 +17,11 @@ import com.vesoft.nebula.tools.importer.{
   UserConfigEntry
 }
 
+import scala.util.Random
+
 object MockConfigs {
 
-  val port = 9999
+  val port: Int = 9000 + Random.nextInt(1000)
 
   val dataBaseConfig: DataBaseConfigEntry = DataBaseConfigEntry(List("127.0.0.1:" + port), "test")
 
