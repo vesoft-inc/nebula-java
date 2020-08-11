@@ -13,6 +13,7 @@ import com.facebook.thrift.transport.TNonblockingTransport;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.vesoft.nebula.graph.ErrorCode;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -39,13 +40,14 @@ public abstract class AsyncAbstractClient extends AbstractClient {
     public int connect() throws TException {
         service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(1));
         int retry = connectionRetry;
+        int code = ErrorCode.E_DISCONNECTED;
         while (retry-- != 0) {
-            int code = doConnect(addresses);
+            code = doConnect(addresses);
             if (code == 0) {
                 break;
             }
         }
-        return 0;
+        return code;
     }
 
     @Override
