@@ -44,29 +44,18 @@ sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
 /**
   * FileBaseSourceConfigEntry
   *
-  * @param path
-  */
-case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value, path: String)
-    extends DataSourceConfigEntry {
-  override def toString: String = {
-    s"File source path: ${path}"
-  }
-}
-
-/**
-  *
   * @param category
   * @param path
   * @param separator
   * @param header
   */
-case class CSVSourceConfigEntry(override val category: SourceCategory.Value,
-                                path: String,
-                                separator: String,
-                                header: Boolean)
+case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value,
+                                     path: String,
+                                     separator: Option[String] = None,
+                                     header: Option[Boolean] = None)
     extends DataSourceConfigEntry {
   override def toString: String = {
-    s"CSV source path: ${path}, separator: ${separator}"
+    s"File source path: ${path}, separator: ${separator}, header: ${header}"
   }
 }
 
@@ -138,9 +127,10 @@ case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
   * @param port
   */
 case class SocketSourceConfigEntry(override val category: SourceCategory.Value,
+                                   override val intervalSeconds: Int,
                                    host: String,
                                    port: Int)
-    extends DataSourceConfigEntry {
+    extends StreamingDataSourceConfigEntry {
   require(host.trim.nonEmpty && port > 0)
 
   override def toString: String = {
@@ -155,9 +145,10 @@ case class SocketSourceConfigEntry(override val category: SourceCategory.Value,
   * @param topic
   */
 case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
+                                  override val intervalSeconds: Int,
                                   server: String,
                                   topic: String)
-    extends DataSourceConfigEntry {
+    extends StreamingDataSourceConfigEntry {
   require(server.trim.nonEmpty && topic.trim.nonEmpty)
 
   override def toString: String = {

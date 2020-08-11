@@ -76,12 +76,12 @@ class VerticesProcessor(data: DataFrame,
         breakPointVerticesCount += vertices.values.length
 
         if (futures.size == 100) { // TODO configurable ?
-          waitingFuturesFinish(futures,
-                               service,
-                               tagConfig,
-                               breakPointVerticesCount,
-                               batchSuccess,
-                               batchFailure)
+          collectFutures(futures,
+                         service,
+                         tagConfig,
+                         breakPointVerticesCount,
+                         batchSuccess,
+                         batchFailure)
           breakPointVerticesCount = 0L
         }
       } else {
@@ -103,12 +103,12 @@ class VerticesProcessor(data: DataFrame,
     }
 
     if (futures.nonEmpty) {
-      waitingFuturesFinish(futures,
-                           service,
-                           tagConfig,
-                           breakPointVerticesCount,
-                           batchSuccess,
-                           batchFailure)
+      collectFutures(futures,
+                     service,
+                     tagConfig,
+                     breakPointVerticesCount,
+                     batchSuccess,
+                     batchFailure)
       breakPointVerticesCount = 0L
     }
     service.shutdown()

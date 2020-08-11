@@ -440,7 +440,10 @@ object Configs {
             config.getBoolean("header")
           else
             false
-        CSVSourceConfigEntry(SourceCategory.CSV, config.getString("path"), separator, header)
+        FileBaseSourceConfigEntry(SourceCategory.CSV,
+                                  config.getString("path"),
+                                  Some(separator),
+                                  Some(header))
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
@@ -478,11 +481,19 @@ object Configs {
           getOrElse(config, "sentence", "")
         )
       case SourceCategory.SOCKET =>
+        val intervalSeconds =
+          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
+          else DEFAULT_STREAM_INTERVAL
         SocketSourceConfigEntry(SourceCategory.SOCKET,
+                                intervalSeconds,
                                 config.getString("host"),
                                 config.getInt("port"))
       case SourceCategory.KAFKA =>
+        val intervalSeconds =
+          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
+          else DEFAULT_STREAM_INTERVAL
         KafkaSourceConfigEntry(SourceCategory.KAFKA,
+                               intervalSeconds,
                                config.getString("service"),
                                config.getString("topic"))
       case SourceCategory.PULSAR =>

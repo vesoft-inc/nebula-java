@@ -16,7 +16,6 @@ import com.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
 import com.vesoft.nebula.tools.importer.config.{
-  CSVSourceConfigEntry,
   Configs,
   ConnectionConfigEntry,
   DataBaseConfigEntry,
@@ -243,9 +242,10 @@ object Exchange {
         val reader = new JSONReader(session, jsonConfig.path)
         Some(reader.read())
       case SourceCategory.CSV =>
-        val csvConfig = config.asInstanceOf[CSVSourceConfigEntry]
+        val csvConfig = config.asInstanceOf[FileBaseSourceConfigEntry]
         LOG.info(s"""Loading CSV files from ${csvConfig.path}""")
-        val reader = new CSVReader(session, csvConfig.path, csvConfig.separator, csvConfig.header)
+        val reader =
+          new CSVReader(session, csvConfig.path, csvConfig.separator.get, csvConfig.header.get)
         Some(reader.read())
       case SourceCategory.HIVE =>
         val hiveConfig = config.asInstanceOf[HiveSourceConfigEntry]
@@ -289,9 +289,10 @@ object Exchange {
                                       pulsarConfig.adminUrl,
                                       pulsarConfig.options)
         Some(reader.read())
-      case _ =>
+      case _ => {
         LOG.error(s"Data source ${config.category} not supported")
         None
+      }
     }
   }
 

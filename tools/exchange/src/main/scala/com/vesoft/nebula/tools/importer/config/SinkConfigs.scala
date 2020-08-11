@@ -7,7 +7,7 @@
 package com.vesoft.nebula.tools.importer.config
 
 /**
-  *
+  * SinkCategory
   */
 object SinkCategory extends Enumeration {
   type Type = Value

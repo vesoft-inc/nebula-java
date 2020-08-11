@@ -33,12 +33,12 @@ trait Processor extends Serializable {
 
   def process(): Unit
 
-  def waitingFuturesFinish(futures: ProcessResult,
-                           service: Executor,
-                           schemaConfig: SchemaConfigEntry,
-                           breakPointCount: Long,
-                           batchSuccess: LongAccumulator,
-                           batchFailure: LongAccumulator): Unit = {
+  def collectFutures(futures: ProcessResult,
+                     service: Executor,
+                     schemaConfig: SchemaConfigEntry,
+                     breakPointCount: Long,
+                     batchSuccess: LongAccumulator,
+                     batchFailure: LongAccumulator): Unit = {
     val pathAndOffset = CheckPointHandler.getPathAndOffset(schemaConfig, breakPointCount)
 
     val latch      = new CountDownLatch(futures.size)

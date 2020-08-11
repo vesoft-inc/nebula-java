@@ -72,12 +72,12 @@ class EdgeProcessor(data: DataFrame,
         breakPointEdgesCount += edges.values.length
 
         if (futures.size == 100) { // TODO configurable ?
-          waitingFuturesFinish(futures,
-                               service,
-                               edgeConfig,
-                               breakPointEdgesCount,
-                               batchSuccess,
-                               batchFailure)
+          collectFutures(futures,
+                         service,
+                         edgeConfig,
+                         breakPointEdgesCount,
+                         batchSuccess,
+                         batchFailure)
           breakPointEdgesCount = 0
         }
       } else {
@@ -100,12 +100,7 @@ class EdgeProcessor(data: DataFrame,
     }
 
     if (futures.nonEmpty) {
-      waitingFuturesFinish(futures,
-                           service,
-                           edgeConfig,
-                           breakPointEdgesCount,
-                           batchSuccess,
-                           batchFailure)
+      collectFutures(futures, service, edgeConfig, breakPointEdgesCount, batchSuccess, batchFailure)
       breakPointEdgesCount = 0
     }
 
