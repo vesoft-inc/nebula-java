@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class MockQueryServer extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger(MockQueryServer.class);
-    private TServer server;
+    private final TServer server;
 
     public MockQueryServer(GraphService.Iface mockProcessor, final int port) {
         TProcessor processor = new GraphService.Processor(mockProcessor);
@@ -45,13 +45,13 @@ public class MockQueryServer extends Thread {
                     return;
                 }
 
+                TTransport client = null;
+                TProcessor processor;
+                TTransport inputTransport = null;
+                TTransport outputTransport = null;
+                TProtocol inputProtocol;
+                TProtocol outputProtocol;
                 while (true) {
-                    TTransport client;
-                    TProcessor processor;
-                    TTransport inputTransport = null;
-                    TTransport outputTransport = null;
-                    TProtocol inputProtocol;
-                    TProtocol outputProtocol;
                     try {
                         client = serverTransport_.accept();
                         if (client != null) {
@@ -68,18 +68,21 @@ public class MockQueryServer extends Thread {
                                 while (processor.process(inputProtocol, outputProtocol, serverCtx)) ;
                             } catch (TTransportException e) {
                             }
-
                         }
                     } catch (Exception x) {
                         LOGGER.error("Error occurred during processing of message.", x);
-                    }
+                    } finally {
+                        if (client != null) {
+                            client.close();
+                        }
 
-                    if (inputTransport != null) {
-                        inputTransport.close();
-                    }
+                        if (inputTransport != null) {
+                            inputTransport.close();
+                        }
 
-                    if (outputTransport != null) {
-                        outputTransport.close();
+                        if (outputTransport != null) {
+                            outputTransport.close();
+                        }
                     }
                 }
             }

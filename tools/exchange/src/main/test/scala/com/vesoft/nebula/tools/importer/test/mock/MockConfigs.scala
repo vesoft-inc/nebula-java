@@ -27,9 +27,9 @@ object MockConfigs {
 
   val userConfig: UserConfigEntry = UserConfigEntry("user", "password")
 
-  val connectionConfig: ConnectionConfigEntry = ConnectionConfigEntry(1, 1)
+  val connectionConfig: ConnectionConfigEntry = ConnectionConfigEntry(1000, 1)
 
-  val executionConfig: ExecutionConfigEntry = ExecutionConfigEntry(1, 1, 1)
+  val executionConfig: ExecutionConfigEntry = ExecutionConfigEntry(1000, 1, 1)
 
   val errorConfig: ErrorConfigEntry = ErrorConfigEntry("/tmp/", 100)
 
