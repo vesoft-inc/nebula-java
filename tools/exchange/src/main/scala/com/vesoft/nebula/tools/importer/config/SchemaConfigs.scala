@@ -10,7 +10,7 @@ import com.typesafe.config.ConfigValue
 import com.vesoft.nebula.tools.importer.KeyPolicy
 
 /**
-  * SchemaConfigEntry
+  * SchemaConfigEntry is tag/edge super class use to save some basic parameter for importer.
   */
 sealed trait SchemaConfigEntry {
   def name: String

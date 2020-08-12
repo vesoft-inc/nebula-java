@@ -74,8 +74,17 @@ case class HiveSourceConfigEntry(override val category: SourceCategory.Value, ex
 }
 
 /**
+  * Neo4JSourceConfigEntry
   *
+  * @param name
   * @param exec
+  * @param server
+  * @param user
+  * @param password
+  * @param database
+  * @param encryption
+  * @param parallel
+  * @param checkPointPath use save resume data dir path.
   */
 case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
                                   name: String,
@@ -103,6 +112,18 @@ case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Val
   }
 }
 
+/**
+  * MySQLSourceConfigEntry
+  *
+  * @param host
+  * @param port
+  * @param database
+  * @param table
+  * @param user
+  * @param password
+  * @param sentence
+  * @return
+ */
 case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
                                   host: String,
                                   port: Int,
@@ -122,6 +143,7 @@ case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
 }
 
 /**
+  * SocketSourceConfigEntry
   *
   * @param host
   * @param port
@@ -156,6 +178,14 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
   }
 }
 
+/**
+  * PulsarSourceConfigEntry
+  *
+  * @param serviceUrl
+  * @param adminUrl use to get data schema.
+  * @param options
+  * @return
+ */
 case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
                                    override val intervalSeconds: Int,
                                    serviceUrl: String,

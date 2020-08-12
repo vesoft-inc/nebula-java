@@ -396,6 +396,12 @@ object Configs {
             edges.toList)
   }
 
+  /**
+    * Use to category name to category value mapping.
+    *
+    * @param category name
+    * @return
+    */
   private[this] def toSourceCategory(category: String): SourceCategory.Value = {
     category.trim.toUpperCase match {
       case "PARQUET" => SourceCategory.PARQUET
@@ -412,6 +418,12 @@ object Configs {
     }
   }
 
+  /**
+    * Use to sink name to sink value mapping.
+    *
+    * @param category name
+    * @return
+    */
   private[this] def toSinkCategory(category: String): SinkCategory.Value = {
     category.trim.toUpperCase match {
       case "CLIENT" =>
@@ -421,6 +433,13 @@ object Configs {
     }
   }
 
+  /**
+    * Use to generate data source config according to category of source.
+    *
+    * @param category
+    * @param config
+    * @return
+    */
   private[this] def dataSourceConfig(category: SourceCategory.Value,
                                      config: Config): DataSourceConfigEntry = {
     category match {
@@ -588,6 +607,13 @@ object Configs {
     }
   }
 
+  /**
+   * Use to parse command line arguments.
+   *
+   * @param args
+   * @param programName
+   * @return Argument
+   */
   def parser(args: Array[String], programName: String): Option[Argument] = {
     val parser = new scopt.OptionParser[Argument](programName) {
       head(programName, "1.0.0")

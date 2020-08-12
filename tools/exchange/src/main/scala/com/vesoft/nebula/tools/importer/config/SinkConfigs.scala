@@ -7,7 +7,8 @@
 package com.vesoft.nebula.tools.importer.config
 
 /**
-  * SinkCategory
+  * SinkCategory is use to expression the writer's type.
+  * Current support client.
   */
 object SinkCategory extends Enumeration {
   type Type = Value
