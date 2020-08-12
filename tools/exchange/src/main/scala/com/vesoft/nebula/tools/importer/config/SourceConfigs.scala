@@ -37,6 +37,14 @@ sealed trait DataSourceConfigEntry {
   def category: SourceCategory.Value
 }
 
+sealed trait FileDataSourceConfigEntry extends DataSourceConfigEntry {
+  def path: String
+}
+
+sealed trait ServerDataSourceConfigEntry extends DataSourceConfigEntry {
+  def sentence: String
+}
+
 sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
   def intervalSeconds: Int
 }
@@ -50,10 +58,10 @@ sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
   * @param header
   */
 case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value,
-                                     path: String,
+                                     override val path: String,
                                      separator: Option[String] = None,
                                      header: Option[Boolean] = None)
-    extends DataSourceConfigEntry {
+    extends FileDataSourceConfigEntry {
   override def toString: String = {
     s"File source path: ${path}, separator: ${separator}, header: ${header}"
   }
@@ -62,22 +70,23 @@ case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value
 /**
   * HiveSourceConfigEntry
   *
-  * @param exec
+  * @param sentence
   */
-case class HiveSourceConfigEntry(override val category: SourceCategory.Value, exec: String)
-    extends DataSourceConfigEntry {
-  require(exec.trim.nonEmpty)
+case class HiveSourceConfigEntry(override val category: SourceCategory.Value,
+                                 override val sentence: String)
+    extends ServerDataSourceConfigEntry {
+  require(sentence.trim.nonEmpty)
 
   override def toString: String = {
-    s"Hive source exec: ${exec}"
+    s"Hive source exec: ${sentence}"
   }
 }
 
 /**
   * Neo4JSourceConfigEntry
   *
+  * @param sentence
   * @param name
-  * @param exec
   * @param server
   * @param user
   * @param password
@@ -87,8 +96,8 @@ case class HiveSourceConfigEntry(override val category: SourceCategory.Value, ex
   * @param checkPointPath use save resume data dir path.
   */
 case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
+                                  override val sentence: String,
                                   name: String,
-                                  exec: String,
                                   server: String,
                                   user: String,
                                   password: String,
@@ -96,17 +105,19 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
                                   encryption: Boolean,
                                   parallel: Int,
                                   checkPointPath: Option[String])
-    extends DataSourceConfigEntry {
-  require(exec.trim.length != 0 && user.trim.length != 0 && parallel > 0)
+    extends ServerDataSourceConfigEntry {
+  require(sentence.trim.nonEmpty && user.trim.nonEmpty && parallel > 0)
 
   override def toString: String = {
     s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
-      s" checkPointPath: ${checkPointPath}, exec: ${exec}, parallel: ${parallel}, database: ${database}"
+      s" checkPointPath: ${checkPointPath}, exec: ${sentence}, parallel: ${parallel}, database: ${database}"
   }
 }
 
-case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value)
-    extends DataSourceConfigEntry {
+case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value,
+                                       override val sentence: String,
+                                       isEdge: Boolean)
+    extends ServerDataSourceConfigEntry {
   override def toString: String = {
     s"Janus graph source"
   }
@@ -123,7 +134,7 @@ case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Val
   * @param password
   * @param sentence
   * @return
- */
+  */
 case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
                                   host: String,
                                   port: Int,
@@ -131,8 +142,8 @@ case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
                                   table: String,
                                   user: String,
                                   password: String,
-                                  sentence: String)
-    extends DataSourceConfigEntry {
+                                  override val sentence: String)
+    extends ServerDataSourceConfigEntry {
   require(
     host.trim.length != 0 && port > 0 && database.trim.length > 0 && table.trim.length > 0 && user.trim.length > 0)
 
@@ -185,7 +196,7 @@ case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
   * @param adminUrl use to get data schema.
   * @param options
   * @return
- */
+  */
 case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
                                    override val intervalSeconds: Int,
                                    serviceUrl: String,

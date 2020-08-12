@@ -6,6 +6,11 @@
 
 package com.vesoft.nebula.tools.importer.reader
 
+import com.vesoft.nebula.tools.importer.config.{
+  KafkaSourceConfigEntry,
+  PulsarSourceConfigEntry,
+  SocketSourceConfigEntry
+}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
@@ -23,19 +28,18 @@ abstract class StreamingBaseReader(override val session: SparkSession) extends R
 /**
   *
   * @param session
-  * @param host
-  * @param port
+  * @param socketConfig
   */
-class SocketReader(override val session: SparkSession, host: String = "127.0.0.1", port: Int = 8989)
+class SocketReader(override val session: SparkSession, socketConfig: SocketSourceConfigEntry)
     extends StreamingBaseReader(session) {
 
-  require(host.trim.size != 0 && port > 0)
+  require(socketConfig.host.trim.nonEmpty && socketConfig.port > 0)
 
   override def read(): DataFrame = {
     session.readStream
       .format("socket")
-      .option("host", host)
-      .option("port", port)
+      .option("host", socketConfig.host)
+      .option("port", socketConfig.port)
       .load()
   }
 }
@@ -43,35 +47,36 @@ class SocketReader(override val session: SparkSession, host: String = "127.0.0.1
 /**
   *
   * @param session
-  * @param server
-  * @param topic
+  * @param kafkaConfig
   */
-class KafkaReader(override val session: SparkSession, server: String = "127.0.0.1:", topic: String)
+class KafkaReader(override val session: SparkSession, kafkaConfig: KafkaSourceConfigEntry)
     extends StreamingBaseReader(session) {
 
-  require(server.trim.size != 0 && topic.trim.size != 0)
+  require(kafkaConfig.server.trim.nonEmpty && kafkaConfig.topic.trim.nonEmpty)
 
   override def read(): DataFrame = {
     session.readStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", server)
-      .option("subscribe", topic)
+      .option("kafka.bootstrap.servers", kafkaConfig.server)
+      .option("subscribe", kafkaConfig.topic)
       .load()
   }
 }
 
-class PulsarReader(override val session: SparkSession,
-                   serviceUrl: String,
-                   adminUrl: String,
-                   options: Map[String, String])
+/**
+  *
+  * @param session
+  * @param pulsarConfig
+  */
+class PulsarReader(override val session: SparkSession, pulsarConfig: PulsarSourceConfigEntry)
     extends StreamingBaseReader(session) {
 
   override def read(): DataFrame = {
     session.readStream
       .format("pulsar")
-      .option("service.url", serviceUrl)
-      .option("admin.url", adminUrl)
-      .options(options)
+      .option("service.url", pulsarConfig.serviceUrl)
+      .option("admin.url", pulsarConfig.adminUrl)
+      .options(pulsarConfig.options)
       .load()
   }
 }

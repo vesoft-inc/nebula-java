@@ -6,9 +6,10 @@
 
 package com.vesoft.nebula.tools.importer.reader
 
+import com.vesoft.nebula.tools.importer.config.FileBaseSourceConfigEntry
 import org.apache.spark.sql.catalyst.encoders.RowEncoder
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 /**
   * The FileBaseReader is the abstract class for HDFS file reader.
@@ -18,7 +19,7 @@ import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
   */
 abstract class FileBaseReader(val session: SparkSession, val path: String) extends Reader {
 
-  require(path.trim.size != 0)
+  require(path.trim.nonEmpty)
 
   override def close(): Unit = {
     session.close()
@@ -29,10 +30,10 @@ abstract class FileBaseReader(val session: SparkSession, val path: String) exten
   * The ParquetReader extend the FileBaseReader and support read parquet file from HDFS.
   *
   * @param session
-  * @param path
+  * @param parquetConfig
   */
-class ParquetReader(override val session: SparkSession, override val path: String)
-    extends FileBaseReader(session, path) {
+class ParquetReader(override val session: SparkSession, parquetConfig: FileBaseSourceConfigEntry)
+    extends FileBaseReader(session, parquetConfig.path) {
 
   override def read(): DataFrame = {
     session.read.parquet(path)
@@ -43,10 +44,10 @@ class ParquetReader(override val session: SparkSession, override val path: Strin
   * The ORCReader extend the FileBaseReader and support read orc file from HDFS.
   *
   * @param session
-  * @param path
+  * @param orcConfig
   */
-class ORCReader(override val session: SparkSession, override val path: String)
-    extends FileBaseReader(session, path) {
+class ORCReader(override val session: SparkSession, orcConfig: FileBaseSourceConfigEntry)
+    extends FileBaseReader(session, orcConfig.path) {
 
   override def read(): DataFrame = {
     session.read.orc(path)
@@ -57,10 +58,10 @@ class ORCReader(override val session: SparkSession, override val path: String)
   * The JSONReader extend the FileBaseReader and support read json file from HDFS.
   *
   * @param session
-  * @param path
+  * @param jsonConfig
   */
-class JSONReader(override val session: SparkSession, override val path: String)
-    extends FileBaseReader(session, path) {
+class JSONReader(override val session: SparkSession, jsonConfig: FileBaseSourceConfigEntry)
+    extends FileBaseReader(session, jsonConfig.path) {
 
   override def read(): DataFrame = {
     session.read.json(path)
@@ -72,18 +73,15 @@ class JSONReader(override val session: SparkSession, override val path: String)
   * All types of the structure are StringType.
   *
   * @param session
-  * @param path
+  * @param csvConfig
   */
-class CSVReader(override val session: SparkSession,
-                override val path: String,
-                separator: String = ",",
-                header: Boolean = false)
-    extends FileBaseReader(session, path) {
+class CSVReader(override val session: SparkSession, csvConfig: FileBaseSourceConfigEntry)
+    extends FileBaseReader(session, csvConfig.path) {
 
   override def read(): DataFrame = {
     session.read
-      .option("delimiter", separator)
-      .option("header", header)
+      .option("delimiter", csvConfig.separator.get)
+      .option("header", csvConfig.header.get)
       .csv(path)
   }
 }
@@ -94,15 +92,15 @@ class CSVReader(override val session: SparkSession,
   * The structure of the row should be specified.
   *
   * @param session
-  * @param path
+  * @param customConfig
   * @param transformation
   * @param structType
   */
 abstract class CustomReader(override val session: SparkSession,
-                            override val path: String,
+                            customConfig: FileBaseSourceConfigEntry,
                             transformation: String => Row,
                             structType: StructType)
-    extends FileBaseReader(session, path) {
+    extends FileBaseReader(session, customConfig.path) {
 
   override def read(): DataFrame = {
     val encoder = RowEncoder.apply(structType)

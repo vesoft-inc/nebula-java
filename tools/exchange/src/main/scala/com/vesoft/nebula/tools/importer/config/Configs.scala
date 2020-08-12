@@ -476,8 +476,8 @@ object Configs {
         val database = if (config.hasPath("database")) Some(config.getString("database")) else None
         Neo4JSourceConfigEntry(
           SourceCategory.NEO4J,
-          name,
           config.getString("exec"),
+          name,
           config.getString("server"),
           config.getString("user"),
           config.getString("password"),
@@ -487,7 +487,7 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
+        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", isEdge = false)
       case SourceCategory.MYSQL =>
         MySQLSourceConfigEntry(
           SourceCategory.MYSQL,
@@ -608,12 +608,12 @@ object Configs {
   }
 
   /**
-   * Use to parse command line arguments.
-   *
-   * @param args
-   * @param programName
-   * @return Argument
-   */
+    * Use to parse command line arguments.
+    *
+    * @param args
+    * @param programName
+    * @return Argument
+    */
   def parser(args: Array[String], programName: String): Option[Argument] = {
     val parser = new scopt.OptionParser[Argument](programName) {
       head(programName, "1.0.0")
