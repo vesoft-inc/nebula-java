@@ -9,6 +9,7 @@ package com.vesoft.nebula.tools.importer.reader
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import com.vesoft.nebula.tools.importer.{Neo4JSourceConfigEntry, Offset}
+import org.apache.commons.configuration.PropertiesConfiguration
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
@@ -18,9 +19,12 @@ import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
   ClusterCountMapReduce,
   PeerPressureVertexProgram
 }
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource
 import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
+import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
+import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
 import org.neo4j.spark.{Executor, Neo4jConfig}
 import org.neo4j.spark.dataframe.CypherTypes
@@ -204,9 +208,26 @@ class JanusGraphReader(override val session: SparkSession,
     extends ServerBaseReader(session, sentence) {
 
   override def read(): DataFrame = {
-    val graph = GraphFactory.open("conf/hadoop/hadoop-gryo.properties")
-    graph.configuration().setProperty("gremlin.hadoop.graphWriter", classOf[PersistedOutputRDD])
-    graph.configuration().setProperty("gremlin.spark.persistContext", true)
+    val path       = "/Users/mengjie/Documents/git/janusgraph-docker/opt/janusgraph/conf/"
+    val properties = path + "janusgraph-cql-es.properties"
+    println(properties)
+    val propertiesConfiguration = new PropertiesConfiguration(properties)
+    propertiesConfiguration.addProperty(
+      "gremlin.remote.remoteConnectionClass",
+      "org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection")
+
+    val g = traversal().withRemote(propertiesConfiguration)
+//    g.addV()
+    import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource
+//    graph.configuration().setProperty("gremlin.hadoop.graphWriter", classOf[PersistedOutputRDD])
+//    graph.configuration().setProperty("gremlin.spark.persistContext", true)
+//    val g = traversal().withRemote(properties);
+//    val g = graph.traversal
+//    graph.vertices().asScala.foreach(println)
+//    graph.addVertex("abc")
+    println(g.V().count().next())
+    println(g.V().next())
+    val graph = g.getGraph
 
     val result = graph
       .compute(classOf[SparkGraphComputer])
@@ -214,12 +235,12 @@ class JanusGraphReader(override val session: SparkSession,
       .mapReduce(ClusterCountMapReduce.build().memoryKey("clusterCount").create())
       .submit()
       .get()
-
-    if (isEdge) {
-      result.graph().edges()
-    } else {
-      result.graph().variables().asMap()
-    }
+//
+//    if (isEdge) {
+//      result.graph().edges()
+//    } else {
+//      result.graph().variables().asMap()
+//    }
     null
   }
 }

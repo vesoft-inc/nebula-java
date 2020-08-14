@@ -208,7 +208,9 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
   }
 }
 
-case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value)
+case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value,
+                                       server: String,
+                                       exec: String)
     extends DataSourceConfigEntry {
   override def toString: String = {
     s"Neo4J source"
@@ -734,17 +736,18 @@ object Configs {
 
   private[this] def toSourceCategory(category: String): SourceCategory.Value = {
     category.trim.toUpperCase match {
-      case "PARQUET" => SourceCategory.PARQUET
-      case "ORC"     => SourceCategory.ORC
-      case "JSON"    => SourceCategory.JSON
-      case "CSV"     => SourceCategory.CSV
-      case "HIVE"    => SourceCategory.HIVE
-      case "NEO4J"   => SourceCategory.NEO4J
-      case "SOCKET"  => SourceCategory.SOCKET
-      case "KAFKA"   => SourceCategory.KAFKA
-      case "MYSQL"   => SourceCategory.MYSQL
-      case "PULSAR"  => SourceCategory.PULSAR
-      case _         => throw new IllegalArgumentException(s"${category} not support")
+      case "PARQUET"     => SourceCategory.PARQUET
+      case "ORC"         => SourceCategory.ORC
+      case "JSON"        => SourceCategory.JSON
+      case "CSV"         => SourceCategory.CSV
+      case "HIVE"        => SourceCategory.HIVE
+      case "NEO4J"       => SourceCategory.NEO4J
+      case "SOCKET"      => SourceCategory.SOCKET
+      case "KAFKA"       => SourceCategory.KAFKA
+      case "MYSQL"       => SourceCategory.MYSQL
+      case "PULSAR"      => SourceCategory.PULSAR
+      case "JANUS GRAPH" => SourceCategory.JANUS_GRAPH
+      case _             => throw new IllegalArgumentException(s"${category} not support")
     }
   }
 
@@ -801,7 +804,7 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
+        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", "")
       case SourceCategory.MYSQL =>
         MySQLSourceConfigEntry(
           SourceCategory.MYSQL,

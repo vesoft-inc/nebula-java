@@ -99,6 +99,7 @@
                                     <exclude>org.spark-project.hive:hive-exec</exclude>
                                     <exclude>stax:stax-api</exclude>
                                     <exclude>org.glassfish.hk2.external:aopalliance-repackaged</exclude>
+                                    <exclude>com.google.common:*</exclude>
                                 </excludes>
                             </artifactSet>
                             <filters>
@@ -112,6 +113,15 @@
                                     </excludes>
                                 </filter>
                             </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com</pattern>
+                                    <shadedPattern>repackaged.com</shadedPattern>
+                                    <includes>
+                                        <include>com.google.common.**</include>
+                                    </includes>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -198,10 +208,10 @@
                     <artifactId>jackson-databind</artifactId>
                     <groupId>com.fasterxml.jackson.core</groupId>
                 </exclusion>
-                <exclusion>
-                    <artifactId>scala-xml_2.11</artifactId>
-                    <groupId>org.scala-lang.modules</groupId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <artifactId>scala-xml_2.11</artifactId>-->
+<!--                    <groupId>org.scala-lang.modules</groupId>-->
+<!--                </exclusion>-->
                 <exclusion>
                     <artifactId>log4j</artifactId>
                     <groupId>log4j</groupId>
@@ -277,10 +287,10 @@
                     <artifactId>commons-logging</artifactId>
                     <groupId>commons-logging</groupId>
                 </exclusion>
-                <exclusion>
-                    <artifactId>avro</artifactId>
-                    <groupId>org.apache.avro</groupId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <artifactId>avro</artifactId>-->
+<!--                    <groupId>org.apache.avro</groupId>-->
+<!--                </exclusion>-->
                 <exclusion>
                     <artifactId>commons-compress</artifactId>
                     <groupId>org.apache.commons</groupId>
@@ -318,6 +328,11 @@
                     <groupId>commons-io</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -525,6 +540,21 @@
                     <groupId>org.apache.commons</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-lucene</artifactId>
+            <version>${janusgraph.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-berkeleyje</artifactId>
+            <version>${janusgraph.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-inmemory</artifactId>
+            <version>${janusgraph.version}</version>
         </dependency>
         <dependency>
             <groupId>org.janusgraph</groupId>
