@@ -1,5 +1,6 @@
 package com.vesoft.nebula;
 
+import com.facebook.thrift.protocol.TCompactProtocol;
 import com.vesoft.nebula.common.Type;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
@@ -15,7 +16,7 @@ public class NebulaReaderExample {
     public static void main(String[] args) {
         SparkConf sparkConf = new SparkConf();
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-        sparkConf.registerKryoClasses(new Class[]{com.facebook.thrift.protocol.TCompactProtocol.class});
+        sparkConf.registerKryoClasses(new Class[]{TCompactProtocol.class});
         SparkSession sparkSession = SparkSession
                 .builder()
                 .config(sparkConf)
@@ -31,6 +32,9 @@ public class NebulaReaderExample {
                 .option("storagePort", "45500")
                 .option("returnCols", "course=name;building=name;student=name")
                 .load();
+        LOGGER.info("vertex schema: ");
+        vertexDataset.printSchema();
+        vertexDataset.show();
 
         Dataset<Row> edgeDataset = sparkSession
                 .read()
@@ -41,11 +45,6 @@ public class NebulaReaderExample {
                 .option("storagePort", "45500")
                 .option("returnCols", "like=likeness;select=grade")
                 .load();
-
-        LOGGER.info("vertex schema: ");
-        vertexDataset.printSchema();
-        vertexDataset.show();
-
         LOGGER.info("edge schema: ");
         edgeDataset.printSchema();
         edgeDataset.show();
