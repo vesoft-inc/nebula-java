@@ -23,18 +23,6 @@ public class NebulaDataSource implements RelationProvider {
         connectInfo = new ConnectInfo();
         connectInfo.setIp(parameters.get("ip").get());
         connectInfo.setSpaceName(parameters.get("spaceName").get());
-        connectInfo.setUsername(parameters.getOrElse("username", new AbstractFunction0<String>() {
-            @Override
-            public String apply() {
-                return null;
-            }
-        }));
-        connectInfo.setPassword(parameters.getOrElse("password", new AbstractFunction0<String>() {
-            @Override
-            public String apply() {
-                return null;
-            }
-        }));
         connectInfo.setStoragePort(Integer.parseInt(parameters.get("storagePort").get()));
         connectInfo.check();
         LOGGER.info("connectInfo, {}", connectInfo);
