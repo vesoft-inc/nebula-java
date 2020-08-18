@@ -8,18 +8,25 @@ package com.vesoft.nebula.tools.importer.reader
 
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{Neo4JSourceConfigEntry, Offset}
+import com.vesoft.nebula.tools.importer.{
+  JanusGraphSourceConfigEntry,
+  Neo4JSourceConfigEntry,
+  Offset
+}
 import org.apache.commons.configuration.PropertiesConfiguration
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
-import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.{DataType, StructType}
 import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
   ClusterCountMapReduce,
   PeerPressureVertexProgram
 }
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.{
+  GraphTraversal,
+  GraphTraversalSource
+}
 import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
@@ -99,7 +106,8 @@ class MySQLReader(override val session: SparkSession,
   * @param config
   */
 class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigEntry)
-    extends ServerBaseReader(session, config.exec) {
+    extends ServerBaseReader(session, config.exec)
+    with CheckPointSupport {
 
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
@@ -112,50 +120,14 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
       val neo4JSession = driver.session()
       neo4JSession.run(countSentence).single().get(0).asLong()
     }
-    if (totalCount <= 0L) throw new RuntimeException(s"your cypher ${config.exec} return nothing!")
+    val offsets = getOffsets(totalCount, config.parallel, config.checkPointPath, config.name)
 
-    val partitionCount = config.parallel
-
-    val offsets = {
-      val batchSizes = List.fill((totalCount % partitionCount).toInt)(
-        totalCount / partitionCount + 1) ::: List.fill(
-        (partitionCount - totalCount % partitionCount).toInt)(totalCount / partitionCount)
-
-      val initEachPartitionOffset = {
-        var offset = 0L
-        0L :: (for (batchSize <- batchSizes.init) yield {
-          offset += batchSize
-          offset
-        })
-      }
-
-      val eachPartitionOffset = config.checkPointPath match {
-        case Some(path) =>
-          val files = Range(0, partitionCount).map(i => s"${path}/${config.name}.${i}").toList
-          if (files.forall(x => HDFSUtils.exists(x)))
-            files.map(file => HDFSUtils.getContent(file).trim.toLong).sorted
-          else initEachPartitionOffset
-        case _ => initEachPartitionOffset
-      }
-
-      val eachPartitionLimit = {
-        batchSizes
-          .zip(initEachPartitionOffset.zip(eachPartitionOffset))
-          .map(x => {
-            x._1 - (x._2._2 - x._2._1)
-          })
-      }
-      eachPartitionOffset.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
-    }
     LOG.info(s"${config.name} offsets: ${offsets.mkString(",")}")
 
     if (offsets.forall(_.size == 0L)) {
       LOG.warn(s"${config.name} already write done from check point.")
       return session.createDataFrame(session.sparkContext.emptyRDD[Row], new StructType())
     }
-    if (offsets.exists(_.size < 0L))
-      throw new RuntimeException(
-        s"Your check point file maybe broken. Please delete ${config.name}.* file")
 
     val neo4jConfig = Neo4jConfig(config.server,
                                   config.user,
@@ -199,48 +171,72 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
 /**
   * @{link JanusGraphReader} extends the @{link ServerBaseReader}
   * @param session
-  * @param sentence
-  * @param isEdge
+  * @param janusGraphConfig
   */
 class JanusGraphReader(override val session: SparkSession,
-                       sentence: String,
-                       isEdge: Boolean = false)
-    extends ServerBaseReader(session, sentence) {
+                       janusGraphConfig: JanusGraphSourceConfigEntry)
+    extends ServerBaseReader(session, "")
+    with CheckPointSupport {
+
+  @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
   override def read(): DataFrame = {
-    val path       = "/Users/mengjie/Documents/git/janusgraph-docker/opt/janusgraph/conf/"
-    val properties = path + "janusgraph-cql-es.properties"
-    println(properties)
-    val propertiesConfiguration = new PropertiesConfiguration(properties)
-    propertiesConfiguration.addProperty(
-      "gremlin.remote.remoteConnectionClass",
-      "org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection")
+    def getPropertiesConfig = {
+      val propertiesConfiguration = new PropertiesConfiguration(janusGraphConfig.propertiesPath)
+      if (!propertiesConfiguration
+            .getKeys()
+            .asScala
+            .toList
+            .contains("gremlin.remote.remoteConnectionClass")) {
+        propertiesConfiguration.addProperty(
+          "gremlin.remote.remoteConnectionClass",
+          "org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection")
+      }
+      propertiesConfiguration
+    }
 
-    val g = traversal().withRemote(propertiesConfiguration)
-//    g.addV()
-    import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource
-//    graph.configuration().setProperty("gremlin.hadoop.graphWriter", classOf[PersistedOutputRDD])
-//    graph.configuration().setProperty("gremlin.spark.persistContext", true)
-//    val g = traversal().withRemote(properties);
-//    val g = graph.traversal
-//    graph.vertices().asScala.foreach(println)
-//    graph.addVertex("abc")
-    println(g.V().count().next())
-    println(g.V().next())
-    val graph = g.getGraph
+    val g     = traversal().withRemote(getPropertiesConfig)
+    val entry = if (janusGraphConfig.isEdge) g.E() else g.V()
+    val offsets = getOffsets(entry.hasLabel(janusGraphConfig.label).count().next(),
+                             janusGraphConfig.parallel,
+                             janusGraphConfig.checkPointPath,
+                             janusGraphConfig.name)
 
-    val result = graph
-      .compute(classOf[SparkGraphComputer])
-      .program(PeerPressureVertexProgram.build().create(graph))
-      .mapReduce(ClusterCountMapReduce.build().memoryKey("clusterCount").create())
-      .submit()
-      .get()
-//
-//    if (isEdge) {
-//      result.graph().edges()
-//    } else {
-//      result.graph().variables().asMap()
-//    }
+    LOG.info(s"${janusGraphConfig.name} offsets: ${offsets.mkString(",")}")
+
+    if (offsets.forall(_.size == 0L)) {
+      LOG.warn(s"${janusGraphConfig.name} already write done from check point.")
+      return session.createDataFrame(session.sparkContext.emptyRDD[Row], new StructType())
+    }
+    val rdd = session.sparkContext
+      .parallelize(offsets, offsets.size)
+      .flatMap(offset => {
+        if (janusGraphConfig.checkPointPath.isDefined) {
+          val path =
+            s"${janusGraphConfig.checkPointPath.get}/${janusGraphConfig.name}.${TaskContext.getPartitionId()}"
+          HDFSUtils.saveContent(path, offset.start.toString)
+        }
+        val g     = traversal().withRemote(getPropertiesConfig)
+        val entry = if (janusGraphConfig.isEdge) g.E() else g.V()
+        val ret = entry
+          .hasLabel(janusGraphConfig.label)
+          .skip(offset.start)
+          .limit(offset.size)
+          .valueMap()
+          .asScala
+          .map((record: java.util.Map[AnyRef, Nothing]) => {
+            val fields = record.keySet().asScala.toList
+            Row.fromSeq(fields.map(field => record.get(field).asInstanceOf[Any]))
+          })
+        g.close()
+        ret
+      })
+    if (rdd.isEmpty())
+      throw new RuntimeException(
+        s"It shouldn't happen. Maybe something wrong ${janusGraphConfig.propertiesPath}")
+    rdd.collect()
+    println("===")
+
     null
   }
 }

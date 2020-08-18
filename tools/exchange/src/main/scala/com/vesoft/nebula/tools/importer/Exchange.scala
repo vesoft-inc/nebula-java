@@ -277,7 +277,7 @@ object Exchange {
         Some(reader.read())
       case SourceCategory.JANUS_GRAPH =>
         val janusGraphSourceConfigEntry = config.asInstanceOf[JanusGraphSourceConfigEntry]
-        val reader                      = new JanusGraphReader(session, janusGraphSourceConfigEntry.exec, true)
+        val reader                      = new JanusGraphReader(session, janusGraphSourceConfigEntry)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")

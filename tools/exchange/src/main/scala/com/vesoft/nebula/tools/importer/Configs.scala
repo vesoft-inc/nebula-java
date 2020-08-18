@@ -209,11 +209,16 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
 }
 
 case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value,
-                                       server: String,
-                                       exec: String)
+                                       name: String,
+                                       propertiesPath: String,
+                                       label: String,
+                                       parallel: Int,
+                                       isEdge: Boolean,
+                                       checkPointPath: Option[String])
     extends DataSourceConfigEntry {
   override def toString: String = {
-    s"Neo4J source"
+    s"janus graph properties path: ${propertiesPath}, label: ${label}, parallel: ${parallel}, " +
+      s"isEdge: ${isEdge}, check point path: ${checkPointPath}"
   }
 }
 
@@ -804,7 +809,21 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", "")
+        val name           = config.getString("name")
+        val label          = config.getString("label")
+        val propertiesPath = config.getString("propertiesPath")
+        val checkPointPath =
+          if (config.hasPath("check_point")) Some(config.getString("check_point"))
+          else DEFAULT_CHECK_POINT_PATH
+        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
+        val isEdge   = !config.hasPath("vertex")
+        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH,
+                                    name,
+                                    propertiesPath,
+                                    label,
+                                    parallel,
+                                    isEdge,
+                                    checkPointPath)
       case SourceCategory.MYSQL =>
         MySQLSourceConfigEntry(
           SourceCategory.MYSQL,
