@@ -21,10 +21,6 @@ public class ConnectInfo implements Checkable, Serializable {
 
     private int storagePort;
 
-    private String username;
-
-    private String password;
-
     @Override
     public void check() throws IllegalArgumentException {
         Preconditions.checkArgument(StringUtils.isNotEmpty(spaceName),
