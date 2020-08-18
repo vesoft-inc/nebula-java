@@ -49,6 +49,7 @@
         <module>examples</module>
         <module>tools</module>
         <module>tools/exchange</module>
+        <module>spark-reader-v1</module>
     </modules>
 
     <distributionManagement>
