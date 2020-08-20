@@ -6,36 +6,23 @@
 
 package com.vesoft.nebula.tools.importer.reader
 
+import java.util
+import java.util.Date
+
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{
-  JanusGraphSourceConfigEntry,
-  Neo4JSourceConfigEntry,
-  Offset
-}
+import com.vesoft.nebula.tools.importer.{JanusGraphSourceConfigEntry, Neo4JSourceConfigEntry}
 import org.apache.commons.configuration.PropertiesConfiguration
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
-import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
-import org.apache.spark.sql.types.{DataType, StructType}
-import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
-  ClusterCountMapReduce,
-  PeerPressureVertexProgram
-}
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.{
-  GraphTraversal,
-  GraphTraversalSource
-}
-import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
-import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
-import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
-import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph
+import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
-import org.neo4j.spark.{Executor, Neo4jConfig}
 import org.neo4j.spark.dataframe.CypherTypes
 import org.neo4j.spark.utils.Neo4jSessionAwareIterator
+import org.neo4j.spark.{Executor, Neo4jConfig}
 
 import scala.collection.JavaConverters._
 
@@ -195,9 +182,9 @@ class JanusGraphReader(override val session: SparkSession,
       propertiesConfiguration
     }
 
-    val g     = traversal().withRemote(getPropertiesConfig)
-    val entry = if (janusGraphConfig.isEdge) g.E() else g.V()
-    val offsets = getOffsets(entry.hasLabel(janusGraphConfig.label).count().next(),
+    val g      = traversal().withRemote(getPropertiesConfig)
+    val entity = if (janusGraphConfig.isEdge) g.E() else g.V()
+    val offsets = getOffsets(entity.hasLabel(janusGraphConfig.label).count().next(),
                              janusGraphConfig.parallel,
                              janusGraphConfig.checkPointPath,
                              janusGraphConfig.name)
@@ -216,28 +203,44 @@ class JanusGraphReader(override val session: SparkSession,
             s"${janusGraphConfig.checkPointPath.get}/${janusGraphConfig.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val g     = traversal().withRemote(getPropertiesConfig)
-        val entry = if (janusGraphConfig.isEdge) g.E() else g.V()
-        val ret = entry
+        val g      = traversal().withRemote(getPropertiesConfig)
+        val entity = if (janusGraphConfig.isEdge) g.E() else g.V()
+        entity
           .hasLabel(janusGraphConfig.label)
           .skip(offset.start)
           .limit(offset.size)
           .valueMap()
           .asScala
           .map((record: java.util.Map[AnyRef, Nothing]) => {
-            val fields = record.keySet().asScala.toList
-            Row.fromSeq(fields.map(field => record.get(field).asInstanceOf[Any]))
+            val fields = record.keySet().asScala.toList.map(_.toString)
+            val schema = StructType(fields.map(field => {
+              val value = record.get(field).asInstanceOf[Any] match {
+                case list: util.ArrayList[Any] => list.get(0)
+                case _                         => record.get(field)
+              }
+              value match {
+                case _: Int     => StructField(field, DataTypes.IntegerType)
+                case _: Long    => StructField(field, DataTypes.LongType)
+                case _: String  => StructField(field, DataTypes.StringType)
+                case _: Double  => StructField(field, DataTypes.DoubleType)
+                case _: Boolean => StructField(field, DataTypes.BooleanType)
+                case _: Float   => StructField(field, DataTypes.FloatType)
+                case _: Date    => StructField(field, DataTypes.DateType)
+                case _: Byte    => StructField(field, DataTypes.BinaryType)
+                case v          => throw new RuntimeException(s"Not support type ${v}")
+              }
+            }))
+            val row = fields
+              .map(field => record.get(field).asInstanceOf[java.util.ArrayList[Any]].get(0))
+              .toArray
+            new GenericRowWithSchema(row, schema).asInstanceOf[Row]
           })
-        g.close()
-        ret
       })
     if (rdd.isEmpty())
       throw new RuntimeException(
         s"It shouldn't happen. Maybe something wrong ${janusGraphConfig.propertiesPath}")
-    rdd.collect()
-    println("===")
-
-    null
+    val schema = rdd.repartition(1).first().schema
+    session.createDataFrame(rdd, schema)
   }
 }
 
