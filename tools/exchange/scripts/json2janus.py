@@ -46,7 +46,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     graph = Graph()
-    connection = DriverRemoteConnection('ws://localhost:8182/gremlin', 'g')
+    connection = DriverRemoteConnection(args.address, 'g')
     g = graph.traversal().withRemote(connection)
     with open(args.file) as f:
         data = json.load(f)
