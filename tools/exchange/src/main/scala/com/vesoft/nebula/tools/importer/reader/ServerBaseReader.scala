@@ -19,6 +19,8 @@ import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
+import org.apache.tinkerpop.gremlin.structure.Direction
+import org.janusgraph.graphdb.relations.RelationIdentifier
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
 import org.neo4j.spark.dataframe.CypherTypes
 import org.neo4j.spark.utils.Neo4jSessionAwareIterator
@@ -167,6 +169,32 @@ class JanusGraphReader(override val session: SparkSession,
 
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
+  private def getTypeAndValue(field: Any, value: Any, prefix: String): Seq[(StructField, Any)] = {
+    value match {
+      case v: Int =>
+        Array((StructField(prefix + field.toString, DataTypes.IntegerType), v.asInstanceOf[Any]))
+      case v: Long =>
+        Array((StructField(prefix + field.toString, DataTypes.LongType), v.asInstanceOf[Any]))
+      case v: String =>
+        Array((StructField(prefix + field.toString, DataTypes.StringType), v.asInstanceOf[Any]))
+      case v: Double =>
+        Array((StructField(prefix + field.toString, DataTypes.DoubleType), v.asInstanceOf[Any]))
+      case v: Boolean =>
+        Array((StructField(prefix + field.toString, DataTypes.BooleanType), v.asInstanceOf[Any]))
+      case v: Float =>
+        Array((StructField(prefix + field.toString, DataTypes.FloatType), v.asInstanceOf[Any]))
+      case v: Date =>
+        Array((StructField(prefix + field.toString, DataTypes.DateType), v.asInstanceOf[Any]))
+      case v: Byte =>
+        Array((StructField(prefix + field.toString, DataTypes.BinaryType), v.asInstanceOf[Any]))
+      case m: util.Map[_, _] =>
+        m.asScala
+          .flatMap(pair => getTypeAndValue(pair._1, pair._2, s"${field.toString}."))
+          .toSeq
+      case v => throw new RuntimeException(s"Not support type ${v}")
+    }
+  }
+
   override def read(): DataFrame = {
     def getPropertiesConfig = {
       val propertiesConfiguration = new PropertiesConfiguration(janusGraphConfig.propertiesPath)
@@ -209,30 +237,19 @@ class JanusGraphReader(override val session: SparkSession,
           .hasLabel(janusGraphConfig.label)
           .skip(offset.start)
           .limit(offset.size)
-          .valueMap()
+          .elementMap()
           .asScala
           .map((record: java.util.Map[AnyRef, Nothing]) => {
             def getValue(field: Any) = record.get(field).asInstanceOf[Any] match {
               case list: util.ArrayList[Any] => list.get(0)
-              case _                         => record.get(field)
+              case x                         => x
             }
-            val fields = record.keySet().asScala.toList.map(_.toString)
-            val schema = StructType(fields.map(field => {
-              getValue(field) match {
-                case _: Int     => StructField(field, DataTypes.IntegerType)
-                case _: Long    => StructField(field, DataTypes.LongType)
-                case _: String  => StructField(field, DataTypes.StringType)
-                case _: Double  => StructField(field, DataTypes.DoubleType)
-                case _: Boolean => StructField(field, DataTypes.BooleanType)
-                case _: Float   => StructField(field, DataTypes.FloatType)
-                case _: Date    => StructField(field, DataTypes.DateType)
-                case _: Byte    => StructField(field, DataTypes.BinaryType)
-                case v          => throw new RuntimeException(s"Not support type ${v}")
-              }
-            }))
-            val row = fields
-              .map(getValue)
-              .toArray
+            val fields =
+              record.keySet().asScala.toList.filter(!janusGraphConfig.isEdge || _.toString != "id")
+            val typeAndValue =
+              fields.flatMap(field => getTypeAndValue(field, getValue(field), "")).sortBy(_._1.name)
+            val schema = StructType(typeAndValue.map(_._1))
+            val row    = typeAndValue.map(_._2).toArray
             new GenericRowWithSchema(row, schema).asInstanceOf[Row]
           })
       })
