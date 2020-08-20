@@ -212,13 +212,13 @@ class JanusGraphReader(override val session: SparkSession,
           .valueMap()
           .asScala
           .map((record: java.util.Map[AnyRef, Nothing]) => {
+            def getValue(field: Any) = record.get(field).asInstanceOf[Any] match {
+              case list: util.ArrayList[Any] => list.get(0)
+              case _                         => record.get(field)
+            }
             val fields = record.keySet().asScala.toList.map(_.toString)
             val schema = StructType(fields.map(field => {
-              val value = record.get(field).asInstanceOf[Any] match {
-                case list: util.ArrayList[Any] => list.get(0)
-                case _                         => record.get(field)
-              }
-              value match {
+              getValue(field) match {
                 case _: Int     => StructField(field, DataTypes.IntegerType)
                 case _: Long    => StructField(field, DataTypes.LongType)
                 case _: String  => StructField(field, DataTypes.StringType)
@@ -231,7 +231,7 @@ class JanusGraphReader(override val session: SparkSession,
               }
             }))
             val row = fields
-              .map(field => record.get(field).asInstanceOf[java.util.ArrayList[Any]].get(0))
+              .map(getValue)
               .toArray
             new GenericRowWithSchema(row, schema).asInstanceOf[Row]
           })

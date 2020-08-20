@@ -112,6 +112,15 @@
                                     </excludes>
                                 </filter>
                             </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com</pattern>
+                                    <shadedPattern>repackaged.com</shadedPattern>
+                                    <includes>
+                                        <include>com.google.common.**</include>
+                                    </includes>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
