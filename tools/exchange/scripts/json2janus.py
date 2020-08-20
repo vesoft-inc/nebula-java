@@ -14,13 +14,17 @@ from gremlin_python.driver.driver_remote_connection import DriverRemoteConnectio
 
 def data2janus(g: GraphTraversalSource, data: dict):
     for name, vertex in data['vertex'].items():
-        for properties in vertex['data']:
+        vertex_count = len(vertex['data'])
+        for i, properties in enumerate(vertex['data']):
             vv = g.addV(name)
             for k, v in properties.items():
                 vv = vv.property(k, v)
             vv.next()
+            print("{}: {}/{}".format(name, i, vertex_count))
+
     for name, edge in data['edge'].items():
-        for e in edge['data']:
+        edge_count = len(edge['data'])
+        for i, e in enumerate(edge['data']):
             from_ = g.V().hasLabel(e['from']['tag'])
             for k, v in e['from']['match'].items():
                 from_ = from_.has(k, v)
@@ -31,6 +35,7 @@ def data2janus(g: GraphTraversalSource, data: dict):
             for k, v in e['data'].items():
                 ee = ee.property(k, v)
             ee.next()
+            print("{}: {}/{}".format(name, i, edge_count))
 
 
 if __name__ == '__main__':
@@ -51,4 +56,4 @@ if __name__ == '__main__':
     with open(args.file) as f:
         data = json.load(f)
         data2janus(g, data)
-    print("total count: {}".format(g.V().count().next()))
+    print("total vertex count: {}, total edge count: {}".format(g.V().count().next(), g.E().count().next()))
