@@ -210,14 +210,15 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
 
 case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value,
                                        name: String,
-                                       propertiesPath: String,
+                                       host: String,
+                                       port: Int,
                                        label: String,
                                        parallel: Int,
                                        isEdge: Boolean,
                                        checkPointPath: Option[String])
     extends DataSourceConfigEntry {
   override def toString: String = {
-    s"janus graph properties path: ${propertiesPath}, label: ${label}, parallel: ${parallel}, " +
+    s"janus graph host: ${host}, port: ${port} label: ${label}, parallel: ${parallel}, " +
       s"isEdge: ${isEdge}, check point path: ${checkPointPath}"
   }
 }
@@ -809,17 +810,26 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        val name           = config.getString("name")
-        val label          = config.getString("label")
-        val propertiesPath = config.getString("propertiesPath")
+        val name  = config.getString("name")
+        val label = config.getString("label")
+        val host  = config.getString("host")
+        val port  = config.getInt("port")
         val checkPointPath =
           if (config.hasPath("check_point")) Some(config.getString("check_point"))
           else DEFAULT_CHECK_POINT_PATH
         val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
-        val isEdge   = !config.hasPath("vertex")
+        val isEdge = {
+          if (config.hasPath("vertex") && (config.hasPath("source.field") || config.hasPath(
+                "target.field")))
+            throw new IllegalArgumentException(
+              s"You can't write vertex and source or target field config same item in janus graph ${name}, " +
+                s"because it use to judge it is edge or vertex!")
+          config.hasPath("source.field")
+        }
         JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH,
                                     name,
-                                    propertiesPath,
+                                    host,
+                                    port,
                                     label,
                                     parallel,
                                     isEdge,

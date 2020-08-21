@@ -8,19 +8,23 @@ package com.vesoft.nebula.tools.importer.reader
 
 import java.util
 import java.util.Date
+import java.util.concurrent.CompletableFuture
 
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import com.vesoft.nebula.tools.importer.{JanusGraphSourceConfigEntry, Neo4JSourceConfigEntry}
-import org.apache.commons.configuration.PropertiesConfiguration
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import org.apache.tinkerpop.gremlin.driver.{Cluster, MessageSerializer}
+import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection
+import org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0
+import org.apache.tinkerpop.gremlin.process.remote.RemoteConnection
+import org.apache.tinkerpop.gremlin.process.remote.traversal.RemoteTraversal
 import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
-import org.apache.tinkerpop.gremlin.structure.Direction
-import org.janusgraph.graphdb.relations.RelationIdentifier
+import org.apache.tinkerpop.gremlin.process.traversal.Bytecode
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
 import org.neo4j.spark.dataframe.CypherTypes
 import org.neo4j.spark.utils.Neo4jSessionAwareIterator
@@ -195,8 +199,21 @@ class JanusGraphReader(override val session: SparkSession,
     }
   }
 
+  private def getRemoteConnection = {
+    val serializer = new GryoMessageSerializerV3d0()
+    serializer.configure(Map[String, Object]("ioRegistries" -> List(
+                           "org.janusgraph.graphdb.tinkerpop.JanusGraphIoRegistry").asJava).asJava,
+                         null)
+    val cluster = Cluster
+      .build(janusGraphConfig.host)
+      .port(janusGraphConfig.port)
+      .serializer(serializer)
+      .create()
+    DriverRemoteConnection.using(cluster)
+  }
+
   override def read(): DataFrame = {
-    val g      = traversal().withRemote(janusGraphConfig.propertiesPath)
+    val g      = traversal().withRemote(getRemoteConnection)
     val entity = if (janusGraphConfig.isEdge) g.E() else g.V()
     val offsets = getOffsets(entity.hasLabel(janusGraphConfig.label).count().next(),
                              janusGraphConfig.parallel,
@@ -217,7 +234,7 @@ class JanusGraphReader(override val session: SparkSession,
             s"${janusGraphConfig.checkPointPath.get}/${janusGraphConfig.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val g      = traversal().withRemote(janusGraphConfig.propertiesPath)
+        val g      = traversal().withRemote(getRemoteConnection)
         val entity = if (janusGraphConfig.isEdge) g.E() else g.V()
         entity
           .hasLabel(janusGraphConfig.label)
@@ -240,8 +257,7 @@ class JanusGraphReader(override val session: SparkSession,
           })
       })
     if (rdd.isEmpty())
-      throw new RuntimeException(
-        s"It shouldn't happen. Maybe something wrong ${janusGraphConfig.propertiesPath}")
+      throw new RuntimeException(s"It shouldn't happen. Maybe something wrong ${janusGraphConfig}")
     val schema = rdd.repartition(1).first().schema
     session.createDataFrame(rdd, schema)
   }
