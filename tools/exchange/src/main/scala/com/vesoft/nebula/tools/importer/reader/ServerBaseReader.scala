@@ -196,21 +196,7 @@ class JanusGraphReader(override val session: SparkSession,
   }
 
   override def read(): DataFrame = {
-    def getPropertiesConfig = {
-      val propertiesConfiguration = new PropertiesConfiguration(janusGraphConfig.propertiesPath)
-      if (!propertiesConfiguration
-            .getKeys()
-            .asScala
-            .toList
-            .contains("gremlin.remote.remoteConnectionClass")) {
-        propertiesConfiguration.addProperty(
-          "gremlin.remote.remoteConnectionClass",
-          "org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection")
-      }
-      propertiesConfiguration
-    }
-
-    val g      = traversal().withRemote(getPropertiesConfig)
+    val g      = traversal().withRemote(janusGraphConfig.propertiesPath)
     val entity = if (janusGraphConfig.isEdge) g.E() else g.V()
     val offsets = getOffsets(entity.hasLabel(janusGraphConfig.label).count().next(),
                              janusGraphConfig.parallel,
@@ -231,7 +217,7 @@ class JanusGraphReader(override val session: SparkSession,
             s"${janusGraphConfig.checkPointPath.get}/${janusGraphConfig.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val g      = traversal().withRemote(getPropertiesConfig)
+        val g      = traversal().withRemote(janusGraphConfig.propertiesPath)
         val entity = if (janusGraphConfig.isEdge) g.E() else g.V()
         entity
           .hasLabel(janusGraphConfig.label)
@@ -241,8 +227,8 @@ class JanusGraphReader(override val session: SparkSession,
           .asScala
           .map((record: java.util.Map[AnyRef, Nothing]) => {
             def getValue(field: Any) = record.get(field).asInstanceOf[Any] match {
-              case list: util.ArrayList[Any] => list.get(0)
-              case x                         => x
+              case list: util.ArrayList[_] => list.get(0)
+              case x                       => x
             }
             val fields =
               record.keySet().asScala.toList.filter(!janusGraphConfig.isEdge || _.toString != "id")
