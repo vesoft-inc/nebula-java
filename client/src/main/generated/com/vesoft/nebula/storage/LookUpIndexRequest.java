@@ -34,23 +34,27 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
   private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)3);
   private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)4);
   private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)5);
+  private static final TField IS_EDGE_FIELD_DESC = new TField("is_edge", TType.BOOL, (short)6);
 
   public int space_id;
   public List<Integer> parts;
   public int index_id;
   public byte[] filter;
   public List<String> return_columns;
+  public boolean is_edge;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int INDEX_ID = 3;
   public static final int FILTER = 4;
   public static final int RETURN_COLUMNS = 5;
+  public static final int IS_EDGE = 6;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __INDEX_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __IS_EDGE_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -67,6 +71,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(IS_EDGE, new FieldMetaData("is_edge", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -82,7 +88,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     List<Integer> parts,
     int index_id,
     byte[] filter,
-    List<String> return_columns)
+    List<String> return_columns,
+    boolean is_edge)
   {
     this();
     this.space_id = space_id;
@@ -92,6 +99,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     setIndex_idIsSet(true);
     this.filter = filter;
     this.return_columns = return_columns;
+    this.is_edge = is_edge;
+    setIs_edgeIsSet(true);
   }
 
   /**
@@ -111,6 +120,7 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
     }
+    this.is_edge = TBaseHelper.deepCopy(other.is_edge);
   }
 
   public LookUpIndexRequest deepCopy() {
@@ -240,6 +250,29 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
+  public boolean  isIs_edge() {
+    return this.is_edge;
+  }
+
+  public LookUpIndexRequest setIs_edge(boolean is_edge) {
+    this.is_edge = is_edge;
+    setIs_edgeIsSet(true);
+    return this;
+  }
+
+  public void unsetIs_edge() {
+    __isset_bit_vector.clear(__IS_EDGE_ISSET_ID);
+  }
+
+  // Returns true if field is_edge is set (has been assigned a value) and false otherwise
+  public boolean isSetIs_edge() {
+    return __isset_bit_vector.get(__IS_EDGE_ISSET_ID);
+  }
+
+  public void setIs_edgeIsSet(boolean value) {
+    __isset_bit_vector.set(__IS_EDGE_ISSET_ID, value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -283,6 +316,14 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case IS_EDGE:
+      if (value == null) {
+        unsetIs_edge();
+      } else {
+        setIs_edge((Boolean)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -305,6 +346,9 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     case RETURN_COLUMNS:
       return getReturn_columns();
 
+    case IS_EDGE:
+      return new Boolean(isIs_edge());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -323,6 +367,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       return isSetFilter();
     case RETURN_COLUMNS:
       return isSetReturn_columns();
+    case IS_EDGE:
+      return isSetIs_edge();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -388,6 +434,15 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         return false;
     }
 
+    boolean this_present_is_edge = true;
+    boolean that_present_is_edge = true;
+    if (this_present_is_edge || that_present_is_edge) {
+      if (!(this_present_is_edge && that_present_is_edge))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.is_edge, that.is_edge))
+        return false;
+    }
+
     return true;
   }
 
@@ -419,6 +474,11 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     builder.append(present_return_columns);
     if (present_return_columns)
       builder.append(return_columns);
+
+    boolean present_is_edge = true;
+    builder.append(present_is_edge);
+    if (present_is_edge)
+      builder.append(is_edge);
 
     return builder.toHashCode();
   }
@@ -475,6 +535,14 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetIs_edge()).compareTo(other.isSetIs_edge());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(is_edge, other.is_edge);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -500,15 +568,15 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.LIST) {
             {
-              TList _list255 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list255.size));
-              for (int _i256 = 0; 
-                   (_list255.size < 0) ? iprot.peekList() : (_i256 < _list255.size); 
-                   ++_i256)
+              TList _list237 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list237.size));
+              for (int _i238 = 0; 
+                   (_list237.size < 0) ? iprot.peekList() : (_i238 < _list237.size); 
+                   ++_i238)
               {
-                int _elem257;
-                _elem257 = iprot.readI32();
-                this.parts.add(_elem257);
+                int _elem239;
+                _elem239 = iprot.readI32();
+                this.parts.add(_elem239);
               }
               iprot.readListEnd();
             }
@@ -534,18 +602,26 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list258 = iprot.readListBegin();
-              this.return_columns = new ArrayList<String>(Math.max(0, _list258.size));
-              for (int _i259 = 0; 
-                   (_list258.size < 0) ? iprot.peekList() : (_i259 < _list258.size); 
-                   ++_i259)
+              TList _list240 = iprot.readListBegin();
+              this.return_columns = new ArrayList<String>(Math.max(0, _list240.size));
+              for (int _i241 = 0; 
+                   (_list240.size < 0) ? iprot.peekList() : (_i241 < _list240.size); 
+                   ++_i241)
               {
-                String _elem260;
-                _elem260 = iprot.readString();
-                this.return_columns.add(_elem260);
+                String _elem242;
+                _elem242 = iprot.readString();
+                this.return_columns.add(_elem242);
               }
               iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case IS_EDGE:
+          if (field.type == TType.BOOL) {
+            this.is_edge = iprot.readBool();
+            setIs_edgeIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -574,8 +650,8 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter261 : this.parts)        {
-          oprot.writeI32(_iter261);
+        for (int _iter243 : this.parts)        {
+          oprot.writeI32(_iter243);
         }
         oprot.writeListEnd();
       }
@@ -593,13 +669,16 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
-        for (String _iter262 : this.return_columns)        {
-          oprot.writeString(_iter262);
+        for (String _iter244 : this.return_columns)        {
+          oprot.writeString(_iter244);
         }
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(IS_EDGE_FIELD_DESC);
+    oprot.writeBool(this.is_edge);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -675,6 +754,13 @@ String space = prettyPrint ? " " : "";
     } else {
       sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("is_edge");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isIs_edge(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -336,16 +336,16 @@ public class LookUpEdgeIndexResp implements TBase, java.io.Serializable, Cloneab
         case ROWS:
           if (field.type == TType.LIST) {
             {
-              TList _list251 = iprot.readListBegin();
-              this.rows = new ArrayList<Edge>(Math.max(0, _list251.size));
-              for (int _i252 = 0; 
-                   (_list251.size < 0) ? iprot.peekList() : (_i252 < _list251.size); 
-                   ++_i252)
+              TList _list237 = iprot.readListBegin();
+              this.rows = new ArrayList<Edge>(Math.max(0, _list237.size));
+              for (int _i238 = 0; 
+                   (_list237.size < 0) ? iprot.peekList() : (_i238 < _list237.size); 
+                   ++_i238)
               {
-                Edge _elem253;
-                _elem253 = new Edge();
-                _elem253.read(iprot);
-                this.rows.add(_elem253);
+                Edge _elem239;
+                _elem239 = new Edge();
+                _elem239.read(iprot);
+                this.rows.add(_elem239);
               }
               iprot.readListEnd();
             }
@@ -387,8 +387,8 @@ public class LookUpEdgeIndexResp implements TBase, java.io.Serializable, Cloneab
         oprot.writeFieldBegin(ROWS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.rows.size()));
-          for (Edge _iter254 : this.rows)          {
-            _iter254.write(oprot);
+          for (Edge _iter240 : this.rows)          {
+            _iter240.write(oprot);
           }
           oprot.writeListEnd();
         }
