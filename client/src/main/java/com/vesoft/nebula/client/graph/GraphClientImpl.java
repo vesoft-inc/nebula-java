@@ -101,19 +101,20 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         }
 
         int retry = executionRetry;
-        while (retry-- > 0) {
+        int code = ErrorCode.E_RPC_FAILURE;
+        while (retry-- != 0) {
             try {
                 ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
-                if (executionResponse.getError_code() != ErrorCode.SUCCEEDED) {
-                    LOGGER.error("execute error: " + executionResponse.getError_msg());
+                code = executionResponse.getError_code();
+                if (code == ErrorCode.SUCCEEDED){
+                    break;
                 }
-                return executionResponse.getError_code();
+                LOGGER.error("execute error: " + executionResponse.getError_msg());
             } catch (TException e) {
                 LOGGER.error("Thrift rpc call failed: " + e.getMessage());
-                return ErrorCode.E_RPC_FAILURE;
             }
         }
-        return ErrorCode.E_RPC_FAILURE;
+        return code;
     }
 
     /**
