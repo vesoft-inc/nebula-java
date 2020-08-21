@@ -102,7 +102,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
 
         int retry = executionRetry;
         int code = ErrorCode.E_RPC_FAILURE;
-        while (retry-- != 0) {
+        while (retry-- >= 0) {
             try {
                 ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
                 code = executionResponse.getError_code();
