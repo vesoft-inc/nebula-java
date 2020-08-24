@@ -96,7 +96,7 @@
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>client</artifactId>
-            <version>1.0.0</version>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
