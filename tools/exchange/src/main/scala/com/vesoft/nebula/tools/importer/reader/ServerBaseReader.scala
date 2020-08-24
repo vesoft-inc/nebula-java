@@ -201,9 +201,10 @@ class JanusGraphReader(override val session: SparkSession,
 
   private def getRemoteConnection = {
     val serializer = new GryoMessageSerializerV3d0()
-    serializer.configure(Map[String, Object]("ioRegistries" -> List(
-                           "org.janusgraph.graphdb.tinkerpop.JanusGraphIoRegistry").asJava).asJava,
-                         null)
+    serializer.configure(new util.HashMap[String, Object]() {
+      put("ioRegistries",
+          util.Arrays.asList("org.janusgraph.graphdb.tinkerpop.JanusGraphIoRegistry"))
+    }, null)
     val cluster = Cluster
       .build(janusGraphConfig.host)
       .port(janusGraphConfig.port)
