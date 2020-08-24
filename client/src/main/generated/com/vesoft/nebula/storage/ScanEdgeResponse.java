@@ -454,18 +454,18 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
         case EDGE_SCHEMA:
           if (field.type == TType.MAP) {
             {
-              TMap _map169 = iprot.readMapBegin();
-              this.edge_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map169.size));
-              for (int _i170 = 0; 
-                   (_map169.size < 0) ? iprot.peekMap() : (_i170 < _map169.size); 
-                   ++_i170)
+              TMap _map155 = iprot.readMapBegin();
+              this.edge_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map155.size));
+              for (int _i156 = 0; 
+                   (_map155.size < 0) ? iprot.peekMap() : (_i156 < _map155.size); 
+                   ++_i156)
               {
-                int _key171;
-                com.vesoft.nebula.Schema _val172;
-                _key171 = iprot.readI32();
-                _val172 = new com.vesoft.nebula.Schema();
-                _val172.read(iprot);
-                this.edge_schema.put(_key171, _val172);
+                int _key157;
+                com.vesoft.nebula.Schema _val158;
+                _key157 = iprot.readI32();
+                _val158 = new com.vesoft.nebula.Schema();
+                _val158.read(iprot);
+                this.edge_schema.put(_key157, _val158);
               }
               iprot.readMapEnd();
             }
@@ -476,16 +476,16 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
         case EDGE_DATA:
           if (field.type == TType.LIST) {
             {
-              TList _list173 = iprot.readListBegin();
-              this.edge_data = new ArrayList<ScanEdge>(Math.max(0, _list173.size));
-              for (int _i174 = 0; 
-                   (_list173.size < 0) ? iprot.peekList() : (_i174 < _list173.size); 
-                   ++_i174)
+              TList _list159 = iprot.readListBegin();
+              this.edge_data = new ArrayList<ScanEdge>(Math.max(0, _list159.size));
+              for (int _i160 = 0; 
+                   (_list159.size < 0) ? iprot.peekList() : (_i160 < _list159.size); 
+                   ++_i160)
               {
-                ScanEdge _elem175;
-                _elem175 = new ScanEdge();
-                _elem175.read(iprot);
-                this.edge_data.add(_elem175);
+                ScanEdge _elem161;
+                _elem161 = new ScanEdge();
+                _elem161.read(iprot);
+                this.edge_data.add(_elem161);
               }
               iprot.readListEnd();
             }
@@ -534,9 +534,9 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
       oprot.writeFieldBegin(EDGE_SCHEMA_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.edge_schema.size()));
-        for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter176 : this.edge_schema.entrySet())        {
-          oprot.writeI32(_iter176.getKey());
-          _iter176.getValue().write(oprot);
+        for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter162 : this.edge_schema.entrySet())        {
+          oprot.writeI32(_iter162.getKey());
+          _iter162.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -546,8 +546,8 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
       oprot.writeFieldBegin(EDGE_DATA_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.edge_data.size()));
-        for (ScanEdge _iter177 : this.edge_data)        {
-          _iter177.write(oprot);
+        for (ScanEdge _iter163 : this.edge_data)        {
+          _iter163.write(oprot);
         }
         oprot.writeListEnd();
       }
