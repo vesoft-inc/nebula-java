@@ -25,7 +25,7 @@
         <config.version>1.4.0</config.version>
         <scala-logging.version>3.9.2</scala-logging.version>
         <scopt.version>3.7.1</scopt.version>
-        <nebula.version>1.0.0</nebula.version>
+        <nebula.version>${parent.version}</nebula.version>
         <s2.version>1.0.0</s2.version>
         <neo.version>2.4.5-M1</neo.version>
         <gremlin.version>3.4.6</gremlin.version>
