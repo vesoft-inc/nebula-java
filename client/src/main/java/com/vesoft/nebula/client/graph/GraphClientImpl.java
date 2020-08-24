@@ -106,7 +106,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
             try {
                 ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
                 code = executionResponse.getError_code();
-                if (code == ErrorCode.SUCCEEDED){
+                if (code == ErrorCode.SUCCEEDED) {
                     break;
                 }
                 LOGGER.error("execute error: " + executionResponse.getError_msg());
