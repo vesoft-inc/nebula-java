@@ -8,7 +8,6 @@ package com.vesoft.nebula.tools.importer.reader
 
 import java.util
 import java.util.Date
-import java.util.concurrent.CompletableFuture
 
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
@@ -18,13 +17,10 @@ import org.apache.spark.TaskContext
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.tinkerpop.gremlin.driver.{Cluster, MessageSerializer}
+import org.apache.tinkerpop.gremlin.driver.Cluster
 import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection
 import org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0
-import org.apache.tinkerpop.gremlin.process.remote.RemoteConnection
-import org.apache.tinkerpop.gremlin.process.remote.traversal.RemoteTraversal
 import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal
-import org.apache.tinkerpop.gremlin.process.traversal.Bytecode
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
 import org.neo4j.spark.dataframe.CypherTypes
 import org.neo4j.spark.utils.Neo4jSessionAwareIterator
@@ -176,26 +172,27 @@ class JanusGraphReader(override val session: SparkSession,
   private def getTypeAndValue(field: Any, value: Any, prefix: String): Seq[(StructField, Any)] = {
     value match {
       case v: Int =>
-        Array((StructField(prefix + field.toString, DataTypes.IntegerType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.IntegerType), v))
       case v: Long =>
-        Array((StructField(prefix + field.toString, DataTypes.LongType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.LongType), v))
       case v: String =>
-        Array((StructField(prefix + field.toString, DataTypes.StringType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.StringType), v))
       case v: Double =>
-        Array((StructField(prefix + field.toString, DataTypes.DoubleType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.DoubleType), v))
       case v: Boolean =>
-        Array((StructField(prefix + field.toString, DataTypes.BooleanType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.BooleanType), v))
       case v: Float =>
-        Array((StructField(prefix + field.toString, DataTypes.FloatType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.FloatType), v))
       case v: Date =>
-        Array((StructField(prefix + field.toString, DataTypes.DateType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.DateType), v))
       case v: Byte =>
-        Array((StructField(prefix + field.toString, DataTypes.BinaryType), v.asInstanceOf[Any]))
+        Array((StructField(prefix + field.toString, DataTypes.BinaryType), v))
       case m: util.Map[_, _] =>
         m.asScala
           .flatMap(pair => getTypeAndValue(pair._1, pair._2, s"${field.toString}."))
           .toSeq
-      case v => throw new RuntimeException(s"Not support type ${v}")
+      case _ =>
+        throw new RuntimeException(s"Not support type!t diff")
     }
   }
 

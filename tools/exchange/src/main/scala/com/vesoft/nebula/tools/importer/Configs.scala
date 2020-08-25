@@ -820,11 +820,11 @@ object Configs {
         val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
         val isEdge = {
           if ((config.hasPath("vertex") || config.hasPath("vertex.field")) && (config.hasPath(
-                "source.field") || config.hasPath("source")))
+                "target.field") || config.hasPath("target")))
             throw new IllegalArgumentException(
               s"You can't write vertex and source or target field config same item in janus graph ${name}, " +
                 s"because it use to judge it is edge or vertex!")
-          config.hasPath("source.field") || config.hasPath("source")
+          config.hasPath("target.field") || config.hasPath("target")
         }
         JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH,
                                     name,
