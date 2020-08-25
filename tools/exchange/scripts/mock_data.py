@@ -7,6 +7,11 @@
 # attached with Common Clause Condition 1.0, found in the LICENSES directory.
 
 import collections
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s-%(levelname)s-%(message)s')
+logger = logging.getLogger(__name__)
 
 
 def gen_property(id: int):
@@ -171,7 +176,7 @@ def data2neo4j(data: dict, args):
             tx.run(statement)
 
     def runAddVertex(session, name: str, data: list):
-        print('start thread:', threading.currentThread().getName())
+        logger.info('start thread:', threading.currentThread().getName())
         ids = 0
         batch_ids = 0
         total_count = len(data)
@@ -182,8 +187,8 @@ def data2neo4j(data: dict, args):
                 addVertex, batch_data, name)
             ids += vertex_batch_size
             batch_ids += 1
-            print("%{}:vertex write {}/{} use {} seconds".format(batch_ids,
-                                                                 ids, total_count, time.time() - batch_start_time))
+            logger.info("%{}:vertex write {}/{} use {} seconds".format(batch_ids, ids, total_count,
+                                                                       time.time() - batch_start_time))
 
     def runAddEdge(session, name: str, data: list):
         ids = 0
@@ -196,8 +201,8 @@ def data2neo4j(data: dict, args):
                 addEdge, batch_data, name)
             ids += edge_batch_size
             batch_ids += 1
-            print("%{}:edge write {}/{} use {} seconds".format(batch_ids,
-                                                               ids, total_count, time.time() - batch_start_time))
+            logger.info("%{}:edge write {}/{} use {} seconds".format(batch_ids, ids, total_count,
+                                                                     time.time() - batch_start_time))
 
     driver = GraphDatabase.driver(address, auth=(user, password))
     sessions = [driver.session() for _ in range(thread_num)]
@@ -262,7 +267,7 @@ def data2janus(data: dict, args):
             for k, v in properties.items():
                 vv = vv.property(k, v)
             vv.next()
-            print("{}: {}/{}".format(name, i, vertex_count))
+            logger.info("{}: {}/{}".format(name, i, vertex_count))
 
     for name, edge in data['edge'].items():
         edge_count = len(edge['data'])
@@ -277,8 +282,8 @@ def data2janus(data: dict, args):
             for k, v in e['data'].items():
                 ee = ee.property(k, v)
             ee.next()
-            print("{}: {}/{}".format(name, i, edge_count))
-    print("total vertex count: {}, total edge count: {}".format(g.V().count().next(), g.E().count().next()))
+            logger.info("{}: {}/{}".format(name, i, edge_count))
+    logger.info("total vertex count: {}, total edge count: {}".format(g.V().count().next(), g.E().count().next()))
 
 
 def data2json(data: dict, args):
