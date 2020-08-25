@@ -357,14 +357,10 @@ if __name__ == '__main__':
 
     parser.add_argument('-o', '--output',
                         help='output server address or file address prefix', type=str, required=True)
-    parser.add_argument('-a', '--tagAnum',
-                        help='tagA num', type=int, default=0)
-    parser.add_argument('-b', '--tagBnum', help='tag b num',
-                        type=int, default=0)
-    parser.add_argument('-aa', '--edgeAAnum', help='edge aa num',
-                        type=int, default=0)
-    parser.add_argument('-ab', '--edgeABnum', help='edge ab num',
-                        type=int, default=0)
+    parser.add_argument('-a', '--tagAnum', help='tagA num', type=int, required=True)
+    parser.add_argument('-b', '--tagBnum', help='tag b num', type=int, required=True)
+    parser.add_argument('-aa', '--edgeAAnum', help='edge aa num', type=int, required=True)
+    parser.add_argument('-ab', '--edgeABnum', help='edge ab num', type=int, required=True)
     parser.add_argument('-edge_count_type', '--edge_count_type', help="count: edge num, degree: edge degree",
                         choices=['count', 'degree'], default='count')
     parser.add_argument('--prefix', help='tag/edge name prefix', type=str, default="")
