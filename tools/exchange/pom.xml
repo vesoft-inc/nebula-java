@@ -130,23 +130,33 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.4.0</version>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
-                        <phase>package</phase>
+                        <id>Scaladoc</id>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>doc</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <args>
+                                <arg>-nobootcp</arg>
+                                <arg>-no-link-warnings</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>doc-jar</goal>
                         </goals>
                         <configuration>
-                            <encoding>UTF-8</encoding>
-                            <charset>UTF-8</charset>
-                            <additionalOptions>
-                                <additionalparam>-source 8</additionalparam>
-                                <additionalOption>-Xdoclint:none</additionalOption>
-                            </additionalOptions>
+                            <args>
+                                <arg>-nobootcp</arg>
+                                <arg>-no-link-warnings</arg>
+                            </args>
                         </configuration>
                     </execution>
                 </executions>
@@ -252,6 +262,10 @@
                 <exclusion>
                     <artifactId>commons-configuration</artifactId>
                     <groupId>commons-configuration</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jul-to-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
