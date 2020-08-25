@@ -34,31 +34,25 @@ trait CheckPointSupport extends Serializable {
     val batchSizes = List.fill((totalCount % parallel).toInt)(totalCount / parallel + 1) ::: List
       .fill((parallel - totalCount % parallel).toInt)(totalCount / parallel)
 
-    val initEachPartitionOffset = {
-      var offset = 0L
-      0L :: (for (batchSize <- batchSizes.init) yield {
-        offset += batchSize
-        offset
-      })
-    }
+    val startOffsets = batchSizes.scanLeft(0L)(_ + _).init
 
-    val eachPartitionOffset = checkPointPath match {
+    val checkPointOffsets = checkPointPath match {
       case Some(path) =>
         val files = Range(0, parallel).map(i => s"${path}/${checkPointNamePrefix}.${i}").toList
-        if (files.forall(x => HDFSUtils.exists(x)))
-          files.map(file => HDFSUtils.getContent(file).trim.toLong).sorted
-        else initEachPartitionOffset
-      case _ => initEachPartitionOffset
+        if (files.forall(HDFSUtils.exists))
+          files.map(HDFSUtils.getContent(_).trim.toLong).sorted
+        else startOffsets
+      case _ => startOffsets
     }
 
     val eachPartitionLimit = {
       batchSizes
-        .zip(initEachPartitionOffset.zip(eachPartitionOffset))
+        .zip(startOffsets.zip(checkPointOffsets))
         .map(x => {
           x._1 - (x._2._2 - x._2._1)
         })
     }
-    val offsets = eachPartitionOffset.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
+    val offsets = checkPointOffsets.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
     if (offsets.exists(_.size < 0L))
       throw new RuntimeException(
         s"Your check point file maybe broken. Please delete ${checkPointNamePrefix}.* file")

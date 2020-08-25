@@ -192,7 +192,7 @@ class JanusGraphReader(override val session: SparkSession,
           .flatMap(pair => getTypeAndValue(pair._1, pair._2, s"${field.toString}."))
           .toSeq
       case _ =>
-        throw new RuntimeException(s"Not support type!t diff")
+        throw new RuntimeException(s"Not support type!")
     }
   }
 

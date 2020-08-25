@@ -508,6 +508,7 @@ object Configs {
   private[this] val DEFAULT_PARTITION            = -1
   private[this] val DEFAULT_CHECK_POINT_PATH     = None
   private[this] val DEFAULT_STREAM_INTERVAL      = 30
+  private[this] val DEFAULT_PARALLEL             = 1
 
   /**
     *
@@ -795,7 +796,7 @@ object Configs {
           else DEFAULT_CHECK_POINT_PATH
         val encryption =
           if (config.hasPath("encryption")) config.getBoolean("encryption") else false
-        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
+        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else DEFAULT_PARALLEL
         val database = if (config.hasPath("database")) Some(config.getString("database")) else None
         Neo4JSourceConfigEntry(
           SourceCategory.NEO4J,
