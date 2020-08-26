@@ -553,8 +553,8 @@ object Configs {
     if (!tagConfigs.isEmpty) {
       for (tagConfig <- tagConfigs.get.asScala) {
         if (!tagConfig.hasPath("name") ||
-            !tagConfig.hasPath("source.type") ||
-            !tagConfig.hasPath("sink.type")) {
+            !tagConfig.hasPath("type.source") ||
+            !tagConfig.hasPath("type.sink")) {
           LOG.error("The `name` and `type` must be specified")
           break()
         }
@@ -577,11 +577,11 @@ object Configs {
           None
         }
 
-        val sourceCategory = toSourceCategory(tagConfig.getString("source.type"))
+        val sourceCategory = toSourceCategory(tagConfig.getString("type.source"))
         val sourceConfig   = dataSourceConfig(sourceCategory, tagConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
-        val sinkCategory = toSinkCategory(tagConfig.getString("sink.type"))
+        val sinkCategory = toSinkCategory(tagConfig.getString("type.sink"))
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
@@ -616,8 +616,8 @@ object Configs {
     if (!edgeConfigs.isEmpty) {
       for (edgeConfig <- edgeConfigs.get.asScala) {
         if (!edgeConfig.hasPath("name") ||
-            !edgeConfig.hasPath("source.type") ||
-            !edgeConfig.hasPath("sink.type")) {
+            !edgeConfig.hasPath("type.source") ||
+            !edgeConfig.hasPath("type.sink")) {
           LOG.error("The `name` and `type`must be specified")
           break()
         }
@@ -628,11 +628,11 @@ object Configs {
           edgeConfig.hasPath("latitude") &&
           edgeConfig.hasPath("longitude")
 
-        val sourceCategory = toSourceCategory(edgeConfig.getString("source.type"))
+        val sourceCategory = toSourceCategory(edgeConfig.getString("type.source"))
         val sourceConfig   = dataSourceConfig(sourceCategory, edgeConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
-        val sinkCategory = toSinkCategory(edgeConfig.getString("sink.type"))
+        val sinkCategory = toSinkCategory(edgeConfig.getString("type.sink"))
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
