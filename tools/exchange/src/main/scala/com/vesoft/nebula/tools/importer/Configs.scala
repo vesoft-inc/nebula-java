@@ -587,7 +587,7 @@ object Configs {
 
         val batch = getOrElse(tagConfig, "batch", DEFAULT_BATCH)
         val checkPointPath =
-          if (tagConfig.hasPath("check_point")) Some(tagConfig.getString("check_point"))
+          if (tagConfig.hasPath("check_point_path")) Some(tagConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
         if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && tagConfig
@@ -690,7 +690,7 @@ object Configs {
 
         val batch = getOrElse(edgeConfig, "batch", DEFAULT_BATCH)
         val checkPointPath =
-          if (edgeConfig.hasPath("check_point")) Some(edgeConfig.getString("check_point"))
+          if (edgeConfig.hasPath("check_point_path")) Some(edgeConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
         if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && edgeConfig
@@ -782,7 +782,7 @@ object Configs {
       case SourceCategory.NEO4J =>
         val name = config.getString("name")
         val checkPointPath =
-          if (config.hasPath("check_point")) Some(config.getString("check_point"))
+          if (config.hasPath("check_point_path")) Some(config.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
         val encryption =
           if (config.hasPath("encryption")) config.getBoolean("encryption") else false
