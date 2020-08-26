@@ -20,8 +20,6 @@ import com.vesoft.nebula.storage.CreateCPRequest;
 import com.vesoft.nebula.storage.DeleteEdgesRequest;
 import com.vesoft.nebula.storage.DeleteVerticesRequest;
 import com.vesoft.nebula.storage.DropCPRequest;
-import com.vesoft.nebula.storage.EdgeKeysRequest;
-import com.vesoft.nebula.storage.EdgeKeysResponse;
 import com.vesoft.nebula.storage.EdgePropRequest;
 import com.vesoft.nebula.storage.EdgePropResponse;
 import com.vesoft.nebula.storage.ExecResponse;
@@ -32,13 +30,13 @@ import com.vesoft.nebula.storage.GetNeighborsRequest;
 import com.vesoft.nebula.storage.GetRequest;
 import com.vesoft.nebula.storage.GetUUIDReq;
 import com.vesoft.nebula.storage.GetUUIDResp;
-import com.vesoft.nebula.storage.LookUpEdgeIndexResp;
 import com.vesoft.nebula.storage.LookUpIndexRequest;
-import com.vesoft.nebula.storage.LookUpVertexIndexResp;
+import com.vesoft.nebula.storage.LookUpIndexResp;
 import com.vesoft.nebula.storage.MemberChangeReq;
 import com.vesoft.nebula.storage.PutRequest;
 import com.vesoft.nebula.storage.QueryResponse;
 import com.vesoft.nebula.storage.QueryStatsResponse;
+import com.vesoft.nebula.storage.RebuildIndexRequest;
 import com.vesoft.nebula.storage.RemovePartReq;
 import com.vesoft.nebula.storage.RemoveRangeRequest;
 import com.vesoft.nebula.storage.RemoveRequest;
@@ -101,11 +99,6 @@ public class NebulaStorageService implements StorageService.Iface {
 
     @Override
     public ExecResponse addEdges(AddEdgesRequest req) throws TException {
-        return null;
-    }
-
-    @Override
-    public EdgeKeysResponse getEdgeKeys(EdgeKeysRequest req) throws TException {
         return null;
     }
 
@@ -222,6 +215,16 @@ public class NebulaStorageService implements StorageService.Iface {
     }
 
     @Override
+    public AdminExecResp rebuildTagIndex(RebuildIndexRequest req) throws TException {
+        return null;
+    }
+
+    @Override
+    public AdminExecResp rebuildEdgeIndex(RebuildIndexRequest req) throws TException {
+        return null;
+    }
+
+    @Override
     public GetLeaderResp getLeaderPart(GetLeaderReq req) throws TException {
         return null;
     }
@@ -252,12 +255,7 @@ public class NebulaStorageService implements StorageService.Iface {
     }
 
     @Override
-    public LookUpVertexIndexResp lookUpVertexIndex(LookUpIndexRequest req) throws TException {
-        return null;
-    }
-
-    @Override
-    public LookUpEdgeIndexResp lookUpEdgeIndex(LookUpIndexRequest req) throws TException {
+    public LookUpIndexResp lookUpIndex(LookUpIndexRequest req) throws TException {
         return null;
     }
 

@@ -29,8 +29,8 @@ import org.neo4j.spark.{Executor, Neo4jConfig}
 import scala.collection.JavaConverters._
 
 /**
-  * @{link ServerBaseReader} is the abstract class of
-  *        It include a spark session and a sentence which will sent to service.
+  * ServerBaseReader is the abstract class of
+  * It include a spark session and a sentence which will sent to service.
   * @param session
   * @param sentence
   */
@@ -43,8 +43,8 @@ abstract class ServerBaseReader(override val session: SparkSession, sentence: St
 }
 
 /**
-  * @{link HiveReader} extends the @{link ServerBaseReader}.
-  *        The HiveReader reading data from Apache Hive via sentence.
+  * HiveReader extends the @{link ServerBaseReader}.
+  * The HiveReader reading data from Apache Hive via sentence.
   * @param session
   * @param sentence
   */
@@ -56,7 +56,7 @@ class HiveReader(override val session: SparkSession, sentence: String)
 }
 
 /**
-  * The @{link MySQLReader} extends the @{link ServerBaseReader}.
+  * The MySQLReader extends the ServerBaseReader.
   * The MySQLReader reading data from MySQL via sentence.
   *
   * @param session
@@ -90,7 +90,7 @@ class MySQLReader(override val session: SparkSession,
 }
 
 /**
-  * @{link Neo4JReader} extends the @{link ServerBaseReader}
+  * Neo4JReader extends the ServerBaseReader
   * @param session
   * @param config
   */
@@ -158,7 +158,7 @@ class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigE
 }
 
 /**
-  * @{link JanusGraphReader} extends the @{link ServerBaseReader}
+  * JanusGraphReader extends the link ServerBaseReader
   * @param session
   * @param janusGraphConfig
   */
