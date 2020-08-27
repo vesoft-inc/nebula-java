@@ -13,7 +13,7 @@ import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.client.storage.processor.Processor;
 import com.vesoft.nebula.data.Result;
-import com.vesoft.nebula.exception.GraphOperateException;
+import com.vesoft.nebula.exception.GraphConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,11 +62,11 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
             labelPropIndexMap.put(colEntry.getKey(), colIndexs);
         }
         LOGGER.info("labelPropIndexMap: {}", labelPropIndexMap);
-        metaClient = new MetaClientImpl(connectInfo.getIp(), connectInfo.getStoragePort());
+        metaClient = new MetaClientImpl(connectInfo.getHostAndPorts());
         try {
             metaClient.connect();
         } catch (TException e) {
-            throw new GraphOperateException(e.getMessage(), e);
+            throw new GraphConnectException(e.getMessage(), e);
         }
         storageClient = new StorageClientImpl(metaClient);
 

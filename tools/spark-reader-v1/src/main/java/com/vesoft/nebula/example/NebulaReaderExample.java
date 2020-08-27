@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula;
+package com.vesoft.nebula.example;
 
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.vesoft.nebula.common.Type;
@@ -33,9 +33,8 @@ public class NebulaReaderExample {
                 .read()
                 .format("com.vesoft.nebula.reader.NebulaDataSource")
                 .option("importType", Type.VERTEX.getType())
-                .option("ip", "127.0.0.1")
+                .option("hostAndPorts", "127.0.0.1:45500")
                 .option("spaceName", "test")
-                .option("storagePort", "45500")
                 .option("returnCols", "course=name;building=name;student=name")
                 .load();
         LOGGER.info("vertex schema: ");
@@ -46,9 +45,8 @@ public class NebulaReaderExample {
                 .read()
                 .format("com.vesoft.nebula.reader.NebulaDataSource")
                 .option("importType", Type.EDGE.getType())
-                .option("ip", "127.0.0.1")
+                .option("hostAndPorts", "127.0.0.1:45500")
                 .option("spaceName", "test")
-                .option("storagePort", "45500")
                 .option("returnCols", "like=likeness;select=grade")
                 .load();
         LOGGER.info("edge schema: ");
