@@ -26,11 +26,9 @@ public class NebulaDataSource implements RelationProvider {
     @Override
     public BaseRelation createRelation(SQLContext sqlContext, Map<String, String> parameters) {
         // parse and check parameters
-        connectInfo = new ConnectInfo();
-        connectInfo.setIp(parameters.get("ip").get());
-        connectInfo.setSpaceName(parameters.get("spaceName").get());
-        connectInfo.setStoragePort(Integer.parseInt(parameters.get("storagePort").get()));
-        connectInfo.check();
+        String spaceName = parameters.get("spaceName").get();
+        String hostAndPorts = parameters.get("hostAndPorts").get();
+        connectInfo = new ConnectInfo(spaceName, hostAndPorts);
         LOGGER.info("connectInfo, {}", connectInfo);
 
         String partitionNumber = parameters.getOrElse("partitionNumber",
@@ -42,7 +40,6 @@ public class NebulaDataSource implements RelationProvider {
                 });
         scanInfo = new ScanInfo(parameters.get("importType").get(),
                 parameters.get("returnCols").get(), Integer.valueOf(partitionNumber));
-        scanInfo.check();
         LOGGER.info("scanInfo: {}", scanInfo);
 
         return new NebulaRelation(sqlContext, connectInfo, scanInfo);

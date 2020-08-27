@@ -41,7 +41,7 @@ public class ScanInfo implements Checkable, Serializable {
         boolean isLegalType = Type.VERTEX.getType().equalsIgnoreCase(scanType)
                 || Type.EDGE.getType().equalsIgnoreCase(scanType);
         Preconditions.checkArgument(isLegalType,
-                "scan type ‘%s’ is illegal, it should be '%s' or '%s'",
+                "scan type '%s' is illegal, it should be '%s' or '%s'",
                 scanType, Type.VERTEX.getType(), Type.EDGE.getType());
 
         boolean isReturnColLegal = Pattern.matches(RETURN_COL_REGEX, returnColString);
