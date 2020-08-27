@@ -36,7 +36,11 @@ public class ResultSet {
         }
 
         public ColumnValue get(String key) {
-            return this.row.columns.get(columns.indexOf(key));
+            int index = columns.indexOf(key);
+            if ( index == -1 ){
+                throw new RuntimeException("Cannot get field because the key '"+key+"' is not exist");
+            }
+            return this.row.columns.get(index);
         }
 
         public String getString(String key) {
@@ -74,7 +78,7 @@ public class ResultSet {
         public boolean contains(String key) {
             return columns.contains(key);
         }
-    }   
+    }
 
     /**
      * Constructor
