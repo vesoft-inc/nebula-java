@@ -16,7 +16,7 @@
         <compiler.target.version>1.8</compiler.target.version>
         <lombok.version>1.18.10</lombok.version>
 
-        <nebula.version>1.0.0</nebula.version>
+        <nebula.version>1.0.1</nebula.version>
 
         <spark.version>2.1.0</spark.version>
         <scala.binary.version>2.11</scala.binary.version>
