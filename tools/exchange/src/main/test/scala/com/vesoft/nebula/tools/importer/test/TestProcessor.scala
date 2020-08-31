@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.tools.importer.test
 
-import com.vesoft.nebula.tools.importer.UserConfigEntry
+import com.vesoft.nebula.tools.importer.config.UserConfigEntry
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}

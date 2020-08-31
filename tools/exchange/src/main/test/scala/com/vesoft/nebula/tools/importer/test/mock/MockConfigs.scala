@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.tools.importer.test.mock
 
-import com.vesoft.nebula.tools.importer.{
+import com.vesoft.nebula.tools.importer.config.{
   Configs,
   ConnectionConfigEntry,
   DataBaseConfigEntry,

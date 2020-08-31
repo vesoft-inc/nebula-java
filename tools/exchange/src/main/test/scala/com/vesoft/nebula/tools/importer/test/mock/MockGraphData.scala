@@ -7,10 +7,10 @@
 package com.vesoft.nebula.tools.importer.test.mock
 
 import com.typesafe.config.impl.ConfigImpl.fromAnyRef
-import com.vesoft.nebula.tools.importer.{
+import com.vesoft.nebula.tools.importer.KeyPolicy
+import com.vesoft.nebula.tools.importer.config.{
   EdgeConfigEntry,
   FileBaseSourceConfigEntry,
-  KeyPolicy,
   NebulaSinkConfigEntry,
   SinkCategory,
   SourceCategory,
