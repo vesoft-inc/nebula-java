@@ -15,6 +15,24 @@ import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors, RateLimiter}
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
+import com.vesoft.nebula.tools.importer.config.{
+  Configs,
+  ConnectionConfigEntry,
+  DataBaseConfigEntry,
+  DataSinkConfigEntry,
+  DataSourceConfigEntry,
+  FileBaseSourceConfigEntry,
+  HiveSourceConfigEntry,
+  KafkaSourceConfigEntry,
+  MySQLSourceConfigEntry,
+  Neo4JSourceConfigEntry,
+  PulsarSourceConfigEntry,
+  SchemaConfigEntry,
+  SinkCategory,
+  SocketSourceConfigEntry,
+  SourceCategory,
+  UserConfigEntry
+}
 import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}
 import com.vesoft.nebula.tools.importer.reader.{
   CSVReader,
@@ -55,10 +73,9 @@ object Exchange {
     val options      = Configs.parser(args, PROGRAM_NAME)
     val c: Argument = options match {
       case Some(config) => config
-      case _ => {
+      case _ =>
         LOG.error("Argument parse failed")
         sys.exit(-1)
-      }
     }
 
     val configs = Configs.parse(c.config)
@@ -135,7 +152,7 @@ object Exchange {
       sys.exit(0)
     }
 
-    if (!configs.tagsConfig.isEmpty) {
+    if (configs.tagsConfig.nonEmpty) {
       for (tagConfig <- configs.tagsConfig) {
         LOG.info(s"Processing Tag ${tagConfig.name}")
 
@@ -148,13 +165,15 @@ object Exchange {
             spark.sparkContext.longAccumulator(s"batchSuccess.${tagConfig.name}")
           val batchFailure =
             spark.sparkContext.longAccumulator(s"batchFailure.${tagConfig.name}")
-          val processor = new VerticesProcessor(repartition(data.get, tagConfig.partition),
-                                                tagConfig,
-                                                fieldKeys,
-                                                nebulaKeys,
-                                                configs,
-                                                batchSuccess,
-                                                batchFailure)
+
+          val processor = new VerticesProcessor(
+            repartition(data.get, tagConfig.partition, tagConfig.dataSourceConfigEntry.category),
+            tagConfig,
+            fieldKeys,
+            nebulaKeys,
+            configs,
+            batchSuccess,
+            batchFailure)
 
           processor.process()
           LOG.info(s"batchSuccess.${tagConfig.name}: ${batchSuccess.value}")
@@ -165,7 +184,7 @@ object Exchange {
       LOG.warn("Tag is not defined")
     }
 
-    if (!configs.edgesConfig.isEmpty) {
+    if (configs.edgesConfig.nonEmpty) {
       for (edgeConfig <- configs.edgesConfig) {
         LOG.info(s"Processing Edge ${edgeConfig.name}")
 
@@ -176,13 +195,15 @@ object Exchange {
           val batchSuccess = spark.sparkContext.longAccumulator(s"batchSuccess.${edgeConfig.name}")
           val batchFailure = spark.sparkContext.longAccumulator(s"batchFailure.${edgeConfig.name}")
 
-          val processor = new EdgeProcessor(repartition(data.get, edgeConfig.partition),
-                                            edgeConfig,
-                                            fieldKeys,
-                                            nebulaKeys,
-                                            configs,
-                                            batchSuccess,
-                                            batchFailure)
+          val processor = new EdgeProcessor(
+            repartition(data.get, edgeConfig.partition, edgeConfig.dataSourceConfigEntry.category),
+            edgeConfig,
+            fieldKeys,
+            nebulaKeys,
+            configs,
+            batchSuccess,
+            batchFailure
+          )
 
           processor.process()
         } else {
@@ -205,50 +226,44 @@ object Exchange {
       config: DataSourceConfigEntry
   ): Option[DataFrame] = {
     config.category match {
-      case SourceCategory.PARQUET => {
+      case SourceCategory.PARQUET =>
         val parquetConfig = config.asInstanceOf[FileBaseSourceConfigEntry]
         LOG.info(s"""Loading Parquet files from ${parquetConfig.path}""")
-        val reader = new ParquetReader(session, parquetConfig.path)
+        val reader = new ParquetReader(session, parquetConfig)
         Some(reader.read())
-      }
-      case SourceCategory.ORC => {
+      case SourceCategory.ORC =>
         val orcConfig = config.asInstanceOf[FileBaseSourceConfigEntry]
         LOG.info(s"""Loading ORC files from ${orcConfig.path}""")
-        val reader = new ORCReader(session, orcConfig.path)
+        val reader = new ORCReader(session, orcConfig)
         Some(reader.read())
-      }
-      case SourceCategory.JSON => {
+      case SourceCategory.JSON =>
         val jsonConfig = config.asInstanceOf[FileBaseSourceConfigEntry]
         LOG.info(s"""Loading JSON files from ${jsonConfig.path}""")
-        val reader = new JSONReader(session, jsonConfig.path)
+        val reader = new JSONReader(session, jsonConfig)
         Some(reader.read())
-      }
-      case SourceCategory.CSV => {
-        val csvConfig = config.asInstanceOf[CSVSourceConfigEntry]
+      case SourceCategory.CSV =>
+        val csvConfig = config.asInstanceOf[FileBaseSourceConfigEntry]
         LOG.info(s"""Loading CSV files from ${csvConfig.path}""")
-        val reader = new CSVReader(session, csvConfig.path, csvConfig.separator, csvConfig.header)
+        val reader =
+          new CSVReader(session, csvConfig)
         Some(reader.read())
-      }
-      case SourceCategory.HIVE => {
+      case SourceCategory.HIVE =>
         val hiveConfig = config.asInstanceOf[HiveSourceConfigEntry]
-        LOG.info(s"""Loading from Hive and exec ${hiveConfig.exec}""")
-        val reader = new HiveReader(session, hiveConfig.exec)
+        LOG.info(s"""Loading from Hive and exec ${hiveConfig.sentence}""")
+        val reader = new HiveReader(session, hiveConfig)
         Some(reader.read())
-      }
       // TODO: (darion.yaphet) Support Structured Streaming
-      case SourceCategory.SOCKET => {
+      case SourceCategory.SOCKET =>
         val socketConfig = config.asInstanceOf[SocketSourceConfigEntry]
         LOG.warn("Socket streaming mode is not suitable for production environment")
         LOG.info(s"""Reading data stream from Socket ${socketConfig.host}:${socketConfig.port}""")
-        val reader = new SocketReader(session, socketConfig.host, socketConfig.port)
+        val reader = new SocketReader(session, socketConfig)
         Some(reader.read())
-      }
-      case SourceCategory.KAFKA => {
+      case SourceCategory.KAFKA =>
         val kafkaConfig = config.asInstanceOf[KafkaSourceConfigEntry]
         LOG.info(s"""Loading from Kafka ${kafkaConfig.server} and subscribe ${kafkaConfig.topic}""")
-        val reader = new KafkaReader(session, kafkaConfig.server, kafkaConfig.topic)
+        val reader = new KafkaReader(session, kafkaConfig)
         Some(reader.read())
-      }
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
         LOG.info(s"Loading from neo4j config: ${neo4jConfig}")
@@ -257,22 +272,12 @@ object Exchange {
       case SourceCategory.MYSQL =>
         val mysqlConfig = config.asInstanceOf[MySQLSourceConfigEntry]
         LOG.info(s"Loading from mysql config: ${mysqlConfig}")
-        val reader = new MySQLReader(session,
-                                     mysqlConfig.host,
-                                     mysqlConfig.port,
-                                     mysqlConfig.database,
-                                     mysqlConfig.table,
-                                     mysqlConfig.user,
-                                     mysqlConfig.password,
-                                     mysqlConfig.sentence)
+        val reader = new MySQLReader(session, mysqlConfig)
         Some(reader.read())
       case SourceCategory.PULSAR =>
         val pulsarConfig = config.asInstanceOf[PulsarSourceConfigEntry]
         LOG.info(s"Loading from pulsar config: ${pulsarConfig}")
-        val reader = new PulsarReader(session,
-                                      pulsarConfig.serviceUrl,
-                                      pulsarConfig.adminUrl,
-                                      pulsarConfig.options)
+        val reader = new PulsarReader(session, pulsarConfig)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")
@@ -307,8 +312,10 @@ object Exchange {
     * @param partition
     * @return
     */
-  private[this] def repartition(frame: DataFrame, partition: Int): DataFrame = {
-    if (partition > 0) {
+  private[this] def repartition(frame: DataFrame,
+                                partition: Int,
+                                sourceCategory: SourceCategory.Value): DataFrame = {
+    if (partition > 0 && !CheckPointHandler.checkSupportResume(sourceCategory)) {
       frame.repartition(partition).toDF
     } else {
       frame
