@@ -67,7 +67,7 @@ public class ResultSet {
             return this.get(key).isBool_val();
         }
 
-        public long getTimestamp(String key){
+        public long getTimestamp(String key) {
             return this.get(key).getTimestamp();
         }
 
