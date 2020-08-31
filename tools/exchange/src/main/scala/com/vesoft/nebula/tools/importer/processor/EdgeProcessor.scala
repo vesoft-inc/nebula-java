@@ -6,24 +6,25 @@
 
 package com.vesoft.nebula.tools.importer.processor
 
-import java.util.concurrent.{CountDownLatch, Executors, TimeUnit}
+import java.util.concurrent.{Executors, TimeUnit}
 
 import com.google.common.geometry.{S2CellId, S2LatLng}
-import com.google.common.util.concurrent.{Futures, MoreExecutors, RateLimiter}
-import com.vesoft.nebula.tools.importer.{
+import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
+import com.vesoft.nebula.tools.importer.config.{
   Configs,
-  Edge,
   EdgeConfigEntry,
+  StreamingDataSourceConfigEntry
+}
+import com.vesoft.nebula.tools.importer.{
+  CheckPointHandler,
+  Edge,
   Edges,
   ErrorHandler,
   ProcessResult,
-  SourceCategory,
-  StreamingDataSourceConfigEntry,
   TooManyErrorsException
 }
-import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaWriterCallback}
+import com.vesoft.nebula.tools.importer.writer.NebulaGraphClientWriter
 import org.apache.log4j.Logger
-import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.{IntegerType, LongType, ShortType}
 import org.apache.spark.sql.{DataFrame, Encoders}
@@ -40,13 +41,13 @@ class EdgeProcessor(data: DataFrame,
                     batchFailure: LongAccumulator)
     extends Processor {
 
-  @transient lazy val LOG = Logger.getLogger(this.getClass)
+  @transient
+  private[this] lazy val LOG = Logger.getLogger(this.getClass)
 
   private[this] val DEFAULT_MIN_CELL_LEVEL = 10
   private[this] val DEFAULT_MAX_CELL_LEVEL = 18
 
   private def processEachPartition(iterator: Iterator[Edge]): Unit = {
-    val partitionId = TaskContext.getPartitionId()
 
     // TODO Support Multi Writer
     val writer = new NebulaGraphClientWriter(config.databaseConfig,
@@ -72,25 +73,13 @@ class EdgeProcessor(data: DataFrame,
         breakPointEdgesCount += edges.values.length
 
         if (futures.size == 100) { // TODO configurable ?
-          val pathAndOffset =
-            if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
-                edgeConfig.checkPointPath.isDefined) {
-              val path   = s"${edgeConfig.checkPointPath.get}/${edgeConfig.name}.${partitionId}"
-              val offset = breakPointEdgesCount + fetchOffset(path)
-              Some((path, offset))
-            } else {
-              None
-            }
-
+          collectFutures(futures,
+                         service,
+                         edgeConfig,
+                         breakPointEdgesCount,
+                         batchSuccess,
+                         batchFailure)
           breakPointEdgesCount = 0
-          val latch      = new CountDownLatch(100)
-          val allFutures = Futures.allAsList(futures: _*)
-          Futures.addCallback(
-            allFutures,
-            new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
-            service)
-          latch.await()
-          futures.clear()
         }
       } else {
         batchFailure.add(1)
@@ -99,37 +88,21 @@ class EdgeProcessor(data: DataFrame,
           throw TooManyErrorsException(s"Too Many Errors ${config.errorConfig.errorMaxSize}")
         }
 
-        if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
-            edgeConfig.checkPointPath.isDefined) {
+        if (CheckPointHandler
+              .checkSupportResume(edgeConfig.dataSourceConfigEntry.category) && edgeConfig.checkPointPath.isDefined) {
           throw new RuntimeException(s"Write edge${edgeConfig.name} errors")
         }
       }
 
-      if (!errorBuffer.isEmpty) {
+      if (errorBuffer.nonEmpty) {
         ErrorHandler.save(errorBuffer, s"${config.errorConfig.errorPath}/${edgeConfig.name}")
         errorBuffer.clear()
       }
     }
 
-    if (!futures.isEmpty) {
-      val pathAndOffset =
-        if (edgeConfig.dataSourceConfigEntry.category == SourceCategory.NEO4J &&
-            edgeConfig.checkPointPath.isDefined) {
-          val path   = s"${edgeConfig.checkPointPath.get}/${edgeConfig.name}.${partitionId}"
-          val offset = breakPointEdgesCount + fetchOffset(path)
-          Some((path, offset))
-        } else {
-          None
-        }
-
+    if (futures.nonEmpty) {
+      collectFutures(futures, service, edgeConfig, breakPointEdgesCount, batchSuccess, batchFailure)
       breakPointEdgesCount = 0
-      val latch      = new CountDownLatch(futures.size)
-      val allFutures = Futures.allAsList(futures: _*)
-      Futures.addCallback(
-        allFutures,
-        new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
-        service)
-      latch.await()
     }
 
     service.shutdown()

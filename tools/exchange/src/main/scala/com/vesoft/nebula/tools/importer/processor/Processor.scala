@@ -6,7 +6,12 @@
 
 package com.vesoft.nebula.tools.importer.processor
 
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import java.util.concurrent.{CountDownLatch, Executor}
+
+import com.google.common.util.concurrent.Futures
+import com.vesoft.nebula.tools.importer.config.SchemaConfigEntry
+import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult}
+import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{
   ArrayType,
@@ -22,10 +27,28 @@ import org.apache.spark.sql.types.{
   StringType,
   TimestampType
 }
+import org.apache.spark.util.LongAccumulator
 
 trait Processor extends Serializable {
 
   def process(): Unit
+
+  def collectFutures(futures: ProcessResult,
+                     service: Executor,
+                     schemaConfig: SchemaConfigEntry,
+                     breakPointCount: Long,
+                     batchSuccess: LongAccumulator,
+                     batchFailure: LongAccumulator): Unit = {
+    val pathAndOffset = CheckPointHandler.getPathAndOffset(schemaConfig, breakPointCount)
+
+    val latch      = new CountDownLatch(futures.size)
+    val allFutures = Futures.allAsList(futures: _*)
+    Futures.addCallback(allFutures,
+                        new NebulaWriterCallback(latch, batchSuccess, batchFailure, pathAndOffset),
+                        service)
+    latch.await()
+    futures.clear()
+  }
 
   def extraValue(row: Row, field: String): Any = {
     // TODO
@@ -104,9 +127,5 @@ trait Processor extends Serializable {
           "\"{}\""
         }
     }
-  }
-
-  def fetchOffset(path: String): Long = {
-    HDFSUtils.getContent(path).toLong
   }
 }

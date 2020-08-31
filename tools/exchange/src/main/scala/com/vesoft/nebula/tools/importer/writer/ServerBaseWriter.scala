@@ -15,18 +15,15 @@ import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
 import com.vesoft.nebula.graph.ErrorCode
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{
+import com.vesoft.nebula.tools.importer.config.{
   ConnectionConfigEntry,
   DataBaseConfigEntry,
-  Edges,
-  KeyPolicy,
   SchemaConfigEntry,
-  TooManyErrorsException,
   Type,
-  UserConfigEntry,
-  Vertices
+  UserConfigEntry
 }
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.{Edges, KeyPolicy, TooManyErrorsException, Vertices}
 import org.apache.log4j.Logger
 import org.apache.spark.util.LongAccumulator
 

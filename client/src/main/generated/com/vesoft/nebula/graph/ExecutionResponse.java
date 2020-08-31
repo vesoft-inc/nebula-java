@@ -35,6 +35,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   private static final TField COLUMN_NAMES_FIELD_DESC = new TField("column_names", TType.LIST, (short)4);
   private static final TField ROWS_FIELD_DESC = new TField("rows", TType.LIST, (short)5);
   private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)6);
+  private static final TField WARNING_MSG_FIELD_DESC = new TField("warning_msg", TType.STRING, (short)7);
 
   /**
    * 
@@ -46,12 +47,14 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   public List<byte[]> column_names;
   public List<RowValue> rows;
   public String space_name;
+  public String warning_msg;
   public static final int ERROR_CODE = 1;
   public static final int LATENCY_IN_US = 2;
   public static final int ERROR_MSG = 3;
   public static final int COLUMN_NAMES = 4;
   public static final int ROWS = 5;
   public static final int SPACE_NAME = 6;
+  public static final int WARNING_MSG = 7;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -75,6 +78,8 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, RowValue.class))));
     tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(WARNING_MSG, new FieldMetaData("warning_msg", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -103,7 +108,8 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     String error_msg,
     List<byte[]> column_names,
     List<RowValue> rows,
-    String space_name)
+    String space_name,
+    String warning_msg)
   {
     this();
     this.error_code = error_code;
@@ -114,6 +120,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     this.column_names = column_names;
     this.rows = rows;
     this.space_name = space_name;
+    this.warning_msg = warning_msg;
   }
 
   /**
@@ -135,6 +142,9 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     }
     if (other.isSetSpace_name()) {
       this.space_name = TBaseHelper.deepCopy(other.space_name);
+    }
+    if (other.isSetWarning_msg()) {
+      this.warning_msg = TBaseHelper.deepCopy(other.warning_msg);
     }
   }
 
@@ -297,6 +307,30 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     }
   }
 
+  public String  getWarning_msg() {
+    return this.warning_msg;
+  }
+
+  public ExecutionResponse setWarning_msg(String warning_msg) {
+    this.warning_msg = warning_msg;
+    return this;
+  }
+
+  public void unsetWarning_msg() {
+    this.warning_msg = null;
+  }
+
+  // Returns true if field warning_msg is set (has been assigned a value) and false otherwise
+  public boolean isSetWarning_msg() {
+    return this.warning_msg != null;
+  }
+
+  public void setWarning_msgIsSet(boolean value) {
+    if (!value) {
+      this.warning_msg = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -348,6 +382,14 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
+    case WARNING_MSG:
+      if (value == null) {
+        unsetWarning_msg();
+      } else {
+        setWarning_msg((String)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -373,6 +415,9 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     case SPACE_NAME:
       return getSpace_name();
 
+    case WARNING_MSG:
+      return getWarning_msg();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -393,6 +438,8 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       return isSetRows();
     case SPACE_NAME:
       return isSetSpace_name();
+    case WARNING_MSG:
+      return isSetWarning_msg();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -467,6 +514,15 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
+    boolean this_present_warning_msg = true && this.isSetWarning_msg();
+    boolean that_present_warning_msg = true && that.isSetWarning_msg();
+    if (this_present_warning_msg || that_present_warning_msg) {
+      if (!(this_present_warning_msg && that_present_warning_msg))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.warning_msg, that.warning_msg))
+        return false;
+    }
+
     return true;
   }
 
@@ -503,6 +559,11 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     builder.append(present_space_name);
     if (present_space_name)
       builder.append(space_name);
+
+    boolean present_warning_msg = true && (isSetWarning_msg());
+    builder.append(present_warning_msg);
+    if (present_warning_msg)
+      builder.append(warning_msg);
 
     return builder.toHashCode();
   }
@@ -564,6 +625,14 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_name, other.space_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetWarning_msg()).compareTo(other.isSetWarning_msg());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(warning_msg, other.warning_msg);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -650,6 +719,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case WARNING_MSG:
+          if (field.type == TType.STRING) {
+            this.warning_msg = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -716,6 +792,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       if (isSetSpace_name()) {
         oprot.writeFieldBegin(SPACE_NAME_FIELD_DESC);
         oprot.writeString(this.space_name);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.warning_msg != null) {
+      if (isSetWarning_msg()) {
+        oprot.writeFieldBegin(WARNING_MSG_FIELD_DESC);
+        oprot.writeString(this.warning_msg);
         oprot.writeFieldEnd();
       }
     }
@@ -818,6 +901,20 @@ String space = prettyPrint ? " " : "";
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this. getSpace_name(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetWarning_msg())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("warning_msg");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getWarning_msg() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getWarning_msg(), indent + 1, prettyPrint));
       }
       first = false;
     }

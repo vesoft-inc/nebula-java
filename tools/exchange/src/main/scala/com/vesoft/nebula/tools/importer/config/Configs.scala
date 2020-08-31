@@ -4,17 +4,18 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer
+package com.vesoft.nebula.tools.importer.config
 
 import java.io.File
 import java.nio.file.Files
 
-import scala.collection.JavaConverters._
-import com.typesafe.config.{Config, ConfigFactory, ConfigValue}
+import com.typesafe.config.{Config, ConfigFactory}
+import com.vesoft.nebula.tools.importer.{Argument, KeyPolicy}
 import org.apache.log4j.Logger
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable
-import util.control.Breaks._
+import scala.util.control.Breaks._
 
 object Type extends Enumeration {
   type Type = Value
@@ -29,8 +30,8 @@ object Type extends Enumeration {
   * @param space
   */
 case class DataBaseConfigEntry(addresses: List[String], space: String) {
-  require(addresses != null && addresses.size != 0)
-  require(space.trim.size != 0)
+  require(addresses != null && addresses.nonEmpty)
+  require(space.trim.nonEmpty)
 
   override def toString: String = super.toString
 }
@@ -42,7 +43,7 @@ case class DataBaseConfigEntry(addresses: List[String], space: String) {
   * @param password
   */
 case class UserConfigEntry(user: String, password: String) {
-  require(user.trim.size != 0 && password.trim.size != 0)
+  require(user.trim.nonEmpty && password.trim.nonEmpty)
 
   override def toString: String = super.toString
 }
@@ -79,7 +80,7 @@ case class ExecutionConfigEntry(timeout: Int, retry: Int, interval: Int) {
   * @param errorMaxSize
   */
 case class ErrorConfigEntry(errorPath: String, errorMaxSize: Int) {
-  require(errorPath.trim.size != 0 && errorMaxSize > 0)
+  require(errorPath.trim.nonEmpty && errorMaxSize > 0)
 
   override def toString: String = super.toString
 }
@@ -94,335 +95,6 @@ case class RateConfigEntry(limit: Int, timeout: Int) {
   require(limit > 0 && timeout > 0)
 
   override def toString: String = super.toString
-}
-
-/**
-  * Category use to explain the data source which the Spark application could reading.
-  */
-object SourceCategory extends Enumeration {
-  type Type = Value
-
-  val PARQUET = Value("PARQUET")
-  val ORC     = Value("ORC")
-  val JSON    = Value("JSON")
-  val CSV     = Value("CSV")
-  val TEXT    = Value("TEXT")
-
-  val HIVE        = Value("HIVE")
-  val NEO4J       = Value("NEO4J")
-  val JANUS_GRAPH = Value("JANUS GRAPH")
-  val MYSQL       = Value("MYSQL")
-
-  val SOCKET = Value("SOCKET")
-  val KAFKA  = Value("KAFKA")
-  val PULSAR = Value("PULSAR")
-}
-
-class SourceCategory
-
-/**
-  *
-  */
-object SinkCategory extends Enumeration {
-  type Type = Value
-
-  val CLIENT = Value("CLIENT")
-}
-
-class SinkCategory
-
-/**
-  * DataSourceConfigEntry
-  */
-sealed trait DataSourceConfigEntry {
-  def category: SourceCategory.Value
-}
-
-sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
-  def intervalSeconds: Int
-}
-
-/**
-  * FileBaseSourceConfigEntry
-  *
-  * @param path
-  */
-case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value, path: String)
-    extends DataSourceConfigEntry {
-  override def toString: String = {
-    s"File source path: ${path}"
-  }
-}
-
-/**
-  *
-  * @param category
-  * @param path
-  * @param separator
-  * @param header
-  */
-case class CSVSourceConfigEntry(override val category: SourceCategory.Value,
-                                path: String,
-                                separator: String,
-                                header: Boolean)
-    extends DataSourceConfigEntry {
-  override def toString: String = {
-    s"CSV source path: ${path}, separator: ${separator}"
-  }
-}
-
-/**
-  * HiveSourceConfigEntry
-  *
-  * @param exec
-  */
-case class HiveSourceConfigEntry(override val category: SourceCategory.Value, exec: String)
-    extends DataSourceConfigEntry {
-  require(exec.trim.size != 0)
-
-  override def toString: String = {
-    s"Hive source exec: ${exec}"
-  }
-}
-
-/**
-  *
-  * @param exec
-  */
-case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
-                                  name: String,
-                                  exec: String,
-                                  server: String,
-                                  user: String,
-                                  password: String,
-                                  database: Option[String],
-                                  encryption: Boolean,
-                                  parallel: Int,
-                                  checkPointPath: Option[String])
-    extends DataSourceConfigEntry {
-  require(exec.trim.length != 0 && user.trim.length != 0 && parallel > 0)
-
-  override def toString: String = {
-    s"Neo4J source address: ${server}, user: ${user}, password: ${password}, encryption: ${encryption}," +
-      s" checkPointPath: ${checkPointPath}, exec: ${exec}, parallel: ${parallel}, database: ${database}"
-  }
-}
-
-case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value)
-    extends DataSourceConfigEntry {
-  override def toString: String = {
-    s"Neo4J source"
-  }
-}
-
-case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
-                                  host: String,
-                                  port: Int,
-                                  database: String,
-                                  table: String,
-                                  user: String,
-                                  password: String,
-                                  sentence: String)
-    extends DataSourceConfigEntry {
-  require(
-    host.trim.length != 0 && port > 0 && database.trim.length > 0 && table.trim.length > 0 && user.trim.length > 0)
-}
-
-/**
-  *
-  * @param host
-  * @param port
-  */
-case class SocketSourceConfigEntry(override val category: SourceCategory.Value,
-                                   host: String,
-                                   port: Int)
-    extends DataSourceConfigEntry {
-  require(host.trim.size != 0 && port > 0)
-
-  override def toString: String = {
-    s"Socket source address: ${host}:${port}"
-  }
-}
-
-/**
-  * TODO: Support more config item about Kafka Consumer
-  *
-  * @param server
-  * @param topic
-  */
-case class KafkaSourceConfigEntry(override val category: SourceCategory.Value,
-                                  server: String,
-                                  topic: String)
-    extends DataSourceConfigEntry {
-  require(server.trim.size != 0 && topic.trim.size != 0)
-
-  override def toString: String = {
-    s"Kafka source server: ${server} topic:${topic}"
-  }
-}
-
-case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
-                                   override val intervalSeconds: Int,
-                                   serviceUrl: String,
-                                   adminUrl: String,
-                                   options: Map[String, String])
-    extends StreamingDataSourceConfigEntry {
-  require(serviceUrl.trim.nonEmpty && adminUrl.trim.nonEmpty && intervalSeconds >= 0)
-  require(options.keys.count(key => List("topic", "topics", "topicsPattern").contains(key)) == 1)
-
-  override def toString: String = {
-    s"Pulsar source service url: ${serviceUrl} admin url: ${adminUrl} options: ${options}"
-  }
-}
-
-/**
-  * DataSinkConfigEntry
-  */
-sealed trait DataSinkConfigEntry {
-  def category: SinkCategory.Value
-}
-
-/**
-  * FileBaseSinkConfigEntry
-  *
-  * @param path
-  */
-case class FileBaseSinkConfigEntry(override val category: SinkCategory.Value, path: String)
-    extends DataSinkConfigEntry {
-  override def toString: String = {
-    s"File sink path: ${path}"
-  }
-}
-
-/**
-  * NebulaSinkConfigEntry use to specified the nebula service's address.
-  */
-case class NebulaSinkConfigEntry(override val category: SinkCategory.Value, addresses: List[String])
-    extends DataSinkConfigEntry {
-  override def toString: String = {
-    s"Nebula sink addresses: ${addresses.mkString("[", ", ", "]")}"
-  }
-}
-
-/**
-  * SchemaConfigEntry
-  */
-sealed trait SchemaConfigEntry {
-  def name: String
-
-  def dataSourceConfigEntry: DataSourceConfigEntry
-
-  def dataSinkConfigEntry: DataSinkConfigEntry
-
-  def fields: Map[String, ConfigValue]
-
-  def batch: Int
-
-  def partition: Int
-
-  def checkPointPath: Option[String]
-}
-
-/**
-  *
-  * @param name
-  * @param dataSourceConfigEntry
-  * @param dataSinkConfigEntry
-  * @param fields
-  * @param vertexField
-  * @param vertexPolicy
-  * @param batch
-  * @param partition
-  * @param checkPointPath
-  */
-case class TagConfigEntry(override val name: String,
-                          override val dataSourceConfigEntry: DataSourceConfigEntry,
-                          override val dataSinkConfigEntry: DataSinkConfigEntry,
-                          override val fields: Map[String, ConfigValue],
-                          vertexField: String,
-                          vertexPolicy: Option[KeyPolicy.Value],
-                          override val batch: Int,
-                          override val partition: Int,
-                          override val checkPointPath: Option[String])
-    extends SchemaConfigEntry {
-  require(name.trim.size != 0 && vertexField.trim.size != 0 && batch > 0)
-
-  override def toString: String = {
-    s"Tag name ${name} " +
-      s"source ${dataSourceConfigEntry} " +
-      s"sink ${dataSinkConfigEntry} " +
-      s"vertex field ${vertexField} " +
-      s"vertex policy ${vertexPolicy} " +
-      s"batch ${batch} " +
-      s"partition ${partition}"
-  }
-}
-
-/**
-  *
-  * @param name
-  * @param dataSourceConfigEntry
-  * @param dataSinkConfigEntry
-  * @param fields
-  * @param sourceField
-  * @param sourcePolicy
-  * @param rankingField
-  * @param targetField
-  * @param targetPolicy
-  * @param isGeo
-  * @param latitude
-  * @param longitude
-  * @param batch
-  * @param partition
-  * @param checkPointPath
-  */
-case class EdgeConfigEntry(override val name: String,
-                           override val dataSourceConfigEntry: DataSourceConfigEntry,
-                           override val dataSinkConfigEntry: DataSinkConfigEntry,
-                           override val fields: Map[String, ConfigValue],
-                           sourceField: String,
-                           sourcePolicy: Option[KeyPolicy.Value],
-                           rankingField: Option[String],
-                           targetField: String,
-                           targetPolicy: Option[KeyPolicy.Value],
-                           isGeo: Boolean,
-                           latitude: Option[String],
-                           longitude: Option[String],
-                           override val batch: Int,
-                           override val partition: Int,
-                           override val checkPointPath: Option[String])
-    extends SchemaConfigEntry {
-  require(
-    name.trim.size != 0 && sourceField.trim.size != 0 &&
-      targetField.trim.size != 0 && batch > 0)
-
-  override def toString: String = {
-    if (isGeo) {
-      s"Edge name ${name} " +
-        s"source ${dataSourceConfigEntry} " +
-        s"sink ${dataSinkConfigEntry} " +
-        s"latitude ${latitude} " +
-        s"longitude ${longitude} " +
-        s"source field ${sourceField} " +
-        s"source policy ${sourcePolicy} " +
-        s"ranking ${rankingField} " +
-        s"target field ${targetField} " +
-        s"target policy ${targetPolicy} " +
-        s"batch ${batch} " +
-        s"partition ${partition}"
-    } else {
-      s"Edge name ${name} " +
-        s"source ${dataSourceConfigEntry} " +
-        s"sink ${dataSinkConfigEntry} " +
-        s"source field ${sourceField} " +
-        s"source policy ${sourcePolicy} " +
-        s"ranking ${rankingField} " +
-        s"target field ${targetField} " +
-        s"target policy ${targetPolicy} " +
-        s"batch ${batch} " +
-        s"partition ${partition}"
-    }
-  }
 }
 
 /**
@@ -550,11 +222,11 @@ object Configs {
 
     val tags       = mutable.ListBuffer[TagConfigEntry]()
     val tagConfigs = getConfigsOrNone(config, "tags")
-    if (!tagConfigs.isEmpty) {
+    if (tagConfigs.isDefined) {
       for (tagConfig <- tagConfigs.get.asScala) {
         if (!tagConfig.hasPath("name") ||
-            !tagConfig.hasPath("source.type") ||
-            !tagConfig.hasPath("sink.type")) {
+            !tagConfig.hasPath("type.source") ||
+            !tagConfig.hasPath("type.sink")) {
           LOG.error("The `name` and `type` must be specified")
           break()
         }
@@ -577,23 +249,19 @@ object Configs {
           None
         }
 
-        val sourceCategory = toSourceCategory(tagConfig.getString("source.type"))
+        val sourceCategory = toSourceCategory(tagConfig.getString("type.source"))
         val sourceConfig   = dataSourceConfig(sourceCategory, tagConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
-        val sinkCategory = toSinkCategory(tagConfig.getString("sink.type"))
+        val sinkCategory = toSinkCategory(tagConfig.getString("type.sink"))
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
         val batch = getOrElse(tagConfig, "batch", DEFAULT_BATCH)
         val checkPointPath =
-          if (tagConfig.hasPath("check_point")) Some(tagConfig.getString("check_point"))
+          if (tagConfig.hasPath("check_point_path")) Some(tagConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
-        if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && tagConfig
-              .hasPath("partition") && tagConfig.getInt("partition") >= 0)
-          throw new IllegalArgumentException(
-            s"If you set check point path in ${tagName}, you must set partition<0 or not set!")
         val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
 
         LOG.info(s"name ${tagName}  batch ${batch}")
@@ -613,11 +281,11 @@ object Configs {
 
     val edges       = mutable.ListBuffer[EdgeConfigEntry]()
     val edgeConfigs = getConfigsOrNone(config, "edges")
-    if (!edgeConfigs.isEmpty) {
+    if (edgeConfigs.isDefined) {
       for (edgeConfig <- edgeConfigs.get.asScala) {
         if (!edgeConfig.hasPath("name") ||
-            !edgeConfig.hasPath("source.type") ||
-            !edgeConfig.hasPath("sink.type")) {
+            !edgeConfig.hasPath("type.source") ||
+            !edgeConfig.hasPath("type.sink")) {
           LOG.error("The `name` and `type`must be specified")
           break()
         }
@@ -628,11 +296,11 @@ object Configs {
           edgeConfig.hasPath("latitude") &&
           edgeConfig.hasPath("longitude")
 
-        val sourceCategory = toSourceCategory(edgeConfig.getString("source.type"))
+        val sourceCategory = toSourceCategory(edgeConfig.getString("type.source"))
         val sourceConfig   = dataSourceConfig(sourceCategory, edgeConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
-        val sinkCategory = toSinkCategory(edgeConfig.getString("sink.type"))
+        val sinkCategory = toSinkCategory(edgeConfig.getString("type.sink"))
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
@@ -690,13 +358,9 @@ object Configs {
 
         val batch = getOrElse(edgeConfig, "batch", DEFAULT_BATCH)
         val checkPointPath =
-          if (edgeConfig.hasPath("check_point")) Some(edgeConfig.getString("check_point"))
+          if (edgeConfig.hasPath("check_point_path")) Some(edgeConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
-        if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && edgeConfig
-              .hasPath("partition") && edgeConfig.getInt("partition") >= 0)
-          throw new IllegalArgumentException(
-            s"If you set check point path in ${edgeName}, you must set partition<0 or not set!")
         val partition = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
 
         val entry = EdgeConfigEntry(
@@ -732,6 +396,12 @@ object Configs {
             edges.toList)
   }
 
+  /**
+    * Use to category name to category value mapping.
+    *
+    * @param category name
+    * @return
+    */
   private[this] def toSourceCategory(category: String): SourceCategory.Value = {
     category.trim.toUpperCase match {
       case "PARQUET" => SourceCategory.PARQUET
@@ -748,6 +418,12 @@ object Configs {
     }
   }
 
+  /**
+    * Use to sink name to sink value mapping.
+    *
+    * @param category name
+    * @return
+    */
   private[this] def toSinkCategory(category: String): SinkCategory.Value = {
     category.trim.toUpperCase match {
       case "CLIENT" =>
@@ -757,6 +433,13 @@ object Configs {
     }
   }
 
+  /**
+    * Use to generate data source config according to category of source.
+    *
+    * @param category
+    * @param config
+    * @return
+    */
   private[this] def dataSourceConfig(category: SourceCategory.Value,
                                      config: Config): DataSourceConfigEntry = {
     category match {
@@ -776,22 +459,25 @@ object Configs {
             config.getBoolean("header")
           else
             false
-        CSVSourceConfigEntry(SourceCategory.CSV, config.getString("path"), separator, header)
+        FileBaseSourceConfigEntry(SourceCategory.CSV,
+                                  config.getString("path"),
+                                  Some(separator),
+                                  Some(header))
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
         val name = config.getString("name")
         val checkPointPath =
-          if (config.hasPath("check_point")) Some(config.getString("check_point"))
+          if (config.hasPath("check_point_path")) Some(config.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
         val encryption =
           if (config.hasPath("encryption")) config.getBoolean("encryption") else false
-        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
+        val parallel = if (config.hasPath("partition")) config.getInt("partition") else 1
         val database = if (config.hasPath("database")) Some(config.getString("database")) else None
         Neo4JSourceConfigEntry(
           SourceCategory.NEO4J,
-          name,
           config.getString("exec"),
+          name,
           config.getString("server"),
           config.getString("user"),
           config.getString("password"),
@@ -801,7 +487,7 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH)
+        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", isEdge = false)
       case SourceCategory.MYSQL =>
         MySQLSourceConfigEntry(
           SourceCategory.MYSQL,
@@ -814,11 +500,19 @@ object Configs {
           getOrElse(config, "sentence", "")
         )
       case SourceCategory.SOCKET =>
+        val intervalSeconds =
+          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
+          else DEFAULT_STREAM_INTERVAL
         SocketSourceConfigEntry(SourceCategory.SOCKET,
+                                intervalSeconds,
                                 config.getString("host"),
                                 config.getInt("port"))
       case SourceCategory.KAFKA =>
+        val intervalSeconds =
+          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
+          else DEFAULT_STREAM_INTERVAL
         KafkaSourceConfigEntry(SourceCategory.KAFKA,
+                               intervalSeconds,
                                config.getString("service"),
                                config.getString("topic"))
       case SourceCategory.PULSAR =>
@@ -906,13 +600,20 @@ object Configs {
     * @return
     */
   private[this] def getOptOrElse[T](config: Option[Config], path: String, defaultValue: T): T = {
-    if (!config.isEmpty && config.get.hasPath(path)) {
+    if (config.isDefined && config.get.hasPath(path)) {
       config.get.getAnyRef(path).asInstanceOf[T]
     } else {
       defaultValue
     }
   }
 
+  /**
+    * Use to parse command line arguments.
+    *
+    * @param args
+    * @param programName
+    * @return Argument
+    */
   def parser(args: Array[String], programName: String): Option[Argument] = {
     val parser = new scopt.OptionParser[Argument](programName) {
       head(programName, "1.0.0")
