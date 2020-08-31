@@ -128,6 +128,19 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar</goal>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -145,6 +158,7 @@
                         <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
+                            <goal>test-jar</goal>
                         </goals>
                         <configuration>
                             <encoding>UTF-8</encoding>
