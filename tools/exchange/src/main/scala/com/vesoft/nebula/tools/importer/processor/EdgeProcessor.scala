@@ -109,6 +109,7 @@ class EdgeProcessor(data: DataFrame,
     while (!service.awaitTermination(100, TimeUnit.MILLISECONDS)) {
       Thread.sleep(10)
     }
+    writer.close()
   }
   override def process(): Unit = {
     val edgeDataFrame = data
