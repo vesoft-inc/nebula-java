@@ -16,7 +16,7 @@ import com.vesoft.nebula.tools.importer.processor.Processor
 import mock.{MockGraphData, MockGraphDataEdge, MockGraphDataVertex}
 import org.apache.log4j.Logger
 
-class TestCreateSentence extends AnyFunSuite {
+class TestInsertSentence extends AnyFunSuite {
 
   private[this] val LOG = Logger.getLogger(this.getClass)
 
