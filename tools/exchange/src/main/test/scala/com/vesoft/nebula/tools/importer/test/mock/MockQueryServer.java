@@ -103,7 +103,7 @@ public class MockQueryServer extends Thread {
     public void waitUntilStarted() {
         synchronized (server) {
             try {
-                server.wait(3000);
+                server.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
