@@ -41,7 +41,8 @@ class EdgeProcessor(data: DataFrame,
                     batchFailure: LongAccumulator)
     extends Processor {
 
-  @transient private[this] lazy val LOG = Logger.getLogger(this.getClass)
+  @transient
+  private[this] lazy val LOG = Logger.getLogger(this.getClass)
 
   private[this] val DEFAULT_MIN_CELL_LEVEL = 10
   private[this] val DEFAULT_MAX_CELL_LEVEL = 18
