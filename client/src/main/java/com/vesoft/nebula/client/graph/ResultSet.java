@@ -37,8 +37,9 @@ public class ResultSet {
 
         public ColumnValue get(String key) {
             int index = columns.indexOf(key);
-            if (index == -1){
-                throw new IllegalArgumentException("Cannot get field because the key '"+key+"' is not exist");
+            if (index == -1) {
+                throw new IllegalArgumentException(
+                    "Cannot get field because the key '" + key + "' is not exist");
             }
             return this.row.columns.get(index);
         }
