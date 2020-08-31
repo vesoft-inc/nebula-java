@@ -225,8 +225,8 @@ object Configs {
     if (tagConfigs.isDefined) {
       for (tagConfig <- tagConfigs.get.asScala) {
         if (!tagConfig.hasPath("name") ||
-            !tagConfig.hasPath("source.type") ||
-            !tagConfig.hasPath("sink.type")) {
+            !tagConfig.hasPath("type.source") ||
+            !tagConfig.hasPath("type.sink")) {
           LOG.error("The `name` and `type` must be specified")
           break()
         }
@@ -249,17 +249,17 @@ object Configs {
           None
         }
 
-        val sourceCategory = toSourceCategory(tagConfig.getString("source.type"))
+        val sourceCategory = toSourceCategory(tagConfig.getString("type.source"))
         val sourceConfig   = dataSourceConfig(sourceCategory, tagConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
-        val sinkCategory = toSinkCategory(tagConfig.getString("sink.type"))
+        val sinkCategory = toSinkCategory(tagConfig.getString("type.sink"))
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
         val batch = getOrElse(tagConfig, "batch", DEFAULT_BATCH)
         val checkPointPath =
-          if (tagConfig.hasPath("check_point")) Some(tagConfig.getString("check_point"))
+          if (tagConfig.hasPath("check_point_path")) Some(tagConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
         val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
@@ -284,8 +284,8 @@ object Configs {
     if (edgeConfigs.isDefined) {
       for (edgeConfig <- edgeConfigs.get.asScala) {
         if (!edgeConfig.hasPath("name") ||
-            !edgeConfig.hasPath("source.type") ||
-            !edgeConfig.hasPath("sink.type")) {
+            !edgeConfig.hasPath("type.source") ||
+            !edgeConfig.hasPath("type.sink")) {
           LOG.error("The `name` and `type`must be specified")
           break()
         }
@@ -296,11 +296,11 @@ object Configs {
           edgeConfig.hasPath("latitude") &&
           edgeConfig.hasPath("longitude")
 
-        val sourceCategory = toSourceCategory(edgeConfig.getString("source.type"))
+        val sourceCategory = toSourceCategory(edgeConfig.getString("type.source"))
         val sourceConfig   = dataSourceConfig(sourceCategory, edgeConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
-        val sinkCategory = toSinkCategory(edgeConfig.getString("sink.type"))
+        val sinkCategory = toSinkCategory(edgeConfig.getString("type.sink"))
         val sinkConfig   = dataSinkConfig(sinkCategory, nebulaConfig)
         LOG.info(s"Sink Config ${sourceConfig}")
 
@@ -358,7 +358,7 @@ object Configs {
 
         val batch = getOrElse(edgeConfig, "batch", DEFAULT_BATCH)
         val checkPointPath =
-          if (edgeConfig.hasPath("check_point")) Some(edgeConfig.getString("check_point"))
+          if (edgeConfig.hasPath("check_point_path")) Some(edgeConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
         val partition = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
@@ -468,7 +468,7 @@ object Configs {
       case SourceCategory.NEO4J =>
         val name = config.getString("name")
         val checkPointPath =
-          if (config.hasPath("check_point")) Some(config.getString("check_point"))
+          if (config.hasPath("check_point_path")) Some(config.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
         val encryption =
           if (config.hasPath("encryption")) config.getBoolean("encryption") else false

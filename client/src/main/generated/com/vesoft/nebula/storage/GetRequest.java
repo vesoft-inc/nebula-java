@@ -31,16 +31,20 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TStruct STRUCT_DESC = new TStruct("GetRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField RETURN_PARTLY_FIELD_DESC = new TField("return_partly", TType.BOOL, (short)3);
 
   public int space_id;
   public Map<Integer,List<String>> parts;
+  public boolean return_partly;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
+  public static final int RETURN_PARTLY = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __RETURN_PARTLY_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -52,6 +56,8 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
                 new FieldValueMetaData(TType.STRING)))));
+    tmpMetaDataMap.put(RETURN_PARTLY, new FieldMetaData("return_partly", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -64,12 +70,15 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
 
   public GetRequest(
     int space_id,
-    Map<Integer,List<String>> parts)
+    Map<Integer,List<String>> parts,
+    boolean return_partly)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
+    this.return_partly = return_partly;
+    setReturn_partlyIsSet(true);
   }
 
   /**
@@ -82,6 +91,7 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
+    this.return_partly = TBaseHelper.deepCopy(other.return_partly);
   }
 
   public GetRequest deepCopy() {
@@ -140,6 +150,29 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
+  public boolean  isReturn_partly() {
+    return this.return_partly;
+  }
+
+  public GetRequest setReturn_partly(boolean return_partly) {
+    this.return_partly = return_partly;
+    setReturn_partlyIsSet(true);
+    return this;
+  }
+
+  public void unsetReturn_partly() {
+    __isset_bit_vector.clear(__RETURN_PARTLY_ISSET_ID);
+  }
+
+  // Returns true if field return_partly is set (has been assigned a value) and false otherwise
+  public boolean isSetReturn_partly() {
+    return __isset_bit_vector.get(__RETURN_PARTLY_ISSET_ID);
+  }
+
+  public void setReturn_partlyIsSet(boolean value) {
+    __isset_bit_vector.set(__RETURN_PARTLY_ISSET_ID, value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -159,6 +192,14 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
+    case RETURN_PARTLY:
+      if (value == null) {
+        unsetReturn_partly();
+      } else {
+        setReturn_partly((Boolean)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -172,6 +213,9 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
     case PARTS:
       return getParts();
 
+    case RETURN_PARTLY:
+      return new Boolean(isReturn_partly());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -184,6 +228,8 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
       return isSetSpace_id();
     case PARTS:
       return isSetParts();
+    case RETURN_PARTLY:
+      return isSetReturn_partly();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -222,6 +268,15 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
         return false;
     }
 
+    boolean this_present_return_partly = true;
+    boolean that_present_return_partly = true;
+    if (this_present_return_partly || that_present_return_partly) {
+      if (!(this_present_return_partly && that_present_return_partly))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.return_partly, that.return_partly))
+        return false;
+    }
+
     return true;
   }
 
@@ -238,6 +293,11 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
     builder.append(present_parts);
     if (present_parts)
       builder.append(parts);
+
+    boolean present_return_partly = true;
+    builder.append(present_return_partly);
+    if (present_return_partly)
+      builder.append(return_partly);
 
     return builder.toHashCode();
   }
@@ -270,6 +330,14 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetReturn_partly()).compareTo(other.isSetReturn_partly());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(return_partly, other.return_partly);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -295,32 +363,40 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map223 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<String>>(Math.max(0, 2*_map223.size));
-              for (int _i224 = 0; 
-                   (_map223.size < 0) ? iprot.peekMap() : (_i224 < _map223.size); 
-                   ++_i224)
+              TMap _map209 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<String>>(Math.max(0, 2*_map209.size));
+              for (int _i210 = 0; 
+                   (_map209.size < 0) ? iprot.peekMap() : (_i210 < _map209.size); 
+                   ++_i210)
               {
-                int _key225;
-                List<String> _val226;
-                _key225 = iprot.readI32();
+                int _key211;
+                List<String> _val212;
+                _key211 = iprot.readI32();
                 {
-                  TList _list227 = iprot.readListBegin();
-                  _val226 = new ArrayList<String>(Math.max(0, _list227.size));
-                  for (int _i228 = 0; 
-                       (_list227.size < 0) ? iprot.peekList() : (_i228 < _list227.size); 
-                       ++_i228)
+                  TList _list213 = iprot.readListBegin();
+                  _val212 = new ArrayList<String>(Math.max(0, _list213.size));
+                  for (int _i214 = 0; 
+                       (_list213.size < 0) ? iprot.peekList() : (_i214 < _list213.size); 
+                       ++_i214)
                   {
-                    String _elem229;
-                    _elem229 = iprot.readString();
-                    _val226.add(_elem229);
+                    String _elem215;
+                    _elem215 = iprot.readString();
+                    _val212.add(_elem215);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key225, _val226);
+                this.parts.put(_key211, _val212);
               }
               iprot.readMapEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case RETURN_PARTLY:
+          if (field.type == TType.BOOL) {
+            this.return_partly = iprot.readBool();
+            setReturn_partlyIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -349,12 +425,12 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<String>> _iter230 : this.parts.entrySet())        {
-          oprot.writeI32(_iter230.getKey());
+        for (Map.Entry<Integer, List<String>> _iter216 : this.parts.entrySet())        {
+          oprot.writeI32(_iter216.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRING, _iter230.getValue().size()));
-            for (String _iter231 : _iter230.getValue())            {
-              oprot.writeString(_iter231);
+            oprot.writeListBegin(new TList(TType.STRING, _iter216.getValue().size()));
+            for (String _iter217 : _iter216.getValue())            {
+              oprot.writeString(_iter217);
             }
             oprot.writeListEnd();
           }
@@ -363,6 +439,9 @@ public class GetRequest implements TBase, java.io.Serializable, Cloneable, Compa
       }
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(RETURN_PARTLY_FIELD_DESC);
+    oprot.writeBool(this.return_partly);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -404,6 +483,13 @@ String space = prettyPrint ? " " : "";
     } else {
       sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("return_partly");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isReturn_partly(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

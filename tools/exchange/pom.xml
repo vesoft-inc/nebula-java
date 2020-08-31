@@ -5,7 +5,7 @@
     <parent>
         <artifactId>nebula</artifactId>
         <groupId>com.vesoft</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -25,7 +25,7 @@
         <config.version>1.4.0</config.version>
         <scala-logging.version>3.9.2</scala-logging.version>
         <scopt.version>3.7.1</scopt.version>
-        <nebula.version>1.0.0</nebula.version>
+        <nebula.version>${parent.version}</nebula.version>
         <s2.version>1.0.0</s2.version>
         <neo.version>2.4.5-M1</neo.version>
         <gremlin.version>3.4.6</gremlin.version>
@@ -112,6 +112,51 @@
                                     </excludes>
                                 </filter>
                             </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>4.4.0</version>
+                <executions>
+                    <execution>
+                        <id>Scaladoc</id>
+                        <goals>
+                            <goal>doc</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <args>
+                                <arg>-nobootcp</arg>
+                                <arg>-no-link-warnings</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>doc-jar</goal>
+                        </goals>
+                        <configuration>
+                            <args>
+                                <arg>-nobootcp</arg>
+                                <arg>-no-link-warnings</arg>
+                            </args>
                         </configuration>
                     </execution>
                 </executions>
@@ -217,6 +262,10 @@
                 <exclusion>
                     <artifactId>commons-configuration</artifactId>
                     <groupId>commons-configuration</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jul-to-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

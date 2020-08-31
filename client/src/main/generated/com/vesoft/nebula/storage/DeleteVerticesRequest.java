@@ -295,29 +295,29 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map113 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map113.size));
-              for (int _i114 = 0; 
-                   (_map113.size < 0) ? iprot.peekMap() : (_i114 < _map113.size); 
-                   ++_i114)
+              TMap _map95 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map95.size));
+              for (int _i96 = 0; 
+                   (_map95.size < 0) ? iprot.peekMap() : (_i96 < _map95.size); 
+                   ++_i96)
               {
-                int _key115;
-                List<Long> _val116;
-                _key115 = iprot.readI32();
+                int _key97;
+                List<Long> _val98;
+                _key97 = iprot.readI32();
                 {
-                  TList _list117 = iprot.readListBegin();
-                  _val116 = new ArrayList<Long>(Math.max(0, _list117.size));
-                  for (int _i118 = 0; 
-                       (_list117.size < 0) ? iprot.peekList() : (_i118 < _list117.size); 
-                       ++_i118)
+                  TList _list99 = iprot.readListBegin();
+                  _val98 = new ArrayList<Long>(Math.max(0, _list99.size));
+                  for (int _i100 = 0; 
+                       (_list99.size < 0) ? iprot.peekList() : (_i100 < _list99.size); 
+                       ++_i100)
                   {
-                    long _elem119;
-                    _elem119 = iprot.readI64();
-                    _val116.add(_elem119);
+                    long _elem101;
+                    _elem101 = iprot.readI64();
+                    _val98.add(_elem101);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key115, _val116);
+                this.parts.put(_key97, _val98);
               }
               iprot.readMapEnd();
             }
@@ -349,12 +349,12 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Long>> _iter120 : this.parts.entrySet())        {
-          oprot.writeI32(_iter120.getKey());
+        for (Map.Entry<Integer, List<Long>> _iter102 : this.parts.entrySet())        {
+          oprot.writeI32(_iter102.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I64, _iter120.getValue().size()));
-            for (long _iter121 : _iter120.getValue())            {
-              oprot.writeI64(_iter121);
+            oprot.writeListBegin(new TList(TType.I64, _iter102.getValue().size()));
+            for (long _iter103 : _iter102.getValue())            {
+              oprot.writeI64(_iter103);
             }
             oprot.writeListEnd();
           }

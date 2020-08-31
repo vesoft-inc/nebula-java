@@ -1,3 +1,5 @@
 pyhocon==0.3.55
 neo4j==4.0.2
 nebula-python==1.0.0.post0
+gremlinpython==3.4.6
+pulsar-client==2.6.0
