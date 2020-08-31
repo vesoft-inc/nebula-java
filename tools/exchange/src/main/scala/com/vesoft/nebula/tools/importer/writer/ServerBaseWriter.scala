@@ -139,11 +139,13 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
   def prepare(): Unit = {
     val code = client.connect()
     if (code != ErrorCode.SUCCEEDED) {
+      this.close()
       throw new RuntimeException("Connection Failed")
     }
 
     val switchCode = client.switchSpace(dataBaseConfigEntry.space).get().get()
     if (switchCode != ErrorCode.SUCCEEDED) {
+      this.close()
       throw new RuntimeException("Switch Failed")
     }
 
