@@ -8,7 +8,6 @@ package com.vesoft.nebula.tools.importer.reader
 
 import com.vesoft.nebula.tools.importer.Offset
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import org.apache.log4j.Logger
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
@@ -45,6 +44,10 @@ trait CheckPointSupport extends Serializable {
       case _ => startOffsets
     }
 
+    if (checkPointOffsets.zip(startOffsets).exists(x => x._1 < x._2))
+      throw new RuntimeException(
+        s"Check Point file maybe previous. Please delete ${checkPointPath}/${checkPointNamePrefix}.* file")
+
     val eachPartitionLimit = {
       batchSizes
         .zip(startOffsets.zip(checkPointOffsets))
@@ -55,7 +58,7 @@ trait CheckPointSupport extends Serializable {
     val offsets = checkPointOffsets.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
     if (offsets.exists(_.size < 0L))
       throw new RuntimeException(
-        s"Your check point file maybe broken. Please delete ${checkPointNamePrefix}.* file")
+        s"Check point file maybe broken. Please delete ${checkPointPath}/${checkPointNamePrefix}.* file")
     offsets
   }
 }

@@ -10,8 +10,8 @@ import java.util
 import java.util.Date
 
 import com.google.common.collect.Maps
+import com.vesoft.nebula.tools.importer.config._
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{JanusGraphSourceConfigEntry, Neo4JSourceConfigEntry}
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
@@ -34,7 +34,7 @@ import scala.collection.JavaConverters._
   * @param session
   * @param sentence
   */
-abstract class ServerBaseReader(override val session: SparkSession, sentence: String)
+abstract class ServerBaseReader(override val session: SparkSession, val sentence: String)
     extends Reader {
 
   override def close(): Unit = {
@@ -46,10 +46,10 @@ abstract class ServerBaseReader(override val session: SparkSession, sentence: St
   * HiveReader extends the @{link ServerBaseReader}.
   * The HiveReader reading data from Apache Hive via sentence.
   * @param session
-  * @param sentence
+  * @param hiveConfig
   */
-class HiveReader(override val session: SparkSession, sentence: String)
-    extends ServerBaseReader(session, sentence) {
+class HiveReader(override val session: SparkSession, hiveConfig: HiveSourceConfigEntry)
+    extends ServerBaseReader(session, hiveConfig.sentence) {
   override def read(): DataFrame = {
     session.sql(sentence)
   }
@@ -60,31 +60,19 @@ class HiveReader(override val session: SparkSession, sentence: String)
   * The MySQLReader reading data from MySQL via sentence.
   *
   * @param session
-  * @param host
-  * @param port
-  * @param database
-  * @param table
-  * @param user
-  * @param password
-  * @param sentence
+  * @param mysqlConfig
   */
-class MySQLReader(override val session: SparkSession,
-                  host: String = "127.0.0.1",
-                  port: Int = 3699,
-                  database: String,
-                  table: String,
-                  user: String,
-                  password: String,
-                  sentence: String)
-    extends ServerBaseReader(session, sentence) {
+class MySQLReader(override val session: SparkSession, mysqlConfig: MySQLSourceConfigEntry)
+    extends ServerBaseReader(session, mysqlConfig.sentence) {
   override def read(): DataFrame = {
-    val url = s"jdbc:mysql://${host}:${port}/${database}?useUnicode=true&characterEncoding=utf-8"
+    val url =
+      s"jdbc:mysql://${mysqlConfig.host}:${mysqlConfig.port}/${mysqlConfig.database}?useUnicode=true&characterEncoding=utf-8"
     session.read
       .format("jdbc")
       .option("url", url)
-      .option("dbtable", table)
-      .option("user", user)
-      .option("password", password)
+      .option("dbtable", mysqlConfig.table)
+      .option("user", mysqlConfig.user)
+      .option("password", mysqlConfig.password)
       .load()
   }
 }
@@ -92,47 +80,49 @@ class MySQLReader(override val session: SparkSession,
 /**
   * Neo4JReader extends the ServerBaseReader
   * @param session
-  * @param config
+  * @param neo4jConfig
   */
-class Neo4JReader(override val session: SparkSession, config: Neo4JSourceConfigEntry)
-    extends ServerBaseReader(session, config.exec)
+class Neo4JReader(override val session: SparkSession, neo4jConfig: Neo4JSourceConfigEntry)
+    extends ServerBaseReader(session, neo4jConfig.sentence)
     with CheckPointSupport {
 
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
   override def read(): DataFrame = {
     val totalCount: Long = {
-      val returnIndex   = config.exec.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
-      val countSentence = config.exec.substring(0, returnIndex) + " count(*)"
+      val returnIndex   = neo4jConfig.sentence.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
+      val countSentence = neo4jConfig.sentence.substring(0, returnIndex) + " count(*)"
       val driver =
-        GraphDatabase.driver(s"${config.server}", AuthTokens.basic(config.user, config.password))
+        GraphDatabase.driver(s"${neo4jConfig.server}",
+                             AuthTokens.basic(neo4jConfig.user, neo4jConfig.password))
       val neo4JSession = driver.session()
       neo4JSession.run(countSentence).single().get(0).asLong()
     }
-    val offsets = getOffsets(totalCount, config.parallel, config.checkPointPath, config.name)
 
-    LOG.info(s"${config.name} offsets: ${offsets.mkString(",")}")
-
+    val offsets =
+      getOffsets(totalCount, neo4jConfig.parallel, neo4jConfig.checkPointPath, neo4jConfig.name)
+    LOG.info(s"${neo4jConfig.name} offsets: ${offsets.mkString(",")}")
     if (offsets.forall(_.size == 0L)) {
-      LOG.warn(s"${config.name} already write done from check point.")
+      LOG.warn(s"${neo4jConfig.name} already write done from check point.")
       return session.createDataFrame(session.sparkContext.emptyRDD[Row], new StructType())
     }
 
-    val neo4jConfig = Neo4jConfig(config.server,
-                                  config.user,
-                                  Some(config.password),
-                                  config.database,
-                                  config.encryption)
+    val config = Neo4jConfig(neo4jConfig.server,
+                             neo4jConfig.user,
+                             Some(neo4jConfig.password),
+                             neo4jConfig.database,
+                             neo4jConfig.encryption)
 
     val rdd = session.sparkContext
       .parallelize(offsets, offsets.size)
       .flatMap(offset => {
-        if (config.checkPointPath.isDefined) {
-          val path = s"${config.checkPointPath.get}/${config.name}.${TaskContext.getPartitionId()}"
+        if (neo4jConfig.checkPointPath.isDefined) {
+          val path =
+            s"${neo4jConfig.checkPointPath.get}/${neo4jConfig.name}.${TaskContext.getPartitionId()}"
           HDFSUtils.saveContent(path, offset.start.toString)
         }
-        val query  = s"${config.exec} SKIP ${offset.start} LIMIT ${offset.size}"
-        val result = new Neo4jSessionAwareIterator(neo4jConfig, query, Maps.newHashMap(), false)
+        val query  = s"${neo4jConfig.sentence} SKIP ${offset.start} LIMIT ${offset.size}"
+        val result = new Neo4jSessionAwareIterator(config, query, Maps.newHashMap(), false)
         val fields = if (result.hasNext) result.peek().keys().asScala else List()
         val schema =
           if (result.hasNext)
@@ -264,9 +254,9 @@ class JanusGraphReader(override val session: SparkSession,
 /**
   *
   * @param session
-  * @param sentence
+  * @param nebulaConfig
   */
-class NebulaReader(override val session: SparkSession, sentence: String)
-    extends ServerBaseReader(session, sentence) {
+class NebulaReader(override val session: SparkSession, nebulaConfig: ServerDataSourceConfigEntry)
+    extends ServerBaseReader(session, nebulaConfig.sentence) {
   override def read(): DataFrame = ???
 }
