@@ -19,7 +19,9 @@ sealed trait SchemaConfigEntry {
 
   def dataSinkConfigEntry: DataSinkConfigEntry
 
-  def fields: Map[String, ConfigValue]
+  def fields: List[String]
+
+  def nebulaFields: List[String]
 
   def batch: Int
 
@@ -34,6 +36,7 @@ sealed trait SchemaConfigEntry {
   * @param dataSourceConfigEntry
   * @param dataSinkConfigEntry
   * @param fields
+  *  @param nebulaFields
   * @param vertexField
   * @param vertexPolicy
   * @param batch
@@ -43,7 +46,8 @@ sealed trait SchemaConfigEntry {
 case class TagConfigEntry(override val name: String,
                           override val dataSourceConfigEntry: DataSourceConfigEntry,
                           override val dataSinkConfigEntry: DataSinkConfigEntry,
-                          override val fields: Map[String, ConfigValue],
+                          override val fields: List[String],
+                          override val nebulaFields: List[String],
                           vertexField: String,
                           vertexPolicy: Option[KeyPolicy.Value],
                           override val batch: Int,
@@ -69,6 +73,7 @@ case class TagConfigEntry(override val name: String,
   * @param dataSourceConfigEntry
   * @param dataSinkConfigEntry
   * @param fields
+  *  @param nebulaFields
   * @param sourceField
   * @param sourcePolicy
   * @param rankingField
@@ -84,7 +89,8 @@ case class TagConfigEntry(override val name: String,
 case class EdgeConfigEntry(override val name: String,
                            override val dataSourceConfigEntry: DataSourceConfigEntry,
                            override val dataSinkConfigEntry: DataSinkConfigEntry,
-                           override val fields: Map[String, ConfigValue],
+                           override val fields: List[String],
+                           override val nebulaFields: List[String],
                            sourceField: String,
                            sourcePolicy: Option[KeyPolicy.Value],
                            rankingField: Option[String],
