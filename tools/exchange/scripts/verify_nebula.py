@@ -6,7 +6,6 @@
 # This source code is licensed under Apache 2.0 License,
 # attached with Common Clause Condition 1.0, found in the LICENSES directory.
 
-
 from nebula.ConnectionPool import ConnectionPool
 from nebula.Client import GraphClient
 from nebula.Common import *
@@ -16,8 +15,8 @@ from pyhocon import ConfigFactory
 
 import logging
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s-%(levelname)s-%(message)s')
+logging.basicConfig(
+    level=logging.INFO, format='%(asctime)s-%(levelname)s-%(message)s')
 logger = logging.getLogger(__name__)
 
 
@@ -68,7 +67,12 @@ def handle_fetch_resp(resp):
 
 
 class TagConf:
-    def __init__(self, tag_name: str, id_field: str, id_policy: str, fields: list, type_name=""):
+    def __init__(self,
+                 tag_name: str,
+                 id_field: str,
+                 id_policy: str,
+                 fields: list,
+                 type_name=""):
         self.tag_name = tag_name
         self.id_field = id_field
         self.id_policy = id_policy
@@ -79,14 +83,22 @@ class TagConf:
         return self.tag_name
 
     def get_id(self, tag_id, fields: list):
-        ret = (tag_id if self.id_policy == '' else self.id_policy + '({})'.format(tag_id)) + ":"
+        ret = (tag_id if self.id_policy == '' else
+               self.id_policy + '({})'.format(tag_id)) + ":"
         ret += "(" + ','.join([fields[field] for field in self.fields]) + ")"
         return ret
 
 
 class EdgeConf:
-    def __init__(self, edge_name, from_field: str, from_policy: str, to_field: str, to_policy: str, fields: list,
-                 ranking='', type_name=""):
+    def __init__(self,
+                 edge_name,
+                 from_field: str,
+                 from_policy: str,
+                 to_field: str,
+                 to_policy: str,
+                 fields: list,
+                 ranking='',
+                 type_name=""):
         self.edge_name = edge_name
         self.from_field = from_field
         self.from_policy = from_policy
@@ -101,11 +113,11 @@ class EdgeConf:
 
     def get_id(self, from_id, to_id, ranking=0):
         return (str(from_id) if self.from_policy == '' else self.from_policy + '({})'.format(from_id)) + "->" + \
-               (str(to_id) if self.to_policy == '' else self.to_policy + '({})'.format(to_id)) + '@{}'.format(ranking)
+               (str(to_id) if self.to_policy == '' else self.to_policy +
+                '({})'.format(to_id)) + '@{}'.format(ranking)
 
 
 class HandleConf:
-
     def __init__(self, conf):
         self.tag_data = {}
         self.edge_data = {}
@@ -119,8 +131,8 @@ class HandleConf:
                 id_field = c.get_string("vertex")
                 id_policy = ""
             fields = list(map(lambda x: str(x), c.get("fields").values()))
-            self.tag_data[tag_name] = TagConf(
-                tag_name, id_field, id_policy, fields, type_name)
+            self.tag_data[tag_name] = TagConf(tag_name, id_field, id_policy,
+                                              fields, type_name)
 
         for c in conf["edges"]:
             edge_name = c.get_string("name")
@@ -140,7 +152,8 @@ class HandleConf:
             ranking = c.get_string("ranking", "")
             fields = list(map(lambda x: str(x), c.get("fields").values()))
             self.edge_data[edge_name] = EdgeConf(
-                edge_name, from_field, from_policy, to_field, to_policy, fields, ranking, type_name)
+                edge_name, from_field, from_policy, to_field, to_policy,
+                fields, ranking, type_name)
 
 
 def verify_nebula(client: GraphClient, datas: list, conf):
@@ -181,12 +194,14 @@ def verify_nebula(client: GraphClient, datas: list, conf):
                     logger.error("search length:{}, real length:{}".format(
                         len(batch_ids), len(nebula_datas)))
                 for nebula_data in nebula_datas:
-                    json_data = search_map[str(
-                        nebula_data[str(tag_conf.id_field)])]
+                    json_data = search_map[str(nebula_data[str(
+                        tag_conf.id_field)])]
                     for field in tag_conf.fields:
                         if nebula_data[field] != json_data[field]:
-                            logger.error("json data:{} , nebula data:{} , field:{}, json value:{}, nebula value: {}",
-                                         json_data, nebula_data, field, json_data[field], nebula_data[field])
+                            logger.error(
+                                "json data:{} , nebula data:{} , field:{}, json value:{}, nebula value: {}",
+                                json_data, nebula_data, field,
+                                json_data[field], nebula_data[field])
 
     def trim_edge_id(x):
         return x if '.' not in x else x.split('.')[1]
@@ -197,10 +212,11 @@ def verify_nebula(client: GraphClient, datas: list, conf):
         data = json_edge_data[edge_name]
         for json_data in data:
 
-            edge_id = edge_conf.get_id(json_data['from']['match'][trim_edge_id(edge_conf.from_field)],
-                                       json_data['to']['match'][trim_edge_id(edge_conf.to_field)],
-                                       0 if edge_conf.ranking == '' else json_data['data'][edge_conf.ranking]
-                                       )
+            edge_id = edge_conf.get_id(
+                json_data['from']['match'][trim_edge_id(edge_conf.from_field)],
+                json_data['to']['match'][trim_edge_id(
+                    edge_conf.to_field)], 0 if edge_conf.ranking == '' else
+                json_data['data'][edge_conf.ranking])
 
             exec_query = query + edge_id
             logger.info("nebula exec: " + exec_query)
@@ -217,17 +233,20 @@ def verify_nebula(client: GraphClient, datas: list, conf):
                     nebula_data = nebula_datas[0]
                     for field in edge_conf.fields:
                         if field not in nebula_data:
-                            logger.error(
-                                "field:{} not in nebula data{}", field, nebula_data)
+                            logger.error("field:{} not in nebula data{}",
+                                         field, nebula_data)
                         if nebula_data[field] != json_data['data'][field]:
-                            logger.error("json data:{} , nebula data:{} , field:{}, json value:{}, nebula value: {}",
-                                         json_data, nebula_data, field, json_data[field], nebula_data[field])
+                            logger.error(
+                                "json data:{} , nebula data:{} , field:{}, json value:{}, nebula value: {}",
+                                json_data, nebula_data, field,
+                                json_data[field], nebula_data[field])
                     if edge_conf.ranking != '':
-                        if nebula_data['_rank'] != json_data['data'][edge_conf.ranking]:
-                            logger.error("rank field {}, nebula rank {}, json rank {}".format(edge_conf.ranking,
-                                                                                              nebula_data['_rank'],
-                                                                                              json_data['data'][
-                                                                                                  edge_conf.ranking]))
+                        if nebula_data['_rank'] != json_data['data'][
+                                edge_conf.ranking]:
+                            logger.error(
+                                "rank field {}, nebula rank {}, json rank {}".
+                                format(edge_conf.ranking, nebula_data['_rank'],
+                                       json_data['data'][edge_conf.ranking]))
 
 
 if __name__ == '__main__':
@@ -236,24 +255,46 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='verify nebula use json')
 
-    parser.add_argument('-j', '--jsons', help='json files path',
-                        nargs='+', type=str, required=True)
-    parser.add_argument('-a', '--address', help='nebula address',
-                        type=str, default="127.0.0.1:3699")
-    parser.add_argument('-p', '--password',
-                        help='nebula password', type=str, default="password")
+    parser.add_argument(
+        '-j',
+        '--jsons',
+        help='json files path',
+        nargs='+',
+        type=str,
+        required=True)
+    parser.add_argument(
+        '-a',
+        '--address',
+        help='nebula address',
+        type=str,
+        default="127.0.0.1:3699")
+    parser.add_argument(
+        '-p',
+        '--password',
+        help='nebula password',
+        type=str,
+        default="password")
     parser.add_argument(
         '-u', '--user', help='nebula user name', type=str, default="user")
 
-    parser.add_argument('-c', '--config', help='spark importer config path',
-                        type=str, default="application.conf")
+    parser.add_argument(
+        '-c',
+        '--config',
+        help='spark importer config path',
+        type=str,
+        default="application.conf")
 
-    parser.add_argument('-l', '--log_level', help='log level=> 10:debug, 20:info, 30:warn, 40:error', type=int,
-                        default=30)
+    parser.add_argument(
+        '-l',
+        '--log_level',
+        help='log level=> 10:debug, 20:info, 30:warn, 40:error',
+        type=int,
+        default=30)
     args = parser.parse_args()
 
     connection_pool = ConnectionPool(
-        args.address.split(":")[0], args.address.split(":")[1])
+        args.address.split(":")[0],
+        args.address.split(":")[1])
     client = GraphClient(connection_pool)
     auth_resp = client.authenticate(args.user, args.password)
     if auth_resp.error_code:

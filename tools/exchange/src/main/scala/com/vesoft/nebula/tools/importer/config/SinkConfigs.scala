@@ -14,6 +14,7 @@ object SinkCategory extends Enumeration {
   type Type = Value
 
   val CLIENT = Value("CLIENT")
+  val SST    = Value("SST")
 }
 
 class SinkCategory
@@ -28,12 +29,13 @@ sealed trait DataSinkConfigEntry {
 /**
   * FileBaseSinkConfigEntry
   *
-  * @param path
   */
-case class FileBaseSinkConfigEntry(override val category: SinkCategory.Value, path: String)
+case class FileBaseSinkConfigEntry(override val category: SinkCategory.Value,
+                                   localPath: String,
+                                   remotePath: String)
     extends DataSinkConfigEntry {
   override def toString: String = {
-    s"File sink path: ${path}"
+    s"File sink: from ${localPath} to ${remotePath}"
   }
 }
 

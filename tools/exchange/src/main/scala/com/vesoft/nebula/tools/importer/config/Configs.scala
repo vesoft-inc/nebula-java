@@ -9,8 +9,10 @@ package com.vesoft.nebula.tools.importer.config
 import java.io.File
 import java.nio.file.Files
 
-import com.typesafe.config.{Config, ConfigFactory}
 import com.vesoft.nebula.tools.importer.{Argument, KeyPolicy}
+
+import scala.collection.JavaConverters._
+import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.log4j.Logger
 
 import scala.collection.JavaConverters._
@@ -29,9 +31,11 @@ object Type extends Enumeration {
   * @param addresses
   * @param space
   */
-case class DataBaseConfigEntry(addresses: List[String], space: String) {
+case class DataBaseConfigEntry(addresses: List[String],
+                               space: String,
+                               metaAddresses: Option[List[String]] = None) {
   require(addresses != null && addresses.nonEmpty)
-  require(space.trim.nonEmpty)
+  require(space.trim.size != 0)
 
   override def toString: String = super.toString
 }
@@ -134,16 +138,6 @@ case class SparkConfigEntry(map: Map[String, String]) {
 
 /**
   * Configs
-  *
-  * @param databaseConfig
-  * @param userConfig
-  * @param connectionConfig
-  * @param executionConfig
-  * @param errorConfig
-  * @param rateConfig
-  * @param sparkConfigEntry
-  * @param tagsConfig
-  * @param edgesConfig
   */
 case class Configs(databaseConfig: DataBaseConfigEntry,
                    userConfig: UserConfigEntry,
@@ -171,6 +165,8 @@ object Configs {
   private[this] val DEFAULT_BATCH                = 2
   private[this] val DEFAULT_PARTITION            = -1
   private[this] val DEFAULT_CHECK_POINT_PATH     = None
+  private[this] val DEFAULT_LOCAL_PATH           = None
+  private[this] val DEFAULT_REMOTE_PATH          = None
   private[this] val DEFAULT_STREAM_INTERVAL      = 30
 
   /**
@@ -183,11 +179,16 @@ object Configs {
       throw new IllegalArgumentException(s"${configPath} not exist")
     }
 
-    val config        = ConfigFactory.parseFile(configPath)
-    val nebulaConfig  = config.getConfig("nebula")
-    val addresses     = nebulaConfig.getStringList("addresses").asScala.toList
+    val config       = ConfigFactory.parseFile(configPath)
+    val nebulaConfig = config.getConfig("nebula")
+    val addresses    = nebulaConfig.getStringList("addresses").asScala.toList
+    val metaAddresses =
+      if (nebulaConfig.hasPath("meta.addresses"))
+        Some(nebulaConfig.getStringList("meta.addresses").asScala.toList)
+      else
+        None
     val space         = nebulaConfig.getString("space")
-    val databaseEntry = DataBaseConfigEntry(addresses, space)
+    val databaseEntry = DataBaseConfigEntry(addresses, space, metaAddresses)
     LOG.info(s"DataBase Config ${databaseEntry}")
 
     val user      = nebulaConfig.getString("user")
@@ -196,26 +197,26 @@ object Configs {
     LOG.info(s"User Config ${userEntry}")
 
     val connectionConfig  = getConfigOrNone(nebulaConfig, "connection")
-    val connectionTimeout = getOptOrElse(connectionConfig, "timeout", DEFAULT_CONNECTION_TIMEOUT)
-    val connectionRetry   = getOptOrElse(connectionConfig, "retry", DEFAULT_CONNECTION_RETRY)
+    val connectionTimeout = getOrElse(connectionConfig, "timeout", DEFAULT_CONNECTION_TIMEOUT)
+    val connectionRetry   = getOrElse(connectionConfig, "retry", DEFAULT_CONNECTION_RETRY)
     val connectionEntry   = ConnectionConfigEntry(connectionTimeout, connectionRetry)
     LOG.info(s"Connection Config ${connectionConfig}")
 
     val executionConfig   = getConfigOrNone(nebulaConfig, "execution")
-    val executionTimeout  = getOptOrElse(executionConfig, "timeout", DEFAULT_EXECUTION_TIMEOUT)
-    val executionRetry    = getOptOrElse(executionConfig, "retry", DEFAULT_EXECUTION_RETRY)
-    val executionInterval = getOptOrElse(executionConfig, "interval", DEFAULT_EXECUTION_INTERVAL)
+    val executionTimeout  = getOrElse(executionConfig, "timeout", DEFAULT_EXECUTION_TIMEOUT)
+    val executionRetry    = getOrElse(executionConfig, "retry", DEFAULT_EXECUTION_RETRY)
+    val executionInterval = getOrElse(executionConfig, "interval", DEFAULT_EXECUTION_INTERVAL)
     val executionEntry    = ExecutionConfigEntry(executionTimeout, executionRetry, executionInterval)
     LOG.info(s"Execution Config ${executionEntry}")
 
     val errorConfig  = getConfigOrNone(nebulaConfig, "error")
-    val errorPath    = getOptOrElse(errorConfig, "output", DEFAULT_ERROR_OUTPUT_PATH)
-    val errorMaxSize = getOptOrElse(errorConfig, "max", DEFAULT_ERROR_MAX_BATCH_SIZE)
+    val errorPath    = getOrElse(errorConfig, "output", DEFAULT_ERROR_OUTPUT_PATH)
+    val errorMaxSize = getOrElse(errorConfig, "max", DEFAULT_ERROR_MAX_BATCH_SIZE)
     val errorEntry   = ErrorConfigEntry(errorPath, errorMaxSize)
 
     val rateConfig  = getConfigOrNone(nebulaConfig, "rate")
-    val rateLimit   = getOptOrElse(rateConfig, "limit", DEFAULT_RATE_LIMIT)
-    val rateTimeout = getOptOrElse(rateConfig, "timeout", DEFAULT_RATE_TIMEOUT)
+    val rateLimit   = getOrElse(rateConfig, "limit", DEFAULT_RATE_LIMIT)
+    val rateTimeout = getOrElse(rateConfig, "timeout", DEFAULT_RATE_TIMEOUT)
     val rateEntry   = RateConfigEntry(rateLimit, rateTimeout)
 
     val sparkEntry = SparkConfigEntry(config)
@@ -232,7 +233,12 @@ object Configs {
         }
 
         val tagName = tagConfig.getString("name")
-        val fields  = tagConfig.getObject("fields").asScala
+        val fields  = tagConfig.getStringList("fields").asScala.toList
+        val nebulaFields = if (tagConfig.hasPath("nebula.fields")) {
+          tagConfig.getStringList("nebula.fields").asScala.toList
+        } else {
+          fields
+        }
 
         // You can specified the vertex field name via the config item `vertex`
         // If you want to qualified the key policy, you can wrap them into a block.
@@ -262,13 +268,21 @@ object Configs {
           if (tagConfig.hasPath("check_point_path")) Some(tagConfig.getString("check_point_path"))
           else DEFAULT_CHECK_POINT_PATH
 
+        val localPath  = getOptOrElse(tagConfig, "local.path")
+        val remotePath = getOptOrElse(tagConfig, "remote.path")
+
+        if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && tagConfig
+              .hasPath("partition") && tagConfig.getInt("partition") >= 0)
+          throw new IllegalArgumentException(
+            s"If you set check point path in ${tagName}, you must set partition<0 or not set!")
         val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
 
         LOG.info(s"name ${tagName}  batch ${batch}")
         val entry = TagConfigEntry(tagName,
                                    sourceConfig,
                                    sinkConfig,
-                                   fields.toMap,
+                                   fields,
+                                   nebulaFields,
                                    vertexField,
                                    policyOpt,
                                    batch,
@@ -291,7 +305,12 @@ object Configs {
         }
 
         val edgeName = edgeConfig.getString("name")
-        val fields   = edgeConfig.getObject("fields").asScala
+        val fields   = edgeConfig.getStringList("fields").asScala.toList
+        val nebulaFields = if (edgeConfig.hasPath("nebula.fields")) {
+          edgeConfig.getStringList("nebula.fields").asScala.toList
+        } else {
+          fields
+        }
         val isGeo = !edgeConfig.hasPath("source") &&
           edgeConfig.hasPath("latitude") &&
           edgeConfig.hasPath("longitude")
@@ -363,11 +382,15 @@ object Configs {
 
         val partition = getOrElse(edgeConfig, "partition", DEFAULT_PARTITION)
 
+        val localPath  = getOptOrElse(edgeConfig, "path.local")
+        val remotePath = getOptOrElse(edgeConfig, "path.remote")
+
         val entry = EdgeConfigEntry(
           edgeName,
           sourceConfig,
           sinkConfig,
-          fields.toMap,
+          fields,
+          nebulaFields,
           sourceField,
           sourcePolicy,
           ranking,
@@ -410,7 +433,6 @@ object Configs {
       case "CSV"     => SourceCategory.CSV
       case "HIVE"    => SourceCategory.HIVE
       case "NEO4J"   => SourceCategory.NEO4J
-      case "SOCKET"  => SourceCategory.SOCKET
       case "KAFKA"   => SourceCategory.KAFKA
       case "MYSQL"   => SourceCategory.MYSQL
       case "PULSAR"  => SourceCategory.PULSAR
@@ -426,10 +448,9 @@ object Configs {
     */
   private[this] def toSinkCategory(category: String): SinkCategory.Value = {
     category.trim.toUpperCase match {
-      case "CLIENT" =>
-        SinkCategory.CLIENT
-      case _ =>
-        throw new IllegalArgumentException(s"${category} not support")
+      case "CLIENT" => SinkCategory.CLIENT
+      case "SST"    => SinkCategory.SST
+      case _        => throw new IllegalArgumentException(s"${category} not support")
     }
   }
 
@@ -459,20 +480,23 @@ object Configs {
             config.getBoolean("header")
           else
             false
-        FileBaseSourceConfigEntry(SourceCategory.CSV,
-                                  config.getString("path"),
-                                  Some(separator),
-                                  Some(header))
+        FileBaseSourceConfigEntry(SourceCategory.CSV, config.getString("path"))
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
         val name = config.getString("name")
-        val checkPointPath =
-          if (config.hasPath("check_point_path")) Some(config.getString("check_point_path"))
-          else DEFAULT_CHECK_POINT_PATH
-        val encryption =
-          if (config.hasPath("encryption")) config.getBoolean("encryption") else false
-        val parallel = if (config.hasPath("partition")) config.getInt("partition") else 1
+        val checkPointPath = if (config.hasPath("check_point_path")) {
+          Some(config.getString("check_point_path"))
+        } else {
+          DEFAULT_CHECK_POINT_PATH
+        }
+
+        val encryption = if (config.hasPath("encryption")) {
+          config.getBoolean("encryption")
+        } else {
+          false
+        }
+        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
         val database = if (config.hasPath("database")) Some(config.getString("database")) else None
         Neo4JSourceConfigEntry(
           SourceCategory.NEO4J,
@@ -487,7 +511,7 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", isEdge = false)
+        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", false) // TODO
       case SourceCategory.MYSQL =>
         MySQLSourceConfigEntry(
           SourceCategory.MYSQL,
@@ -499,14 +523,6 @@ object Configs {
           config.getString("password"),
           getOrElse(config, "sentence", "")
         )
-      case SourceCategory.SOCKET =>
-        val intervalSeconds =
-          if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
-          else DEFAULT_STREAM_INTERVAL
-        SocketSourceConfigEntry(SourceCategory.SOCKET,
-                                intervalSeconds,
-                                config.getString("host"),
-                                config.getInt("port"))
       case SourceCategory.KAFKA =>
         val intervalSeconds =
           if (config.hasPath("interval.seconds")) config.getInt("interval.seconds")
@@ -527,7 +543,7 @@ object Configs {
                                 config.getString("admin"),
                                 options)
       case _ =>
-        throw new IllegalArgumentException("")
+        throw new IllegalArgumentException("Unsupported data source")
     }
   }
 
@@ -537,8 +553,12 @@ object Configs {
       case SinkCategory.CLIENT =>
         NebulaSinkConfigEntry(SinkCategory.CLIENT,
                               nebulaConfig.getStringList("addresses").asScala.toList)
+      case SinkCategory.SST =>
+        FileBaseSinkConfigEntry(SinkCategory.SST,
+                                nebulaConfig.getString("path.local"),
+                                nebulaConfig.getString("path.remote"))
       case _ =>
-        throw new IllegalArgumentException("Not Support")
+        throw new IllegalArgumentException("Unsupported data sink")
     }
   }
 
@@ -589,6 +609,14 @@ object Configs {
     }
   }
 
+  private[this] def getOptOrElse(config: Config, path: String): Option[String] = {
+    if (config.hasPath(path)) {
+      Some(config.getString(path))
+    } else {
+      None
+    }
+  }
+
   /**
     * Get the value from config by the path which is optional.
     * If the path not exist, return the default value.
@@ -599,7 +627,7 @@ object Configs {
     * @tparam T
     * @return
     */
-  private[this] def getOptOrElse[T](config: Option[Config], path: String, defaultValue: T): T = {
+  private[this] def getOrElse[T](config: Option[Config], path: String, defaultValue: T): T = {
     if (config.isDefined && config.get.hasPath(path)) {
       config.get.getAnyRef(path).asInstanceOf[T]
     } else {

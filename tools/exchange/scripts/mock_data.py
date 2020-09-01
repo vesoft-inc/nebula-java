@@ -65,8 +65,8 @@ def gen_edge(id: int, from_tag: str, from_id: int, to_tag: str, to_id: int):
     }
 
 
-def mock_data(start_id: int, prefix_name: str, tagA_num: int, tagB_num: int, a_a_num: int, a_b_num: int,
-              edge_count_type: str):
+def mock_data(start_id: int, prefix_name: str, tagA_num: int, tagB_num: int,
+              a_a_num: int, a_b_num: int, edge_count_type: str):
     name_tagA = prefix_name + "tagA"
     name_tagB = prefix_name + "tagB"
     name_edgeAA = prefix_name + "edgeAA"
@@ -98,14 +98,16 @@ def mock_data(start_id: int, prefix_name: str, tagA_num: int, tagB_num: int, a_a
             for to_id in range(from_id + 1, tagA_num):
                 if (len(edgeAA_data) < a_a_num):
                     edgeAA_data.append(
-                        gen_edge(ids_for_all, name_tagA, from_id, name_tagA, to_id))
+                        gen_edge(ids_for_all, name_tagA, from_id, name_tagA,
+                                 to_id))
                     ids_for_all += 1
                 else:
                     break
             for to_id in range(tagB_num):
                 if (len(edgeAB_data) < a_b_num):
                     edgeAB_data.append(
-                        gen_edge(ids_for_all, name_tagA, from_id, name_tagB, to_id + tagA_num))
+                        gen_edge(ids_for_all, name_tagA, from_id, name_tagB,
+                                 to_id + tagA_num))
                     ids_for_all += 1
                 else:
                     break
@@ -122,7 +124,8 @@ def mock_data(start_id: int, prefix_name: str, tagA_num: int, tagB_num: int, a_a
             to_a_ids.insert(0, to_a_ids.pop())
             for i in range(tagA_num):
                 edgeAA_data.append(
-                    gen_edge(ids_for_all, name_tagA, from_ids[i], name_tagA, to_a_ids[i]))
+                    gen_edge(ids_for_all, name_tagA, from_ids[i], name_tagA,
+                             to_a_ids[i]))
                 ids_for_all += 1
             times += 1
         times = 0
@@ -130,7 +133,8 @@ def mock_data(start_id: int, prefix_name: str, tagA_num: int, tagB_num: int, a_a
             to_b_ids.insert(0, to_b_ids.pop())
             for i in range(tagB_num):
                 edgeAB_data.append(
-                    gen_edge(ids_for_all, name_tagA, from_ids[i], name_tagB, to_b_ids[i]))
+                    gen_edge(ids_for_all, name_tagA, from_ids[i], name_tagB,
+                             to_b_ids[i]))
                 ids_for_all += 1
             times += 1
 

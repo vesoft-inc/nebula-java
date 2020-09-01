@@ -12,6 +12,8 @@ import com.google.common.util.concurrent.Futures
 import com.vesoft.nebula.tools.importer.config.SchemaConfigEntry
 import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult}
 import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import org.apache.log4j.Logger
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{
   ArrayType,
@@ -30,6 +32,8 @@ import org.apache.spark.sql.types.{
 import org.apache.spark.util.LongAccumulator
 
 trait Processor extends Serializable {
+
+  @transient lazy val LOG = Logger.getLogger(this.getClass)
 
   def process(): Unit
 
@@ -50,63 +54,64 @@ trait Processor extends Serializable {
     futures.clear()
   }
 
-  def extraValue(row: Row, field: String): Any = {
+  def extraValue(row: Row, field: String, toBytes: Boolean = false): Any = {
     // TODO
     val index = row.schema.fieldIndex(field)
     row.schema.fields(index).dataType match {
       case StringType =>
-        if (!row.isNullAt(index)) {
+        val result = if (!row.isNullAt(index)) {
           row.getString(index).mkString("\"", "", "\"")
         } else {
           "\"\""
         }
+        if (toBytes) result.getBytes else result
       case ShortType =>
         if (!row.isNullAt(index)) {
-          row.getShort(index).toString
+          row.getShort(index)
         } else {
-          "0"
+          0.toShort
         }
       case IntegerType =>
         if (!row.isNullAt(index)) {
-          row.getInt(index).toString
+          row.getInt(index)
         } else {
-          "0"
+          0
         }
       case LongType =>
         if (!row.isNullAt(index)) {
-          row.getLong(index).toString
+          row.getLong(index)
         } else {
-          "0"
+          0L
         }
       case FloatType =>
         if (!row.isNullAt(index)) {
-          row.getFloat(index).toString
+          row.getFloat(index)
         } else {
-          "0.0"
+          0.0.toFloat
         }
       case DoubleType =>
         if (!row.isNullAt(index)) {
-          row.getDouble(index).toString
+          row.getDouble(index)
         } else {
-          "0.0"
+          0.0
         }
       case _: DecimalType =>
         if (!row.isNullAt(index)) {
-          row.getDecimal(index).toString
+          row.getDecimal(index)
         } else {
-          "0.0"
+          0.0
         }
       case BooleanType =>
         if (!row.isNullAt(index)) {
-          row.getBoolean(index).toString
+          row.getBoolean(index)
         } else {
-          "false"
+          false
         }
       case TimestampType =>
         if (!row.isNullAt(index)) {
           row.getTimestamp(index).getTime
         } else {
-          "0"
+          0L
         }
       case _: DateType =>
         if (!row.isNullAt(index)) {
@@ -126,6 +131,19 @@ trait Processor extends Serializable {
         } else {
           "\"{}\""
         }
+    }
+  }
+
+  def fetchOffset(path: String): Long = {
+    HDFSUtils.getContent(path).toLong
+  }
+
+  def getLong(row: Row, field: String): Long = {
+    val index = row.schema.fieldIndex(field)
+    row.schema.fields(index).dataType match {
+      case LongType    => row.getLong(index)
+      case IntegerType => row.getInt(index).toLong
+      case StringType  => row.getString(index).toLong
     }
   }
 }
