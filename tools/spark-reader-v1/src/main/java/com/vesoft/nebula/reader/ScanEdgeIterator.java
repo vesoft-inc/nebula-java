@@ -78,7 +78,7 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             List<com.vesoft.nebula.data.Row> rows = dataEntry.getValue();
             for (com.vesoft.nebula.data.Row row : rows) {
                 Iterator<Integer> nameIndexIterator = propIndexs.iterator();
-                String[] fields = new String[propSize + 3];
+                String[] fields = new String[propSize + 2];
                 fields[0] = String.valueOf(row.getDefaultProperties()[0].getValue());
                 fields[1] = String.valueOf(row.getDefaultProperties()[2].getValue());
                 Property[] properties = row.getProperties();

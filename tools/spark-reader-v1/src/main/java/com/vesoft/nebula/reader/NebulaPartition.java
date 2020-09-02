@@ -13,11 +13,9 @@ import org.apache.spark.Partition;
 public class NebulaPartition implements Partition {
 
     private int index;
-    private int totalPartition;
 
-    public NebulaPartition(int index, int totalPartition) {
+    public NebulaPartition(int index) {
         this.index = index;
-        this.totalPartition = totalPartition;
     }
 
     @Override
@@ -30,7 +28,7 @@ public class NebulaPartition implements Partition {
      * @param totalPart  nebula data part num
      * @return           scan data part list
      */
-    public List<Integer> getScanParts(int totalPart) {
+    public List<Integer> getScanParts(int totalPart, int totalPartition) {
         List<Integer> scanParts = new ArrayList<>();
 
         int currentPart = index + 1;

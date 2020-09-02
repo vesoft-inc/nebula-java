@@ -58,7 +58,7 @@ public class NebulaRDD extends RDD<Row> {
         int partitionNumber = scanInfo.getPartitionNumber();
         Partition[] partitions = new Partition[partitionNumber];
         for (int i = 0; i < partitionNumber; i++) {
-            Partition partition = new NebulaPartition(i, partitionNumber);
+            Partition partition = new NebulaPartition(i);
             partitions[i] = partition;
         }
         return partitions;

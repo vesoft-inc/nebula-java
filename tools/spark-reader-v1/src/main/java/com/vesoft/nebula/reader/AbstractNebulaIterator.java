@@ -44,11 +44,6 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
 
     public AbstractNebulaIterator(ConnectInfo connectInfo, Partition split,
                                   ScanInfo scanInfo, Map<String, Integer> propIndexMap) {
-        init(connectInfo, split, scanInfo, propIndexMap);
-    }
-
-    private void init(ConnectInfo connectInfo, Partition split,
-                      ScanInfo scanInfo, Map<String, Integer> propIndexMap) {
         this.propSize = propIndexMap.size();
         this.connectInfo = connectInfo;
         this.returnCols = scanInfo.getReturnColMap();
@@ -73,7 +68,8 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
         // allocate scanPart to this partition
         int totalPart = metaClient.getPartsAlloc(connectInfo.getSpaceName()).size();
         NebulaPartition nebulaPartition = (NebulaPartition) split;
-        List<Integer> scanParts = nebulaPartition.getScanParts(totalPart);
+        List<Integer> scanParts = nebulaPartition.getScanParts(totalPart,
+                                                                scanInfo.getPartitionNumber());
         LOGGER.info("partition index: {}, scanPart: {}", split.index(), scanParts);
         scanPartIterator = scanParts.iterator();
     }
