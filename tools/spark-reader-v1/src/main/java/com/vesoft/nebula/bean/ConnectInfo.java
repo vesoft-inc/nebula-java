@@ -12,10 +12,8 @@ import com.vesoft.nebula.common.Checkable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
-@Data
 public class ConnectInfo implements Checkable, Serializable {
 
     private String spaceName;
@@ -26,6 +24,10 @@ public class ConnectInfo implements Checkable, Serializable {
         this.spaceName = spaceName;
         this.hostAndPorts = hostAndPorts;
         check();
+    }
+
+    public String getSpaceName() {
+        return this.spaceName;
     }
 
     public List<HostAndPort> getHostAndPorts() {

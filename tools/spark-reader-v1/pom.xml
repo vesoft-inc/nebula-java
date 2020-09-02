@@ -14,7 +14,6 @@
     <properties>
         <compiler.source.version>1.8</compiler.source.version>
         <compiler.target.version>1.8</compiler.target.version>
-        <lombok.version>1.18.10</lombok.version>
 
         <nebula.version>1.0.1</nebula.version>
 
@@ -23,12 +22,6 @@
     </properties>
 
     <dependencies>
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
 
         <!-- nebula client-->
         <dependency>
