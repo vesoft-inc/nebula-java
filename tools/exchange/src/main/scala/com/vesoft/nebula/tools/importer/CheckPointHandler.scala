@@ -14,8 +14,9 @@ object CheckPointHandler {
 
   def checkSupportResume(value: SourceCategory.Value): Boolean = {
     value match {
-      case SourceCategory.NEO4J => true
-      case _                    => false
+      case SourceCategory.NEO4J       => true
+      case SourceCategory.JANUS_GRAPH => true
+      case _                          => false
     }
   }
 

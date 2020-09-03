@@ -125,6 +125,7 @@ class EdgeProcessor(data: DataFrame,
     }
     writer.close()
   }
+
   override def process(): Unit = {
     if (edgeConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
       val fileBaseConfig = edgeConfig.dataSinkConfigEntry.asInstanceOf[FileBaseSinkConfigEntry]
