@@ -89,6 +89,9 @@ class Neo4JReader(override val session: SparkSession, neo4jConfig: Neo4JSourceCo
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
   override def read(): DataFrame = {
+    if (!neo4jConfig.sentence.toUpperCase.contains("ORDER"))
+      LOG.warn("We strongly suggest the cypher sentence must use `order by` clause.\n" +
+        "Because the `skip` clause in partition no guarantees are made on the order of the result unless the query specifies the ORDER BY clause")
     val totalCount: Long = {
       val returnIndex   = neo4jConfig.sentence.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
       val countSentence = neo4jConfig.sentence.substring(0, returnIndex) + " count(*)"
