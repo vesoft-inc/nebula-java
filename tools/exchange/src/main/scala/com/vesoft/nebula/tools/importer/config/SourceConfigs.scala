@@ -160,24 +160,6 @@ case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
 }
 
 /**
-  * SocketSourceConfigEntry
-  *
-  * @param host
-  * @param port
-  */
-case class SocketSourceConfigEntry(override val category: SourceCategory.Value,
-                                   override val intervalSeconds: Int,
-                                   host: String,
-                                   port: Int)
-    extends StreamingDataSourceConfigEntry {
-  require(host.trim.nonEmpty && port > 0)
-
-  override def toString: String = {
-    s"Socket source address: ${host}:${port}"
-  }
-}
-
-/**
   * TODO: Support more config item about Kafka Consumer
   *
   * @param server

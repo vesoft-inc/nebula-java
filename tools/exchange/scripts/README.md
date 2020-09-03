@@ -12,37 +12,53 @@ sudo pip3 install -r requirements.txt
 
 #### overview of mock_data
 
-use to generate graph data(json format).
+Use to generate graph data.
 
-it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA, xxedgeAB
+It will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA, xxedgeAB.
 
 #### args of mock_data
 
 1. -o/--output
 
-    - overview: output json path
+    - overview: output address
 
     - type: string
 
     - required
 
-2. -a/--tagAnum
+    - options:
 
-    - overview: the number of vertex of tagA
+    If set `-t` different, this arg is different.
+
+    | `-t`  | `-o`                                                    | `-o` example                |
+    | ----- | ------------------------------------------------------- | --------------------------- |
+    | json  | json output path prefix, not have to add `.json` suffix | /path/data                  |
+    | csv   | csv output path prefix, not have to add `.csv` suffix   | /path/data                  |
+    | sql   | sql output path prefix, not have to add `.sql` suffix   | /path/data                  |
+    | neo4j | neo4j bolt server address                               | bolt://localhost:7687       |
+    | janus | janus ws server address                                 | ws://localhost:8182/gremlin |
+
+2. -t/--type
+
+    - overview: type of output address
+
+    - choices: json, csv, sql, neo4j, janus
+
+    - default: json
+
+3. -a/--tagAnum
+
+    - overview: the number of vertex of tagA.
 
     - type: int
 
-    - default: 100
+4. -b/--tagBnum
 
-3. -b/--tagBnum
-
-    - overview: the number of vertex of tagB
+    - overview: the number of vertex of tagB.
 
     - type: int
 
-    - default: 100
-
-4. -edge_count_type/--edge_count_type
+5. -edge_count_type/--edge_count_type
 
     - overview: the edge numbers count type. it has two options:
 
@@ -54,25 +70,29 @@ it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA,
 
     - default: count
 
-5. -aa/--edgeAAnum
+6. -aa/--edgeAAnum
 
     - overview: the number of edge of edgeAA. this type edge use tagA as source vertex, and tagA as target vertex.
 
-    - typoe: int
+    - type: int
 
-    - default: 100
-
-6. -ab/--edgeABnum
+7. -ab/--edgeABnum
 
     - overview: the number of edge of edgeAB. this type edge use tagA as source vertex, and tagB as target vertex.
 
-    - typoe: int
+    - type: int
 
-    - default: 100
+8. -p/--prefix
 
-7. -p/--prefix
+    - overview: this use to the prefix in tag/edge name.
 
-    - overview: this use to the prefix in tag/edge name
+9. -u/--user
+
+    - overview: server auth username, if you need.
+
+10. -p/--password
+
+    - overview: server auth password, if you need.
 
 #### output format
 
@@ -114,57 +134,61 @@ it will generate two types vertex: xxtagA, xxtagB, And two types edge: xxedgeAA,
 }
 ```
 
-### json2neo4j.py
+### pulsar_producer.py
 
-#### overview of json2neo4j
+#### overview of pulsar
 
-use to import json data to neo4j database.
+Use to generate stream of pulsar
 
-it will print the time of use.
+#### args of pulsar_producer.py
 
-#### args of json2neo4j
+1. -a/--address
 
-1. -f/--file
-
-    - overview: the json file path that your want to import to neo4j.
+    - overview: the pulsar server address
 
     - type: string
 
-    - required
+    - default: pulsar://localhost:6650
 
-2. -a/-address
+2. -b/-batch_size
 
-    - overview: the address of neo4j.
+    - overview: the batch size per interval
+
+    - type: int
+
+    - default: 10
+
+3. -i/--interval
+
+    - overview: pulsar interval seconds
+
+    - type: int
+
+    - default: 10
+
+4. -s/--schema_type
+
+    - overview: the output data schema type
 
     - type: string
 
-    - default: bolt://127.0.0.1:7687
+    - choices: avro, json
 
-3. -u/--user
+    - default: avro
 
-    - overview: the user of neo4j.
+5. -t/--tag_topics
 
-    - type: string
+    - overview: the tag topics, can add more than one. But -t or -e only one can set
 
-    - default: neo4j
+6. -e/--edge_topics
 
-4. -p/--password
-
-    - overview: the password of neo4j.
-
-    - type: string
-
-    - default: neo4j
-
-5. -t/--thread_num
-
-    - overview: the thread number of import to neo4j use .
+    - overview: the edge topics, can add more than one. But -t or -e only one can set
 
 ### verify_nebula.py
 
 #### overview of verify_nebula
 
-use to verify nebula database data.
+Use to verify nebula database data.
 
 #### args of verify_nebula
 

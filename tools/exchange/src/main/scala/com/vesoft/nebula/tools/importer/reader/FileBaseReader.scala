@@ -99,6 +99,7 @@ class CSVReader(override val session: SparkSession, csvConfig: FileBaseSourceCon
 abstract class CustomReader(override val session: SparkSession,
                             customConfig: FileBaseSourceConfigEntry,
                             transformation: String => Row,
+                            filter: Row => Boolean,
                             structType: StructType)
     extends FileBaseReader(session, customConfig.path) {
 
@@ -108,5 +109,6 @@ abstract class CustomReader(override val session: SparkSession,
       .text(path)
       .filter(!_.getString(0).isEmpty)
       .map(row => transformation(row.getString(0)))(encoder)
+      .filter(filter)
   }
 }

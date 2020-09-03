@@ -10,7 +10,7 @@ import java.util.concurrent.CountDownLatch
 
 import com.google.common.base.Optional
 import com.google.common.net.HostAndPort
-import com.google.common.util.concurrent.{FutureCallback, ListenableFuture}
+import com.google.common.util.concurrent.FutureCallback
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
@@ -23,7 +23,13 @@ import com.vesoft.nebula.tools.importer.config.{
   UserConfigEntry
 }
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{Edges, KeyPolicy, TooManyErrorsException, Vertices}
+import com.vesoft.nebula.tools.importer.{
+  Edges,
+  KeyPolicy,
+  TooManyErrorsException,
+  Vertices,
+  WriterResult
+}
 import org.apache.log4j.Logger
 import org.apache.spark.util.LongAccumulator
 
@@ -99,6 +105,10 @@ abstract class ServerBaseWriter extends Writer {
       .mkString(", ")
     BATCH_INSERT_TEMPLATE.format(Type.EDGE.toString, name, edges.propertyNames, values)
   }
+
+  def writeVertices(vertices: Vertices): WriterResult
+
+  def writeEdges(edges: Edges): WriterResult
 }
 
 /**
@@ -152,13 +162,13 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
     LOG.info(s"Connection to ${dataBaseConfigEntry.addresses}")
   }
 
-  override def writeVertices(vertices: Vertices): ListenableFuture[Optional[Integer]] = {
+  override def writeVertices(vertices: Vertices): WriterResult = {
     val sentence = toExecuteSentence(config.name, vertices)
     LOG.info(sentence)
     client.execute(sentence)
   }
 
-  override def writeEdges(edges: Edges): ListenableFuture[Optional[Integer]] = {
+  override def writeEdges(edges: Edges): WriterResult = {
     val sentence = toExecuteSentence(config.name, edges)
     LOG.info(sentence)
     client.execute(sentence)
@@ -229,9 +239,9 @@ class NebulaStorageClientWriter(addresses: List[(String, Int)], space: String)
 
   override def prepare(): Unit = {}
 
-  override def writeVertices(vertices: Vertices): ListenableFuture[Optional[Integer]] = ???
+  override def writeVertices(vertices: Vertices): WriterResult = ???
 
-  override def writeEdges(edges: Edges): ListenableFuture[Optional[Integer]] = ???
+  override def writeEdges(edges: Edges): WriterResult = ???
 
   override def close(): Unit = {
     client.close()

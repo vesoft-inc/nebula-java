@@ -6,15 +6,24 @@
 
 package com.vesoft.nebula.tools.importer.processor
 
+import java.io.{File, IOException}
+import java.nio.ByteBuffer
+import java.nio.file.{Files, Paths, StandardCopyOption}
 import java.util.concurrent.{Executors, TimeUnit}
 
 import com.google.common.geometry.{S2CellId, S2LatLng}
+import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
+import com.vesoft.nebula.NebulaCodec
+import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.tools.importer.config.{
   Configs,
   EdgeConfigEntry,
+  FileBaseSinkConfigEntry,
+  SinkCategory,
   StreamingDataSourceConfigEntry
 }
+import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import com.vesoft.nebula.tools.importer.{
   CheckPointHandler,
   Edge,
@@ -23,13 +32,18 @@ import com.vesoft.nebula.tools.importer.{
   ProcessResult,
   TooManyErrorsException
 }
-import com.vesoft.nebula.tools.importer.writer.NebulaGraphClientWriter
 import org.apache.log4j.Logger
+import com.vesoft.nebula.tools.importer.writer.{
+  NebulaGraphClientWriter,
+  NebulaSSTWriter
+}
+import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.{IntegerType, LongType, ShortType}
-import org.apache.spark.sql.{DataFrame, Encoders}
+import org.apache.spark.sql.{DataFrame, Encoders, Row}
 import org.apache.spark.util.LongAccumulator
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ArrayBuffer
 
 class EdgeProcessor(data: DataFrame,
@@ -65,7 +79,7 @@ class EdgeProcessor(data: DataFrame,
 
     iterator.grouped(edgeConfig.batch).foreach { edge =>
       val edges =
-        Edges(nebulaKeys, edge.toList, None, edgeConfig.sourcePolicy, edgeConfig.targetPolicy)
+        Edges(nebulaKeys, edge.toList, edgeConfig.sourcePolicy, edgeConfig.targetPolicy)
 
       if (rateLimiter.tryAcquire(config.rateConfig.timeout, TimeUnit.MILLISECONDS)) {
         val future = writer.writeEdges(edges)
@@ -113,68 +127,165 @@ class EdgeProcessor(data: DataFrame,
   }
 
   override def process(): Unit = {
-    val edgeDataFrame = data
-      .map { row =>
-        val sourceField = if (!edgeConfig.isGeo) {
-          val sourceIndex = row.schema.fieldIndex(edgeConfig.sourceField)
-          if (edgeConfig.sourcePolicy.isEmpty) {
-            row.schema.fields(sourceIndex).dataType match {
-              case LongType    => row.getLong(sourceIndex).toString
-              case IntegerType => row.getInt(sourceIndex).toString
-              case x           => throw new RuntimeException(s"Not support ${x} type use as source field")
+    if (edgeConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
+      val fileBaseConfig = edgeConfig.dataSinkConfigEntry.asInstanceOf[FileBaseSinkConfigEntry]
+      val metaClient = new MetaClientImpl(config.databaseConfig.metaAddresses.get.map { address =>
+        val pair = address.split(":")
+        if (pair.length != 2) {
+          throw new IllegalArgumentException("address should compose by host and port")
+        }
+        HostAndPort.fromParts(pair(0), pair(1).toInt)
+      }.asJava)
+      metaClient.connect()
+
+      val partSize = metaClient.getPartsAlloc(config.databaseConfig.space).size()
+      val response = metaClient.getEdges(config.databaseConfig.space).asScala
+      val edgeType = response
+        .filter(item => item.edge_name == edgeConfig.name)
+        .map(_.edge_type)
+        .toList(0)
+      metaClient.close() // TODO Try
+
+      data
+        .mapPartitions { iter =>
+          val stream = classOf[NebulaCodec].getResourceAsStream("/libnebula_codec.so")
+          val tmpDir = new File(System.getProperty("java.io.tmpdir"))
+          if (!tmpDir.exists && !tmpDir.mkdir) {
+            throw new IOException("Failed to create temp directory " + tmpDir)
+          }
+          val tmp = File.createTempFile("libnebula_codec", ".so")
+          tmp.deleteOnExit()
+          try {
+            Files.copy(stream, tmp.toPath, StandardCopyOption.REPLACE_EXISTING)
+          } finally {
+            stream.close()
+          }
+
+          System.load(tmp.getAbsolutePath)
+          LOG.info(s"Loading NebulaCodec successfully.")
+
+          iter.map { row =>
+            val sourceID = getLong(row, edgeConfig.sourceField)
+            val targetID = getLong(row, edgeConfig.targetField)
+            val ranking = if (edgeConfig.rankingField.isDefined) {
+              getLong(row, edgeConfig.rankingField.get)
+            } else {
+              0
+            }
+
+            val part = (sourceID % partSize + 1).toInt
+            val encodedKey = NebulaCodec.createEdgeKey(part,
+                                                       sourceID,
+                                                       edgeType,
+                                                       ranking,
+                                                       targetID,
+                                                       0L) // TODO version
+            val values = for {
+              property <- fieldKeys if property.trim.length != 0
+            } yield extraValue(row, property, true).asInstanceOf[AnyRef]
+            val encodedValue = NebulaCodec.encode(values.toArray)
+            (encodedKey, encodedValue)
+          }
+        }(Encoders.tuple(Encoders.BINARY, Encoders.BINARY))
+        .toDF("key", "value")
+        .sortWithinPartitions("key")
+        .foreachPartition { iterator: Iterator[Row] =>
+          val taskID                  = TaskContext.get().taskAttemptId()
+          var writer: NebulaSSTWriter = null
+          var currentPart             = -1
+          try {
+            iterator.foreach { vertex =>
+              val key   = vertex.getAs[Array[Byte]](0)
+              val value = vertex.getAs[Array[Byte]](1)
+              val part  = ByteBuffer.wrap(key, 0, 4).getInt >> 8
+
+              if (part != currentPart) {
+                if (writer != null) {
+                  writer.close()
+                  val localFile = s"${fileBaseConfig.localPath}/${currentPart}-${taskID}.sst"
+                  HDFSUtils.upload(localFile, s"${fileBaseConfig.remotePath}/${currentPart}")
+                  Files.delete(Paths.get(localFile))
+                }
+                currentPart = part
+                val tmp = s"${fileBaseConfig.localPath}/${currentPart}-${taskID}.sst"
+                writer = new NebulaSSTWriter(tmp)
+                writer.prepare()
+              }
+              writer.write(key, value)
+            }
+          } finally {
+            if (writer != null) {
+              writer.close()
+              val localFile = s"${fileBaseConfig.localPath}/${currentPart}-${taskID}.sst"
+              HDFSUtils.upload(localFile, s"${fileBaseConfig.remotePath}/${currentPart}")
+              Files.delete(Paths.get(localFile))
+            }
+          }
+        }
+    } else {
+      val edgeFrame = data
+        .map { row =>
+          val sourceField = if (!edgeConfig.isGeo) {
+            val sourceIndex = row.schema.fieldIndex(edgeConfig.sourceField)
+            if (edgeConfig.sourcePolicy.isEmpty) {
+              row.schema.fields(sourceIndex).dataType match {
+                case LongType    => row.getLong(sourceIndex).toString
+                case IntegerType => row.getInt(sourceIndex).toString
+                case x           => throw new RuntimeException(s"Not support ${x} type use as source field")
+              }
+            } else {
+              row.getString(sourceIndex)
             }
           } else {
-            row.getString(sourceIndex)
+            val lat = row.getDouble(row.schema.fieldIndex(edgeConfig.latitude.get))
+            val lng = row.getDouble(row.schema.fieldIndex(edgeConfig.longitude.get))
+            indexCells(lat, lng).mkString(",")
           }
-        } else {
-          val lat = row.getDouble(row.schema.fieldIndex(edgeConfig.latitude.get))
-          val lng = row.getDouble(row.schema.fieldIndex(edgeConfig.longitude.get))
-          indexCells(lat, lng).mkString(",")
-        }
 
-        val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
-        val targetField =
-          if (edgeConfig.targetPolicy.isEmpty) {
-            row.schema.fields(targetIndex).dataType match {
-              case LongType    => row.getLong(targetIndex).toString
-              case IntegerType => row.getInt(targetIndex).toString
-              case x           => throw new RuntimeException(s"Not support ${x} type use as target field")
+          val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
+          val targetField =
+            if (edgeConfig.targetPolicy.isEmpty) {
+              row.schema.fields(targetIndex).dataType match {
+                case LongType    => row.getLong(targetIndex).toString
+                case IntegerType => row.getInt(targetIndex).toString
+                case x           => throw new RuntimeException(s"Not support ${x} type use as target field")
+              }
+            } else {
+              row.getString(targetIndex)
             }
+
+          val values = for {
+            property <- fieldKeys if property.trim.length != 0
+          } yield extraValue(row, property)
+
+          if (edgeConfig.rankingField.isDefined) {
+            val index = row.schema.fieldIndex(edgeConfig.rankingField.get)
+            val ranking = row.schema.fields(index).dataType match {
+              case LongType    => row.getLong(index)
+              case IntegerType => row.getInt(index).toLong
+              case ShortType   => row.getShort(index).toLong
+              case x           => throw new RuntimeException(s"Not support ${x} type use as ranking")
+            }
+            Edge(sourceField, targetField, Some(ranking), values)
           } else {
-            row.getString(targetIndex)
+            Edge(sourceField, targetField, None, values)
           }
+        }(Encoders.kryo[Edge])
 
-        val values = for {
-          property <- fieldKeys if property.trim.length != 0
-        } yield extraValue(row, property)
-
-        if (edgeConfig.rankingField.isDefined) {
-          val index = row.schema.fieldIndex(edgeConfig.rankingField.get)
-          val ranking = row.schema.fields(index).dataType match {
-            case LongType    => row.getLong(index)
-            case IntegerType => row.getInt(index).toLong
-            case ShortType   => row.getShort(index).toLong
-            case x           => throw new RuntimeException(s"Not support ${x} type use as ranking")
-          }
-          Edge(sourceField, targetField, Some(ranking), values)
-        } else {
-          Edge(sourceField, targetField, None, values)
-        }
-      }(Encoders.kryo[Edge])
-
-    if (data.isStreaming) {
-      val streamingDataSourceConfig =
-        edgeConfig.dataSourceConfigEntry.asInstanceOf[StreamingDataSourceConfigEntry]
-      edgeDataFrame.writeStream
-        .foreachBatch((edgeSet, batchId) => {
-          LOG.info(s"${edgeConfig.name} edge start batch ${batchId}.")
-          edgeSet.foreachPartition(processEachPartition _)
-        })
-        .trigger(Trigger.ProcessingTime(s"${streamingDataSourceConfig.intervalSeconds} seconds"))
-        .start()
-        .awaitTermination()
-    } else
-      edgeDataFrame.foreachPartition(processEachPartition _)
+      if (data.isStreaming) {
+        val streamingDataSourceConfig =
+          edgeConfig.dataSourceConfigEntry.asInstanceOf[StreamingDataSourceConfigEntry]
+        edgeFrame.writeStream
+          .foreachBatch((edges, batchId) => {
+            LOG.info(s"${edgeConfig.name} edge start batch ${batchId}.")
+            edges.foreachPartition(processEachPartition _)
+          })
+          .trigger(Trigger.ProcessingTime(s"${streamingDataSourceConfig.intervalSeconds} seconds"))
+          .start()
+          .awaitTermination()
+      } else
+        edgeFrame.foreachPartition(processEachPartition _)
+    }
   }
 
   private[this] def indexCells(lat: Double, lng: Double): IndexedSeq[Long] = {

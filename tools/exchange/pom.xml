@@ -13,7 +13,8 @@
     <artifactId>exchange</artifactId>
 
     <properties>
-        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <scala.2.10.version>2.10.7</scala.2.10.version>
         <scala.2.11.version>2.11.12</scala.2.11.version>
         <scala.2.12.version>2.12.10</scala.2.12.version>
@@ -31,6 +32,7 @@
         <gremlin.version>3.4.6</gremlin.version>
         <janusgraph.version>0.5.0</janusgraph.version>
         <pulsar.version>2.4.5</pulsar.version>
+        <commons-codec.version>1.14</commons-codec.version>
     </properties>
 
     <build>
@@ -497,6 +499,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.vesoft</groupId>
+            <artifactId>nebula-utils</artifactId>
+            <version>1.0.0-rc2</version>
+        </dependency>
+        <dependency>
             <groupId>neo4j-contrib</groupId>
             <artifactId>neo4j-spark-connector</artifactId>
             <version>${neo.version}</version>
@@ -623,6 +630,11 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
     </dependencies>
     <repositories>
