@@ -115,17 +115,11 @@ case class Neo4JSourceConfigEntry(override val category: SourceCategory.Value,
 }
 
 case class JanusGraphSourceConfigEntry(override val category: SourceCategory.Value,
-                                       name: String,
-                                       host: String,
-                                       port: Int,
-                                       label: String,
-                                       parallel: Int,
-                                       isEdge: Boolean,
-                                       checkPointPath: Option[String])
-    extends DataSourceConfigEntry {
+                                       override val sentence: String,
+                                       isEdge: Boolean)
+    extends ServerDataSourceConfigEntry {
   override def toString: String = {
-    s"janus graph host: ${host}, port: ${port} label: ${label}, parallel: ${parallel}, " +
-      s"isEdge: ${isEdge}, check point path: ${checkPointPath}"
+    s"Janus graph source"
   }
 }
 

@@ -424,17 +424,16 @@ object Configs {
     */
   private[this] def toSourceCategory(category: String): SourceCategory.Value = {
     category.trim.toUpperCase match {
-      case "PARQUET"     => SourceCategory.PARQUET
-      case "ORC"         => SourceCategory.ORC
-      case "JSON"        => SourceCategory.JSON
-      case "CSV"         => SourceCategory.CSV
-      case "HIVE"        => SourceCategory.HIVE
-      case "NEO4J"       => SourceCategory.NEO4J
-      case "KAFKA"       => SourceCategory.KAFKA
-      case "MYSQL"       => SourceCategory.MYSQL
-      case "PULSAR"      => SourceCategory.PULSAR
-      case "JANUS GRAPH" => SourceCategory.JANUS_GRAPH
-      case _             => throw new IllegalArgumentException(s"${category} not support")
+      case "PARQUET" => SourceCategory.PARQUET
+      case "ORC"     => SourceCategory.ORC
+      case "JSON"    => SourceCategory.JSON
+      case "CSV"     => SourceCategory.CSV
+      case "HIVE"    => SourceCategory.HIVE
+      case "NEO4J"   => SourceCategory.NEO4J
+      case "KAFKA"   => SourceCategory.KAFKA
+      case "MYSQL"   => SourceCategory.MYSQL
+      case "PULSAR"  => SourceCategory.PULSAR
+      case _         => throw new IllegalArgumentException(s"${category} not support")
     }
   }
 
@@ -509,33 +508,7 @@ object Configs {
           checkPointPath
         )
       case SourceCategory.JANUS_GRAPH =>
-        val name  = config.getString("name")
-        val label = config.getString("label")
-        val host  = config.getString("host")
-        val port  = config.getInt("port")
-        val checkPointPath =
-          if (config.hasPath("check_point_path")) Some(config.getString("check_point_path"))
-          else DEFAULT_CHECK_POINT_PATH
-        val parallel =
-          if (config.hasPath("partition")) config.getInt("partition") else DEFAULT_PARALLEL
-        if (parallel <= 0)
-          throw new IllegalArgumentException(s"Can't set janus graph ${name} partition<=0.")
-        val isEdge = {
-          if ((config.hasPath("vertex") || config.hasPath("vertex.field")) && (config.hasPath(
-                "target.field") || config.hasPath("target")))
-            throw new IllegalArgumentException(
-              s"You can't write vertex and source or target field config same item in janus graph ${name}, " +
-                s"because it use to judge it is edge or vertex!")
-          config.hasPath("target.field") || config.hasPath("target")
-        }
-        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH,
-                                    name,
-                                    host,
-                                    port,
-                                    label,
-                                    parallel,
-                                    isEdge,
-                                    checkPointPath)
+        JanusGraphSourceConfigEntry(SourceCategory.JANUS_GRAPH, "", false) // TODO
       case SourceCategory.MYSQL =>
         MySQLSourceConfigEntry(
           SourceCategory.MYSQL,
