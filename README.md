@@ -4,7 +4,7 @@
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
 [![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
 
-This guide provides instructions and options for connecting **Nebula Graph** for Java developer. However, Nebula Java is not not thread-safe.
+This guide provides instructions and options for connecting **Nebula Graph** for Java developer. However, Nebula Java is not thread-safe.
 
 ## Prerequisites
 
