@@ -168,6 +168,7 @@ object Configs {
   private[this] val DEFAULT_LOCAL_PATH           = None
   private[this] val DEFAULT_REMOTE_PATH          = None
   private[this] val DEFAULT_STREAM_INTERVAL      = 30
+  private[this] val DEFAULT_PARALLEL             = 1
 
   /**
     *
@@ -271,10 +272,6 @@ object Configs {
         val localPath  = getOptOrElse(tagConfig, "local.path")
         val remotePath = getOptOrElse(tagConfig, "remote.path")
 
-        if (sourceConfig.category == SourceCategory.NEO4J && checkPointPath.isDefined && tagConfig
-              .hasPath("partition") && tagConfig.getInt("partition") >= 0)
-          throw new IllegalArgumentException(
-            s"If you set check point path in ${tagName}, you must set partition<0 or not set!")
         val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
 
         LOG.info(s"name ${tagName}  batch ${batch}")
@@ -480,23 +477,23 @@ object Configs {
             config.getBoolean("header")
           else
             false
-        FileBaseSourceConfigEntry(SourceCategory.CSV, config.getString("path"))
+        FileBaseSourceConfigEntry(SourceCategory.CSV,
+                                  config.getString("path"),
+                                  Some(separator),
+                                  Some(header))
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>
         val name = config.getString("name")
-        val checkPointPath = if (config.hasPath("check_point_path")) {
-          Some(config.getString("check_point_path"))
-        } else {
-          DEFAULT_CHECK_POINT_PATH
-        }
-
-        val encryption = if (config.hasPath("encryption")) {
-          config.getBoolean("encryption")
-        } else {
-          false
-        }
-        val parallel = if (config.hasPath("parallel")) config.getInt("parallel") else 1
+        val checkPointPath =
+          if (config.hasPath("check_point_path")) Some(config.getString("check_point_path"))
+          else DEFAULT_CHECK_POINT_PATH
+        val encryption =
+          if (config.hasPath("encryption")) config.getBoolean("encryption") else false
+        val parallel =
+          if (config.hasPath("partition")) config.getInt("partition") else DEFAULT_PARALLEL
+        if (parallel <= 0)
+          throw new IllegalArgumentException(s"Can't set neo4j ${name} partition<=0.")
         val database = if (config.hasPath("database")) Some(config.getString("database")) else None
         Neo4JSourceConfigEntry(
           SourceCategory.NEO4J,

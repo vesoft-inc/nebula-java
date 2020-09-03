@@ -7,20 +7,13 @@
 package com.vesoft.nebula.tools.importer.reader
 
 import com.google.common.collect.Maps
+import com.vesoft.nebula.tools.importer.config._
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{CheckPointHandler, Offset}
-import com.vesoft.nebula.tools.importer.config.{
-  HiveSourceConfigEntry,
-  JanusGraphSourceConfigEntry,
-  MySQLSourceConfigEntry,
-  Neo4JSourceConfigEntry,
-  ServerDataSourceConfigEntry
-}
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
   ClusterCountMapReduce,
   PeerPressureVertexProgram
@@ -29,9 +22,9 @@ import org.apache.tinkerpop.gremlin.spark.process.computer.SparkGraphComputer
 import org.apache.tinkerpop.gremlin.spark.structure.io.PersistedOutputRDD
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory
 import org.neo4j.driver.{AuthTokens, GraphDatabase}
-import org.neo4j.spark.{Executor, Neo4jConfig}
 import org.neo4j.spark.dataframe.CypherTypes
 import org.neo4j.spark.utils.Neo4jSessionAwareIterator
+import org.neo4j.spark.{Executor, Neo4jConfig}
 
 import scala.collection.JavaConverters._
 
@@ -90,21 +83,32 @@ class MySQLReader(override val session: SparkSession, mysqlConfig: MySQLSourceCo
   * @param neo4jConfig
   */
 class Neo4JReader(override val session: SparkSession, neo4jConfig: Neo4JSourceConfigEntry)
-    extends ServerBaseReader(session, neo4jConfig.sentence) {
+    extends ServerBaseReader(session, neo4jConfig.sentence)
+    with CheckPointSupport {
 
   @transient lazy private val LOG = Logger.getLogger(this.getClass)
 
   override def read(): DataFrame = {
+    if (!neo4jConfig.sentence.toUpperCase.contains("ORDER"))
+      LOG.warn("We strongly suggest the cypher sentence must use `order by` clause.\n" +
+        "Because the `skip` clause in partition no guarantees are made on the order of the result unless the query specifies the ORDER BY clause")
+    val totalCount: Long = {
+      val returnIndex   = neo4jConfig.sentence.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
+      val countSentence = neo4jConfig.sentence.substring(0, returnIndex) + " count(*)"
+      val driver =
+        GraphDatabase.driver(s"${neo4jConfig.server}",
+                             AuthTokens.basic(neo4jConfig.user, neo4jConfig.password))
+      val neo4JSession = driver.session()
+      neo4JSession.run(countSentence).single().get(0).asLong()
+    }
 
-    val offsets = getOffsets
+    val offsets =
+      getOffsets(totalCount, neo4jConfig.parallel, neo4jConfig.checkPointPath, neo4jConfig.name)
     LOG.info(s"${neo4jConfig.name} offsets: ${offsets.mkString(",")}")
     if (offsets.forall(_.size == 0L)) {
       LOG.warn(s"${neo4jConfig.name} already write done from check point.")
       return session.createDataFrame(session.sparkContext.emptyRDD[Row], new StructType())
     }
-    if (offsets.exists(_.size < 0L))
-      throw new RuntimeException(
-        s"Your check point file maybe broken. Please delete ${neo4jConfig.name}.* file")
 
     val config = Neo4jConfig(neo4jConfig.server,
                              neo4jConfig.user,
@@ -144,56 +148,6 @@ class Neo4JReader(override val session: SparkSession, neo4jConfig: Neo4JSourceCo
     val schema = rdd.repartition(1).first().schema
     session.createDataFrame(rdd, schema)
   }
-
-  def getOffsets: List[Offset] = {
-
-    val totalCount: Long = {
-      val returnIndex   = neo4jConfig.sentence.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
-      val countSentence = neo4jConfig.sentence.substring(0, returnIndex) + " count(*)"
-      val driver =
-        GraphDatabase.driver(s"${neo4jConfig.server}",
-                             AuthTokens.basic(neo4jConfig.user, neo4jConfig.password))
-      val neo4JSession = driver.session()
-      neo4JSession.run(countSentence).single().get(0).asLong()
-    }
-    if (totalCount <= 0L)
-      throw new RuntimeException(s"your cypher ${neo4jConfig.sentence} return nothing!")
-
-    val partitionCount = neo4jConfig.parallel
-
-    val batchSizes = List.fill((totalCount % partitionCount).toInt)(totalCount / partitionCount + 1) ::: List
-      .fill((partitionCount - totalCount % partitionCount).toInt)(totalCount / partitionCount)
-
-    val initEachPartitionOffset = {
-      var offset = 0L
-      0L :: (for (batchSize <- batchSizes.init) yield {
-        offset += batchSize
-        offset
-      })
-    }
-
-    val eachPartitionOffset = neo4jConfig.checkPointPath match {
-      case Some(path) =>
-        val files = Range(0, partitionCount).map(i => s"${path}/${neo4jConfig.name}.${i}").toList
-        if (files.forall(x => HDFSUtils.exists(x)))
-          files.map(file => CheckPointHandler.fetchOffset(file)).sorted
-        else {
-          LOG.warn(
-            s"Can't read ${neo4jConfig.name} offset in files, maybe this is first run or file of check point was missing.")
-          initEachPartitionOffset
-        }
-      case _ => initEachPartitionOffset
-    }
-
-    val eachPartitionLimit = {
-      batchSizes
-        .zip(initEachPartitionOffset.zip(eachPartitionOffset))
-        .map(x => {
-          x._1 - (x._2._2 - x._2._1)
-        })
-    }
-    eachPartitionOffset.zip(eachPartitionLimit).map(x => Offset(x._1, x._2))
-  }
 }
 
 /**
@@ -203,7 +157,8 @@ class Neo4JReader(override val session: SparkSession, neo4jConfig: Neo4JSourceCo
   */
 class JanusGraphReader(override val session: SparkSession,
                        janusGraphConfig: JanusGraphSourceConfigEntry)
-    extends ServerBaseReader(session, janusGraphConfig.sentence) {
+    extends ServerBaseReader(session, "")
+    with CheckPointSupport {
 
   override def read(): DataFrame = {
     val graph = GraphFactory.open("conf/hadoop/hadoop-gryo.properties")

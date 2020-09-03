@@ -20,6 +20,7 @@ import com.vesoft.nebula.tools.importer.config.{
   DataSourceConfigEntry,
   FileBaseSourceConfigEntry,
   HiveSourceConfigEntry,
+  JanusGraphSourceConfigEntry,
   KafkaSourceConfigEntry,
   MySQLSourceConfigEntry,
   Neo4JSourceConfigEntry,
@@ -31,6 +32,7 @@ import com.vesoft.nebula.tools.importer.reader.{
   CSVReader,
   HiveReader,
   JSONReader,
+  JanusGraphReader,
   KafkaReader,
   MySQLReader,
   Neo4JReader,
@@ -264,6 +266,10 @@ object Exchange {
         val pulsarConfig = config.asInstanceOf[PulsarSourceConfigEntry]
         LOG.info(s"Loading from pulsar config: ${pulsarConfig}")
         val reader = new PulsarReader(session, pulsarConfig)
+        Some(reader.read())
+      case SourceCategory.JANUS_GRAPH =>
+        val janusGraphSourceConfigEntry = config.asInstanceOf[JanusGraphSourceConfigEntry]
+        val reader                      = new JanusGraphReader(session, janusGraphSourceConfigEntry)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")
