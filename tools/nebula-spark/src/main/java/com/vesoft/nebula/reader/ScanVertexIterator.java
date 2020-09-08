@@ -8,10 +8,10 @@ package com.vesoft.nebula.reader;
 
 import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.exception.GraphOperateException;
 import com.vesoft.nebula.client.storage.processor.ScanVertexProcessor;
 import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
-import com.vesoft.nebula.exception.GraphOperateException;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import java.io.IOException;
 import java.util.ArrayList;
