@@ -11,7 +11,7 @@
     <artifactId>tools</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>spark-importer</module>
+        <module>exchange</module>
         <module>nebula-spark</module>
     </modules>
 </project>

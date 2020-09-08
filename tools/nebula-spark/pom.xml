@@ -14,6 +14,8 @@
     <properties>
         <spark.version>2.4.4</spark.version>
         <nebula.version>1.0.0</nebula.version>
+        <compiler.source.version>1.8</compiler.source.version>
+        <compiler.target.version>1.8</compiler.target.version>
     </properties>
 
     <dependencies>
@@ -38,4 +40,17 @@
             <version>${nebula.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${compiler.source.version}</source>
+                    <target>${compiler.target.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

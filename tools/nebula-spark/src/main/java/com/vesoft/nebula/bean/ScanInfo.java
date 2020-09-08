@@ -7,8 +7,8 @@
 package com.vesoft.nebula.bean;
 
 import com.google.common.base.Preconditions;
-import com.vesoft.nebula.common.Checkable;
 import com.vesoft.nebula.common.Type;
+import com.vesoft.nebula.common.Checkable;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
