@@ -9,13 +9,10 @@ package com.vesoft.nebula.reader;
 import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
 import com.vesoft.nebula.common.Type;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
@@ -33,53 +30,46 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
 
     private SQLContext sqlContext;
     private StructType schema;
+    private final Map<String, List<StructField>> labelFields = new HashMap<>();
 
     private ConnectInfo connectInfo;
     private ScanInfo scanInfo;
-    private Map<String, Integer> propIndexMap;
 
     public NebulaRelation(SQLContext sqlContext, ConnectInfo connectInfo, ScanInfo scanInfo) {
         this.sqlContext = sqlContext;
         this.connectInfo = connectInfo;
         this.scanInfo = scanInfo;
 
-        initParameters(scanInfo);
+        initSchema(scanInfo);
     }
 
-    private void initParameters(ScanInfo scanInfo) {
-
-        Set<String> returnPropSet = new HashSet<>();
+    /**
+     * init result dataset's schema
+     *
+     * @param scanInfo
+     * */
+    private void initSchema(ScanInfo scanInfo) {
         Map<String, List<String>> returnColMap = scanInfo.getReturnColMap();
         LOGGER.info("return col map: {}", returnColMap);
-        for (Map.Entry<String, List<String>> returnColEntry : returnColMap.entrySet()) {
-            List<String> returnCols = returnColEntry.getValue();
-            for (String returnCol : returnCols) {
-                returnPropSet.add(returnCol);
-            }
-        }
-        LOGGER.info("return prop set: {}", returnPropSet);
 
         List<StructField> fields = new ArrayList<>();
-        if (Type.VERTEX.getType().equalsIgnoreCase(scanInfo.getScanType())) {
-            fields.add(DataTypes.createStructField("id", DataTypes.StringType, false));
-        } else {
-            fields.add(DataTypes.createStructField("src", DataTypes.StringType, false));
-            fields.add(DataTypes.createStructField("dst", DataTypes.StringType, false));
-        }
-        /*
-            spark read result has only one dataset, but scan result contain difference properties,
-            so create a schema contain all properties
-         */
-        for (String returnCol : returnPropSet) {
-            fields.add(DataTypes.createStructField(returnCol, DataTypes.StringType, true));
-        }
-        schema = DataTypes.createStructType(fields);
+        for (Map.Entry<String, List<String>> returnColEntry : returnColMap.entrySet()) {
+            if (Type.VERTEX.getType().equalsIgnoreCase(scanInfo.getScanType())) {
+                fields.add(DataTypes.createStructField("_vertexId", DataTypes.StringType, false));
+            } else {
+                fields.add(DataTypes.createStructField("_srcId", DataTypes.StringType, false));
+                fields.add(DataTypes.createStructField("_dstId", DataTypes.StringType, false));
+            }
 
-        propIndexMap = new HashMap<>();
-        for (int i = 0; i < fields.size(); i++) {
-            propIndexMap.put(fields.get(i).name(), i);
+            for (String returnCol : returnColEntry.getValue()) {
+                fields.add(DataTypes.createStructField(returnCol, DataTypes.StringType, true));
+            }
+            // TODO if allCols is true, then fields should contain all properties.
+
+            labelFields.put(returnColEntry.getKey(), fields);
+            schema = new StructType(fields.toArray(new StructField[fields.size()]));
+            LOGGER.info("return prop set for label {} : {}", returnColEntry.getKey(), fields);
         }
-        LOGGER.info("propIndexMap: {}", propIndexMap);
     }
 
     public SQLContext sqlContext() {
@@ -91,6 +81,6 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
     }
 
     public RDD<Row> buildScan() {
-        return new NebulaRDD(sqlContext, scanInfo, connectInfo, propIndexMap);
+        return new NebulaRDD(sqlContext, scanInfo, connectInfo);
     }
 }

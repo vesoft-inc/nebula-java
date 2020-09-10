@@ -32,29 +32,30 @@ public class NebulaReaderExample {
         Dataset<Row> vertexDataset = sparkSession
                 .read()
                 .format("com.vesoft.nebula.reader.NebulaDataSource")
-                .option("importType", Type.VERTEX.getType())
+                .option("scanType", Type.VERTEX.getType())
                 .option("hostAndPorts", "127.0.0.1:45500")
-                .option("spaceName", "test")
-                .option("returnCols", "course=name;building=name;student=name")
+                .option("spaceName", "nb")
+                .option("label", "player")
+                .option("returnCols", "name")
                 .load();
-        LOGGER.info("vertex schema: ");
+        LOGGER.info("vertex course schema: ");
         vertexDataset.printSchema();
         vertexDataset.show();
 
         Dataset<Row> edgeDataset = sparkSession
                 .read()
                 .format("com.vesoft.nebula.reader.NebulaDataSource")
-                .option("importType", Type.EDGE.getType())
+                .option("scanType", Type.EDGE.getType())
                 .option("hostAndPorts", "127.0.0.1:45500")
-                .option("spaceName", "test")
-                .option("returnCols", "like=likeness;select=grade")
+                .option("spaceName", "nb")
+                .option("label", "follow")
+                .option("returnCols", "degree")
                 .load();
         LOGGER.info("edge schema: ");
         edgeDataset.printSchema();
         edgeDataset.show();
-
+//
         LOGGER.info("vertex count: {}, edge count: {}", vertexDataset.count(), edgeDataset.count());
-
     }
 
 }

@@ -30,14 +30,11 @@ public class NebulaPartition implements Partition {
      */
     public List<Integer> getScanParts(int totalPart, int totalPartition) {
         List<Integer> scanParts = new ArrayList<>();
-
         int currentPart = index + 1;
         while (currentPart <= totalPart) {
             scanParts.add(currentPart);
             currentPart += totalPartition;
         }
-
         return scanParts;
-
     }
 }

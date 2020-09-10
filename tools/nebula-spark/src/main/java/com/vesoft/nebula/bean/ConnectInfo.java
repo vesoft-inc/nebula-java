@@ -6,24 +6,20 @@
 
 package com.vesoft.nebula.bean;
 
-import com.google.common.base.Preconditions;
 import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.common.Checkable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
-public class ConnectInfo implements Checkable, Serializable {
+public class ConnectInfo implements Serializable {
 
-    private String spaceName;
+    private final String spaceName;
 
-    private String hostAndPorts;
+    private final String hostAndPorts;
 
     public ConnectInfo(String spaceName, String hostAndPorts) {
         this.spaceName = spaceName;
         this.hostAndPorts = hostAndPorts;
-        check();
     }
 
     public String getSpaceName() {
@@ -37,14 +33,5 @@ public class ConnectInfo implements Checkable, Serializable {
             hostAndPortList.add(HostAndPort.fromString(hostAndPort));
         }
         return hostAndPortList;
-    }
-
-    @Override
-    public void check() throws IllegalArgumentException {
-        Preconditions.checkArgument(StringUtils.isNotEmpty(spaceName),
-                "The spaceName can't be null or empty");
-
-        Preconditions.checkArgument(StringUtils.isNotEmpty(hostAndPorts),
-                "The hostAndPorts can't be null or empty");
     }
 }

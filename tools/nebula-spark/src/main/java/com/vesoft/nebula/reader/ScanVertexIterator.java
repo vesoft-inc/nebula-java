@@ -8,30 +8,32 @@ package com.vesoft.nebula.reader;
 
 import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.exception.GraphOperateException;
 import com.vesoft.nebula.client.storage.processor.ScanVertexProcessor;
 import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.storage.ScanVertexResponse;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.apache.spark.Partition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ScanVertexIterator extends AbstractNebulaIterator {
 
-    private Logger logger = LoggerFactory.getLogger(ScanVertexIterator.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ScanVertexIterator.class);
 
     private Iterator<ScanVertexResponse> responseIterator;
 
+    private ScanInfo scanInfo;
+
     public ScanVertexIterator(ConnectInfo connectInfo, Partition split,
-                              ScanInfo scanInfo, Map<String, Integer> propIndexMap) {
-        super(connectInfo, split, scanInfo, propIndexMap);
-        processor = new ScanVertexProcessor(metaClient);
+                              ScanInfo scanInfo) {
+        super(connectInfo, split, scanInfo);
+        this.scanInfo = scanInfo;
     }
 
     @Override
@@ -45,25 +47,24 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
                 if (scanPartIterator.hasNext()) {
                     try {
                         responseIterator = storageClient.scanVertex(connectInfo.getSpaceName(),
-                                scanPartIterator.next(), returnCols,
-                                false, 1000, 0L, Long.MAX_VALUE);
+                                scanPartIterator.next(), returnCols, scanInfo.getAllCols(),
+                                1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
-                        logger.error(e.getMessage(), e);
+                        LOGGER.error(e.getMessage(), e);
                         throw new GraphOperateException(e.getMessage(), e);
                     }
                     continue;
                 }
                 break;
-            } else if (responseIterator.hasNext()) {
+            } else {
                 ScanVertexResponse next = responseIterator.next();
                 if (next != null) {
+                    processor = new ScanVertexProcessor(metaClient);
                     Result processResult = processor.process(connectInfo.getSpaceName(), next);
                     dataIterator = process(processResult);
                 }
-                continue;
             }
         }
-
         if (dataIterator == null) {
             return false;
         }
@@ -71,25 +72,22 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
     }
 
     @Override
-    protected Iterator<String[]> process(Result result) {
-        List<String[]> resultValues = new ArrayList<>();
-
-        Map<String, List<com.vesoft.nebula.data.Row>> dataMap = result.getRows();
-        for (Map.Entry<String, List<com.vesoft.nebula.data.Row>> dataEntry : dataMap.entrySet()) {
+    protected Iterator<String> process(Result result) {
+        Map<String, List<Row>> dataMap = result.getRows();
+        for (Map.Entry<String, List<Row>> dataEntry : dataMap.entrySet()) {
             String labelName = dataEntry.getKey();
-            List<Integer> propIndexs = labelPropIndexMap.get(labelName);
-            List<com.vesoft.nebula.data.Row> rows = dataEntry.getValue();
-            for (com.vesoft.nebula.data.Row row : rows) {
-                Iterator<Integer> nameIndexIterator = propIndexs.iterator();
-                String[] fields = new String[propSize + 1];
-                fields[0] = String.valueOf(row.getDefaultProperties()[0].getValue());
+            for (Row row : dataEntry.getValue()) {
+                List<String> fields = new ArrayList<>();
+                // add default property _vertexId for tag
+                fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
                 Property[] properties = row.getProperties();
                 for (int i = 0; i < properties.length; i++) {
-                    fields[nameIndexIterator.next()] = String.valueOf(properties[i].getValue());
+                    fields.add(String.valueOf(properties[i].getValue()));
                 }
-                resultValues.add(fields);
+                resultValues.put(labelName, fields);
             }
         }
-        return resultValues.iterator();
+        LOGGER.info("tag info ={}", resultValues.toString());
+        return resultValues.keySet().iterator();
     }
 }

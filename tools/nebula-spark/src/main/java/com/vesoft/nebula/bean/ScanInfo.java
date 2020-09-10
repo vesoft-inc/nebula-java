@@ -6,67 +6,67 @@
 
 package com.vesoft.nebula.bean;
 
-import com.google.common.base.Preconditions;
-import com.vesoft.nebula.common.Type;
-import com.vesoft.nebula.common.Checkable;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.*;
 
-public class ScanInfo implements Checkable, Serializable {
+public class ScanInfo implements Serializable {
 
-    private String scanType;
+    private final String nameSpace;
 
-    private String returnColString;
+    private final String scanType;
 
-    private int partitionNumber;
+    private final String label;
 
-    private static final String RETURN_COL_REGEX = "(\\w+=(\\w+)(,\\w+)*)(;\\w+=(\\w+)(,\\w+)*)*";
+    private final String returnColString;
+
+    private boolean allCols = false;
+
+    private final int partitionNumber;
 
     /**
-     * @param scanType    scan element type
-     * @param returnColString  return col string example: labela=name,age;labelb=name
+     * @param nameSpace       nameSpace
+     * @param scanType        scan element type
+     * @param label           vertex or edge label
+     * @param partitionNumber partition number
+     * @param returnColString scan col string example: name,age
      */
-    public ScanInfo(String scanType, String returnColString, int partitionNumber) {
+    public ScanInfo(String nameSpace, String scanType, String label, String returnColString, int partitionNumber) {
+        this.nameSpace = nameSpace;
         this.scanType = scanType;
+        this.label = label;
         this.returnColString = returnColString;
         this.partitionNumber = partitionNumber;
     }
 
-    @Override
-    public void check() throws IllegalArgumentException {
-        boolean isLegalType = Type.VERTEX.getType().equalsIgnoreCase(scanType)
-                || Type.EDGE.getType().equalsIgnoreCase(scanType);
-        Preconditions.checkArgument(isLegalType,
-                "scan type '%s' is illegal, it should be '%s' or '%s'",
-                scanType, Type.VERTEX.getType(), Type.EDGE.getType());
-
-        boolean isReturnColLegal = Pattern.matches(RETURN_COL_REGEX, returnColString);
-        Preconditions.checkArgument(isReturnColLegal,
-                "return col string '%s' is illegal, the pattern should like a=b,c;d=e",
-                returnColString);
+    public String getNameSpace() {
+        return nameSpace;
     }
 
     public String getScanType() {
         return scanType;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     public int getPartitionNumber() {
         return partitionNumber;
     }
 
-    public Map<String, List<String>> getReturnColMap() {
-        check();
+    public boolean getAllCols() {
+        return allCols;
+    }
 
-        Map<String, List<String>> result = new HashMap<>();
-        String[] returnColSplits = returnColString.split(";");
-        for (String returnColSplit : returnColSplits) {
-            String[] labelPropertyMap = returnColSplit.split("=");
-            String label = labelPropertyMap[0];
-            List<String> properties = Arrays.asList(labelPropertyMap[1].split(","));
+    public Map<String, List<String>> getReturnColMap() {
+        Map<String, List<String>> result = new HashMap<>(1);
+        if(StringUtils.isEmpty(returnColString)){
+            allCols = true;
+            result.put(label, new ArrayList<>());
+        } else{
+            List<String> properties = Arrays.asList(returnColString.split(","));
             result.put(label, properties);
         }
         return result;
