@@ -51,6 +51,9 @@ public class ErrorCode {
   public static final int E_BLOCK_WRITE_FAILURE = -52;
   public static final int E_REBUILD_INDEX_FAILURE = -53;
   public static final int E_INDEX_WITH_TTL = -54;
+  public static final int E_ADD_JOB_FAILURE = -55;
+  public static final int E_STOP_JOB_FAILURE = -56;
+  public static final int E_SAVE_JOB_FAILURE = -57;
   public static final int E_UNKNOWN = -99;
 
   public static final IntRangeSet VALID_VALUES;

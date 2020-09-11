@@ -32,25 +32,29 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
   private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)1);
   private static final TField PARTITION_NUM_FIELD_DESC = new TField("partition_num", TType.I32, (short)2);
   private static final TField REPLICA_FACTOR_FIELD_DESC = new TField("replica_factor", TType.I32, (short)3);
-  private static final TField CHARSET_NAME_FIELD_DESC = new TField("charset_name", TType.STRING, (short)4);
-  private static final TField COLLATE_NAME_FIELD_DESC = new TField("collate_name", TType.STRING, (short)5);
+  private static final TField VID_SIZE_FIELD_DESC = new TField("vid_size", TType.I32, (short)4);
+  private static final TField CHARSET_NAME_FIELD_DESC = new TField("charset_name", TType.STRING, (short)5);
+  private static final TField COLLATE_NAME_FIELD_DESC = new TField("collate_name", TType.STRING, (short)6);
 
-  public String space_name;
+  public byte[] space_name;
   public int partition_num;
   public int replica_factor;
-  public String charset_name;
-  public String collate_name;
+  public int vid_size;
+  public byte[] charset_name;
+  public byte[] collate_name;
   public static final int SPACE_NAME = 1;
   public static final int PARTITION_NUM = 2;
   public static final int REPLICA_FACTOR = 3;
-  public static final int CHARSET_NAME = 4;
-  public static final int COLLATE_NAME = 5;
+  public static final int VID_SIZE = 4;
+  public static final int CHARSET_NAME = 5;
+  public static final int COLLATE_NAME = 6;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __PARTITION_NUM_ISSET_ID = 0;
   private static final int __REPLICA_FACTOR_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __VID_SIZE_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -60,6 +64,8 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     tmpMetaDataMap.put(PARTITION_NUM, new FieldMetaData("partition_num", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(REPLICA_FACTOR, new FieldMetaData("replica_factor", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(VID_SIZE, new FieldMetaData("vid_size", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(CHARSET_NAME, new FieldMetaData("charset_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
@@ -73,14 +79,17 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public SpaceProperties() {
+    this.vid_size = 8;
+
   }
 
   public SpaceProperties(
-    String space_name,
+    byte[] space_name,
     int partition_num,
     int replica_factor,
-    String charset_name,
-    String collate_name)
+    int vid_size,
+    byte[] charset_name,
+    byte[] collate_name)
   {
     this();
     this.space_name = space_name;
@@ -88,6 +97,8 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     setPartition_numIsSet(true);
     this.replica_factor = replica_factor;
     setReplica_factorIsSet(true);
+    this.vid_size = vid_size;
+    setVid_sizeIsSet(true);
     this.charset_name = charset_name;
     this.collate_name = collate_name;
   }
@@ -103,6 +114,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     }
     this.partition_num = TBaseHelper.deepCopy(other.partition_num);
     this.replica_factor = TBaseHelper.deepCopy(other.replica_factor);
+    this.vid_size = TBaseHelper.deepCopy(other.vid_size);
     if (other.isSetCharset_name()) {
       this.charset_name = TBaseHelper.deepCopy(other.charset_name);
     }
@@ -120,11 +132,11 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     return new SpaceProperties(this);
   }
 
-  public String  getSpace_name() {
+  public byte[]  getSpace_name() {
     return this.space_name;
   }
 
-  public SpaceProperties setSpace_name(String space_name) {
+  public SpaceProperties setSpace_name(byte[] space_name) {
     this.space_name = space_name;
     return this;
   }
@@ -190,11 +202,34 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__REPLICA_FACTOR_ISSET_ID, value);
   }
 
-  public String  getCharset_name() {
+  public int  getVid_size() {
+    return this.vid_size;
+  }
+
+  public SpaceProperties setVid_size(int vid_size) {
+    this.vid_size = vid_size;
+    setVid_sizeIsSet(true);
+    return this;
+  }
+
+  public void unsetVid_size() {
+    __isset_bit_vector.clear(__VID_SIZE_ISSET_ID);
+  }
+
+  // Returns true if field vid_size is set (has been assigned a value) and false otherwise
+  public boolean isSetVid_size() {
+    return __isset_bit_vector.get(__VID_SIZE_ISSET_ID);
+  }
+
+  public void setVid_sizeIsSet(boolean value) {
+    __isset_bit_vector.set(__VID_SIZE_ISSET_ID, value);
+  }
+
+  public byte[]  getCharset_name() {
     return this.charset_name;
   }
 
-  public SpaceProperties setCharset_name(String charset_name) {
+  public SpaceProperties setCharset_name(byte[] charset_name) {
     this.charset_name = charset_name;
     return this;
   }
@@ -214,11 +249,11 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  public String  getCollate_name() {
+  public byte[]  getCollate_name() {
     return this.collate_name;
   }
 
-  public SpaceProperties setCollate_name(String collate_name) {
+  public SpaceProperties setCollate_name(byte[] collate_name) {
     this.collate_name = collate_name;
     return this;
   }
@@ -244,7 +279,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       if (value == null) {
         unsetSpace_name();
       } else {
-        setSpace_name((String)value);
+        setSpace_name((byte[])value);
       }
       break;
 
@@ -264,11 +299,19 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
+    case VID_SIZE:
+      if (value == null) {
+        unsetVid_size();
+      } else {
+        setVid_size((Integer)value);
+      }
+      break;
+
     case CHARSET_NAME:
       if (value == null) {
         unsetCharset_name();
       } else {
-        setCharset_name((String)value);
+        setCharset_name((byte[])value);
       }
       break;
 
@@ -276,7 +319,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       if (value == null) {
         unsetCollate_name();
       } else {
-        setCollate_name((String)value);
+        setCollate_name((byte[])value);
       }
       break;
 
@@ -295,6 +338,9 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
 
     case REPLICA_FACTOR:
       return new Integer(getReplica_factor());
+
+    case VID_SIZE:
+      return new Integer(getVid_size());
 
     case CHARSET_NAME:
       return getCharset_name();
@@ -316,6 +362,8 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       return isSetPartition_num();
     case REPLICA_FACTOR:
       return isSetReplica_factor();
+    case VID_SIZE:
+      return isSetVid_size();
     case CHARSET_NAME:
       return isSetCharset_name();
     case COLLATE_NAME:
@@ -345,7 +393,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     if (this_present_space_name || that_present_space_name) {
       if (!(this_present_space_name && that_present_space_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.space_name, that.space_name))
+      if (!TBaseHelper.equalsSlow(this.space_name, that.space_name))
         return false;
     }
 
@@ -367,12 +415,21 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
         return false;
     }
 
+    boolean this_present_vid_size = true;
+    boolean that_present_vid_size = true;
+    if (this_present_vid_size || that_present_vid_size) {
+      if (!(this_present_vid_size && that_present_vid_size))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.vid_size, that.vid_size))
+        return false;
+    }
+
     boolean this_present_charset_name = true && this.isSetCharset_name();
     boolean that_present_charset_name = true && that.isSetCharset_name();
     if (this_present_charset_name || that_present_charset_name) {
       if (!(this_present_charset_name && that_present_charset_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.charset_name, that.charset_name))
+      if (!TBaseHelper.equalsSlow(this.charset_name, that.charset_name))
         return false;
     }
 
@@ -381,7 +438,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     if (this_present_collate_name || that_present_collate_name) {
       if (!(this_present_collate_name && that_present_collate_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.collate_name, that.collate_name))
+      if (!TBaseHelper.equalsSlow(this.collate_name, that.collate_name))
         return false;
     }
 
@@ -406,6 +463,11 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     builder.append(present_replica_factor);
     if (present_replica_factor)
       builder.append(replica_factor);
+
+    boolean present_vid_size = true;
+    builder.append(present_vid_size);
+    if (present_vid_size)
+      builder.append(vid_size);
 
     boolean present_charset_name = true && (isSetCharset_name());
     builder.append(present_charset_name);
@@ -456,6 +518,14 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetVid_size()).compareTo(other.isSetVid_size());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(vid_size, other.vid_size);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetCharset_name()).compareTo(other.isSetCharset_name());
     if (lastComparison != 0) {
       return lastComparison;
@@ -488,7 +558,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
       {
         case SPACE_NAME:
           if (field.type == TType.STRING) {
-            this.space_name = iprot.readString();
+            this.space_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -509,16 +579,24 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case VID_SIZE:
+          if (field.type == TType.I32) {
+            this.vid_size = iprot.readI32();
+            setVid_sizeIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         case CHARSET_NAME:
           if (field.type == TType.STRING) {
-            this.charset_name = iprot.readString();
+            this.charset_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case COLLATE_NAME:
           if (field.type == TType.STRING) {
-            this.collate_name = iprot.readString();
+            this.collate_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -542,7 +620,7 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.space_name != null) {
       oprot.writeFieldBegin(SPACE_NAME_FIELD_DESC);
-      oprot.writeString(this.space_name);
+      oprot.writeBinary(this.space_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(PARTITION_NUM_FIELD_DESC);
@@ -551,14 +629,17 @@ public class SpaceProperties implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldBegin(REPLICA_FACTOR_FIELD_DESC);
     oprot.writeI32(this.replica_factor);
     oprot.writeFieldEnd();
+    oprot.writeFieldBegin(VID_SIZE_FIELD_DESC);
+    oprot.writeI32(this.vid_size);
+    oprot.writeFieldEnd();
     if (this.charset_name != null) {
       oprot.writeFieldBegin(CHARSET_NAME_FIELD_DESC);
-      oprot.writeString(this.charset_name);
+      oprot.writeBinary(this.charset_name);
       oprot.writeFieldEnd();
     }
     if (this.collate_name != null) {
       oprot.writeFieldBegin(COLLATE_NAME_FIELD_DESC);
-      oprot.writeString(this.collate_name);
+      oprot.writeBinary(this.collate_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -593,7 +674,12 @@ String space = prettyPrint ? " " : "";
     if (this. getSpace_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSpace_name(), indent + 1, prettyPrint));
+        int __space_name_size = Math.min(this. getSpace_name().length, 128);
+        for (int i = 0; i < __space_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getSpace_name()[i]).length() > 1 ? Integer.toHexString(this. getSpace_name()[i]).substring(Integer.toHexString(this. getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace_name()[i]).toUpperCase());
+        }
+        if (this. getSpace_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -612,13 +698,25 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
+    sb.append("vid_size");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getVid_size(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
     sb.append("charset_name");
     sb.append(space);
     sb.append(":").append(space);
     if (this. getCharset_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getCharset_name(), indent + 1, prettyPrint));
+        int __charset_name_size = Math.min(this. getCharset_name().length, 128);
+        for (int i = 0; i < __charset_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getCharset_name()[i]).length() > 1 ? Integer.toHexString(this. getCharset_name()[i]).substring(Integer.toHexString(this. getCharset_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCharset_name()[i]).toUpperCase());
+        }
+        if (this. getCharset_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -629,7 +727,12 @@ String space = prettyPrint ? " " : "";
     if (this. getCollate_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getCollate_name(), indent + 1, prettyPrint));
+        int __collate_name_size = Math.min(this. getCollate_name().length, 128);
+        for (int i = 0; i < __collate_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getCollate_name()[i]).length() > 1 ? Integer.toHexString(this. getCollate_name()[i]).substring(Integer.toHexString(this. getCollate_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCollate_name()[i]).toUpperCase());
+        }
+        if (this. getCollate_name().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

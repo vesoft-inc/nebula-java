@@ -1,14 +1,25 @@
-/* Copyright (c) 2018 vesoft inc. All rights reserved.
+/* vim: ft=proto
+ * Copyright (c) 2018 vesoft inc. All rights reserved.
  *
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-include "common.thrift"
-
 namespace cpp nebula.graph
 namespace java com.vesoft.nebula.graph
 namespace go nebula.graph
+namespace js nebula.graph
+namespace csharp nebula.graph
+namespace py nebula2.graph
+
+include "common.thrift"
+
+/*
+ *
+ *  Note: In order to support multiple languages, all string
+ *        have to be defined as **binary** in the thrift file
+ *
+ */
 
 enum ErrorCode {
     SUCCEEDED = 0,
@@ -34,102 +45,84 @@ enum ErrorCode {
     E_USER_NOT_FOUND = -10,
     E_BAD_PERMISSION = -11,
 
+    // semantic error
+    E_SEMANTIC_ERROR = -12,
 } (cpp.enum_strict)
 
 
-typedef i64 IdType
-typedef i64 Timestamp
-typedef i16 Year
-struct YearMonth {
-    1: i16 year;
-    2: byte month;
-}
-struct Date {
-    1: i16 year;
-    2: byte month;
-    3: byte day;
-}
-struct DateTime {
-    1: i16 year;
-    2: byte month;
-    3: byte day;
-    4: byte hour;
-    5: byte minute;
-    6: byte second;
-    7: i16 millisec;
-    8: i16 microsec;
+struct ProfilingStats {
+    // How many rows being processed in an executor.
+    1: required i64  rows;
+    // Duration spent in an executor.
+    2: required i64  exec_duration_in_us;
+    // Total duration spent in an executor, contains schedule time
+    3: required i64  total_duration_in_us;
+    // Other profiling stats data map
+    4: optional map<binary, binary>
+        (cpp.template = "std::unordered_map") other_stats;
 }
 
-struct Vertex {
-    1: common.VertexID id;
-}
-struct Edge {
-    1: binary type;
-    2: common.EdgeRanking ranking;
-    3: optional common.VertexID src;
-    4: optional common.VertexID dst;
-}
-union PathEntry {
-    1: Vertex vertex;
-    2: Edge edge;
-}
-struct Path {
-    1: list<PathEntry> entry_list;
+// The info used for select/loop.
+struct PlanNodeBranchInfo {
+    // True if loop body or then branch of select
+    1: required bool  is_do_branch;
+    // select/loop node id
+    2: required i64   condition_node_id;
 }
 
-union ColumnValue {
-    // Simple types
-    1: bool bool_val,
-    2: i64 integer;
-    3: IdType id;
-    4: float single_precision;
-    5: double double_precision;
-    6: binary str;
-
-    // Date time types
-    7: Timestamp timestamp;
-    8: Year year;
-    9: YearMonth month;
-    10: Date date;
-    11: DateTime datetime;
-
-    // Graph specific
-    41: Path path;
-
-    // Container types
-    // LIST = 101;
-    // SET = 102;
-    // MAP = 103;
-    // STRUCT = 104;
+struct Pair {
+    1: required binary key;
+    2: required binary value;
 }
 
-
-struct RowValue {
-    1: list<ColumnValue> columns;
+struct PlanNodeDescription {
+    1: required binary                          name;
+    2: required i64                             id;
+    3: required binary                          output_var;
+    // other description of an executor
+    4: optional list<Pair>                      description;
+    // If an executor would be executed multi times,
+    // the profiling statistics should be multi-versioned.
+    5: optional list<ProfilingStats>            profiles;
+    6: optional PlanNodeBranchInfo              branch_info;
+    7: optional list<i64>                       dependencies;
 }
+
+struct PlanDescription {
+    1: required list<PlanNodeDescription>     plan_node_descs;
+    // map from node id to index of list
+    2: required map<i64, i64>
+        (cpp.template = "std::unordered_map") node_index_map;
+    // the print format of exec plan, lowercase string like `dot'
+    3: required binary                        format;
+}
+
 
 struct ExecutionResponse {
-    1: required ErrorCode error_code;
-    2: required i32 latency_in_us;          // Execution time on server
-    3: optional string error_msg;
-    4: optional list<binary> column_names;  // Column names
-    5: optional list<RowValue> rows;
-    6: optional string space_name;
-    7: optional string warning_msg;
+    1: required ErrorCode               error_code;
+    2: required i32                     latency_in_us;  // Execution time on server
+    3: optional common.DataSet          data;
+    4: optional binary                  space_name;
+    5: optional binary                  error_msg;
+    6: optional PlanDescription         plan_desc;
+    7: optional binary                  comment;        // Supplementary instruction
 }
 
 
 struct AuthResponse {
-    1: required ErrorCode error_code;
-    2: optional i64 session_id;
-    3: optional string error_msg;
+    1: required ErrorCode   error_code;
+    2: optional binary      error_msg;
+    3: optional i64         session_id;
 }
 
 
 service GraphService {
-    AuthResponse authenticate(1: string username, 2: string password)
+    AuthResponse authenticate(1: binary username, 2: binary password)
 
     oneway void signout(1: i64 sessionId)
 
-    ExecutionResponse execute(1: i64 sessionId, 2: string stmt)
+    ExecutionResponse execute(1: i64 sessionId, 2: binary stmt)
+
+    // Same as execute(), but response will be a json string
+    binary executeJson(1: i64 sessionId, 2: binary stmt)
 }

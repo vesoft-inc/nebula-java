@@ -30,14 +30,18 @@ import com.facebook.thrift.protocol.*;
 public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparable<JobDesc> {
   private static final TStruct STRUCT_DESC = new TStruct("JobDesc");
   private static final TField ID_FIELD_DESC = new TField("id", TType.I32, (short)1);
-  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.STRING, (short)2);
+  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)2);
   private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)3);
   private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)4);
   private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)5);
   private static final TField STOP_TIME_FIELD_DESC = new TField("stop_time", TType.I64, (short)6);
 
   public int id;
-  public String cmd;
+  /**
+   * 
+   * @see AdminCmd
+   */
+  public int cmd;
   public List<String> paras;
   /**
    * 
@@ -56,10 +60,11 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
 
   // isset id assignments
   private static final int __ID_ISSET_ID = 0;
-  private static final int __STATUS_ISSET_ID = 1;
-  private static final int __START_TIME_ISSET_ID = 2;
-  private static final int __STOP_TIME_ISSET_ID = 3;
-  private BitSet __isset_bit_vector = new BitSet(4);
+  private static final int __CMD_ISSET_ID = 1;
+  private static final int __STATUS_ISSET_ID = 2;
+  private static final int __START_TIME_ISSET_ID = 3;
+  private static final int __STOP_TIME_ISSET_ID = 4;
+  private BitSet __isset_bit_vector = new BitSet(5);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -67,7 +72,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(CMD, new FieldMetaData("cmd", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+        new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARAS, new FieldMetaData("paras", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
@@ -89,7 +94,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
 
   public JobDesc(
     int id,
-    String cmd,
+    int cmd,
     List<String> paras,
     int status,
     long start_time,
@@ -99,6 +104,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     this.id = id;
     setIdIsSet(true);
     this.cmd = cmd;
+    setCmdIsSet(true);
     this.paras = paras;
     this.status = status;
     setStatusIsSet(true);
@@ -115,9 +121,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.id = TBaseHelper.deepCopy(other.id);
-    if (other.isSetCmd()) {
-      this.cmd = TBaseHelper.deepCopy(other.cmd);
-    }
+    this.cmd = TBaseHelper.deepCopy(other.cmd);
     if (other.isSetParas()) {
       this.paras = TBaseHelper.deepCopy(other.paras);
     }
@@ -158,28 +162,35 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     __isset_bit_vector.set(__ID_ISSET_ID, value);
   }
 
-  public String  getCmd() {
+  /**
+   * 
+   * @see AdminCmd
+   */
+  public int  getCmd() {
     return this.cmd;
   }
 
-  public JobDesc setCmd(String cmd) {
+  /**
+   * 
+   * @see AdminCmd
+   */
+  public JobDesc setCmd(int cmd) {
     this.cmd = cmd;
+    setCmdIsSet(true);
     return this;
   }
 
   public void unsetCmd() {
-    this.cmd = null;
+    __isset_bit_vector.clear(__CMD_ISSET_ID);
   }
 
   // Returns true if field cmd is set (has been assigned a value) and false otherwise
   public boolean isSetCmd() {
-    return this.cmd != null;
+    return __isset_bit_vector.get(__CMD_ISSET_ID);
   }
 
   public void setCmdIsSet(boolean value) {
-    if (!value) {
-      this.cmd = null;
-    }
+    __isset_bit_vector.set(__CMD_ISSET_ID, value);
   }
 
   public List<String>  getParas() {
@@ -298,7 +309,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       if (value == null) {
         unsetCmd();
       } else {
-        setCmd((String)value);
+        setCmd((Integer)value);
       }
       break;
 
@@ -408,8 +419,8 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
         return false;
     }
 
-    boolean this_present_cmd = true && this.isSetCmd();
-    boolean that_present_cmd = true && that.isSetCmd();
+    boolean this_present_cmd = true;
+    boolean that_present_cmd = true;
     if (this_present_cmd || that_present_cmd) {
       if (!(this_present_cmd && that_present_cmd))
         return false;
@@ -465,7 +476,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     if (present_id)
       builder.append(id);
 
-    boolean present_cmd = true && (isSetCmd());
+    boolean present_cmd = true;
     builder.append(present_cmd);
     if (present_cmd)
       builder.append(cmd);
@@ -576,8 +587,9 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
           }
           break;
         case CMD:
-          if (field.type == TType.STRING) {
-            this.cmd = iprot.readString();
+          if (field.type == TType.I32) {
+            this.cmd = iprot.readI32();
+            setCmdIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -585,15 +597,15 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
         case PARAS:
           if (field.type == TType.LIST) {
             {
-              TList _list22 = iprot.readListBegin();
-              this.paras = new ArrayList<String>(Math.max(0, _list22.size));
-              for (int _i23 = 0; 
-                   (_list22.size < 0) ? iprot.peekList() : (_i23 < _list22.size); 
-                   ++_i23)
+              TList _list30 = iprot.readListBegin();
+              this.paras = new ArrayList<String>(Math.max(0, _list30.size));
+              for (int _i31 = 0; 
+                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
+                   ++_i31)
               {
-                String _elem24;
-                _elem24 = iprot.readString();
-                this.paras.add(_elem24);
+                String _elem32;
+                _elem32 = iprot.readString();
+                this.paras.add(_elem32);
               }
               iprot.readListEnd();
             }
@@ -645,17 +657,15 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     oprot.writeFieldBegin(ID_FIELD_DESC);
     oprot.writeI32(this.id);
     oprot.writeFieldEnd();
-    if (this.cmd != null) {
-      oprot.writeFieldBegin(CMD_FIELD_DESC);
-      oprot.writeString(this.cmd);
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(CMD_FIELD_DESC);
+    oprot.writeI32(this.cmd);
+    oprot.writeFieldEnd();
     if (this.paras != null) {
       oprot.writeFieldBegin(PARAS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.paras.size()));
-        for (String _iter25 : this.paras)        {
-          oprot.writeString(_iter25);
+        for (String _iter33 : this.paras)        {
+          oprot.writeString(_iter33);
         }
         oprot.writeListEnd();
       }
@@ -706,10 +716,14 @@ String space = prettyPrint ? " " : "";
     sb.append("cmd");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getCmd() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getCmd(), indent + 1, prettyPrint));
+    String cmd_name = AdminCmd.VALUES_TO_NAMES.get(this. getCmd());
+    if (cmd_name != null) {
+      sb.append(cmd_name);
+      sb.append(" (");
+    }
+    sb.append(this. getCmd());
+    if (cmd_name != null) {
+      sb.append(")");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -760,6 +774,9 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
+    if (isSetCmd() && !AdminCmd.VALID_VALUES.contains(cmd)){
+      throw new TProtocolException("The field 'cmd' has been assigned the invalid value " + cmd);
+    }
     if (isSetStatus() && !JobStatus.VALID_VALUES.contains(status)){
       throw new TProtocolException("The field 'status' has been assigned the invalid value " + status);
     }

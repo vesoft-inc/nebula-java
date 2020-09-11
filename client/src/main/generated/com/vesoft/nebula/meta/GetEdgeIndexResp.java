@@ -39,7 +39,7 @@ public class GetEdgeIndexResp implements TBase, java.io.Serializable, Cloneable 
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public com.vesoft.nebula.IndexItem item;
+  public IndexItem item;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int ITEM = 3;
@@ -57,7 +57,7 @@ public class GetEdgeIndexResp implements TBase, java.io.Serializable, Cloneable 
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(ITEM, new FieldMetaData("item", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.IndexItem.class)));
+        new StructMetaData(TType.STRUCT, IndexItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -71,7 +71,7 @@ public class GetEdgeIndexResp implements TBase, java.io.Serializable, Cloneable 
   public GetEdgeIndexResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    com.vesoft.nebula.IndexItem item)
+    IndexItem item)
   {
     this();
     this.code = code;
@@ -159,11 +159,11 @@ public class GetEdgeIndexResp implements TBase, java.io.Serializable, Cloneable 
     }
   }
 
-  public com.vesoft.nebula.IndexItem  getItem() {
+  public IndexItem  getItem() {
     return this.item;
   }
 
-  public GetEdgeIndexResp setItem(com.vesoft.nebula.IndexItem item) {
+  public GetEdgeIndexResp setItem(IndexItem item) {
     this.item = item;
     return this;
   }
@@ -205,7 +205,7 @@ public class GetEdgeIndexResp implements TBase, java.io.Serializable, Cloneable 
       if (value == null) {
         unsetItem();
       } else {
-        setItem((com.vesoft.nebula.IndexItem)value);
+        setItem((IndexItem)value);
       }
       break;
 
@@ -340,7 +340,7 @@ public class GetEdgeIndexResp implements TBase, java.io.Serializable, Cloneable 
           break;
         case ITEM:
           if (field.type == TType.STRUCT) {
-            this.item = new com.vesoft.nebula.IndexItem();
+            this.item = new IndexItem();
             this.item.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

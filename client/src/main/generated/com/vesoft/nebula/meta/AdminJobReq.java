@@ -30,26 +30,32 @@ import com.facebook.thrift.protocol.*;
 public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comparable<AdminJobReq> {
   private static final TStruct STRUCT_DESC = new TStruct("AdminJobReq");
   private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)1);
-  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)2);
+  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)2);
+  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)3);
 
   /**
    * 
    * @see AdminJobOp
    */
   public int op;
-  public List<String> paras;
+  public int cmd;
+  public List<byte[]> paras;
   public static final int OP = 1;
-  public static final int PARAS = 2;
+  public static final int CMD = 2;
+  public static final int PARAS = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __OP_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __CMD_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(CMD, new FieldMetaData("cmd", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARAS, new FieldMetaData("paras", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
@@ -66,11 +72,14 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public AdminJobReq(
     int op,
-    List<String> paras)
+    int cmd,
+    List<byte[]> paras)
   {
     this();
     this.op = op;
     setOpIsSet(true);
+    this.cmd = cmd;
+    setCmdIsSet(true);
     this.paras = paras;
   }
 
@@ -81,6 +90,7 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.op = TBaseHelper.deepCopy(other.op);
+    this.cmd = TBaseHelper.deepCopy(other.cmd);
     if (other.isSetParas()) {
       this.paras = TBaseHelper.deepCopy(other.paras);
     }
@@ -126,11 +136,34 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     __isset_bit_vector.set(__OP_ISSET_ID, value);
   }
 
-  public List<String>  getParas() {
+  public int  getCmd() {
+    return this.cmd;
+  }
+
+  public AdminJobReq setCmd(int cmd) {
+    this.cmd = cmd;
+    setCmdIsSet(true);
+    return this;
+  }
+
+  public void unsetCmd() {
+    __isset_bit_vector.clear(__CMD_ISSET_ID);
+  }
+
+  // Returns true if field cmd is set (has been assigned a value) and false otherwise
+  public boolean isSetCmd() {
+    return __isset_bit_vector.get(__CMD_ISSET_ID);
+  }
+
+  public void setCmdIsSet(boolean value) {
+    __isset_bit_vector.set(__CMD_ISSET_ID, value);
+  }
+
+  public List<byte[]>  getParas() {
     return this.paras;
   }
 
-  public AdminJobReq setParas(List<String> paras) {
+  public AdminJobReq setParas(List<byte[]> paras) {
     this.paras = paras;
     return this;
   }
@@ -161,11 +194,19 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       break;
 
+    case CMD:
+      if (value == null) {
+        unsetCmd();
+      } else {
+        setCmd((Integer)value);
+      }
+      break;
+
     case PARAS:
       if (value == null) {
         unsetParas();
       } else {
-        setParas((List<String>)value);
+        setParas((List<byte[]>)value);
       }
       break;
 
@@ -178,6 +219,9 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     switch (fieldID) {
     case OP:
       return getOp();
+
+    case CMD:
+      return getCmd();
 
     case PARAS:
       return getParas();
@@ -192,6 +236,8 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     switch (fieldID) {
     case OP:
       return isSetOp();
+    case CMD:
+      return isSetCmd();
     case PARAS:
       return isSetParas();
     default:
@@ -223,12 +269,21 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
         return false;
     }
 
+    boolean this_present_cmd = true;
+    boolean that_present_cmd = true;
+    if (this_present_cmd || that_present_cmd) {
+      if (!(this_present_cmd && that_present_cmd))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.cmd, that.cmd))
+        return false;
+    }
+
     boolean this_present_paras = true && this.isSetParas();
     boolean that_present_paras = true && that.isSetParas();
     if (this_present_paras || that_present_paras) {
       if (!(this_present_paras && that_present_paras))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.paras, that.paras))
+      if (!TBaseHelper.equalsSlow(this.paras, that.paras))
         return false;
     }
 
@@ -243,6 +298,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     builder.append(present_op);
     if (present_op)
       builder.append(op);
+
+    boolean present_cmd = true;
+    builder.append(present_cmd);
+    if (present_cmd)
+      builder.append(cmd);
 
     boolean present_paras = true && (isSetParas());
     builder.append(present_paras);
@@ -269,6 +329,14 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(op, other.op);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCmd()).compareTo(other.isSetCmd());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(cmd, other.cmd);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -302,18 +370,26 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case CMD:
+          if (field.type == TType.I32) {
+            this.cmd = iprot.readI32();
+            setCmdIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         case PARAS:
           if (field.type == TType.LIST) {
             {
-              TList _list18 = iprot.readListBegin();
-              this.paras = new ArrayList<String>(Math.max(0, _list18.size));
-              for (int _i19 = 0; 
-                   (_list18.size < 0) ? iprot.peekList() : (_i19 < _list18.size); 
-                   ++_i19)
+              TList _list26 = iprot.readListBegin();
+              this.paras = new ArrayList<byte[]>(Math.max(0, _list26.size));
+              for (int _i27 = 0; 
+                   (_list26.size < 0) ? iprot.peekList() : (_i27 < _list26.size); 
+                   ++_i27)
               {
-                String _elem20;
-                _elem20 = iprot.readString();
-                this.paras.add(_elem20);
+                byte[] _elem28;
+                _elem28 = iprot.readBinary();
+                this.paras.add(_elem28);
               }
               iprot.readListEnd();
             }
@@ -341,12 +417,15 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeFieldBegin(OP_FIELD_DESC);
     oprot.writeI32(this.op);
     oprot.writeFieldEnd();
+    oprot.writeFieldBegin(CMD_FIELD_DESC);
+    oprot.writeI32(this.cmd);
+    oprot.writeFieldEnd();
     if (this.paras != null) {
       oprot.writeFieldBegin(PARAS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.paras.size()));
-        for (String _iter21 : this.paras)        {
-          oprot.writeString(_iter21);
+        for (byte[] _iter29 : this.paras)        {
+          oprot.writeBinary(_iter29);
         }
         oprot.writeListEnd();
       }
@@ -388,6 +467,21 @@ String space = prettyPrint ? " " : "";
     }
     sb.append(this. getOp());
     if (op_name != null) {
+      sb.append(")");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("cmd");
+    sb.append(space);
+    sb.append(":").append(space);
+    String cmd_name = AdminCmd.VALUES_TO_NAMES.get(this. getCmd());
+    if (cmd_name != null) {
+      sb.append(cmd_name);
+      sb.append(" (");
+    }
+    sb.append(this. getCmd());
+    if (cmd_name != null) {
       sb.append(")");
     }
     first = false;

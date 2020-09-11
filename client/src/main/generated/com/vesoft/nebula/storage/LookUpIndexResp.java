@@ -27,21 +27,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("LookUpIndexResp");
+public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("LookupIndexResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)2);
-  private static final TField VERTICES_FIELD_DESC = new TField("vertices", TType.LIST, (short)3);
-  private static final TField EDGES_FIELD_DESC = new TField("edges", TType.LIST, (short)4);
+  private static final TField DATA_FIELD_DESC = new TField("data", TType.STRUCT, (short)2);
 
   public ResponseCommon result;
-  public com.vesoft.nebula.Schema schema;
-  public List<VertexIndexData> vertices;
-  public List<Edge> edges;
+  public com.vesoft.nebula.DataSet data;
   public static final int RESULT = 1;
-  public static final int SCHEMA = 2;
-  public static final int VERTICES = 3;
-  public static final int EDGES = 4;
+  public static final int DATA = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -51,76 +45,60 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.OPTIONAL, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
-    tmpMetaDataMap.put(VERTICES, new FieldMetaData("vertices", TFieldRequirementType.OPTIONAL, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, VertexIndexData.class))));
-    tmpMetaDataMap.put(EDGES, new FieldMetaData("edges", TFieldRequirementType.OPTIONAL, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, Edge.class))));
+    tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(LookUpIndexResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(LookupIndexResp.class, metaDataMap);
   }
 
-  public LookUpIndexResp() {
+  public LookupIndexResp() {
   }
 
-  public LookUpIndexResp(
+  public LookupIndexResp(
     ResponseCommon result)
   {
     this();
     this.result = result;
   }
 
-  public LookUpIndexResp(
+  public LookupIndexResp(
     ResponseCommon result,
-    com.vesoft.nebula.Schema schema,
-    List<VertexIndexData> vertices,
-    List<Edge> edges)
+    com.vesoft.nebula.DataSet data)
   {
     this();
     this.result = result;
-    this.schema = schema;
-    this.vertices = vertices;
-    this.edges = edges;
+    this.data = data;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public LookUpIndexResp(LookUpIndexResp other) {
+  public LookupIndexResp(LookupIndexResp other) {
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetSchema()) {
-      this.schema = TBaseHelper.deepCopy(other.schema);
-    }
-    if (other.isSetVertices()) {
-      this.vertices = TBaseHelper.deepCopy(other.vertices);
-    }
-    if (other.isSetEdges()) {
-      this.edges = TBaseHelper.deepCopy(other.edges);
+    if (other.isSetData()) {
+      this.data = TBaseHelper.deepCopy(other.data);
     }
   }
 
-  public LookUpIndexResp deepCopy() {
-    return new LookUpIndexResp(this);
+  public LookupIndexResp deepCopy() {
+    return new LookupIndexResp(this);
   }
 
   @Deprecated
-  public LookUpIndexResp clone() {
-    return new LookUpIndexResp(this);
+  public LookupIndexResp clone() {
+    return new LookupIndexResp(this);
   }
 
   public ResponseCommon  getResult() {
     return this.result;
   }
 
-  public LookUpIndexResp setResult(ResponseCommon result) {
+  public LookupIndexResp setResult(ResponseCommon result) {
     this.result = result;
     return this;
   }
@@ -140,79 +118,30 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
-    return this.schema;
+  public com.vesoft.nebula.DataSet  getData() {
+    return this.data;
   }
 
-  public LookUpIndexResp setSchema(com.vesoft.nebula.Schema schema) {
-    this.schema = schema;
+  public LookupIndexResp setData(com.vesoft.nebula.DataSet data) {
+    this.data = data;
     return this;
   }
 
-  public void unsetSchema() {
-    this.schema = null;
+  public void unsetData() {
+    this.data = null;
   }
 
-  // Returns true if field schema is set (has been assigned a value) and false otherwise
-  public boolean isSetSchema() {
-    return this.schema != null;
+  // Returns true if field data is set (has been assigned a value) and false otherwise
+  public boolean isSetData() {
+    return this.data != null;
   }
 
-  public void setSchemaIsSet(boolean value) {
+  public void setDataIsSet(boolean value) {
     if (!value) {
-      this.schema = null;
+      this.data = null;
     }
   }
 
-  public List<VertexIndexData>  getVertices() {
-    return this.vertices;
-  }
-
-  public LookUpIndexResp setVertices(List<VertexIndexData> vertices) {
-    this.vertices = vertices;
-    return this;
-  }
-
-  public void unsetVertices() {
-    this.vertices = null;
-  }
-
-  // Returns true if field vertices is set (has been assigned a value) and false otherwise
-  public boolean isSetVertices() {
-    return this.vertices != null;
-  }
-
-  public void setVerticesIsSet(boolean value) {
-    if (!value) {
-      this.vertices = null;
-    }
-  }
-
-  public List<Edge>  getEdges() {
-    return this.edges;
-  }
-
-  public LookUpIndexResp setEdges(List<Edge> edges) {
-    this.edges = edges;
-    return this;
-  }
-
-  public void unsetEdges() {
-    this.edges = null;
-  }
-
-  // Returns true if field edges is set (has been assigned a value) and false otherwise
-  public boolean isSetEdges() {
-    return this.edges != null;
-  }
-
-  public void setEdgesIsSet(boolean value) {
-    if (!value) {
-      this.edges = null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case RESULT:
@@ -223,27 +152,11 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
-    case SCHEMA:
+    case DATA:
       if (value == null) {
-        unsetSchema();
+        unsetData();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
-      }
-      break;
-
-    case VERTICES:
-      if (value == null) {
-        unsetVertices();
-      } else {
-        setVertices((List<VertexIndexData>)value);
-      }
-      break;
-
-    case EDGES:
-      if (value == null) {
-        unsetEdges();
-      } else {
-        setEdges((List<Edge>)value);
+        setData((com.vesoft.nebula.DataSet)value);
       }
       break;
 
@@ -257,14 +170,8 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
     case RESULT:
       return getResult();
 
-    case SCHEMA:
-      return getSchema();
-
-    case VERTICES:
-      return getVertices();
-
-    case EDGES:
-      return getEdges();
+    case DATA:
+      return getData();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -276,12 +183,8 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
     switch (fieldID) {
     case RESULT:
       return isSetResult();
-    case SCHEMA:
-      return isSetSchema();
-    case VERTICES:
-      return isSetVertices();
-    case EDGES:
-      return isSetEdges();
+    case DATA:
+      return isSetData();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -291,12 +194,12 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof LookUpIndexResp)
-      return this.equals((LookUpIndexResp)that);
+    if (that instanceof LookupIndexResp)
+      return this.equals((LookupIndexResp)that);
     return false;
   }
 
-  public boolean equals(LookUpIndexResp that) {
+  public boolean equals(LookupIndexResp that) {
     if (that == null)
       return false;
     if (this == that)
@@ -311,30 +214,12 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
-    boolean this_present_schema = true && this.isSetSchema();
-    boolean that_present_schema = true && that.isSetSchema();
-    if (this_present_schema || that_present_schema) {
-      if (!(this_present_schema && that_present_schema))
+    boolean this_present_data = true && this.isSetData();
+    boolean that_present_data = true && that.isSetData();
+    if (this_present_data || that_present_data) {
+      if (!(this_present_data && that_present_data))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.schema, that.schema))
-        return false;
-    }
-
-    boolean this_present_vertices = true && this.isSetVertices();
-    boolean that_present_vertices = true && that.isSetVertices();
-    if (this_present_vertices || that_present_vertices) {
-      if (!(this_present_vertices && that_present_vertices))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vertices, that.vertices))
-        return false;
-    }
-
-    boolean this_present_edges = true && this.isSetEdges();
-    boolean that_present_edges = true && that.isSetEdges();
-    if (this_present_edges || that_present_edges) {
-      if (!(this_present_edges && that_present_edges))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edges, that.edges))
+      if (!TBaseHelper.equalsNobinary(this.data, that.data))
         return false;
     }
 
@@ -350,20 +235,10 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
     if (present_result)
       builder.append(result);
 
-    boolean present_schema = true && (isSetSchema());
-    builder.append(present_schema);
-    if (present_schema)
-      builder.append(schema);
-
-    boolean present_vertices = true && (isSetVertices());
-    builder.append(present_vertices);
-    if (present_vertices)
-      builder.append(vertices);
-
-    boolean present_edges = true && (isSetEdges());
-    builder.append(present_edges);
-    if (present_edges)
-      builder.append(edges);
+    boolean present_data = true && (isSetData());
+    builder.append(present_data);
+    if (present_data)
+      builder.append(data);
 
     return builder.toHashCode();
   }
@@ -387,50 +262,10 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case SCHEMA:
+        case DATA:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
-            this.schema.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case VERTICES:
-          if (field.type == TType.LIST) {
-            {
-              TList _list245 = iprot.readListBegin();
-              this.vertices = new ArrayList<VertexIndexData>(Math.max(0, _list245.size));
-              for (int _i246 = 0; 
-                   (_list245.size < 0) ? iprot.peekList() : (_i246 < _list245.size); 
-                   ++_i246)
-              {
-                VertexIndexData _elem247;
-                _elem247 = new VertexIndexData();
-                _elem247.read(iprot);
-                this.vertices.add(_elem247);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case EDGES:
-          if (field.type == TType.LIST) {
-            {
-              TList _list248 = iprot.readListBegin();
-              this.edges = new ArrayList<Edge>(Math.max(0, _list248.size));
-              for (int _i249 = 0; 
-                   (_list248.size < 0) ? iprot.peekList() : (_i249 < _list248.size); 
-                   ++_i249)
-              {
-                Edge _elem250;
-                _elem250 = new Edge();
-                _elem250.read(iprot);
-                this.edges.add(_elem250);
-              }
-              iprot.readListEnd();
-            }
+            this.data = new com.vesoft.nebula.DataSet();
+            this.data.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -457,36 +292,10 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.schema != null) {
-      if (isSetSchema()) {
-        oprot.writeFieldBegin(SCHEMA_FIELD_DESC);
-        this.schema.write(oprot);
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.vertices != null) {
-      if (isSetVertices()) {
-        oprot.writeFieldBegin(VERTICES_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.STRUCT, this.vertices.size()));
-          for (VertexIndexData _iter251 : this.vertices)          {
-            _iter251.write(oprot);
-          }
-          oprot.writeListEnd();
-        }
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.edges != null) {
-      if (isSetEdges()) {
-        oprot.writeFieldBegin(EDGES_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.STRUCT, this.edges.size()));
-          for (Edge _iter252 : this.edges)          {
-            _iter252.write(oprot);
-          }
-          oprot.writeListEnd();
-        }
+    if (this.data != null) {
+      if (isSetData()) {
+        oprot.writeFieldBegin(DATA_FIELD_DESC);
+        this.data.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -509,7 +318,7 @@ public class LookUpIndexResp implements TBase, java.io.Serializable, Cloneable {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("LookUpIndexResp");
+    StringBuilder sb = new StringBuilder("LookupIndexResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -525,45 +334,17 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetSchema())
+    if (isSetData())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("schema");
+      sb.append("data");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSchema() == null) {
+      if (this. getData() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetVertices())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("vertices");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getVertices() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getVertices(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetEdges())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("edges");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getEdges() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getEdges(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this. getData(), indent + 1, prettyPrint));
       }
       first = false;
     }

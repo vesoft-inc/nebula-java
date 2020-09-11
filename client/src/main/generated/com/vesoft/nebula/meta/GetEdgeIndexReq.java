@@ -33,7 +33,7 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
   private static final TField INDEX_NAME_FIELD_DESC = new TField("index_name", TType.STRING, (short)2);
 
   public int space_id;
-  public String index_name;
+  public byte[] index_name;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -61,7 +61,7 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
 
   public GetEdgeIndexReq(
     int space_id,
-    String index_name)
+    byte[] index_name)
   {
     this();
     this.space_id = space_id;
@@ -113,11 +113,11 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getIndex_name() {
+  public byte[]  getIndex_name() {
     return this.index_name;
   }
 
-  public GetEdgeIndexReq setIndex_name(String index_name) {
+  public GetEdgeIndexReq setIndex_name(byte[] index_name) {
     this.index_name = index_name;
     return this;
   }
@@ -151,7 +151,7 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
       if (value == null) {
         unsetIndex_name();
       } else {
-        setIndex_name((String)value);
+        setIndex_name((byte[])value);
       }
       break;
 
@@ -214,7 +214,7 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
     if (this_present_index_name || that_present_index_name) {
       if (!(this_present_index_name && that_present_index_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.index_name, that.index_name))
+      if (!TBaseHelper.equalsSlow(this.index_name, that.index_name))
         return false;
     }
 
@@ -290,7 +290,7 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
           break;
         case INDEX_NAME:
           if (field.type == TType.STRING) {
-            this.index_name = iprot.readString();
+            this.index_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -317,7 +317,7 @@ public class GetEdgeIndexReq implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldEnd();
     if (this.index_name != null) {
       oprot.writeFieldBegin(INDEX_NAME_FIELD_DESC);
-      oprot.writeString(this.index_name);
+      oprot.writeBinary(this.index_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -359,7 +359,12 @@ String space = prettyPrint ? " " : "";
     if (this. getIndex_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getIndex_name(), indent + 1, prettyPrint));
+        int __index_name_size = Math.min(this. getIndex_name().length, 128);
+        for (int i = 0; i < __index_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getIndex_name()[i]).length() > 1 ? Integer.toHexString(this. getIndex_name()[i]).substring(Integer.toHexString(this. getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getIndex_name()[i]).toUpperCase());
+        }
+        if (this. getIndex_name().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

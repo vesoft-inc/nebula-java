@@ -29,11 +29,11 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class RoleItem implements TBase, java.io.Serializable, Cloneable, Comparable<RoleItem> {
   private static final TStruct STRUCT_DESC = new TStruct("RoleItem");
-  private static final TField USER_ID_FIELD_DESC = new TField("user_id", TType.I32, (short)1);
+  private static final TField USER_ID_FIELD_DESC = new TField("user_id", TType.STRING, (short)1);
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)2);
   private static final TField ROLE_TYPE_FIELD_DESC = new TField("role_type", TType.I32, (short)3);
 
-  public int user_id;
+  public byte[] user_id;
   public int space_id;
   /**
    * 
@@ -46,16 +46,15 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __USER_ID_ISSET_ID = 0;
-  private static final int __SPACE_ID_ISSET_ID = 1;
-  private static final int __ROLE_TYPE_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private static final int __ROLE_TYPE_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(USER_ID, new FieldMetaData("user_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
+        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(ROLE_TYPE, new FieldMetaData("role_type", TFieldRequirementType.DEFAULT, 
@@ -71,13 +70,12 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public RoleItem(
-    int user_id,
+    byte[] user_id,
     int space_id,
     int role_type)
   {
     this();
     this.user_id = user_id;
-    setUser_idIsSet(true);
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.role_type = role_type;
@@ -90,7 +88,9 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
   public RoleItem(RoleItem other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.user_id = TBaseHelper.deepCopy(other.user_id);
+    if (other.isSetUser_id()) {
+      this.user_id = TBaseHelper.deepCopy(other.user_id);
+    }
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     this.role_type = TBaseHelper.deepCopy(other.role_type);
   }
@@ -104,27 +104,28 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     return new RoleItem(this);
   }
 
-  public int  getUser_id() {
+  public byte[]  getUser_id() {
     return this.user_id;
   }
 
-  public RoleItem setUser_id(int user_id) {
+  public RoleItem setUser_id(byte[] user_id) {
     this.user_id = user_id;
-    setUser_idIsSet(true);
     return this;
   }
 
   public void unsetUser_id() {
-    __isset_bit_vector.clear(__USER_ID_ISSET_ID);
+    this.user_id = null;
   }
 
   // Returns true if field user_id is set (has been assigned a value) and false otherwise
   public boolean isSetUser_id() {
-    return __isset_bit_vector.get(__USER_ID_ISSET_ID);
+    return this.user_id != null;
   }
 
   public void setUser_idIsSet(boolean value) {
-    __isset_bit_vector.set(__USER_ID_ISSET_ID, value);
+    if (!value) {
+      this.user_id = null;
+    }
   }
 
   public int  getSpace_id() {
@@ -187,7 +188,7 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetUser_id();
       } else {
-        setUser_id((Integer)value);
+        setUser_id((byte[])value);
       }
       break;
 
@@ -215,7 +216,7 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
     case USER_ID:
-      return new Integer(getUser_id());
+      return getUser_id();
 
     case SPACE_ID:
       return new Integer(getSpace_id());
@@ -257,12 +258,12 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     if (this == that)
       return true;
 
-    boolean this_present_user_id = true;
-    boolean that_present_user_id = true;
+    boolean this_present_user_id = true && this.isSetUser_id();
+    boolean that_present_user_id = true && that.isSetUser_id();
     if (this_present_user_id || that_present_user_id) {
       if (!(this_present_user_id && that_present_user_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.user_id, that.user_id))
+      if (!TBaseHelper.equalsSlow(this.user_id, that.user_id))
         return false;
     }
 
@@ -291,7 +292,7 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_user_id = true;
+    boolean present_user_id = true && (isSetUser_id());
     builder.append(present_user_id);
     if (present_user_id)
       builder.append(user_id);
@@ -360,9 +361,8 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
       switch (field.id)
       {
         case USER_ID:
-          if (field.type == TType.I32) {
-            this.user_id = iprot.readI32();
-            setUser_idIsSet(true);
+          if (field.type == TType.STRING) {
+            this.user_id = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -400,9 +400,11 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(USER_ID_FIELD_DESC);
-    oprot.writeI32(this.user_id);
-    oprot.writeFieldEnd();
+    if (this.user_id != null) {
+      oprot.writeFieldBegin(USER_ID_FIELD_DESC);
+      oprot.writeBinary(this.user_id);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
@@ -438,7 +440,16 @@ String space = prettyPrint ? " " : "";
     sb.append("user_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getUser_id(), indent + 1, prettyPrint));
+    if (this. getUser_id() == null) {
+      sb.append("null");
+    } else {
+        int __user_id_size = Math.min(this. getUser_id().length, 128);
+        for (int i = 0; i < __user_id_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getUser_id()[i]).length() > 1 ? Integer.toHexString(this. getUser_id()[i]).substring(Integer.toHexString(this. getUser_id()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getUser_id()[i]).toUpperCase());
+        }
+        if (this. getUser_id().length > 128) sb.append(" ...");
+    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

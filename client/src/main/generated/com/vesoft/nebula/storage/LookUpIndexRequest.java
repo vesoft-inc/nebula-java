@@ -27,116 +27,118 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneable, Comparable<LookUpIndexRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("LookUpIndexRequest");
+public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("LookupIndexRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.LIST, (short)2);
-  private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)3);
-  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)4);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)5);
-  private static final TField IS_EDGE_FIELD_DESC = new TField("is_edge", TType.BOOL, (short)6);
+  private static final TField INDICES_FIELD_DESC = new TField("indices", TType.STRUCT, (short)3);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)4);
 
   public int space_id;
   public List<Integer> parts;
-  public int index_id;
-  public byte[] filter;
-  public List<String> return_columns;
-  public boolean is_edge;
+  public IndexSpec indices;
+  public List<byte[]> return_columns;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
-  public static final int INDEX_ID = 3;
-  public static final int FILTER = 4;
-  public static final int RETURN_COLUMNS = 5;
-  public static final int IS_EDGE = 6;
+  public static final int INDICES = 3;
+  public static final int RETURN_COLUMNS = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private static final int __INDEX_ID_ISSET_ID = 1;
-  private static final int __IS_EDGE_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.REQUIRED, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.I32))));
-    tmpMetaDataMap.put(INDEX_ID, new FieldMetaData("index_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(FILTER, new FieldMetaData("filter", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(INDICES, new FieldMetaData("indices", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, IndexSpec.class)));
+    tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
-    tmpMetaDataMap.put(IS_EDGE, new FieldMetaData("is_edge", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(LookUpIndexRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(LookupIndexRequest.class, metaDataMap);
   }
 
-  public LookUpIndexRequest() {
+  public LookupIndexRequest() {
   }
 
-  public LookUpIndexRequest(
+  public LookupIndexRequest(
     int space_id,
-    List<Integer> parts,
-    int index_id,
-    byte[] filter,
-    List<String> return_columns,
-    boolean is_edge)
+    List<Integer> parts)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
-    this.index_id = index_id;
-    setIndex_idIsSet(true);
-    this.filter = filter;
+  }
+
+  public LookupIndexRequest(
+    int space_id,
+    List<Integer> parts,
+    IndexSpec indices)
+  {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.indices = indices;
+  }
+
+  public LookupIndexRequest(
+    int space_id,
+    List<Integer> parts,
+    IndexSpec indices,
+    List<byte[]> return_columns)
+  {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.indices = indices;
     this.return_columns = return_columns;
-    this.is_edge = is_edge;
-    setIs_edgeIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public LookUpIndexRequest(LookUpIndexRequest other) {
+  public LookupIndexRequest(LookupIndexRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
-    this.index_id = TBaseHelper.deepCopy(other.index_id);
-    if (other.isSetFilter()) {
-      this.filter = TBaseHelper.deepCopy(other.filter);
+    if (other.isSetIndices()) {
+      this.indices = TBaseHelper.deepCopy(other.indices);
     }
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
     }
-    this.is_edge = TBaseHelper.deepCopy(other.is_edge);
   }
 
-  public LookUpIndexRequest deepCopy() {
-    return new LookUpIndexRequest(this);
+  public LookupIndexRequest deepCopy() {
+    return new LookupIndexRequest(this);
   }
 
   @Deprecated
-  public LookUpIndexRequest clone() {
-    return new LookUpIndexRequest(this);
+  public LookupIndexRequest clone() {
+    return new LookupIndexRequest(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public LookUpIndexRequest setSpace_id(int space_id) {
+  public LookupIndexRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -159,7 +161,7 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     return this.parts;
   }
 
-  public LookUpIndexRequest setParts(List<Integer> parts) {
+  public LookupIndexRequest setParts(List<Integer> parts) {
     this.parts = parts;
     return this;
   }
@@ -179,58 +181,35 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public int  getIndex_id() {
-    return this.index_id;
+  public IndexSpec  getIndices() {
+    return this.indices;
   }
 
-  public LookUpIndexRequest setIndex_id(int index_id) {
-    this.index_id = index_id;
-    setIndex_idIsSet(true);
+  public LookupIndexRequest setIndices(IndexSpec indices) {
+    this.indices = indices;
     return this;
   }
 
-  public void unsetIndex_id() {
-    __isset_bit_vector.clear(__INDEX_ID_ISSET_ID);
+  public void unsetIndices() {
+    this.indices = null;
   }
 
-  // Returns true if field index_id is set (has been assigned a value) and false otherwise
-  public boolean isSetIndex_id() {
-    return __isset_bit_vector.get(__INDEX_ID_ISSET_ID);
+  // Returns true if field indices is set (has been assigned a value) and false otherwise
+  public boolean isSetIndices() {
+    return this.indices != null;
   }
 
-  public void setIndex_idIsSet(boolean value) {
-    __isset_bit_vector.set(__INDEX_ID_ISSET_ID, value);
-  }
-
-  public byte[]  getFilter() {
-    return this.filter;
-  }
-
-  public LookUpIndexRequest setFilter(byte[] filter) {
-    this.filter = filter;
-    return this;
-  }
-
-  public void unsetFilter() {
-    this.filter = null;
-  }
-
-  // Returns true if field filter is set (has been assigned a value) and false otherwise
-  public boolean isSetFilter() {
-    return this.filter != null;
-  }
-
-  public void setFilterIsSet(boolean value) {
+  public void setIndicesIsSet(boolean value) {
     if (!value) {
-      this.filter = null;
+      this.indices = null;
     }
   }
 
-  public List<String>  getReturn_columns() {
+  public List<byte[]>  getReturn_columns() {
     return this.return_columns;
   }
 
-  public LookUpIndexRequest setReturn_columns(List<String> return_columns) {
+  public LookupIndexRequest setReturn_columns(List<byte[]> return_columns) {
     this.return_columns = return_columns;
     return this;
   }
@@ -248,29 +227,6 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     if (!value) {
       this.return_columns = null;
     }
-  }
-
-  public boolean  isIs_edge() {
-    return this.is_edge;
-  }
-
-  public LookUpIndexRequest setIs_edge(boolean is_edge) {
-    this.is_edge = is_edge;
-    setIs_edgeIsSet(true);
-    return this;
-  }
-
-  public void unsetIs_edge() {
-    __isset_bit_vector.clear(__IS_EDGE_ISSET_ID);
-  }
-
-  // Returns true if field is_edge is set (has been assigned a value) and false otherwise
-  public boolean isSetIs_edge() {
-    return __isset_bit_vector.get(__IS_EDGE_ISSET_ID);
-  }
-
-  public void setIs_edgeIsSet(boolean value) {
-    __isset_bit_vector.set(__IS_EDGE_ISSET_ID, value);
   }
 
   @SuppressWarnings("unchecked")
@@ -292,19 +248,11 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case INDEX_ID:
+    case INDICES:
       if (value == null) {
-        unsetIndex_id();
+        unsetIndices();
       } else {
-        setIndex_id((Integer)value);
-      }
-      break;
-
-    case FILTER:
-      if (value == null) {
-        unsetFilter();
-      } else {
-        setFilter((byte[])value);
+        setIndices((IndexSpec)value);
       }
       break;
 
@@ -312,15 +260,7 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       if (value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((List<String>)value);
-      }
-      break;
-
-    case IS_EDGE:
-      if (value == null) {
-        unsetIs_edge();
-      } else {
-        setIs_edge((Boolean)value);
+        setReturn_columns((List<byte[]>)value);
       }
       break;
 
@@ -337,17 +277,11 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     case PARTS:
       return getParts();
 
-    case INDEX_ID:
-      return new Integer(getIndex_id());
-
-    case FILTER:
-      return getFilter();
+    case INDICES:
+      return getIndices();
 
     case RETURN_COLUMNS:
       return getReturn_columns();
-
-    case IS_EDGE:
-      return new Boolean(isIs_edge());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -361,14 +295,10 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       return isSetSpace_id();
     case PARTS:
       return isSetParts();
-    case INDEX_ID:
-      return isSetIndex_id();
-    case FILTER:
-      return isSetFilter();
+    case INDICES:
+      return isSetIndices();
     case RETURN_COLUMNS:
       return isSetReturn_columns();
-    case IS_EDGE:
-      return isSetIs_edge();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -378,12 +308,12 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof LookUpIndexRequest)
-      return this.equals((LookUpIndexRequest)that);
+    if (that instanceof LookupIndexRequest)
+      return this.equals((LookupIndexRequest)that);
     return false;
   }
 
-  public boolean equals(LookUpIndexRequest that) {
+  public boolean equals(LookupIndexRequest that) {
     if (that == null)
       return false;
     if (this == that)
@@ -407,21 +337,12 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         return false;
     }
 
-    boolean this_present_index_id = true;
-    boolean that_present_index_id = true;
-    if (this_present_index_id || that_present_index_id) {
-      if (!(this_present_index_id && that_present_index_id))
+    boolean this_present_indices = true && this.isSetIndices();
+    boolean that_present_indices = true && that.isSetIndices();
+    if (this_present_indices || that_present_indices) {
+      if (!(this_present_indices && that_present_indices))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.index_id, that.index_id))
-        return false;
-    }
-
-    boolean this_present_filter = true && this.isSetFilter();
-    boolean that_present_filter = true && that.isSetFilter();
-    if (this_present_filter || that_present_filter) {
-      if (!(this_present_filter && that_present_filter))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
+      if (!TBaseHelper.equalsNobinary(this.indices, that.indices))
         return false;
     }
 
@@ -430,16 +351,7 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     if (this_present_return_columns || that_present_return_columns) {
       if (!(this_present_return_columns && that_present_return_columns))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.return_columns, that.return_columns))
-        return false;
-    }
-
-    boolean this_present_is_edge = true;
-    boolean that_present_is_edge = true;
-    if (this_present_is_edge || that_present_is_edge) {
-      if (!(this_present_is_edge && that_present_is_edge))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.is_edge, that.is_edge))
+      if (!TBaseHelper.equalsSlow(this.return_columns, that.return_columns))
         return false;
     }
 
@@ -460,90 +372,17 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     if (present_parts)
       builder.append(parts);
 
-    boolean present_index_id = true;
-    builder.append(present_index_id);
-    if (present_index_id)
-      builder.append(index_id);
-
-    boolean present_filter = true && (isSetFilter());
-    builder.append(present_filter);
-    if (present_filter)
-      builder.append(filter);
+    boolean present_indices = true && (isSetIndices());
+    builder.append(present_indices);
+    if (present_indices)
+      builder.append(indices);
 
     boolean present_return_columns = true && (isSetReturn_columns());
     builder.append(present_return_columns);
     if (present_return_columns)
       builder.append(return_columns);
 
-    boolean present_is_edge = true;
-    builder.append(present_is_edge);
-    if (present_is_edge)
-      builder.append(is_edge);
-
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(LookUpIndexRequest other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetIndex_id()).compareTo(other.isSetIndex_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(index_id, other.index_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetFilter()).compareTo(other.isSetFilter());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(filter, other.filter);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetReturn_columns()).compareTo(other.isSetReturn_columns());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(return_columns, other.return_columns);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetIs_edge()).compareTo(other.isSetIs_edge());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(is_edge, other.is_edge);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -568,15 +407,15 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.LIST) {
             {
-              TList _list237 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list237.size));
-              for (int _i238 = 0; 
-                   (_list237.size < 0) ? iprot.peekList() : (_i238 < _list237.size); 
-                   ++_i238)
+              TList _list163 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list163.size));
+              for (int _i164 = 0; 
+                   (_list163.size < 0) ? iprot.peekList() : (_i164 < _list163.size); 
+                   ++_i164)
               {
-                int _elem239;
-                _elem239 = iprot.readI32();
-                this.parts.add(_elem239);
+                int _elem165;
+                _elem165 = iprot.readI32();
+                this.parts.add(_elem165);
               }
               iprot.readListEnd();
             }
@@ -584,17 +423,10 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case INDEX_ID:
-          if (field.type == TType.I32) {
-            this.index_id = iprot.readI32();
-            setIndex_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case FILTER:
-          if (field.type == TType.STRING) {
-            this.filter = iprot.readBinary();
+        case INDICES:
+          if (field.type == TType.STRUCT) {
+            this.indices = new IndexSpec();
+            this.indices.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -602,26 +434,18 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case RETURN_COLUMNS:
           if (field.type == TType.LIST) {
             {
-              TList _list240 = iprot.readListBegin();
-              this.return_columns = new ArrayList<String>(Math.max(0, _list240.size));
-              for (int _i241 = 0; 
-                   (_list240.size < 0) ? iprot.peekList() : (_i241 < _list240.size); 
-                   ++_i241)
+              TList _list166 = iprot.readListBegin();
+              this.return_columns = new ArrayList<byte[]>(Math.max(0, _list166.size));
+              for (int _i167 = 0; 
+                   (_list166.size < 0) ? iprot.peekList() : (_i167 < _list166.size); 
+                   ++_i167)
               {
-                String _elem242;
-                _elem242 = iprot.readString();
-                this.return_columns.add(_elem242);
+                byte[] _elem168;
+                _elem168 = iprot.readBinary();
+                this.return_columns.add(_elem168);
               }
               iprot.readListEnd();
             }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case IS_EDGE:
-          if (field.type == TType.BOOL) {
-            this.is_edge = iprot.readBool();
-            setIs_edgeIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -636,6 +460,9 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
+    if (!isSetSpace_id()) {
+      throw new TProtocolException("Required field 'space_id' was not found in serialized data! Struct: " + toString());
+    }
     validate();
   }
 
@@ -650,35 +477,31 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter243 : this.parts)        {
-          oprot.writeI32(_iter243);
+        for (int _iter169 : this.parts)        {
+          oprot.writeI32(_iter169);
         }
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(INDEX_ID_FIELD_DESC);
-    oprot.writeI32(this.index_id);
-    oprot.writeFieldEnd();
-    if (this.filter != null) {
-      oprot.writeFieldBegin(FILTER_FIELD_DESC);
-      oprot.writeBinary(this.filter);
+    if (this.indices != null) {
+      oprot.writeFieldBegin(INDICES_FIELD_DESC);
+      this.indices.write(oprot);
       oprot.writeFieldEnd();
     }
     if (this.return_columns != null) {
-      oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
-        for (String _iter244 : this.return_columns)        {
-          oprot.writeString(_iter244);
+      if (isSetReturn_columns()) {
+        oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
+        {
+          oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
+          for (byte[] _iter170 : this.return_columns)          {
+            oprot.writeBinary(_iter170);
+          }
+          oprot.writeListEnd();
         }
-        oprot.writeListEnd();
+        oprot.writeFieldEnd();
       }
-      oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(IS_EDGE_FIELD_DESC);
-    oprot.writeBool(this.is_edge);
-    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -698,7 +521,7 @@ public class LookUpIndexRequest implements TBase, java.io.Serializable, Cloneabl
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("LookUpIndexRequest");
+    StringBuilder sb = new StringBuilder("LookupIndexRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -723,45 +546,29 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("index_id");
+    sb.append("indices");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getIndex_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("filter");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getFilter() == null) {
+    if (this. getIndices() == null) {
       sb.append("null");
     } else {
-        int __filter_size = Math.min(this. getFilter().length, 128);
-        for (int i = 0; i < __filter_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
-        }
-        if (this. getFilter().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getIndices(), indent + 1, prettyPrint));
     }
     first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("return_columns");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getReturn_columns() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
+    if (isSetReturn_columns())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("return_columns");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getReturn_columns() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
+      }
+      first = false;
     }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("is_edge");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIs_edge(), indent + 1, prettyPrint));
-    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
@@ -769,6 +576,10 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
+    // alas, we cannot check 'space_id' because it's a primitive and you chose the non-beans generator.
+    if (parts == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'parts' was not present! Struct: " + toString());
+    }
     // check that fields of type enum have valid values
   }
 

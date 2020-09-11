@@ -39,7 +39,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public String value;
+  public byte[] value;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int VALUE = 3;
@@ -71,7 +71,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
   public GetResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    String value)
+    byte[] value)
   {
     this();
     this.code = code;
@@ -159,11 +159,11 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     }
   }
 
-  public String  getValue() {
+  public byte[]  getValue() {
     return this.value;
   }
 
-  public GetResp setValue(String value) {
+  public GetResp setValue(byte[] value) {
     this.value = value;
     return this;
   }
@@ -205,7 +205,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
       if (value == null) {
         unsetValue();
       } else {
-        setValue((String)value);
+        setValue((byte[])value);
       }
       break;
 
@@ -282,7 +282,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     if (this_present_value || that_present_value) {
       if (!(this_present_value && that_present_value))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.value, that.value))
+      if (!TBaseHelper.equalsSlow(this.value, that.value))
         return false;
     }
 
@@ -379,7 +379,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
           break;
         case VALUE:
           if (field.type == TType.STRING) {
-            this.value = iprot.readString();
+            this.value = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -411,7 +411,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     }
     if (this.value != null) {
       oprot.writeFieldBegin(VALUE_FIELD_DESC);
-      oprot.writeString(this.value);
+      oprot.writeBinary(this.value);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -472,7 +472,12 @@ String space = prettyPrint ? " " : "";
     if (this. getValue() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getValue(), indent + 1, prettyPrint));
+        int __value_size = Math.min(this. getValue().length, 128);
+        for (int i = 0; i < __value_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getValue()[i]).length() > 1 ? Integer.toHexString(this. getValue()[i]).substring(Integer.toHexString(this. getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getValue()[i]).toUpperCase());
+        }
+        if (this. getValue().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

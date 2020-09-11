@@ -32,8 +32,8 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
   private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
   private static final TField ENCODED_PWD_FIELD_DESC = new TField("encoded_pwd", TType.STRING, (short)2);
 
-  public String account;
-  public String encoded_pwd;
+  public byte[] account;
+  public byte[] encoded_pwd;
   public static final int ACCOUNT = 1;
   public static final int ENCODED_PWD = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -58,8 +58,8 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public AlterUserReq(
-    String account,
-    String encoded_pwd)
+    byte[] account,
+    byte[] encoded_pwd)
   {
     this();
     this.account = account;
@@ -87,11 +87,11 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     return new AlterUserReq(this);
   }
 
-  public String  getAccount() {
+  public byte[]  getAccount() {
     return this.account;
   }
 
-  public AlterUserReq setAccount(String account) {
+  public AlterUserReq setAccount(byte[] account) {
     this.account = account;
     return this;
   }
@@ -111,11 +111,11 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  public String  getEncoded_pwd() {
+  public byte[]  getEncoded_pwd() {
     return this.encoded_pwd;
   }
 
-  public AlterUserReq setEncoded_pwd(String encoded_pwd) {
+  public AlterUserReq setEncoded_pwd(byte[] encoded_pwd) {
     this.encoded_pwd = encoded_pwd;
     return this;
   }
@@ -141,7 +141,7 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
       if (value == null) {
         unsetAccount();
       } else {
-        setAccount((String)value);
+        setAccount((byte[])value);
       }
       break;
 
@@ -149,7 +149,7 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
       if (value == null) {
         unsetEncoded_pwd();
       } else {
-        setEncoded_pwd((String)value);
+        setEncoded_pwd((byte[])value);
       }
       break;
 
@@ -203,7 +203,7 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     if (this_present_account || that_present_account) {
       if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.account, that.account))
+      if (!TBaseHelper.equalsSlow(this.account, that.account))
         return false;
     }
 
@@ -212,7 +212,7 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     if (this_present_encoded_pwd || that_present_encoded_pwd) {
       if (!(this_present_encoded_pwd && that_present_encoded_pwd))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.encoded_pwd, that.encoded_pwd))
+      if (!TBaseHelper.equalsSlow(this.encoded_pwd, that.encoded_pwd))
         return false;
     }
 
@@ -280,14 +280,14 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
       {
         case ACCOUNT:
           if (field.type == TType.STRING) {
-            this.account = iprot.readString();
+            this.account = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case ENCODED_PWD:
           if (field.type == TType.STRING) {
-            this.encoded_pwd = iprot.readString();
+            this.encoded_pwd = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -311,12 +311,12 @@ public class AlterUserReq implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.account != null) {
       oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
-      oprot.writeString(this.account);
+      oprot.writeBinary(this.account);
       oprot.writeFieldEnd();
     }
     if (this.encoded_pwd != null) {
       oprot.writeFieldBegin(ENCODED_PWD_FIELD_DESC);
-      oprot.writeString(this.encoded_pwd);
+      oprot.writeBinary(this.encoded_pwd);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -351,7 +351,12 @@ String space = prettyPrint ? " " : "";
     if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
+        int __account_size = Math.min(this. getAccount().length, 128);
+        for (int i = 0; i < __account_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+        }
+        if (this. getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -362,7 +367,12 @@ String space = prettyPrint ? " " : "";
     if (this. getEncoded_pwd() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEncoded_pwd(), indent + 1, prettyPrint));
+        int __encoded_pwd_size = Math.min(this. getEncoded_pwd().length, 128);
+        for (int i = 0; i < __encoded_pwd_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getEncoded_pwd()[i]).length() > 1 ? Integer.toHexString(this. getEncoded_pwd()[i]).substring(Integer.toHexString(this. getEncoded_pwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEncoded_pwd()[i]).toUpperCase());
+        }
+        if (this. getEncoded_pwd().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

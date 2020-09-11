@@ -39,7 +39,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<String> values;
+  public List<byte[]> values;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int VALUES = 3;
@@ -72,7 +72,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
   public MultiGetResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<String> values)
+    List<byte[]> values)
   {
     this();
     this.code = code;
@@ -160,11 +160,11 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  public List<String>  getValues() {
+  public List<byte[]>  getValues() {
     return this.values;
   }
 
-  public MultiGetResp setValues(List<String> values) {
+  public MultiGetResp setValues(List<byte[]> values) {
     this.values = values;
     return this;
   }
@@ -207,7 +207,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       if (value == null) {
         unsetValues();
       } else {
-        setValues((List<String>)value);
+        setValues((List<byte[]>)value);
       }
       break;
 
@@ -284,7 +284,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     if (this_present_values || that_present_values) {
       if (!(this_present_values && that_present_values))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.values, that.values))
+      if (!TBaseHelper.equalsSlow(this.values, that.values))
         return false;
     }
 
@@ -382,15 +382,15 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
         case VALUES:
           if (field.type == TType.LIST) {
             {
-              TList _list91 = iprot.readListBegin();
-              this.values = new ArrayList<String>(Math.max(0, _list91.size));
-              for (int _i92 = 0; 
-                   (_list91.size < 0) ? iprot.peekList() : (_i92 < _list91.size); 
-                   ++_i92)
+              TList _list99 = iprot.readListBegin();
+              this.values = new ArrayList<byte[]>(Math.max(0, _list99.size));
+              for (int _i100 = 0; 
+                   (_list99.size < 0) ? iprot.peekList() : (_i100 < _list99.size); 
+                   ++_i100)
               {
-                String _elem93;
-                _elem93 = iprot.readString();
-                this.values.add(_elem93);
+                byte[] _elem101;
+                _elem101 = iprot.readBinary();
+                this.values.add(_elem101);
               }
               iprot.readListEnd();
             }
@@ -427,8 +427,8 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(VALUES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.values.size()));
-        for (String _iter94 : this.values)        {
-          oprot.writeString(_iter94);
+        for (byte[] _iter102 : this.values)        {
+          oprot.writeBinary(_iter102);
         }
         oprot.writeListEnd();
       }

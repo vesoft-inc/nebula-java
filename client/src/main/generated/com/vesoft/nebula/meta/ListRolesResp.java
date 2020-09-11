@@ -39,7 +39,7 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<com.vesoft.nebula.RoleItem> roles;
+  public List<RoleItem> roles;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int ROLES = 3;
@@ -58,7 +58,7 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(ROLES, new FieldMetaData("roles", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.RoleItem.class))));
+            new StructMetaData(TType.STRUCT, RoleItem.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -72,7 +72,7 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
   public ListRolesResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<com.vesoft.nebula.RoleItem> roles)
+    List<RoleItem> roles)
   {
     this();
     this.code = code;
@@ -160,11 +160,11 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public List<com.vesoft.nebula.RoleItem>  getRoles() {
+  public List<RoleItem>  getRoles() {
     return this.roles;
   }
 
-  public ListRolesResp setRoles(List<com.vesoft.nebula.RoleItem> roles) {
+  public ListRolesResp setRoles(List<RoleItem> roles) {
     this.roles = roles;
     return this;
   }
@@ -207,7 +207,7 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
       if (value == null) {
         unsetRoles();
       } else {
-        setRoles((List<com.vesoft.nebula.RoleItem>)value);
+        setRoles((List<RoleItem>)value);
       }
       break;
 
@@ -382,16 +382,16 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
         case ROLES:
           if (field.type == TType.LIST) {
             {
-              TList _list129 = iprot.readListBegin();
-              this.roles = new ArrayList<com.vesoft.nebula.RoleItem>(Math.max(0, _list129.size));
-              for (int _i130 = 0; 
-                   (_list129.size < 0) ? iprot.peekList() : (_i130 < _list129.size); 
-                   ++_i130)
+              TList _list137 = iprot.readListBegin();
+              this.roles = new ArrayList<RoleItem>(Math.max(0, _list137.size));
+              for (int _i138 = 0; 
+                   (_list137.size < 0) ? iprot.peekList() : (_i138 < _list137.size); 
+                   ++_i138)
               {
-                com.vesoft.nebula.RoleItem _elem131;
-                _elem131 = new com.vesoft.nebula.RoleItem();
-                _elem131.read(iprot);
-                this.roles.add(_elem131);
+                RoleItem _elem139;
+                _elem139 = new RoleItem();
+                _elem139.read(iprot);
+                this.roles.add(_elem139);
               }
               iprot.readListEnd();
             }
@@ -428,8 +428,8 @@ public class ListRolesResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(ROLES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.roles.size()));
-        for (com.vesoft.nebula.RoleItem _iter132 : this.roles)        {
-          _iter132.write(oprot);
+        for (RoleItem _iter140 : this.roles)        {
+          _iter140.write(oprot);
         }
         oprot.writeListEnd();
       }

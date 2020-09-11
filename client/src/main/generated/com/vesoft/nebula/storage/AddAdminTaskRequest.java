@@ -32,43 +32,31 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
   private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)1);
   private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)2);
   private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)3);
-  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)4);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.LIST, (short)5);
-  private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)6);
-  private static final TField DELAY_MS_FIELD_DESC = new TField("delay_ms", TType.I64, (short)7);
-  private static final TField CONCURRENT_FIELD_DESC = new TField("concurrent", TType.I32, (short)8);
+  private static final TField PARA_FIELD_DESC = new TField("para", TType.STRUCT, (short)4);
+  private static final TField CONCURRENCY_FIELD_DESC = new TField("concurrency", TType.I32, (short)5);
 
   /**
    * 
-   * @see com.vesoft.nebula.AdminCmd
+   * @see com.vesoft.nebula.meta.AdminCmd
    */
   public int cmd;
   public int job_id;
   public int task_id;
-  public int space_id;
-  public List<Integer> parts;
-  public int index_id;
-  public long delay_ms;
-  public int concurrent;
+  public TaskPara para;
+  public int concurrency;
   public static final int CMD = 1;
   public static final int JOB_ID = 2;
   public static final int TASK_ID = 3;
-  public static final int SPACE_ID = 4;
-  public static final int PARTS = 5;
-  public static final int INDEX_ID = 6;
-  public static final int DELAY_MS = 7;
-  public static final int CONCURRENT = 8;
+  public static final int PARA = 4;
+  public static final int CONCURRENCY = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __CMD_ISSET_ID = 0;
   private static final int __JOB_ID_ISSET_ID = 1;
   private static final int __TASK_ID_ISSET_ID = 2;
-  private static final int __SPACE_ID_ISSET_ID = 3;
-  private static final int __INDEX_ID_ISSET_ID = 4;
-  private static final int __DELAY_MS_ISSET_ID = 5;
-  private static final int __CONCURRENT_ISSET_ID = 6;
-  private BitSet __isset_bit_vector = new BitSet(7);
+  private static final int __CONCURRENCY_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -79,16 +67,9 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(TASK_ID, new FieldMetaData("task_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.OPTIONAL, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.I32))));
-    tmpMetaDataMap.put(INDEX_ID, new FieldMetaData("index_id", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(DELAY_MS, new FieldMetaData("delay_ms", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(CONCURRENT, new FieldMetaData("concurrent", TFieldRequirementType.OPTIONAL, 
+    tmpMetaDataMap.put(PARA, new FieldMetaData("para", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, TaskPara.class)));
+    tmpMetaDataMap.put(CONCURRENCY, new FieldMetaData("concurrency", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -104,7 +85,7 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     int cmd,
     int job_id,
     int task_id,
-    int space_id)
+    TaskPara para)
   {
     this();
     this.cmd = cmd;
@@ -113,19 +94,15 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     setJob_idIsSet(true);
     this.task_id = task_id;
     setTask_idIsSet(true);
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+    this.para = para;
   }
 
   public AddAdminTaskRequest(
     int cmd,
     int job_id,
     int task_id,
-    int space_id,
-    List<Integer> parts,
-    int index_id,
-    long delay_ms,
-    int concurrent)
+    TaskPara para,
+    int concurrency)
   {
     this();
     this.cmd = cmd;
@@ -134,15 +111,9 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     setJob_idIsSet(true);
     this.task_id = task_id;
     setTask_idIsSet(true);
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
-    this.parts = parts;
-    this.index_id = index_id;
-    setIndex_idIsSet(true);
-    this.delay_ms = delay_ms;
-    setDelay_msIsSet(true);
-    this.concurrent = concurrent;
-    setConcurrentIsSet(true);
+    this.para = para;
+    this.concurrency = concurrency;
+    setConcurrencyIsSet(true);
   }
 
   /**
@@ -154,13 +125,10 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     this.cmd = TBaseHelper.deepCopy(other.cmd);
     this.job_id = TBaseHelper.deepCopy(other.job_id);
     this.task_id = TBaseHelper.deepCopy(other.task_id);
-    this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetParts()) {
-      this.parts = TBaseHelper.deepCopy(other.parts);
+    if (other.isSetPara()) {
+      this.para = TBaseHelper.deepCopy(other.para);
     }
-    this.index_id = TBaseHelper.deepCopy(other.index_id);
-    this.delay_ms = TBaseHelper.deepCopy(other.delay_ms);
-    this.concurrent = TBaseHelper.deepCopy(other.concurrent);
+    this.concurrency = TBaseHelper.deepCopy(other.concurrency);
   }
 
   public AddAdminTaskRequest deepCopy() {
@@ -174,7 +142,7 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
 
   /**
    * 
-   * @see com.vesoft.nebula.AdminCmd
+   * @see com.vesoft.nebula.meta.AdminCmd
    */
   public int  getCmd() {
     return this.cmd;
@@ -182,7 +150,7 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
 
   /**
    * 
-   * @see com.vesoft.nebula.AdminCmd
+   * @see com.vesoft.nebula.meta.AdminCmd
    */
   public AddAdminTaskRequest setCmd(int cmd) {
     this.cmd = cmd;
@@ -249,123 +217,53 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     __isset_bit_vector.set(__TASK_ID_ISSET_ID, value);
   }
 
-  public int  getSpace_id() {
-    return this.space_id;
+  public TaskPara  getPara() {
+    return this.para;
   }
 
-  public AddAdminTaskRequest setSpace_id(int space_id) {
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+  public AddAdminTaskRequest setPara(TaskPara para) {
+    this.para = para;
     return this;
   }
 
-  public void unsetSpace_id() {
-    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
+  public void unsetPara() {
+    this.para = null;
   }
 
-  // Returns true if field space_id is set (has been assigned a value) and false otherwise
-  public boolean isSetSpace_id() {
-    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
+  // Returns true if field para is set (has been assigned a value) and false otherwise
+  public boolean isSetPara() {
+    return this.para != null;
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
-  }
-
-  public List<Integer>  getParts() {
-    return this.parts;
-  }
-
-  public AddAdminTaskRequest setParts(List<Integer> parts) {
-    this.parts = parts;
-    return this;
-  }
-
-  public void unsetParts() {
-    this.parts = null;
-  }
-
-  // Returns true if field parts is set (has been assigned a value) and false otherwise
-  public boolean isSetParts() {
-    return this.parts != null;
-  }
-
-  public void setPartsIsSet(boolean value) {
+  public void setParaIsSet(boolean value) {
     if (!value) {
-      this.parts = null;
+      this.para = null;
     }
   }
 
-  public int  getIndex_id() {
-    return this.index_id;
+  public int  getConcurrency() {
+    return this.concurrency;
   }
 
-  public AddAdminTaskRequest setIndex_id(int index_id) {
-    this.index_id = index_id;
-    setIndex_idIsSet(true);
+  public AddAdminTaskRequest setConcurrency(int concurrency) {
+    this.concurrency = concurrency;
+    setConcurrencyIsSet(true);
     return this;
   }
 
-  public void unsetIndex_id() {
-    __isset_bit_vector.clear(__INDEX_ID_ISSET_ID);
+  public void unsetConcurrency() {
+    __isset_bit_vector.clear(__CONCURRENCY_ISSET_ID);
   }
 
-  // Returns true if field index_id is set (has been assigned a value) and false otherwise
-  public boolean isSetIndex_id() {
-    return __isset_bit_vector.get(__INDEX_ID_ISSET_ID);
+  // Returns true if field concurrency is set (has been assigned a value) and false otherwise
+  public boolean isSetConcurrency() {
+    return __isset_bit_vector.get(__CONCURRENCY_ISSET_ID);
   }
 
-  public void setIndex_idIsSet(boolean value) {
-    __isset_bit_vector.set(__INDEX_ID_ISSET_ID, value);
+  public void setConcurrencyIsSet(boolean value) {
+    __isset_bit_vector.set(__CONCURRENCY_ISSET_ID, value);
   }
 
-  public long  getDelay_ms() {
-    return this.delay_ms;
-  }
-
-  public AddAdminTaskRequest setDelay_ms(long delay_ms) {
-    this.delay_ms = delay_ms;
-    setDelay_msIsSet(true);
-    return this;
-  }
-
-  public void unsetDelay_ms() {
-    __isset_bit_vector.clear(__DELAY_MS_ISSET_ID);
-  }
-
-  // Returns true if field delay_ms is set (has been assigned a value) and false otherwise
-  public boolean isSetDelay_ms() {
-    return __isset_bit_vector.get(__DELAY_MS_ISSET_ID);
-  }
-
-  public void setDelay_msIsSet(boolean value) {
-    __isset_bit_vector.set(__DELAY_MS_ISSET_ID, value);
-  }
-
-  public int  getConcurrent() {
-    return this.concurrent;
-  }
-
-  public AddAdminTaskRequest setConcurrent(int concurrent) {
-    this.concurrent = concurrent;
-    setConcurrentIsSet(true);
-    return this;
-  }
-
-  public void unsetConcurrent() {
-    __isset_bit_vector.clear(__CONCURRENT_ISSET_ID);
-  }
-
-  // Returns true if field concurrent is set (has been assigned a value) and false otherwise
-  public boolean isSetConcurrent() {
-    return __isset_bit_vector.get(__CONCURRENT_ISSET_ID);
-  }
-
-  public void setConcurrentIsSet(boolean value) {
-    __isset_bit_vector.set(__CONCURRENT_ISSET_ID, value);
-  }
-
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case CMD:
@@ -392,43 +290,19 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
-    case SPACE_ID:
+    case PARA:
       if (value == null) {
-        unsetSpace_id();
+        unsetPara();
       } else {
-        setSpace_id((Integer)value);
+        setPara((TaskPara)value);
       }
       break;
 
-    case PARTS:
+    case CONCURRENCY:
       if (value == null) {
-        unsetParts();
+        unsetConcurrency();
       } else {
-        setParts((List<Integer>)value);
-      }
-      break;
-
-    case INDEX_ID:
-      if (value == null) {
-        unsetIndex_id();
-      } else {
-        setIndex_id((Integer)value);
-      }
-      break;
-
-    case DELAY_MS:
-      if (value == null) {
-        unsetDelay_ms();
-      } else {
-        setDelay_ms((Long)value);
-      }
-      break;
-
-    case CONCURRENT:
-      if (value == null) {
-        unsetConcurrent();
-      } else {
-        setConcurrent((Integer)value);
+        setConcurrency((Integer)value);
       }
       break;
 
@@ -448,20 +322,11 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     case TASK_ID:
       return new Integer(getTask_id());
 
-    case SPACE_ID:
-      return new Integer(getSpace_id());
+    case PARA:
+      return getPara();
 
-    case PARTS:
-      return getParts();
-
-    case INDEX_ID:
-      return new Integer(getIndex_id());
-
-    case DELAY_MS:
-      return new Long(getDelay_ms());
-
-    case CONCURRENT:
-      return new Integer(getConcurrent());
+    case CONCURRENCY:
+      return new Integer(getConcurrency());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -477,16 +342,10 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       return isSetJob_id();
     case TASK_ID:
       return isSetTask_id();
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PARTS:
-      return isSetParts();
-    case INDEX_ID:
-      return isSetIndex_id();
-    case DELAY_MS:
-      return isSetDelay_ms();
-    case CONCURRENT:
-      return isSetConcurrent();
+    case PARA:
+      return isSetPara();
+    case CONCURRENCY:
+      return isSetConcurrency();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -534,48 +393,21 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
         return false;
     }
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
+    boolean this_present_para = true && this.isSetPara();
+    boolean that_present_para = true && that.isSetPara();
+    if (this_present_para || that_present_para) {
+      if (!(this_present_para && that_present_para))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
-
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
+      if (!TBaseHelper.equalsNobinary(this.para, that.para))
         return false;
     }
 
-    boolean this_present_index_id = true && this.isSetIndex_id();
-    boolean that_present_index_id = true && that.isSetIndex_id();
-    if (this_present_index_id || that_present_index_id) {
-      if (!(this_present_index_id && that_present_index_id))
+    boolean this_present_concurrency = true && this.isSetConcurrency();
+    boolean that_present_concurrency = true && that.isSetConcurrency();
+    if (this_present_concurrency || that_present_concurrency) {
+      if (!(this_present_concurrency && that_present_concurrency))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.index_id, that.index_id))
-        return false;
-    }
-
-    boolean this_present_delay_ms = true && this.isSetDelay_ms();
-    boolean that_present_delay_ms = true && that.isSetDelay_ms();
-    if (this_present_delay_ms || that_present_delay_ms) {
-      if (!(this_present_delay_ms && that_present_delay_ms))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.delay_ms, that.delay_ms))
-        return false;
-    }
-
-    boolean this_present_concurrent = true && this.isSetConcurrent();
-    boolean that_present_concurrent = true && that.isSetConcurrent();
-    if (this_present_concurrent || that_present_concurrent) {
-      if (!(this_present_concurrent && that_present_concurrent))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.concurrent, that.concurrent))
+      if (!TBaseHelper.equalsNobinary(this.concurrency, that.concurrency))
         return false;
     }
 
@@ -601,30 +433,15 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     if (present_task_id)
       builder.append(task_id);
 
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
+    boolean present_para = true && (isSetPara());
+    builder.append(present_para);
+    if (present_para)
+      builder.append(para);
 
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
-
-    boolean present_index_id = true && (isSetIndex_id());
-    builder.append(present_index_id);
-    if (present_index_id)
-      builder.append(index_id);
-
-    boolean present_delay_ms = true && (isSetDelay_ms());
-    builder.append(present_delay_ms);
-    if (present_delay_ms)
-      builder.append(delay_ms);
-
-    boolean present_concurrent = true && (isSetConcurrent());
-    builder.append(present_concurrent);
-    if (present_concurrent)
-      builder.append(concurrent);
+    boolean present_concurrency = true && (isSetConcurrency());
+    builder.append(present_concurrency);
+    if (present_concurrency)
+      builder.append(concurrency);
 
     return builder.toHashCode();
   }
@@ -665,43 +482,19 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    lastComparison = Boolean.valueOf(isSetPara()).compareTo(other.isSetPara());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    lastComparison = TBaseHelper.compareTo(para, other.para);
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
+    lastComparison = Boolean.valueOf(isSetConcurrency()).compareTo(other.isSetConcurrency());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetIndex_id()).compareTo(other.isSetIndex_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(index_id, other.index_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetDelay_ms()).compareTo(other.isSetDelay_ms());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(delay_ms, other.delay_ms);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetConcurrent()).compareTo(other.isSetConcurrent());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(concurrent, other.concurrent);
+    lastComparison = TBaseHelper.compareTo(concurrency, other.concurrency);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -743,53 +536,18 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case SPACE_ID:
+        case PARA:
+          if (field.type == TType.STRUCT) {
+            this.para = new TaskPara();
+            this.para.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case CONCURRENCY:
           if (field.type == TType.I32) {
-            this.space_id = iprot.readI32();
-            setSpace_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case PARTS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list240 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list240.size));
-              for (int _i241 = 0; 
-                   (_list240.size < 0) ? iprot.peekList() : (_i241 < _list240.size); 
-                   ++_i241)
-              {
-                int _elem242;
-                _elem242 = iprot.readI32();
-                this.parts.add(_elem242);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case INDEX_ID:
-          if (field.type == TType.I32) {
-            this.index_id = iprot.readI32();
-            setIndex_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case DELAY_MS:
-          if (field.type == TType.I64) {
-            this.delay_ms = iprot.readI64();
-            setDelay_msIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case CONCURRENT:
-          if (field.type == TType.I32) {
-            this.concurrent = iprot.readI32();
-            setConcurrentIsSet(true);
+            this.concurrency = iprot.readI32();
+            setConcurrencyIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -820,35 +578,14 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     oprot.writeFieldBegin(TASK_ID_FIELD_DESC);
     oprot.writeI32(this.task_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
-    oprot.writeI32(this.space_id);
-    oprot.writeFieldEnd();
-    if (this.parts != null) {
-      if (isSetParts()) {
-        oprot.writeFieldBegin(PARTS_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-          for (int _iter243 : this.parts)          {
-            oprot.writeI32(_iter243);
-          }
-          oprot.writeListEnd();
-        }
-        oprot.writeFieldEnd();
-      }
-    }
-    if (isSetIndex_id()) {
-      oprot.writeFieldBegin(INDEX_ID_FIELD_DESC);
-      oprot.writeI32(this.index_id);
+    if (this.para != null) {
+      oprot.writeFieldBegin(PARA_FIELD_DESC);
+      this.para.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (isSetDelay_ms()) {
-      oprot.writeFieldBegin(DELAY_MS_FIELD_DESC);
-      oprot.writeI64(this.delay_ms);
-      oprot.writeFieldEnd();
-    }
-    if (isSetConcurrent()) {
-      oprot.writeFieldBegin(CONCURRENT_FIELD_DESC);
-      oprot.writeI32(this.concurrent);
+    if (isSetConcurrency()) {
+      oprot.writeFieldBegin(CONCURRENCY_FIELD_DESC);
+      oprot.writeI32(this.concurrency);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -880,7 +617,7 @@ String space = prettyPrint ? " " : "";
     sb.append("cmd");
     sb.append(space);
     sb.append(":").append(space);
-    String cmd_name = com.vesoft.nebula.AdminCmd.VALUES_TO_NAMES.get(this. getCmd());
+    String cmd_name = com.vesoft.nebula.meta.AdminCmd.VALUES_TO_NAMES.get(this. getCmd());
     if (cmd_name != null) {
       sb.append(cmd_name);
       sb.append(" (");
@@ -906,53 +643,23 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("space_id");
+    sb.append("para");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    if (this. getPara() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getPara(), indent + 1, prettyPrint));
+    }
     first = false;
-    if (isSetParts())
+    if (isSetConcurrency())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("parts");
+      sb.append("concurrency");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getParts() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetIndex_id())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("index_id");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getIndex_id(), indent + 1, prettyPrint));
-      first = false;
-    }
-    if (isSetDelay_ms())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("delay_ms");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getDelay_ms(), indent + 1, prettyPrint));
-      first = false;
-    }
-    if (isSetConcurrent())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("concurrent");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getConcurrent(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getConcurrency(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -963,7 +670,7 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
-    if (isSetCmd() && !com.vesoft.nebula.AdminCmd.VALID_VALUES.contains(cmd)){
+    if (isSetCmd() && !com.vesoft.nebula.meta.AdminCmd.VALID_VALUES.contains(cmd)){
       throw new TProtocolException("The field 'cmd' has been assigned the invalid value " + cmd);
     }
   }

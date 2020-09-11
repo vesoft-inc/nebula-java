@@ -35,8 +35,8 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
 
   public int space_id;
-  public String tag_name;
-  public com.vesoft.nebula.Schema schema;
+  public byte[] tag_name;
+  public Schema schema;
   public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int TAG_NAME = 2;
@@ -57,7 +57,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(TAG_NAME, new FieldMetaData("tag_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+        new StructMetaData(TType.STRUCT, Schema.class)));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -72,8 +72,8 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
 
   public CreateTagReq(
     int space_id,
-    String tag_name,
-    com.vesoft.nebula.Schema schema,
+    byte[] tag_name,
+    Schema schema,
     boolean if_not_exists)
   {
     this();
@@ -133,11 +133,11 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getTag_name() {
+  public byte[]  getTag_name() {
     return this.tag_name;
   }
 
-  public CreateTagReq setTag_name(String tag_name) {
+  public CreateTagReq setTag_name(byte[] tag_name) {
     this.tag_name = tag_name;
     return this;
   }
@@ -157,11 +157,11 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
+  public Schema  getSchema() {
     return this.schema;
   }
 
-  public CreateTagReq setSchema(com.vesoft.nebula.Schema schema) {
+  public CreateTagReq setSchema(Schema schema) {
     this.schema = schema;
     return this;
   }
@@ -218,7 +218,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetTag_name();
       } else {
-        setTag_name((String)value);
+        setTag_name((byte[])value);
       }
       break;
 
@@ -226,7 +226,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSchema();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
+        setSchema((Schema)value);
       }
       break;
 
@@ -307,7 +307,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
     if (this_present_tag_name || that_present_tag_name) {
       if (!(this_present_tag_name && that_present_tag_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_name, that.tag_name))
+      if (!TBaseHelper.equalsSlow(this.tag_name, that.tag_name))
         return false;
     }
 
@@ -380,14 +380,14 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
           break;
         case TAG_NAME:
           if (field.type == TType.STRING) {
-            this.tag_name = iprot.readString();
+            this.tag_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case SCHEMA:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
+            this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -423,7 +423,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldEnd();
     if (this.tag_name != null) {
       oprot.writeFieldBegin(TAG_NAME_FIELD_DESC);
-      oprot.writeString(this.tag_name);
+      oprot.writeBinary(this.tag_name);
       oprot.writeFieldEnd();
     }
     if (this.schema != null) {
@@ -473,7 +473,12 @@ String space = prettyPrint ? " " : "";
     if (this. getTag_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTag_name(), indent + 1, prettyPrint));
+        int __tag_name_size = Math.min(this. getTag_name().length, 128);
+        for (int i = 0; i < __tag_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getTag_name()[i]).length() > 1 ? Integer.toHexString(this. getTag_name()[i]).substring(Integer.toHexString(this. getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTag_name()[i]).toUpperCase());
+        }
+        if (this. getTag_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

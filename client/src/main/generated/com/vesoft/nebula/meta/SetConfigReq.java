@@ -27,28 +27,21 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Comparable<SetConfigReq> {
+public class SetConfigReq implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("SetConfigReq");
   private static final TField ITEM_FIELD_DESC = new TField("item", TType.STRUCT, (short)1);
-  private static final TField FORCE_FIELD_DESC = new TField("force", TType.BOOL, (short)2);
 
   public ConfigItem item;
-  public boolean force;
   public static final int ITEM = 1;
-  public static final int FORCE = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __FORCE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ITEM, new FieldMetaData("item", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, ConfigItem.class)));
-    tmpMetaDataMap.put(FORCE, new FieldMetaData("force", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -60,25 +53,19 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public SetConfigReq(
-    ConfigItem item,
-    boolean force)
+    ConfigItem item)
   {
     this();
     this.item = item;
-    this.force = force;
-    setForceIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public SetConfigReq(SetConfigReq other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetItem()) {
       this.item = TBaseHelper.deepCopy(other.item);
     }
-    this.force = TBaseHelper.deepCopy(other.force);
   }
 
   public SetConfigReq deepCopy() {
@@ -114,29 +101,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  public boolean  isForce() {
-    return this.force;
-  }
-
-  public SetConfigReq setForce(boolean force) {
-    this.force = force;
-    setForceIsSet(true);
-    return this;
-  }
-
-  public void unsetForce() {
-    __isset_bit_vector.clear(__FORCE_ISSET_ID);
-  }
-
-  // Returns true if field force is set (has been assigned a value) and false otherwise
-  public boolean isSetForce() {
-    return __isset_bit_vector.get(__FORCE_ISSET_ID);
-  }
-
-  public void setForceIsSet(boolean value) {
-    __isset_bit_vector.set(__FORCE_ISSET_ID, value);
-  }
-
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case ITEM:
@@ -144,14 +108,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
         unsetItem();
       } else {
         setItem((ConfigItem)value);
-      }
-      break;
-
-    case FORCE:
-      if (value == null) {
-        unsetForce();
-      } else {
-        setForce((Boolean)value);
       }
       break;
 
@@ -165,9 +121,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     case ITEM:
       return getItem();
 
-    case FORCE:
-      return new Boolean(isForce());
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -178,8 +131,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     switch (fieldID) {
     case ITEM:
       return isSetItem();
-    case FORCE:
-      return isSetForce();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -209,15 +160,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
         return false;
     }
 
-    boolean this_present_force = true;
-    boolean that_present_force = true;
-    if (this_present_force || that_present_force) {
-      if (!(this_present_force && that_present_force))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.force, that.force))
-        return false;
-    }
-
     return true;
   }
 
@@ -230,43 +172,7 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     if (present_item)
       builder.append(item);
 
-    boolean present_force = true;
-    builder.append(present_force);
-    if (present_force)
-      builder.append(force);
-
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(SetConfigReq other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetItem()).compareTo(other.isSetItem());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(item, other.item);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetForce()).compareTo(other.isSetForce());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(force, other.force);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -284,14 +190,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
           if (field.type == TType.STRUCT) {
             this.item = new ConfigItem();
             this.item.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case FORCE:
-          if (field.type == TType.BOOL) {
-            this.force = iprot.readBool();
-            setForceIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -318,9 +216,6 @@ public class SetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
       this.item.write(oprot);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(FORCE_FIELD_DESC);
-    oprot.writeBool(this.force);
-    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -355,13 +250,6 @@ String space = prettyPrint ? " " : "";
     } else {
       sb.append(TBaseHelper.toString(this. getItem(), indent + 1, prettyPrint));
     }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("force");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isForce(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

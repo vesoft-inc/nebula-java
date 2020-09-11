@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetConfigReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetConfigReq> {
+public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("GetConfigReq");
   private static final TField ITEM_FIELD_DESC = new TField("item", TType.STRUCT, (short)1);
 
@@ -173,29 +173,6 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable, Com
       builder.append(item);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(GetConfigReq other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetItem()).compareTo(other.isSetItem());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(item, other.item);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {

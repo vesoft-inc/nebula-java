@@ -30,17 +30,15 @@ import com.facebook.thrift.protocol.*;
 public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetUUIDResp> {
   private static final TStruct STRUCT_DESC = new TStruct("GetUUIDResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)2);
+  private static final TField ID_FIELD_DESC = new TField("id", TType.STRING, (short)2);
 
   public ResponseCommon result;
-  public long id;
+  public byte[] id;
   public static final int RESULT = 1;
   public static final int ID = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -48,7 +46,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -68,24 +66,23 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
 
   public GetUUIDResp(
     ResponseCommon result,
-    long id)
+    byte[] id)
   {
     this();
     this.result = result;
     this.id = id;
-    setIdIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public GetUUIDResp(GetUUIDResp other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    this.id = TBaseHelper.deepCopy(other.id);
+    if (other.isSetId()) {
+      this.id = TBaseHelper.deepCopy(other.id);
+    }
   }
 
   public GetUUIDResp deepCopy() {
@@ -121,27 +118,28 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public long  getId() {
+  public byte[]  getId() {
     return this.id;
   }
 
-  public GetUUIDResp setId(long id) {
+  public GetUUIDResp setId(byte[] id) {
     this.id = id;
-    setIdIsSet(true);
     return this;
   }
 
   public void unsetId() {
-    __isset_bit_vector.clear(__ID_ISSET_ID);
+    this.id = null;
   }
 
   // Returns true if field id is set (has been assigned a value) and false otherwise
   public boolean isSetId() {
-    return __isset_bit_vector.get(__ID_ISSET_ID);
+    return this.id != null;
   }
 
   public void setIdIsSet(boolean value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, value);
+    if (!value) {
+      this.id = null;
+    }
   }
 
   public void setFieldValue(int fieldID, Object value) {
@@ -158,7 +156,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetId();
       } else {
-        setId((Long)value);
+        setId((byte[])value);
       }
       break;
 
@@ -173,7 +171,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
       return getResult();
 
     case ID:
-      return new Long(getId());
+      return getId();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -216,12 +214,12 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
         return false;
     }
 
-    boolean this_present_id = true;
-    boolean that_present_id = true;
+    boolean this_present_id = true && this.isSetId();
+    boolean that_present_id = true && that.isSetId();
     if (this_present_id || that_present_id) {
       if (!(this_present_id && that_present_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
+      if (!TBaseHelper.equalsSlow(this.id, that.id))
         return false;
     }
 
@@ -237,7 +235,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     if (present_result)
       builder.append(result);
 
-    boolean present_id = true;
+    boolean present_id = true && (isSetId());
     builder.append(present_id);
     if (present_id)
       builder.append(id);
@@ -296,9 +294,8 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
           }
           break;
         case ID:
-          if (field.type == TType.I64) {
-            this.id = iprot.readI64();
-            setIdIsSet(true);
+          if (field.type == TType.STRING) {
+            this.id = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -325,9 +322,11 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(ID_FIELD_DESC);
-    oprot.writeI64(this.id);
-    oprot.writeFieldEnd();
+    if (this.id != null) {
+      oprot.writeFieldBegin(ID_FIELD_DESC);
+      oprot.writeBinary(this.id);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -368,7 +367,16 @@ String space = prettyPrint ? " " : "";
     sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+    if (this. getId() == null) {
+      sb.append("null");
+    } else {
+        int __id_size = Math.min(this. getId().length, 128);
+        for (int i = 0; i < __id_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getId()[i]).length() > 1 ? Integer.toHexString(this. getId()[i]).substring(Integer.toHexString(this. getId()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getId()[i]).toUpperCase());
+        }
+        if (this. getId().length > 128) sb.append(" ...");
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

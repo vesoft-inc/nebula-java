@@ -39,7 +39,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<String> values;
+  public List<byte[]> values;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int VALUES = 3;
@@ -72,7 +72,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
   public ScanResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<String> values)
+    List<byte[]> values)
   {
     this();
     this.code = code;
@@ -160,11 +160,11 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public List<String>  getValues() {
+  public List<byte[]>  getValues() {
     return this.values;
   }
 
-  public ScanResp setValues(List<String> values) {
+  public ScanResp setValues(List<byte[]> values) {
     this.values = values;
     return this;
   }
@@ -207,7 +207,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetValues();
       } else {
-        setValues((List<String>)value);
+        setValues((List<byte[]>)value);
       }
       break;
 
@@ -284,7 +284,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     if (this_present_values || that_present_values) {
       if (!(this_present_values && that_present_values))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.values, that.values))
+      if (!TBaseHelper.equalsSlow(this.values, that.values))
         return false;
     }
 
@@ -382,15 +382,15 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
         case VALUES:
           if (field.type == TType.LIST) {
             {
-              TList _list95 = iprot.readListBegin();
-              this.values = new ArrayList<String>(Math.max(0, _list95.size));
-              for (int _i96 = 0; 
-                   (_list95.size < 0) ? iprot.peekList() : (_i96 < _list95.size); 
-                   ++_i96)
+              TList _list103 = iprot.readListBegin();
+              this.values = new ArrayList<byte[]>(Math.max(0, _list103.size));
+              for (int _i104 = 0; 
+                   (_list103.size < 0) ? iprot.peekList() : (_i104 < _list103.size); 
+                   ++_i104)
               {
-                String _elem97;
-                _elem97 = iprot.readString();
-                this.values.add(_elem97);
+                byte[] _elem105;
+                _elem105 = iprot.readBinary();
+                this.values.add(_elem105);
               }
               iprot.readListEnd();
             }
@@ -427,8 +427,8 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(VALUES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.values.size()));
-        for (String _iter98 : this.values)        {
-          oprot.writeString(_iter98);
+        for (byte[] _iter106 : this.values)        {
+          oprot.writeBinary(_iter106);
         }
         oprot.writeListEnd();
       }

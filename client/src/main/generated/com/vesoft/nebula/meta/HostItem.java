@@ -33,6 +33,8 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)2);
   private static final TField LEADER_PARTS_FIELD_DESC = new TField("leader_parts", TType.MAP, (short)3);
   private static final TField ALL_PARTS_FIELD_DESC = new TField("all_parts", TType.MAP, (short)4);
+  private static final TField ROLE_FIELD_DESC = new TField("role", TType.I32, (short)5);
+  private static final TField GIT_INFO_SHA_FIELD_DESC = new TField("git_info_sha", TType.STRING, (short)6);
 
   public com.vesoft.nebula.HostAddr hostAddr;
   /**
@@ -40,17 +42,22 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
    * @see HostStatus
    */
   public int status;
-  public Map<String,List<Integer>> leader_parts;
-  public Map<String,List<Integer>> all_parts;
+  public Map<byte[],List<Integer>> leader_parts;
+  public Map<byte[],List<Integer>> all_parts;
+  public int role;
+  public byte[] git_info_sha;
   public static final int HOSTADDR = 1;
   public static final int STATUS = 2;
   public static final int LEADER_PARTS = 3;
   public static final int ALL_PARTS = 4;
+  public static final int ROLE = 5;
+  public static final int GIT_INFO_SHA = 6;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __STATUS_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __ROLE_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -69,6 +76,10 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
             new FieldValueMetaData(TType.STRING), 
             new ListMetaData(TType.LIST, 
                 new FieldValueMetaData(TType.I32)))));
+    tmpMetaDataMap.put(ROLE, new FieldMetaData("role", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(GIT_INFO_SHA, new FieldMetaData("git_info_sha", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -82,8 +93,10 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   public HostItem(
     com.vesoft.nebula.HostAddr hostAddr,
     int status,
-    Map<String,List<Integer>> leader_parts,
-    Map<String,List<Integer>> all_parts)
+    Map<byte[],List<Integer>> leader_parts,
+    Map<byte[],List<Integer>> all_parts,
+    int role,
+    byte[] git_info_sha)
   {
     this();
     this.hostAddr = hostAddr;
@@ -91,6 +104,9 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     setStatusIsSet(true);
     this.leader_parts = leader_parts;
     this.all_parts = all_parts;
+    this.role = role;
+    setRoleIsSet(true);
+    this.git_info_sha = git_info_sha;
   }
 
   /**
@@ -108,6 +124,10 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
     if (other.isSetAll_parts()) {
       this.all_parts = TBaseHelper.deepCopy(other.all_parts);
+    }
+    this.role = TBaseHelper.deepCopy(other.role);
+    if (other.isSetGit_info_sha()) {
+      this.git_info_sha = TBaseHelper.deepCopy(other.git_info_sha);
     }
   }
 
@@ -175,11 +195,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.set(__STATUS_ISSET_ID, value);
   }
 
-  public Map<String,List<Integer>>  getLeader_parts() {
+  public Map<byte[],List<Integer>>  getLeader_parts() {
     return this.leader_parts;
   }
 
-  public HostItem setLeader_parts(Map<String,List<Integer>> leader_parts) {
+  public HostItem setLeader_parts(Map<byte[],List<Integer>> leader_parts) {
     this.leader_parts = leader_parts;
     return this;
   }
@@ -199,11 +219,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public Map<String,List<Integer>>  getAll_parts() {
+  public Map<byte[],List<Integer>>  getAll_parts() {
     return this.all_parts;
   }
 
-  public HostItem setAll_parts(Map<String,List<Integer>> all_parts) {
+  public HostItem setAll_parts(Map<byte[],List<Integer>> all_parts) {
     this.all_parts = all_parts;
     return this;
   }
@@ -220,6 +240,53 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   public void setAll_partsIsSet(boolean value) {
     if (!value) {
       this.all_parts = null;
+    }
+  }
+
+  public int  getRole() {
+    return this.role;
+  }
+
+  public HostItem setRole(int role) {
+    this.role = role;
+    setRoleIsSet(true);
+    return this;
+  }
+
+  public void unsetRole() {
+    __isset_bit_vector.clear(__ROLE_ISSET_ID);
+  }
+
+  // Returns true if field role is set (has been assigned a value) and false otherwise
+  public boolean isSetRole() {
+    return __isset_bit_vector.get(__ROLE_ISSET_ID);
+  }
+
+  public void setRoleIsSet(boolean value) {
+    __isset_bit_vector.set(__ROLE_ISSET_ID, value);
+  }
+
+  public byte[]  getGit_info_sha() {
+    return this.git_info_sha;
+  }
+
+  public HostItem setGit_info_sha(byte[] git_info_sha) {
+    this.git_info_sha = git_info_sha;
+    return this;
+  }
+
+  public void unsetGit_info_sha() {
+    this.git_info_sha = null;
+  }
+
+  // Returns true if field git_info_sha is set (has been assigned a value) and false otherwise
+  public boolean isSetGit_info_sha() {
+    return this.git_info_sha != null;
+  }
+
+  public void setGit_info_shaIsSet(boolean value) {
+    if (!value) {
+      this.git_info_sha = null;
     }
   }
 
@@ -246,7 +313,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetLeader_parts();
       } else {
-        setLeader_parts((Map<String,List<Integer>>)value);
+        setLeader_parts((Map<byte[],List<Integer>>)value);
       }
       break;
 
@@ -254,7 +321,23 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetAll_parts();
       } else {
-        setAll_parts((Map<String,List<Integer>>)value);
+        setAll_parts((Map<byte[],List<Integer>>)value);
+      }
+      break;
+
+    case ROLE:
+      if (value == null) {
+        unsetRole();
+      } else {
+        setRole((Integer)value);
+      }
+      break;
+
+    case GIT_INFO_SHA:
+      if (value == null) {
+        unsetGit_info_sha();
+      } else {
+        setGit_info_sha((byte[])value);
       }
       break;
 
@@ -277,6 +360,12 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     case ALL_PARTS:
       return getAll_parts();
 
+    case ROLE:
+      return getRole();
+
+    case GIT_INFO_SHA:
+      return getGit_info_sha();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -293,6 +382,10 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return isSetLeader_parts();
     case ALL_PARTS:
       return isSetAll_parts();
+    case ROLE:
+      return isSetRole();
+    case GIT_INFO_SHA:
+      return isSetGit_info_sha();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -336,7 +429,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     if (this_present_leader_parts || that_present_leader_parts) {
       if (!(this_present_leader_parts && that_present_leader_parts))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_parts, that.leader_parts))
+      if (!TBaseHelper.equalsSlow(this.leader_parts, that.leader_parts))
         return false;
     }
 
@@ -345,7 +438,25 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     if (this_present_all_parts || that_present_all_parts) {
       if (!(this_present_all_parts && that_present_all_parts))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.all_parts, that.all_parts))
+      if (!TBaseHelper.equalsSlow(this.all_parts, that.all_parts))
+        return false;
+    }
+
+    boolean this_present_role = true;
+    boolean that_present_role = true;
+    if (this_present_role || that_present_role) {
+      if (!(this_present_role && that_present_role))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.role, that.role))
+        return false;
+    }
+
+    boolean this_present_git_info_sha = true && this.isSetGit_info_sha();
+    boolean that_present_git_info_sha = true && that.isSetGit_info_sha();
+    if (this_present_git_info_sha || that_present_git_info_sha) {
+      if (!(this_present_git_info_sha && that_present_git_info_sha))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.git_info_sha, that.git_info_sha))
         return false;
     }
 
@@ -375,6 +486,16 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     builder.append(present_all_parts);
     if (present_all_parts)
       builder.append(all_parts);
+
+    boolean present_role = true;
+    builder.append(present_role);
+    if (present_role)
+      builder.append(role);
+
+    boolean present_git_info_sha = true && (isSetGit_info_sha());
+    builder.append(present_git_info_sha);
+    if (present_git_info_sha)
+      builder.append(git_info_sha);
 
     return builder.toHashCode();
   }
@@ -423,6 +544,22 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetRole()).compareTo(other.isSetRole());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(role, other.role);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetGit_info_sha()).compareTo(other.isSetGit_info_sha());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(git_info_sha, other.git_info_sha);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -456,29 +593,29 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
         case LEADER_PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map0 = iprot.readMapBegin();
-              this.leader_parts = new HashMap<String,List<Integer>>(Math.max(0, 2*_map0.size));
-              for (int _i1 = 0; 
-                   (_map0.size < 0) ? iprot.peekMap() : (_i1 < _map0.size); 
-                   ++_i1)
+              TMap _map8 = iprot.readMapBegin();
+              this.leader_parts = new HashMap<byte[],List<Integer>>(Math.max(0, 2*_map8.size));
+              for (int _i9 = 0; 
+                   (_map8.size < 0) ? iprot.peekMap() : (_i9 < _map8.size); 
+                   ++_i9)
               {
-                String _key2;
-                List<Integer> _val3;
-                _key2 = iprot.readString();
+                byte[] _key10;
+                List<Integer> _val11;
+                _key10 = iprot.readBinary();
                 {
-                  TList _list4 = iprot.readListBegin();
-                  _val3 = new ArrayList<Integer>(Math.max(0, _list4.size));
-                  for (int _i5 = 0; 
-                       (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
-                       ++_i5)
+                  TList _list12 = iprot.readListBegin();
+                  _val11 = new ArrayList<Integer>(Math.max(0, _list12.size));
+                  for (int _i13 = 0; 
+                       (_list12.size < 0) ? iprot.peekList() : (_i13 < _list12.size); 
+                       ++_i13)
                   {
-                    int _elem6;
-                    _elem6 = iprot.readI32();
-                    _val3.add(_elem6);
+                    int _elem14;
+                    _elem14 = iprot.readI32();
+                    _val11.add(_elem14);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_parts.put(_key2, _val3);
+                this.leader_parts.put(_key10, _val11);
               }
               iprot.readMapEnd();
             }
@@ -489,32 +626,47 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
         case ALL_PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map7 = iprot.readMapBegin();
-              this.all_parts = new HashMap<String,List<Integer>>(Math.max(0, 2*_map7.size));
-              for (int _i8 = 0; 
-                   (_map7.size < 0) ? iprot.peekMap() : (_i8 < _map7.size); 
-                   ++_i8)
+              TMap _map15 = iprot.readMapBegin();
+              this.all_parts = new HashMap<byte[],List<Integer>>(Math.max(0, 2*_map15.size));
+              for (int _i16 = 0; 
+                   (_map15.size < 0) ? iprot.peekMap() : (_i16 < _map15.size); 
+                   ++_i16)
               {
-                String _key9;
-                List<Integer> _val10;
-                _key9 = iprot.readString();
+                byte[] _key17;
+                List<Integer> _val18;
+                _key17 = iprot.readBinary();
                 {
-                  TList _list11 = iprot.readListBegin();
-                  _val10 = new ArrayList<Integer>(Math.max(0, _list11.size));
-                  for (int _i12 = 0; 
-                       (_list11.size < 0) ? iprot.peekList() : (_i12 < _list11.size); 
-                       ++_i12)
+                  TList _list19 = iprot.readListBegin();
+                  _val18 = new ArrayList<Integer>(Math.max(0, _list19.size));
+                  for (int _i20 = 0; 
+                       (_list19.size < 0) ? iprot.peekList() : (_i20 < _list19.size); 
+                       ++_i20)
                   {
-                    int _elem13;
-                    _elem13 = iprot.readI32();
-                    _val10.add(_elem13);
+                    int _elem21;
+                    _elem21 = iprot.readI32();
+                    _val18.add(_elem21);
                   }
                   iprot.readListEnd();
                 }
-                this.all_parts.put(_key9, _val10);
+                this.all_parts.put(_key17, _val18);
               }
               iprot.readMapEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case ROLE:
+          if (field.type == TType.I32) {
+            this.role = iprot.readI32();
+            setRoleIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case GIT_INFO_SHA:
+          if (field.type == TType.STRING) {
+            this.git_info_sha = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -548,12 +700,12 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.leader_parts.size()));
-        for (Map.Entry<String, List<Integer>> _iter14 : this.leader_parts.entrySet())        {
-          oprot.writeString(_iter14.getKey());
+        for (Map.Entry<byte[], List<Integer>> _iter22 : this.leader_parts.entrySet())        {
+          oprot.writeBinary(_iter22.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter14.getValue().size()));
-            for (int _iter15 : _iter14.getValue())            {
-              oprot.writeI32(_iter15);
+            oprot.writeListBegin(new TList(TType.I32, _iter22.getValue().size()));
+            for (int _iter23 : _iter22.getValue())            {
+              oprot.writeI32(_iter23);
             }
             oprot.writeListEnd();
           }
@@ -566,18 +718,26 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(ALL_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.all_parts.size()));
-        for (Map.Entry<String, List<Integer>> _iter16 : this.all_parts.entrySet())        {
-          oprot.writeString(_iter16.getKey());
+        for (Map.Entry<byte[], List<Integer>> _iter24 : this.all_parts.entrySet())        {
+          oprot.writeBinary(_iter24.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter16.getValue().size()));
-            for (int _iter17 : _iter16.getValue())            {
-              oprot.writeI32(_iter17);
+            oprot.writeListBegin(new TList(TType.I32, _iter24.getValue().size()));
+            for (int _iter25 : _iter24.getValue())            {
+              oprot.writeI32(_iter25);
             }
             oprot.writeListEnd();
           }
         }
         oprot.writeMapEnd();
       }
+      oprot.writeFieldEnd();
+    }
+    oprot.writeFieldBegin(ROLE_FIELD_DESC);
+    oprot.writeI32(this.role);
+    oprot.writeFieldEnd();
+    if (this.git_info_sha != null) {
+      oprot.writeFieldBegin(GIT_INFO_SHA_FIELD_DESC);
+      oprot.writeBinary(this.git_info_sha);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -650,6 +810,37 @@ String space = prettyPrint ? " " : "";
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this. getAll_parts(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("role");
+    sb.append(space);
+    sb.append(":").append(space);
+    String role_name = HostRole.VALUES_TO_NAMES.get(this. getRole());
+    if (role_name != null) {
+      sb.append(role_name);
+      sb.append(" (");
+    }
+    sb.append(this. getRole());
+    if (role_name != null) {
+      sb.append(")");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("git_info_sha");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getGit_info_sha() == null) {
+      sb.append("null");
+    } else {
+        int __git_info_sha_size = Math.min(this. getGit_info_sha().length, 128);
+        for (int i = 0; i < __git_info_sha_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getGit_info_sha()[i]).length() > 1 ? Integer.toHexString(this. getGit_info_sha()[i]).substring(Integer.toHexString(this. getGit_info_sha()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getGit_info_sha()[i]).toUpperCase());
+        }
+        if (this. getGit_info_sha().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

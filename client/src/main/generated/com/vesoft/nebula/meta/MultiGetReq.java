@@ -32,8 +32,8 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField SEGMENT_FIELD_DESC = new TField("segment", TType.STRING, (short)1);
   private static final TField KEYS_FIELD_DESC = new TField("keys", TType.LIST, (short)2);
 
-  public String segment;
-  public List<String> keys;
+  public byte[] segment;
+  public List<byte[]> keys;
   public static final int SEGMENT = 1;
   public static final int KEYS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -59,8 +59,8 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public MultiGetReq(
-    String segment,
-    List<String> keys)
+    byte[] segment,
+    List<byte[]> keys)
   {
     this();
     this.segment = segment;
@@ -88,11 +88,11 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new MultiGetReq(this);
   }
 
-  public String  getSegment() {
+  public byte[]  getSegment() {
     return this.segment;
   }
 
-  public MultiGetReq setSegment(String segment) {
+  public MultiGetReq setSegment(byte[] segment) {
     this.segment = segment;
     return this;
   }
@@ -112,11 +112,11 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public List<String>  getKeys() {
+  public List<byte[]>  getKeys() {
     return this.keys;
   }
 
-  public MultiGetReq setKeys(List<String> keys) {
+  public MultiGetReq setKeys(List<byte[]> keys) {
     this.keys = keys;
     return this;
   }
@@ -143,7 +143,7 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetSegment();
       } else {
-        setSegment((String)value);
+        setSegment((byte[])value);
       }
       break;
 
@@ -151,7 +151,7 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetKeys();
       } else {
-        setKeys((List<String>)value);
+        setKeys((List<byte[]>)value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_segment || that_present_segment) {
       if (!(this_present_segment && that_present_segment))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.segment, that.segment))
+      if (!TBaseHelper.equalsSlow(this.segment, that.segment))
         return false;
     }
 
@@ -214,7 +214,7 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_keys || that_present_keys) {
       if (!(this_present_keys && that_present_keys))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.keys, that.keys))
+      if (!TBaseHelper.equalsSlow(this.keys, that.keys))
         return false;
     }
 
@@ -282,7 +282,7 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case SEGMENT:
           if (field.type == TType.STRING) {
-            this.segment = iprot.readString();
+            this.segment = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -290,15 +290,15 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
         case KEYS:
           if (field.type == TType.LIST) {
             {
-              TList _list87 = iprot.readListBegin();
-              this.keys = new ArrayList<String>(Math.max(0, _list87.size));
-              for (int _i88 = 0; 
-                   (_list87.size < 0) ? iprot.peekList() : (_i88 < _list87.size); 
-                   ++_i88)
+              TList _list95 = iprot.readListBegin();
+              this.keys = new ArrayList<byte[]>(Math.max(0, _list95.size));
+              for (int _i96 = 0; 
+                   (_list95.size < 0) ? iprot.peekList() : (_i96 < _list95.size); 
+                   ++_i96)
               {
-                String _elem89;
-                _elem89 = iprot.readString();
-                this.keys.add(_elem89);
+                byte[] _elem97;
+                _elem97 = iprot.readBinary();
+                this.keys.add(_elem97);
               }
               iprot.readListEnd();
             }
@@ -325,15 +325,15 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.segment != null) {
       oprot.writeFieldBegin(SEGMENT_FIELD_DESC);
-      oprot.writeString(this.segment);
+      oprot.writeBinary(this.segment);
       oprot.writeFieldEnd();
     }
     if (this.keys != null) {
       oprot.writeFieldBegin(KEYS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.keys.size()));
-        for (String _iter90 : this.keys)        {
-          oprot.writeString(_iter90);
+        for (byte[] _iter98 : this.keys)        {
+          oprot.writeBinary(_iter98);
         }
         oprot.writeListEnd();
       }
@@ -371,7 +371,12 @@ String space = prettyPrint ? " " : "";
     if (this. getSegment() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSegment(), indent + 1, prettyPrint));
+        int __segment_size = Math.min(this. getSegment().length, 128);
+        for (int i = 0; i < __segment_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getSegment()[i]).length() > 1 ? Integer.toHexString(this. getSegment()[i]).substring(Integer.toHexString(this. getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSegment()[i]).toUpperCase());
+        }
+        if (this. getSegment().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

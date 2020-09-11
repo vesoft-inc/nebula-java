@@ -33,9 +33,9 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
   private static final TField START_FIELD_DESC = new TField("start", TType.STRING, (short)2);
   private static final TField END_FIELD_DESC = new TField("end", TType.STRING, (short)3);
 
-  public String segment;
-  public String start;
-  public String end;
+  public byte[] segment;
+  public byte[] start;
+  public byte[] end;
   public static final int SEGMENT = 1;
   public static final int START = 2;
   public static final int END = 3;
@@ -63,9 +63,9 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public RemoveRangeReq(
-    String segment,
-    String start,
-    String end)
+    byte[] segment,
+    byte[] start,
+    byte[] end)
   {
     this();
     this.segment = segment;
@@ -97,11 +97,11 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     return new RemoveRangeReq(this);
   }
 
-  public String  getSegment() {
+  public byte[]  getSegment() {
     return this.segment;
   }
 
-  public RemoveRangeReq setSegment(String segment) {
+  public RemoveRangeReq setSegment(byte[] segment) {
     this.segment = segment;
     return this;
   }
@@ -121,11 +121,11 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public String  getStart() {
+  public byte[]  getStart() {
     return this.start;
   }
 
-  public RemoveRangeReq setStart(String start) {
+  public RemoveRangeReq setStart(byte[] start) {
     this.start = start;
     return this;
   }
@@ -145,11 +145,11 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public String  getEnd() {
+  public byte[]  getEnd() {
     return this.end;
   }
 
-  public RemoveRangeReq setEnd(String end) {
+  public RemoveRangeReq setEnd(byte[] end) {
     this.end = end;
     return this;
   }
@@ -175,7 +175,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       if (value == null) {
         unsetSegment();
       } else {
-        setSegment((String)value);
+        setSegment((byte[])value);
       }
       break;
 
@@ -183,7 +183,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       if (value == null) {
         unsetStart();
       } else {
-        setStart((String)value);
+        setStart((byte[])value);
       }
       break;
 
@@ -191,7 +191,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       if (value == null) {
         unsetEnd();
       } else {
-        setEnd((String)value);
+        setEnd((byte[])value);
       }
       break;
 
@@ -250,7 +250,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     if (this_present_segment || that_present_segment) {
       if (!(this_present_segment && that_present_segment))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.segment, that.segment))
+      if (!TBaseHelper.equalsSlow(this.segment, that.segment))
         return false;
     }
 
@@ -259,7 +259,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     if (this_present_start || that_present_start) {
       if (!(this_present_start && that_present_start))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.start, that.start))
+      if (!TBaseHelper.equalsSlow(this.start, that.start))
         return false;
     }
 
@@ -268,7 +268,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     if (this_present_end || that_present_end) {
       if (!(this_present_end && that_present_end))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.end, that.end))
+      if (!TBaseHelper.equalsSlow(this.end, that.end))
         return false;
     }
 
@@ -349,21 +349,21 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       {
         case SEGMENT:
           if (field.type == TType.STRING) {
-            this.segment = iprot.readString();
+            this.segment = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case START:
           if (field.type == TType.STRING) {
-            this.start = iprot.readString();
+            this.start = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case END:
           if (field.type == TType.STRING) {
-            this.end = iprot.readString();
+            this.end = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -387,17 +387,17 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.segment != null) {
       oprot.writeFieldBegin(SEGMENT_FIELD_DESC);
-      oprot.writeString(this.segment);
+      oprot.writeBinary(this.segment);
       oprot.writeFieldEnd();
     }
     if (this.start != null) {
       oprot.writeFieldBegin(START_FIELD_DESC);
-      oprot.writeString(this.start);
+      oprot.writeBinary(this.start);
       oprot.writeFieldEnd();
     }
     if (this.end != null) {
       oprot.writeFieldBegin(END_FIELD_DESC);
-      oprot.writeString(this.end);
+      oprot.writeBinary(this.end);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -432,7 +432,12 @@ String space = prettyPrint ? " " : "";
     if (this. getSegment() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSegment(), indent + 1, prettyPrint));
+        int __segment_size = Math.min(this. getSegment().length, 128);
+        for (int i = 0; i < __segment_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getSegment()[i]).length() > 1 ? Integer.toHexString(this. getSegment()[i]).substring(Integer.toHexString(this. getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSegment()[i]).toUpperCase());
+        }
+        if (this. getSegment().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -443,7 +448,12 @@ String space = prettyPrint ? " " : "";
     if (this. getStart() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getStart(), indent + 1, prettyPrint));
+        int __start_size = Math.min(this. getStart().length, 128);
+        for (int i = 0; i < __start_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getStart()[i]).length() > 1 ? Integer.toHexString(this. getStart()[i]).substring(Integer.toHexString(this. getStart()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getStart()[i]).toUpperCase());
+        }
+        if (this. getStart().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -454,7 +464,12 @@ String space = prettyPrint ? " " : "";
     if (this. getEnd() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEnd(), indent + 1, prettyPrint));
+        int __end_size = Math.min(this. getEnd().length, 128);
+        for (int i = 0; i < __end_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getEnd()[i]).length() > 1 ? Integer.toHexString(this. getEnd()[i]).substring(Integer.toHexString(this. getEnd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEnd()[i]).toUpperCase());
+        }
+        if (this. getEnd().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
