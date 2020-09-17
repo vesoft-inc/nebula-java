@@ -57,7 +57,14 @@ If query executes successfully, `0` will be returned. For a more complete exampl
 
 If you only use the interface of RPC, nothing to worry about.
 
-If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the `nebula-utils` jar, but if it doesn't work in your environment, please compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). And `mvn install` the jni jar in your local maven repo.
+If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the [nebula-utils](https://repo1.maven.org/maven2/com/vesoft/nebula-utils/) jar package.
+
+However, if it doesn't work in your environment, you can compile it by following steps:
+- Compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). 
+- Then install the jni jar in your local maven repo:
+```
+mvn install:install-file -Dfile=${your-nebula-utils.jar} -DgroupId=com.vesoft -DartifactId=nebula-utils -Dversion={version} -Dpackaging=jar
+```
 
 See more [Storage Client Examples](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/) for how to scan edges and vertices from storage directly.
 
