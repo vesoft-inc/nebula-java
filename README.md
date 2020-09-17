@@ -61,7 +61,7 @@ If you want to directly use storage client to encode/decode, you need to use the
 
 However, if it doesn't work in your environment, you can compile it by following steps:
 - Compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). 
-- Then install the jni jar in your local maven repo:
+- Then install the jni jar into your local maven repo:
 ```
 mvn install:install-file -Dfile=${your-nebula-utils.jar} -DgroupId=com.vesoft -DartifactId=nebula-utils -Dversion={version} -Dpackaging=jar
 ```
