@@ -2,6 +2,8 @@
 
 下表列出了您在使用 Nebula Graph&reg; Exchange 时可能会收到的错误信息。
 
+
+
 | 错误信息 | 说明 | 解决方法 |
 |:---|:---|:---|
 |You can't write vertex and source or target field config same item in janus graph ${name}, " + s"because it use to judge it is edge or vertex!      |  ??   |  ??    |
