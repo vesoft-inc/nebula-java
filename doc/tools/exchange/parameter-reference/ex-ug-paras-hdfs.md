@@ -5,7 +5,7 @@
 | 参数 | 默认值 | 数据类型 | 是否必需 | 说明 |
 | :--- | :--- | :--- | :--- | :--- |
 | tags.name | 无 | string | 是 | 设置为 Nebula Graph 中的标签名称。 |
-| tags.type.source | 无 | string | 是 | 指定标签源数据的格式。可以设置为以下值：<br />- parquet<br />- csv<br />- json<br />- txt<br />- orc<br /> |
+| tags.type.source | 无 | string | 是 | 指定标签源数据的格式。可以设置为以下值：<br />- parquet<br />- csv<br />- json<br />- orc |
 | tags.type.sink | 无 | string | 是 | 指定标签数据导入 Nebula Graph 的方式。可以设置为：<br />- client：以客户端形式导入<br />- sst：以 SST 文件格式导入 |
 | tags.path | 无 | string | 是 | 指定获取标签源数据的 HDFS 路径。路径名称可以选择以 hdfs 开头。 |
 | tags.fileds | 无 | list[string] | 是 | 指定源数据中与 Nebula Graph 标签对应的属性名称。以列表形式列出，多个属性名称之间以英文逗号隔开。 |
@@ -16,7 +16,7 @@
 | tags.batch | 256 | int | 是 | 单次写入 Nebula Graph 的点数据量。 |
 | tags.partition | 32 | int | 是 | Spark 的分区数量。`【根据什么来判断数量】` |
 | edges.name | 无 | string | 是 | 指定 Nebula Graph 中的边类型名称。 |
-| edges.type.source | 无 | string | 是 | 指定边类型源数据格式。可以设置为以下值：<br />- parquet<br />- csv<br />- json<br />- txt<br />- orc |
+| edges.type.source | 无 | string | 是 | 指定边类型源数据格式。可以设置为以下值：<br />- parquet<br />- csv<br />- json<br />- orc |
 | edges.type.sink | 无 | string | 是 | 指定边类型源数据导入 Nebula Graph 的方式。可以设置为：<br />- client：表示以客户端形式导入<br />- sst：表示以 SST 文件格式导入 |
 | edges.path | 无 | string | 是 | 指定获取边类型数据的 HDFS 路径。路径名称可以选择以 `hdfs` 开头。 |
 | edges.fields | 无 | list[string] | 是 | 指定源数据中与 Nebula Graph 边类型对应的属性名称。以列表形式列出，多个属性名称之间以英文逗号隔开。 |

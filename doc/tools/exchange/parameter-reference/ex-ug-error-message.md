@@ -1,9 +1,9 @@
-# 错误码
+# 错误信息
 
 下表列出了您在使用 Nebula Graph&reg; Exchange 时可能会收到的错误信息。
 
 | 错误信息 | 说明 | 解决方法 |
-|------|----|------|
+|:---|:---|:---|
 |You can't write vertex and source or target field config same item in janus graph ${name}, " + s"because it use to judge it is edge or vertex!      |  ??   |  ??    |
 |  It shouldn't happen. Maybe something wrong ${janusGraphConfig}    |    |      |
 | ${category} not support     |  数据源格式不支持。  |  当前 Nebula Graph Exchange 仅支持部分格式的源数据。详细信息，参考 [使用限制](../../about-exchange/ex-ug-limitations)    |
