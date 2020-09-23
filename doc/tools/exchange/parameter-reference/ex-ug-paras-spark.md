@@ -3,7 +3,7 @@
 下表列出在使用 Nebula Graph&reg; Exchange 导入数据时您需要设置的 Spark 相关参数。更多 Spark 参数配置信息，参考[《Apache Spark 文档》](https://spark.apache.org/docs/latest/configuration.html#application-properties "点击前往 Apache Spark 文档")。实际应用时的参数设置，参考不同来源数据的 [操作示例](../use-exchange/ex-ug-import-from-neo4j.md)。
 
 | 参数 | 默认值 | 数据类型 | 是否必需 | 说明 |
-| --- | --- | :--- | --- | --- |
+| :--- | :--- | :--- | :--- | :--- |
 | spark.app.name | Spark Writer`（需要改成 Exchange 吗？如果要改，github 上的示例配置文件里也需要改一下？）` | string | 否 | Spark Driver Program 名称 |
 | spark.driver.cores | 1 | int | 否 | Driver 进程的核数，仅适用于集群模式。`（如果不是集群，就不需要设置？）` |
 | spark.driver.maxResultSize | 1G | string | 否 | 每个 Spark 操作（例如收集）中所有分区的序列化结果的上限（以字节为单位）。最小值为 1M，设为 0 则表示无限制上限。 |

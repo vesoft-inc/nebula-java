@@ -46,8 +46,8 @@ Neo4j 的数据集信息如下：
 
 上述三者分别拥有如下表所示的属性。
 
-|  | 属性 **idInt** | 属性 **idString** | 属性 **tboolean** | 属性 **tdouble** |
-| --- | --- | --- | --- | --- |
+| 要素名称 | 属性 **idInt** | 属性 **idString** | 属性 **tboolean** | 属性 **tdouble** |
+| :--- | :--- | :--- | :--- | --- |
 | tagA | `int` | `string` | `bool` | `double` |
 | tagB | `int` | `string` | `bool` | `double` |
 | edgeAB | `int` | `string` | `bool` | `double` |
@@ -61,7 +61,7 @@ Neo4j 的数据集信息如下：
   - 用户名：_neo4j_
   - 密码：_neo4j_
 - Nebula Graph 数据库：
-  - 服务器地址及端口为： `127.0.0.1:3699`
+  - 服务器地址及端口为：`127.0.0.1:3699`
   - 用户名：本示例中 Nebula Graph 数据库没有启用身份认证，所以，用户名为 _user_
   - 密码：_password_
 
@@ -79,7 +79,7 @@ Neo4j 的数据集信息如下：
 
 1. 确认图数据模式要素：Neo4j 中的标签和关系类型及其属性与 Nebula Graph 中的数据模式要素对应关系如下表所示。
 | Neo4j 要素 | Nebula Graph 要素 | 要素名称 |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | Node | Tag | tagA 和 tagB |
 | Relationship Type | Edge Type | edgAB |
 
@@ -253,7 +253,7 @@ Exchange 导入数据时，并不会导入 Neo4j 数据库中的索引，所以�
 Neo4j 和 Nebula Graph 在系统架构、数据模型和访问方式上都有一些差异，部分差异可能会对您使用 Exchange 迁移数据产生影响。下表列出了常见的异同。
 
 | 对比项 | | Neo4j 3.5 Conmunity | Nebula Graph 1.0.1 | 对于使用 Exchange 的影响 |
-| :---: | --- | --- | --- | --- |
+| :--- | :--- | :--- | :--- | :--- |
 | 系统架构 | 分布式 | 仅 Enterprise 支持 | 支持 | 无 |
 |  | 数据分片 | 不支持 | 支持 | 无 |
 |  | 开源协议 | AGPL |  Apache 2.0 | 无 |

@@ -15,7 +15,6 @@
     - 导入 JanusGraph 数据【TODO】
     - 导入 Kafka 数据【TODO】
     - 导入 MySQL 数据【TODO】
-    - 导入 Socket 数据【TODO】
     - 导入 SST 文件【TODO】
 - 参数说明
   - [Spark 参数](parameter-reference/ex-ug-paras-spark.md)
@@ -27,6 +26,5 @@
     - Kafka 参数
     - MySQL 参数
     - Pulsar 参数
-    - Socket 参数
   - [导入命令参数](parameter-reference/ex-ug-para-import-command.md)
 - [错误信息](parameter-reference/ex-ug-error-message.md)
