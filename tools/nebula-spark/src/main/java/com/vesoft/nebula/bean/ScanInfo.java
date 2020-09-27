@@ -15,7 +15,7 @@ public class ScanInfo implements Serializable {
 
     private final String nameSpace;
 
-    private final String scanType;
+    private final String type;
 
     private final String label;
 
@@ -27,14 +27,14 @@ public class ScanInfo implements Serializable {
 
     /**
      * @param nameSpace       nameSpace
-     * @param scanType        scan element type
+     * @param type        scan element type
      * @param label           vertex or edge label
      * @param partitionNumber partition number
      * @param returnColString scan col string example: name,age
      */
-    public ScanInfo(String nameSpace, String scanType, String label, String returnColString, int partitionNumber) {
+    public ScanInfo(String nameSpace, String type, String label, String returnColString, int partitionNumber) {
         this.nameSpace = nameSpace;
-        this.scanType = scanType;
+        this.type = type;
         this.label = label;
         this.returnColString = returnColString;
         this.partitionNumber = partitionNumber;
@@ -44,8 +44,8 @@ public class ScanInfo implements Serializable {
         return nameSpace;
     }
 
-    public String getScanType() {
-        return scanType;
+    public String getType() {
+        return type;
     }
 
     public String getLabel() {

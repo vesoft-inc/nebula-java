@@ -10,14 +10,11 @@ import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
 import com.vesoft.nebula.common.Type;
 
-import java.util.List;
-import java.util.Map;
 import org.apache.spark.Partition;
 import org.apache.spark.TaskContext;
 import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.types.StructField;
 import scala.collection.Iterator;
 import scala.collection.mutable.ArrayBuffer;
 import scala.reflect.ClassManifestFactory$;
@@ -53,8 +50,8 @@ public class NebulaRDD extends RDD<Row> {
      * */
     @Override
     public Iterator<Row> compute(Partition split, TaskContext context) {
-        String scanType = scanInfo.getScanType();
-        if (Type.VERTEX.getType().equalsIgnoreCase(scanType)) {
+        String type = scanInfo.getType();
+        if (Type.VERTEX.getType().equalsIgnoreCase(type)) {
             return new ScanVertexIterator(connectInfo, split, scanInfo);
         } else {
             return new ScanEdgeIterator(connectInfo, split, scanInfo);

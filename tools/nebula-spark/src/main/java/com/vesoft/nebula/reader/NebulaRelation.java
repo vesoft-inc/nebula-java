@@ -54,7 +54,7 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
 
         List<StructField> fields = new ArrayList<>();
         for (Map.Entry<String, List<String>> returnColEntry : returnColMap.entrySet()) {
-            if (Type.VERTEX.getType().equalsIgnoreCase(scanInfo.getScanType())) {
+            if (Type.VERTEX.getType().equalsIgnoreCase(scanInfo.getType())) {
                 fields.add(DataTypes.createStructField("_vertexId", DataTypes.StringType, false));
             } else {
                 fields.add(DataTypes.createStructField("_srcId", DataTypes.StringType, false));

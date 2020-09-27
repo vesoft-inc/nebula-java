@@ -34,16 +34,16 @@ public class NebulaDataSource implements RelationProvider {
     public BaseRelation createRelation(SQLContext sqlContext, Map<String, String> parameters) {
         // check and parse parameter spaceName
         Preconditions.checkArgument(parameters.get(Parameters.SPACE_NAME).isDefined(), "spaceName is not configured.");
-        String spaceName = parameters.get("spaceName").get();
+        String spaceName = parameters.get(Parameters.SPACE_NAME).get();
 
-        // check and parse parameter scanType
-        Preconditions.checkArgument(parameters.get(Parameters.SCAN_TYPE).isDefined(), "scanType is not configured.");
+        // check and parse parameter type
+        Preconditions.checkArgument(parameters.get(Parameters.TYPE).isDefined(), "type is not configured.");
 
-        String scanType = parameters.get(Parameters.SCAN_TYPE).get();
-        Preconditions.checkArgument(scanType.equalsIgnoreCase(Type.EDGE.getType())
-                        || scanType.equalsIgnoreCase(Type.VERTEX.getType()),
+        String type = parameters.get(Parameters.TYPE).get();
+        Preconditions.checkArgument(type.equalsIgnoreCase(Type.EDGE.getType())
+                        || type.equalsIgnoreCase(Type.VERTEX.getType()),
                 "scan_type '%s' is illegal, it should be '%s' or '%s'",
-               scanType , Type.VERTEX.getType(), Type.EDGE.getType());
+               type , Type.VERTEX.getType(), Type.EDGE.getType());
 
         // check and parse parameter label
         Preconditions.checkArgument(parameters.get(Parameters.LABEL).isDefined(), "label is not configured.");
@@ -74,7 +74,7 @@ public class NebulaDataSource implements RelationProvider {
         connectInfo = new ConnectInfo(spaceName, hostAndPorts);
         LOGGER.info("connectInfo, {}", connectInfo);
 
-        scanInfo = new ScanInfo(spaceName,scanType,
+        scanInfo = new ScanInfo(spaceName,type,
                 label, returnCols, Integer.parseInt(partitionNumber));
         LOGGER.info("scanInfo: {}", scanInfo);
 
