@@ -7,8 +7,6 @@
 package com.vesoft.nebula.reader;
 
 import com.facebook.thrift.TException;
-import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
 import com.vesoft.nebula.exception.GraphConnectException;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
@@ -21,7 +19,6 @@ import java.util.*;
 import org.apache.spark.Partition;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
-import org.apache.spark.sql.types.StructField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.AbstractIterator;
@@ -32,21 +29,19 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
 
     protected Iterator<String> dataIterator;
     protected Iterator<Integer> scanPartIterator;
-    protected Map<String, List<String>> resultValues = new HashMap<>();
+    protected Map<String, List<Object>> resultValues = new HashMap<>();
 
     protected StorageClientImpl storageClient;
     protected MetaClientImpl metaClient;
     protected Processor processor;
 
-    protected ConnectInfo connectInfo;
     protected Map<String, List<String>> returnCols;
 
-    public AbstractNebulaIterator(ConnectInfo connectInfo, Partition split,
+    public AbstractNebulaIterator(Partition split,
                                   ScanInfo scanInfo) {
-        this.connectInfo = connectInfo;
         this.returnCols = scanInfo.getReturnColMap();
 
-        metaClient = new MetaClientImpl(connectInfo.getHostAndPorts());
+        metaClient = new MetaClientImpl(scanInfo.getHostAndPorts());
         try {
             metaClient.connect();
         } catch (TException e) {
@@ -55,7 +50,7 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
         storageClient = new StorageClientImpl(metaClient);
 
         // allocate scanPart to this partition
-        int totalPart = metaClient.getPartsAlloc(connectInfo.getSpaceName()).size();
+        int totalPart = metaClient.getPartsAlloc(scanInfo.getNameSpace()).size();
         NebulaPartition nebulaPartition = (NebulaPartition) split;
         List<Integer> scanParts = nebulaPartition.getScanParts(totalPart,
                                                                 scanInfo.getPartitionNumber());

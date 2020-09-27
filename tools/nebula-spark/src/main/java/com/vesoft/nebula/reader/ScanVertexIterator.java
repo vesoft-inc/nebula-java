@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.exception.GraphOperateException;
@@ -30,9 +29,9 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
 
     private ScanInfo scanInfo;
 
-    public ScanVertexIterator(ConnectInfo connectInfo, Partition split,
+    public ScanVertexIterator(Partition split,
                               ScanInfo scanInfo) {
-        super(connectInfo, split, scanInfo);
+        super(split, scanInfo);
         this.scanInfo = scanInfo;
     }
 
@@ -46,7 +45,7 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
             if (responseIterator == null || !responseIterator.hasNext()) {
                 if (scanPartIterator.hasNext()) {
                     try {
-                        responseIterator = storageClient.scanVertex(connectInfo.getSpaceName(),
+                        responseIterator = storageClient.scanVertex(scanInfo.getNameSpace(),
                                 scanPartIterator.next(), returnCols, scanInfo.getAllCols(),
                                 1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
@@ -60,7 +59,7 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
                 ScanVertexResponse next = responseIterator.next();
                 if (next != null) {
                     processor = new ScanVertexProcessor(metaClient);
-                    Result processResult = processor.process(connectInfo.getSpaceName(), next);
+                    Result processResult = processor.process(scanInfo.getNameSpace(), next);
                     dataIterator = process(processResult);
                 }
             }
@@ -77,12 +76,12 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
         for (Map.Entry<String, List<Row>> dataEntry : dataMap.entrySet()) {
             String labelName = dataEntry.getKey();
             for (Row row : dataEntry.getValue()) {
-                List<String> fields = new ArrayList<>();
+                List<Object> fields = new ArrayList<>();
                 // add default property _vertexId for tag
                 fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
                 Property[] properties = row.getProperties();
                 for (int i = 0; i < properties.length; i++) {
-                    fields.add(String.valueOf(properties[i].getValue()));
+                    fields.add(properties[i].getValue());
                 }
                 resultValues.put(labelName, fields);
             }

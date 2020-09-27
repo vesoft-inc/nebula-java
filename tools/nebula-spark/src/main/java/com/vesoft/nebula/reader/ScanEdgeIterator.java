@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.ScanInfo;
 import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Property;
@@ -29,9 +28,9 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
 
     private ScanInfo scanInfo;
 
-    public ScanEdgeIterator(ConnectInfo connectInfo, Partition split,
+    public ScanEdgeIterator(Partition split,
                             ScanInfo scanInfo) {
-        super(connectInfo, split, scanInfo);
+        super(split, scanInfo);
         this.scanInfo = scanInfo;
     }
 
@@ -45,7 +44,7 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             if (responseIterator == null || !responseIterator.hasNext()) {
                 if (scanPartIterator.hasNext()) {
                     try {
-                        responseIterator = storageClient.scanEdge(connectInfo.getSpaceName(),
+                        responseIterator = storageClient.scanEdge(scanInfo.getNameSpace(),
                                 scanPartIterator.next(), returnCols, scanInfo.getAllCols(),
                                 1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
@@ -58,7 +57,7 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
                 ScanEdgeResponse next = responseIterator.next();
                 if (next != null) {
                     processor = new ScanEdgeProcessor(metaClient);
-                    Result processResult = processor.process(connectInfo.getSpaceName(), next);
+                    Result processResult = processor.process(scanInfo.getNameSpace(), next);
                     dataIterator = process(processResult);
                 }
             }
@@ -76,13 +75,13 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             String labelName = dataEntry.getKey();
             List<Row> rows = dataEntry.getValue();
             for (Row row : rows) {
-                List<String> fields = new ArrayList<>(returnCols.get(labelName).size() + 2);
+                List<Object> fields = new ArrayList<>(returnCols.get(labelName).size() + 2);
                 // add default property _srcId and _dstId for egde
                 fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
                 fields.add(String.valueOf(row.getDefaultProperties()[2].getValue()));
                 Property[] properties = row.getProperties();
                 for (int i = 0; i < properties.length; i++) {
-                    fields.add(String.valueOf(properties[i].getValue()));
+                    fields.add(properties[i].getValue());
                 }
                 resultValues.put(labelName, fields);
             }

@@ -7,10 +7,10 @@
 package com.vesoft.nebula.reader;
 
 import com.google.common.base.Preconditions;
-import com.vesoft.nebula.bean.ConnectInfo;
 import com.vesoft.nebula.bean.Parameters;
 import com.vesoft.nebula.bean.ScanInfo;
 import com.vesoft.nebula.common.Type;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.sources.BaseRelation;
 import org.apache.spark.sql.sources.RelationProvider;
@@ -26,8 +26,6 @@ public class NebulaDataSource implements RelationProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(NebulaDataSource.class);
     private static final String RETURN_COL_REGEX = "(\\w+)(,\\w+)*";
 
-
-    private ConnectInfo connectInfo;
     private ScanInfo scanInfo;
 
     @Override
@@ -56,9 +54,9 @@ public class NebulaDataSource implements RelationProvider {
         // check and parse parameter returnCols
         Preconditions.checkArgument(parameters.get(Parameters.RETURN_COLS).isDefined(), "returnCols is not configured.");
         String returnCols = parameters.get(Parameters.RETURN_COLS).get();
-        boolean isReturnColLegal = Pattern.matches(RETURN_COL_REGEX, returnCols);
+        boolean isReturnColLegal = StringUtils.isBlank(returnCols) || Pattern.matches(RETURN_COL_REGEX, returnCols);
         Preconditions.checkArgument(isReturnColLegal,
-                "returnCols '%s' is illegal, the pattern should like a,b",
+                "returnCols '%s' is illegal, the pattern should be blank or string like a,b",
                 returnCols);
 
         // check and parse parameter partitionNumber
@@ -70,14 +68,10 @@ public class NebulaDataSource implements RelationProvider {
                     }
                 });
 
-
-        connectInfo = new ConnectInfo(spaceName, hostAndPorts);
-        LOGGER.info("connectInfo, {}", connectInfo);
-
         scanInfo = new ScanInfo(spaceName,type,
-                label, returnCols, Integer.parseInt(partitionNumber));
+                label, returnCols, Integer.parseInt(partitionNumber), hostAndPorts);
         LOGGER.info("scanInfo: {}", scanInfo);
 
-        return new NebulaRelation(sqlContext, connectInfo, scanInfo);
+        return new NebulaRelation(sqlContext, scanInfo);
     }
 }

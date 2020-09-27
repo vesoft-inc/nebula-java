@@ -36,7 +36,8 @@ public class NebulaReaderExample {
                 .option("hostAndPorts", "127.0.0.1:45500")
                 .option("spaceName", "nb")
                 .option("label", "player")
-                .option("returnCols", "name")
+                // if configuration "returnCols" is null or "", then return all cols
+                .option("returnCols", "")
                 .load();
         LOGGER.info("vertex course schema: ");
         vertexDataset.printSchema();
@@ -48,14 +49,15 @@ public class NebulaReaderExample {
                 .option("type", Type.EDGE.getType())
                 .option("hostAndPorts", "127.0.0.1:45500")
                 .option("spaceName", "nb")
-                .option("label", "follow")
-                .option("returnCols", "degree")
+                .option("label", "serve")
+                // if configuration "returnCols" is null or "", then return all cols
+                .option("returnCols", "")
                 .load();
         LOGGER.info("edge schema: ");
         edgeDataset.printSchema();
         edgeDataset.show();
-
-        LOGGER.info("vertex count: {}, edge count: {}", vertexDataset.count(), edgeDataset.count());
+//
+//        LOGGER.info("vertex count: {}, edge count: {}", vertexDataset.count(), edgeDataset.count());
     }
 
 }
