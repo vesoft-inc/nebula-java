@@ -8,7 +8,7 @@ package com.vesoft.nebula.reader;
 
 import com.google.common.base.Preconditions;
 import com.vesoft.nebula.bean.Parameters;
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.common.Type;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.SQLContext;
@@ -26,7 +26,7 @@ public class NebulaDataSource implements RelationProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(NebulaDataSource.class);
     private static final String RETURN_COL_REGEX = "(\\w+)(,\\w+)*";
 
-    private ScanInfo scanInfo;
+    private DataSourceConfig dataSourceConfig;
 
     @Override
     public BaseRelation createRelation(SQLContext sqlContext, Map<String, String> parameters) {
@@ -68,10 +68,10 @@ public class NebulaDataSource implements RelationProvider {
                     }
                 });
 
-        scanInfo = new ScanInfo(spaceName,type,
+        dataSourceConfig = new DataSourceConfig(spaceName,type,
                 label, returnCols, Integer.parseInt(partitionNumber), hostAndPorts);
-        LOGGER.info("scanInfo: {}", scanInfo);
+        LOGGER.info("dataSourceConfig: {}", dataSourceConfig);
 
-        return new NebulaRelation(sqlContext, scanInfo);
+        return new NebulaRelation(sqlContext, dataSourceConfig);
     }
 }

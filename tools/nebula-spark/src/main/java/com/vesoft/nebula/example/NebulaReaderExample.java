@@ -56,8 +56,8 @@ public class NebulaReaderExample {
         LOGGER.info("edge schema: ");
         edgeDataset.printSchema();
         edgeDataset.show();
-//
-//        LOGGER.info("vertex count: {}, edge count: {}", vertexDataset.count(), edgeDataset.count());
+
+        LOGGER.info("vertex count: {}, edge count: {}", vertexDataset.count(), edgeDataset.count());
     }
 
 }

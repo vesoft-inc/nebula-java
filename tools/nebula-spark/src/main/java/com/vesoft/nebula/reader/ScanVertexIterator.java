@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.exception.GraphOperateException;
 import com.vesoft.nebula.client.storage.processor.ScanVertexProcessor;
@@ -27,12 +27,12 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
 
     private Iterator<ScanVertexResponse> responseIterator;
 
-    private ScanInfo scanInfo;
+    private DataSourceConfig dataSourceConfig;
 
     public ScanVertexIterator(Partition split,
-                              ScanInfo scanInfo) {
-        super(split, scanInfo);
-        this.scanInfo = scanInfo;
+                              DataSourceConfig dataSourceConfig) {
+        super(split, dataSourceConfig);
+        this.dataSourceConfig = dataSourceConfig;
     }
 
     @Override
@@ -45,8 +45,8 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
             if (responseIterator == null || !responseIterator.hasNext()) {
                 if (scanPartIterator.hasNext()) {
                     try {
-                        responseIterator = storageClient.scanVertex(scanInfo.getNameSpace(),
-                                scanPartIterator.next(), returnCols, scanInfo.getAllCols(),
+                        responseIterator = storageClient.scanVertex(dataSourceConfig.getNameSpace(),
+                                scanPartIterator.next(), returnCols, dataSourceConfig.getAllCols(),
                                 1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
                         LOGGER.error(e.getMessage(), e);
@@ -59,7 +59,7 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
                 ScanVertexResponse next = responseIterator.next();
                 if (next != null) {
                     processor = new ScanVertexProcessor(metaClient);
-                    Result processResult = processor.process(scanInfo.getNameSpace(), next);
+                    Result processResult = processor.process(dataSourceConfig.getNameSpace(), next);
                     dataIterator = process(processResult);
                 }
             }

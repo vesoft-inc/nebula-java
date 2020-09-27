@@ -7,7 +7,7 @@
 package com.vesoft.nebula.reader;
 
 import com.facebook.thrift.TException;
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.exception.GraphConnectException;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
@@ -38,10 +38,10 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
     protected Map<String, List<String>> returnCols;
 
     public AbstractNebulaIterator(Partition split,
-                                  ScanInfo scanInfo) {
-        this.returnCols = scanInfo.getReturnColMap();
+                                  DataSourceConfig dataSourceConfig) {
+        this.returnCols = dataSourceConfig.getReturnColMap();
 
-        metaClient = new MetaClientImpl(scanInfo.getHostAndPorts());
+        metaClient = new MetaClientImpl(dataSourceConfig.getHostAndPorts());
         try {
             metaClient.connect();
         } catch (TException e) {
@@ -50,10 +50,10 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
         storageClient = new StorageClientImpl(metaClient);
 
         // allocate scanPart to this partition
-        int totalPart = metaClient.getPartsAlloc(scanInfo.getNameSpace()).size();
+        int totalPart = metaClient.getPartsAlloc(dataSourceConfig.getNameSpace()).size();
         NebulaPartition nebulaPartition = (NebulaPartition) split;
         List<Integer> scanParts = nebulaPartition.getScanParts(totalPart,
-                                                                scanInfo.getPartitionNumber());
+                                                                dataSourceConfig.getPartitionNumber());
         LOGGER.info("partition index: {}, scanPart: {}", split.index(), scanParts.toString());
         scanPartIterator = scanParts.iterator();
     }

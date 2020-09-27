@@ -7,7 +7,7 @@
 package com.vesoft.nebula.reader;
 
 import com.facebook.thrift.TException;
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.common.Type;
 
@@ -35,27 +35,27 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
     private StructType schema;
     private final Map<String, List<StructField>> labelFields = new HashMap<>();
 
-    private ScanInfo scanInfo;
+    private DataSourceConfig dataSourceConfig;
 
-    public NebulaRelation(SQLContext sqlContext, ScanInfo scanInfo) {
+    public NebulaRelation(SQLContext sqlContext, DataSourceConfig dataSourceConfig) {
         this.sqlContext = sqlContext;
-        this.scanInfo = scanInfo;
+        this.dataSourceConfig = dataSourceConfig;
 
-        initSchema(scanInfo);
+        initSchema(dataSourceConfig);
     }
 
     /**
      * init result dataset's schema
      *
-     * @param scanInfo
+     * @param dataSourceConfig
      */
-    private void initSchema(ScanInfo scanInfo) {
-        Map<String, List<String>> returnColMap = scanInfo.getReturnColMap();
+    private void initSchema(DataSourceConfig dataSourceConfig) {
+        Map<String, List<String>> returnColMap = dataSourceConfig.getReturnColMap();
         LOGGER.info("return col map: {}", returnColMap);
 
         List<StructField> fields = new ArrayList<>();
 
-        MetaClientImpl metaClient = new MetaClientImpl(scanInfo.getHostAndPorts());
+        MetaClientImpl metaClient = new MetaClientImpl(dataSourceConfig.getHostAndPorts());
         try {
             metaClient.connect();
         } catch (TException e) {
@@ -64,16 +64,16 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
 
         Map<String, Class> schemaColAndType;
         for (Map.Entry<String, List<String>> returnColEntry : returnColMap.entrySet()) {
-            if (Type.VERTEX.getType().equalsIgnoreCase(scanInfo.getType())) {
+            if (Type.VERTEX.getType().equalsIgnoreCase(dataSourceConfig.getType())) {
                 fields.add(DataTypes.createStructField("_vertexId", DataTypes.StringType, false));
-                schemaColAndType = metaClient.getTagSchema(scanInfo.getNameSpace(), scanInfo.getLabel());
+                schemaColAndType = metaClient.getTagSchema(dataSourceConfig.getNameSpace(), dataSourceConfig.getLabel());
             } else {
                 fields.add(DataTypes.createStructField("_srcId", DataTypes.StringType, false));
                 fields.add(DataTypes.createStructField("_dstId", DataTypes.StringType, false));
-                schemaColAndType = metaClient.getEdgeSchema(scanInfo.getNameSpace(), scanInfo.getLabel());
+                schemaColAndType = metaClient.getEdgeSchema(dataSourceConfig.getNameSpace(), dataSourceConfig.getLabel());
             }
 
-            if (scanInfo.getAllCols()) {
+            if (dataSourceConfig.getAllCols()) {
                 // if allCols is true, then fields should contain all properties.
                 for (Map.Entry<String, Class> colTypeEntry : schemaColAndType.entrySet()) {
                     fields.add(DataTypes.createStructField(colTypeEntry.getKey(),
@@ -87,7 +87,7 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
                                 DataTypeConverter.convertDataType(schemaColAndType.get(returnCol)),
                                 true));
                     } else {
-                        LOGGER.warn("label {} doesn't contain col {}", scanInfo.getLabel(), returnCol);
+                        LOGGER.warn("label {} doesn't contain col {}", dataSourceConfig.getLabel(), returnCol);
                     }
                 }
             }
@@ -107,6 +107,6 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
     }
 
     public RDD<Row> buildScan() {
-        return new NebulaRDD(sqlContext, scanInfo);
+        return new NebulaRDD(sqlContext, dataSourceConfig);
     }
 }

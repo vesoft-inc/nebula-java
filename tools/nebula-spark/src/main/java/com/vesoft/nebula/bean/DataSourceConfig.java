@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.Serializable;
 import java.util.*;
 
-public class ScanInfo implements Serializable {
+public class DataSourceConfig implements Serializable {
 
     private final String nameSpace;
 
@@ -36,7 +36,7 @@ public class ScanInfo implements Serializable {
      * @param returnColString scan col string example: name,age
      * @param hostAndPorts    host and port
      */
-    public ScanInfo(String nameSpace, String type, String label, String returnColString, int partitionNumber, String hostAndPorts) {
+    public DataSourceConfig(String nameSpace, String type, String label, String returnColString, int partitionNumber, String hostAndPorts) {
         this.nameSpace = nameSpace;
         this.type = type;
         this.label = label;

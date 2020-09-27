@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.common.Type;
 
 import org.apache.spark.Partition;
@@ -23,16 +23,16 @@ public class NebulaRDD extends RDD<Row> {
 
     private static final ClassTag<Row> ROW_TAG = ClassManifestFactory$.MODULE$.fromClass(Row.class);
 
-    private ScanInfo scanInfo;
+    private DataSourceConfig dataSourceConfig;
 
     /**
-     * @param sqlContext    sqlContext
-     * @param scanInfo      scan info
+     * @param sqlContext       sqlContext
+     * @param dataSourceConfig scan info
      */
-    public NebulaRDD(SQLContext sqlContext, ScanInfo scanInfo) {
+    public NebulaRDD(SQLContext sqlContext, DataSourceConfig dataSourceConfig) {
         super(sqlContext.sparkContext(), new ArrayBuffer<>(), ROW_TAG);
 
-        this.scanInfo = scanInfo;
+        this.dataSourceConfig = dataSourceConfig;
     }
 
     /**
@@ -40,22 +40,21 @@ public class NebulaRDD extends RDD<Row> {
      *
      * @param split
      * @param context
-     *
      * @return Iterator<Row>
-     * */
+     */
     @Override
     public Iterator<Row> compute(Partition split, TaskContext context) {
-        String type = scanInfo.getType();
+        String type = dataSourceConfig.getType();
         if (Type.VERTEX.getType().equalsIgnoreCase(type)) {
-            return new ScanVertexIterator(split, scanInfo);
+            return new ScanVertexIterator(split, dataSourceConfig);
         } else {
-            return new ScanEdgeIterator(split, scanInfo);
+            return new ScanEdgeIterator(split, dataSourceConfig);
         }
     }
 
     @Override
     public Partition[] getPartitions() {
-        int partitionNumber = scanInfo.getPartitionNumber();
+        int partitionNumber = dataSourceConfig.getPartitionNumber();
         Partition[] partitions = new Partition[partitionNumber];
         for (int i = 0; i < partitionNumber; i++) {
             Partition partition = new NebulaPartition(i);

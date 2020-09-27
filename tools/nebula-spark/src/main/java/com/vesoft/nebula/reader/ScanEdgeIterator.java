@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
@@ -26,12 +26,12 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
 
     private Iterator<ScanEdgeResponse> responseIterator;
 
-    private ScanInfo scanInfo;
+    private DataSourceConfig dataSourceConfig;
 
     public ScanEdgeIterator(Partition split,
-                            ScanInfo scanInfo) {
-        super(split, scanInfo);
-        this.scanInfo = scanInfo;
+                            DataSourceConfig dataSourceConfig) {
+        super(split, dataSourceConfig);
+        this.dataSourceConfig = dataSourceConfig;
     }
 
     @Override
@@ -44,8 +44,8 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             if (responseIterator == null || !responseIterator.hasNext()) {
                 if (scanPartIterator.hasNext()) {
                     try {
-                        responseIterator = storageClient.scanEdge(scanInfo.getNameSpace(),
-                                scanPartIterator.next(), returnCols, scanInfo.getAllCols(),
+                        responseIterator = storageClient.scanEdge(dataSourceConfig.getNameSpace(),
+                                scanPartIterator.next(), returnCols, dataSourceConfig.getAllCols(),
                                 1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
                         LOGGER.error(e.getMessage(), e);
@@ -57,7 +57,7 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
                 ScanEdgeResponse next = responseIterator.next();
                 if (next != null) {
                     processor = new ScanEdgeProcessor(metaClient);
-                    Result processResult = processor.process(scanInfo.getNameSpace(), next);
+                    Result processResult = processor.process(dataSourceConfig.getNameSpace(), next);
                     dataIterator = process(processResult);
                 }
             }
@@ -76,7 +76,7 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             List<Row> rows = dataEntry.getValue();
             for (Row row : rows) {
                 List<Object> fields = new ArrayList<>(returnCols.get(labelName).size() + 2);
-                // add default property _srcId and _dstId for egde
+                // add default property _srcId and _dstId for edge
                 fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
                 fields.add(String.valueOf(row.getDefaultProperties()[2].getValue()));
                 Property[] properties = row.getProperties();
