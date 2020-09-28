@@ -13,6 +13,7 @@ import com.vesoft.nebula.common.Type;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.sources.BaseRelation;
+import org.apache.spark.sql.sources.DataSourceRegister;
 import org.apache.spark.sql.sources.RelationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,17 @@ import scala.runtime.AbstractFunction0;
 
 import java.util.regex.Pattern;
 
-public class NebulaDataSource implements RelationProvider {
+public class DefaultSource implements RelationProvider, DataSourceRegister {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NebulaDataSource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSource.class);
     private static final String RETURN_COL_REGEX = "(\\w+)(,\\w+)*";
 
     private DataSourceConfig dataSourceConfig;
+
+    @Override
+    public String shortName() {
+        return "nebula";
+    }
 
     @Override
     public BaseRelation createRelation(SQLContext sqlContext, Map<String, String> parameters) {

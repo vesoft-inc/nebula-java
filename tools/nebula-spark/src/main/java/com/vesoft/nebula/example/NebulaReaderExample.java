@@ -31,7 +31,7 @@ public class NebulaReaderExample {
 
         Dataset<Row> vertexDataset = sparkSession
                 .read()
-                .format("com.vesoft.nebula.reader.NebulaDataSource")
+                .format("nebula")
                 .option("type", Type.VERTEX.getType())
                 .option("hostAndPorts", "127.0.0.1:45500")
                 .option("spaceName", "nb")
@@ -45,7 +45,7 @@ public class NebulaReaderExample {
 
         Dataset<Row> edgeDataset = sparkSession
                 .read()
-                .format("com.vesoft.nebula.reader.NebulaDataSource")
+                .format("nebula")
                 .option("type", Type.EDGE.getType())
                 .option("hostAndPorts", "127.0.0.1:45500")
                 .option("spaceName", "nb")
