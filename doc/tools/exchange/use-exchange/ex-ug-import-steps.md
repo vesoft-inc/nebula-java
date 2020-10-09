@@ -23,10 +23,4 @@
 
 详细操作步骤，根据数据来源不同，您可以参考相应的操作示例：
 
-- [导入 Neo4j 数据](../parameter-reference/ex-ug-paras-neo4j.md)
-- [导入 SST 文件](ex-ug-import-sst.md)
-- 导入 HDFS 数据【TODO】
-- 导入 HIVE 数据【TODO】
-- 导入 MySQL 数据【TODO】
-- 导入 Kafka 数据【TODO】
-- 导入 Pulsar 数据【TODO】
+- [导入 Neo4j 数据](ex-ug-import-from-neo4j.md)

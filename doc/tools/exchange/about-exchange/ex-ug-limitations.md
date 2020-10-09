@@ -1,6 +1,6 @@
 # 使用限制
 
-本文描述 Nebula Graph&reg; Exchange 的一些使用限制。
+本文描述 Exchange 的一些使用限制。
 
 ## 适用的 Nebula Graph 版本
 
@@ -10,8 +10,8 @@ Nebula Graph 1.0.1 及以上版本。
 
 Exchange 支持以下操作系统：
 
-- Linux【发行版本？】
-- Mac OS【版本？】
+- Linux
+- Mac OS
 
 ## 软件依赖
 
