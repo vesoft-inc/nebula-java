@@ -18,7 +18,6 @@ import org.apache.spark.sql.sources.RelationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.immutable.Map;
-import scala.runtime.AbstractFunction0;
 
 import java.util.regex.Pattern;
 
@@ -46,8 +45,8 @@ public class DefaultSource implements RelationProvider, DataSourceRegister {
         String type = parameters.get(Parameters.TYPE).get();
         Preconditions.checkArgument(type.equalsIgnoreCase(Type.EDGE.getType())
                         || type.equalsIgnoreCase(Type.VERTEX.getType()),
-                "scan_type '%s' is illegal, it should be '%s' or '%s'",
-               type , Type.VERTEX.getType(), Type.EDGE.getType());
+                "type '%s' is illegal, it should be '%s' or '%s'",
+                type, Type.VERTEX.getType(), Type.EDGE.getType());
 
         // check and parse parameter label
         Preconditions.checkArgument(parameters.get(Parameters.LABEL).isDefined(), "label is not configured.");
@@ -66,15 +65,10 @@ public class DefaultSource implements RelationProvider, DataSourceRegister {
                 returnCols);
 
         // check and parse parameter partitionNumber
-        String partitionNumber = parameters.getOrElse(Parameters.PARTITION_NUMBER,
-                new AbstractFunction0<String>() {
-                    @Override
-                    public String apply() {
-                        return String.valueOf(Runtime.getRuntime().availableProcessors());
-                    }
-                });
+        Preconditions.checkArgument(parameters.get(Parameters.PARTITION_NUMBER).isDefined(), "partition is not configured.");
+        String partitionNumber = parameters.get(Parameters.PARTITION_NUMBER).get();
 
-        dataSourceConfig = new DataSourceConfig(spaceName,type,
+        dataSourceConfig = new DataSourceConfig(spaceName, type,
                 label, returnCols, Integer.parseInt(partitionNumber), hostAndPorts);
         LOGGER.info("dataSourceConfig: {}", dataSourceConfig);
 

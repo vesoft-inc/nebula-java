@@ -15,7 +15,10 @@ import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.spark.Partition;
 import org.slf4j.Logger;

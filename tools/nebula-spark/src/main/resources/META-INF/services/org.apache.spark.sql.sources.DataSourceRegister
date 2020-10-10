@@ -1,1 +1,2 @@
 com.vesoft.nebula.reader.DefaultSource
+#com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider

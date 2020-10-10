@@ -30,6 +30,11 @@
             <version>${spark.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-graphx_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>client</artifactId>
             <version>${nebula.version}</version>
@@ -104,6 +109,22 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- scala-maven -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

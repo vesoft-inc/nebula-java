@@ -10,7 +10,11 @@ import com.google.common.net.HostAndPort;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class DataSourceConfig implements Serializable {
 

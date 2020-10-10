@@ -12,7 +12,10 @@ import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.common.Type;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.vesoft.nebula.exception.GraphConnectException;
 import com.vesoft.nebula.util.DataTypeConverter;
@@ -98,14 +101,17 @@ public class NebulaRelation extends BaseRelation implements Serializable, TableS
         }
     }
 
+    @Override
     public SQLContext sqlContext() {
         return sqlContext;
     }
 
+    @Override
     public StructType schema() {
         return schema;
     }
 
+    @Override
     public RDD<Row> buildScan() {
         return new NebulaRDD(sqlContext, dataSourceConfig);
     }

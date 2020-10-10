@@ -14,7 +14,10 @@ import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.spark.Partition;
 import org.slf4j.Logger;
@@ -75,7 +78,7 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             String labelName = dataEntry.getKey();
             List<Row> rows = dataEntry.getValue();
             for (Row row : rows) {
-                List<Object> fields = new ArrayList<>(returnCols.get(labelName).size() + 2);
+                List<Object> fields = new ArrayList<>();
                 // add default property _srcId and _dstId for edge
                 fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
                 fields.add(String.valueOf(row.getDefaultProperties()[2].getValue()));

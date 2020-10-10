@@ -7,6 +7,7 @@
 package com.vesoft.nebula.example;
 
 import com.facebook.thrift.protocol.TCompactProtocol;
+import com.vesoft.nebula.bean.Parameters;
 import com.vesoft.nebula.common.Type;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
@@ -32,12 +33,13 @@ public class NebulaReaderExample {
         Dataset<Row> vertexDataset = sparkSession
                 .read()
                 .format("nebula")
-                .option("type", Type.VERTEX.getType())
-                .option("hostAndPorts", "127.0.0.1:45500")
-                .option("spaceName", "nb")
-                .option("label", "player")
+                .option(Parameters.TYPE, Type.VERTEX.getType())
+                .option(Parameters.HOST_AND_PORTS, "127.0.0.1:45500")
+                .option(Parameters.PARTITION_NUMBER, "100")
+                .option(Parameters.SPACE_NAME, "nb")
+                .option(Parameters.LABEL, "player")
                 // if configuration "returnCols" is null or "", then return all cols
-                .option("returnCols", "")
+                .option(Parameters.RETURN_COLS, "")
                 .load();
         LOGGER.info("vertex course schema: ");
         vertexDataset.printSchema();
@@ -46,12 +48,13 @@ public class NebulaReaderExample {
         Dataset<Row> edgeDataset = sparkSession
                 .read()
                 .format("nebula")
-                .option("type", Type.EDGE.getType())
-                .option("hostAndPorts", "127.0.0.1:45500")
-                .option("spaceName", "nb")
-                .option("label", "serve")
+                .option(Parameters.TYPE, Type.EDGE.getType())
+                .option(Parameters.HOST_AND_PORTS, "127.0.0.1:45500")
+                .option(Parameters.PARTITION_NUMBER, "100")
+                .option(Parameters.SPACE_NAME, "nb")
+                .option(Parameters.LABEL, "serve")
                 // if configuration "returnCols" is null or "", then return all cols
-                .option("returnCols", "")
+                .option(Parameters.RETURN_COLS, "")
                 .load();
         LOGGER.info("edge schema: ");
         edgeDataset.printSchema();

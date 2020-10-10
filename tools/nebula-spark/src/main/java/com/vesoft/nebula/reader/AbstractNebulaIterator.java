@@ -53,7 +53,7 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
         int totalPart = metaClient.getPartsAlloc(dataSourceConfig.getNameSpace()).size();
         NebulaPartition nebulaPartition = (NebulaPartition) split;
         List<Integer> scanParts = nebulaPartition.getScanParts(totalPart,
-                                                                dataSourceConfig.getPartitionNumber());
+                dataSourceConfig.getPartitionNumber());
         LOGGER.info("partition index: {}, scanPart: {}", split.index(), scanParts.toString());
         scanPartIterator = scanParts.iterator();
     }
