@@ -6,31 +6,35 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ConnectInfo;
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.client.storage.processor.ScanEdgeProcessor;
 import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
+import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
+
 import java.io.IOException;
+import java.util.Map;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+
 import org.apache.spark.Partition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ScanEdgeIterator extends AbstractNebulaIterator {
 
-    private Logger logger = LoggerFactory.getLogger(ScanEdgeIterator.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ScanEdgeIterator.class);
 
     private Iterator<ScanEdgeResponse> responseIterator;
 
-    public ScanEdgeIterator(ConnectInfo connectInfo, Partition split,
-                            ScanInfo scanInfo, Map<String, Integer> propIndexMap) {
-        super(connectInfo, split, scanInfo, propIndexMap);
-        processor = new ScanEdgeProcessor(metaClient);
+    private DataSourceConfig dataSourceConfig;
+
+    public ScanEdgeIterator(Partition split,
+                            DataSourceConfig dataSourceConfig) {
+        super(split, dataSourceConfig);
+        this.dataSourceConfig = dataSourceConfig;
     }
 
     @Override
@@ -43,22 +47,22 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             if (responseIterator == null || !responseIterator.hasNext()) {
                 if (scanPartIterator.hasNext()) {
                     try {
-                        responseIterator = storageClient.scanEdge(connectInfo.getSpaceName(),
-                                scanPartIterator.next(), returnCols,
-                                false, 1000, 0L, Long.MAX_VALUE);
+                        responseIterator = storageClient.scanEdge(dataSourceConfig.getNameSpace(),
+                                scanPartIterator.next(), returnCols, dataSourceConfig.getAllCols(),
+                                1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
-                        logger.error(e.getMessage(), e);
+                        LOGGER.error(e.getMessage(), e);
                     }
                     continue;
                 }
                 break;
-            } else if (responseIterator.hasNext()) {
+            } else {
                 ScanEdgeResponse next = responseIterator.next();
                 if (next != null) {
-                    Result processResult = processor.process(connectInfo.getSpaceName(), next);
+                    processor = new ScanEdgeProcessor(metaClient);
+                    Result processResult = processor.process(dataSourceConfig.getNameSpace(), next);
                     dataIterator = process(processResult);
                 }
-                continue;
             }
         }
         if (dataIterator == null) {
@@ -68,26 +72,24 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
     }
 
     @Override
-    protected Iterator<String[]> process(Result result) {
-        List<String[]> resultValues = new ArrayList<>();
-
-        Map<String, List<com.vesoft.nebula.data.Row>> dataMap = result.getRows();
-        for (Map.Entry<String, List<com.vesoft.nebula.data.Row>> dataEntry : dataMap.entrySet()) {
+    protected Iterator<String> process(Result result) {
+        Map<String, List<Row>> dataMap = result.getRows();
+        for (Map.Entry<String, List<Row>> dataEntry : dataMap.entrySet()) {
             String labelName = dataEntry.getKey();
-            List<Integer> propIndexs = labelPropIndexMap.get(labelName);
-            List<com.vesoft.nebula.data.Row> rows = dataEntry.getValue();
-            for (com.vesoft.nebula.data.Row row : rows) {
-                Iterator<Integer> nameIndexIterator = propIndexs.iterator();
-                String[] fields = new String[propSize + 2];
-                fields[0] = String.valueOf(row.getDefaultProperties()[0].getValue());
-                fields[1] = String.valueOf(row.getDefaultProperties()[2].getValue());
+            List<Row> rows = dataEntry.getValue();
+            for (Row row : rows) {
+                List<Object> fields = new ArrayList<>();
+                // add default property _srcId and _dstId for edge
+                fields.add(String.valueOf(row.getDefaultProperties()[0].getValue()));
+                fields.add(String.valueOf(row.getDefaultProperties()[2].getValue()));
                 Property[] properties = row.getProperties();
                 for (int i = 0; i < properties.length; i++) {
-                    fields[nameIndexIterator.next()] = String.valueOf(properties[i].getValue());
+                    fields.add(properties[i].getValue());
                 }
-                resultValues.add(fields);
+                resultValues.put(labelName, fields);
             }
         }
-        return resultValues.iterator();
+        LOGGER.info("edge info ={}", resultValues.toString());
+        return resultValues.keySet().iterator();
     }
 }

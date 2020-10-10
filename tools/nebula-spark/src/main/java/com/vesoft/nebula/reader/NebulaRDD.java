@@ -6,10 +6,9 @@
 
 package com.vesoft.nebula.reader;
 
-import com.vesoft.nebula.bean.ConnectInfo;
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.common.Type;
-import java.util.Map;
+
 import org.apache.spark.Partition;
 import org.apache.spark.TaskContext;
 import org.apache.spark.rdd.RDD;
@@ -24,38 +23,38 @@ public class NebulaRDD extends RDD<Row> {
 
     private static final ClassTag<Row> ROW_TAG = ClassManifestFactory$.MODULE$.fromClass(Row.class);
 
-    private ConnectInfo connectInfo;
-    private ScanInfo scanInfo;
-    private Map<String, Integer> propIndexMap;
+    private DataSourceConfig dataSourceConfig;
 
     /**
-     * @param sqlContext    sqlContext
-     * @param scanInfo      scan info
-     * @param connectInfo   nebula connect info
-     * @param propIndexMap  label and its properties in schema index map
+     * @param sqlContext       sqlContext
+     * @param dataSourceConfig scan info
      */
-    public NebulaRDD(SQLContext sqlContext, ScanInfo scanInfo,
-                     ConnectInfo connectInfo, Map<String, Integer> propIndexMap) {
+    public NebulaRDD(SQLContext sqlContext, DataSourceConfig dataSourceConfig) {
         super(sqlContext.sparkContext(), new ArrayBuffer<>(), ROW_TAG);
 
-        this.propIndexMap = propIndexMap;
-        this.scanInfo = scanInfo;
-        this.connectInfo = connectInfo;
+        this.dataSourceConfig = dataSourceConfig;
     }
 
+    /**
+     * start to scan vertex or edge data
+     *
+     * @param split
+     * @param context
+     * @return Iterator<Row>
+     */
     @Override
     public Iterator<Row> compute(Partition split, TaskContext context) {
-        String scanType = scanInfo.getScanType();
-        if (Type.VERTEX.getType().equalsIgnoreCase(scanType)) {
-            return new ScanVertexIterator(connectInfo, split, scanInfo, propIndexMap);
+        String type = dataSourceConfig.getType();
+        if (Type.VERTEX.getType().equalsIgnoreCase(type)) {
+            return new ScanVertexIterator(split, dataSourceConfig);
         } else {
-            return new ScanEdgeIterator(connectInfo, split, scanInfo, propIndexMap);
+            return new ScanEdgeIterator(split, dataSourceConfig);
         }
     }
 
     @Override
     public Partition[] getPartitions() {
-        int partitionNumber = scanInfo.getPartitionNumber();
+        int partitionNumber = dataSourceConfig.getPartitionNumber();
         Partition[] partitions = new Partition[partitionNumber];
         for (int i = 0; i < partitionNumber; i++) {
             Partition partition = new NebulaPartition(i);

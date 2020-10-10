@@ -8,6 +8,7 @@ package com.vesoft.nebula.reader;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.spark.Partition;
 
 public class NebulaPartition implements Partition {
@@ -25,19 +26,17 @@ public class NebulaPartition implements Partition {
 
     /**
      * allocate scanPart to partition
-     * @param totalPart  nebula data part num
-     * @return           scan data part list
+     *
+     * @param totalPart nebula data part num
+     * @return scan data part list
      */
     public List<Integer> getScanParts(int totalPart, int totalPartition) {
         List<Integer> scanParts = new ArrayList<>();
-
         int currentPart = index + 1;
         while (currentPart <= totalPart) {
             scanParts.add(currentPart);
             currentPart += totalPartition;
         }
-
         return scanParts;
-
     }
 }

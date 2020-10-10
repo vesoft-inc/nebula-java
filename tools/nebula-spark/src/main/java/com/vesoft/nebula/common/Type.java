@@ -8,7 +8,7 @@ package com.vesoft.nebula.common;
 
 public enum Type {
 
-    VERTEX("VERTEX"),EDGE("EDGE");
+    VERTEX("VERTEX"), EDGE("EDGE");
 
     private String type;
 

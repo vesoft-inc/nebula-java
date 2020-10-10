@@ -7,18 +7,15 @@
 package com.vesoft.nebula.reader;
 
 import com.facebook.thrift.TException;
-import com.vesoft.nebula.bean.ConnectInfo;
-import com.vesoft.nebula.bean.ScanInfo;
+import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.exception.GraphConnectException;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.client.storage.processor.Processor;
 import com.vesoft.nebula.data.Result;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 import org.apache.spark.Partition;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -30,34 +27,21 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNebulaIterator.class);
 
-    protected Iterator<String[]> dataIterator;
+    protected Iterator<String> dataIterator;
     protected Iterator<Integer> scanPartIterator;
+    protected Map<String, List<Object>> resultValues = new HashMap<>();
 
     protected StorageClientImpl storageClient;
     protected MetaClientImpl metaClient;
     protected Processor processor;
 
-    protected ConnectInfo connectInfo;
     protected Map<String, List<String>> returnCols;
-    protected Map<String, List<Integer>> labelPropIndexMap;
-    protected int propSize;
 
-    public AbstractNebulaIterator(ConnectInfo connectInfo, Partition split,
-                                  ScanInfo scanInfo, Map<String, Integer> propIndexMap) {
-        this.propSize = propIndexMap.size();
-        this.connectInfo = connectInfo;
-        this.returnCols = scanInfo.getReturnColMap();
-        this.labelPropIndexMap = new HashMap<>();
-        for (Map.Entry<String, List<String>> colEntry : returnCols.entrySet()) {
-            List<Integer> colIndexs = new ArrayList<>();
-            List<String> propNames = colEntry.getValue();
-            for (String propName : propNames) {
-                colIndexs.add(propIndexMap.get(propName));
-            }
-            labelPropIndexMap.put(colEntry.getKey(), colIndexs);
-        }
-        LOGGER.info("labelPropIndexMap: {}", labelPropIndexMap);
-        metaClient = new MetaClientImpl(connectInfo.getHostAndPorts());
+    public AbstractNebulaIterator(Partition split,
+                                  DataSourceConfig dataSourceConfig) {
+        this.returnCols = dataSourceConfig.getReturnColMap();
+
+        metaClient = new MetaClientImpl(dataSourceConfig.getHostAndPorts());
         try {
             metaClient.connect();
         } catch (TException e) {
@@ -66,11 +50,11 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
         storageClient = new StorageClientImpl(metaClient);
 
         // allocate scanPart to this partition
-        int totalPart = metaClient.getPartsAlloc(connectInfo.getSpaceName()).size();
+        int totalPart = metaClient.getPartsAlloc(dataSourceConfig.getNameSpace()).size();
         NebulaPartition nebulaPartition = (NebulaPartition) split;
         List<Integer> scanParts = nebulaPartition.getScanParts(totalPart,
-                                                                scanInfo.getPartitionNumber());
-        LOGGER.info("partition index: {}, scanPart: {}", split.index(), scanParts);
+                dataSourceConfig.getPartitionNumber());
+        LOGGER.info("partition index: {}, scanPart: {}", split.index(), scanParts.toString());
         scanPartIterator = scanParts.iterator();
     }
 
@@ -79,8 +63,8 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
 
     @Override
     public Row next() {
-        return RowFactory.create(dataIterator.next());
+        return RowFactory.create(resultValues.get(dataIterator.next()).toArray());
     }
 
-    protected abstract Iterator<String[]> process(Result result);
+    protected abstract Iterator<String> process(Result result);
 }
