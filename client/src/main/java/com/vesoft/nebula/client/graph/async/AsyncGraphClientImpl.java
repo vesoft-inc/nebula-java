@@ -16,7 +16,6 @@ import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Optional;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.client.graph.async.entry.AuthenticateCallback;
 import com.vesoft.nebula.client.graph.async.entry.ExecuteCallback;
@@ -163,7 +162,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                     ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
                     int code = resp.getError_code();
                     if (code == ErrorCode.SUCCEEDED) {
-                        ResultSet rs = new ResultSet(resp.getColumn_names(), resp.getRows());
+                        ResultSet rs = new ResultSet(resp);
                         return Optional.of(rs);
                     } else {
                         LOGGER.error("Execute error: " + resp.getError_msg());

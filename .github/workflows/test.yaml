@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+      - name: Install nebula
+        run: |
+          git clone https://github.com/vesoft-inc/nebula-docker-compose.git
+          cp ci/docker-compose.yaml nebula-docker-compose/
+          cd nebula-docker-compose/
+          docker-compose up -d
+          sleep 5
+      - name: Test ci
+        run: |
+          mvn test
+

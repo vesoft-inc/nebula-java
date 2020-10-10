@@ -4,14 +4,14 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.session;
+package com.vesoft.nebula.client.graph;
 
 /**
  *
  */
-public class QuerySessionFactory implements SessionFactory<SimpleQuerySession> {
-    @Override
-    public SimpleQuerySession create() {
-        return new SimpleQuerySession();
+public class NotValidConnectionException extends Exception {
+    NotValidConnectionException() {
+        super("No extra connection");
     }
 }
+

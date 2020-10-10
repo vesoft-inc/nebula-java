@@ -8,13 +8,15 @@ package com.vesoft.nebula.examples;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
-import com.vesoft.nebula.client.graph.ConnectionException;
-import com.vesoft.nebula.client.graph.GraphClient;
-import com.vesoft.nebula.client.graph.GraphClientImpl;
-import com.vesoft.nebula.client.graph.NGQLException;
+import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.client.graph.Config;
+import com.vesoft.nebula.client.graph.ConnectionPool;
 import com.vesoft.nebula.client.graph.ResultSet;
+import com.vesoft.nebula.client.graph.Session;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
+import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,30 +87,26 @@ public class GraphClientExample {
                 + "10 -> 990:(80), 10 -> 990:(28), 10 -> 990:(76), 10 -> 990:(27), 10 -> 990:(13);";
 
     public static void main(String[] args) {
-        LOGGER.info(batchInsertEdges);
-
-        if (args.length != 2) {
-            System.out.println("Usage: "
-                    + "com.vesoft.nebula.examples.GraphClientExample <host> <graph service port>");
-            return;
-        }
-
-        try (GraphClient client = new GraphClientImpl(args[0], Integer.valueOf(args[1]))) {
-            client.setUser("user");
-            client.setPassword("password");
-
-            client.connect();
-            int code = client.switchSpace(SPACE_NAME);
-            if (ErrorCode.SUCCEEDED != code) {
+        ConnectionPool pool = new ConnectionPool();
+        try {
+            List<HostAndPort> addresses = Arrays.asList(
+                    HostAndPort.fromParts("127.0.0.1", 3699));
+            Config config = new Config();
+            config.maxConnectionPoolSize = 1;
+            config.timeout = 10000;
+            pool.init(addresses, "root", "nebula", config);
+            Session session = pool.getSession(true);
+            ResultSet resp = session.execute(String.format("USE %s", SPACE_NAME));
+            if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                 LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));
                 LOGGER.error(String.format("Please confirm %s have been created", SPACE_NAME));
                 System.exit(-1);
             }
 
             for (String statement : createTags) {
-                code = client.execute(statement);
+                resp = session.execute(statement);
                 LOGGER.info(statement);
-                if (ErrorCode.SUCCEEDED != code) {
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                     LOGGER.error(String.format("Create Tag Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -116,8 +114,8 @@ public class GraphClientExample {
 
             for (String statement : createEdges) {
                 LOGGER.info(statement);
-                code = client.execute(statement);
-                if (ErrorCode.SUCCEEDED != code) {
+                resp = session.execute(statement);
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                     LOGGER.error(String.format("Create Edge Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -125,8 +123,8 @@ public class GraphClientExample {
 
             for (String statement : insertVertices) {
                 LOGGER.info(statement);
-                code = client.execute(statement);
-                if (ErrorCode.SUCCEEDED != code) {
+                resp = session.execute(statement);
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                     LOGGER.error(String.format("Insert Vertices Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -134,8 +132,8 @@ public class GraphClientExample {
 
             for (String statement : insertEdges) {
                 LOGGER.info(statement);
-                code = client.execute(statement);
-                if (ErrorCode.SUCCEEDED != code) {
+                resp = session.execute(statement);
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                     LOGGER.error(String.format("Insert Edges Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -144,12 +142,11 @@ public class GraphClientExample {
             ResultSet resultSet = null;
             try {
                 LOGGER.info(simpleQuery);
-                resultSet = client.executeQuery(simpleQuery);
-            } catch (ConnectionException e) {
-                LOGGER.error("Query Failed: ", e.getMessage());
+                resp = session.execute(simpleQuery);
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                    LOGGER.error("Query Failed: ", resp.getErrorMessage());
+                }
             } catch (TException e) {
-                e.printStackTrace();
-            } catch (NGQLException e) {
                 e.printStackTrace();
             }
 
@@ -161,23 +158,21 @@ public class GraphClientExample {
 
             try {
                 LOGGER.info(emptyQuery);
-                resultSet = client.executeQuery(emptyQuery);
-            } catch (ConnectionException e) {
-                LOGGER.error("Query Failed: ", e.getMessage());
+                resp = session.execute(emptyQuery);
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                    LOGGER.error("Query Failed: ", resp.getErrorMessage());
+                }
             } catch (TException e) {
-                e.printStackTrace();
-            } catch (NGQLException e) {
                 e.printStackTrace();
             }
 
             try {
                 LOGGER.info(complexQuery);
-                resultSet = client.executeQuery(complexQuery);
-            } catch (NGQLException e) {
-                e.printStackTrace();
+                resp = session.execute(complexQuery);
+                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                    LOGGER.error("Query Failed: ", resp.getErrorMessage());
+                }
             } catch (TException e) {
-                e.printStackTrace();
-            } catch (ConnectionException e) {
                 e.printStackTrace();
             }
 
@@ -189,13 +184,15 @@ public class GraphClientExample {
             }
 
             LOGGER.info(batchInsertEdges);
-            code = client.execute(batchInsertEdges);
-            if (ErrorCode.SUCCEEDED != code) {
+            resp = session.execute(batchInsertEdges);
+            if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                 LOGGER.error(String.format("Batch Insert Edges Failed: %s", batchInsertEdges));
                 System.exit(-1);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            pool.close();
         }
     }
 }

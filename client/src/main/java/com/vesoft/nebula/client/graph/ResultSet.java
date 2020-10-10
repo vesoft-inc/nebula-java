@@ -1,4 +1,4 @@
-/* Copyright (c) 2019 vesoft inc. All rights reserved.
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
@@ -9,18 +9,18 @@ package com.vesoft.nebula.client.graph;
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.ColumnValue;
 import com.vesoft.nebula.graph.DateTime;
+import com.vesoft.nebula.graph.ErrorCode;
+import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.RowValue;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public class ResultSet {
-
     private List<String> columns;
     private List<RowValue> rows;
-    private List<Result> results;
+    private List<ResultSet.Result> results;
+    private int code = ErrorCode.SUCCEEDED;
+    private String errorMessage;
 
     public static class Result {
         private final RowValue row;
@@ -39,7 +39,7 @@ public class ResultSet {
             int index = columns.indexOf(key);
             if (index == -1) {
                 throw new IllegalArgumentException(
-                    "Cannot get field because the key '" + key + "' is not exist");
+                        "Cannot get field because the key '" + key + "' is not exist");
             }
             return this.row.columns.get(index);
         }
@@ -89,26 +89,35 @@ public class ResultSet {
      * Constructor
      */
     public ResultSet() {
-        this(Lists.newArrayList(), Lists.newArrayList());
+        this(new ExecutionResponse());
     }
 
-    /**
-     * @param columns schema info
-     * @param rows    field values
-     */
-    public ResultSet(List<byte[]> columns, List<RowValue> rows) {
-        if (columns == null) {
-            columns = Lists.newArrayList();
+    public ResultSet(ExecutionResponse resp) {
+        if (resp.column_names == null) {
+            this.columns = Lists.newArrayList();
+            this.results = Lists.newArrayList();
+        } else {
+            this.columns = Lists.newArrayListWithCapacity(resp.column_names.size());
+            for (byte[] column : resp.column_names) {
+                this.columns.add(new String(column).intern());
+            }
+            if (resp.rows == null) {
+                this.results = Lists.newArrayList();
+            } else {
+                this.rows = resp.rows;
+                this.results =  Lists.newArrayListWithCapacity(rows.size());
+                for (RowValue row : this.rows) {
+                    this.results.add(
+                            new ResultSet.Result(
+                                    this.columns, row));
+                }
+            }
         }
-        this.columns = Lists.newArrayListWithCapacity(columns.size());
-        for (byte[] column : columns) {
-            this.columns.add(new String(column).intern());
+        if (resp.error_msg != null) {
+            errorMessage = resp.error_msg;
         }
-        this.rows = rows;
-        this.results = new ArrayList<>(rows.size());
-        for (RowValue row : this.rows) {
-            this.results.add(new Result(this.columns, row));
-        }
+
+        code = resp.error_code;
     }
 
     /**
@@ -124,8 +133,16 @@ public class ResultSet {
         return this.rows;
     }
 
-    public List<Result> getResults() {
+    public List<ResultSet.Result> getResults() {
         return this.results;
+    }
+
+    public int getErrorCode() {
+        return this.code;
+    }
+
+    public String getErrorMessage() {
+        return this.errorMessage;
     }
 
     @Override

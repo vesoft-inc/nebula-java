@@ -31,23 +31,27 @@
 
 连接到 `graphd`：
 
+先创建一个连接池，然后调用 `init()` 接口初始化连接池，这个时候假如指定的的服务有不可用的，`init()` 返回 **false**，全部可用，返回 **true**。
+
 ```java
-GraphClient client = new GraphClientImpl("127.0.0.1", 3699);
-client.setUser("user");
-client.setPassword("password");
-client.connect();
+List<HostAndPort> addresses = Arrays.asList(HostAndPort.fromParts("127.0.0.1", 3699));
+Config config = new Config();
+config.maxConnectionPoolSize = 10;
+config.timeout = 10000;
+pool.init(addresses, userName, password, config);
+Session session = pool.getSession(true);
 ```
 
 使用图空间：
 
 ```java
-int code = client.switchSpace("space_test");
+ResultSet resp = session.execute("USE space_test");
 ```
 
 执行语句：
 
 ```java
-int code = client.execute("CREATE TAG course(name string, credits int);");
+ResultSet resp = session.execute("CREATE TAG course(name string, credits int);");
 ```
 
 If query executes successfully, `0` will be returned. For a more complete example, refer to [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
