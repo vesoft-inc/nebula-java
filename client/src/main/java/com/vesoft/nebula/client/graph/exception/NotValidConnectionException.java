@@ -4,13 +4,13 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph;
+package com.vesoft.nebula.client.graph.exception;
 
 /**
  *
  */
 public class NotValidConnectionException extends Exception {
-    NotValidConnectionException() {
+    public NotValidConnectionException() {
         super("No extra connection");
     }
 }

@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph;
+package com.vesoft.nebula.client.graph.data;
 
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.ColumnValue;
@@ -12,7 +12,6 @@ import com.vesoft.nebula.graph.DateTime;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.RowValue;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResultSet {
@@ -135,6 +134,10 @@ public class ResultSet {
 
     public List<ResultSet.Result> getResults() {
         return this.results;
+    }
+
+    public boolean isSucceeded() {
+        return this.code == ErrorCode.SUCCEEDED;
     }
 
     public int getErrorCode() {

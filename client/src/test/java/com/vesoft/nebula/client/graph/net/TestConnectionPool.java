@@ -6,12 +6,12 @@
 
 package com.vesoft.nebula.graph.sync;
 
-import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.client.graph.Config;
-import com.vesoft.nebula.client.graph.ConnectionPool;
-import com.vesoft.nebula.client.graph.NotValidConnectionException;
-import com.vesoft.nebula.client.graph.ResultSet;
-import com.vesoft.nebula.client.graph.Session;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+import com.vesoft.nebula.client.graph.net.ConnectionPool;
+import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +25,9 @@ public class TestConnectionPool {
     public void testInitFailed() {
         try {
             Config config = new Config();
-            config.maxConnectionPoolSize = 1;
-            List<HostAndPort> addresses = Arrays.asList(HostAndPort.fromParts("127.0.0.1", 3888));
+            config.setMinConnSize(0);
+            config.setMaxConnSize(1);
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3888));
             assert (false == pool.init(addresses, "root", "nebula", config));
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,13 +39,15 @@ public class TestConnectionPool {
     public void testGetSession() {
         try {
             Config config = new Config();
-            config.maxConnectionPoolSize = 4;
-            List<HostAndPort> addresses = Arrays.asList(HostAndPort.fromParts("127.0.0.1", 3699),
-                    HostAndPort.fromParts("127.0.0.1", 3700));
+            config.setMinConnSize(2);
+            config.setMaxConnSize(4);
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
+                    new HostAddress("127.0.0.1", 3700));
             assert (pool.init(addresses, "root", "nebula", config));
+            assert (pool.getConnectionsNum() == 2);
             int i = 0;
             List<Session> sessions = new ArrayList<Session>();
-            while (i < config.maxConnectionPoolSize) {
+            while (i < config.getMaxConnSize()) {
                 Session session = pool.getSession(false);
                 assert (session != null);
                 ResultSet resp = session.execute("SHOW SPACES");
@@ -56,6 +59,7 @@ public class TestConnectionPool {
 
             assert (pool.getInUsedNum() == 4);
             assert (pool.getOkServersNum() == 2);
+            assert (pool.getConnectionsNum() == 4);
             // All sessions are in used, so getSession failed
             try {
                 Session session = pool.getSession(false);

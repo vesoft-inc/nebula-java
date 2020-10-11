@@ -6,8 +6,8 @@
 
 package com.vesoft.nebula.graph.sync;
 
-import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.client.graph.Connection;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.net.Connection;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class TestConnection {
         try {
             // Test open
             Connection connection = new Connection();
-            connection.open(HostAndPort.fromParts("127.0.0.1", 3699), 1000);
+            connection.open(new HostAddress("127.0.0.1", 3699), 1000);
 
             // Test authenticate
             long sessionId = connection.authenticate("root", "nebula");

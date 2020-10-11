@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph;
+package com.vesoft.nebula.client.graph.net;
 
 
 import com.facebook.thrift.TException;
@@ -13,7 +13,9 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
@@ -22,19 +24,17 @@ import com.vesoft.nebula.graph.GraphService;
 public class Connection {
     private TTransport transport = null;
     private GraphService.Client connection = null;
-    private HostAndPort address = null;
-    private Boolean isUsed = false;
+    private boolean isUsed = false;
 
-    public void open(HostAndPort address, int timeout) throws TException {
+    public void open(HostAddress address, int timeout) throws IOErrorException {
         try {
-            this.address = address;
             this.transport = new TSocket(
-                    address.getHostText(), address.getPort(), timeout, timeout);
+                    address.getHost(), address.getPort(), timeout, timeout);
             this.transport.open();
             TProtocol protocol = new TCompactProtocol(transport);
             this.connection = new GraphService.Client(protocol);
         } catch (TException e) {
-            throw e;
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
     }
 
@@ -45,7 +45,6 @@ public class Connection {
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 throw new AuthFailedException(resp.error_msg);
             }
-            setUsed();
             return resp.session_id;
         } catch (TException e) {
             if (e instanceof TTransportException) {
@@ -54,8 +53,8 @@ public class Connection {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
                 }
             }
+            throw new AuthFailedException("Not authenticate");
         }
-        throw new AuthFailedException("Not authenticate");
     }
 
     public ExecutionResponse execute(long sessionID, String stmt)
@@ -69,7 +68,7 @@ public class Connection {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
                 }
             }
-            throw e;
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
     }
 
@@ -89,12 +88,12 @@ public class Connection {
         }
     }
 
-    public Boolean ping() {
+    public boolean ping() {
         // TODO: need server supported
         return false;
     }
 
-    public Boolean isUsed() {
+    public boolean isUsed() {
         return isUsed;
     }
 

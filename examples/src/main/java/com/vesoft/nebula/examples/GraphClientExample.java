@@ -8,11 +8,11 @@ package com.vesoft.nebula.examples;
 
 import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
-import com.google.common.net.HostAndPort;
-import com.vesoft.nebula.client.graph.Config;
-import com.vesoft.nebula.client.graph.ConnectionPool;
-import com.vesoft.nebula.client.graph.ResultSet;
-import com.vesoft.nebula.client.graph.Session;
+import com.vesoft.nebula.client.graph.*;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.net.ConnectionPool;
+import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
 import java.util.Arrays;
@@ -89,11 +89,11 @@ public class GraphClientExample {
     public static void main(String[] args) {
         ConnectionPool pool = new ConnectionPool();
         try {
-            List<HostAndPort> addresses = Arrays.asList(
-                    HostAndPort.fromParts("127.0.0.1", 3699));
+            List<HostAddress> addresses = Arrays.asList(
+                    new HostAddress("127.0.0.1", 3699));
             Config config = new Config();
-            config.maxConnectionPoolSize = 1;
-            config.timeout = 10000;
+            config.setMaxConnSize(1);
+            config.setTimeout(10000);
             pool.init(addresses, "root", "nebula", config);
             Session session = pool.getSession(true);
             ResultSet resp = session.execute(String.format("USE %s", SPACE_NAME));

@@ -12,7 +12,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.vesoft.nebula.client.graph.ResultSet;
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClient;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl;
 import com.vesoft.nebula.graph.ErrorCode;

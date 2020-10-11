@@ -4,13 +4,13 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph;
+package com.vesoft.nebula.client.graph.exception;
 
 /**
  *
  */
 public class AuthFailedException extends Exception {
-    AuthFailedException(String message) {
+    public AuthFailedException(String message) {
         super(String.format("Auth failed: %s", message));
     }
 }

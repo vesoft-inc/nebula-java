@@ -7,6 +7,48 @@
 package com.vesoft.nebula.client.graph;
 
 public class Config {
-    public int maxConnectionPoolSize = 10;   // The max connections in pool for all addresses
-    public int timeout = 1000; // Socket timeout and Socket connection timeout
+    // The min connections in pool for all addresses
+    private int minConnsSize = 10;
+
+    // The max connections in pool for all addresses
+    private int maxConnsSize = 100;
+
+    // Socket timeout and Socket connection timeout, unit: seconds
+    private int timeout = 1000;
+
+    // The idleTime of the connection, unit: seconds
+    // The connection's idle time more than idleTime, it will be delete
+    private int idleTime = 5 * 60 * 1000;
+
+    public int getMinConnSize() {
+        return minConnsSize;
+    }
+
+    public void setMinConnSize(int minConnSize) {
+        this.minConnsSize = minConnSize;
+    }
+
+    public int getMaxConnSize() {
+        return maxConnsSize;
+    }
+
+    public void setMaxConnSize(int maxConnSize) {
+        this.maxConnsSize = maxConnSize;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public int getIdleTime() {
+        return idleTime;
+    }
+
+    public void setIdleTime(int idleTime) {
+        this.idleTime = idleTime;
+    }
 }

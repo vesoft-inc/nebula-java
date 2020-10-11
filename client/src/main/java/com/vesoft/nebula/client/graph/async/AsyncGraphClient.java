@@ -11,7 +11,7 @@ import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.AsyncAbstractClient;
 import com.vesoft.nebula.auth.AuthProvider;
-import com.vesoft.nebula.client.graph.ResultSet;
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import java.util.List;
 
 public abstract class AsyncGraphClient extends AsyncAbstractClient implements AuthProvider {

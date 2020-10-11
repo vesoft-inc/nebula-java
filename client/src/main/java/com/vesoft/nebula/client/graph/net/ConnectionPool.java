@@ -4,14 +4,21 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph;
+package com.vesoft.nebula.client.graph.net;
 
 import com.facebook.thrift.TException;
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.client.graph.Config;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,17 +27,19 @@ import org.slf4j.LoggerFactory;
 public class ConnectionPool {
     private static final int S_OK = 0;
     private static final int S_BAD = 1;
-    private List<HostAndPort> addresses = new ArrayList<HostAndPort>();
     private String userName;
     private String password;
     private Config config;
     private int pos = 0;
-    private Map<HostAndPort, Integer> serversStatus = new HashMap<HostAndPort, Integer>();
-    private Map<HostAndPort, List<Connection>> connections =
-            new HashMap<HostAndPort, List<Connection>>();
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Boolean isClosed = false;
+    // save the servers' address
+    private List<HostAddress> addresses = new ArrayList<>();
+    // save the servers' status
+    private final Map<HostAddress, Integer> serversStatus = new HashMap<>();
+    private final Map<HostAddress, List<Connection>> connections = new HashMap<>();
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final Logger log = LoggerFactory.getLogger(ConnectionPool.class);
+    private final ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
 
     /**
      * init the connection pool.
@@ -41,7 +50,7 @@ public class ConnectionPool {
      * @param config The config for connectionPool
      * @return Boolean if all addresses are ok, return true else return.
      */
-    public Boolean init(List<HostAndPort> addresses,
+    public Boolean init(List<HostAddress> addresses,
                         String userName,
                         String password,
                         Config config) {
@@ -49,14 +58,35 @@ public class ConnectionPool {
         this.userName = userName;
         this.password = password;
         this.config = config;
-        for (HostAndPort addr : addresses) {
+        for (HostAddress addr : addresses) {
             serversStatus.put(addr, S_BAD);
-            connections.put(addr, new ArrayList<Connection>());
+            connections.put(addr, new ArrayList<>());
         }
         updateServersStatus();
+        int okNum = getOkServersNum();
         if (getOkServersNum() != this.addresses.size()) {
             return false;
         }
+
+        int maxConnPerAddr = config.getMinConnSize() / okNum;
+        // Init the min conns num
+        for (HostAddress addr : addresses) {
+            List<Connection> conns = connections.get(addr);
+            try {
+                int i = 0;
+                while (i < maxConnPerAddr) {
+                    Connection connection = new Connection();
+                    connection.open(addr, config.getTimeout());
+                    conns.add(connection);
+                    i++;
+                }
+            } catch (IOErrorException e) {
+                log.error(String.format("Init connection failed: %s", e.getMessage()));
+                return false;
+            }
+        }
+
+        schedule.scheduleAtFixedRate(this::scheduleTask, 60, 60, TimeUnit.SECONDS);
         return true;
     }
 
@@ -74,13 +104,9 @@ public class ConnectionPool {
         if (conn == null) {
             throw new NotValidConnectionException();
         }
-        try {
-            long sessionId = conn.authenticate(userName, password);
-            return new Session(conn, sessionId, this, retryConnection);
-        } catch (Exception e) {
-            throw e;
-        }
-
+        long sessionId = conn.authenticate(userName, password);
+        conn.setUsed();
+        return new Session(conn, sessionId, this, retryConnection);
     }
 
     public Connection getConnection() {
@@ -94,37 +120,36 @@ public class ConnectionPool {
                 return null;
             }
 
-            int maxConnPerAddr = (int)(config.maxConnectionPoolSize / okNum);
+            int maxConnPerAddr = config.getMaxConnSize() / okNum;
             int tryCount = 0;
             while (tryCount <= addresses.size()) {
                 pos = (pos + 1) %  addresses.size();
-                HostAndPort addr = addresses.get(pos);
+                HostAddress addr = addresses.get(pos);
                 List<Connection> conns = connections.get(addr);
                 if (serversStatus.get(addr) == S_OK) {
-                    if (conns.size() < maxConnPerAddr) {
-                        Connection connection = new Connection();
-                        connection.open(addr, config.timeout);
-                        conns.add(connection);
-                    }
                     for (Connection conn : conns) {
                         if (!conn.isUsed()) {
                             conn.setUsed();
-                            log.info(String.format("Get connection from address [%s:%d]",
-                                    addr.getHostText(), addr.getPort()));
+                            log.info(String.format("Get connection to address [%s:%d]",
+                                    addr.getHost(), addr.getPort()));
                             return conn;
                         }
                     }
-                } else {
-                    for (Connection conn : conns) {
-                        if (!conn.isUsed()) {
-                            conns.remove(conn);
+                    if (conns.size() < maxConnPerAddr) {
+                        try {
+                            Connection connection = new Connection();
+                            connection.open(addr, config.getTimeout());
+                            conns.add(connection);
+                        } catch (IOErrorException e) {
+                            log.error(String.format("Connect to [%s:%d] failed: %s.",
+                                    addr.getHost(), addr.getPort(), e.getMessage()));
                         }
                     }
+                } else {
+                    conns.removeIf(conn -> !conn.isUsed());
                 }
                 tryCount++;
             }
-            return null;
-        } catch (TException e) {
             return null;
         } finally {
             lock.writeLock().unlock();
@@ -134,7 +159,7 @@ public class ConnectionPool {
     public void updateServersStatus() {
         try {
             lock.writeLock().lock();
-            for (HostAndPort addr : addresses) {
+            for (HostAddress addr : addresses) {
                 if (ping(addr)) {
                     serversStatus.put(addr, S_OK);
                 } else {
@@ -150,7 +175,7 @@ public class ConnectionPool {
         try {
             lock.readLock().lock();
             int okNum = 0;
-            for (HostAndPort addr : serversStatus.keySet()) {
+            for (HostAddress addr : serversStatus.keySet()) {
                 if (serversStatus.get(addr) == S_OK) {
                     okNum++;
                 }
@@ -165,7 +190,7 @@ public class ConnectionPool {
         try {
             lock.readLock().lock();
             int usedNum = 0;
-            for (HostAndPort addr : connections.keySet()) {
+            for (HostAddress addr : connections.keySet()) {
                 List<Connection> conns = connections.get(addr);
                 for (Connection conn : conns) {
                     if (conn.isUsed()) {
@@ -179,21 +204,10 @@ public class ConnectionPool {
         }
     }
 
-    private Boolean ping(HostAndPort addr) {
-        try {
-            Connection connection = new Connection();
-            connection.open(addr, config.timeout);
-            connection.close();
-            return true;
-        } catch (TException e) {
-            return false;
-        }
-    }
-
     public void close() {
         try {
             lock.readLock().lock();
-            for (HostAndPort addr : connections.keySet()) {
+            for (HostAddress addr : connections.keySet()) {
                 for (Connection conn : connections.get(addr)) {
                     conn.close();
                 }
@@ -202,5 +216,35 @@ public class ConnectionPool {
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    public int getConnectionsNum() {
+        try {
+            lock.readLock().lock();
+            int connectionNum = 0;
+            for (HostAddress addr : connections.keySet()) {
+                connectionNum += connections.get(addr).size();
+            }
+            return connectionNum;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    private boolean ping(HostAddress addr) {
+        try {
+            Connection connection = new Connection();
+            connection.open(addr, config.getTimeout());
+            connection.close();
+            return true;
+        } catch (IOErrorException e) {
+            return false;
+        }
+    }
+
+    private void scheduleTask() {
+        updateServersStatus();
+        log.info("========= scheduleTask ========");
+        // TODO: delete the unused connection which is more than idle time to use
     }
 }
