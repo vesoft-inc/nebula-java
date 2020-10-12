@@ -23,6 +23,7 @@ public class TestConnection {
             // Test authenticate
             long sessionId = connection.authenticate("root", "nebula");
             assert (sessionId != 0);
+            connection.setUsed(true);
             assert (connection.isUsed());
 
             // Test execute

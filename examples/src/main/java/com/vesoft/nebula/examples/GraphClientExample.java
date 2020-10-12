@@ -11,6 +11,7 @@ import com.google.common.base.Joiner;
 import com.vesoft.nebula.client.graph.*;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.ConnectionPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
@@ -106,7 +107,7 @@ public class GraphClientExample {
             for (String statement : createTags) {
                 resp = session.execute(statement);
                 LOGGER.info(statement);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (!resp.isSucceeded()) {
                     LOGGER.error(String.format("Create Tag Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -115,7 +116,7 @@ public class GraphClientExample {
             for (String statement : createEdges) {
                 LOGGER.info(statement);
                 resp = session.execute(statement);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (!resp.isSucceeded()) {
                     LOGGER.error(String.format("Create Edge Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -124,7 +125,7 @@ public class GraphClientExample {
             for (String statement : insertVertices) {
                 LOGGER.info(statement);
                 resp = session.execute(statement);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (!resp.isSucceeded()) {
                     LOGGER.error(String.format("Insert Vertices Failed: %s", statement));
                     System.exit(-1);
                 }
@@ -133,51 +134,50 @@ public class GraphClientExample {
             for (String statement : insertEdges) {
                 LOGGER.info(statement);
                 resp = session.execute(statement);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (!resp.isSucceeded()) {
                     LOGGER.error(String.format("Insert Edges Failed: %s", statement));
                     System.exit(-1);
                 }
             }
 
-            ResultSet resultSet = null;
             try {
                 LOGGER.info(simpleQuery);
                 resp = session.execute(simpleQuery);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (!resp.isSucceeded()) {
                     LOGGER.error("Query Failed: ", resp.getErrorMessage());
                 }
-            } catch (TException e) {
+            } catch (IOErrorException e) {
                 e.printStackTrace();
             }
 
-            LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
+            LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resp.getColumns())));
 
-            for (RowValue value : resultSet.getRows()) {
+            for (RowValue value : resp.getRows()) {
                 LOGGER.info("ID: {}", value.columns.get(0).getId());
             }
 
             try {
                 LOGGER.info(emptyQuery);
                 resp = session.execute(emptyQuery);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (resp.isSucceeded()) {
                     LOGGER.error("Query Failed: ", resp.getErrorMessage());
                 }
-            } catch (TException e) {
+            } catch (IOErrorException e) {
                 e.printStackTrace();
             }
 
             try {
                 LOGGER.info(complexQuery);
                 resp = session.execute(complexQuery);
-                if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+                if (!resp.isSucceeded()) {
                     LOGGER.error("Query Failed: ", resp.getErrorMessage());
                 }
-            } catch (TException e) {
+            } catch (IOErrorException e) {
                 e.printStackTrace();
             }
 
-            LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
-            for (ResultSet.Result value : resultSet.getResults()) {
+            LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resp.getColumns())));
+            for (ResultSet.Result value : resp.getResults()) {
                 LOGGER.info(String.format("%s, %d, %s", value.getString("Friend"),
                         value.getInteger("Age"),
                         value.getString("Gender")));
@@ -185,7 +185,7 @@ public class GraphClientExample {
 
             LOGGER.info(batchInsertEdges);
             resp = session.execute(batchInsertEdges);
-            if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
+            if (!resp.isSucceeded()) {
                 LOGGER.error(String.format("Batch Insert Edges Failed: %s", batchInsertEdges));
                 System.exit(-1);
             }

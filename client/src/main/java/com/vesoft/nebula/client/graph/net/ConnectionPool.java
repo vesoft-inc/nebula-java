@@ -49,7 +49,7 @@ public class ConnectionPool {
      * @param userName The userName to authenticate
      * @param password The password to authenticate
      * @param config The config for connectionPool
-     * @return Boolean if all addresses are ok, return true else return.
+     * @return Boolean if all addresses are ok, return true else return false.
      */
     public Boolean init(List<HostAddress> addresses,
                         String userName,
