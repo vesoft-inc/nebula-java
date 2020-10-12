@@ -8,7 +8,7 @@ package com.vesoft.nebula.client.graph;
 
 public class Config {
     // The min connections in pool for all addresses
-    private int minConnsSize = 10;
+    private int minConnsSize = 0;
 
     // The max connections in pool for all addresses
     private int maxConnsSize = 100;

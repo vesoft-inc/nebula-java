@@ -39,7 +39,7 @@ public class TestConnection {
                 assert (true);
             }
 
-            connection.setUsed();
+            connection.setUsed(true);
             assert (connection.isUsed());
 
             connection.close();

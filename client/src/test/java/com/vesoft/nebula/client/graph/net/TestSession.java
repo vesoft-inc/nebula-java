@@ -31,6 +31,7 @@ public class TestSession {
         try {
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699));
             Config config = new Config();
+            config.setMinConnSize(0);
             config.setMaxConnSize(1);
             pool.init(addresses, "root", "nebula", config);
             Session session = pool.getSession(true);
@@ -100,10 +101,13 @@ public class TestSession {
                     new HostAddress("127.0.0.1", 3700));
             Config config = new Config();
             config.setMaxConnSize(2);
+            config.setIdleTime(2);
             pool.init(addresses, "root", "nebula", config);
             Session session = pool.getSession(false);
-            for (int i = 0; i < 30; i++) {
-                log.info("Execute: SHOW SPACES");
+            // TODO: Add a task to stop the graphd("127.0.0.1:3700") after 10 second
+
+            // TODO: Add a task to start the graphd("127.0.0.1:3700") after 20 second
+            for (int i = 0; i < 20; i++) {
                 try {
                     ResultSet resp = session.execute("SHOW SPACES");
                     if (!resp.isSucceeded()) {
@@ -119,6 +123,10 @@ public class TestSession {
                 TimeUnit.SECONDS.sleep(2);
             }
             session.release();
+            Session session1 = pool.getSession(false);
+            assert (session1 != null);
+            Session session2 = pool.getSession(false);
+            assert (session2 != null);
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);

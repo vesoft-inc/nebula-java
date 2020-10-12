@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.client.graph.net;
 
-import com.facebook.thrift.TException;
 import com.vesoft.nebula.client.graph.Config;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
@@ -32,6 +31,8 @@ public class ConnectionPool {
     private Config config;
     private int pos = 0;
     private Boolean isClosed = false;
+    // the period time to check connections
+    private int delayTime = 60;  // unit seconds
     // save the servers' address
     private List<HostAddress> addresses = new ArrayList<>();
     // save the servers' status
@@ -86,7 +87,7 @@ public class ConnectionPool {
             }
         }
 
-        schedule.scheduleAtFixedRate(this::scheduleTask, 60, 60, TimeUnit.SECONDS);
+        schedule.scheduleAtFixedRate(this::scheduleTask, delayTime, delayTime, TimeUnit.SECONDS);
         return true;
     }
 
@@ -105,7 +106,7 @@ public class ConnectionPool {
             throw new NotValidConnectionException();
         }
         long sessionId = conn.authenticate(userName, password);
-        conn.setUsed();
+        conn.setUsed(true);
         return new Session(conn, sessionId, this, retryConnection);
     }
 
@@ -119,7 +120,7 @@ public class ConnectionPool {
             if (okNum == 0) {
                 return null;
             }
-
+            log.info(String.format("getMaxConnSize is %d", config.getMaxConnSize()));
             int maxConnPerAddr = config.getMaxConnSize() / okNum;
             int tryCount = 0;
             while (tryCount <= addresses.size()) {
@@ -129,7 +130,7 @@ public class ConnectionPool {
                 if (serversStatus.get(addr) == S_OK) {
                     for (Connection conn : conns) {
                         if (!conn.isUsed()) {
-                            conn.setUsed();
+                            conn.setUsed(true);
                             log.info(String.format("Get connection to address [%s:%d]",
                                     addr.getHost(), addr.getPort()));
                             return conn;
@@ -244,7 +245,15 @@ public class ConnectionPool {
 
     private void scheduleTask() {
         updateServersStatus();
-        log.info("========= scheduleTask ========");
-        // TODO: delete the unused connection which is more than idle time to use
+        log.debug("scheduleTask start");
+        try {
+            lock.writeLock().lock();
+            for (HostAddress addr : connections.keySet()) {
+                List<Connection> conns = connections.get(addr);
+                conns.removeIf(conn -> !conn.isUsed() && conn.idleTime() > config.getIdleTime());
+            }
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 }

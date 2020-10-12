@@ -25,6 +25,7 @@ public class Connection {
     private TTransport transport = null;
     private GraphService.Client connection = null;
     private boolean isUsed = false;
+    private long startUseTime = 0;
 
     public void open(HostAddress address, int timeout) throws IOErrorException {
         try {
@@ -53,12 +54,12 @@ public class Connection {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
                 }
             }
-            throw new AuthFailedException("Not authenticate");
+            throw new AuthFailedException(String.format("Authenticate failed: %s", e.getMessage()));
         }
     }
 
     public ExecutionResponse execute(long sessionID, String stmt)
-            throws IOErrorException, TException {
+            throws IOErrorException {
         try {
             return connection.execute(sessionID, stmt);
         } catch (TException e) {
@@ -97,7 +98,19 @@ public class Connection {
         return isUsed;
     }
 
-    public void setUsed() {
-        isUsed = true;
+    public void setUsed(boolean used) {
+        if (used) {
+            startUseTime = System.currentTimeMillis() / 1000;
+        } else {
+            startUseTime = 0;
+        }
+        isUsed = used;
+    }
+
+    public long idleTime() {
+        if (!isUsed()) {
+            return 0;
+        }
+        return System.currentTimeMillis() / 1000 - startUseTime;
     }
 }
