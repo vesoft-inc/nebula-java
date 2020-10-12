@@ -10,7 +10,7 @@ Nebula Graph 1.0.1 及以上版本。
 
 Exchange 支持以下操作系统：
 
-- Linux
+- CentOS 7
 - Mac OS
 
 ## 软件依赖

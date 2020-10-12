@@ -11,9 +11,5 @@
 | `nebula.connection.timeout` | 3000 | `int` | 否 | Thrift 连接的超时时间，单位为 ms。 |
 | `nebula.connection.retry` | 3 | `int` | 否 | Thrift 连接重试次数。 |
 | `nebula.execution.retry` | 3 | `int` | 否 | nGQL 语句执行重试次数。 |
-| `nebula.execution.timeout? (/nebula-java/tools/exchange/src/main/scala/com/vesoft/nebula/tools/importer/config/Configs.scala 文件里有这个参数，实际用户需要设置吗？）` |  |  |  |  |
-| `nebula.execution.interval? (/nebula-java/tools/exchange/src/main/scala/com/vesoft/nebula/tools/importer/config/Configs.scala 文件里有这个参数，实际用户需要设置吗？）` |  |  |  |  |
 | `nebula.error.max` | 32 | `int` | 否 |  |
 | `nebula.error.output` | 无 | `string` | 是 | 在 Nebula Graph 服务器上指定输出错误信息的日志路径。您可以在这个文件里查看发生的所有错误信息。 |
-| `nebula.rate.limit` |  |  |  |  |
-| `nebula.rate.timeout` |  |  |  |  |

@@ -35,7 +35,7 @@ Exchange 读取 Neo4j 数据时需要完成以下工作：
   - 内存：251 GB
 - Spark：单机版，2.4.6 pre-build for Hadoop 2.7
 - Neo4j：3.5.20 Community Edition
-- Nebula Graph：V1.0.1，使用 Docker Compose 部署
+- Nebula Graph：V1.0.1，使用 Docker Compose 部署。详细信息，参考 [使用 Docker Compose 部署 Nebula Graph](https://github.com/vesoft-inc/nebula-docker-compose/blob/master/README_zh-CN.md)
 
 ### 数据集信息
 
@@ -75,7 +75,7 @@ Neo4j 的数据集信息如下：
 
 ## 操作步骤
 
-### 步骤 1. 在 Nebula Graph 中构建图数据模式
+### 步骤 1. 在 Nebula Graph 中构建图数据模式（Schema）
 
 根据示例场景，按以下步骤完成 Nebula Graph 构建图数据模式：
 
@@ -98,7 +98,7 @@ Neo4j 的数据集信息如下：
     CREATE EDGE edgeAB(idInt int, idString string, tboolean bool, tdouble double); -- 创建边类型 edgeAB
     ```
 
-关于 Nebula Graph 构图的更多信息，您可以参考《Nebula Graph Database 手册》的 [快速开始](https://docs.nebula-graph.com.cn/manual-CN/1.overview/2.quick-start/1.get-started/ "点击前往 Nebula Graph 网站") 。
+关于 Nebula Graph 构图的更多信息，参考《Nebula Graph Database 手册》的 [快速开始](https://docs.nebula-graph.com.cn/manual-CN/1.overview/2.quick-start/1.get-started/ "点击前往 Nebula Graph 网站") 。
 
 ### 步骤 2. 配置源数据
 
@@ -157,7 +157,7 @@ Exchange 采用 HOCON（Human-Optimized Config Object Notation）配置文件格
     }
   }
 
-  # 处理点标签
+  # 处理标签（点类型）
   tags: [
  {
     name: tagA
@@ -309,13 +309,13 @@ Neo4j 和 Nebula Graph 在系统架构、数据模型和访问方式上都有一
  <tr>
   <td>点类型/边类型</td>
   <td>Label（可以没有 Label，Label 不决定属性 Schema）</td>
-  <td>Tag/EdgeType（必须至少有一个Tag，并且与 Schema 对应）</td>
+  <td>Tag/EdgeType（必须至少有一个 Tag，并且与 Schema 对应）</td>
   <td>无</td>
-  </tr>
+  </tr>  
  <tr>
   <td>点 ID/唯一主键</td>
   <td>点允许无主键（会有多条重复记录）。由内置 <code>id()</code> 标识，或者由约束来保证主键唯一。</td>
-  <td>点必须有唯一标识符，称为 VID。VID 由应用生成。</td>
+  <td>点必须有唯一标识符，称为 VID。VID 由应用程序生成。</td>
   <td>主键相同的重复记录只保留最新的一份。</td>
  </tr>
  <tr>

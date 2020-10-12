@@ -1,6 +1,6 @@
 # 导入数据步骤
 
-无论导入哪种数据，您可以按以下代码来实现使用 Exchange 向 Nebula Graph 中导入数据。
+您可以按本文描述的步骤使用 Exchange 将指定来源的数据导入到 Nebula Graph 中。
 
 ## 前提条件
 
@@ -15,7 +15,7 @@
 
 按以下步骤将不同来源的数据导入 Nebula Graph 数据库：
 
-步骤 1. 在 Nebula Graph 中构图，包括创建图空间、创建图模型。
+步骤 1. 在 Nebula Graph 中构图，包括创建图空间、创建图数据模式（Schema）。
 步骤 2. 配置源数据。
 步骤 3. 分别修改 Spark、Nebula Graph 和源数据配置文件。
 步骤 4. 向 Nebula Graph 迁移数据。
