@@ -1,9 +1,7 @@
-/*
- *  Copyright (c) 2020 vesoft inc. All rights reserved.
- *  *
- *  * This source code is licensed under Apache 2.0 License,
- *  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
 package com.vesoft.nebula.tools.algorithm.config
@@ -11,7 +9,7 @@ package com.vesoft.nebula.tools.algorithm.config
 object ConfigSuite {
 
   def configMock(): Configs = {
-    val address         = "192.168.8.171:45500"
+    val address         = "127.0.0.1:45500"
     val space           = "nb"
     val partitionNumber = "100"
     val labels          = List("serve", "follow")

@@ -1,9 +1,7 @@
-/*
- *  Copyright (c) 2020 vesoft inc. All rights reserved.
- *  *
- *  * This source code is licensed under Apache 2.0 License,
- *  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
 package com.vesoft.nebula.tools.algorithm.config
@@ -39,7 +37,7 @@ object SparkConfig {
     }
     session.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 
-    partitionNum = sparkConfigs.getOrElse("spark.app.partitionNum", "0").toString
+    partitionNum = sparkConfigs.getOrElse("spark.app.partitionNum", "0")
 
     SparkConfig(session, partitionNum)
   }

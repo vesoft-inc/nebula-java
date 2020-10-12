@@ -1,9 +1,7 @@
-/*
- *  Copyright (c) 2020 vesoft inc. All rights reserved.
- *  *
- *  * This source code is licensed under Apache 2.0 License,
- *  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
 package com.vesoft.nebula.tools.algorithm.utils
@@ -32,7 +30,7 @@ class NebulaUtilSuite {
 
   @Test
   def validateWithoutWeight: Unit = {
-    val hostPorts: String        = "192.168.8.171:45500"
+    val hostPorts: String        = "127.0.0.1:45500"
     val nameSpace: String        = "nb"
     val labels: List[String]     = List("serve")
     val hasWeight: Boolean       = false
