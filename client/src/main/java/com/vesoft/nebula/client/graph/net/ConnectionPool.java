@@ -120,7 +120,6 @@ public class ConnectionPool {
             if (okNum == 0) {
                 return null;
             }
-            log.info(String.format("getMaxConnSize is %d", config.getMaxConnSize()));
             int maxConnPerAddr = config.getMaxConnSize() / okNum;
             int tryCount = 0;
             while (tryCount <= addresses.size()) {
