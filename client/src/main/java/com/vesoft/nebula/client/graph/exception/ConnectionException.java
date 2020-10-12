@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph.async;
+package com.vesoft.nebula.client.graph.exception;
 
 public class ConnectionException extends Exception {
 
