@@ -97,11 +97,12 @@ public class TestSession {
     public void testReconnect() {
         ConnectionPool pool = new ConnectionPool();
         try {
-            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
-                    new HostAddress("127.0.0.1", 3700));
             Config config = new Config();
             config.setMaxConnSize(2);
             config.setIdleTime(2);
+            pool.setDelayTime(2);
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
+                    new HostAddress("127.0.0.1", 3700));
             pool.init(addresses, "root", "nebula", config);
             Session session = pool.getSession(false);
             // TODO: Add a task to stop the graphd("127.0.0.1:3700") after 10 second
