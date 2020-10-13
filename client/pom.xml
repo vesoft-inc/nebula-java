@@ -16,7 +16,7 @@
         <commons-lang3.version>3.8</commons-lang3.version>
         <slf4j-log4j12.version>1.7.25</slf4j-log4j12.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <guava.version>14.0</guava.version>
         <commons-codec.version>1.13</commons-codec.version>
         <nebula-utils.version>1.0.0-rc2</nebula-utils.version>
