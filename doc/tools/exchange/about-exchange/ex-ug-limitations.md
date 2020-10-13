@@ -1,6 +1,6 @@
 # 使用限制
 
-本文描述 Nebula Graph&reg; Exchange 的一些使用限制。
+本文描述 Exchange 的一些使用限制。
 
 ## 适用的 Nebula Graph 版本
 
@@ -10,8 +10,8 @@ Nebula Graph 1.0.1 及以上版本。
 
 Exchange 支持以下操作系统：
 
-- Linux【发行版本？】
-- Mac OS【版本？】
+- CentOS 7
+- Mac OS
 
 ## 软件依赖
 
@@ -30,10 +30,8 @@ Exchange 支持将以下格式或来源的数据转换为 Nebula Graph 能识别
   - Apache ORC
   - JSON
   - CSV
-  - TEXT
 - 数据仓库：HIVE
 - 图数据库：Neo4j 2.4.5-M1
 - 关系型数据库：MySQL
 - 流处理软件平台：Apache Kafka&reg;
 - 发布/订阅消息系统：Apache Pulsar 2.4.5
-- 网络流（Socket）
