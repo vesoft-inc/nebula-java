@@ -6,27 +6,18 @@
 
 package com.vesoft.nebula.tools
 
-import org.apache.spark.graphx
 import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.types.{DoubleType, IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{
-  DataFrame,
-  DataFrameReader,
-  DataFrameWriter,
-  Encoders,
-  Row,
-  SparkSession
-}
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
 package object connector {
 
   type Address    = (String, Int)
   type EdgeRank   = Int
-  type Property   = (String, Any)
+  type Propertyy  = (String, Any)
   type VertexID   = Long
-  type Vertex     = (VertexId, List[Property])
-  type NebulaEdge = Edge[(EdgeRank, List[Property])]
+  type Vertex     = (VertexId, List[Propertyy])
+  type NebulaEdge = Edge[(EdgeRank, List[Propertyy])]
   type NebulaType = Int
 
   def loadGraph(space: String)(implicit session: SparkSession): Graph[Vertex, NebulaEdge] = ???
