@@ -1,2 +1,5 @@
-com.vesoft.nebula.reader.DefaultSource
-#com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider
+# if you want to use java spark-connector, then use com.vesoft.nebula.reader.DefaultSource as the thirdparty datasource
+# if you want to use scala spark-connector, then use com.vesoft.nebula.tools.connector.reader.NebulaRelationProvide as the thirdparty datasource
+
+#com.vesoft.nebula.reader.DefaultSource
+com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider

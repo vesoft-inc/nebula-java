@@ -26,7 +26,7 @@ class DefaultSource()
     val metaProvider = new MetaProvider(List("127.0.0.1" -> 8989))
     val schema       = metaProvider.getTagSchema("space", "tag name")
 
-    new NebulaVertexReader(List("127.0.0.1" -> 8989), "space", "tag name")
+    new NebulaVertexReader(List("127.0.0.1" -> 8989), "space", "tag name", "")
   }
 
   override def createWriter(writeUUID: String,
