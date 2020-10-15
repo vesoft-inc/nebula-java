@@ -8,10 +8,9 @@
 package com.vesoft.nebula.tools.connector.example
 
 import com.facebook.thrift.protocol.TCompactProtocol
-import com.vesoft.nebula.bean.Parameters
-import com.vesoft.nebula.tools.connector.DataTypeEnum
+import com.vesoft.nebula.tools.connector.{NebulaDataFrameReader, NebulaDataFrameWriter}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.{Dataset, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 import org.slf4j.LoggerFactory
 
 object Main {
@@ -23,38 +22,30 @@ object Main {
     sparkConf
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .registerKryoClasses(Array[Class[_]](classOf[TCompactProtocol]))
-
     val spark = SparkSession
       .builder()
       .config(sparkConf)
       .master("local")
       .getOrCreate()
 
-    val vertexDataset: Dataset[Row] = spark.read
-      .format("nebula")
-      .option(Parameters.HOST_AND_PORTS, "127.0.0.1:45500")
-      .option(Parameters.PARTITION_NUMBER, "100")
-      .option(Parameters.SPACE_NAME, "nb")
-      .option(Parameters.TYPE, DataTypeEnum.VERTEX.toString)
-      .option(Parameters.LABEL, "player")
-      .option(Parameters.RETURN_COLS, "")
-      .load()
+//     read vertex and edge from nebula
+    val vertexDataset: Dataset[Row] =
+      spark.read
+        .nebula("127.0.0.1:45500", "nb", "100")
+        .loadVertices("player", List())
     vertexDataset.printSchema()
     vertexDataset.show()
 
-    val edgeDataset: Dataset[Row] = spark.read
-      .format("nebula")
-      .option(Parameters.HOST_AND_PORTS, "127.0.0.1:45500")
-      .option(Parameters.PARTITION_NUMBER, "100")
-      .option(Parameters.SPACE_NAME, "nb")
-      .option(Parameters.TYPE, DataTypeEnum.EDGE.toString)
-      .option(Parameters.LABEL, "serve")
-      .option(Parameters.RETURN_COLS, "")
-      .load()
+    val edgeDataset: Dataset[Row] =
+      spark.read
+        .nebula("127.0.0.1:45500", "nb", "100")
+        .loadEdges("serve", List())
+
     edgeDataset.printSchema()
     edgeDataset.show()
 
     LOG.info(s"vertex count=${vertexDataset.count()}, edge count=${edgeDataset.count()}")
+
   }
 
 }
