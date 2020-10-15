@@ -47,8 +47,9 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
             if (responseIterator == null || !responseIterator.hasNext()) {
                 if (scanPartIterator.hasNext()) {
                     try {
+                        Integer scanPart = scanPartIterator.next();
                         responseIterator = storageClient.scanEdge(dataSourceConfig.getNameSpace(),
-                                scanPartIterator.next(), returnCols, dataSourceConfig.getAllCols(),
+                                scanPart, returnCols, dataSourceConfig.getAllCols(),
                                 1000, 0L, Long.MAX_VALUE);
                     } catch (IOException e) {
                         LOGGER.error(e.getMessage(), e);
@@ -72,10 +73,9 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
     }
 
     @Override
-    protected Iterator<String> process(Result result) {
+    protected Iterator<List<Object>> process(Result result) {
         Map<String, List<Row>> dataMap = result.getRows();
         for (Map.Entry<String, List<Row>> dataEntry : dataMap.entrySet()) {
-            String labelName = dataEntry.getKey();
             List<Row> rows = dataEntry.getValue();
             for (Row row : rows) {
                 List<Object> fields = new ArrayList<>();
@@ -86,10 +86,9 @@ public class ScanEdgeIterator extends AbstractNebulaIterator {
                 for (int i = 0; i < properties.length; i++) {
                     fields.add(properties[i].getValue());
                 }
-                resultValues.put(labelName, fields);
+                resultValues.add(fields);
             }
         }
-        LOGGER.info("edge info ={}", resultValues.toString());
-        return resultValues.keySet().iterator();
+        return resultValues.iterator();
     }
 }
