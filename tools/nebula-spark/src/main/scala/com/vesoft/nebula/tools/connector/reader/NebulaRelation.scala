@@ -55,7 +55,7 @@ private case class NebulaRelation(override val sqlContext: SQLContext, nebulaOpt
         // if allCols is true, then fields should contain all properties.
         schemaColAndType.keySet
           .foreach(propName => {
-            LOG.info(s"***** prop name ${propName}, type ${schemaColAndType} ")
+            LOG.info(s"prop name ${propName}, type ${schemaColAndType} ")
             fields.append(
               DataTypes.createStructField(propName,
                                           NebulaUtils.convertDataType(schemaColAndType(propName)),

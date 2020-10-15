@@ -24,7 +24,7 @@ import scala.collection.mutable.ListBuffer
   */
 class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema: StructType)
     extends AbstractNebulaIterator(split, nebulaOptions, schema) {
-  private val LOGGER = LoggerFactory.getLogger(this.getClass)
+  private val LOG = LoggerFactory.getLogger(this.getClass)
 
   private var responseIterator: util.Iterator[ScanEdgeResponse] = _
 
@@ -46,7 +46,7 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
                                                         Long.MaxValue)
           catch {
             case e: Exception =>
-              LOGGER.error(s"Exception scanning edge ${nebulaOptions.label}", e)
+              LOG.error(s"Exception scanning edge ${nebulaOptions.label}", e)
               NebulaUtils.closeMetaClient(metaClient)
               NebulaUtils.closeStorageClient(storageClient)
               throw new GraphOperateException(e.getMessage, e)
@@ -75,11 +75,10 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
     dataIterator.hasNext
   }
 
-  override def process(result: Result[Row]): Iterator[String] = {
+  override def process(result: Result[Row]): Iterator[List[Property]] = {
     val dataMap = result.getRows
     import scala.collection.JavaConversions._
     for (dataEntry <- dataMap.entrySet) {
-      val labelName: String = dataEntry.getKey
       for (row <- dataEntry.getValue) {
         val fields: ListBuffer[Property] = new ListBuffer[Property]()
         // add default property _srcId and _dstId for edge
@@ -89,10 +88,9 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
         for (i <- properties.indices) {
           fields.append(properties(i))
         }
-        resultValues += (labelName -> fields.toList)
+        resultValues.append(fields.toList)
       }
     }
-    LOGGER.info("edge info ={}", resultValues.toString)
-    resultValues.keySet.iterator
+    resultValues.iterator
   }
 }

@@ -12,7 +12,7 @@ object DataTypeEnum extends Enumeration {
   val VERTEX = Value("vertex")
   val EDGE   = Value("edge")
 
-  def vaildDataType(dataType: String): Boolean = {
+  def validDataType(dataType: String): Boolean = {
     dataType.equalsIgnoreCase(VERTEX.toString) || dataType.equalsIgnoreCase(EDGE.toString)
   }
 }
