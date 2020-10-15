@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.tools.algorithm.lib
 
+import java.io.{BufferedWriter, FileOutputStream, IOException, OutputStreamWriter}
+
 import com.vesoft.nebula.tools.algorithm.config.{Configs, NebulaConfig, PRConfig, SparkConfig}
 import org.apache.log4j.Logger
 import org.apache.spark.graphx.{Graph, VertexRDD}
@@ -35,7 +37,15 @@ object PageRankAlgo {
     val nebulaConfig   = NebulaConfig.getNebula(configs)
     val pageRankConfig = PRConfig.getPRConfig(configs)
 
-    val dataSet: Dataset[Row] =
+    var out: BufferedWriter = null
+    try {
+      out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/algotest", true)));
+    } catch {
+      case e: IOException => LOGGER.error(e.getMessage)
+    }
+
+    val startTime = System.currentTimeMillis()
+    val dataSet: Dataset[Row] = {
       NebulaUtil.scanEdgeData(
         sparkConfig.spark,
         sparkConfig.partitionNum,
@@ -46,6 +56,11 @@ object PageRankAlgo {
         nebulaConfig.hasWeight,
         nebulaConfig.weightCols
       )
+    }
+
+//    LOGGER.info(s"#### graph dataset's size is {${dataSet.count()}}")
+
+    out.write("dataset's size : " + dataSet.count())
 
     val resultPath                      = NebulaUtil.getResultPath(pageRankConfig.PRPath, ALGORITHM)
     val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
@@ -59,6 +74,11 @@ object PageRankAlgo {
       ))
     val algoResult = sparkConfig.spark.sqlContext
       .createDataFrame(prResultRDD, schema)
+    val endTime = System.currentTimeMillis()
+    val time    = (endTime - startTime) / 1000
+//    LOGGER.info(s"##### pagerank algo takes {$time}")
+    out.write("\n pagerank takes time: " + time)
+    out.close()
     algoResult.write.parquet(resultPath)
     algoResult
   }
