@@ -24,7 +24,7 @@ import scala.collection.mutable.ListBuffer
   */
 class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schema: StructType)
     extends AbstractNebulaIterator(split, nebulaOptions, schema) {
-  private val LOGGER = LoggerFactory.getLogger(this.getClass)
+  private val LOG = LoggerFactory.getLogger(this.getClass)
 
   private var responseIterator: util.Iterator[ScanVertexResponse] = _
 
@@ -47,7 +47,7 @@ class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schem
                                                           Long.MaxValue)
           catch {
             case e: Exception =>
-              LOGGER.error(s"Exception scanning vertex ${nebulaOptions.label}", e)
+              LOG.error(s"Exception scanning vertex ${nebulaOptions.label}", e)
               NebulaUtils.closeMetaClient(metaClient)
               NebulaUtils.closeStorageClient(storageClient)
               throw new GraphOperateException(e.getMessage, e)
@@ -69,18 +69,17 @@ class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schem
     }
 
     if (dataIterator == null) {
-      if (storageClient != null) storageClient.close()
-      if (metaClient != null) metaClient.close()
+//      if (storageClient != null) storageClient.close()
+//      if (metaClient != null) metaClient.close()
       return false
     }
     dataIterator.hasNext
   }
 
-  override def process(result: Result[Row]): Iterator[String] = {
+  override def process(result: Result[Row]): Iterator[List[Property]] = {
     val dataMap: util.Map[String, util.List[Row]] = result.getRows
     import scala.collection.JavaConversions._
     for (dataEntry <- dataMap.entrySet) {
-      val labelName: String = dataEntry.getKey
       for (row <- dataEntry.getValue) {
         val fields: ListBuffer[Property] = new ListBuffer[Property]()
         // add default property _vertexId for tag
@@ -89,10 +88,9 @@ class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schem
         for (i <- properties.indices) {
           fields.append(properties(i))
         }
-        resultValues += (labelName -> fields.toList)
+        resultValues.append(fields.toList)
       }
     }
-    LOGGER.info("tag info ={}", resultValues.toString)
-    resultValues.keySet.iterator
+    resultValues.iterator
   }
 }

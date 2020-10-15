@@ -25,7 +25,7 @@ import org.apache.spark.unsafe.types.UTF8String
 import org.slf4j.LoggerFactory
 
 object NebulaUtils {
-  private val LOGGER = LoggerFactory.getLogger(this.getClass)
+  private val LOG = LoggerFactory.getLogger(this.getClass)
 
   /**
     * convert nebula data type to spark sql data type

@@ -12,8 +12,11 @@ import com.vesoft.nebula.bean.Parameters
 import com.vesoft.nebula.tools.connector.DataTypeEnum
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
+import org.slf4j.LoggerFactory
 
 object Main {
+  private val LOG = LoggerFactory.getLogger(this.getClass)
+
   def main(args: Array[String]): Unit = {
 
     val sparkConf = new SparkConf
@@ -51,6 +54,7 @@ object Main {
     edgeDataset.printSchema()
     edgeDataset.show()
 
+    LOG.info(s"vertex count=${vertexDataset.count()}, edge count=${edgeDataset.count()}")
   }
 
 }

@@ -25,13 +25,13 @@ import scala.collection.mutable
 import scala.collection.JavaConverters._
 
 abstract class AbstractNebulaIterator extends Iterator[InternalRow] {
-  private val LOGGER: Logger = LoggerFactory.getLogger(classOf[AbstractNebulaIterator])
+  private val LOG: Logger = LoggerFactory.getLogger(classOf[AbstractNebulaIterator])
 
-  protected var dataIterator: Iterator[String]      = _
-  protected var scanPartIterator: Iterator[Integer] = _
+  protected var dataIterator: Iterator[List[Property]] = _
+  protected var scanPartIterator: Iterator[Integer]    = _
+  protected var resultValues: mutable.ListBuffer[List[Property]] =
+    mutable.ListBuffer[List[Property]]()
 
-  protected var resultValues: mutable.Map[String, List[Property]] =
-    mutable.Map[String, List[Property]]()
   protected var storageClient: StorageClientImpl                = _
   protected var metaClient: MetaClientImpl                      = _
   protected var processor: Processor[_]                         = _
@@ -55,7 +55,7 @@ abstract class AbstractNebulaIterator extends Iterator[InternalRow] {
     val totalPart       = metaClient.getPartsAlloc(nebulaOptions.spaceName).size
     val nebulaPartition = split.asInstanceOf[NebulaPartition]
     val scanParts       = nebulaPartition.getScanParts(totalPart, nebulaOptions.partitionNums.toInt)
-    LOGGER.info("partition index: {}, scanPart: {}", split.index, scanParts.toString)
+    LOG.info(s"partition index: ${split.index}, scanPart: ${scanParts.toString}")
     scanPartIterator = scanParts.iterator
   }
 
@@ -65,7 +65,7 @@ abstract class AbstractNebulaIterator extends Iterator[InternalRow] {
     val getters: Array[NebulaValueGetter] = NebulaUtils.makeGetters(schema)
     val mutableRow                        = new SpecificInternalRow(schema.fields.map(x => x.dataType))
 
-    val resultSet: Array[Property] = resultValues(dataIterator.next()).toArray
+    val resultSet: Array[Property] = dataIterator.next().toArray
     for (i <- getters.indices) {
       getters(i).apply(resultSet(i), mutableRow, i)
       if (resultSet(i) == null) mutableRow.setNullAt(i)
@@ -73,5 +73,5 @@ abstract class AbstractNebulaIterator extends Iterator[InternalRow] {
     mutableRow
   }
 
-  protected def process(result: Result[com.vesoft.nebula.data.Row]): Iterator[String]
+  protected def process(result: Result[com.vesoft.nebula.data.Row]): Iterator[List[Property]]
 }

@@ -65,7 +65,7 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])
   require(parameters.isDefinedAt(TYPE), s"Option '$TYPE' is required")
   val dataType: String = parameters(TYPE)
   require(
-    DataTypeEnum.vaildDataType(dataType),
+    DataTypeEnum.validDataType(dataType),
     s"Option '$TYPE' is illegal, it should be '${DataTypeEnum.VERTEX}' or '${DataTypeEnum.EDGE}'")
 
   // nebula label
