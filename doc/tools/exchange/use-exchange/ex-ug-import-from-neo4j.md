@@ -17,7 +17,8 @@ Exchange 读取 Neo4j 数据时需要完成以下工作：
 至此，Exchange 即完成了对 Neo4j 数据的导出。之后，数据被并行写入 Nebula Graph 数据库中。
 
 整个过程如下图所示。
-![Nebula Graph&reg; Exchange 从 Neo4j 数据库中导出数据再并行导入 Nebula Graph 数据库中](/doc/tools/exchange/figs/ex-ug-002.png "Nebula Graph&reg; Exchange 迁移 Neo4j 数据")
+
+![Nebula Graph&reg; Exchange 从 Neo4j 数据库中导出数据再并行导入 Nebula Graph 数据库中](https://docs-cdn.nebula-graph.com.cn/nebula-java-tools-docs/ex-ug-002.png "Nebula Graph&reg; Exchange 迁移 Neo4j 数据")
 
 本文以一个示例说明如何使用 Exchange 将 Neo4j 的数据批量导入 Nebula Graph 数据库。
 
