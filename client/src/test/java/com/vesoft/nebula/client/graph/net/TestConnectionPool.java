@@ -13,14 +13,28 @@ import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
+import sun.net.util.IPAddressUtil;
 
 public class TestConnectionPool {
     @Test()
     public void testInitFailed() {
+        // hostname is not existed
+        try {
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("hostname", 3888));
+            NebulaPool pool = new NebulaPool();
+            assert (false == pool.init(addresses, new NebulaPoolConfig()));
+        } catch (UnknownHostException e) {
+            System.out.println("We expect must reach here: init pool failed.");
+            assert (true);
+        }
+
+        // connect failed
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMinConnSize(0);

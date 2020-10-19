@@ -5,19 +5,25 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.net.util.IPAddressUtil;
 
 public class NebulaPool {
     private GenericObjectPool<SyncConnection> objectPool = null;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public boolean init(List<HostAddress> addresses, NebulaPoolConfig config) {
-        ConnObjectPool objectPool = new ConnObjectPool(addresses, config);
+    public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
+            throws UnknownHostException {
+        List<HostAddress> newAddrs = hostToIp(addresses);
+        ConnObjectPool objectPool = new ConnObjectPool(newAddrs, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
         objConfig.setMaxIdle(config.getIdleTime());
@@ -72,5 +78,21 @@ public class NebulaPool {
         if (this.objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)this.objectPool.getFactory()).updateServerStatus();
         }
+    }
+
+    private List<HostAddress> hostToIp(List<HostAddress> addresses)
+            throws UnknownHostException {
+        List<HostAddress> newAddrs = new ArrayList<HostAddress>();
+        for (HostAddress addr : addresses) {
+            String ip;
+            if (IPAddressUtil.isIPv4LiteralAddress(addr.getHost())
+                    || IPAddressUtil.isIPv6LiteralAddress(addr.getHost())) {
+                ip = addr.getHost();
+            } else {
+                ip = InetAddress.getByName(addr.getHost()).getHostAddress();
+            }
+            newAddrs.add(new HostAddress(ip, addr.getPort()));
+        }
+        return newAddrs;
     }
 }
