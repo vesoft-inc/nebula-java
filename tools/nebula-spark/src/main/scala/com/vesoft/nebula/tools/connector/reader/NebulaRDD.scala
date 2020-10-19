@@ -38,8 +38,7 @@ class NebulaRDD(val sqlContext: SQLContext, var nebulaOptions: NebulaOptions, sc
     val partitionNumber = nebulaOptions.partitionNums.toInt
     val partitions      = new Array[Partition](partitionNumber)
     for (i <- 0 until partitionNumber) {
-      val partition = NebulaPartition(i)
-      partitions(i) = partition
+      partitions(i) = NebulaPartition(i)
     }
     partitions
   }
@@ -60,9 +59,7 @@ case class NebulaPartition(indexNum: Int) extends Partition {
   def getScanParts(totalPart: Int, totalPartition: Int): List[Integer] = {
     val scanParts   = new ListBuffer[Integer]
     var currentPart = indexNum + 1
-    while ({
-      currentPart <= totalPart
-    }) {
+    while (currentPart <= totalPart) {
       scanParts.append(currentPart)
       currentPart += totalPartition
     }
