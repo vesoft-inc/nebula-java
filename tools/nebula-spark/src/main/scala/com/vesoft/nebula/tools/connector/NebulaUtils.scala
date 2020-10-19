@@ -11,9 +11,10 @@ import com.google.common.net.HostAndPort
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
 import com.vesoft.nebula.data.Property
+import com.vesoft.nebula.tools.connector.exception.{GraphConnectException, NebulaRPCException}
 import org.apache.spark.sql.catalyst.InternalRow
-import org.apache.spark.sql.types.{DataType, DateType, Metadata, StructType}
-import org.apache.spark.sql.types.DataTypes.{
+import org.apache.spark.sql.types.{DataType, Metadata, StructType}
+import org.apache.spark.sql.types.{
   BooleanType,
   DoubleType,
   FloatType,
@@ -56,8 +57,13 @@ object NebulaUtils {
     try {
       metaClient.connect()
     } catch {
-      case e: TException =>
-        throw new Exception(e.getMessage, e)
+      case te: TException =>
+        throw new GraphConnectException(
+          s"failed to connect nebula meta client with ${hostAndPorts}",
+          te)
+      case rpce: NebulaRPCException =>
+        throw new NebulaRPCException(s"failed to connect for rpc exception with ${hostAndPorts}",
+                                     rpce)
     }
     metaClient
   }
