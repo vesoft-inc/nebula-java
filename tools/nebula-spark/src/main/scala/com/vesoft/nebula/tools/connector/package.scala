@@ -6,27 +6,20 @@
 
 package com.vesoft.nebula.tools
 
-import org.apache.spark.graphx
+import com.vesoft.nebula.bean.Parameters
+import com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider
 import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.types.{DoubleType, IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{
-  DataFrame,
-  DataFrameReader,
-  DataFrameWriter,
-  Encoders,
-  Row,
-  SparkSession
-}
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
 package object connector {
 
   type Address    = (String, Int)
   type EdgeRank   = Int
-  type Property   = (String, Any)
+  type Propertyy  = (String, Any)
   type VertexID   = Long
-  type Vertex     = (VertexId, List[Property])
-  type NebulaEdge = Edge[(EdgeRank, List[Property])]
+  type Vertex     = (VertexId, List[Propertyy])
+  type NebulaEdge = Edge[(EdgeRank, List[Propertyy])]
   type NebulaType = Int
 
   def loadGraph(space: String)(implicit session: SparkSession): Graph[Vertex, NebulaEdge] = ???
@@ -55,6 +48,21 @@ package object connector {
     ???
 
   implicit class NebulaDataFrameReader(reader: DataFrameReader) {
+    var address: String      = _
+    var space: String        = _
+    var partitionNum: String = _
+
+    /**
+      * @param address
+      * @param partitionNum
+      * @param space
+      * */
+    def nebula(address: String, space: String, partitionNum: String): NebulaDataFrameReader = {
+      this.address = address
+      this.space = space
+      this.partitionNum = partitionNum
+      this
+    }
 
     def nebula(space: String, host: String, port: Int): Unit = {
       nebula(space, List(host -> port))
@@ -65,39 +73,43 @@ package object connector {
     /**
       * Reading com.vesoft.nebula.tools.connector.vertices from Nebula Graph
       *
-      * @param addresses
-      * @return
+      * @param tag
+      * @param fields
+      * @return DataFrame
       */
-    def nebulaVertices(space: String,
-                       tag: String,
-                       fields: List[String],
-                       address: String,
-                       addresses: String*): DataFrame = {
+    def loadVertices(tag: String, fields: List[String]): DataFrame = {
+      assert(address != null && space != null && partitionNum != null,
+             "call nebula first before call loadVertices. ")
       reader
-        .format(classOf[vertices.DefaultSource].getName)
-        .option("nebula.space", space)
-        .option("nebula.tag", tag)
-        .option("nebula.fields", fields.mkString(","))
-        .load(Seq(address) ++ addresses: _*)
+        .format(classOf[NebulaRelationProvider].getName)
+        .option(Parameters.HOST_AND_PORTS, address)
+        .option(Parameters.PARTITION_NUMBER, partitionNum)
+        .option(Parameters.SPACE_NAME, space)
+        .option(Parameters.TYPE, DataTypeEnum.VERTEX.toString)
+        .option(Parameters.LABEL, tag)
+        .option(Parameters.RETURN_COLS, fields.mkString(","))
+        .load()
     }
 
     /**
       * Reading edges from Nebula Graph
       *
-      * @param addresses
-      * @return
+      * @param edge
+      * @param fields
+      * @return DataFrame
       */
-    def nebulaEdges(space: String,
-                    edge: String,
-                    fields: List[String],
-                    address: String,
-                    addresses: String*): DataFrame = {
+    def loadEdges(edge: String, fields: List[String]): DataFrame = {
+      assert(address != null && space != null && partitionNum != null,
+             "call nebula first before call loadEdges. ")
       reader
-        .format(classOf[edges.DefaultSource].getName)
-        .option("nebula.space", space)
-        .option("nebula.edge", edge)
-        .option("nebula.fields", fields.mkString(","))
-        .load(Seq(address) ++ addresses: _*)
+        .format(classOf[NebulaRelationProvider].getName)
+        .option(Parameters.HOST_AND_PORTS, address)
+        .option(Parameters.PARTITION_NUMBER, partitionNum)
+        .option(Parameters.SPACE_NAME, space)
+        .option(Parameters.TYPE, DataTypeEnum.EDGE.toString)
+        .option(Parameters.LABEL, edge)
+        .option(Parameters.RETURN_COLS, fields.mkString(","))
+        .load()
     }
   }
 

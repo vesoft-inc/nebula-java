@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.tools.connector
 
+import com.vesoft.nebula.tools.connector.reader.NebulaPartition
 import org.apache.spark.{Partition, SparkContext, TaskContext}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
@@ -20,7 +21,7 @@ class NebulaVerticesRDD(context: SparkContext, space: String, tag: String)
   override protected def getPartitions: Array[Partition] = {
     val provider = new MetaProvider(Nil)
     (1 to provider.getPartition(space).size())
-      .map(new NebulaPartition(_).asInstanceOf[Partition])
+      .map(NebulaPartition(_).asInstanceOf[Partition])
       .toArray
   }
 }
