@@ -10,8 +10,8 @@ package com.vesoft.nebula.client.graph.exception;
  *
  */
 public class NotValidConnectionException extends Exception {
-    public NotValidConnectionException() {
-        super("No extra connection");
+    public NotValidConnectionException(String message) {
+        super(String.format("No extra connection: %s", message));
     }
 }
 

@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.client.graph;
 
-public class Config {
+public class NebulaPoolConfig {
     // The min connections in pool for all addresses
     private int minConnsSize = 0;
 
@@ -19,6 +19,11 @@ public class Config {
     // The idleTime of the connection, unit: seconds
     // The connection's idle time more than idleTime, it will be delete
     private int idleTime = 5 * 60 * 1000;
+
+
+    // the times to retry to connect
+
+    private int retryConnectTimes = 3;
 
     public int getMinConnSize() {
         return minConnsSize;
@@ -51,4 +56,13 @@ public class Config {
     public void setIdleTime(int idleTime) {
         this.idleTime = idleTime;
     }
+
+    public int getRetryConnectTimes() {
+        return retryConnectTimes;
+    }
+
+    public void setRetryConnectTimes(int retryConnectTimes) {
+        this.retryConnectTimes = retryConnectTimes;
+    }
+
 }

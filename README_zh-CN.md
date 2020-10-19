@@ -34,12 +34,13 @@
 先创建一个连接池，然后调用 `init()` 接口初始化连接池，这个时候假如指定的的服务有不可用的，`init()` 返回 **false**，全部可用，返回 **true**。
 
 ```java
-List<HostAndPort> addresses = Arrays.asList(HostAndPort.fromParts("127.0.0.1", 3699));
-Config config = new Config();
-config.maxConnectionPoolSize = 10;
-config.timeout = 10000;
-pool.init(addresses, userName, password, config);
-Session session = pool.getSession(true);
+List<HostAndPort> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699));
+NebulaPoolConfig nebulaPoolConfig = new Config();
+nebulaPoolConfig.setMinConnSize(10);
+nebulaPoolConfig.setMaxConnSize(100);
+nebulaPoolConfig.setIdleTime(60000);
+pool.init(addresses, nebulaPoolConfig);
+Session session = pool.getSession(userName, password, false);
 ```
 
 使用图空间：

@@ -7,24 +7,24 @@
 package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ExecutionResponse;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Session {
-    private final long sessionID;
-
-    private Connection conn;
-
-    private final ConnectionPool pool;
-
+public class Session extends Object {
+    private long sessionID;
+    private SyncConnection connection;
+    private final GenericObjectPool<SyncConnection> pool;
     private final Boolean retryConnect;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public Session(Connection connection,
-                   long sessionID,
-                   ConnectionPool connPool,
+    public Session(SyncConnection connection,
+                   GenericObjectPool<SyncConnection> connPool,
                    Boolean retryConnect) {
-        this.conn = connection;
-        this.sessionID = sessionID;
+        this.connection = connection;
         this.pool = connPool;
         this.retryConnect = retryConnect;
     }
@@ -37,46 +37,94 @@ public class Session {
      */
     public ResultSet execute(String stmt) throws IOErrorException {
         try {
-            ExecutionResponse resp = conn.execute(sessionID, stmt);
+            if (this.connection == null) {
+                throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
+                        "Connection is null");
+            }
+            ExecutionResponse resp = connection.execute(sessionID, stmt);
             return new ResultSet(resp);
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
-                pool.updateServersStatus();
+                if (this.pool.getFactory() instanceof ConnObjectPool) {
+                    ((ConnObjectPool) this.pool.getFactory()).updateServerStatus();
+                }
+                try {
+                    this.pool.invalidateObject(this.connection);
+                } catch (Exception e) {
+                    log.error("Return object failed");
+                }
+
                 if (this.retryConnect) {
                     if (retryConnect()) {
-                        ExecutionResponse resp = conn.execute(sessionID, stmt);
+                        ExecutionResponse resp = connection.execute(sessionID, stmt);
                         return new ResultSet(resp);
                     } else {
                         throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
                                 "All servers are broken.");
                     }
                 }
+            }
+            throw ie;
+        }
+    }
+
+    public void auth(String userName, String password)
+            throws AuthFailedException, IOErrorException {
+        try {
+            this.sessionID = connection.authenticate(userName, password);
+        } catch (AuthFailedException e) {
+            throw e;
+        } catch (IOErrorException ie) {
+            if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                if (this.pool.getFactory() instanceof ConnObjectPool) {
+                    ((ConnObjectPool)this.pool.getFactory()).updateServerStatus();
+                }
+                try {
+                    this.pool.invalidateObject(this.connection);
+                } catch (Exception e) {
+                    log.error("Return object failed");
+                }
+
+                if (this.retryConnect) {
+                    if (retryConnect()) {
+                        this.sessionID = connection.authenticate(userName, password);
+                    } else {
+                        throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                                "All servers are broken.");
+                    }
+                }
+                throw ie;
+            } else {
                 throw ie;
             }
         }
-        return new ResultSet();
     }
 
-    private Boolean retryConnect() {
-        Connection newConn = pool.getConnection();
-        if (newConn == null) {
+    private boolean retryConnect() {
+        try {
+            SyncConnection newConn = pool.borrowObject();
+            this.connection.close();
+            this.connection = newConn;
+            return true;
+        } catch (Exception e) {
             return false;
         }
-        this.conn.close();
-        this.conn = newConn;
-        return true;
     }
 
     // Need server supported, v1.0 nebula-graph doesn't supported
-    public Boolean ping() {
-        if (this.conn == null) {
+    public boolean ping() {
+        if (this.connection == null) {
             return false;
         }
-        return this.conn.ping();
+        return this.connection.ping();
     }
 
     public void release() {
-        this.conn.setUsed(false);
-        this.conn.signout(sessionID);
+        this.connection.signout(sessionID);
+        try {
+            this.pool.returnObject(this.connection);
+        } catch (Exception e) {
+            return;
+        }
     }
 }

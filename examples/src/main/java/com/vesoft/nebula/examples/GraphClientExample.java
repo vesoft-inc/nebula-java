@@ -6,13 +6,12 @@
 
 package com.vesoft.nebula.examples;
 
-import com.facebook.thrift.TException;
 import com.google.common.base.Joiner;
 import com.vesoft.nebula.client.graph.*;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.ConnectionPool;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.RowValue;
@@ -88,15 +87,15 @@ public class GraphClientExample {
                 + "10 -> 990:(80), 10 -> 990:(28), 10 -> 990:(76), 10 -> 990:(27), 10 -> 990:(13);";
 
     public static void main(String[] args) {
-        ConnectionPool pool = new ConnectionPool();
+        NebulaPool pool = new NebulaPool();
         try {
             List<HostAddress> addresses = Arrays.asList(
                     new HostAddress("127.0.0.1", 3699));
-            Config config = new Config();
-            config.setMaxConnSize(1);
-            config.setTimeout(10000);
-            pool.init(addresses, "root", "nebula", config);
-            Session session = pool.getSession(true);
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMaxConnSize(1);
+            nebulaPoolConfig.setTimeout(10000);
+            pool.init(addresses,  nebulaPoolConfig);
+            Session session = pool.getSession("root", "nebula", true);
             ResultSet resp = session.execute(String.format("USE %s", SPACE_NAME));
             if (ErrorCode.SUCCEEDED != resp.getErrorCode()) {
                 LOGGER.error(String.format("Switch Space %s Failed", SPACE_NAME));

@@ -7,24 +7,22 @@
 package com.vesoft.nebula.graph.sync;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
-import com.vesoft.nebula.client.graph.net.Connection;
+import com.vesoft.nebula.client.graph.net.SyncConnection;
 import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import org.junit.Test;
 
-public class TestConnection {
+public class TestSyncConnection {
     @Test(timeout = 3000)
     public void testAll() {
         try {
             // Test open
-            Connection connection = new Connection();
+            SyncConnection connection = new SyncConnection();
             connection.open(new HostAddress("127.0.0.1", 3699), 1000);
 
             // Test authenticate
             long sessionId = connection.authenticate("root", "nebula");
             assert (sessionId != 0);
-            connection.setUsed(true);
-            assert (connection.isUsed());
 
             // Test execute
             ExecutionResponse resp = connection.execute(sessionId, "SHOW SPACES;");
@@ -32,16 +30,12 @@ public class TestConnection {
 
             // Test signout
             connection.signout(sessionId);
-            assert (connection.isUsed() == false);
 
             try {
                 connection.execute(sessionId, "SHOW SPACES;");
             } catch (Exception e) {
                 assert (true);
             }
-
-            connection.setUsed(true);
-            assert (connection.isUsed());
 
             connection.close();
 

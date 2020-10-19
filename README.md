@@ -33,10 +33,13 @@ For more versions, please refer to [releases](https://github.com/vesoft-inc/nebu
 Connect to the `graphd`:
 
 ```java
-GraphClient client = new GraphClientImpl("127.0.0.1", 3699);
-client.setUser("user");
-client.setPassword("password");
-client.connect();
+List<HostAndPort> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699));
+NebulaPoolConfig nebulaPoolConfig = new Config();
+nebulaPoolConfig.setMinConnSize(10);
+nebulaPoolConfig.setMaxConnSize(100);
+nebulaPoolConfig.setIdleTime(60000);
+pool.init(addresses, nebulaPoolConfig);
+Session session = pool.getSession(userName, password, false);
 ```
 
 Use a space:

@@ -6,11 +6,11 @@
 
 package com.vesoft.nebula.graph.sync;
 
-import com.vesoft.nebula.client.graph.Config;
+import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.ConnectionPool;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ColumnValue;
 import com.vesoft.nebula.graph.RowValue;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +28,14 @@ public class TestSession {
 
     @Test(timeout = 20000)
     public void testResultSet() {
-        ConnectionPool pool = new ConnectionPool();
+        NebulaPool pool = new NebulaPool();
         try {
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699));
-            Config config = new Config();
-            config.setMinConnSize(0);
-            config.setMaxConnSize(1);
-            pool.init(addresses, "root", "nebula", config);
-            Session session = pool.getSession(true);
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMinConnSize(0);
+            nebulaPoolConfig.setMaxConnSize(1);
+            assert pool.init(addresses, nebulaPoolConfig);
+            Session session = pool.getSession("root", "nebula", true);
             {
                 ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test");
                 assert (resp.isSucceeded());
@@ -93,18 +94,19 @@ public class TestSession {
         }
     }
 
-    @Test(timeout = 100000)
+    @Test()
     public void testReconnect() {
-        ConnectionPool pool = new ConnectionPool();
+        NebulaPool pool = new NebulaPool();
         try {
-            Config config = new Config();
-            config.setMaxConnSize(2);
-            config.setIdleTime(2);
-            pool.setDelayTime(2);
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMinConnSize(2);
+            nebulaPoolConfig.setMaxConnSize(2);
+            nebulaPoolConfig.setIdleTime(2);
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
                     new HostAddress("127.0.0.1", 3700));
-            pool.init(addresses, "root", "nebula", config);
-            Session session = pool.getSession(false);
+            assert pool.init(addresses, nebulaPoolConfig);
+            Session session = pool.getSession("root", "nebula", false);
+            System.out.println("==================================");
             // TODO: Add a task to stop the graphd("127.0.0.1:3700") after 10 second
 
             // TODO: Add a task to start the graphd("127.0.0.1:3700") after 20 second
@@ -117,20 +119,20 @@ public class TestSession {
                     }
                 } catch (IOErrorException ie) {
                     if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
-                        session = pool.getSession(false);
+                        session = pool.getSession("root", "nebula", false);
                         session.execute("USE test");
                     }
                 }
                 TimeUnit.SECONDS.sleep(2);
             }
             session.release();
-            Session session1 = pool.getSession(false);
+            Session session1 = pool.getSession("root", "nebula", false);
             assert (session1 != null);
-            Session session2 = pool.getSession(false);
+            Session session2 = pool.getSession("root", "nebula", false);
             assert (session2 != null);
         } catch (Exception e) {
             e.printStackTrace();
-            assert (false);
+            Assert.assertFalse(e.getMessage(),false);
         } finally {
             if (pool != null) {
                 pool.close();
