@@ -8,19 +8,25 @@ package com.vesoft.nebula.tools.connector.vertices
 
 import java.util.Optional
 
+import com.google.common.net.HostAndPort
 import com.vesoft.nebula.tools.connector.{
   AddressHandler,
   MetaProvider,
+  NebulaOptions,
   NebulaVertexReader,
-  NebulaVertexWriter
+  NebulaVertexWriter,
+  OperaType
 }
 import org.apache.spark.sql.SaveMode
+import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap
 import org.apache.spark.sql.sources.DataSourceRegister
 import org.apache.spark.sql.sources.v2.reader.DataSourceReader
 import org.apache.spark.sql.sources.v2.writer.DataSourceWriter
 import org.apache.spark.sql.sources.v2.{DataSourceOptions, DataSourceV2, ReadSupport, WriteSupport}
 import org.apache.spark.sql.types.StructType
 import org.slf4j.LoggerFactory
+
+import scala.collection.JavaConverters._
 
 class DefaultSource()
     extends DataSourceV2
@@ -56,16 +62,12 @@ class DefaultSource()
       LOG.warn("Currently ")
     }
 
-    val space = options.get("nebula.space").get
-    val tag   = options.get("nebula.tag").get
-    val address = options
-      .paths()
-      .map(address => {
-        val pair = address.split(":")
-        (pair(0), pair(1).toInt)
-      })
-      .toList
-    Optional.of(new NebulaVertexWriter(address, space, tag, schema))
+    val space   = options.get("nebula.space").get
+    val tag     = options.get("nebula.tag").get
+    val address = options.paths().map(HostAndPort.fromString(_)).toList
+    val nebulaOptions: NebulaOptions = new NebulaOptions(
+      options.asMap().asScala.asInstanceOf[CaseInsensitiveMap[String]])(OperaType.WRITE)
+    Optional.of(new NebulaVertexWriter(address, nebulaOptions, space, tag, 0, schema))
   }
 
   override def shortName(): String = "Nebula Vertex Source"

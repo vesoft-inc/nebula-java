@@ -21,7 +21,7 @@ class NebulaRDD(val sqlContext: SQLContext, var nebulaOptions: NebulaOptions, sc
     extends RDD[InternalRow](sqlContext.sparkContext, Nil) {
 
   /**
-    * start to scan vertex or edge data
+    * start to scan vertex or edge edge
     *
     * @param split
     * @param context
@@ -53,8 +53,8 @@ case class NebulaPartition(indexNum: Int) extends Partition {
   /**
     * allocate scanPart to partition
     *
-    * @param totalPart nebula data part num
-    * @return scan data part list
+    * @param totalPart nebula edge part num
+    * @return scan edge part list
     */
   def getScanParts(totalPart: Int, totalPartition: Int): List[Integer] = {
     val scanParts   = new ListBuffer[Integer]
