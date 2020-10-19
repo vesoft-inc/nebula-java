@@ -4,10 +4,10 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.config
+package com.vesoft.nebula.tools.exchange.config
 
 import com.typesafe.config.ConfigValue
-import com.vesoft.nebula.tools.importer.KeyPolicy
+import com.vesoft.nebula.tools.exchange.KeyPolicy
 
 /**
   * SchemaConfigEntry is tag/edge super class use to save some basic parameter for importer.

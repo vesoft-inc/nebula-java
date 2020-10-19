@@ -4,12 +4,12 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.config
+package com.vesoft.nebula.tools.exchange.config
 
 import java.io.File
 import java.nio.file.Files
 
-import com.vesoft.nebula.tools.importer.{Argument, KeyPolicy}
+import com.vesoft.nebula.tools.exchange.{Argument, KeyPolicy}
 
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.log4j.Logger

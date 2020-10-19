@@ -4,16 +4,17 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.reader
+package com.vesoft.nebula.tools.exchange.reader
 
 import com.google.common.collect.Maps
-import com.vesoft.nebula.tools.importer.config._
-import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
+import com.vesoft.nebula.tools.exchange.config._
+import com.vesoft.nebula.tools.exchange.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
@@ -186,6 +187,22 @@ class JanusGraphReader(override val session: SparkSession,
       result.graph().variables().asMap()
     }
     null
+  }
+}
+
+/**
+  * The ElasticSearchReader extends the ServerBaseReader.
+  * The ElasticSearchReader reading data from ElasticSearch via sentence.
+  *
+  * @param session
+  * @param esConfig
+  */
+class ElasticSearchReader(override val session: SparkSession, esConfig: ElasticSearchConfigEntry)
+    extends ServerBaseReader(session, esConfig.sentence) {
+  override def read(): DataFrame = {
+    session.read
+      .format("es")
+      .load(sentence)
   }
 }
 

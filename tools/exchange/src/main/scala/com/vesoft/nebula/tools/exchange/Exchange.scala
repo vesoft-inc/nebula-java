@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer
+package com.vesoft.nebula.tools.exchange
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.io.File
@@ -15,9 +15,10 @@ import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors, RateLimiter}
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
-import com.vesoft.nebula.tools.importer.config.{
+import com.vesoft.nebula.tools.exchange.config.{
   Configs,
   DataSourceConfigEntry,
+  ElasticSearchConfigEntry,
   FileBaseSourceConfigEntry,
   HBaseSourceConfigEntry,
   HiveSourceConfigEntry,
@@ -28,10 +29,11 @@ import com.vesoft.nebula.tools.importer.config.{
   PulsarSourceConfigEntry,
   SourceCategory
 }
-import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}
-import com.vesoft.nebula.tools.importer.reader.{
+import com.vesoft.nebula.tools.exchange.processor.{EdgeProcessor, VerticesProcessor}
+import com.vesoft.nebula.tools.exchange.reader.{
   CSVReader,
   HBaseReader,
+  ElasticSearchReader,
   HiveReader,
   JSONReader,
   JanusGraphReader,
@@ -44,6 +46,7 @@ import com.vesoft.nebula.tools.importer.reader.{
 }
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
+import org.elasticsearch.hadoop.cfg.ConfigurationOptions
 
 import scala.collection.JavaConverters._
 
@@ -87,6 +90,23 @@ object Exchange {
             Array(
               classOf[com.facebook.thrift.async.TAsyncClientManager]
             )))
+
+    // You should make sure the ElasticSearch cluster are the same.
+    if (configs.tagsConfig.nonEmpty) {
+      for (tagConfig <- configs.tagsConfig if tagConfig.name.toLowerCase.equals("es")) {
+        val esConfig = tagConfig.asInstanceOf[ElasticSearchConfigEntry]
+        session
+          .config(ConfigurationOptions.ES_NODES, esConfig.host)
+          .config(ConfigurationOptions.ES_PORT, esConfig.port)
+      }
+
+      for (edgeConfig <- configs.edgesConfig if edgeConfig.name.toLowerCase.equals("es")) {
+        val esConfig = edgeConfig.asInstanceOf[ElasticSearchConfigEntry]
+        session
+          .config(ConfigurationOptions.ES_NODES, esConfig.host)
+          .config(ConfigurationOptions.ES_PORT, esConfig.port)
+      }
+    }
 
     val spark = if (c.hive) {
       session.enableHiveSupport().getOrCreate()
@@ -256,17 +276,22 @@ object Exchange {
       }
       case SourceCategory.NEO4J =>
         val neo4jConfig = config.asInstanceOf[Neo4JSourceConfigEntry]
-        LOG.info(s"Loading from neo4j config: ${neo4jConfig}")
+        LOG.info(s"Loading from Neo4J config: ${neo4jConfig}")
         val reader = new Neo4JReader(session, neo4jConfig)
         Some(reader.read())
       case SourceCategory.MYSQL =>
         val mysqlConfig = config.asInstanceOf[MySQLSourceConfigEntry]
-        LOG.info(s"Loading from mysql config: ${mysqlConfig}")
+        LOG.info(s"Loading from MySQL config: ${mysqlConfig}")
         val reader = new MySQLReader(session, mysqlConfig)
+        Some(reader.read())
+      case SourceCategory.ES =>
+        val esConfig = config.asInstanceOf[ElasticSearchConfigEntry]
+        LOG.info(s"Loading from ElasticSearch config: ${esConfig}")
+        val reader = new ElasticSearchReader(session, esConfig)
         Some(reader.read())
       case SourceCategory.PULSAR =>
         val pulsarConfig = config.asInstanceOf[PulsarSourceConfigEntry]
-        LOG.info(s"Loading from pulsar config: ${pulsarConfig}")
+        LOG.info(s"Loading from Pulsar config: ${pulsarConfig}")
         val reader = new PulsarReader(session, pulsarConfig)
         Some(reader.read())
       case SourceCategory.JANUS_GRAPH =>

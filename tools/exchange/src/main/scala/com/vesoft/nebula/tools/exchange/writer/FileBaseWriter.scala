@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.writer
+package com.vesoft.nebula.tools.exchange.writer
 
 import org.rocksdb.{
   EnvOptions,

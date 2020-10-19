@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.config
+package com.vesoft.nebula.tools.exchange.config
 
 /**
   * SinkCategory is use to expression the writer's type.

@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.config
+package com.vesoft.nebula.tools.exchange.config
 
 import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.spark.sql.types.DataType
@@ -26,6 +26,7 @@ object SourceCategory extends Enumeration {
   val JANUS_GRAPH = Value("JANUS GRAPH")
   val MYSQL       = Value("MYSQL")
   val HBASE       = Value("HBASE")
+  val ES          = Value("ElasticSearch")
 
   val SOCKET = Value("SOCKET")
   val KAFKA  = Value("KAFKA")
@@ -152,8 +153,20 @@ case class MySQLSourceConfigEntry(override val category: SourceCategory.Value,
     host.trim.length != 0 && port > 0 && database.trim.length > 0 && table.trim.length > 0 && user.trim.length > 0)
 
   override def toString: String = {
-    s"MySql source host: ${host}, port: ${port}, database: ${database}, table: ${table}, " +
+    s"MySQL source host: ${host}, port: ${port}, database: ${database}, table: ${table}, " +
       s"user: ${user}, password: ${password}, sentence: ${sentence}"
+  }
+}
+
+case class ElasticSearchConfigEntry(override val category: SourceCategory.Value,
+                                    host: String,
+                                    port: Int,
+                                    override val sentence: String)
+    extends ServerDataSourceConfigEntry {
+  require(host.trim.length != 0 && port > 0)
+
+  override def toString: String = {
+    s"ElasticSearch source host: ${host}, port: ${port}, sentence: ${sentence}"
   }
 }
 

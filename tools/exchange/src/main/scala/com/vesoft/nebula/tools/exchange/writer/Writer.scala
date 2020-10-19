@@ -4,8 +4,14 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.processor
+package com.vesoft.nebula.tools.exchange.writer
 
-class ReloadProcessor {
+/**
+  *
+  */
+trait Writer extends Serializable {
 
+  def prepare(): Unit
+
+  def close()
 }

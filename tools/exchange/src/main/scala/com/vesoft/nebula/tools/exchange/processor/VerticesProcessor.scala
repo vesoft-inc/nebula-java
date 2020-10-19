@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.processor
+package com.vesoft.nebula.tools.exchange.processor
 
 import java.io.{File, IOException}
 import java.nio.{ByteBuffer, ByteOrder}
@@ -15,15 +15,7 @@ import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.NebulaCodec
 import com.vesoft.nebula.client.meta.MetaClientImpl
-import com.vesoft.nebula.tools.importer.config.{
-  Configs,
-  FileBaseSinkConfigEntry,
-  SinkCategory,
-  StreamingDataSourceConfigEntry,
-  TagConfigEntry
-}
-import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
-import com.vesoft.nebula.tools.importer.{
+import com.vesoft.nebula.tools.exchange.{
   CheckPointHandler,
   ErrorHandler,
   ProcessResult,
@@ -31,8 +23,17 @@ import com.vesoft.nebula.tools.importer.{
   Vertex,
   Vertices
 }
+import com.vesoft.nebula.tools.exchange.config.{
+  Configs,
+  FileBaseSinkConfigEntry,
+  SinkCategory,
+  StreamingDataSourceConfigEntry,
+  TagConfigEntry
+}
+import com.vesoft.nebula.tools.exchange.utils.HDFSUtils
+import com.vesoft.nebula.tools.exchange.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
+import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.log4j.Logger
-import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
 import org.apache.commons.lang.StringEscapeUtils
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger

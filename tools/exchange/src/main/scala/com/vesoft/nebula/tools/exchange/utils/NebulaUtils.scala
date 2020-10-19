@@ -9,7 +9,7 @@ package com.vesoft.nebula.tools.importer.utils
 import com.google.common.net.HostAndPort
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.meta.{ErrorCode, TagItem}
-import com.vesoft.nebula.tools.importer.config.{EdgeConfigEntry, SchemaConfigEntry, TagConfigEntry}
+import com.vesoft.nebula.tools.exchange.config.{EdgeConfigEntry, SchemaConfigEntry, TagConfigEntry}
 import org.apache.log4j.Logger
 import org.apache.spark.sql.types.DataType
 import org.apache.spark.sql.types.DataTypes.{

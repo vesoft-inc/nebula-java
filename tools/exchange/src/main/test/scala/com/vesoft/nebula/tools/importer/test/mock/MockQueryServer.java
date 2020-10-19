@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.test.mock;
+package com.vesoft.nebula.tools.exchange.test.mock;
 
 import com.facebook.thrift.TProcessor;
 import com.facebook.thrift.TProcessorFactory;

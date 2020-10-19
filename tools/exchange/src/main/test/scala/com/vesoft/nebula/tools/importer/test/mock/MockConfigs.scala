@@ -4,9 +4,9 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.test.mock
+package com.vesoft.nebula.tools.exchange.test.mock
 
-import com.vesoft.nebula.tools.importer.config.{
+import com.vesoft.nebula.tools.exchange.config.{
   Configs,
   ConnectionConfigEntry,
   DataBaseConfigEntry,

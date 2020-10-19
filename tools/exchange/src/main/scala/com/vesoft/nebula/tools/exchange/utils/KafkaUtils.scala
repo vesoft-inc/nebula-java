@@ -4,9 +4,9 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.utils
+package com.vesoft.nebula.tools.exchange.utils
 
-import com.vesoft.nebula.tools.importer.{Edge, Vertex}
+import com.vesoft.nebula.tools.exchange.{Edge, Vertex}
 
 object KafkaUtils {
 

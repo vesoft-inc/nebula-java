@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer
+package com.vesoft.nebula.tools.exchange
 
 import com.google.common.net.HostAndPort
 import com.vesoft.nebula.client.meta.MetaClientImpl

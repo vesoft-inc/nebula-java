@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.utils
+package com.vesoft.nebula.tools.exchange.utils
 
 import java.nio.charset.Charset
 

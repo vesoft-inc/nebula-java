@@ -4,9 +4,9 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.reader
+package com.vesoft.nebula.tools.exchange.reader
 
-import com.vesoft.nebula.tools.importer.config.FileBaseSourceConfigEntry
+import com.vesoft.nebula.tools.exchange.config.FileBaseSourceConfigEntry
 import org.apache.spark.sql.catalyst.encoders.RowEncoder
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}

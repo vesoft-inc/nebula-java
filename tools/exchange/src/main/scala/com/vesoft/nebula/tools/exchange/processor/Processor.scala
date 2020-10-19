@@ -4,15 +4,15 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.processor
+package com.vesoft.nebula.tools.exchange.processor
 
 import java.util.concurrent.{CountDownLatch, Executor}
 
 import com.google.common.util.concurrent.Futures
-import com.vesoft.nebula.tools.importer.config.SchemaConfigEntry
-import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult}
-import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.exchange.{CheckPointHandler, ProcessResult}
+import com.vesoft.nebula.tools.exchange.config.SchemaConfigEntry
+import com.vesoft.nebula.tools.exchange.utils.HDFSUtils
+import com.vesoft.nebula.tools.exchange.writer.NebulaWriterCallback
 import org.apache.commons.lang.StringEscapeUtils
 import org.apache.log4j.Logger
 import org.apache.spark.sql.Row

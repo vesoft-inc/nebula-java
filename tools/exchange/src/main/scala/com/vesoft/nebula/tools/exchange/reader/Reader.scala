@@ -4,10 +4,10 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.reader
+package com.vesoft.nebula.tools.exchange.reader
 
-import com.vesoft.nebula.tools.importer.Offset
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.exchange.Offset
+import com.vesoft.nebula.tools.exchange.utils.HDFSUtils
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**

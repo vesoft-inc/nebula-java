@@ -11,7 +11,7 @@ import com.google.common.util.concurrent.ListenableFuture
 
 import scala.collection.mutable.ListBuffer
 
-package object importer {
+package object exchange {
 
   type GraphSpaceID   = Int
   type PartitionID    = Int

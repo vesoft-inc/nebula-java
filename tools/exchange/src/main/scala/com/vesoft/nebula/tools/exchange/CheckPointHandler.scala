@@ -4,10 +4,10 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer
+package com.vesoft.nebula.tools.exchange
 
-import com.vesoft.nebula.tools.importer.config.{SchemaConfigEntry, SourceCategory}
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.exchange.config.{SchemaConfigEntry, SourceCategory}
+import com.vesoft.nebula.tools.exchange.utils.HDFSUtils
 import org.apache.spark.TaskContext
 
 object CheckPointHandler {

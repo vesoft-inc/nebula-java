@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.tools.importer.writer
+package com.vesoft.nebula.tools.exchange.writer
 
 import java.util.concurrent.CountDownLatch
 
@@ -15,15 +15,15 @@ import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
 import com.vesoft.nebula.graph.ErrorCode
-import com.vesoft.nebula.tools.importer.config.{
+import com.vesoft.nebula.tools.exchange.config.{
   ConnectionConfigEntry,
   DataBaseConfigEntry,
   SchemaConfigEntry,
   Type,
   UserConfigEntry
 }
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{
+import com.vesoft.nebula.tools.exchange.utils.HDFSUtils
+import com.vesoft.nebula.tools.exchange.{
   Edges,
   KeyPolicy,
   TooManyErrorsException,
