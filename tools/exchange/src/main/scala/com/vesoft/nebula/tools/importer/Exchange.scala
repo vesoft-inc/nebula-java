@@ -19,6 +19,7 @@ import com.vesoft.nebula.tools.importer.config.{
   Configs,
   DataSourceConfigEntry,
   FileBaseSourceConfigEntry,
+  HBaseSourceConfigEntry,
   HiveSourceConfigEntry,
   JanusGraphSourceConfigEntry,
   KafkaSourceConfigEntry,
@@ -30,6 +31,7 @@ import com.vesoft.nebula.tools.importer.config.{
 import com.vesoft.nebula.tools.importer.processor.{EdgeProcessor, VerticesProcessor}
 import com.vesoft.nebula.tools.importer.reader.{
   CSVReader,
+  HBaseReader,
   HiveReader,
   JSONReader,
   JanusGraphReader,
@@ -77,6 +79,7 @@ object Exchange {
     val session = SparkSession
       .builder()
       .appName(PROGRAM_NAME)
+      .master("local")
       .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .config("spark.sql.shuffle.partitions", "1")
       .config(
@@ -270,6 +273,10 @@ object Exchange {
       case SourceCategory.JANUS_GRAPH =>
         val janusGraphSourceConfigEntry = config.asInstanceOf[JanusGraphSourceConfigEntry]
         val reader                      = new JanusGraphReader(session, janusGraphSourceConfigEntry)
+        Some(reader.read())
+      case SourceCategory.HBASE =>
+        val hbaseSourceConfigEntry = config.asInstanceOf[HBaseSourceConfigEntry]
+        val reader                 = new HBaseReader(session, hbaseSourceConfigEntry)
         Some(reader.read())
       case _ => {
         LOG.error(s"Data source ${config.category} not supported")

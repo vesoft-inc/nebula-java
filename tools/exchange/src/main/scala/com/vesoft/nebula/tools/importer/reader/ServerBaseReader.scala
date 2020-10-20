@@ -8,11 +8,17 @@ package com.vesoft.nebula.tools.importer.reader
 
 import com.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.config._
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
+import org.apache.hadoop.hbase.HBaseConfiguration
+import org.apache.hadoop.hbase.client.Result
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable
+import org.apache.hadoop.hbase.mapreduce.TableInputFormat
+import org.apache.hadoop.hbase.util.Bytes
 import org.apache.log4j.Logger
 import org.apache.spark.TaskContext
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
-import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.{DataTypes, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.tinkerpop.gremlin.process.computer.clustering.peerpressure.{
   ClusterCountMapReduce,
@@ -27,6 +33,7 @@ import org.neo4j.spark.utils.Neo4jSessionAwareIterator
 import org.neo4j.spark.{Executor, Neo4jConfig}
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 /**
   * ServerBaseReader is the abstract class of
@@ -90,8 +97,9 @@ class Neo4JReader(override val session: SparkSession, neo4jConfig: Neo4JSourceCo
 
   override def read(): DataFrame = {
     if (!neo4jConfig.sentence.toUpperCase.contains("ORDER"))
-      LOG.warn("We strongly suggest the cypher sentence must use `order by` clause.\n" +
-        "Because the `skip` clause in partition no guarantees are made on the order of the result unless the query specifies the ORDER BY clause")
+      LOG.warn(
+        "We strongly suggest the cypher sentence must use `order by` clause.\n" +
+          "Because the `skip` clause in partition no guarantees are made on the order of the result unless the query specifies the ORDER BY clause")
     val totalCount: Long = {
       val returnIndex   = neo4jConfig.sentence.toUpperCase.lastIndexOf("RETURN") + "RETURN".length
       val countSentence = neo4jConfig.sentence.substring(0, returnIndex) + " count(*)"
@@ -189,4 +197,57 @@ class JanusGraphReader(override val session: SparkSession,
 class NebulaReader(override val session: SparkSession, nebulaConfig: ServerDataSourceConfigEntry)
     extends ServerBaseReader(session, nebulaConfig.sentence) {
   override def read(): DataFrame = ???
+}
+
+/**
+  * HBaseReader extends [[ServerBaseReader]]
+  *
+  */
+class HBaseReader(override val session: SparkSession, hbaseConfig: HBaseSourceConfigEntry)
+    extends ServerBaseReader(session, null) {
+  override def read(): DataFrame = {
+    val cf       = hbaseConfig.columnFamily
+    val scanConf = HBaseConfiguration.create()
+    scanConf.set("hbase.zookeeper.quorum", hbaseConfig.host)
+    scanConf.set("hbase.zookeeper.property.clientPort", hbaseConfig.port)
+    scanConf.set(TableInputFormat.INPUT_TABLE, hbaseConfig.table)
+    hbaseConfig.fields.filter(field => !field.equalsIgnoreCase("rowkey"))
+    scanConf.set(TableInputFormat.SCAN_COLUMNS,
+                 hbaseConfig.fields
+                   .filter(field => !field.equalsIgnoreCase("rowkey"))
+                   .map(field => s"$cf:$field")
+                   .mkString(" "))
+    val fields = hbaseConfig.fields
+
+    val hbaseRDD: RDD[(ImmutableBytesWritable, Result)] = session.sparkContext.newAPIHadoopRDD(
+      scanConf,
+      classOf[TableInputFormat],
+      classOf[ImmutableBytesWritable],
+      classOf[Result])
+
+    val sourceSchema = hbaseConfig.sourceFieldSchema
+
+    val values = hbaseRDD.map(row => {
+      val values: ListBuffer[Any] = new ListBuffer[Any]
+      val result: Result          = row._2
+
+      for (i <- fields.indices) {
+        if (fields(i).equalsIgnoreCase("rowkey")) {
+          values += NebulaUtils.getDataFrameValue(Bytes.toString(result.getRow),
+                                                  sourceSchema(fields(i)))
+        } else {
+          values += NebulaUtils.getDataFrameValue(
+            Bytes.toString(result.getValue(Bytes.toBytes(cf), Bytes.toBytes(fields(i)))),
+            sourceSchema(fields(i)))
+        }
+      }
+      Row.fromSeq(values.toList)
+    })
+    val schema = StructType(
+      fields.map(field => DataTypes.createStructField(field, sourceSchema(field), true)))
+    val dataFrame = session.createDataFrame(values, schema)
+    dataFrame.show()
+    dataFrame.printSchema()
+    dataFrame
+  }
 }

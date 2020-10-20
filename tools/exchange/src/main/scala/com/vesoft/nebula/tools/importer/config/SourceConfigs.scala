@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.tools.importer.config
 
+import org.apache.spark.sql.types.DataType
+
 /**
   * Category use to explain the data source which the Spark application could reading.
   */
@@ -22,6 +24,7 @@ object SourceCategory extends Enumeration {
   val NEO4J       = Value("NEO4J")
   val JANUS_GRAPH = Value("JANUS GRAPH")
   val MYSQL       = Value("MYSQL")
+  val HBASE       = Value("HBASE")
 
   val SOCKET = Value("SOCKET")
   val KAFKA  = Value("KAFKA")
@@ -190,5 +193,23 @@ case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
 
   override def toString: String = {
     s"Pulsar source service url: ${serviceUrl} admin url: ${adminUrl} options: ${options}"
+  }
+}
+
+/**
+  * HBaseSourceConfigEntry
+  *
+  */
+case class HBaseSourceConfigEntry(override val category: SourceCategory.Value,
+                                  override val sentence: String,
+                                  host: String,
+                                  port: String,
+                                  table: String,
+                                  columnFamily: String,
+                                  fields: List[String],
+                                  sourceFieldSchema: Map[String, DataType])
+    extends ServerDataSourceConfigEntry() {
+  override def toString: String = {
+    s"HBase graph source, HBase host is $host, port is $port, table is $table"
   }
 }

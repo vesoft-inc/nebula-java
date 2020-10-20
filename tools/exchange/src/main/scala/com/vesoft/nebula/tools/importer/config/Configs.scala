@@ -13,10 +13,12 @@ import com.vesoft.nebula.tools.importer.{Argument, KeyPolicy}
 
 import scala.collection.JavaConverters._
 import com.typesafe.config.{Config, ConfigFactory}
+import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.log4j.Logger
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 import scala.util.control.Breaks._
 
 object Type extends Enumeration {
@@ -257,7 +259,7 @@ object Configs {
         }
 
         val sourceCategory = toSourceCategory(tagConfig.getString("type.source"))
-        val sourceConfig   = dataSourceConfig(sourceCategory, tagConfig)
+        val sourceConfig   = dataSourceConfig(sourceCategory, tagConfig, nebulaConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
         val sinkCategory = toSinkCategory(tagConfig.getString("type.sink"))
@@ -313,7 +315,7 @@ object Configs {
           edgeConfig.hasPath("longitude")
 
         val sourceCategory = toSourceCategory(edgeConfig.getString("type.source"))
-        val sourceConfig   = dataSourceConfig(sourceCategory, edgeConfig)
+        val sourceConfig   = dataSourceConfig(sourceCategory, edgeConfig, nebulaConfig)
         LOG.info(s"Source Config ${sourceConfig}")
 
         val sinkCategory = toSinkCategory(edgeConfig.getString("type.sink"))
@@ -433,6 +435,7 @@ object Configs {
       case "KAFKA"   => SourceCategory.KAFKA
       case "MYSQL"   => SourceCategory.MYSQL
       case "PULSAR"  => SourceCategory.PULSAR
+      case "HBASE"   => SourceCategory.HBASE
       case _         => throw new IllegalArgumentException(s"${category} not support")
     }
   }
@@ -459,7 +462,8 @@ object Configs {
     * @return
     */
   private[this] def dataSourceConfig(category: SourceCategory.Value,
-                                     config: Config): DataSourceConfigEntry = {
+                                     config: Config,
+                                     nebulaConfig: Config): DataSourceConfigEntry = {
     category match {
       case SourceCategory.PARQUET =>
         FileBaseSourceConfigEntry(SourceCategory.PARQUET, config.getString("path"))
@@ -539,6 +543,32 @@ object Configs {
                                 config.getString("service"),
                                 config.getString("admin"),
                                 options)
+      case SourceCategory.HBASE =>
+        val fields: ListBuffer[String] = new ListBuffer[String]
+        for (field <- config.getStringList("fields").asScala) {
+          fields.append(field)
+        }
+
+        if (config.hasPath("vertex")) {
+          fields.append(config.getString("vertex"))
+        }
+        if (config.hasPath("source.field")) {
+          fields.append(config.getString("source.field"))
+        }
+        if (config.hasPath("target.field")) {
+          fields.append(config.getString("target.field"))
+        }
+
+        HBaseSourceConfigEntry(
+          SourceCategory.HBASE,
+          getOrElse(config, "sentence", ""),
+          config.getString("host"),
+          config.getString("port"),
+          config.getString("table"),
+          config.getString("columnFamily"),
+          fields.toSet.toList,
+          NebulaUtils.getDataSourceFieldType(config, nebulaConfig)
+        )
       case _ =>
         throw new IllegalArgumentException("Unsupported data source")
     }
