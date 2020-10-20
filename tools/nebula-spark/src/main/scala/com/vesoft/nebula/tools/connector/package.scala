@@ -130,7 +130,7 @@ package object connector {
           val props: ListBuffer[Any] = ListBuffer()
           for (i <- row.schema.fields.indices) {
             if (i != 0) {
-              props.append(NebulaUtils.resolveDataAndType(row, fields, i))
+              props.append(NebulaUtils.resolveDataAndType(row, fields(i).dataType, i))
             }
           }
           (vertexId, props.toList)
@@ -153,7 +153,7 @@ package object connector {
           val props: ListBuffer[Any] = ListBuffer()
           for (i <- row.schema.fields.indices) {
             if (i != 0 && i != 1) {
-              props.append(NebulaUtils.resolveDataAndType(row, fields, i))
+              props.append(NebulaUtils.resolveDataAndType(row, fields(i).dataType, i))
             }
           }
           Edge(row.get(0).toString.toLong, row.get(1).toString.toLong, (rank, props.toList))

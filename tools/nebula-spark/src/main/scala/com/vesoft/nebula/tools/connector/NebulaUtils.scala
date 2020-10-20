@@ -112,8 +112,20 @@ object NebulaUtils {
     }
   }
 
-  def resolveDataAndType(row: Row, fields: Array[StructField], i: Int): Any = {
-    fields(i).dataType match {
+  def resolveDataAndType(row: Row, dataType: DataType, i: Int): Any = {
+    dataType match {
+      case LongType    => row.getLong(i)
+      case IntegerType => row.getInt(i)
+      case DoubleType  => row.getDouble(i)
+      case FloatType   => row.getFloat(i)
+      case BooleanType => row.getBoolean(i)
+      case StringType  => row.getString(i)
+      case _           => row.getString(i)
+    }
+  }
+
+  def getRowColData(row: InternalRow, dataType: DataType, i: Int): Any = {
+    dataType match {
       case LongType    => row.getLong(i)
       case IntegerType => row.getInt(i)
       case DoubleType  => row.getDouble(i)

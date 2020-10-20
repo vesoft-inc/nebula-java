@@ -16,17 +16,7 @@ import org.apache.spark.sql.sources.v2.writer.{
   DataWriterFactory,
   WriterCommitMessage
 }
-import org.apache.spark.sql.types.{
-  BooleanType,
-  DataType,
-  DoubleType,
-  FloatType,
-  IntegerType,
-  LongType,
-  ShortType,
-  StringType,
-  StructType
-}
+import org.apache.spark.sql.types.{DataType, StructType}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
@@ -43,13 +33,13 @@ class NebulaVWriter(address: List[HostAndPort],
 
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
-  val types     = schema.fields.map(field => field.dataType)
-  val propNames = assignProps(schema, vertexIndex)
+  val types: Array[DataType] = schema.fields.map(field => field.dataType)
+  val propNames: String      = assignProps(schema)
 
   override def write(row: InternalRow): Unit = {
     val vertex = extraValue(types(vertexIndex), row, vertexIndex)
     val values = assignValues(types, row)
-    println(s"INSERT TAG ${tag}($propNames) VALUES ${vertex}:(${values})")
+    println(s"INSERT TAG $tag($propNames) VALUES $vertex:($values)")
 
     // 连接client
 
@@ -71,16 +61,13 @@ class NebulaVWriter(address: List[HostAndPort],
         Futures.addCallback(
           future,
           new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {
-              LOG.info(s"succeed to execute {$useSpace}")
-            }
+            override def onSuccess(result: Optional[Integer]): Unit = {}
 
             override def onFailure(t: Throwable): Unit = {
               LOG.error(s"failed to execute {$useSpace}")
             }
           }
         )
-
       } else {
         throw new TimeoutException()
       }
@@ -112,9 +99,7 @@ class NebulaVWriter(address: List[HostAndPort],
         Futures.addCallback(
           future,
           new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {
-              LOG.info(s"succeed to execute {$exec}")
-            }
+            override def onSuccess(result: Optional[Integer]): Unit = {}
 
             override def onFailure(t: Throwable): Unit = {
               LOG.error(s"failed to execute {$useSpace}")
@@ -130,37 +115,19 @@ class NebulaVWriter(address: List[HostAndPort],
 
   def assignValues(types: Array[DataType], record: InternalRow): String = {
     val values = for {
-      index <- 0 until types.length
+      index <- types.indices
       if index != vertexIndex
     } yield {
-      val value = types(index) match {
-        case BooleanType => record.getBoolean(index)
-        case ShortType   => record.getShort(index)
-        case IntegerType => record.getInt(index)
-        case LongType    => record.getLong(index)
-        case DoubleType  => record.getDouble(index)
-        case FloatType   => record.getFloat(index)
-        case StringType  => record.getString(index)
-      }
-      value.toString
+      NebulaUtils.getRowColData(record, types(index), index).toString
     }
     values.mkString(", ")
   }
 
   def extraValue(dataType: DataType, record: InternalRow, index: Int): String = {
-    val value = dataType match {
-      case BooleanType => record.getBoolean(index)
-      case ShortType   => record.getShort(index)
-      case IntegerType => record.getInt(index)
-      case LongType    => record.getLong(index)
-      case DoubleType  => record.getDouble(index)
-      case FloatType   => record.getFloat(index)
-      case StringType  => record.getString(index)
-    }
-    value.toString
+    NebulaUtils.getRowColData(record, dataType, index).toString
   }
 
-  def assignProps(schema: StructType, index: Int): String = {
+  def assignProps(schema: StructType): String = {
     val propNames = for {
       index <- schema.indices
       if index != vertexIndex
@@ -190,14 +157,14 @@ class NebulaEWriter(address: List[HostAndPort],
 
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
-  val types     = schema.fields.map(field => field.dataType)
-  val propNames = assignProps(schema, srcIndex, dstIndex)
+  val types: Array[DataType] = schema.fields.map(field => field.dataType)
+  val propNames: String      = assignProps(schema, srcIndex, dstIndex)
 
   override def write(row: InternalRow): Unit = {
 
     val edges  = extraValues(types(srcIndex), types(dstIndex), row, srcIndex, dstIndex)
     val values = assignValues(types, row)
-    println(s"INSERT EDGE ${edge}($propNames) VALUES ${edges._1}->${edges._2}:(${values})")
+    println(s"INSERT EDGE $edge($propNames) VALUES ${edges._1}->${edges._2}:($values)")
 
     // 连接client
     val client = new AsyncGraphClientImpl(
@@ -219,12 +186,10 @@ class NebulaEWriter(address: List[HostAndPort],
         Futures.addCallback(
           future,
           new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {
-              LOG.info(s"succeed for ${useSpace}")
-            }
+            override def onSuccess(result: Optional[Integer]): Unit = {}
 
             override def onFailure(t: Throwable): Unit = {
-              LOG.error(s"failed to execute ${useSpace}")
+              LOG.error(s"failed to execute $useSpace")
             }
           }
         )
@@ -266,9 +231,7 @@ class NebulaEWriter(address: List[HostAndPort],
         Futures.addCallback(
           future,
           new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {
-              LOG.info(s"succeed to execute {$exec}")
-            }
+            override def onSuccess(result: Optional[Integer]): Unit = {}
 
             override def onFailure(t: Throwable): Unit = {
               LOG.error(s"failed to execute {$useSpace}")
@@ -285,19 +248,10 @@ class NebulaEWriter(address: List[HostAndPort],
 
   def assignValues(types: Array[DataType], record: InternalRow): String = {
     val values = for {
-      index <- 0 until types.length
+      index <- types.indices
       if index != srcIndex && index != dstIndex
     } yield {
-      val value = types(index) match {
-        case BooleanType => record.getBoolean(index)
-        case ShortType   => record.getShort(index)
-        case IntegerType => record.getInt(index)
-        case LongType    => record.getLong(index)
-        case DoubleType  => record.getDouble(index)
-        case FloatType   => record.getFloat(index)
-        case StringType  => record.getString(index)
-      }
-      value.toString
+      NebulaUtils.getRowColData(record, types(index), index).toString
     }
     values.mkString(", ")
   }
@@ -307,24 +261,8 @@ class NebulaEWriter(address: List[HostAndPort],
                   record: InternalRow,
                   srcIndex: Int,
                   dstIndex: Int): (String, String) = {
-    val srcValue = srcDataType match {
-      case BooleanType => record.getBoolean(srcIndex)
-      case ShortType   => record.getShort(srcIndex)
-      case IntegerType => record.getInt(srcIndex)
-      case LongType    => record.getLong(srcIndex)
-      case DoubleType  => record.getDouble(srcIndex)
-      case FloatType   => record.getFloat(srcIndex)
-      case StringType  => record.getString(srcIndex)
-    }
-    val dstValue = dstDataType match {
-      case BooleanType => record.getBoolean(dstIndex)
-      case ShortType   => record.getShort(dstIndex)
-      case IntegerType => record.getInt(dstIndex)
-      case LongType    => record.getLong(dstIndex)
-      case DoubleType  => record.getDouble(dstIndex)
-      case FloatType   => record.getFloat(dstIndex)
-      case StringType  => record.getString(dstIndex)
-    }
+    val srcValue = NebulaUtils.getRowColData(record, srcDataType, srcIndex)
+    val dstValue = NebulaUtils.getRowColData(record, dstDataType, dstIndex)
     (srcValue.toString, dstValue.toString)
   }
 
