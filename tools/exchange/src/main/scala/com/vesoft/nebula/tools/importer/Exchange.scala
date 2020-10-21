@@ -79,7 +79,6 @@ object Exchange {
     val session = SparkSession
       .builder()
       .appName(PROGRAM_NAME)
-      .master("local")
       .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .config("spark.sql.shuffle.partitions", "1")
       .config(

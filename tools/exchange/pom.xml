@@ -21,12 +21,15 @@
         <scala.version>${scala.2.11.version}</scala.version>
         <version.scala.binary>2.12</version.scala.binary>
         <spark.version>2.4.4</spark.version>
+        <spark-csv.version>1.5.0</spark-csv.version>
         <scalatest.version>3.2.0</scalatest.version>
         <rocksdb.version>6.7.3</rocksdb.version>
         <config.version>1.4.0</config.version>
         <scala-logging.version>3.9.2</scala-logging.version>
+        <scala-xml.version>2.11.0-M4</scala-xml.version>
         <scopt.version>3.7.1</scopt.version>
         <nebula.version>${parent.version}</nebula.version>
+        <nebula-utils.version>1.0.0-rc2</nebula-utils.version>
         <s2.version>1.0.0</s2.version>
         <neo.version>2.4.5-M1</neo.version>
         <gremlin.version>3.4.6</gremlin.version>
@@ -428,7 +431,7 @@
         <dependency>
             <groupId>com.databricks</groupId>
             <artifactId>spark-csv_2.11</artifactId>
-            <version>1.5.0</version>
+            <version>${spark-csv.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>scala-library</artifactId>
@@ -503,7 +506,7 @@
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>nebula-utils</artifactId>
-            <version>1.0.0-rc2</version>
+            <version>${nebula-utils.version}</version>
         </dependency>
         <dependency>
             <groupId>neo4j-contrib</groupId>
@@ -661,7 +664,7 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-xml</artifactId>
-            <version>2.11.0-M4</version>
+            <version>${scala-xml.version}</version>
         </dependency>
     </dependencies>
     <repositories>
