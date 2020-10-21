@@ -22,16 +22,14 @@ abstract class NebulaPartitionReader(addresses: List[Address], space: String, pa
   lazy val rows: Iterator[InternalRow] = Seq(
     InternalRow.fromSeq(Array(0, 1, 2)),
     InternalRow.fromSeq(Array(10, 11, 12)),
-    InternalRow.fromSeq(Array(20, 21, 22)),
+    InternalRow.fromSeq(Array(20, 21, 22))
   ).toIterator
 
   override def next(): Boolean = rows.hasNext
 
   override def get(): InternalRow = rows.next
 
-  override def close(): Unit = {
-    storageProvider.close()
-  }
+  override def close(): Unit = storageProvider.close()
 }
 
 final class NebulaVertexPartitionReader(addresses: List[Address],

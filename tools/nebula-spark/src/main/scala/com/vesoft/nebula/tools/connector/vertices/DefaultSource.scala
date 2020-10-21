@@ -42,7 +42,7 @@ class DefaultSource()
     val paths        = toAddress(pathsOpt.get())
     val metaProvider = new MetaProvider(paths)
     val schema       = metaProvider.getTagSchema("space", "tag name")
-    new NebulaVertexReader(paths, "space", "tag name")
+    new NebulaVertexReader(paths, "space", "tag name", "")
   }
 
   override def createWriter(writeUUID: String,
