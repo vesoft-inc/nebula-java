@@ -32,14 +32,14 @@ object Main {
     val vertexDataset: Dataset[Row] =
       spark.read
         .nebula("127.0.0.1:45500", "nb", "100")
-        .loadVertices("player", List())
+        .loadVertices("player", "*")
     vertexDataset.printSchema()
     vertexDataset.show()
 
     val edgeDataset: Dataset[Row] =
       spark.read
         .nebula("127.0.0.1:45500", "nb", "100")
-        .loadEdges("serve", List())
+        .loadEdges("serve", "start_year,end_year")
 
     edgeDataset.printSchema()
     edgeDataset.show()
