@@ -39,10 +39,8 @@ class NebulaVWriter(address: List[HostAndPort],
   override def write(row: InternalRow): Unit = {
     val vertex = extraValue(types(vertexIndex), row, vertexIndex)
     val values = assignValues(types, row)
-    println(s"INSERT TAG $tag($propNames) VALUES $vertex:($values)")
 
     // 连接client
-
     val client = new AsyncGraphClientImpl(
       address.asJava,
       nebulaOptions.connectionTimeout,
@@ -74,7 +72,7 @@ class NebulaVWriter(address: List[HostAndPort],
 
       val exec = NebulaTemplate.BATCH_INSERT_TEMPLATE.format(
         DataTypeEnum.VERTEX.toString,
-        nebulaOptions.label,
+        tag,
         propNames,
         if (nebulaOptions.policy == null) {
           NebulaTemplate.VERTEX_VALUE_TEMPLATE.format(vertex, values)

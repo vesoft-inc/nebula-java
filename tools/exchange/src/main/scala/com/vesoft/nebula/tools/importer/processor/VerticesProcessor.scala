@@ -157,7 +157,7 @@ class VerticesProcessor(data: DataFrame,
           if (!tmpDir.exists && !tmpDir.mkdir) {
             throw new IOException("Failed to create temp directory " + tmpDir)
           }
-          val tmp = File.createTempFile("libnebula_codec", ".so")
+          val tmp = new File(tmpDir, "libnebula_codec.so")
           tmp.deleteOnExit()
           try {
             Files.copy(stream, tmp.toPath, StandardCopyOption.REPLACE_EXISTING)

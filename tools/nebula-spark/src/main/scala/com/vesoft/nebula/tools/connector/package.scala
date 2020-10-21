@@ -9,15 +9,8 @@ package com.vesoft.nebula.tools
 import com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider
 import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{
-  DataFrame,
-  DataFrameReader,
-  DataFrameWriter,
-  Encoder,
-  Encoders,
-  Row,
-  SparkSession
-}
+import org.apache.spark.sql.{Encoder, Encoders}
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
 
 import scala.collection.mutable.ListBuffer
 
@@ -45,8 +38,8 @@ package object connector {
 //
 //    val `type` = StructType(fields)
 //
-//    val edge = session.sparkContext.parallelize(values)
-//    session.createDataFrame(edge)(Encoders.bean[Values])
+//    val data = session.sparkContext.parallelize(values)
+//    session.createDataFrame(data)(Encoders.bean[Values])
 //
 //    Row.fromSeq(values)
 //  }

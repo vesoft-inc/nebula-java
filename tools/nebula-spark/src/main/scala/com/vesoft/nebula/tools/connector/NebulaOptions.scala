@@ -64,7 +64,7 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])(
           s"Option '$SPACE_NAME' is required and can not be blank")
   val spaceName: String = parameters(SPACE_NAME)
 
-  // nebula edge type: Type.vertex or Type.edge
+  // nebula data type: DataTypeEnum.VERTEX or DataTypeEnum.EDGE
   require(parameters.isDefinedAt(TYPE), s"Option '$TYPE' is required")
   val dataType: String = parameters(TYPE)
   require(

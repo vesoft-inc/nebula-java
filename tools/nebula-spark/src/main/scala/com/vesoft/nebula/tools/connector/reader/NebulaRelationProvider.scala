@@ -8,19 +8,17 @@ package com.vesoft.nebula.tools.connector.reader
 
 import java.util.Map.Entry
 import java.util.Optional
-
-import com.google.common.net.HostAndPort
 import com.vesoft.nebula.tools.connector.exception.IllegalOptionException
 import com.vesoft.nebula.tools.connector.{
   DataTypeEnum,
   NebulaEdgeWriter,
-  NebulaOptions,
   NebulaVertexWriter,
   OperaType
 }
 import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap
 import org.apache.spark.sql.sources.v2.writer.DataSourceWriter
 import org.apache.spark.sql.sources.v2.{DataSourceOptions, WriteSupport}
+import com.vesoft.nebula.tools.connector.NebulaOptions
 import org.apache.spark.sql.sources.{
   BaseRelation,
   CreatableRelationProvider,
@@ -30,10 +28,7 @@ import org.apache.spark.sql.sources.{
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SQLContext, SaveMode}
 import org.slf4j.LoggerFactory
-
 import scala.collection.JavaConversions.iterableAsScalaIterable
-import scala.collection.JavaConverters.mapAsScalaMapConverter
-import scala.collection.mutable
 
 class NebulaRelationProvider
     extends CreatableRelationProvider

@@ -11,7 +11,7 @@ import com.facebook.thrift.protocol.TCompactProtocol
 import com.vesoft.nebula.tools.connector.{NebulaDataFrameReader, NebulaDataFrameWriter}
 import org.apache.spark.SparkConf
 import org.apache.spark.graphx.Graph
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.slf4j.LoggerFactory
 
 object Main {
@@ -25,11 +25,11 @@ object Main {
       .registerKryoClasses(Array[Class[_]](classOf[TCompactProtocol]))
     val spark = SparkSession
       .builder()
-      .master("local")
+//      .master("local")
       .config(sparkConf)
       .getOrCreate()
 
-    writeNebulaEdge(spark)
+    writeNebulaVertex(spark)
   }
 
   def readNebulaVertex(spark: SparkSession) = {
@@ -68,7 +68,7 @@ object Main {
   }
 
   def writeNebulaVertex(spark: SparkSession): Unit = {
-    val df = spark.read.json("tools/nebula-spark/src/main/resources/vertex")
+    val df = spark.read.json("hdfs://192.168.8.171:9000/home/darion/vertex.json")
     df.show()
 
     df.write

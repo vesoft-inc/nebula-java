@@ -21,7 +21,7 @@ class NebulaRDD(val sqlContext: SQLContext, var nebulaOptions: NebulaOptions, sc
     extends RDD[InternalRow](sqlContext.sparkContext, Nil) {
 
   /**
-    * start to scan vertex or edge edge
+    * start to scan vertex or edge data
     *
     * @param split
     * @param context

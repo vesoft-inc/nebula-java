@@ -23,7 +23,6 @@ import org.apache.spark.sql.types.{
   LongType,
   Metadata,
   StringType,
-  StructField,
   StructType
 }
 import org.apache.spark.unsafe.types.UTF8String
@@ -33,7 +32,7 @@ object NebulaUtils {
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
   /**
-    * convert nebula edge type to spark sql edge type
+    * convert nebula data type to spark sql data type
     */
   def convertDataType(clazz: Class[_]): DataType = {
     if (java.lang.Long.TYPE.getSimpleName
