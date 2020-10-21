@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.tools.importer.config
 
+import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.spark.sql.types.DataType
 
 /**
@@ -201,7 +202,6 @@ case class PulsarSourceConfigEntry(override val category: SourceCategory.Value,
   *
   */
 case class HBaseSourceConfigEntry(override val category: SourceCategory.Value,
-                                  override val sentence: String,
                                   host: String,
                                   port: String,
                                   table: String,
@@ -209,6 +209,12 @@ case class HBaseSourceConfigEntry(override val category: SourceCategory.Value,
                                   fields: List[String],
                                   sourceFieldSchema: Map[String, DataType])
     extends ServerDataSourceConfigEntry() {
+
+  require(host.trim.length != 0 && port.trim.length != 0 && NebulaUtils
+    .isNumic(port.trim) && table.trim.length > 0 && table.trim.length > 0 && columnFamily.trim.length > 0)
+
+  override val sentence: String = null
+
   override def toString: String = {
     s"HBase graph source, HBase host is $host, port is $port, table is $table"
   }

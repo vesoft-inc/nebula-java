@@ -249,9 +249,6 @@ class HBaseReader(override val session: SparkSession, hbaseConfig: HBaseSourceCo
     val schema = StructType(
       fields.map(field => DataTypes.createStructField(field, sourceSchema(field), true)))
     val dataFrame = session.createDataFrame(values, schema)
-    dataFrame.printSchema()
-    LOG.info("hbase source data example: ")
-    dataFrame.show()
     dataFrame
   }
 }

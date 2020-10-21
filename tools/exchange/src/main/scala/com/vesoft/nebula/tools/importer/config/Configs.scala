@@ -560,7 +560,6 @@ object Configs {
 
         HBaseSourceConfigEntry(
           SourceCategory.HBASE,
-          getOrElse(config, "sentence", ""),
           config.getString("host"),
           config.getString("port"),
           config.getString("table"),

@@ -24,7 +24,6 @@ import org.apache.thrift.TException
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
 object NebulaUtils {
   private[this] val LOG = Logger.getLogger(this.getClass)
@@ -37,10 +36,7 @@ object NebulaUtils {
     val space        = nebulaConfig.getString("space")
     val label        = dataSourceConf.getString("name")
 
-    val hostPorts: ListBuffer[HostAndPort] = new ListBuffer[HostAndPort]
-    for (i <- 0 until address.size()) {
-      hostPorts.append(HostAndPort.fromString(address.get(i)))
-    }
+    val hostPorts = address.toArray.map(addr => HostAndPort.fromString(addr.toString)).toList
 
     var metaClient: MetaClientImpl = null
     try {
@@ -53,7 +49,7 @@ object NebulaUtils {
     }
     if (ErrorCode.SUCCEEDED != metaClient.connect()) {
       LOG.error("meta client connect failed.")
-      sys.exit(-1)
+      throw new TException("meta client connect failed: connect operation does not return 0.")
     }
 
     var nebulaSchemaMap: mutable.Map[String, Class[_]] = mutable.Map()
@@ -115,5 +111,12 @@ object NebulaUtils {
       case FloatType   => value.toFloat
       case _           => value
     }
+  }
+
+  def isNumic(str: String): Boolean = {
+    for (char <- str.toCharArray) {
+      if (!Character.isDigit(char)) return false
+    }
+    true
   }
 }
