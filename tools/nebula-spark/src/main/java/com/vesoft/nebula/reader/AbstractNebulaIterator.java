@@ -27,10 +27,10 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNebulaIterator.class);
 
-    protected Iterator<String> dataIterator;
+    protected Iterator<List<Object>> dataIterator;
     protected Iterator<Integer> scanPartIterator;
-    protected Map<String, List<Object>> resultValues = new HashMap<>();
 
+    protected List<List<Object>> resultValues = new ArrayList<>();
     protected StorageClientImpl storageClient;
     protected MetaClientImpl metaClient;
     protected Processor processor;
@@ -63,8 +63,8 @@ public abstract class AbstractNebulaIterator extends AbstractIterator<Row> {
 
     @Override
     public Row next() {
-        return RowFactory.create(resultValues.get(dataIterator.next()).toArray());
+        return RowFactory.create(dataIterator.next().toArray());
     }
 
-    protected abstract Iterator<String> process(Result result);
+    protected abstract Iterator<List<Object>> process(Result result);
 }
