@@ -230,7 +230,7 @@ class HBaseReader(override val session: SparkSession, hbaseConfig: HBaseSourceCo
 
     val sourceSchema = hbaseConfig.sourceFieldSchema
 
-    val values = hbaseRDD.map(row => {
+    val rowRDD = hbaseRDD.map(row => {
       val values: ListBuffer[Any] = new ListBuffer[Any]
       val result: Result          = row._2
 
@@ -248,7 +248,7 @@ class HBaseReader(override val session: SparkSession, hbaseConfig: HBaseSourceCo
     })
     val schema = StructType(
       fields.map(field => DataTypes.createStructField(field, sourceSchema(field), true)))
-    val dataFrame = session.createDataFrame(values, schema)
+    val dataFrame = session.createDataFrame(rowRDD, schema)
     dataFrame
   }
 }

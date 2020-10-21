@@ -216,6 +216,6 @@ case class HBaseSourceConfigEntry(override val category: SourceCategory.Value,
   override val sentence: String = null
 
   override def toString: String = {
-    s"HBase graph source, HBase host is $host, port is $port, table is $table"
+    s"HBase source host: $host, port: $port, table: $table"
   }
 }
