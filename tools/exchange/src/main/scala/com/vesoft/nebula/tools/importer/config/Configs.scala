@@ -544,7 +544,7 @@ object Configs {
                                 options)
       case SourceCategory.HBASE =>
         val fields: ListBuffer[String] = new ListBuffer[String]
-        fields.append(config.getStringList("fields").asScala.map(field => field): _*)
+        fields.append(config.getStringList("fields").asScala: _*)
 
         if (config.hasPath("vertex")) {
           fields.append(config.getString("vertex"))
