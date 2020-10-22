@@ -11,8 +11,8 @@ import com.facebook.thrift.protocol.TCompactProtocol
 import com.vesoft.nebula.tools.connector.{NebulaDataFrameReader, NebulaDataFrameWriter}
 import org.apache.spark.SparkConf
 import org.apache.spark.graphx.Graph
-import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.slf4j.LoggerFactory
 
 object Main {
