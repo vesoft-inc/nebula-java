@@ -38,7 +38,7 @@ object Main {
     sys.exit()
   }
 
-  def readNebulaVertex(spark: SparkSession) = {
+  def readNebulaVertex(spark: SparkSession): Unit = {
     LOG.info("start loading nebula vertex to DataFrame ========")
     val vertexDataset: Dataset[Row] =
       spark.read

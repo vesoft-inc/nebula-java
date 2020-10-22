@@ -7,7 +7,6 @@ import com.google.common.util.concurrent.{FutureCallback, Futures, RateLimiter}
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
 import com.vesoft.nebula.tools.connector.exception.GraphExecuteException
-import org.apache.commons.httpclient.util.TimeoutController.TimeoutException
 import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.sources.v2.writer.{
   DataSourceWriter,
@@ -68,7 +67,7 @@ abstract class NebulaWriter(address: List[HostAndPort], nebulaOptions: NebulaOpt
         }
       )
     } else {
-      throw new TimeoutException()
+      LOG.error(s"failed to acquire rateLimiter for statement {$useSpace}")
     }
   }
 }
@@ -113,7 +112,7 @@ class NebulaVertexWriter(address: List[HostAndPort],
                                                                     values)
           case _ =>
             throw new IllegalArgumentException(
-              s"Policy be HASH or UUID, your configuration policy is ${nebulaOptions.policy}")
+              s"Policy should be HASH or UUID, your configuration policy is ${nebulaOptions.policy}")
         }
       }
     )
@@ -131,7 +130,7 @@ class NebulaVertexWriter(address: List[HostAndPort],
         }
       )
     } else {
-      throw new TimeoutException()
+      LOG.error(s"failed to acquire reteLimiter for statement {$exec}")
     }
   }
 
@@ -226,7 +225,7 @@ class NebulaEdgeWriter(address: List[HostAndPort],
         }
       )
     } else {
-      throw new TimeoutException()
+      LOG.error(s"failed to acquire reteLimiter for statement {$exec}")
     }
   }
 

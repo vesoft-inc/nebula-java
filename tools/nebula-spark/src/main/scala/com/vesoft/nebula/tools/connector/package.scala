@@ -7,11 +7,10 @@
 package com.vesoft.nebula.tools
 
 import com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider
-import org.apache.spark.graphx.{Edge, Graph, VertexId}
+import org.apache.spark.graphx.{Edge, VertexId}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Encoder, Encoders}
-import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
-
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row}
 import scala.collection.mutable.ListBuffer
 
 package object connector {
@@ -23,26 +22,6 @@ package object connector {
   type NebulaVertex = (VertexId, Prop)
   type NebulaEdge   = Edge[(EdgeRank, Prop)]
   type NebulaType   = Int
-
-  def loadGraph(space: String)(implicit session: SparkSession): Graph[NebulaVertex, NebulaEdge] =
-    ???
-//  {
-//    case class Values(value: Any*)
-//    val values = Seq(Values(1, 3.14, "Hello"))
-//
-//    val fields = List(
-//      StructField("col_int", IntegerType),
-//      StructField("col_double", DoubleType),
-//      StructField("col_string", StringType)
-//    )
-//
-//    val `type` = StructType(fields)
-//
-//    val data = session.sparkContext.parallelize(values)
-//    session.createDataFrame(data)(Encoders.bean[Values])
-//
-//    Row.fromSeq(values)
-//  }
 
   implicit class NebulaDataFrameReader(reader: DataFrameReader) {
     var address: String      = _
