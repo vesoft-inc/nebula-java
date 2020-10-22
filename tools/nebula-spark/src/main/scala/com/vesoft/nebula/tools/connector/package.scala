@@ -77,7 +77,7 @@ package object connector {
       * @param fields
       * @return DataFrame
       */
-    def loadVertices(tag: String, fields: List[String]): DataFrame = {
+    def loadVertices(tag: String, fields: String): DataFrame = {
       assert(address != null && space != null && partitionNum != null,
              "call nebula first before call loadVertices. ")
       reader
@@ -87,7 +87,7 @@ package object connector {
         .option(Parameters.SPACE_NAME, space)
         .option(Parameters.TYPE, DataTypeEnum.VERTEX.toString)
         .option(Parameters.LABEL, tag)
-        .option(Parameters.RETURN_COLS, fields.mkString(","))
+        .option(Parameters.RETURN_COLS, fields)
         .load()
     }
 
@@ -98,7 +98,7 @@ package object connector {
       * @param fields
       * @return DataFrame
       */
-    def loadEdges(edge: String, fields: List[String]): DataFrame = {
+    def loadEdges(edge: String, fields: String): DataFrame = {
       assert(address != null && space != null && partitionNum != null,
              "call nebula first before call loadEdges. ")
       reader
@@ -108,7 +108,7 @@ package object connector {
         .option(Parameters.SPACE_NAME, space)
         .option(Parameters.TYPE, DataTypeEnum.EDGE.toString)
         .option(Parameters.LABEL, edge)
-        .option(Parameters.RETURN_COLS, fields.mkString(","))
+        .option(Parameters.RETURN_COLS, fields)
         .load()
     }
   }

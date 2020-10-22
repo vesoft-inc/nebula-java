@@ -42,7 +42,7 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])
 
   /**
     * Return property with all options
-    * */
+   **/
   val asProperties: Properties = {
     val properties = new Properties()
     parameters.originalMap.foreach { case (k, v) => properties.setProperty(k, v) }
@@ -51,7 +51,7 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])
 
   /**
     * parameters invalidate
-    * */
+    */
   // nebula connection info
   require(parameters.isDefinedAt(HOST_AND_PORTS), s"Option '$HOST_AND_PORTS' is required")
   val hostAndPorts: String = parameters(HOST_AND_PORTS)
@@ -77,8 +77,11 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])
   private val RETURN_COL_REGEX: String = "(\\w+)(,\\w+)*"
   require(parameters.isDefinedAt(RETURN_COLS), s"Option '$RETURN_COLS' is required")
   val returnCols: String = parameters(RETURN_COLS)
-  require(StringUtils.isBlank(returnCols) || Pattern.matches(RETURN_COL_REGEX, returnCols),
-          s"Option '$RETURN_COLS' should be blank or be string like a,b")
+  require(
+    StringUtils.isNotBlank(returnCols) || Pattern.matches(RETURN_COL_REGEX, returnCols) || "*"
+      .equals(returnCols.trim),
+    s"Option '$RETURN_COLS' should be blank or be string like a,b"
+  )
   var allCols: Boolean = false
 
   // spark partition numbers
@@ -87,7 +90,7 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])
 
   def getReturnColMap: Map[String, List[String]] = {
     val result: Map[String, List[String]] = Map()
-    if (StringUtils.isBlank(returnCols)) {
+    if ("*".equals(returnCols)) {
       allCols = true
       result ++ Map(label -> List())
     } else {
