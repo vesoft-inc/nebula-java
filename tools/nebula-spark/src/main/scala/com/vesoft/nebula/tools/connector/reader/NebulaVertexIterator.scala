@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import scala.collection.mutable.ListBuffer
 
 /**
-  * iterator to read nebula's vertex data
+  * iterator to read nebula's vertex edge
   */
 class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schema: StructType)
     extends AbstractNebulaIterator(split, nebulaOptions, schema) {

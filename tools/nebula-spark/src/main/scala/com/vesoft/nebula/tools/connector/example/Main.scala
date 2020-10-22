@@ -10,7 +10,9 @@ package com.vesoft.nebula.tools.connector.example
 import com.facebook.thrift.protocol.TCompactProtocol
 import com.vesoft.nebula.tools.connector.{NebulaDataFrameReader, NebulaDataFrameWriter}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.graphx.Graph
+import org.apache.spark.storage.StorageLevel
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.slf4j.LoggerFactory
 
 object Main {
@@ -24,28 +26,72 @@ object Main {
       .registerKryoClasses(Array[Class[_]](classOf[TCompactProtocol]))
     val spark = SparkSession
       .builder()
-      .config(sparkConf)
       .master("local")
+      .config(sparkConf)
       .getOrCreate()
 
-//     read vertex and edge from nebula
+    readNebulaVertex(spark)
+    readNebulaEdge(spark)
+    readGraphX(spark)
+    writeNebulaVertex(spark)
+    writeNebulaEdge(spark)
+    sys.exit()
+  }
+
+  def readNebulaVertex(spark: SparkSession): Unit = {
+    LOG.info("start loading nebula vertex to DataFrame ========")
     val vertexDataset: Dataset[Row] =
       spark.read
         .nebula("127.0.0.1:45500", "nb", "100")
-        .loadVertices("player", List())
+        .loadVerticesToDF("player", List())
     vertexDataset.printSchema()
     vertexDataset.show()
+  }
 
+  def readNebulaEdge(spark: SparkSession): Unit = {
+    LOG.info("start loading nebula edge to DataFrame ========")
     val edgeDataset: Dataset[Row] =
       spark.read
         .nebula("127.0.0.1:45500", "nb", "100")
-        .loadEdges("serve", List())
-
+        .loadEdgesToDF("serve", List())
     edgeDataset.printSchema()
     edgeDataset.show()
-
-    LOG.info(s"vertex count=${vertexDataset.count()}, edge count=${edgeDataset.count()}")
-
   }
 
+  def readGraphX(spark: SparkSession): Unit = {
+    LOG.info("start loading nebula vertex to graphx's vertex ========")
+    val vertexRDD = spark.read
+      .nebula("127.0.0.1:45500", "nb", "100")
+      .loadVerticesToGraphx("player", List())
+
+    LOG.info("start loading nebula edge to graphx's edge ========")
+    val edgeRDD = spark.read
+      .nebula("127.0.0.1:45500", "nb", "100")
+      .loadEdgesToGraphx("serve", List())
+
+    val graph = Graph(vertexRDD, edgeRDD)
+    graph.degrees.foreach(println(_))
+  }
+
+  def writeNebulaVertex(spark: SparkSession): Unit = {
+    val df = spark.read.json("tools/nebula-spark/src/main/resources/vertex")
+    df.show()
+    df.persist(StorageLevel.MEMORY_AND_DISK_SER)
+
+    df.write
+      .nebula("127.0.0.1:3699", "nb", "100")
+      .writeVertices("player", "vertexId", "hash")
+    spark.close()
+  }
+
+  def writeNebulaEdge(spark: SparkSession): Unit = {
+    val df = spark.read.json("tools/nebula-spark/src/main/resources/edge")
+    df.show()
+    df.persist(StorageLevel.MEMORY_AND_DISK_SER)
+
+    df.write
+      .nebula("127.0.0.1:3699", "nb", "100")
+      .writeEdges("follow", "source", "target")
+    spark.close()
+  }
 }
