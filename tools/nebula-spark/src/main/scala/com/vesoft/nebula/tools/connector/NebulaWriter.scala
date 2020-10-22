@@ -51,7 +51,7 @@ abstract class NebulaWriter(address: List[HostAndPort], nebulaOptions: NebulaOpt
   }
 
   /**
-    * execute use space for once
+    * execute use space
     */
   def useSpace(client: AsyncGraphClientImpl, space: String): Unit = {
     val useSpace = NebulaTemplate.USE_TEMPLATE.format(space)

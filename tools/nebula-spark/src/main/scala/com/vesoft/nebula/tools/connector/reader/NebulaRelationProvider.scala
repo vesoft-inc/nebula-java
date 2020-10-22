@@ -38,7 +38,7 @@ class NebulaRelationProvider
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
   /**
-    * The string that represents the format that nebula edge source provider uses.
+    * The string that represents the format that nebula data source provider uses.
     */
   override def shortName(): String = "nebula"
 
@@ -65,8 +65,6 @@ class NebulaRelationProvider
 
     val nebulaOptions: NebulaOptions =
       new NebulaOptions(CaseInsensitiveMap(parameters))(OperaType.WRITE)
-    val space    = nebulaOptions.spaceName
-    val label    = nebulaOptions.label
     val address  = nebulaOptions.getHostAndPorts
     val dataType = nebulaOptions.dataType
     if (mode == SaveMode.Ignore || mode == SaveMode.ErrorIfExists) {

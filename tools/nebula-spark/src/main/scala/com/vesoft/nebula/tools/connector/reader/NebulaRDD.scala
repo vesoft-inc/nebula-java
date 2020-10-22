@@ -53,8 +53,8 @@ case class NebulaPartition(indexNum: Int) extends Partition {
   /**
     * allocate scanPart to partition
     *
-    * @param totalPart nebula edge part num
-    * @return scan edge part list
+    * @param totalPart nebula data part num
+    * @return scan data part list
     */
   def getScanParts(totalPart: Int, totalPartition: Int): List[Integer] = {
     val scanParts   = new ListBuffer[Integer]
