@@ -7,14 +7,12 @@
 package com.vesoft.nebula.tools.connector.vertices
 
 import java.util.Optional
-
 import com.google.common.net.HostAndPort
 import com.vesoft.nebula.tools.connector.{
   AddressHandler,
-  MetaProvider,
+  NebulaDataSourceVertexWriter,
   NebulaOptions,
   NebulaVertexReader,
-  NebulaVertexWriter,
   OperaType
 }
 import org.apache.spark.sql.SaveMode
@@ -25,7 +23,6 @@ import org.apache.spark.sql.sources.v2.writer.DataSourceWriter
 import org.apache.spark.sql.sources.v2.{DataSourceOptions, DataSourceV2, ReadSupport, WriteSupport}
 import org.apache.spark.sql.types.StructType
 import org.slf4j.LoggerFactory
-
 import scala.collection.JavaConverters._
 
 class DefaultSource()
@@ -45,9 +42,7 @@ class DefaultSource()
       throw new IllegalArgumentException("Paths not exist")
     }
 
-    val paths        = toAddress(pathsOpt.get())
-    val metaProvider = new MetaProvider(paths)
-    val schema       = metaProvider.getTagSchema("space", "tag name")
+    val paths = toAddress(pathsOpt.get())
     new NebulaVertexReader(paths, "space", "tag name", "")
   }
 
@@ -62,12 +57,10 @@ class DefaultSource()
       LOG.warn("Currently ")
     }
 
-    val space   = options.get("nebula.space").get
-    val tag     = options.get("nebula.tag").get
     val address = options.paths().map(HostAndPort.fromString(_)).toList
     val nebulaOptions: NebulaOptions = new NebulaOptions(
       options.asMap().asScala.asInstanceOf[CaseInsensitiveMap[String]])(OperaType.WRITE)
-    Optional.of(new NebulaVertexWriter(address, nebulaOptions, space, tag, 0, schema))
+    Optional.of(new NebulaDataSourceVertexWriter(address, nebulaOptions, 0, schema))
   }
 
   override def shortName(): String = "Nebula Vertex Source"

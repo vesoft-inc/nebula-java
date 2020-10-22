@@ -176,7 +176,7 @@ package object connector {
     /**
       * write dataframe into nebula vertex
       */
-    def writeVertices(tag: String, vertexFiled: String): Unit = {
+    def writeVertices(tag: String, vertexFiled: String, policy: String = null): Unit = {
       writer
         .format(classOf[NebulaRelationProvider].getName)
         .option(NebulaOptions.HOST_AND_PORTS, address)
@@ -185,13 +185,17 @@ package object connector {
         .option(NebulaOptions.LABEL, tag)
         .option(NebulaOptions.TYPE, DataTypeEnum.VERTEX.toString)
         .option(NebulaOptions.VERTEX_FIELD, vertexFiled)
+        .option(NebulaOptions.POLICY, policy)
         .save()
     }
 
     /**
       * write dataframe into nebula edge
       */
-    def writeEdges(edge: String, srcVertexField: String, dstVertexField: String): Unit = {
+    def writeEdges(edge: String,
+                   srcVertexField: String,
+                   dstVertexField: String,
+                   policy: String = null): Unit = {
       writer
         .format(classOf[NebulaRelationProvider].getName)
         .option(NebulaOptions.HOST_AND_PORTS, address)
@@ -201,6 +205,7 @@ package object connector {
         .option(NebulaOptions.TYPE, DataTypeEnum.EDGE.toString)
         .option(NebulaOptions.SRC_VERTEX_FIELD, srcVertexField)
         .option(NebulaOptions.DST_VERTEX_FIELD, dstVertexField)
+        .option(NebulaOptions.POLICY, policy)
         .save()
     }
   }

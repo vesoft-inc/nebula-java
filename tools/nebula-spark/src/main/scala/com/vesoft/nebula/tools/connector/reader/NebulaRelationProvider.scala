@@ -11,8 +11,8 @@ import java.util.Optional
 import com.vesoft.nebula.tools.connector.exception.IllegalOptionException
 import com.vesoft.nebula.tools.connector.{
   DataTypeEnum,
-  NebulaEdgeWriter,
-  NebulaVertexWriter,
+  NebulaDataSourceEdgeWriter,
+  NebulaDataSourceVertexWriter,
   OperaType
 }
 import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap
@@ -91,7 +91,7 @@ class NebulaRelationProvider
         }
         index
       }
-      Optional.of(new NebulaVertexWriter(address, nebulaOptions, space, label, vertexIndex, schema))
+      Optional.of(new NebulaDataSourceVertexWriter(address, nebulaOptions, vertexIndex, schema))
     } else {
       val srcVertexFiled = nebulaOptions.srcVertexField
       val dstVertexField = nebulaOptions.dstVertexField
@@ -113,13 +113,11 @@ class NebulaRelationProvider
         (srcIndex, dstIndex)
       }
       Optional.of(
-        new NebulaEdgeWriter(address,
-                             nebulaOptions,
-                             space,
-                             label,
-                             vertexFieldsIndex._1,
-                             vertexFieldsIndex._2,
-                             schema))
+        new NebulaDataSourceEdgeWriter(address,
+                                       nebulaOptions,
+                                       vertexFieldsIndex._1,
+                                       vertexFieldsIndex._2,
+                                       schema))
     }
   }
 }

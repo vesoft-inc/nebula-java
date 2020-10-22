@@ -1,7 +1,6 @@
 package com.vesoft.nebula.tools.connector
 
 import java.util.concurrent.TimeUnit
-
 import com.google.common.base.Optional
 import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{FutureCallback, Futures, RateLimiter}
@@ -18,96 +17,121 @@ import org.apache.spark.sql.sources.v2.writer.{
 }
 import org.apache.spark.sql.types.{DataType, StructType}
 import org.slf4j.LoggerFactory
-
 import scala.collection.JavaConverters._
 
 case class NebulaCommitMessage() extends WriterCommitMessage
 
-class NebulaVWriter(address: List[HostAndPort],
-                    nebulaOptions: NebulaOptions,
-                    space: String,
-                    tag: String,
-                    vertexIndex: Int,
-                    schema: StructType)
+abstract class NebulaWriter(address: List[HostAndPort], nebulaOptions: NebulaOptions)
     extends DataWriter[InternalRow] {
+
+  private val LOG                       = LoggerFactory.getLogger(this.getClass)
+  val rateLimiter                       = RateLimiter.create(nebulaOptions.rateLimit)
+  var graphClient: AsyncGraphClientImpl = _
+  var connected                         = false
+
+  /**
+    * connect the nebula client for once
+    */
+  def connectClient(): AsyncGraphClientImpl = {
+    if (!connected) {
+      graphClient = new AsyncGraphClientImpl(
+        address.asJava,
+        nebulaOptions.connectionTimeout,
+        nebulaOptions.connectionRetry,
+        nebulaOptions.executionRetry
+      )
+      graphClient.setUser(nebulaOptions.user)
+      graphClient.setPassword(nebulaOptions.passwd)
+      if (ErrorCode.SUCCEEDED == graphClient.connect()) {
+        connected = true
+      } else {
+        throw ConnectionException("failed to connect graph client.")
+      }
+    }
+    graphClient
+  }
+
+  /**
+    * execute use space for once
+    */
+  def useSpace(client: AsyncGraphClientImpl, space: String): Unit = {
+    val useSpace = NebulaTemplate.USE_TEMPLATE.format(space)
+    if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
+      val future = client.execute(useSpace)
+      Futures.addCallback(
+        future,
+        new FutureCallback[Optional[Integer]] {
+          override def onSuccess(result: Optional[Integer]): Unit = {}
+          override def onFailure(t: Throwable): Unit = {
+            LOG.error(s"failed to execute {$useSpace}")
+          }
+        }
+      )
+    } else {
+      throw new TimeoutException()
+    }
+  }
+}
+
+class NebulaVertexWriter(address: List[HostAndPort],
+                         nebulaOptions: NebulaOptions,
+                         vertexIndex: Int,
+                         schema: StructType)
+    extends NebulaWriter(address, nebulaOptions) {
 
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
-  val types: Array[DataType] = schema.fields.map(field => field.dataType)
-  val propNames: String      = assignProps(schema)
+  val types                        = schema.fields.map(field => field.dataType)
+  val propNames                    = assignProps(schema)
+  var client: AsyncGraphClientImpl = _
 
+  /**
+    * write one vertex row into nebula
+    */
   override def write(row: InternalRow): Unit = {
     val vertex = extraValue(types(vertexIndex), row, vertexIndex)
     val values = assignValues(types, row)
 
-    // 连接client
-    val client = new AsyncGraphClientImpl(
-      address.asJava,
-      nebulaOptions.connectionTimeout,
-      nebulaOptions.connectionRetry,
-      nebulaOptions.executionRetry
-    )
-    client.setUser(nebulaOptions.user)
-    client.setPassword(nebulaOptions.passwd)
+    client = connectClient()
+    useSpace(client, nebulaOptions.spaceName)
 
-    if (ErrorCode.SUCCEEDED == client.connect()) {
-      val rateLimiter = RateLimiter.create(nebulaOptions.rateLimit)
-
-      val useSpace = NebulaTemplate.USE_TEMPLATE.format(space)
-      if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
-        val future = client.execute(useSpace)
-        Futures.addCallback(
-          future,
-          new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {}
-
-            override def onFailure(t: Throwable): Unit = {
-              LOG.error(s"failed to execute {$useSpace}")
-            }
-          }
-        )
+    val exec = NebulaTemplate.BATCH_INSERT_TEMPLATE.format(
+      DataTypeEnum.VERTEX.toString,
+      nebulaOptions.label,
+      propNames,
+      if (nebulaOptions.policy == null) {
+        NebulaTemplate.VERTEX_VALUE_TEMPLATE.format(vertex, values)
       } else {
-        throw new TimeoutException()
+        KeyPolicy.withName(nebulaOptions.policy) match {
+          case KeyPolicy.HASH =>
+            NebulaTemplate.VERTEX_VALUE_TEMPLATE_WITH_POLICY.format(KeyPolicy.HASH.toString,
+                                                                    vertex,
+                                                                    values)
+          case KeyPolicy.UUID =>
+            NebulaTemplate.VERTEX_VALUE_TEMPLATE_WITH_POLICY.format(KeyPolicy.UUID.toString,
+                                                                    vertex,
+                                                                    values)
+          case _ =>
+            throw new IllegalArgumentException(
+              s"Policy be HASH or UUID, your configuration policy is ${nebulaOptions.policy}")
+        }
       }
+    )
+    if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
+      val future = client.execute(exec)
+      Futures.addCallback(
+        future,
+        new FutureCallback[Optional[Integer]] {
+          override def onSuccess(result: Optional[Integer]): Unit = {}
 
-      val exec = NebulaTemplate.BATCH_INSERT_TEMPLATE.format(
-        DataTypeEnum.VERTEX.toString,
-        tag,
-        propNames,
-        if (nebulaOptions.policy == null) {
-          NebulaTemplate.VERTEX_VALUE_TEMPLATE.format(vertex, values)
-        } else {
-          KeyPolicy.withName(nebulaOptions.policy) match {
-            case KeyPolicy.HASH =>
-              NebulaTemplate.VERTEX_VALUE_TEMPLATE_WITH_POLICY.format(KeyPolicy.HASH.toString,
-                                                                      vertex,
-                                                                      values)
-            case KeyPolicy.UUID =>
-              NebulaTemplate.VERTEX_VALUE_TEMPLATE_WITH_POLICY.format(KeyPolicy.UUID.toString,
-                                                                      vertex,
-                                                                      values)
-            case _ =>
-              throw new IllegalArgumentException(
-                s"Policy be HASH or UUID, your configuration policy is ${nebulaOptions.policy}")
+          override def onFailure(t: Throwable): Unit = {
+            LOG.error(s"failed to execute {$exec}")
+            throw new GraphExecuteException(s"failed to execute {$exec}")
           }
         }
       )
-      if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
-        val future = client.execute(exec)
-        Futures.addCallback(
-          future,
-          new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {}
-
-            override def onFailure(t: Throwable): Unit = {
-              LOG.error(s"failed to execute {$useSpace}")
-              throw new GraphExecuteException(s"failed to execute {$exec}")
-            }
-          }
-        )
-      } else {
-        throw new TimeoutException()
-      }
+    } else {
+      throw new TimeoutException()
     }
   }
 
@@ -140,108 +164,70 @@ class NebulaVWriter(address: List[HostAndPort],
   }
 
   override def abort(): Unit = {
-//    client.close()
+    LOG.error("insert vertex task abort.")
+    client.close()
   }
 }
 
-class NebulaEWriter(address: List[HostAndPort],
-                    nebulaOptions: NebulaOptions,
-                    space: String,
-                    edge: String,
-                    srcIndex: Int,
-                    dstIndex: Int,
-                    schema: StructType)
-    extends DataWriter[InternalRow] {
+class NebulaEdgeWriter(address: List[HostAndPort],
+                       nebulaOptions: NebulaOptions,
+                       srcIndex: Int,
+                       dstIndex: Int,
+                       schema: StructType)
+    extends NebulaWriter(address, nebulaOptions) {
 
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
-  val types: Array[DataType] = schema.fields.map(field => field.dataType)
-  val propNames: String      = assignProps(schema, srcIndex, dstIndex)
+  val types                        = schema.fields.map(field => field.dataType)
+  val propNames                    = assignProps(schema, srcIndex, dstIndex)
+  var client: AsyncGraphClientImpl = _
 
+  /**
+    * write one edge record into nebula
+    */
   override def write(row: InternalRow): Unit = {
-
     val edges  = extraValues(types(srcIndex), types(dstIndex), row, srcIndex, dstIndex)
     val values = assignValues(types, row)
-    println(s"INSERT EDGE $edge($propNames) VALUES ${edges._1}->${edges._2}:($values)")
 
-    // 连接client
-    val client = new AsyncGraphClientImpl(
-      address.asJava,
-      nebulaOptions.connectionTimeout,
-      nebulaOptions.connectionRetry,
-      nebulaOptions.executionRetry
-    )
-    client.setUser(nebulaOptions.user)
-    client.setPassword(nebulaOptions.passwd)
+    client = connectClient()
+    useSpace(client, nebulaOptions.spaceName)
 
-    if (ErrorCode.SUCCEEDED == client.connect()) {
-      val rateLimiter = RateLimiter.create(nebulaOptions.rateLimit)
-
-      val useSpace = NebulaTemplate.USE_TEMPLATE.format(space)
-      if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
-
-        val future = client.execute(useSpace)
-        Futures.addCallback(
-          future,
-          new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {}
-
-            override def onFailure(t: Throwable): Unit = {
-              LOG.error(s"failed to execute $useSpace")
-            }
-          }
-        )
-
+    val exec = NebulaTemplate.BATCH_INSERT_TEMPLATE.format(
+      DataTypeEnum.EDGE.toString,
+      nebulaOptions.label,
+      propNames,
+      if (nebulaOptions.policy == null) {
+        NebulaTemplate.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE.format(edges._1, edges._2, values)
       } else {
-        throw new TimeoutException()
+        KeyPolicy.withName(nebulaOptions.policy) match {
+          case KeyPolicy.HASH =>
+            NebulaTemplate.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE_WITH_POLICY
+              .format(KeyPolicy.HASH.toString, edges._1, KeyPolicy.HASH.toString, edges._2, values)
+          case KeyPolicy.UUID =>
+            NebulaTemplate.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE_WITH_POLICY
+              .format(KeyPolicy.UUID.toString, edges._1, KeyPolicy.UUID.toString, edges._2, values)
+          case _ =>
+            throw new IllegalArgumentException(
+              s"Policy be HASH or UUID, your configuration policy is ${nebulaOptions.policy}")
+        }
       }
+    )
+    if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
+      val future = client.execute(exec)
+      Futures.addCallback(
+        future,
+        new FutureCallback[Optional[Integer]] {
+          override def onSuccess(result: Optional[Integer]): Unit = {}
 
-      val exec = NebulaTemplate.BATCH_INSERT_TEMPLATE.format(
-        DataTypeEnum.EDGE.toString,
-        nebulaOptions.label,
-        propNames,
-        if (nebulaOptions.policy == null) {
-          NebulaTemplate.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE.format(edges._1, edges._2, values)
-        } else {
-          KeyPolicy.withName(nebulaOptions.policy) match {
-            case KeyPolicy.HASH =>
-              NebulaTemplate.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE_WITH_POLICY.format(
-                KeyPolicy.HASH.toString,
-                edges._1,
-                KeyPolicy.HASH.toString,
-                edges._2,
-                values)
-            case KeyPolicy.UUID =>
-              NebulaTemplate.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE_WITH_POLICY.format(
-                KeyPolicy.UUID.toString,
-                edges._1,
-                KeyPolicy.UUID.toString,
-                edges._2,
-                values)
-            case _ =>
-              throw new IllegalArgumentException(
-                s"Policy be HASH or UUID, your configuration policy is ${nebulaOptions.policy}")
+          override def onFailure(t: Throwable): Unit = {
+            LOG.error(s"failed to execute {$exec}")
+            throw new GraphExecuteException(s"failed to execute {$exec}")
           }
         }
       )
-      if (rateLimiter.tryAcquire(nebulaOptions.rateTimeOut, TimeUnit.MILLISECONDS)) {
-        val future = client.execute(exec)
-        Futures.addCallback(
-          future,
-          new FutureCallback[Optional[Integer]] {
-            override def onSuccess(result: Optional[Integer]): Unit = {}
-
-            override def onFailure(t: Throwable): Unit = {
-              LOG.error(s"failed to execute {$useSpace}")
-              throw new GraphExecuteException(s"failed to execute {$exec}")
-            }
-          }
-        )
-      } else {
-        throw new TimeoutException()
-      }
+    } else {
+      throw new TimeoutException()
     }
-
   }
 
   def assignValues(types: Array[DataType], record: InternalRow): String = {
@@ -280,27 +266,24 @@ class NebulaEWriter(address: List[HostAndPort],
 
   override def abort(): Unit = {
     LOG.error("insert edge task abort.")
+    client.close()
   }
 }
 
 class NebulaVertexWriterFactory(address: List[HostAndPort],
                                 nebulaOptions: NebulaOptions,
-                                space: String,
-                                tag: String,
                                 vertexIndex: Int,
                                 schema: StructType)
     extends DataWriterFactory[InternalRow] {
   override def createDataWriter(partitionId: EdgeRank,
                                 taskId: Long,
                                 epochId: Long): DataWriter[InternalRow] = {
-    new NebulaVWriter(address, nebulaOptions, space, tag, vertexIndex, schema)
+    new NebulaVertexWriter(address, nebulaOptions, vertexIndex, schema)
   }
 }
 
 class NebulaEdgeWriterFactory(address: List[HostAndPort],
                               nebulaOptions: NebulaOptions,
-                              space: String,
-                              tag: String,
                               srcIndex: Int,
                               dstIndex: Int,
                               schema: StructType)
@@ -308,21 +291,19 @@ class NebulaEdgeWriterFactory(address: List[HostAndPort],
   override def createDataWriter(partitionId: EdgeRank,
                                 taskId: Long,
                                 epochId: Long): DataWriter[InternalRow] = {
-    new NebulaEWriter(address, nebulaOptions, space, tag, srcIndex, dstIndex, schema)
+    new NebulaEdgeWriter(address, nebulaOptions, srcIndex, dstIndex, schema)
   }
 }
 
-class NebulaVertexWriter(addresses: List[HostAndPort],
-                         nebulaOptions: NebulaOptions,
-                         space: String,
-                         tag: String,
-                         vertexIndex: Int,
-                         schema: StructType)
+class NebulaDataSourceVertexWriter(addresses: List[HostAndPort],
+                                   nebulaOptions: NebulaOptions,
+                                   vertexIndex: Int,
+                                   schema: StructType)
     extends DataSourceWriter {
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
   override def createWriterFactory(): DataWriterFactory[InternalRow] = {
-    new NebulaVertexWriterFactory(addresses, nebulaOptions, space, tag, vertexIndex, schema)
+    new NebulaVertexWriterFactory(addresses, nebulaOptions, vertexIndex, schema)
   }
 
   override def commit(messages: Array[WriterCommitMessage]): Unit = {
@@ -330,22 +311,20 @@ class NebulaVertexWriter(addresses: List[HostAndPort],
   }
 
   override def abort(messages: Array[WriterCommitMessage]): Unit = {
-    LOG.error("")
+    LOG.error("NebulaDataSourceVertexWriter abort")
   }
 }
 
-class NebulaEdgeWriter(addresses: List[HostAndPort],
-                       nebulaOptions: NebulaOptions,
-                       space: String,
-                       edge: String,
-                       srcIndex: Int,
-                       dstIndex: Int,
-                       schema: StructType)
+class NebulaDataSourceEdgeWriter(addresses: List[HostAndPort],
+                                 nebulaOptions: NebulaOptions,
+                                 srcIndex: Int,
+                                 dstIndex: Int,
+                                 schema: StructType)
     extends DataSourceWriter {
   private val LOG = LoggerFactory.getLogger(this.getClass)
 
   override def createWriterFactory(): DataWriterFactory[InternalRow] = {
-    new NebulaEdgeWriterFactory(addresses, nebulaOptions, space, edge, srcIndex, dstIndex, schema)
+    new NebulaEdgeWriterFactory(addresses, nebulaOptions, srcIndex, dstIndex, schema)
   }
 
   override def commit(messages: Array[WriterCommitMessage]): Unit = {
@@ -353,6 +332,6 @@ class NebulaEdgeWriter(addresses: List[HostAndPort],
   }
 
   override def abort(messages: Array[WriterCommitMessage]): Unit = {
-    LOG.error("")
+    LOG.error("NebulaDataSourceEdgeWriter abort")
   }
 }
