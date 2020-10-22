@@ -74,10 +74,9 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
     }
 
     @Override
-    protected Iterator<String> process(Result result) {
+    protected Iterator<List<Object>> process(Result result) {
         Map<String, List<Row>> dataMap = result.getRows();
         for (Map.Entry<String, List<Row>> dataEntry : dataMap.entrySet()) {
-            String labelName = dataEntry.getKey();
             for (Row row : dataEntry.getValue()) {
                 List<Object> fields = new ArrayList<>();
                 // add default property _vertexId for tag
@@ -86,10 +85,10 @@ public class ScanVertexIterator extends AbstractNebulaIterator {
                 for (int i = 0; i < properties.length; i++) {
                     fields.add(properties[i].getValue());
                 }
-                resultValues.put(labelName, fields);
+                resultValues.add(fields);
             }
         }
-        LOGGER.info("tag info ={}", resultValues.toString());
-        return resultValues.keySet().iterator();
+        LOGGER.info("tag info ={}", resultValues);
+        return resultValues.iterator();
     }
 }
