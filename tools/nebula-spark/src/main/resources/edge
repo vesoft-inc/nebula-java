@@ -1,0 +1,10 @@
+{"source":12345,"target":23456,"degree":34}
+{"source":11111,"target":22222,"degree":33}
+{"source":11111,"target":33333,"degree":32}
+{"source":11111,"target":44444,"degree":31}
+{"source":22222,"target":55555,"degree":30}
+{"source":33333,"target":44444,"degree":29}
+{"source":33333,"target":55555,"degree":28}
+{"source":44444,"target":22222,"degree":27}
+{"source":44444,"target":55555,"degree":26}
+{"source":22222,"target":66666,"degree":25}
