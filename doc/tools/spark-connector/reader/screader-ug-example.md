@@ -49,14 +49,14 @@
     val vertexDataset: Dataset[Row] =
           sparkSession.read
             .nebula("127.0.0.1:45500", "spaceName", "100")
-            .loadVertices("tag", List("field1,field2"))
+            .loadVertices("tag", "*")
     vertexDataset.show()
 
     // 读取 Nebula Graph 的边数据
     val edgeDataset: Dataset[Row] =
           sparkSession.read
             .nebula("127.0.0.1:45500", "spaceName", "100")
-            .loadEdges("edge", List("field1,field2"))
+            .loadEdges("edge", "field1,field2")
     edgeDataset.show()
     ```
 
@@ -114,6 +114,7 @@
 - 读取边数据
 
     ```
+    20/10/27 08:56:57 INFO DAGScheduler: Job 4 finished: show at Main.scala:71, took 0.085975 s
     +------+------+----------+--------+
     |_srcId|_dstId|start_year|end_year|
     +------+------+----------+--------+
