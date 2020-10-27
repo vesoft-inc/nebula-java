@@ -26,18 +26,14 @@
     </dependency>
     ```
 
-2. 构建 `SparkSession` 类，这是 Spark SQL 的编码入口。<!--下面需要添加 import 这两行内容吗？-->
+2. 构建 `SparkSession` 类，这是 Spark SQL 的编码入口。
 
     ```
-    import org.apache.spark.SparkConf
-    import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
-
-
     val sparkConf = new SparkConf
     sparkConf
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .registerKryoClasses(Array[Class[_]](classOf[TCompactProtocol]))
-    val spark = SparkSession
+    val sparkSession = SparkSession
       .builder()
       .config(sparkConf)
       .master("local")
@@ -53,14 +49,14 @@
     val vertexDataset: Dataset[Row] =
           sparkSession.read
             .nebula("127.0.0.1:45500", "spaceName", "100")
-            .loadVerticesToDF("tag", List("field1,field2"))
+            .loadVertices("tag", List("field1,field2"))
     vertexDataset.show()
 
     // 读取 Nebula Graph 的边数据
     val edgeDataset: Dataset[Row] =
           sparkSession.read
             .nebula("127.0.0.1:45500", "spaceName", "100")
-            .loadEdgesToDF("edge", List("field1,field2"))
+            .loadEdges("edge", List("field1,field2"))
     edgeDataset.show()
     ```
 
@@ -82,4 +78,46 @@
   - `<edge: String>`：配置为指定 Nebula Graph 图空间中某个边类型的名称。
   - `<fields: String>`：配置为指定边类型的属性名称，不允许为空。如果一个边类型有多个属性，则以英文逗号分隔。如果指定了属性名称，表示只读取指定的属性，如果配置为 `*` 表示读取指定边类型的所有属性。
 
-读取出来就是 DataFrame。<!--给个读取出来的数据示例？-->
+读取出来就是 DataFrame。以下为结果示例。
+
+- 读取点数据
+
+    ```
+    20/10/27 08:51:04 INFO DAGScheduler: Job 0 finished: show at Main.scala:61, took 1.873141 s
+    +---------+----------+---+
+    |_vertexId|      name|age|
+    +---------+----------+---+
+    |        0|  Tom55322| 19|
+    | 84541440|Tom4152378| 27|
+    | 67829760|  Tom24006| 10|
+    | 51118080|  Tom84165| 62|
+    | 34406400|  Tom17308|  1|
+    | 17694720|  Tom73089| 56|
+    |   983040|  Tom82311| 95|
+    | 68812800|  Tom61046| 93|
+    | 52101120|  Tom52116| 45|
+    | 18677760|   Tom4773| 18|
+    |  1966080|  Tom25979| 20|
+    | 69795840|  Tom92575|  9|
+    | 53084160|  Tom48645| 29|
+    | 36372480|  Tom20594| 86|
+    | 19660800|  Tom27071| 32|
+    |  2949120|    Tom630| 61|
+    | 70778880|  Tom82319| 78|
+    | 37355520|  Tom38207| 31|
+    | 20643840|  Tom56158| 73|
+    |  3932160|  Tom36933| 59|
+    +---------+----------+---+
+    only showing top 20 rows
+    ```
+
+- 读取边数据
+
+    ```
+    +------+------+----------+--------+
+    |_srcId|_dstId|start_year|end_year|
+    +------+------+----------+--------+
+    |   101|   201|      2002|    2020|
+    |   102|   201|      2002|    2015|
+    +------+------+----------+--------+
+    ```

@@ -8,7 +8,7 @@ Spark SQL 是 Spark 中用于处理结构化数据的一个编程模块。它提
 
 ### 接口
 
-Spark 调用外部数据源包的是 `org.apache.spark.sql`, 以下为 Spark SQL 提供的扩展数据源相关的接口。
+Spark 使用 `org.apache.spark.sql` 调用外部数据源包。以下为 Spark SQL 提供的扩展数据源相关的接口。
 
 - 基本接口，包括：
 
@@ -28,7 +28,7 @@ Spark 调用外部数据源包的是 `org.apache.spark.sql`, 以下为 Spark SQL
 
   - `RDD[InternalRow]`: 从数据源中扫描出来后，需要构造成 `RDD[Row]`。
 
-要实现自定义 Spark 外部数据源，您需要根据数据源自定义上述部分方法。
+Spark-connector Reader 根据 Nebula Graph 的数据源自定义了部分上述部分方法，从而实现自定义 Spark 外部数据源。
 
 ### 实现类图
 
@@ -38,7 +38,7 @@ Spark 调用外部数据源包的是 `org.apache.spark.sql`, 以下为 Spark SQL
 
 处理流程如下：
 
-1. 定义数据源 `NebulaRelationProvider`：继承 `RelationProvider` 的自定义 `relation`，继承 `DataSourceRegister` 注册外部数据源。
+1. 定义数据源 `NebulaRelationProvider`：继承 `RelationProvider` 自定义 `relation`，继承 `DataSourceRegister` 注册外部数据源。
 
 2. 定义 `NebulaRelation`，实现 Nebula Graph 图数据 Schema 的获取和数据转换方法。在 `NebulaRelation#getSchema` 方法中连接 Nebula Graph 的 Meta 服务获取配置的返回字段对应的 Schema 信息。
 
