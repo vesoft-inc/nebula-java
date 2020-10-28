@@ -10,6 +10,6 @@ Spark-connector 是 Spark 与 Nebula Graph 之间进行数据交换的一个工�
 
 Spark-connector 是一个完全开源的项目，欢迎开源爱好者通过以下方式参与：
 
-- 参与 Issue 讨论，如答疑、提供想法或者报告无法解决的问题
+- 前往 [Nebula Graph 论坛](https://discuss.nebula-graph.com.cn/ "点击前往“Nebula Graph 论坛") 上参与 Issue 讨论，如答疑、提供想法或者报告无法解决的问题
 - 撰写或改进文档
 - 提交优化代码

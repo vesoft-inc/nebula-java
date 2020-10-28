@@ -1,7 +1,3 @@
 # 使用限制
 
-使用 Spark-connector Reader 时，必须保证您的机器上已经安装了以下软件：
-
-- Apache Spark&trade; 2.3.0 及以上版本
-- Scala
-- Java：1.8
+Spark-connector Reader 目前无法读取 Nebula Graph 中属性为空的点和边数据。
