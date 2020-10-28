@@ -13,5 +13,6 @@
     <modules>
         <module>exchange</module>
         <module>nebula-spark</module>
+        <module>nebula-algorithm</module>
     </modules>
 </project>
