@@ -16,7 +16,7 @@
 - 已经获取 Nebula Graph 数据库的以下信息：
   - 图空间名称和分区数量（如果创建图空间时未设置分区数量，则默认使用 100）
   - 标签和边类型的名称以及属性
-  - metad 进程所在机器的 IP 地址及端口号
+  - metad 服务所在机器的 IP 地址及端口号
 
 ## 操作步骤
 
@@ -70,7 +70,7 @@
 
     - `nebula(<address: String>, <space: String>, <partitionNum: String>)`，所有参数均为必需参数。
 
-      - `<address: String>`：配置为 Nebula Graph 数据库 metad 进程所在的服务器地址及端口，如果有多个 Meta 服务复本，则配置为多个地址，以英文逗号分隔，例如 `"ip1:45500,ip2:45500"`。默认端口号为 45500。
+      - `<address: String>`：配置为 Nebula Graph 数据库 metad 服务所在的服务器地址及端口，如果有多个 metad 服务复本，则配置为多个地址，以英文逗号分隔，例如 `"ip1:45500,ip2:45500"`。默认端口号为 45500。
       - `<space: String>`: 配置为 Nebula Graph 的图空间名称。
       - `<partitionNum: String>`：配置为 Nebula Graph 里创建图空间时指定的分区数量。如果您在创建 Nebula Graph 图空间时未指定分区数量，这里设置为默认分区数量 100。
 
