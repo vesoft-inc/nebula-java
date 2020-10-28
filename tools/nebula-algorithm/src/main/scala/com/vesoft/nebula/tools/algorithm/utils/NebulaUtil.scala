@@ -7,7 +7,6 @@
 package com.vesoft.nebula.tools.algorithm.utils
 
 import java.util
-
 import com.google.common.net.HostAndPort
 import com.vesoft.nebula.bean.Parameters
 import com.vesoft.nebula.client.meta.MetaClientImpl
@@ -17,7 +16,6 @@ import org.apache.spark.graphx.{Edge, Graph}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Dataset, Encoder, Row, SparkSession}
 import org.slf4j.LoggerFactory
-
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 

@@ -8,12 +8,9 @@ package com.vesoft.nebula.tools.algorithm.config
 
 import java.io.File
 import java.nio.file.Files
-
 import org.apache.log4j.Logger
-
 import scala.collection.JavaConverters._
 import com.typesafe.config.{Config, ConfigFactory}
-
 import scala.collection.mutable
 
 /**
@@ -89,7 +86,7 @@ object NebulaConfigEntry {
   */
 case class SparkConfigEntry(map: Map[String, String]) {
   override def toString: String = {
-    ""
+    map.toString()
   }
 }
 
@@ -100,7 +97,7 @@ case class SparkConfigEntry(map: Map[String, String]) {
   */
 case class AlgorithmConfigEntry(map: Map[String, String]) {
   override def toString: String = {
-    ""
+    map.toString()
   }
 }
 
@@ -120,7 +117,9 @@ case class NebulaConfigEntry(address: String,
                              hasWeight: Boolean,
                              weightCols: List[String]) {
   override def toString: String = {
-    ""
+    s"NebulaConfigEntry: " +
+      s"{address: $address, space: $space, partitionNumber: $partitionNumber, " +
+      s"labels: ${labels.mkString(",")}, hasWeight: $hasWeight, weightCols: ${weightCols.mkString(",")}"
   }
 }
 

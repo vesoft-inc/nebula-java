@@ -13,7 +13,6 @@ import org.apache.spark.graphx.{Edge, Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 import org.apache.spark.sql.types.{LongType, StructField, StructType}
-
 import scala.collection.mutable
 import scala.collection.mutable.{HashMap, HashSet}
 

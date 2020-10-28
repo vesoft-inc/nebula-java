@@ -14,12 +14,6 @@ case class NebulaConfig(hostPorts: String,
                         weightCols: List[String])
 
 object NebulaConfig {
-  var hostPorts: String        = _
-  var nameSpace: String        = _
-  var partition: String        = _
-  var labels: List[String]     = _
-  var hasWeight: Boolean       = false
-  var weightCols: List[String] = _
 
   def getNebula(configs: Configs): NebulaConfig = {
     val nebulaConfigs   = configs.nebulaConfig

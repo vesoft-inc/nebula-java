@@ -7,7 +7,6 @@
 package com.vesoft.nebula.tools.algorithm.lib
 
 import java.io.{BufferedWriter, FileOutputStream, IOException, OutputStreamWriter}
-
 import com.vesoft.nebula.tools.algorithm.config.{Configs, NebulaConfig, PRConfig, SparkConfig}
 import org.apache.log4j.Logger
 import org.apache.spark.graphx.{Graph, VertexRDD}
