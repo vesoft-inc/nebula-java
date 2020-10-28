@@ -8,16 +8,26 @@ package com.vesoft.nebula.tools.connector.exception
 
 import com.facebook.thrift.TException
 
-class Exception {}
-
-class GraphConnectException(val message: String, val cause: Throwable)
+/***
+  * An exception thrown if nebula client connects failed.
+  */
+class GraphConnectException(message: String, cause: Throwable = null)
     extends TException(message, cause)
 
-class IllegalOptionException(val message: String, val cause: Throwable)
+/**
+  * An exception thrown if a required option is missing form [[NebulaOptions]]
+  */
+class IllegalOptionException(message: String, cause: Throwable = null)
     extends IllegalArgumentException(message, cause)
 
-class GraphExecuteException(val message: String, val cause: Throwable)
+/**
+  * An exception thrown if nebula execution failed.
+  */
+class GraphExecuteException(message: String, cause: Throwable = null)
     extends TException(message, cause)
 
-class NebulaRPCException(val message: String, val cause: Throwable)
+/**
+  * An exception thrown if nebula execution occur rpc exception.
+  */
+class NebulaRPCException(message: String, cause: Throwable = null)
     extends RuntimeException(message, cause)
