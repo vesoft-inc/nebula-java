@@ -12,21 +12,29 @@ import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
 import com.vesoft.nebula.data.Property
 import com.vesoft.nebula.tools.connector.exception.{GraphConnectException, NebulaRPCException}
+import com.vesoft.nebula.tools.connector.writer.NebulaBatchWriter
+import org.apache.spark.sql.{DataFrame, Row}
 import org.apache.spark.sql.catalyst.InternalRow
-import org.apache.spark.sql.types.{DataType, Metadata, StructType}
+import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap
 import org.apache.spark.sql.types.{
   BooleanType,
+  DataType,
   DoubleType,
   FloatType,
   IntegerType,
   LongType,
-  StringType
+  Metadata,
+  StringType,
+  StructType
 }
 import org.apache.spark.unsafe.types.UTF8String
 import org.slf4j.LoggerFactory
 
 object NebulaUtils {
   private val LOG = LoggerFactory.getLogger(this.getClass)
+
+  var nebulaOptions: NebulaOptions    = _
+  var parameters: Map[String, String] = Map()
 
   /**
     * convert nebula data type to spark sql data type
@@ -107,4 +115,29 @@ object NebulaUtils {
           row.update(pos, UTF8String.fromString(prop.getValue.toString))
     }
   }
+
+  def resolveDataAndType(row: Row, dataType: DataType, i: Int): Any = {
+    dataType match {
+      case LongType    => row.getLong(i)
+      case IntegerType => row.getInt(i)
+      case DoubleType  => row.getDouble(i)
+      case FloatType   => row.getFloat(i)
+      case BooleanType => row.getBoolean(i)
+      case StringType  => row.getString(i)
+      case _           => row.getString(i)
+    }
+  }
+
+  def getRowColData(row: InternalRow, dataType: DataType, i: Int): Any = {
+    dataType match {
+      case LongType    => row.getLong(i)
+      case IntegerType => row.getInt(i)
+      case DoubleType  => row.getDouble(i)
+      case FloatType   => row.getFloat(i)
+      case BooleanType => row.getBoolean(i)
+      case StringType  => row.getString(i)
+      case _           => row.getString(i)
+    }
+  }
+
 }

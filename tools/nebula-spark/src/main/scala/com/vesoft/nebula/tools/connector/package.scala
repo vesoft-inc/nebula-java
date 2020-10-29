@@ -6,46 +6,27 @@
 
 package com.vesoft.nebula.tools
 
-import com.vesoft.nebula.bean.Parameters
+import java.util.Map.Entry
+
 import com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider
-import org.apache.spark.graphx.{Edge, Graph, VertexId}
+import com.vesoft.nebula.tools.connector.writer.NebulaBatchWriter
+import org.apache.spark.graphx.{Edge, VertexId}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row, SparkSession}
+import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap
+import org.apache.spark.sql.{Encoder, Encoders}
+import org.apache.spark.sql.{DataFrame, DataFrameReader, DataFrameWriter, Row}
+
+import scala.collection.mutable.ListBuffer
 
 package object connector {
 
-  type Address    = (String, Int)
-  type EdgeRank   = Int
-  type Propertyy  = (String, Any)
-  type VertexID   = Long
-  type Vertex     = (VertexId, List[Propertyy])
-  type NebulaEdge = Edge[(EdgeRank, List[Propertyy])]
-  type NebulaType = Int
-
-  def loadGraph(space: String)(implicit session: SparkSession): Graph[Vertex, NebulaEdge] = ???
-//  {
-//    case class Values(value: Any*)
-//    val values = Seq(Values(1, 3.14, "Hello"))
-//
-//    val fields = List(
-//      StructField("col_int", IntegerType),
-//      StructField("col_double", DoubleType),
-//      StructField("col_string", StringType)
-//    )
-//
-//    val `type` = StructType(fields)
-//
-//    val data = session.sparkContext.parallelize(values)
-//    session.createDataFrame(data)(Encoders.bean[Values])
-//
-//    Row.fromSeq(values)
-//  }
-
-  def loadVertices(space: String, tagName: String)(implicit session: SparkSession): RDD[Vertex] =
-    ???
-
-  def loadEdges(space: String, edgeName: String)(implicit session: SparkSession): RDD[NebulaEdge] =
-    ???
+  type Address      = (String, Int)
+  type EdgeRank     = Int
+  type Prop         = List[Any]
+  type VertexID     = Long
+  type NebulaVertex = (VertexId, Prop)
+  type NebulaEdge   = Edge[(EdgeRank, Prop)]
+  type NebulaType   = Int
 
   implicit class NebulaDataFrameReader(reader: DataFrameReader) {
     var address: String      = _
@@ -53,10 +34,10 @@ package object connector {
     var partitionNum: String = _
 
     /**
-      * @param address
-      * @param partitionNum
-      * @param space
-      * */
+      * @param address nebula-metad's address
+      * @param partitionNum nebula space partition
+      * @param space nebula space
+      */
     def nebula(address: String, space: String, partitionNum: String): NebulaDataFrameReader = {
       this.address = address
       this.space = space
@@ -73,61 +54,142 @@ package object connector {
     /**
       * Reading com.vesoft.nebula.tools.connector.vertices from Nebula Graph
       *
-      * @param tag
-      * @param fields
+      * @param tag nebula vertex type
+      * @param fields tag's return columns
       * @return DataFrame
       */
-    def loadVertices(tag: String, fields: String): DataFrame = {
+    def loadVerticesToDF(tag: String, fields: String): DataFrame = {
       assert(address != null && space != null && partitionNum != null,
              "call nebula first before call loadVertices. ")
       reader
         .format(classOf[NebulaRelationProvider].getName)
-        .option(Parameters.HOST_AND_PORTS, address)
-        .option(Parameters.PARTITION_NUMBER, partitionNum)
-        .option(Parameters.SPACE_NAME, space)
-        .option(Parameters.TYPE, DataTypeEnum.VERTEX.toString)
-        .option(Parameters.LABEL, tag)
-        .option(Parameters.RETURN_COLS, fields)
+        .option(NebulaOptions.HOST_AND_PORTS, address)
+        .option(NebulaOptions.PARTITION_NUMBER, partitionNum)
+        .option(NebulaOptions.SPACE_NAME, space)
+        .option(NebulaOptions.TYPE, DataTypeEnum.VERTEX.toString)
+        .option(NebulaOptions.LABEL, tag)
+        .option(NebulaOptions.RETURN_COLS, fields)
         .load()
     }
 
     /**
       * Reading edges from Nebula Graph
       *
-      * @param edge
-      * @param fields
+      * @param edge nebula edge type
+      * @param fields edge's return columns
       * @return DataFrame
       */
-    def loadEdges(edge: String, fields: String): DataFrame = {
+    def loadEdgesToDF(edge: String, fields: String): DataFrame = {
       assert(address != null && space != null && partitionNum != null,
              "call nebula first before call loadEdges. ")
       reader
         .format(classOf[NebulaRelationProvider].getName)
-        .option(Parameters.HOST_AND_PORTS, address)
-        .option(Parameters.PARTITION_NUMBER, partitionNum)
-        .option(Parameters.SPACE_NAME, space)
-        .option(Parameters.TYPE, DataTypeEnum.EDGE.toString)
-        .option(Parameters.LABEL, edge)
-        .option(Parameters.RETURN_COLS, fields)
+        .option(NebulaOptions.HOST_AND_PORTS, address)
+        .option(NebulaOptions.PARTITION_NUMBER, partitionNum)
+        .option(NebulaOptions.SPACE_NAME, space)
+        .option(NebulaOptions.TYPE, DataTypeEnum.EDGE.toString)
+        .option(NebulaOptions.LABEL, edge)
+        .option(NebulaOptions.RETURN_COLS, fields)
         .load()
     }
+
+    /**
+      * read nebula vertex edge to graphx's vertex
+      */
+    def loadVerticesToGraphx(tagName: String, fields: String): RDD[NebulaVertex] = {
+      val vertexDataset = loadVerticesToDF(tagName, fields)
+      implicit val encoder: Encoder[NebulaVertex] =
+        Encoders.bean[NebulaVertex](classOf[NebulaVertex])
+      vertexDataset
+        .map(row => {
+          val fields                 = row.schema.fields
+          val vertexId               = row.get(0).toString.toLong
+          val props: ListBuffer[Any] = ListBuffer()
+          for (i <- row.schema.fields.indices) {
+            if (i != 0) {
+              props.append(NebulaUtils.resolveDataAndType(row, fields(i).dataType, i))
+            }
+          }
+          (vertexId, props.toList)
+        })(encoder)
+        .rdd
+    }
+
+    /**
+      * read nebula edge edge to graphx's edge
+      */
+    def loadEdgesToGraphx(edgeName: String, fields: String): RDD[NebulaEdge] = {
+      val edgeDataset =
+        loadEdgesToDF(edgeName, fields)
+      implicit val encoder: Encoder[NebulaEdge] = Encoders.bean[NebulaEdge](classOf[NebulaEdge])
+      edgeDataset
+        .map(row => {
+          val cols = row.schema.fields
+          // TODO resolve rank
+          val rank                   = 1
+          val props: ListBuffer[Any] = ListBuffer()
+          for (i <- row.schema.fields.indices) {
+            if (i != 0 && i != 1) {
+              props.append(NebulaUtils.resolveDataAndType(row, cols(i).dataType, i))
+            }
+          }
+          Edge(row.get(0).toString.toLong, row.get(1).toString.toLong, (rank, props.toList))
+        })(encoder)
+        .rdd
+    }
+
   }
 
   implicit class NebulaDataFrameWriter(writer: DataFrameWriter[Row]) {
+    var address: String      = _
+    var space: String        = _
+    var partitionNum: String = _
 
-    def writeVertices(space: String, tag: String): Unit = {
+    /**
+      * @param address      nebula-metad's address
+      * @param partitionNum nebula space partition
+      * @param space        nebula space
+      */
+    def nebula(address: String, space: String, partitionNum: String): NebulaDataFrameWriter = {
+      this.address = address
+      this.space = space
+      this.partitionNum = partitionNum
+      this
+    }
+
+    /**
+      * write dataframe into nebula vertex
+      */
+    def writeVertices(tag: String, vertexFiled: String, policy: String = ""): Unit = {
       writer
-        .format(classOf[vertices.DefaultSource].getName)
-        .option("nebula.space", space)
-        .option("nebula.tag", tag)
+        .format(classOf[NebulaRelationProvider].getName)
+        .option(NebulaOptions.HOST_AND_PORTS, address)
+        .option(NebulaOptions.PARTITION_NUMBER, partitionNum)
+        .option(NebulaOptions.SPACE_NAME, space)
+        .option(NebulaOptions.LABEL, tag)
+        .option(NebulaOptions.TYPE, DataTypeEnum.VERTEX.toString)
+        .option(NebulaOptions.VERTEX_FIELD, vertexFiled)
+        .option(NebulaOptions.POLICY, policy)
         .save()
     }
 
-    def writeEdges(space: String, edge: String): Unit = {
+    /**
+      * write dataframe into nebula edge
+      */
+    def writeEdges(edge: String,
+                   srcVertexField: String,
+                   dstVertexField: String,
+                   policy: String = ""): Unit = {
       writer
-        .format(classOf[edges.DefaultSource].getName)
-        .option("nebula.space", space)
-        .option("nebula.edge", edge)
+        .format(classOf[NebulaRelationProvider].getName)
+        .option(NebulaOptions.HOST_AND_PORTS, address)
+        .option(NebulaOptions.PARTITION_NUMBER, partitionNum)
+        .option(NebulaOptions.SPACE_NAME, space)
+        .option(NebulaOptions.LABEL, edge)
+        .option(NebulaOptions.TYPE, DataTypeEnum.EDGE.toString)
+        .option(NebulaOptions.SRC_VERTEX_FIELD, srcVertexField)
+        .option(NebulaOptions.DST_VERTEX_FIELD, dstVertexField)
+        .option(NebulaOptions.POLICY, policy)
         .save()
     }
   }

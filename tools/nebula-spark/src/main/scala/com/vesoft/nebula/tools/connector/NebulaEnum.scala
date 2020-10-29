@@ -16,3 +16,17 @@ object DataTypeEnum extends Enumeration {
     dataType.equalsIgnoreCase(VERTEX.toString) || dataType.equalsIgnoreCase(EDGE.toString)
   }
 }
+
+object KeyPolicy extends Enumeration {
+
+  type POLICY = Value
+  val HASH = Value("hash")
+  val UUID = Value("uuid")
+}
+
+object OperaType extends Enumeration {
+
+  type Operation = Value
+  val READ  = Value("read")
+  val WRITE = Value("write")
+}
