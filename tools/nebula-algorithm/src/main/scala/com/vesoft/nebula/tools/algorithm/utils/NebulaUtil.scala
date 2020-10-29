@@ -7,15 +7,17 @@
 package com.vesoft.nebula.tools.algorithm.utils
 
 import java.util
+
 import com.google.common.net.HostAndPort
 import com.vesoft.nebula.bean.Parameters
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.common.Type
-import com.vesoft.nebula.tools.connector.NebulaUtils
+import com.vesoft.nebula.tools.connector.{ConnectionException, NebulaUtils}
 import org.apache.spark.graphx.{Edge, Graph}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Dataset, Encoder, Row, SparkSession}
 import org.slf4j.LoggerFactory
+
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
@@ -148,37 +150,31 @@ object NebulaUtil {
       hostAndPortList.append(HostAndPort.fromString(hostAndPort))
     }
     var metaClient: MetaClientImpl = null
-    try {
-      metaClient = NebulaUtils.createMetaClient(hostAndPortList.toList)
-      if (metaClient == null) {
-        LOG.error(s" configuration for nebula.address=${hostPorts} cannot connect nebula service.")
-        System.exit(-1)
-      }
-    } catch {
-      case e: Exception => {
-        LOG.error(s" configuration for nebula.address=${hostPorts} is wrong.")
-        throw e
-      }
+    metaClient = NebulaUtils.createMetaClient(hostAndPortList.toList)
+    if (metaClient == null) {
+      LOG.error(s" configuration for nebula.address=${hostPorts} cannot connect nebula service.")
+      throw ConnectionException("failed to connect nebula service")
     }
 
     // check whether nameSpace exists
-    var exitSpace = false
+    var existSpace = false
     import scala.collection.JavaConverters._
     for (spaceNameID <- metaClient.listSpaces().asScala) {
       if (spaceNameID.getName.equals(nameSpace)) {
-        exitSpace = true
+        existSpace = true
       }
     }
-    if (!exitSpace) {
+    if (!existSpace) {
       LOG.error(s" Space=${nameSpace} doesn't exist. ")
-      System.exit(-1)
+      throw new IllegalArgumentException(s"space $nameSpace doesn't exist in nebula database.")
     }
 
     // check if all edge labels exist and weight col match label
     if (hasWeight && labels.size != weightCols.size) {
       LOG.error(
         s" size of configuration nebula.labels=${labels.size} do not match nebula.weightCols=${weightCols.size}. ")
-      System.exit(-1)
+      throw new IllegalArgumentException(
+        s"wrong labels and weightCols configuration, sizes mush be the same.")
     }
 
     // check if all weightCols' dataTypes are the same (不同label 的权重列的数据类型必须相同)
@@ -198,7 +194,8 @@ object NebulaUtil {
       }
       if (dataTypes.toSet.size > 1) {
         LOG.error(" configuration nebula.weightCols has different dataTypes.")
-        System.exit(-1)
+        throw new IllegalArgumentException(
+          s"weightCols must has the same dataType in nebula database, weightCols' data types: ${dataTypes.toList}")
       }
     }
 

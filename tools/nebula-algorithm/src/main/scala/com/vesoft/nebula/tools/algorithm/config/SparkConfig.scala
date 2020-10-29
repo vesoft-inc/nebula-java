@@ -32,6 +32,7 @@ object SparkConfig {
             session.conf.set("spark.executor.cores", sparkConfig._2)
           case "spark.conf.cores-max" => session.conf.set("spark.cores.max", sparkConfig._2)
           case _                      =>
+          // todo add more spark configs
         }
       }
     }
