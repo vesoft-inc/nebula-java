@@ -18,7 +18,7 @@
         <config.version>1.4.0</config.version>
         <scopt.version>3.7.1</scopt.version>
         <scalatest.version>3.2.0</scalatest.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <compiler.source.version>1.8</compiler.source.version>
         <compiler.target.version>1.8</compiler.target.version>
     </properties>
