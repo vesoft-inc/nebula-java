@@ -17,7 +17,7 @@
 - 软件环境：
    - Spark：spark-2.4.6-bin-hadoop2.7 三个节点集群
    - yarn V2.10.0：三个节点集群
-   - Nebula Graph V1.0.0：分布式部署，默认配置
+   - Nebula Graph V1.1.0：分布式部署，默认配置
   
 ## 示例数据
 
