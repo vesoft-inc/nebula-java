@@ -2,9 +2,10 @@
 
 以下是 nebula-algorithm 使用说明。
 
-- [什么是 nebula-algorithm](na-ug-what-is-nebula-algorithm.md)
-- [使用限制](na-ug-limitations.md)
-- [使用示例](na-ug-example.md)
+- [什么是 nebula-algorithm](../../doc/tools/nebula-algorithm/na-ug-what-is-nebula-algorithm.md)
+- [使用限制](../../doc/tools/nebula-algorithm/na-ug-limitations.md)
+- [编译 nebula-algorithm](../../doc/tools/nebula-algorithm/na-ug-compile.md)
+- [使用示例](../../doc/tools/nebula-algorithm/na-ug-example.md)
 
 ## 贡献
 
