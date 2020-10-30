@@ -116,12 +116,12 @@ spark-submit --master "local" --class com.vesoft.nebula.tools.algorithm.Main /yo
 - `--master`：指定 Spark 集群中Master 进程的 URL。详细信息，参考 [master-urls](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls "点击前往 Apache Spark 文档")。
 - `--class`：指定 Driver 主类。
 - `-p`：Spark 配置文件文件路径。
-
-如果您未在配置文件中完成 `spark.conf` 的设置，可以在执行命令时一起提交。
+- 其他：如果您未在配置文件中设置 Spark 的任务资源分配（`conf`）信息，您可以在这个命令中指定。例如，本示例中，`--driver-memory=20G  --executor-memory=100G --executor-cores=3`。
 
 ## 测试结果
 
-Spark 任务的资源分配为 `--driver-memory=20G  --executor-memory=100G --executor-cores=3` 时，对体量为一亿的数据集进行测试：
+按本示例设置的 Spark 任务资源分配，对于一个拥有一亿个数据的数据集：
 
 - PageRank 的执行时间（PageRank 算法执行时间）为 21 分钟
 - Louvain 的执行时间（Reader + Louvain 算法执行时间）为 1.3 小时
+- 
