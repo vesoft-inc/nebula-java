@@ -22,6 +22,8 @@ Exchange 读取 Neo4j 数据时需要完成以下工作：
 
 本文以一个示例说明如何使用 Exchange 将 Neo4j 的数据批量导入 Nebula Graph 数据库。
 
+> **说明**：本文仅说明如何以客户端形式转移数据。您也能通过 SSTable 文件将 Neo4j 的数据批量转入 Nebula Graph 数据库，具体操作基本相同，仅配置文件修改有差异，详细信息参考 [导入 SSTable 文件](ex-ug-import-sst.md)。
+
 ## 示例场景
 
 假设您在 Neo4j 数据库里有一个图数据集，需要使用 Exchange 将数据转移到 Nebula Graph 数据库中。

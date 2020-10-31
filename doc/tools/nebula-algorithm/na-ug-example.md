@@ -45,16 +45,16 @@
   # Spark 相关设置
   spark: {
     app: {
-        # Spark 应用的名称，可选。默认为您将运行的算法名称，例如 PageRank
+        # Spark 应用程序的名称，可选项。默认设置为您即将运行的算法名称，例如 PageRank
         name: PageRank
 
-        # Spark 中分区数量，可选。
+        # Spark 中分区数量，可选项。
         partitionNum: 12
     }
 
     master: local
 
-    # 可选，如果这里未设置，则在执行 nebula-algorithm 时设置
+    # 可选项，如果这里未设置，则在执行 spark-submit spark 任务时设置
     conf: {
         driver-memory: 20g
         executor-memory: 100g
@@ -65,20 +65,20 @@
 
   # Nebula Graph 相关配置
   nebula: {
-    # Meta 服务的信息
+    # 必需。Meta 服务的信息
     addresses: "127.0.0.1:45500" # 如果有多个 Meta 服务复本，则以英文逗号隔开
     user: root
     pswd: nebula
-    space: 
-    # 创建图空间时设置的分区数量。如果您未设置分区数，则使用默认值 100
+    space: algoTest
+    # 必需。创建图空间时设置的分区数量。如果创建图空间时未设置分区数，则设置为默认值 100
     partitionNumber: 100
-    # Nebula Graph 的边类型，如果有多种边类型，则以英文逗号隔开
+    # 必需。Nebula Graph 的边类型，如果有多种边类型，则以英文逗号隔开
     labels: ["FRIENDS"]
 
     hasWeight: true
-    # 如果 hasWeight 配置为 true，则必须配置 weightCols，而且 weightCols 里的列顺序必须与边类型属性的顺序相同
+    # 如果 hasWeight 配置为 true，则必须配置 weightCols。根据 labels 列出的边类型，按顺序在 weightCols 里设置对应的属性，一种边类型仅对应一个属性
     # 说明：nebula-algorithm 仅支持同构图，所以，weightCols 中列出的属性的数据类型必须保持一致而且均为数字类型
-    weightCols: ["likeness"] # 多个属性，以英文逗号隔开
+    weightCols: ["likeness"] # 如果 labels 里有多种边类型，则相应设置对应的属性，属性之间以英文逗号隔开
   }
 
   algorithm: {
@@ -124,4 +124,3 @@ spark-submit --master "local" --class com.vesoft.nebula.tools.algorithm.Main /yo
 
 - PageRank 的执行时间（PageRank 算法执行时间）为 21 分钟
 - Louvain 的执行时间（Reader + Louvain 算法执行时间）为 1.3 小时
-- 

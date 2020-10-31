@@ -1,6 +1,6 @@
 # 导入 SSTable 文件
 
-Nebula Graph Exchange 支持将 Hadoop Distributed File System（HDFS）数据转换成 SSTable 文件后再导入 Nebula Graph 数据库中。本文描述 Exchange 将源数据转换为 SSTable 文件并导入 Nebula Graph 的实现原理，以及完成数据导入的操作过程。
+Nebula Graph Exchange 能将不同来源的数据转换成 SSTable 文件后再导入 Nebula Graph 数据库中。本文描述 Exchange 将源数据转换为 SSTable 文件并导入 Nebula Graph 的实现原理，并提供示例说明如何修改配置文件完成 SSTable 文件导入操作。
 
 ## 实现方法
 
@@ -12,7 +12,7 @@ RocksDB 提供了一系列 API 用于创建及导入 SSTable 文件，有助于�
 
 1. Exchange 的 Reader 从数据源中读取数据。
 
-2. sstProcessor 按照 Nebula Graph 要求的格式生成 SSTable 文件，主要包含点和边两类数据。其中，
+2. sstProcessor 按照 Nebula Graph 要求的格式生成 SSTable 文件，存储到本地，并上传到 HDFS。SSTable 文件主要包含点和边两类数据，其中，
 
    - 表示点的键包括：分区信息、点 ID（VID）、标签类型信息和标签版本信息。
    - 表示边的键包括：分区信息、起点和终点 ID（`rsc_vid` 和 `dst_vid`）、边类型信息、边排序信息和边版本信息。
@@ -33,27 +33,31 @@ RocksDB 提供了一系列 API 用于创建及导入 SSTable 文件，有助于�
     }
     ```
 
-    调用 `IngestExternalFile()` 方法时，RocksDB 默认会将文件拷贝到数据目录，并且阻塞 RocksDB 写入操作。如果 SST 文件中的键范围覆盖了 Memtable 键的范围，则将 Memtable 落盘（flush）到磁盘。将 SSTable 文件放置在 LSM 树最优位置后，为文件分配一个全局序列号，并打开写操作。
+    调用 `IngestExternalFile()` 方法时，RocksDB 默认会将文件拷贝到数据目录，并且阻塞 RocksDB 写入操作。如果 SST 文件中的键范围覆盖了 Memtable 键的范围，则将 Memtable 落盘（flush）到硬盘。将 SSTable 文件放置在 LSM 树最优位置后，为文件分配一个全局序列号，并打开写操作。
 
 ## 使用示例
 
-不同来源的数据，导入 Nebula Graph 的操作与直接导入方法相同，但是在配置文件中，必须做以下修改：
+不同来源的数据，导入 Nebula Graph 的操作与客户端形式导入操作基本相同，但是有以下差异：
 
-- 源数据的标签和边类型配置：`tags.type.sink` 和 `edges.type.sink` 必须配置为 `sst`。
-- Nebula Graph 相关配置里，需要添加 Nebula Graph 数据库 Meta 服务的 IP 地址和端口，并添加
+- 环境里必须部署 HDFS。
+- 在配置文件中，必须做以下修改：
+  - 源数据的标签和边类型配置：`tags.type.sink` 和 `edges.type.sink` 必须配置为 `sst`。
+  - Nebula Graph 相关配置里，需要添加 Nebula Graph 数据库 Meta 服务的 IP 地址和端口，并添加 SSTable 文件在本地和 HDFS 的存储路径。
+  
     ```conf
       # Nebula Graph 相关配置
       nebula:  {
         addresses: ["127.0.0.1:3699"]
-        meta.addresses:["127.0.0.1:45500"] # 添加 Nebula Graph 数据库 Meta 服务的 IP 地址和端口
+        # 添加 Nebula Graph 数据库 Meta 服务的 IP 地址和端口
+        meta.addresses:["127.0.0.1:45500"] 
         user: user
         pswd: password
         space: test
         path:{
-          local:/Users/example/Documents/tmp
           # 指定 SSTable 文件保存到本地的路径
-          # remote:/example/
-          # 如果导入的 HDFS 数据源，还需要指定上传 SSTable 到 HDFS 的路径
+          local:/Users/example/Documents/tmp
+          # 指定上传 SSTable 文件的 HDFS 路径
+          remote:/example/
         }
 
         connection {
