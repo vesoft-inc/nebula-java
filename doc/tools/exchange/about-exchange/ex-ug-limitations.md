@@ -23,8 +23,8 @@ Exchange 支持以下操作系统：
 
 在以下使用场景，还需要部署 Hadoop Distributed File System (HDFS)：
 
-- 以客户端形式转移 HDFS 上的数据
-- 以 SSTable 文件格式转移数据
+- 以客户端形式迁移 HDFS 上的数据
+- 以 SST 文件格式迁移数据
 
 ## 数据格式和来源
 

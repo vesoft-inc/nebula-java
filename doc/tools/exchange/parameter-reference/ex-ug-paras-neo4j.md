@@ -6,7 +6,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | `tags.name` | 无 | `string` | 是 | 设置为 Nebula Graph 中的标签名称。 |
 | `tags.type.source` | 无 | `string` | 是 | 指定标签源数据的格式。设置为 `neo4j`。 |
-| `tags.type.sink` | 无 | `string` | 是 | 指定标签源数据导入 Nebula Graph 的方式。可以设置为：<br />- `client`：以客户端形式导入<br />- `sst`：以 SSTable 文件格式导入 |
+| `tags.type.sink` | 无 | `string` | 是 | 指定标签源数据导入 Nebula Graph 的方式。可以设置为：<br />- `client`：以客户端形式导入<br />- `sst`：以 SST 文件格式导入 |
 | `tags.server` | 无 | `string` | 是 | 设置 Neo4j 数据库服务器地址，格式必须为 `bolt://<IP地址>:7687` 。 |
 | `tags.user` | 无 | `string` | 是 | Neo4j 数据库登录账号。 |
 | `tags.password` | 无 | `string` | 是 | Neo4j 数据库账号登录密码。 |
@@ -21,7 +21,7 @@
 | `tags.check_point_path` | 无 | `string` | 否 | 用于设置保存导入进度信息的目录，用于断点续传。如果没有设置这个参数，表示不启用断点续传。 |
 | `edges.name` | 无 | `string` | 是 | 指定 Nebula Graph 中的边类型名称。 |
 | `edges.type.source` | 无 | `string` | 是 | 源数据格式，设置为 neo4j。 |
-| `edges.type.sink` | 无 | `string` | 是 | 指定边类型源数据导入 Nebula Graph 的方式。可以设置为：<br />- `client`：以客户端形式导入<br />- `sst`：以 SSTable 文件格式导入<br /> |
+| `edges.type.sink` | 无 | `string` | 是 | 指定边类型源数据导入 Nebula Graph 的方式。可以设置为：<br />- `client`：以客户端形式导入<br />- `sst`：以 SST 文件格式导入<br /> |
 | `edges.server` | 无 | `string` | 是 | 指定 Neo4j 数据库服务器地址，格式必须为 `bolt://<IP地址>:7687` 。 |
 | `edges.user` | 无 | `string` | 是 | 指定 Neo4j 数据库登录账号。 |
 | `edges.password` | 无 | `string` | 是 | 指定 Neo4j 数据库账号登录密码。 |
