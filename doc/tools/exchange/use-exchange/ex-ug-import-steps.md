@@ -4,7 +4,7 @@
 
 ## 前提条件
 
-开始转移数据之前，您需要确保以下信息：
+开始迁移数据之前，您需要确保以下信息：
 
 - 已经安装部署了 Nebula Graph 并获取查询引擎所在服务器的 IP 地址、用户名和密码。
 - 已经完成 Exchange 编译。详细信息，参考 [编译 Nebula Graph Exchange](../compile-exchange/ex-ug-compile.md)。

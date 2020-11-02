@@ -15,7 +15,7 @@
     - 导入 JanusGraph 数据[TODO]
     - 导入 Kafka 数据[TODO]
     - 导入 MySQL 数据[TODO]
-    - 导入 SST 文件[TODO]
+    - [导入 SST 文件](use-exchange/ex-ug-import-sst.md)
 - 参数说明
   - [Spark 参数](parameter-reference/ex-ug-paras-spark.md)
   - [Nebula Graph 参数](parameter-reference/ex-ug-paras-nebulagraph.md)
