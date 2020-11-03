@@ -55,14 +55,14 @@
     val vertexDataset: Dataset[Row] =
           sparkSession.read
             .nebula("127.0.0.1:45500", "spaceName", "100")
-            .loadVertices("tag", "*")
+            .loadVerticesToDF("tag", "*")
     vertexDataset.show()
 
     // 读取 Nebula Graph 的边数据
     val edgeDataset: Dataset[Row] =
           sparkSession.read
             .nebula("127.0.0.1:45500", "spaceName", "100")
-            .loadEdges("edge", "field1,field2")
+            .loadEdgesToDF("edge", "field1,field2")
     edgeDataset.show()
     ```
 
@@ -74,12 +74,12 @@
       - `<space: String>`: 配置为 Nebula Graph 的图空间名称。
       - `<partitionNum: String>`：配置为 Nebula Graph 里创建图空间时指定的分区数量。如果您在创建 Nebula Graph 图空间时未指定分区数量，这里设置为默认分区数量 100。
 
-    - `loadVertices(<tag: String>, <fields: String>)`，所有参数均为必需参数。
+    - `loadVerticesToDF(<tag: String>, <fields: String>)`，所有参数均为必需参数。
 
       - `<tag: String>`：配置为指定 Nebula Graph 图空间中某个标签的名称。
       - `<fields: String>`：配置为指定标签的属性名称，不允许为空。如果一个标签有多个属性，则以英文逗号分隔。如果指定了属性名称，表示只读取指定的属性。如果配置为 `*`，表示读取指定标签的所有属性。
 
-    - `loadEdges(<edge: String>, <fields: String>)`，所有参数均为必需参数。
+    - `loadEdgesToDF(<edge: String>, <fields: String>)`，所有参数均为必需参数。
 
       - `<edge: String>`：配置为指定 Nebula Graph 图空间中某个边类型的名称。
       - `<fields: String>`：配置为指定边类型的属性名称，不允许为空。如果一个边类型有多个属性，则以英文逗号分隔。如果指定了属性名称，表示只读取指定的属性，如果配置为 `*` 表示读取指定边类型的所有属性。
