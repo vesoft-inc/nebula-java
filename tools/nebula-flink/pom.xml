@@ -17,6 +17,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <compiler.source.version>1.8</compiler.source.version>
         <compiler.target.version>1.8</compiler.target.version>
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <dependencies>
@@ -44,12 +45,12 @@
             <artifactId>flink-clients_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-test-utils_${scala.binary.version}</artifactId>
-            <version>${flink.version}</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-test-utils_${scala.binary.version}</artifactId>-->
+<!--            <version>${flink.version}</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-common</artifactId>
@@ -59,6 +60,14 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-core</artifactId>
             <version>${flink.version}</version>
+        </dependency>
+
+        <!-- junit-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -97,9 +106,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/java</source>
-                                <source>src/main/generated</source>
-                                <source>src/main/fbthrift</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -114,7 +120,6 @@
                                 <source>src/test/java</source>
                                 <source>src/main/java</source>
                                 <source>src/main/generated</source>
-                                <source>src/main/fbthrift</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -186,7 +191,6 @@
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
-                                        <exclude>com/vesoft/tools/**</exclude>
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
@@ -201,4 +205,12 @@
     </build>
 
 
+    <repositories>
+        <repository>
+            <id>apache snapshots</id>
+            <name>apache snapshot</name>
+            <url>https://repository.apache.org/snapshots/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 </project>
