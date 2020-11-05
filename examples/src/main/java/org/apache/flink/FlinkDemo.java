@@ -8,18 +8,23 @@ import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanVertexResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.connector.nebula.connection.NebulaClientOptions;
 import org.apache.flink.connector.nebula.connection.NebulaConnectionProvider;
 import org.apache.flink.connector.nebula.connection.NebulaGraphConnectionProvider;
 import org.apache.flink.connector.nebula.connection.NebulaMetaConnectionProvider;
-import org.apache.flink.connector.nebula.source.NebulaInputFormat;
-import org.apache.flink.connector.nebula.source.NebulaSourceFunction;
-import org.apache.flink.connector.nebula.statement.ExecutionOptions;
 import org.apache.flink.connector.nebula.sink.AbstractNebulaOutPutFormat;
 import org.apache.flink.connector.nebula.sink.NebulaBatchOutputFormat;
 import org.apache.flink.connector.nebula.sink.NebulaSinkFunction;
+import org.apache.flink.connector.nebula.source.NebulaInputFormat;
+import org.apache.flink.connector.nebula.source.NebulaSourceFunction;
+import org.apache.flink.connector.nebula.statement.ExecutionOptions;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -29,7 +34,6 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
 
 public class FlinkDemo {
     private static final Logger LOG = LoggerFactory.getLogger(FlinkDemo.class);
@@ -44,7 +48,7 @@ public class FlinkDemo {
     private static final NebulaConnectionProvider graphConnectionProvider;
     private static final NebulaConnectionProvider metaConnectionProvider;
 
-    static{
+    static {
         NebulaClientOptions nebulaClientOptions = new NebulaClientOptions
                 .NebulaClientOptionsBuilder()
                 .setAddress("127.0.0.1:3699")
@@ -77,10 +81,10 @@ public class FlinkDemo {
     }
 
     public static void main(String[] args) throws Exception {
-//        testNebulaSinkFunction();
-//        testSourceSink();
-//        testSourceSink();
-		testNebulaSinkFunction();
+        testNebulaSinkFunction();
+        testSourceSink();
+        testSourceSink();
+        testNebulaSinkFunction();
     }
 
     public static void addNebulaSource() throws Exception {
@@ -104,7 +108,8 @@ public class FlinkDemo {
                 List<String> cols = new ArrayList<>();
                 cols.add("name");
                 returnCols.put("player", cols);
-                Iterator<ScanVertexResponse> scanVertexResponseIterator = storageClient.scanVertex(namespace, returnCols);
+                Iterator<ScanVertexResponse> scanVertexResponseIterator =
+                        storageClient.scanVertex(namespace, returnCols);
                 if (!scanVertexResponseIterator.hasNext()) {
                     LOG.error("**** empty vertexScan result");
                 }
@@ -154,21 +159,22 @@ public class FlinkDemo {
         // source
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-		env.enableCheckpointing(10000)
-				.getCheckpointConfig()
-				.setCheckpointingMode(CheckpointingMode.AT_LEAST_ONCE);
+        env.enableCheckpointing(10000)
+                .getCheckpointConfig()
+                .setCheckpointingMode(CheckpointingMode.AT_LEAST_ONCE);
 
-		env.getCheckpointConfig()
-				.setCheckpointTimeout(1*60000);
-		env.getCheckpointConfig().setMaxConcurrentCheckpoints(3);
-		env.setStateBackend(new FsStateBackend("file:///Users/nicole/tmp"));
+        env.getCheckpointConfig()
+                .setCheckpointTimeout(1 * 60000);
+        env.getCheckpointConfig().setMaxConcurrentCheckpoints(3);
+        env.setStateBackend(new FsStateBackend("file:///Users/nicole/tmp"));
 
         // construct source
-        List<List<String>> player = new ArrayList<>();
+
         List<String> fields1 = new ArrayList<>();
         fields1.add("15");
         fields1.add("nicole");
         fields1.add("18");
+        List<List<String>> player = new ArrayList<>();
         player.add(fields1);
 
         List<String> fields2 = new ArrayList<>();
@@ -189,7 +195,8 @@ public class FlinkDemo {
         playerSource.countWindowAll(1);
 
         // sink
-        AbstractNebulaOutPutFormat outPutFormat = new NebulaBatchOutputFormat(graphConnectionProvider)
+        AbstractNebulaOutPutFormat outPutFormat =
+                new NebulaBatchOutputFormat(graphConnectionProvider)
                 .setExecutionOptions(sinkExecutionOptions);
         NebulaSinkFunction nebulaSinkFunction = new NebulaSinkFunction(outPutFormat);
 
@@ -204,33 +211,37 @@ public class FlinkDemo {
         env.execute("nebula read and write");
     }
 
-    /** read from nebula and then write into nebula */
+    /**
+     * read from nebula and then write into nebula
+     */
     public static void testSourceSink() throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.enableCheckpointing(10000)
-				.getCheckpointConfig()
-				.setCheckpointingMode(CheckpointingMode.AT_LEAST_ONCE);
+                .getCheckpointConfig()
+                .setCheckpointingMode(CheckpointingMode.AT_LEAST_ONCE);
 
         env.getCheckpointConfig()
-				.setCheckpointTimeout(20*3600);
+                .setCheckpointTimeout(20 * 3600);
         env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-//        env.setStateBackend(new FsStateBackend("hdfs://127.0.0.1:9000/flink/checkpoints"));
+        // env.setStateBackend(new FsStateBackend("hdfs://127.0.0.1:9000/flink/checkpoints"));
 
         // source
-        NebulaSourceFunction sourceFunction = new NebulaSourceFunction(metaConnectionProvider).setExecutionOptions(sourceExecutionOptions);
+        NebulaSourceFunction sourceFunction = new NebulaSourceFunction(metaConnectionProvider)
+                .setExecutionOptions(sourceExecutionOptions);
         DataStreamSource<Row> dataSource = env.addSource(sourceFunction);
-        dataSource.map(row ->{
-            LOG.info("record={}",row);
+        dataSource.map(row -> {
+            LOG.info("record={}", row);
             return row;
         });
 
         // sink
-        AbstractNebulaOutPutFormat outPutFormat = new NebulaBatchOutputFormat(graphConnectionProvider)
+        AbstractNebulaOutPutFormat outPutFormat =
+                new NebulaBatchOutputFormat(graphConnectionProvider)
                 .setExecutionOptions(sinkExecutionOptions);
         NebulaSinkFunction nebulaSinkFunction = new NebulaSinkFunction(outPutFormat);
 
         dataSource.print();
-        dataSource.map(row->{
+        dataSource.map(row -> {
             org.apache.flink.types.Row record = new org.apache.flink.types.Row(3);
             record.setField(0, row.getDefaultProperties()[0].getValue().toString());
             record.setField(1, row.getProperties()[0].getValue().toString());
