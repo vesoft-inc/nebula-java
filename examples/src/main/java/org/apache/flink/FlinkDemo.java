@@ -1,4 +1,4 @@
-package org.apache.flink.connector.nebula;
+package org.apache.flink;
 
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
@@ -34,9 +34,9 @@ import java.util.*;
 public class FlinkDemo {
     private static final Logger LOG = LoggerFactory.getLogger(FlinkDemo.class);
 
-    private static final String address = "192.168.8.171:45500";
-    private static final String username = "";
-    private static final String password = "";
+    private static final String address = "127.0.0.1:45500";
+    private static final String username = "root";
+    private static final String password = "nebula";
     private static final String namespace = "nb";
     private static final String label = "player";
     private static final ExecutionOptions sourceExecutionOptions;
@@ -47,13 +47,13 @@ public class FlinkDemo {
     static{
         NebulaClientOptions nebulaClientOptions = new NebulaClientOptions
                 .NebulaClientOptionsBuilder()
-                .setAddress("192.168.8.171:3699")
+                .setAddress("127.0.0.1:3699")
                 .build();
         graphConnectionProvider = new NebulaGraphConnectionProvider(nebulaClientOptions);
 
         NebulaClientOptions nebulaClientOptions1 = new NebulaClientOptions
                 .NebulaClientOptionsBuilder()
-                .setAddress("192.168.8.171:45500")
+                .setAddress("127.0.0.1:45500")
                 .build();
         metaConnectionProvider = new NebulaMetaConnectionProvider(nebulaClientOptions1);
 
@@ -87,7 +87,7 @@ public class FlinkDemo {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-        // 自定义datasource
+        // customize datasource
         SourceFunction source = new SourceFunction<List<String>>() {
             private static final long serialVersionUID = -7958462911936661287L;
             private volatile boolean isRunning = true;
@@ -137,6 +137,7 @@ public class FlinkDemo {
         env.execute("scan nebula nb.player");
     }
 
+
     public static void testNebulaSource() throws Exception {
 
         NebulaInputFormat inputFormat = new NebulaInputFormat(metaConnectionProvider)
@@ -162,7 +163,7 @@ public class FlinkDemo {
 		env.getCheckpointConfig().setMaxConcurrentCheckpoints(3);
 		env.setStateBackend(new FsStateBackend("file:///Users/nicole/tmp"));
 
-        // 构造source
+        // construct source
         List<List<String>> player = new ArrayList<>();
         List<String> fields1 = new ArrayList<>();
         fields1.add("15");
@@ -193,7 +194,6 @@ public class FlinkDemo {
         NebulaSinkFunction nebulaSinkFunction = new NebulaSinkFunction(outPutFormat);
 
         playerSource.map(row -> {
-            LOG.info("row info: ", row.toString());
             org.apache.flink.types.Row record = new org.apache.flink.types.Row(row.size());
             for (int i = 0; i < row.size(); i++) {
                 record.setField(i, row.get(i));
@@ -214,13 +214,12 @@ public class FlinkDemo {
         env.getCheckpointConfig()
 				.setCheckpointTimeout(20*3600);
         env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-//        env.setStateBackend(new FsStateBackend("hdfs://192.168.8.171:9000/flink/checkpoints"));
+//        env.setStateBackend(new FsStateBackend("hdfs://127.0.0.1:9000/flink/checkpoints"));
 
         // source
         NebulaSourceFunction sourceFunction = new NebulaSourceFunction(metaConnectionProvider).setExecutionOptions(sourceExecutionOptions);
         DataStreamSource<Row> dataSource = env.addSource(sourceFunction);
         dataSource.map(row ->{
-            LOG.error("info ", row.getProperties()[0].toString());
             LOG.info("record={}",row);
             return row;
         });

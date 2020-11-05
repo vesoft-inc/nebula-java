@@ -46,7 +46,7 @@ public class NebulaBatchExecutor<T> {
         String propNames = String.join(NebulaConstant.COMMA, executionOptions.getFields());
         String values = String.join(NebulaConstant.COMMA, nebulaBufferedRow.getRows());
         String exec = String.format(NebulaConstant.BATCH_INSERT_TEMPLATE, executionOptions.getDataType(), executionOptions.getLabel(), propNames, values);
-        LOG.error("insert statement={}",exec);
+        LOG.debug("insert statement={}",exec);
         ListenableFuture<Optional<Integer>> execResult = client.execute(exec);
         Futures.addCallback(execResult, new FutureCallback<Optional<Integer>>() {
             @Override
