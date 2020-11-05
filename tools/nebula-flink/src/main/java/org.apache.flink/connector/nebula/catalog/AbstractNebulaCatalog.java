@@ -1,7 +1,7 @@
 package org.apache.flink.connector.nebula.catalog;
 
 /**
- * 用于读取nebula的元数据
+ * AbstractNebulaCatalog is used to get nebula schema
  */
 public interface AbstractNebulaCatalog {
 
