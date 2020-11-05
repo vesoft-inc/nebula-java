@@ -14,5 +14,6 @@
         <module>exchange</module>
         <module>nebula-spark</module>
         <module>nebula-algorithm</module>
+        <module>nebula-flink</module>
     </modules>
 </project>
