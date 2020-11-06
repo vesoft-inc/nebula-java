@@ -32,22 +32,22 @@ public class AbstractNebulaOutPutFormatTest extends TestCase {
                 .setBatch(1)
                 .builder();
 
-//        NebulaClientOptions clientOptions = new NebulaClientOptions
-//                .NebulaClientOptionsBuilder()
-//                .setAddress("127.0.0.1:3699")
-//                .build();
-//        NebulaConnectionProvider connectionProvider = new NebulaGraphConnectionProvider(clientOptions);
-//
-//        Row row = new Row(3);
-//        row.setField(0, 111);
-//        row.setField(1, "jena");
-//        row.setField(2, 12);
-//
-//        AbstractNebulaOutPutFormat outPutFormat = new AbstractNebulaOutPutFormat(connectionProvider)
-//                .setExecutionOptions(executionOptions);
-//
-//        outPutFormat.open(1, 2);
-//        outPutFormat.writeRecord(row);
+        NebulaClientOptions clientOptions = new NebulaClientOptions
+                .NebulaClientOptionsBuilder()
+                .setAddress("127.0.0.1:3699")
+                .build();
+        NebulaConnectionProvider connectionProvider = new NebulaGraphConnectionProvider(clientOptions);
+
+        Row row = new Row(3);
+        row.setField(0, 111);
+        row.setField(1, "jena");
+        row.setField(2, 12);
+
+        AbstractNebulaOutPutFormat outPutFormat = new AbstractNebulaOutPutFormat(connectionProvider)
+                .setExecutionOptions(executionOptions);
+
+        outPutFormat.open(1, 2);
+        outPutFormat.writeRecord(row);
     }
 
 }
