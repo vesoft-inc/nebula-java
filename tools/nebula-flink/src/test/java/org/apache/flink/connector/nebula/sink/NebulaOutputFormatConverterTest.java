@@ -1,12 +1,17 @@
-package org.apache.flink;
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
 
-import org.apache.flink.connector.nebula.sink.NebulaRowOutputFormatConverter;
+package org.apache.flink.connector.nebula.sink;
+
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;
 import org.apache.flink.connector.nebula.utils.PolicyEnum;
 import org.apache.flink.types.Row;
 import org.junit.Test;
 
-public class NebulaReadWriteHelperTest {
+public class NebulaOutputFormatConverterTest {
     @Test
     public void testCreateValue(){
         ExecutionOptions rowInfoConfig = new ExecutionOptions.ExecutionOptionBuilder().setIdIndex(0).builder();
@@ -17,6 +22,6 @@ public class NebulaReadWriteHelperTest {
         row.setField(1, "jena");
         row.setField(2, 12);
         String value = helper.createValue(row, true, PolicyEnum.HASH);
-        System.out.println(value);
+        assert "HASH(\"111\"): (jena,12)".equals(value);
     }
 }
