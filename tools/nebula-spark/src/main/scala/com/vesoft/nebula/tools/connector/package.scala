@@ -79,7 +79,7 @@ package object connector {
       * @param fields edge's return columns
       * @return DataFrame
       */
-    def loadEdgesToDF(edge: String, fields: String): DataFrame = {
+    def loadEdges(edge: String, fields: String): DataFrame = {
       assert(address != null && space != null && partitionNum != null,
              "call nebula first before call loadEdges. ")
       reader
@@ -96,7 +96,7 @@ package object connector {
     /**
       * read nebula vertex edge to graphx's vertex
       */
-    def loadVerticesToGraphx(tagName: String, fields: String): RDD[NebulaVertex] = {
+    def loadVertices(tagName: String, fields: String): RDD[NebulaVertex] = {
       val vertexDataset = loadVerticesToDF(tagName, fields)
       implicit val encoder: Encoder[NebulaVertex] =
         Encoders.bean[NebulaVertex](classOf[NebulaVertex])
@@ -118,9 +118,9 @@ package object connector {
     /**
       * read nebula edge edge to graphx's edge
       */
-    def loadEdgesToGraphx(edgeName: String, fields: String): RDD[NebulaEdge] = {
+    def loadEdges(edgeName: String, fields: String): RDD[NebulaEdge] = {
       val edgeDataset =
-        loadEdgesToDF(edgeName, fields)
+        loadEdges(edgeName, fields)
       implicit val encoder: Encoder[NebulaEdge] = Encoders.bean[NebulaEdge](classOf[NebulaEdge])
       edgeDataset
         .map(row => {
