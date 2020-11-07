@@ -35,6 +35,7 @@ class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schem
     var continue: Boolean = false
     var break: Boolean    = false
     while ((dataIterator == null || !dataIterator.hasNext) && !break) {
+      resultValues.clear()
       continue = false
       if (responseIterator == null || !responseIterator.hasNext) {
         if (scanPartIterator.hasNext) {
