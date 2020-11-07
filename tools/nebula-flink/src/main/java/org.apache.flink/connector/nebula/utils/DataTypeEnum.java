@@ -18,7 +18,7 @@ public enum DataTypeEnum {
     }
 
     public boolean isVertex(){
-        if(VERTEX.type.equals(this.type)){
+        if(VERTEX.type.equalsIgnoreCase(this.type)){
             return true;
         }
         return false;

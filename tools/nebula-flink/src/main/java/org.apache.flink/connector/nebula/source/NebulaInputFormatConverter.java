@@ -10,5 +10,5 @@ import com.vesoft.nebula.data.Row;
 
 public interface NebulaInputFormatConverter<T> {
 
-    public T convert(Row record, boolean isVertex);
+    public T convert(Row record);
 }

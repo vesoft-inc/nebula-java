@@ -77,7 +77,11 @@ public class NebulaInputFormat extends RichInputFormat<Row, InputSplit> {
             throw new IOException("connect storage client error, ", e);
         }
         rows = new ArrayList<>();
-        formatConverter = new NebulaRowInputFormatConverter();
+        if(executionOptions.getDataType().isVertex()){
+            formatConverter = new NebulaRowVertexInputFormatConverter();
+        } else{
+            formatConverter = new NebulaRowEdgeInputFormatConverter();
+        }
     }
 
     @Override
@@ -144,7 +148,7 @@ public class NebulaInputFormat extends RichInputFormat<Row, InputSplit> {
             return null;
         }
         scannedRows++;
-        Row row = (Row) formatConverter.convert(resultIter.next(), executionOptions.getDataType().isVertex());
+        Row row = (Row) formatConverter.convert(resultIter.next());
         hasNext = resultIter.hasNext();
         return row;
     }

@@ -14,7 +14,7 @@ import org.junit.Test;
 public class NebulaIntputFormatConverterTest {
     @Test
     public void convert(){
-        NebulaRowInputFormatConverter converter = new NebulaRowInputFormatConverter();
+        NebulaRowVertexInputFormatConverter converter = new NebulaRowVertexInputFormatConverter();
 
         Property[] defaultProps = new Property[1];
         defaultProps[0] = new Property(PropertyDef.PropertyType.VID, "id", 1L);
@@ -22,7 +22,7 @@ public class NebulaIntputFormatConverterTest {
         props[0] = new Property(PropertyDef.PropertyType.STRING, "name", "nicole");
         props[1] = new Property(PropertyDef.PropertyType.INT, "age", 22L);
         Row row = new Row(defaultProps, props);
-        org.apache.flink.types.Row flinkRow = converter.convert(row, true);
+        org.apache.flink.types.Row flinkRow = converter.convert(row);
         assert (flinkRow.getArity() == 3);
         assert (flinkRow.getField(0) == defaultProps[0]);
     }

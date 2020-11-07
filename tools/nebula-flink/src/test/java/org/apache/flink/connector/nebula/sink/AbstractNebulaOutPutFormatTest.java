@@ -24,7 +24,8 @@ public class AbstractNebulaOutPutFormatTest extends TestCase {
         List<String> cols = new ArrayList<>();
         cols.add("name");
         cols.add("age");
-        ExecutionOptions executionOptions = new ExecutionOptions.ExecutionOptionBuilder().setDataType("VERTEX")
+        ExecutionOptions executionOptions = new ExecutionOptions.ExecutionOptionBuilder()
+                .setDataType("VERTEX")
                 .setGraphSpace("flinkSink")
                 .setLabel("player")
                 .setFields(cols)
@@ -43,7 +44,7 @@ public class AbstractNebulaOutPutFormatTest extends TestCase {
         row.setField(1, "jena");
         row.setField(2, 12);
 
-        AbstractNebulaOutPutFormat outPutFormat = new AbstractNebulaOutPutFormat(connectionProvider)
+        AbstractNebulaOutPutFormat outPutFormat = new NebulaBatchOutputFormat(connectionProvider)
                 .setExecutionOptions(executionOptions);
 
         outPutFormat.open(1, 2);
