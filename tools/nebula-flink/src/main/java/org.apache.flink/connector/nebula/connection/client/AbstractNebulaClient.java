@@ -9,14 +9,13 @@ package org.apache.flink.connector.nebula.connection.client;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.Client;
-import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.flink.connector.nebula.utils.NebulaConstant;
 
 public abstract class AbstractNebulaClient {
-    protected int timeout = NebulaConstant.timeout;
-    protected int connectTimeout = NebulaConstant.connectTimeout;
-    protected int connectionRetry = NebulaConstant.connectionRetry;
-    protected  int executionRetry = NebulaConstant.executionRetry;
+    protected int timeout = NebulaConstant.DEFAULT_TIMEOUT_MS;
+    protected int connectTimeout = NebulaConstant.DEFAULT_CONNECT_TIMEOUT_MS;
+    protected int connectionRetry = NebulaConstant.DEFAULT_CONNECT_RETRY;
+    protected  int executionRetry = NebulaConstant.DEFAULT_EXECUTION_RETRY;
 
     public AbstractNebulaClient(){}
 

@@ -152,6 +152,28 @@ public class ExecutionOptions implements Serializable {
         return rankIndex;
     }
 
+    @Override
+    public String toString() {
+        return "ExecutionOptions{" +
+                "graphSpace='" + graphSpace + '\'' +
+                ", dataType=" + dataType +
+                ", queryStatement='" + queryStatement + '\'' +
+                ", executeStatement='" + executeStatement + '\'' +
+                ", label='" + label + '\'' +
+                ", fields=" + fields +
+                ", allCols=" + allCols +
+                ", limit=" + limit +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", batch=" + batch +
+                ", policy=" + policy +
+                ", idIndex=" + idIndex +
+                ", srcIndex=" + srcIndex +
+                ", dstIndex=" + dstIndex +
+                ", rankIndex=" + rankIndex +
+                '}';
+    }
+
     public static class ExecutionOptionBuilder {
         private String graphSpace;
         private DataTypeEnum dataType;

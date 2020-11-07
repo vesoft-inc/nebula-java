@@ -42,7 +42,7 @@ public class NebulaRowOutputFormatConverter implements NebulaOutputFormatConvert
      */
     @Override
     public String createValue(Row row, Boolean isVertex, PolicyEnum policy) {
-        if(row == null|| row.equals("")){
+        if(row == null|| row.getArity() == 0){
             Log.error("empty row");
             return null;
         }

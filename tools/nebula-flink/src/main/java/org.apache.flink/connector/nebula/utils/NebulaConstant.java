@@ -26,9 +26,9 @@ public class NebulaConstant {
     public static final int DEFAULT_ROW_INFO_INDEX = -1;
 
     // default value for connection
-    public static final int timeout = 60000;
-    public static final int connectTimeout = 60000;
-    public static final int connectionRetry = 5;
-    public static final int executionRetry = 3;
+    public static final int DEFAULT_TIMEOUT_MS = 1000;
+    public static final int DEFAULT_CONNECT_TIMEOUT_MS = 3000;
+    public static final int DEFAULT_CONNECT_RETRY = 3;
+    public static final int DEFAULT_EXECUTION_RETRY = 3;
 
 }
