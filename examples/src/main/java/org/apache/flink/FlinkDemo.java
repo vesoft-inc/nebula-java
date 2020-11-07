@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package org.apache.flink;
 
 import com.google.common.net.HostAndPort;
@@ -38,11 +45,11 @@ import org.slf4j.LoggerFactory;
 public class FlinkDemo {
     private static final Logger LOG = LoggerFactory.getLogger(FlinkDemo.class);
 
-    private static final String address = "127.0.0.1:45500";
-    private static final String username = "root";
-    private static final String password = "nebula";
-    private static final String namespace = "nb";
-    private static final String label = "player";
+    private static final String ADDRESS = "127.0.0.1:45500";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "nebula";
+    private static final String NAMESPACE = "nb";
+    private static final String LABEL = "player";
     private static final ExecutionOptions sourceExecutionOptions;
     private static final ExecutionOptions sinkExecutionOptions;
     private static final NebulaConnectionProvider graphConnectionProvider;
@@ -66,13 +73,13 @@ public class FlinkDemo {
         cols.add("age");
         sourceExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder().setDataType("VERTEX")
                 .setGraphSpace("flinkSource")
-                .setLabel(label)
+                .setLabel(LABEL)
                 .setFields(cols)
                 .setLimit(100)
                 .builder();
         sinkExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder().setDataType("VERTEX")
                 .setGraphSpace("flinkSink")
-                .setLabel(label)
+                .setLabel(LABEL)
                 .setFields(cols)
                 .setIdIndex(0)
                 .setBatch(2)
@@ -99,7 +106,7 @@ public class FlinkDemo {
             @Override
             public void run(SourceContext<List<String>> ctx) throws Exception {
                 List<HostAndPort> hostAddress = new ArrayList<>();
-                hostAddress.add(HostAndPort.fromString(address));
+                hostAddress.add(HostAndPort.fromString(ADDRESS));
                 MetaClientImpl metaClient = new MetaClientImpl(hostAddress);
                 metaClient.connect();
                 StorageClientImpl storageClient = new StorageClientImpl(metaClient);
@@ -109,7 +116,7 @@ public class FlinkDemo {
                 cols.add("name");
                 returnCols.put("player", cols);
                 Iterator<ScanVertexResponse> scanVertexResponseIterator =
-                        storageClient.scanVertex(namespace, returnCols);
+                        storageClient.scanVertex(NAMESPACE, returnCols);
                 if (!scanVertexResponseIterator.hasNext()) {
                     LOG.error("**** empty vertexScan result");
                 }
@@ -117,7 +124,7 @@ public class FlinkDemo {
 
                 while (scanVertexResponseIterator.hasNext()) {
                     LOG.info("**** start to process nebula vertex");
-                    Result result = processor.process(namespace, scanVertexResponseIterator.next());
+                    Result result = processor.process(NAMESPACE, scanVertexResponseIterator.next());
                     List<Row> rows = result.getRows("player");
 
                     for (Row row : rows) {
