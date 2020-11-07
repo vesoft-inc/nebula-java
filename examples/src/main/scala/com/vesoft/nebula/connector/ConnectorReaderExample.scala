@@ -43,8 +43,10 @@ object ConnectorReaderExample {
       spark.read
         .nebula("127.0.0.1:45500", "nb", "100")
         .loadVerticesToDF("player", "*")
+    val count = vertexDataset.count()
     vertexDataset.printSchema()
     vertexDataset.show()
+    LOG.error("**********vertex count:"+count, null);
   }
 
   def readNebulaEdge(spark: SparkSession): Unit = {
