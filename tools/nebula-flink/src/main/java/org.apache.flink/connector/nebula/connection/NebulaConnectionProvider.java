@@ -16,12 +16,12 @@ public abstract class NebulaConnectionProvider {
 
     protected transient volatile Client client;
 
-    abstract public  Client getClient() throws TException;
+    abstract public Client getClient() throws TException;
 
-    Client reConnectClient() throws Exception{
-        try{
+    Client reConnectClient() throws Exception {
+        try {
             client.close();
-        } catch (TException e){
+        } catch (TException e) {
             LOG.info("Nebula connection close failed. ", e);
         } finally {
             client = null;
@@ -30,7 +30,7 @@ public abstract class NebulaConnectionProvider {
         return client;
     }
 
-    public void close() throws Exception{
+    public void close() throws Exception {
         client.close();
     }
 }

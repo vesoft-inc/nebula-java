@@ -15,11 +15,13 @@ import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanVertexResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.connector.nebula.connection.NebulaClientOptions;
@@ -32,6 +34,7 @@ import org.apache.flink.connector.nebula.sink.NebulaSinkFunction;
 import org.apache.flink.connector.nebula.source.NebulaInputFormat;
 import org.apache.flink.connector.nebula.source.NebulaSourceFunction;
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;
+import org.apache.flink.connector.nebula.utils.DataTypeEnum;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -71,13 +74,15 @@ public class FlinkDemo {
         List<String> cols = new ArrayList<>();
         cols.add("name");
         cols.add("age");
-        sourceExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder().setDataType("VERTEX")
+        sourceExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder()
+                .setDataType(DataTypeEnum.VERTEX.name())
                 .setGraphSpace("flinkSource")
                 .setLabel(LABEL)
                 .setFields(cols)
                 .setLimit(100)
                 .builder();
-        sinkExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder().setDataType("VERTEX")
+        sinkExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder()
+                .setDataType(DataTypeEnum.VERTEX.name())
                 .setGraphSpace("flinkSink")
                 .setLabel(LABEL)
                 .setFields(cols)
@@ -204,7 +209,7 @@ public class FlinkDemo {
         // sink
         AbstractNebulaOutPutFormat outPutFormat =
                 new NebulaBatchOutputFormat(graphConnectionProvider)
-                .setExecutionOptions(sinkExecutionOptions);
+                        .setExecutionOptions(sinkExecutionOptions);
         NebulaSinkFunction nebulaSinkFunction = new NebulaSinkFunction(outPutFormat);
 
         playerSource.map(row -> {
@@ -244,7 +249,7 @@ public class FlinkDemo {
         // sink
         AbstractNebulaOutPutFormat outPutFormat =
                 new NebulaBatchOutputFormat(graphConnectionProvider)
-                .setExecutionOptions(sinkExecutionOptions);
+                        .setExecutionOptions(sinkExecutionOptions);
         NebulaSinkFunction nebulaSinkFunction = new NebulaSinkFunction(outPutFormat);
 
         dataSource.print();

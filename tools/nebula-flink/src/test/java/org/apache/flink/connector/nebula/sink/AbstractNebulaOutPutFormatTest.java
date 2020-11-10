@@ -11,21 +11,21 @@ import org.apache.flink.connector.nebula.connection.NebulaClientOptions;
 import org.apache.flink.connector.nebula.connection.NebulaConnectionProvider;
 import org.apache.flink.connector.nebula.connection.NebulaGraphConnectionProvider;
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;
+import org.apache.flink.connector.nebula.utils.DataTypeEnum;
 import org.apache.flink.types.Row;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AbstractNebulaOutPutFormatTest extends TestCase {
     @Test
     public void testWrite() throws IOException {
-        List<String> cols = new ArrayList<>();
-        cols.add("name");
-        cols.add("age");
+        List<String> cols = Arrays.asList("name", "age");
         ExecutionOptions executionOptions = new ExecutionOptions.ExecutionOptionBuilder()
-                .setDataType("VERTEX")
+                .setDataType(DataTypeEnum.VERTEX.name())
                 .setGraphSpace("flinkSink")
                 .setLabel("player")
                 .setFields(cols)
