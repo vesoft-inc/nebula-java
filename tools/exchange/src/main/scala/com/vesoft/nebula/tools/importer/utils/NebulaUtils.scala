@@ -7,7 +7,6 @@
 package com.vesoft.nebula.tools.importer.utils
 
 import com.google.common.net.HostAndPort
-import com.typesafe.config.Config
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.meta.{ErrorCode, TagItem}
 import com.vesoft.nebula.tools.importer.config.{EdgeConfigEntry, SchemaConfigEntry, TagConfigEntry}

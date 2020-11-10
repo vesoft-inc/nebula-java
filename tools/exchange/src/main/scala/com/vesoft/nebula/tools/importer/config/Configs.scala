@@ -12,7 +12,6 @@ import java.nio.file.Files
 import com.vesoft.nebula.tools.importer.{Argument, KeyPolicy}
 
 import com.typesafe.config.{Config, ConfigFactory}
-import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.log4j.Logger
 
 import scala.collection.JavaConverters._
