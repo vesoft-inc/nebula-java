@@ -13,7 +13,14 @@ import com.vesoft.nebula.meta.{ErrorCode, TagItem}
 import com.vesoft.nebula.tools.importer.config.{EdgeConfigEntry, SchemaConfigEntry, TagConfigEntry}
 import org.apache.log4j.Logger
 import org.apache.spark.sql.types.DataType
-import org.apache.spark.sql.types.DataTypes.{BooleanType, DoubleType, FloatType, IntegerType, LongType, StringType}
+import org.apache.spark.sql.types.DataTypes.{
+  BooleanType,
+  DoubleType,
+  FloatType,
+  IntegerType,
+  LongType,
+  StringType
+}
 import org.apache.thrift.TException
 
 import scala.collection.JavaConversions.seqAsJavaList
@@ -23,10 +30,12 @@ import scala.collection.mutable
 object NebulaUtils {
   private[this] val LOG = Logger.getLogger(this.getClass)
 
-  def getDataSourceFieldType(sourceConfig: SchemaConfigEntry, address: String, space: String): Map[String, DataType] = {
+  def getDataSourceFieldType(sourceConfig: SchemaConfigEntry,
+                             address: String,
+                             space: String): Map[String, DataType] = {
     val nebulaFields = sourceConfig.nebulaFields
     val sourceFields = sourceConfig.fields
-    val label = sourceConfig.name
+    val label        = sourceConfig.name
 
     val hostPorts = address.split(",").map(addr => HostAndPort.fromString(addr)).toList
 
@@ -45,7 +54,7 @@ object NebulaUtils {
     }
 
     var nebulaSchemaMap: mutable.Map[String, Class[_]] = mutable.Map()
-    val isVertex: Boolean = isLabelVertex(metaClient, space, label)
+    val isVertex: Boolean                              = isLabelVertex(metaClient, space, label)
     if (isVertex) {
       nebulaSchemaMap = metaClient.getTagSchema(space, label).asScala
     } else {
@@ -60,10 +69,10 @@ object NebulaUtils {
       if (sourceConfig.asInstanceOf[TagConfigEntry].vertexPolicy.isEmpty) {
         sourceSchemaMap.+=(sourceConfig.asInstanceOf[TagConfigEntry].vertexField -> LongType)
       } else {
-        sourceSchemaMap.+=(sourceConfig.asInstanceOf[TagConfigEntry].vertexField  -> StringType)
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[TagConfigEntry].vertexField -> StringType)
       }
     } else {
-      if (sourceConfig.asInstanceOf[EdgeConfigEntry].sourcePolicy.isEmpty ) {
+      if (sourceConfig.asInstanceOf[EdgeConfigEntry].sourcePolicy.isEmpty) {
         sourceSchemaMap.+=(sourceConfig.asInstanceOf[EdgeConfigEntry].sourceField -> LongType)
       } else {
         sourceSchemaMap.+=(sourceConfig.asInstanceOf[EdgeConfigEntry].sourceField -> StringType)
@@ -98,12 +107,12 @@ object NebulaUtils {
 
   def getDataFrameValue(value: String, dataType: DataType): Any = {
     dataType match {
-      case LongType => value.toLong
+      case LongType    => value.toLong
       case IntegerType => value.toInt
       case BooleanType => value.toBoolean
-      case DoubleType => value.toDouble
-      case FloatType => value.toFloat
-      case _ => value
+      case DoubleType  => value.toDouble
+      case FloatType   => value.toFloat
+      case _           => value
     }
   }
 

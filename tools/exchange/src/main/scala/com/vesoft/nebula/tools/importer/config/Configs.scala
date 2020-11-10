@@ -556,13 +556,12 @@ object Configs {
           fields.append(config.getString("target.field"))
         }
 
-        HBaseSourceConfigEntry(
-          SourceCategory.HBASE,
-          config.getString("host"),
-          config.getString("port"),
-          config.getString("table"),
-          config.getString("columnFamily"),
-          fields.toSet.toList)
+        HBaseSourceConfigEntry(SourceCategory.HBASE,
+                               config.getString("host"),
+                               config.getString("port"),
+                               config.getString("table"),
+                               config.getString("columnFamily"),
+                               fields.toSet.toList)
       case _ =>
         throw new IllegalArgumentException("Unsupported data source")
     }

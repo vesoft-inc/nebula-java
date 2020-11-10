@@ -16,9 +16,22 @@ import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.NebulaCodec
 import com.vesoft.nebula.client.meta.MetaClientImpl
-import com.vesoft.nebula.tools.importer.config.{Configs, EdgeConfigEntry, FileBaseSinkConfigEntry, SinkCategory, StreamingDataSourceConfigEntry}
+import com.vesoft.nebula.tools.importer.config.{
+  Configs,
+  EdgeConfigEntry,
+  FileBaseSinkConfigEntry,
+  SinkCategory,
+  StreamingDataSourceConfigEntry
+}
 import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
-import com.vesoft.nebula.tools.importer.{CheckPointHandler, Edge, Edges, ErrorHandler, ProcessResult, TooManyErrorsException}
+import com.vesoft.nebula.tools.importer.{
+  CheckPointHandler,
+  Edge,
+  Edges,
+  ErrorHandler,
+  ProcessResult,
+  TooManyErrorsException
+}
 import org.apache.log4j.Logger
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
 import org.apache.spark.TaskContext
@@ -112,8 +125,8 @@ class EdgeProcessor(data: DataFrame,
 
   override def process(): Unit = {
 
-    val address = config.databaseConfig.metaAddresses.get.mkString(",")
-    val space = config.databaseConfig.space
+    val address      = config.databaseConfig.metaAddresses.get.mkString(",")
+    val space        = config.databaseConfig.space
     val fieldTypeMap = NebulaUtils.getDataSourceFieldType(edgeConfig, address, space)
 
     if (edgeConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
@@ -171,7 +184,7 @@ class EdgeProcessor(data: DataFrame,
                                                        0L) // TODO version
             val values = for {
               property <- fieldKeys if property.trim.length != 0
-            } yield extraValue(row, property, fieldTypeMap,true).asInstanceOf[AnyRef]
+            } yield extraValue(row, property, fieldTypeMap, true).asInstanceOf[AnyRef]
             val encodedValue = NebulaCodec.encode(values.toArray)
             (encodedKey, encodedValue)
           }

@@ -15,7 +15,21 @@ import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import org.apache.log4j.Logger
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{ArrayType, BooleanType, DataType, DateType, DecimalType, DoubleType, FloatType, IntegerType, LongType, MapType, ShortType, StringType, TimestampType}
+import org.apache.spark.sql.types.{
+  ArrayType,
+  BooleanType,
+  DataType,
+  DateType,
+  DecimalType,
+  DoubleType,
+  FloatType,
+  IntegerType,
+  LongType,
+  MapType,
+  ShortType,
+  StringType,
+  TimestampType
+}
 import org.apache.spark.util.LongAccumulator
 
 trait Processor extends Serializable {
@@ -41,7 +55,10 @@ trait Processor extends Serializable {
     futures.clear()
   }
 
-  def extraValue(row: Row, field: String, fieldTypeMap: Map[String, DataType], toBytes: Boolean = false): Any = {
+  def extraValue(row: Row,
+                 field: String,
+                 fieldTypeMap: Map[String, DataType],
+                 toBytes: Boolean = false): Any = {
     // TODO
     val index = row.schema.fieldIndex(field)
     fieldTypeMap(field) match {

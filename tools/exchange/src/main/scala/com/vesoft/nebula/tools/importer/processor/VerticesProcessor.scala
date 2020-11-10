@@ -15,9 +15,22 @@ import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.NebulaCodec
 import com.vesoft.nebula.client.meta.MetaClientImpl
-import com.vesoft.nebula.tools.importer.config.{Configs, FileBaseSinkConfigEntry, SinkCategory, StreamingDataSourceConfigEntry, TagConfigEntry}
+import com.vesoft.nebula.tools.importer.config.{
+  Configs,
+  FileBaseSinkConfigEntry,
+  SinkCategory,
+  StreamingDataSourceConfigEntry,
+  TagConfigEntry
+}
 import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
-import com.vesoft.nebula.tools.importer.{CheckPointHandler, ErrorHandler, ProcessResult, TooManyErrorsException, Vertex, Vertices}
+import com.vesoft.nebula.tools.importer.{
+  CheckPointHandler,
+  ErrorHandler,
+  ProcessResult,
+  TooManyErrorsException,
+  Vertex,
+  Vertices
+}
 import org.apache.log4j.Logger
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
 import org.apache.spark.TaskContext
@@ -119,8 +132,8 @@ class VerticesProcessor(data: DataFrame,
 
   override def process(): Unit = {
 
-    val address = config.databaseConfig.metaAddresses.get.mkString(",")
-    val space = config.databaseConfig.space
+    val address      = config.databaseConfig.metaAddresses.get.mkString(",")
+    val space        = config.databaseConfig.space
     val fieldTypeMap = NebulaUtils.getDataSourceFieldType(tagConfig, address, space)
 
     if (tagConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
