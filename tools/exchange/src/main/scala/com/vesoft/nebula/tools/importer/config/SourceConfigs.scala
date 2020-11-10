@@ -206,8 +206,7 @@ case class HBaseSourceConfigEntry(override val category: SourceCategory.Value,
                                   port: String,
                                   table: String,
                                   columnFamily: String,
-                                  fields: List[String],
-                                  sourceFieldSchema: Map[String, DataType])
+                                  fields: List[String])
     extends ServerDataSourceConfigEntry() {
 
   require(host.trim.length != 0 && port.trim.length != 0 && NebulaUtils

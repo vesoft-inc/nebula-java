@@ -10,37 +10,29 @@ import com.google.common.net.HostAndPort
 import com.typesafe.config.Config
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.meta.{ErrorCode, TagItem}
+import com.vesoft.nebula.tools.importer.config.{EdgeConfigEntry, SchemaConfigEntry, TagConfigEntry}
 import org.apache.log4j.Logger
-import org.apache.spark.sql.types.{DataType}
-import org.apache.spark.sql.types.DataTypes.{
-  BooleanType,
-  DoubleType,
-  FloatType,
-  IntegerType,
-  LongType,
-  StringType
-}
+import org.apache.spark.sql.types.DataType
+import org.apache.spark.sql.types.DataTypes.{BooleanType, DoubleType, FloatType, IntegerType, LongType, StringType}
 import org.apache.thrift.TException
 
+import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 object NebulaUtils {
   private[this] val LOG = Logger.getLogger(this.getClass)
 
-  def getDataSourceFieldType(dataSourceConf: Config,
-                             nebulaConfig: Config): Map[String, DataType] = {
-    val nebulaFields = dataSourceConf.getStringList("nebula.fields")
-    val sourceFields = dataSourceConf.getStringList("fields")
-    val address      = nebulaConfig.getStringList("metaAddress")
-    val space        = nebulaConfig.getString("space")
-    val label        = dataSourceConf.getString("name")
+  def getDataSourceFieldType(sourceConfig: SchemaConfigEntry, address: String, space: String): Map[String, DataType] = {
+    val nebulaFields = sourceConfig.nebulaFields
+    val sourceFields = sourceConfig.fields
+    val label = sourceConfig.name
 
-    val hostPorts = address.toArray.map(addr => HostAndPort.fromString(addr.toString)).toList
+    val hostPorts = address.split(",").map(addr => HostAndPort.fromString(addr)).toList
 
     var metaClient: MetaClientImpl = null
     try {
-      metaClient = new MetaClientImpl(hostPorts.toList.asJava)
+      metaClient = new MetaClientImpl(hostPorts)
     } catch {
       case e: TException => {
         LOG.error("failed to get metaClient")
@@ -53,7 +45,7 @@ object NebulaUtils {
     }
 
     var nebulaSchemaMap: mutable.Map[String, Class[_]] = mutable.Map()
-    val isVertex: Boolean                              = isLabelVertex(metaClient, space, label)
+    val isVertex: Boolean = isLabelVertex(metaClient, space, label)
     if (isVertex) {
       nebulaSchemaMap = metaClient.getTagSchema(space, label).asScala
     } else {
@@ -61,25 +53,25 @@ object NebulaUtils {
     }
 
     val sourceSchemaMap: mutable.Map[String, DataType] = mutable.HashMap[String, DataType]()
-    for (i <- 0 until nebulaFields.size()) {
+    for (i <- nebulaFields.indices) {
       sourceSchemaMap.put(sourceFields.get(i), getDataType(nebulaSchemaMap(nebulaFields.get(i))))
     }
     if (isVertex) {
-      if (dataSourceConf.hasPath("policy")) {
-        sourceSchemaMap.+=(dataSourceConf.getString("vertex") -> StringType)
+      if (sourceConfig.asInstanceOf[TagConfigEntry].vertexPolicy.isEmpty) {
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[TagConfigEntry].vertexField -> LongType)
       } else {
-        sourceSchemaMap.+=(dataSourceConf.getString("vertex") -> LongType)
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[TagConfigEntry].vertexField  -> StringType)
       }
     } else {
-      if (dataSourceConf.hasPath("source.field")) {
-        sourceSchemaMap.+=(dataSourceConf.getString("source.field") -> StringType)
+      if (sourceConfig.asInstanceOf[EdgeConfigEntry].sourcePolicy.isEmpty ) {
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[EdgeConfigEntry].sourceField -> LongType)
       } else {
-        sourceSchemaMap.+=(dataSourceConf.getString("source.field") -> LongType)
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[EdgeConfigEntry].sourceField -> StringType)
       }
-      if (dataSourceConf.hasPath("target.field")) {
-        sourceSchemaMap.+=(dataSourceConf.getString("target.field") -> StringType)
+      if (sourceConfig.asInstanceOf[EdgeConfigEntry].targetPolicy.isEmpty) {
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[EdgeConfigEntry].targetField -> LongType)
       } else {
-        sourceSchemaMap.+=(dataSourceConf.getString("target.field") -> LongType)
+        sourceSchemaMap.+=(sourceConfig.asInstanceOf[EdgeConfigEntry].targetField -> StringType)
       }
     }
     sourceSchemaMap.toMap
@@ -89,6 +81,8 @@ object NebulaUtils {
     if (classOf[java.lang.Boolean] == clazz) return BooleanType
     else if (classOf[java.lang.Long] == clazz) return LongType
     else if (classOf[java.lang.Double] == clazz) return DoubleType
+    else if (classOf[java.lang.Integer] == clazz) return LongType
+    else if (classOf[java.lang.Float] == clazz) return DoubleType
     StringType
   }
 
@@ -104,12 +98,12 @@ object NebulaUtils {
 
   def getDataFrameValue(value: String, dataType: DataType): Any = {
     dataType match {
-      case LongType    => value.toLong
+      case LongType => value.toLong
       case IntegerType => value.toInt
       case BooleanType => value.toBoolean
-      case DoubleType  => value.toDouble
-      case FloatType   => value.toFloat
-      case _           => value
+      case DoubleType => value.toDouble
+      case FloatType => value.toFloat
+      case _ => value
     }
   }
 

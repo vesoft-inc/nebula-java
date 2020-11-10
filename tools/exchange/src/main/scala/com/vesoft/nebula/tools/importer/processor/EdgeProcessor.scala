@@ -16,27 +16,11 @@ import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.NebulaCodec
 import com.vesoft.nebula.client.meta.MetaClientImpl
-import com.vesoft.nebula.tools.importer.config.{
-  Configs,
-  EdgeConfigEntry,
-  FileBaseSinkConfigEntry,
-  SinkCategory,
-  StreamingDataSourceConfigEntry
-}
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
-import com.vesoft.nebula.tools.importer.{
-  CheckPointHandler,
-  Edge,
-  Edges,
-  ErrorHandler,
-  ProcessResult,
-  TooManyErrorsException
-}
+import com.vesoft.nebula.tools.importer.config.{Configs, EdgeConfigEntry, FileBaseSinkConfigEntry, SinkCategory, StreamingDataSourceConfigEntry}
+import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
+import com.vesoft.nebula.tools.importer.{CheckPointHandler, Edge, Edges, ErrorHandler, ProcessResult, TooManyErrorsException}
 import org.apache.log4j.Logger
-import com.vesoft.nebula.tools.importer.writer.{
-  NebulaGraphClientWriter,
-  NebulaSSTWriter
-}
+import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.{IntegerType, LongType, ShortType}
@@ -127,6 +111,11 @@ class EdgeProcessor(data: DataFrame,
   }
 
   override def process(): Unit = {
+
+    val address = config.databaseConfig.metaAddresses.get.mkString(",")
+    val space = config.databaseConfig.space
+    val fieldTypeMap = NebulaUtils.getDataSourceFieldType(edgeConfig, address, space)
+
     if (edgeConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
       val fileBaseConfig = edgeConfig.dataSinkConfigEntry.asInstanceOf[FileBaseSinkConfigEntry]
       val metaClient = new MetaClientImpl(config.databaseConfig.metaAddresses.get.map { address =>
@@ -182,7 +171,7 @@ class EdgeProcessor(data: DataFrame,
                                                        0L) // TODO version
             val values = for {
               property <- fieldKeys if property.trim.length != 0
-            } yield extraValue(row, property, true).asInstanceOf[AnyRef]
+            } yield extraValue(row, property, fieldTypeMap,true).asInstanceOf[AnyRef]
             val encodedValue = NebulaCodec.encode(values.toArray)
             (encodedKey, encodedValue)
           }
@@ -256,7 +245,7 @@ class EdgeProcessor(data: DataFrame,
 
           val values = for {
             property <- fieldKeys if property.trim.length != 0
-          } yield extraValue(row, property)
+          } yield extraValue(row, property, fieldTypeMap)
 
           if (edgeConfig.rankingField.isDefined) {
             val index = row.schema.fieldIndex(edgeConfig.rankingField.get)

@@ -15,20 +15,7 @@ import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
 import org.apache.log4j.Logger
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{
-  ArrayType,
-  BooleanType,
-  DateType,
-  DecimalType,
-  DoubleType,
-  FloatType,
-  IntegerType,
-  LongType,
-  MapType,
-  ShortType,
-  StringType,
-  TimestampType
-}
+import org.apache.spark.sql.types.{ArrayType, BooleanType, DataType, DateType, DecimalType, DoubleType, FloatType, IntegerType, LongType, MapType, ShortType, StringType, TimestampType}
 import org.apache.spark.util.LongAccumulator
 
 trait Processor extends Serializable {
@@ -54,62 +41,62 @@ trait Processor extends Serializable {
     futures.clear()
   }
 
-  def extraValue(row: Row, field: String, toBytes: Boolean = false): Any = {
+  def extraValue(row: Row, field: String, fieldTypeMap: Map[String, DataType], toBytes: Boolean = false): Any = {
     // TODO
     val index = row.schema.fieldIndex(field)
-    row.schema.fields(index).dataType match {
+    fieldTypeMap(field) match {
       case StringType =>
         val result = if (!row.isNullAt(index)) {
-          row.getString(index).mkString("\"", "", "\"")
+          row.getAs[String](index).mkString("\"", "", "\"")
         } else {
           "\"\""
         }
         if (toBytes) result.getBytes else result
       case ShortType =>
         if (!row.isNullAt(index)) {
-          row.getShort(index)
+          row.getAs[Short](index)
         } else {
           0.toShort
         }
       case IntegerType =>
         if (!row.isNullAt(index)) {
-          row.getInt(index)
+          row.getAs[Int](index)
         } else {
           0
         }
       case LongType =>
         if (!row.isNullAt(index)) {
-          row.getLong(index)
+          row.getAs[Long](index)
         } else {
           0L
         }
       case FloatType =>
         if (!row.isNullAt(index)) {
-          row.getFloat(index)
+          row.getAs[Float](index)
         } else {
           0.0.toFloat
         }
       case DoubleType =>
         if (!row.isNullAt(index)) {
-          row.getDouble(index)
+          row.getAs[Double](index)
         } else {
           0.0
         }
       case _: DecimalType =>
         if (!row.isNullAt(index)) {
-          row.getDecimal(index)
+          row.getAs[Double](index)
         } else {
           0.0
         }
       case BooleanType =>
         if (!row.isNullAt(index)) {
-          row.getBoolean(index)
+          row.getAs[Boolean](index)
         } else {
           false
         }
       case TimestampType =>
         if (!row.isNullAt(index)) {
-          row.getTimestamp(index).getTime
+          row.getAs[TimestampType](index)
         } else {
           0L
         }

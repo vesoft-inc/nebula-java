@@ -562,9 +562,7 @@ object Configs {
           config.getString("port"),
           config.getString("table"),
           config.getString("columnFamily"),
-          fields.toSet.toList,
-          NebulaUtils.getDataSourceFieldType(config, nebulaConfig)
-        )
+          fields.toSet.toList)
       case _ =>
         throw new IllegalArgumentException("Unsupported data source")
     }
