@@ -228,26 +228,21 @@ class HBaseReader(override val session: SparkSession, hbaseConfig: HBaseSourceCo
       classOf[ImmutableBytesWritable],
       classOf[Result])
 
-    val sourceSchema = hbaseConfig.sourceFieldSchema
-
     val rowRDD = hbaseRDD.map(row => {
-      val values: ListBuffer[Any] = new ListBuffer[Any]
-      val result: Result          = row._2
+      val values: ListBuffer[String] = new ListBuffer[String]
+      val result: Result             = row._2
 
       for (i <- fields.indices) {
         if (fields(i).equalsIgnoreCase("rowkey")) {
-          values += NebulaUtils.getDataFrameValue(Bytes.toString(result.getRow),
-                                                  sourceSchema(fields(i)))
+          values += Bytes.toString(result.getRow)
         } else {
-          values += NebulaUtils.getDataFrameValue(
-            Bytes.toString(result.getValue(Bytes.toBytes(cf), Bytes.toBytes(fields(i)))),
-            sourceSchema(fields(i)))
+          values += Bytes.toString(result.getValue(Bytes.toBytes(cf), Bytes.toBytes(fields(i))))
         }
       }
       Row.fromSeq(values.toList)
     })
     val schema = StructType(
-      fields.map(field => DataTypes.createStructField(field, sourceSchema(field), true)))
+      fields.map(field => DataTypes.createStructField(field, DataTypes.StringType, true)))
     val dataFrame = session.createDataFrame(rowRDD, schema)
     dataFrame
   }

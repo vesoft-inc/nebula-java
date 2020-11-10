@@ -12,7 +12,6 @@ import java.nio.file.Files
 import com.vesoft.nebula.tools.importer.{Argument, KeyPolicy}
 
 import com.typesafe.config.{Config, ConfigFactory}
-import com.vesoft.nebula.tools.importer.utils.NebulaUtils
 import org.apache.log4j.Logger
 
 import scala.collection.JavaConverters._
@@ -556,15 +555,12 @@ object Configs {
           fields.append(config.getString("target.field"))
         }
 
-        HBaseSourceConfigEntry(
-          SourceCategory.HBASE,
-          config.getString("host"),
-          config.getString("port"),
-          config.getString("table"),
-          config.getString("columnFamily"),
-          fields.toSet.toList,
-          NebulaUtils.getDataSourceFieldType(config, nebulaConfig)
-        )
+        HBaseSourceConfigEntry(SourceCategory.HBASE,
+                               config.getString("host"),
+                               config.getString("port"),
+                               config.getString("table"),
+                               config.getString("columnFamily"),
+                               fields.toSet.toList)
       case _ =>
         throw new IllegalArgumentException("Unsupported data source")
     }

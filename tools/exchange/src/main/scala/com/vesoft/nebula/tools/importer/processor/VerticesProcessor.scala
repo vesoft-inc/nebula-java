@@ -22,7 +22,7 @@ import com.vesoft.nebula.tools.importer.config.{
   StreamingDataSourceConfigEntry,
   TagConfigEntry
 }
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
 import com.vesoft.nebula.tools.importer.{
   CheckPointHandler,
   ErrorHandler,
@@ -131,6 +131,11 @@ class VerticesProcessor(data: DataFrame,
   }
 
   override def process(): Unit = {
+
+    val address      = config.databaseConfig.metaAddresses.get.mkString(",")
+    val space        = config.databaseConfig.space
+    val fieldTypeMap = NebulaUtils.getDataSourceFieldType(tagConfig, address, space)
+
     if (tagConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
       val fileBaseConfig = tagConfig.dataSinkConfigEntry.asInstanceOf[FileBaseSinkConfigEntry]
       val metaClient = new MetaClientImpl(config.databaseConfig.metaAddresses.get.map { address =>
@@ -176,7 +181,7 @@ class VerticesProcessor(data: DataFrame,
 
             val values = for {
               property <- fieldKeys if property.trim.length != 0
-            } yield extraValue(row, property, true).asInstanceOf[AnyRef]
+            } yield extraValue(row, property, fieldTypeMap, true).asInstanceOf[AnyRef]
             val encodedValue = NebulaCodec.encode(values.toArray)
             (encodedKey, encodedValue)
           }
@@ -239,7 +244,7 @@ class VerticesProcessor(data: DataFrame,
 
           val values = for {
             property <- fieldKeys if property.trim.length != 0
-          } yield extraValue(row, property)
+          } yield extraValue(row, property, fieldTypeMap)
           Vertex(vertexID, values)
         }(Encoders.kryo[Vertex])
 
