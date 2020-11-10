@@ -12,5 +12,12 @@ import java.io.Serializable;
 
 public interface NebulaOutputFormatConverter<T> extends Serializable {
 
-    String createValue(T record, Boolean isVertex, PolicyEnum policy);
+    /**
+     * convert row to nebula's insert values
+     *
+     * @param record flink record
+     * @param policy see {@link PolicyEnum}
+     * @return String
+     */
+    String createValue(T record, PolicyEnum policy);
 }

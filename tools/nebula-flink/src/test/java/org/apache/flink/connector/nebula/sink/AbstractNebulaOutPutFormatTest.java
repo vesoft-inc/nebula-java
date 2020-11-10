@@ -11,6 +11,7 @@ import org.apache.flink.connector.nebula.connection.NebulaClientOptions;
 import org.apache.flink.connector.nebula.connection.NebulaConnectionProvider;
 import org.apache.flink.connector.nebula.connection.NebulaGraphConnectionProvider;
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;
+import org.apache.flink.connector.nebula.statement.VertexExecutionOptions;
 import org.apache.flink.connector.nebula.utils.DataTypeEnum;
 import org.apache.flink.types.Row;
 import org.junit.Test;
@@ -24,10 +25,9 @@ public class AbstractNebulaOutPutFormatTest extends TestCase {
     @Test
     public void testWrite() throws IOException {
         List<String> cols = Arrays.asList("name", "age");
-        ExecutionOptions executionOptions = new ExecutionOptions.ExecutionOptionBuilder()
-                .setDataType(DataTypeEnum.VERTEX.name())
+        ExecutionOptions executionOptions = new VertexExecutionOptions.ExecutionOptionBuilder()
                 .setGraphSpace("flinkSink")
-                .setLabel("player")
+                .setTag("player")
                 .setFields(cols)
                 .setIdIndex(0)
                 .setBatch(1)

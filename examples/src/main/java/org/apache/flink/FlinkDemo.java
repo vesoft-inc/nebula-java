@@ -15,13 +15,12 @@ import com.vesoft.nebula.data.Property;
 import com.vesoft.nebula.data.Result;
 import com.vesoft.nebula.data.Row;
 import com.vesoft.nebula.storage.ScanVertexResponse;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.connector.nebula.connection.NebulaClientOptions;
@@ -34,7 +33,7 @@ import org.apache.flink.connector.nebula.sink.NebulaSinkFunction;
 import org.apache.flink.connector.nebula.source.NebulaInputFormat;
 import org.apache.flink.connector.nebula.source.NebulaSourceFunction;
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;
-import org.apache.flink.connector.nebula.utils.DataTypeEnum;
+import org.apache.flink.connector.nebula.statement.VertexExecutionOptions;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -44,11 +43,10 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class FlinkDemo {
     private static final Logger LOG = LoggerFactory.getLogger(FlinkDemo.class);
 
-    private static final String ADDRESS = "127.0.0.1:45500";
+    private static final String ADDRESS = "192.168.8.171:45500";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "nebula";
     private static final String NAMESPACE = "nb";
@@ -71,20 +69,16 @@ public class FlinkDemo {
                 .build();
         metaConnectionProvider = new NebulaMetaConnectionProvider(nebulaClientOptions1);
 
-        List<String> cols = new ArrayList<>();
-        cols.add("name");
-        cols.add("age");
-        sourceExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder()
-                .setDataType(DataTypeEnum.VERTEX.name())
+        List<String> cols = Arrays.asList("name", "age");
+        sourceExecutionOptions = new VertexExecutionOptions.ExecutionOptionBuilder()
                 .setGraphSpace("flinkSource")
-                .setLabel(LABEL)
+                .setTag(LABEL)
                 .setFields(cols)
                 .setLimit(100)
                 .builder();
-        sinkExecutionOptions = new ExecutionOptions.ExecutionOptionBuilder()
-                .setDataType(DataTypeEnum.VERTEX.name())
+        sinkExecutionOptions = new VertexExecutionOptions.ExecutionOptionBuilder()
                 .setGraphSpace("flinkSink")
-                .setLabel(LABEL)
+                .setTag(LABEL)
                 .setFields(cols)
                 .setIdIndex(0)
                 .setBatch(2)
@@ -93,10 +87,7 @@ public class FlinkDemo {
     }
 
     public static void main(String[] args) throws Exception {
-        testNebulaSinkFunction();
         testSourceSink();
-        testSourceSink();
-        testNebulaSinkFunction();
     }
 
     public static void addNebulaSource() throws Exception {
@@ -241,10 +232,6 @@ public class FlinkDemo {
         NebulaSourceFunction sourceFunction = new NebulaSourceFunction(metaConnectionProvider)
                 .setExecutionOptions(sourceExecutionOptions);
         DataStreamSource<Row> dataSource = env.addSource(sourceFunction);
-        dataSource.map(row -> {
-            LOG.info("record={}", row);
-            return row;
-        });
 
         // sink
         AbstractNebulaOutPutFormat outPutFormat =

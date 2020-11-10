@@ -12,7 +12,9 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl;
 import com.vesoft.nebula.graph.ErrorCode;
+import org.apache.flink.connector.nebula.statement.EdgeExecutionOptions;
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;
+import org.apache.flink.connector.nebula.statement.VertexExecutionOptions;
 import org.apache.flink.connector.nebula.utils.NebulaConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,7 @@ public class NebulaBatchExecutor<T> {
     final private ExecutionOptions executionOptions;
     final private NebulaBufferedRow nebulaBufferedRow;
 
-    public NebulaBatchExecutor(ExecutionOptions executionOptions){
+    public NebulaBatchExecutor(ExecutionOptions executionOptions) {
         this.executionOptions = executionOptions;
         this.nebulaBufferedRow = new NebulaBufferedRow();
     }
@@ -34,10 +36,16 @@ public class NebulaBatchExecutor<T> {
      * @param record represent vertex or edge
      */
     void addToBatch(T record) {
-        NebulaOutputFormatConverter converter = new NebulaRowOutputFormatConverter(executionOptions);
         boolean isVertex = executionOptions.getDataType().isVertex();
-        String value = converter.createValue(record, isVertex, executionOptions.getPolicy());
-        if(value == null){
+
+        NebulaOutputFormatConverter converter;
+        if (isVertex) {
+            converter = new NebulaRowVertexOutputFormatConverter((VertexExecutionOptions) executionOptions);
+        } else {
+            converter = new NebulaRowEdgeOutputFormatConverter((EdgeExecutionOptions) executionOptions);
+        }
+        String value = converter.createValue(record, executionOptions.getPolicy());
+        if (value == null) {
             return;
         }
         nebulaBufferedRow.putRow(value);
@@ -52,7 +60,7 @@ public class NebulaBatchExecutor<T> {
         String propNames = String.join(NebulaConstant.COMMA, executionOptions.getFields());
         String values = String.join(NebulaConstant.COMMA, nebulaBufferedRow.getRows());
         String exec = String.format(NebulaConstant.BATCH_INSERT_TEMPLATE, executionOptions.getDataType(), executionOptions.getLabel(), propNames, values);
-        LOG.debug("insert statement={}",exec);
+        LOG.debug("insert statement={}", exec);
         ListenableFuture<Optional<Integer>> execResult = client.execute(exec);
         Futures.addCallback(execResult, new FutureCallback<Optional<Integer>>() {
             @Override
