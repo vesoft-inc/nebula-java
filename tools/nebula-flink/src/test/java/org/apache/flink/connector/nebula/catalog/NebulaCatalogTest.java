@@ -28,7 +28,7 @@ public class NebulaCatalogTest {
     static StreamTableEnvironment tEnv;
     static Catalog catalog;
 
-    static{
+    static {
         catalog = NebulaCatalogUtils.createNebulaCatalog(CATALOG_NAME, DEFAULT_SPACE, ADDRESS, USERNAME, PASSWORD);
         StreamExecutionEnvironment bsEnv = StreamExecutionEnvironment.getExecutionEnvironment();
         tEnv = StreamTableEnvironment.create(bsEnv);
@@ -68,7 +68,7 @@ public class NebulaCatalogTest {
     @Test
     public void testGetTable() throws TableNotExistException {
         CatalogBaseTable table = catalog.getTable(new ObjectPath(DEFAULT_SPACE, TABLE));
-        assert table.getComment().equalsIgnoreCase(DEFAULT_SPACE);
+        assert table.getComment().equalsIgnoreCase("nebulaTableCatalog");
         assert table.getSchema().getFieldCount() == 2;
     }
 }
