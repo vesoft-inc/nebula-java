@@ -184,7 +184,9 @@ class EdgeProcessor(data: DataFrame,
                                                        0L) // TODO version
             val values = for {
               property <- fieldKeys if property.trim.length != 0
-            } yield extraValue(row, property, fieldTypeMap, true).asInstanceOf[AnyRef]
+            } yield
+              extraValue(row, property, fieldTypeMap, edgeConfig.isImplicit, true)
+                .asInstanceOf[AnyRef]
             val encodedValue = NebulaCodec.encode(values.toArray)
             (encodedKey, encodedValue)
           }
@@ -258,7 +260,7 @@ class EdgeProcessor(data: DataFrame,
 
           val values = for {
             property <- fieldKeys if property.trim.length != 0
-          } yield extraValue(row, property, fieldTypeMap)
+          } yield extraValue(row, property, fieldTypeMap, edgeConfig.isImplicit)
 
           if (edgeConfig.rankingField.isDefined) {
             val index = row.schema.fieldIndex(edgeConfig.rankingField.get)

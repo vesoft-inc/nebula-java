@@ -169,6 +169,7 @@ object Configs {
   private[this] val DEFAULT_REMOTE_PATH          = None
   private[this] val DEFAULT_STREAM_INTERVAL      = 30
   private[this] val DEFAULT_PARALLEL             = 1
+  private[this] val DEFAULT_IS_IMPLICIT          = true
 
   /**
     *
@@ -272,7 +273,8 @@ object Configs {
         val localPath  = getOptOrElse(tagConfig, "local.path")
         val remotePath = getOptOrElse(tagConfig, "remote.path")
 
-        val partition = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
+        val partition  = getOrElse(tagConfig, "partition", DEFAULT_PARTITION)
+        val isImplicit = getOrElse(tagConfig, "isImplicit", DEFAULT_IS_IMPLICIT)
 
         LOG.info(s"name ${tagName}  batch ${batch}")
         val entry = TagConfigEntry(tagName,
@@ -284,7 +286,8 @@ object Configs {
                                    policyOpt,
                                    batch,
                                    partition,
-                                   checkPointPath)
+                                   checkPointPath,
+                                   isImplicit)
         LOG.info(s"Tag Config: ${entry}")
         tags += entry
       }
@@ -381,6 +384,7 @@ object Configs {
 
         val localPath  = getOptOrElse(edgeConfig, "path.local")
         val remotePath = getOptOrElse(edgeConfig, "path.remote")
+        val isImplicit = getOrElse(edgeConfig, "isImplicit", DEFAULT_IS_IMPLICIT)
 
         val entry = EdgeConfigEntry(
           edgeName,
@@ -398,7 +402,8 @@ object Configs {
           longitude,
           batch,
           partition,
-          checkPointPath
+          checkPointPath,
+          isImplicit
         )
         LOG.info(s"Edge Config: ${entry}")
         edges += entry

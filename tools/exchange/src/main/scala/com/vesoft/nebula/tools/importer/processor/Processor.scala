@@ -58,185 +58,202 @@ trait Processor extends Serializable {
   def extraValue(row: Row,
                  field: String,
                  fieldTypeMap: Map[String, DataType],
+                 isImplicit: Boolean,
                  toBytes: Boolean = false): Any = {
     // TODO
     val index = row.schema.fieldIndex(field)
 
-    row.schema.fields(index).dataType match {
-      case StringType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            val result = if (!row.isNullAt(index)) {
-              row.getString(index).mkString("\"", "", "\"")
-            } else {
-              "\"\""
-            }
-            if (toBytes) result.getBytes else result
-
-          case LongType =>
-            if (!row.isNullAt(index)) {
-              row.getString(index).toLong
-            } else {
-              0L
-            }
-          case DoubleType =>
-            if (!row.isNullAt(index)) {
-              row.getString(index).toDouble
-            } else {
-              0.0
-            }
-          case BooleanType =>
-            if (!row.isNullAt(index)) {
-              row.getString(index).toBoolean
-            }
+    if (!isImplicit) {
+      if (!row.isNullAt(index)) {
+        throw new IllegalArgumentException(
+          s"${field} has no value, Nebula does not support null value yet")
+      }
+      row.schema.fields(index).dataType match {
+        case StringType => {
+          val result = row.getString(index).mkString("\"", "", "\"")
+          if (toBytes) result.getBytes else result
+        }
+        case _: Any => {
+          row.get(index)
         }
       }
+    } else {
+      row.schema.fields(index).dataType match {
+        case StringType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              val result = if (!row.isNullAt(index)) {
+                row.getString(index).mkString("\"", "", "\"")
+              } else {
+                "\"\""
+              }
+              if (toBytes) result.getBytes else result
 
-      case ShortType   =>
-      case IntegerType =>
-      case LongType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            val result = if (!row.isNullAt(index)) {
-              row.getLong(index).toString.mkString("\"", "", "\"")
-            } else {
-              "\"\""
-            }
-            if (toBytes) result.getBytes else result
-          case LongType =>
-            if (!row.isNullAt(index)) {
-              row.getLong(index)
-            } else {
-              0L
-            }
-          case DoubleType =>
-            if (!row.isNullAt(index)) {
-              row.getLong(index).toDouble
-            } else {
-              0.0
-            }
-          case BooleanType =>
-            if (!row.isNullAt(index)) {
-              row.getLong(index).toString.toBoolean
-            } else {
-              false
-            }
+            case LongType =>
+              if (!row.isNullAt(index)) {
+                row.getString(index).toLong
+              } else {
+                0L
+              }
+            case DoubleType =>
+              if (!row.isNullAt(index)) {
+                row.getString(index).toDouble
+              } else {
+                0.0
+              }
+            case BooleanType =>
+              if (!row.isNullAt(index)) {
+                row.getString(index).toBoolean
+              }
+          }
         }
-      }
 
-      case FloatType =>
-      case DoubleType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            val result = if (!row.isNullAt(index)) {
-              row.getDouble(index).toString.mkString("\"", "", "\"")
-            } else {
-              "\"\""
-            }
-            if (toBytes) result.getBytes else result
-          case LongType =>
-            if (!row.isNullAt(index)) {
-              row.getDouble(index).toLong
-            } else {
-              0L
-            }
-          case DoubleType =>
-            if (!row.isNullAt(index)) {
-              row.getDouble(index)
-            } else {
-              0.0
-            }
-          case BooleanType =>
-            if (!row.isNullAt(index)) {
-              row.getDouble(index).toString.toBoolean
-            } else {
-              false
-            }
+        case ShortType   =>
+        case IntegerType =>
+        case LongType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              val result = if (!row.isNullAt(index)) {
+                row.getLong(index).toString.mkString("\"", "", "\"")
+              } else {
+                "\"\""
+              }
+              if (toBytes) result.getBytes else result
+            case LongType =>
+              if (!row.isNullAt(index)) {
+                row.getLong(index)
+              } else {
+                0L
+              }
+            case DoubleType =>
+              if (!row.isNullAt(index)) {
+                row.getLong(index).toDouble
+              } else {
+                0.0
+              }
+            case BooleanType =>
+              if (!row.isNullAt(index)) {
+                row.getLong(index).toString.toBoolean
+              } else {
+                false
+              }
+          }
         }
-      }
 
-      case BooleanType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            val result = if (!row.isNullAt(index)) {
-              row.getBoolean(index).toString.mkString("\"", "", "\"")
-            } else {
-              "\"\""
-            }
-            if (toBytes) result.getBytes else result
-          case LongType =>
-            if (!row.isNullAt(index)) {
-              if (row.getBoolean(index)) 1L else 0L
-            } else {
-              0L
-            }
-          case DoubleType =>
-            if (!row.isNullAt(index)) {
-              if (row.getBoolean(index)) 1.0 else 0.0
-            } else {
-              0.0
-            }
-          case BooleanType =>
-            if (!row.isNullAt(index)) {
-              row.getBoolean(index)
-            } else {
-              false
-            }
+        case FloatType =>
+        case DoubleType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              val result = if (!row.isNullAt(index)) {
+                row.getDouble(index).toString.mkString("\"", "", "\"")
+              } else {
+                "\"\""
+              }
+              if (toBytes) result.getBytes else result
+            case LongType =>
+              if (!row.isNullAt(index)) {
+                row.getDouble(index).toLong
+              } else {
+                0L
+              }
+            case DoubleType =>
+              if (!row.isNullAt(index)) {
+                row.getDouble(index)
+              } else {
+                0.0
+              }
+            case BooleanType =>
+              if (!row.isNullAt(index)) {
+                row.getDouble(index).toString.toBoolean
+              } else {
+                false
+              }
+          }
         }
-      }
 
-      case TimestampType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            if (!row.isNullAt(index)) {
-              row.getTimestamp(index).toString.mkString("\"", "", "\"")
-            } else {
-              "\"\""
-            }
-          case LongType =>
-            if (!row.isNullAt(index)) {
-              row.getTimestamp(index).toString.toLong
-            } else {
-              0L
-            }
-          case _ =>
-            throw new IllegalArgumentException(
-              s"field ${field} doesn't have correct datatype in nebula graph")
+        case BooleanType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              val result = if (!row.isNullAt(index)) {
+                row.getBoolean(index).toString.mkString("\"", "", "\"")
+              } else {
+                "\"\""
+              }
+              if (toBytes) result.getBytes else result
+            case LongType =>
+              if (!row.isNullAt(index)) {
+                if (row.getBoolean(index)) 1L else 0L
+              } else {
+                0L
+              }
+            case DoubleType =>
+              if (!row.isNullAt(index)) {
+                if (row.getBoolean(index)) 1.0 else 0.0
+              } else {
+                0.0
+              }
+            case BooleanType =>
+              if (!row.isNullAt(index)) {
+                row.getBoolean(index)
+              } else {
+                false
+              }
+          }
         }
-      }
 
-      case _: DateType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            if (!row.isNullAt(index)) {
-              row.getDate(index).toString.mkString("\"", "", "\"")
-            } else {
-              "\"\""
-            }
-          case _ =>
-            throw new IllegalArgumentException(
-              s"field ${field} doesn't have correct datatype in nebula graph")
+        case TimestampType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              if (!row.isNullAt(index)) {
+                row.getTimestamp(index).toString.mkString("\"", "", "\"")
+              } else {
+                "\"\""
+              }
+            case LongType =>
+              if (!row.isNullAt(index)) {
+                row.getTimestamp(index).toString.toLong
+              } else {
+                0L
+              }
+            case _ =>
+              throw new IllegalArgumentException(
+                s"field ${field} doesn't have correct datatype in nebula graph")
+          }
         }
-      }
 
-      case _: ArrayType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            if (!row.isNullAt(index)) {
-              row.getSeq(index).toString.mkString("\"[", ",", "]\"")
-            } else {
-              "\"[]\""
-            }
+        case _: DateType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              if (!row.isNullAt(index)) {
+                row.getDate(index).toString.mkString("\"", "", "\"")
+              } else {
+                "\"\""
+              }
+            case _ =>
+              throw new IllegalArgumentException(
+                s"field ${field} doesn't have correct datatype in nebula graph")
+          }
         }
-      }
-      case _: MapType => {
-        fieldTypeMap(field) match {
-          case StringType =>
-            if (!row.isNullAt(index)) {
-              row.getSeq(index).toString.mkString("\"{", ",", "}\"")
-            } else {
-              "\"{}\""
-            }
+
+        case _: ArrayType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              if (!row.isNullAt(index)) {
+                row.getSeq(index).toString.mkString("\"[", ",", "]\"")
+              } else {
+                "\"[]\""
+              }
+          }
+        }
+        case _: MapType => {
+          fieldTypeMap(field) match {
+            case StringType =>
+              if (!row.isNullAt(index)) {
+                row.getSeq(index).toString.mkString("\"{", ",", "}\"")
+              } else {
+                "\"{}\""
+              }
+          }
         }
       }
     }
