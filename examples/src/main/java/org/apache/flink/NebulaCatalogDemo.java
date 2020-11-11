@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package org.apache.flink.connector.nebula.catalog;
+package org.apache.flink;
 
 import org.apache.flink.connector.nebula.utils.NebulaCatalogUtils;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -15,28 +15,27 @@ import org.apache.flink.table.catalog.CatalogDatabase;
 import org.apache.flink.table.catalog.ObjectPath;
 import org.apache.flink.table.catalog.exceptions.DatabaseNotExistException;
 import org.apache.flink.table.catalog.exceptions.TableNotExistException;
-import org.junit.Test;
 
-public class NebulaCatalogTest {
+public class NebulaCatalogDemo {
 
-    private final static String CATALOG_NAME = "testCatalog";
-    private final static String DEFAULT_SPACE = "flinkSink";
-    private final static String USERNAME = "root";
-    private final static String PASSWORD = "nebula";
-    private final static String ADDRESS = "127.0.0.1:45500";
-    private final static String TABLE = "VERTEX.player";
+    private static String catalogName = "testCatalog";
+    private static String defaultSpace = "flinkSink";
+    private static String username = "root";
+    private static String password = "nebula";
+    private static String address = "127.0.0.1:45500";
+    private String table = "VERTEX.player";
     static StreamTableEnvironment tEnv;
     static Catalog catalog;
 
     static {
-        catalog = NebulaCatalogUtils.createNebulaCatalog(CATALOG_NAME, DEFAULT_SPACE, ADDRESS, USERNAME, PASSWORD);
+        catalog = NebulaCatalogUtils
+                .createNebulaCatalog(catalogName, defaultSpace, address, username, password);
         StreamExecutionEnvironment bsEnv = StreamExecutionEnvironment.getExecutionEnvironment();
         tEnv = StreamTableEnvironment.create(bsEnv);
-        tEnv.registerCatalog(CATALOG_NAME, catalog);
-        tEnv.useCatalog(CATALOG_NAME);
+        tEnv.registerCatalog(catalogName, catalog);
+        tEnv.useCatalog(catalogName);
     }
 
-    @Test
     public void testListDatabases() {
         String[] spaces = tEnv.listDatabases();
         for (String space : spaces) {
@@ -44,30 +43,26 @@ public class NebulaCatalogTest {
         }
     }
 
-    @Test
     public void testGetDatabase() throws DatabaseNotExistException {
-        CatalogDatabase database = catalog.getDatabase(DEFAULT_SPACE);
-        assert DEFAULT_SPACE.equalsIgnoreCase(database.getComment());
+        CatalogDatabase database = catalog.getDatabase(defaultSpace);
+        assert defaultSpace.equalsIgnoreCase(database.getComment());
         assert database.getProperties().containsKey("spaceId");
     }
 
-    @Test
     public void testTableExists() {
-        ObjectPath path = new ObjectPath(DEFAULT_SPACE, TABLE);
+        ObjectPath path = new ObjectPath(defaultSpace, table);
         assert catalog.tableExists(path);
     }
 
-    @Test
     public void testListTables() {
-        tEnv.useDatabase(DEFAULT_SPACE);
+        tEnv.useDatabase(defaultSpace);
         String[] tables = tEnv.listTables();
         assert tables.length == 1;
-        assert tables[0].equalsIgnoreCase(TABLE);
+        assert tables[0].equalsIgnoreCase(table);
     }
 
-    @Test
     public void testGetTable() throws TableNotExistException {
-        CatalogBaseTable table = catalog.getTable(new ObjectPath(DEFAULT_SPACE, TABLE));
+        CatalogBaseTable table = catalog.getTable(new ObjectPath(defaultSpace, this.table));
         assert table.getComment().equalsIgnoreCase("nebulaTableCatalog");
         assert table.getSchema().getFieldCount() == 2;
     }
