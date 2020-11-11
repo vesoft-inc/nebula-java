@@ -193,5 +193,10 @@
             <artifactId>libthrift</artifactId>
             <version>0.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.vesoft</groupId>
+            <artifactId>nebula-flink</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 </project>
