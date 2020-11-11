@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2020 vesoft inc. All rights reserved.
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
@@ -46,7 +45,7 @@ import org.slf4j.LoggerFactory;
 public class FlinkDemo {
     private static final Logger LOG = LoggerFactory.getLogger(FlinkDemo.class);
 
-    private static final String ADDRESS = "192.168.8.171:45500";
+    private static final String ADDRESS = "127.0.0.1:45500";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "nebula";
     private static final String NAMESPACE = "nb";

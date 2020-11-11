@@ -23,4 +23,14 @@ public enum DataTypeEnum {
         }
         return false;
     }
+
+    public static boolean checkValidDataType(String type){
+        if(VERTEX.name().equalsIgnoreCase(type)){
+            return true;
+        }
+        if(EDGE.name().equalsIgnoreCase(type)){
+            return true;
+        }
+        return false;
+    }
 }

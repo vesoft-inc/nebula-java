@@ -90,73 +90,73 @@ public class EdgeExecutionOptions extends ExecutionOptions {
         private int dstIndex = DEFAULT_ROW_INFO_INDEX;
         private int rankIndex = DEFAULT_ROW_INFO_INDEX;
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setGraphSpace(String graphSpace) {
+        public ExecutionOptionBuilder setGraphSpace(String graphSpace) {
             this.graphSpace = graphSpace;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setQueryStatement(String queryStatement) {
+        public ExecutionOptionBuilder setQueryStatement(String queryStatement) {
             this.queryStatement = queryStatement;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setExecuteStatement(String executeStatement) {
+        public ExecutionOptionBuilder setExecuteStatement(String executeStatement) {
             this.executeStatement = executeStatement;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setLabel(String edge) {
+        public ExecutionOptionBuilder setLabel(String edge) {
             this.edge = edge;
             return this;
         }
 
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setFields(List<String> fields) {
+        public ExecutionOptionBuilder setFields(List<String> fields) {
             this.fields = fields;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setAllCols(boolean allCols) {
+        public ExecutionOptionBuilder setAllCols(boolean allCols) {
             this.allCols = allCols;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setLimit(int limit) {
+        public ExecutionOptionBuilder setLimit(int limit) {
             this.limit = limit;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setStartTime(long startTime) {
+        public ExecutionOptionBuilder setStartTime(long startTime) {
             this.startTime = startTime;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setEndTime(long endTime) {
+        public ExecutionOptionBuilder setEndTime(long endTime) {
             this.endTime = endTime;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setBatch(int batch) {
+        public ExecutionOptionBuilder setBatch(int batch) {
             this.batch = batch;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setPolicy(String policy) {
+        public ExecutionOptionBuilder setPolicy(String policy) {
             this.policy = PolicyEnum.valueOf(policy);
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setSrcIndex(int srcIndex) {
+        public ExecutionOptionBuilder setSrcIndex(int srcIndex) {
             this.srcIndex = srcIndex;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setDstIndex(int dstIndex) {
+        public ExecutionOptionBuilder setDstIndex(int dstIndex) {
             this.dstIndex = dstIndex;
             return this;
         }
 
-        public EdgeExecutionOptions.ExecutionOptionBuilder setRankIndex(int rankIndex) {
+        public ExecutionOptionBuilder setRankIndex(int rankIndex) {
             this.rankIndex = rankIndex;
             return this;
         }
