@@ -21,9 +21,11 @@ import scala.util.Random
 
 object MockConfigs {
 
-  val port: Int = 9000 + Random.nextInt(1000)
+  val port: Int     = 9000 + Random.nextInt(1000)
+  val metaPort: Int = 9000 + Random.nextInt(1000)
 
-  val dataBaseConfig: DataBaseConfigEntry = DataBaseConfigEntry(List("127.0.0.1:" + port), "test")
+  val dataBaseConfig: DataBaseConfigEntry =
+    DataBaseConfigEntry(List("127.0.0.1:" + port), "test", List("127.0.0.1" + metaPort))
 
   val userConfig: UserConfigEntry = UserConfigEntry("user", "password")
 
