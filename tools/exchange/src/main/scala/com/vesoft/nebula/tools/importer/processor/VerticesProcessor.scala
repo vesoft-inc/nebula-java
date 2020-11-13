@@ -132,13 +132,13 @@ class VerticesProcessor(data: DataFrame,
 
   override def process(): Unit = {
 
-    val address      = config.databaseConfig.metaAddresses.get.mkString(",")
+    val address      = config.databaseConfig.metaAddresses.mkString(",")
     val space        = config.databaseConfig.space
     val fieldTypeMap = NebulaUtils.getDataSourceFieldType(tagConfig, address, space)
 
     if (tagConfig.dataSinkConfigEntry.category == SinkCategory.SST) {
       val fileBaseConfig = tagConfig.dataSinkConfigEntry.asInstanceOf[FileBaseSinkConfigEntry]
-      val metaClient = new MetaClientImpl(config.databaseConfig.metaAddresses.get.map { address =>
+      val metaClient = new MetaClientImpl(config.databaseConfig.metaAddresses.map { address =>
         val pair = address.split(":")
         if (pair.length != 2) {
           throw new IllegalArgumentException("address should compose by host and port")

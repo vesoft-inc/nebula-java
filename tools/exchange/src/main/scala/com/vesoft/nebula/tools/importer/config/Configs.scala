@@ -33,9 +33,10 @@ object Type extends Enumeration {
   */
 case class DataBaseConfigEntry(addresses: List[String],
                                space: String,
-                               metaAddresses: Option[List[String]] = None) {
+                               metaAddresses: List[String]) {
   require(addresses != null && addresses.nonEmpty)
-  require(space.trim.size != 0)
+  require(metaAddresses != null && metaAddresses.nonEmpty)
+  require(space.trim.nonEmpty)
 
   override def toString: String = super.toString
 }
@@ -181,14 +182,11 @@ object Configs {
       throw new IllegalArgumentException(s"${configPath} not exist")
     }
 
-    val config       = ConfigFactory.parseFile(configPath)
-    val nebulaConfig = config.getConfig("nebula")
-    val addresses    = nebulaConfig.getStringList("addresses").asScala.toList
-    val metaAddresses =
-      if (nebulaConfig.hasPath("meta.addresses"))
-        Some(nebulaConfig.getStringList("meta.addresses").asScala.toList)
-      else
-        None
+    val config        = ConfigFactory.parseFile(configPath)
+    val nebulaConfig  = config.getConfig("nebula")
+    val addresses     = nebulaConfig.getStringList("address.graph").asScala.toList
+    val metaAddresses = nebulaConfig.getStringList("address.meta").asScala.toList
+
     val space         = nebulaConfig.getString("space")
     val databaseEntry = DataBaseConfigEntry(addresses, space, metaAddresses)
     LOG.info(s"DataBase Config ${databaseEntry}")
@@ -576,7 +574,7 @@ object Configs {
     category match {
       case SinkCategory.CLIENT =>
         NebulaSinkConfigEntry(SinkCategory.CLIENT,
-                              nebulaConfig.getStringList("addresses").asScala.toList)
+                              nebulaConfig.getStringList("address.graph").asScala.toList)
       case SinkCategory.SST =>
         FileBaseSinkConfigEntry(SinkCategory.SST,
                                 nebulaConfig.getString("path.local"),
