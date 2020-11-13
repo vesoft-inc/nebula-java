@@ -4,7 +4,8 @@
 
 | 参数 | 默认值 | 数据类型 | 是否必需 | 说明 |
 | :--- | :--- | :--- | :--- | :--- |
-| `nebula.addresses` | 无 | `list[string]` | 是 | Nebula Graph 查询引擎的地址列表。如果有多个地址，以英文逗号分隔。 |
+| `nebula.address.graph` | 无 | `list[string]` | 是 | Nebula Graph 图数据库 Graph 服务的地址列表。如果有多个地址，以英文逗号分隔。 |
+| `nebula.address.meta` | 无 | `list[string]` | 是 | Nebula Graph 图数据库 Meta 服务的地址列表。如果有多个地址，以英文逗号分隔。 |
 | `nebula.user` | `user` | `string` | 是 | 数据库用户名，默认为 `user` 。如果 Nebula Grpah 启用了身份认证：<br />- 如果未创建不同用户，使用 `root` 。<br />- 如果已经创建了不同的用户并且分配了指定空间的角色，则使用对该空间拥有写操作权限的用户。 |
 | `nebula.pswd` | `password` | `string` | 是 | 数据库用户名对应的密码，默认 `user` 的密码为 `password` 。如果 Nebula Grpah 启用了身份认证：<br />- 使用 `root` 时，密码为 `nebula` 。<br />- 使用其他用户账号时，设置账号对应的密码。 |
 | `nebula.space` | 无 | `string` | 是 | 导入数据对应的图空间（Space）名称。 |
