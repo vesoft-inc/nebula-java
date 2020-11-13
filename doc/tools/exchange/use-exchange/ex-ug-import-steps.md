@@ -7,7 +7,7 @@
 开始迁移数据之前，您需要确保以下信息：
 
 - 已经安装部署了 Nebula Graph 并获取查询引擎所在服务器的 IP 地址、用户名和密码。
-- 已经完成 Exchange 编译。详细信息，参考 [编译 Nebula Graph Exchange](../compile-exchange/ex-ug-compile.md)。
+- 已经完成 Exchange 编译。详细信息，参考 [编译 Nebula Graph Exchange](../ex-ug-compile.md)。
 - 已经安装 Spark。
 - 在 Nebula Graph 中创建图数据模式需要的所有信息，包括标签和边类型的名称、属性等。
 
