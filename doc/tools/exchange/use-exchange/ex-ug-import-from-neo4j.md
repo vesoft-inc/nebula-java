@@ -135,7 +135,10 @@ Exchange 采用 HOCON（Human-Optimized Config Object Notation）配置文件格
 
   # Nebula Graph 相关配置
   nebula: {
-    addresses: ["127.0.0.1:3699"]
+    address: {
+      graph: ["127.0.0.1:3699"]
+      meta: ["127.0.0.1:45500"]
+    }
     user: user
     pswd: password
     space: test
