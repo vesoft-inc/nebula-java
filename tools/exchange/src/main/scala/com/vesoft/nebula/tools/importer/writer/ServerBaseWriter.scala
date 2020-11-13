@@ -185,6 +185,8 @@ class NebulaWriterCallback(latch: CountDownLatch,
                            pathAndOffset: Option[(String, Long)])
     extends FutureCallback[java.util.List[Optional[Integer]]] {
 
+  private[this] lazy val LOG = Logger.getLogger(this.getClass)
+
   private[this] val DEFAULT_ERROR_TIMES = 16
 
   override def onSuccess(results: java.util.List[Optional[Integer]]): Unit = {
@@ -200,6 +202,7 @@ class NebulaWriterCallback(latch: CountDownLatch,
       if (result.get() == ErrorCode.SUCCEEDED) {
         batchSuccess.add(1)
       } else {
+        LOG.error(s"batch insert error with code ${result.get()}, batch size is ${results.size()}")
         batchFailure.add(1)
       }
     }
