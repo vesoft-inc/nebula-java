@@ -145,7 +145,8 @@ class EdgeProcessor(data: DataFrame,
       val edgeType = response
         .filter(item => item.edge_name == edgeConfig.name)
         .map(_.edge_type)
-        .toList(0)
+        .toList
+        .head
       metaClient.close() // TODO Try
 
       data
@@ -229,46 +230,34 @@ class EdgeProcessor(data: DataFrame,
         .map { row =>
           val sourceField = if (!edgeConfig.isGeo) {
             val sourceIndex = row.schema.fieldIndex(edgeConfig.sourceField)
-            if (edgeConfig.sourcePolicy.isEmpty) {
-              row.schema.fields(sourceIndex).dataType match {
-                case LongType    => row.getLong(sourceIndex).toString
-                case IntegerType => row.getInt(sourceIndex).toString
-                case x           => throw new RuntimeException(s"Not support ${x} type use as source field")
-              }
-            } else {
-              row.getString(sourceIndex)
-            }
+            row.get(sourceIndex).toString
           } else {
             val lat = row.getDouble(row.schema.fieldIndex(edgeConfig.latitude.get))
             val lng = row.getDouble(row.schema.fieldIndex(edgeConfig.longitude.get))
             indexCells(lat, lng).mkString(",")
           }
+          if (edgeConfig.sourcePolicy.isEmpty) {
+            assert(NebulaUtils.isNumic(sourceField),
+                   s"Not support non-Numeric type for source field")
+          }
 
           val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
-          val targetField =
-            if (edgeConfig.targetPolicy.isEmpty) {
-              row.schema.fields(targetIndex).dataType match {
-                case LongType    => row.getLong(targetIndex).toString
-                case IntegerType => row.getInt(targetIndex).toString
-                case x           => throw new RuntimeException(s"Not support ${x} type use as target field")
-              }
-            } else {
-              row.getString(targetIndex)
-            }
+          val targetField = row.get(targetIndex).toString
+          if (edgeConfig.targetPolicy.isEmpty) {
+            assert(NebulaUtils.isNumic(targetField),
+                   s"Not support non-Numeric type for target field")
+          }
 
           val values = for {
             property <- fieldKeys if property.trim.length != 0
           } yield extraValue(row, property, fieldTypeMap)
 
           if (edgeConfig.rankingField.isDefined) {
-            val index = row.schema.fieldIndex(edgeConfig.rankingField.get)
-            val ranking = row.schema.fields(index).dataType match {
-              case LongType    => row.getLong(index)
-              case IntegerType => row.getInt(index).toLong
-              case ShortType   => row.getShort(index).toLong
-              case x           => throw new RuntimeException(s"Not support ${x} type use as ranking")
-            }
-            Edge(sourceField, targetField, Some(ranking), values)
+            val index   = row.schema.fieldIndex(edgeConfig.rankingField.get)
+            val ranking = row.get(index).toString
+            assert(NebulaUtils.isNumic(ranking), s"Not support non-Numeric type for ranking field")
+
+            Edge(sourceField, targetField, Some(ranking.toLong), values)
           } else {
             Edge(sourceField, targetField, None, values)
           }
