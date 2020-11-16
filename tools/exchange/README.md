@@ -1,4 +1,4 @@
-# 欢迎使用 Nebula Graph Exchange 组件
+# 欢迎使用 Nebula Graph Exchange
 
 Nebula Graph Exchange（简称为 Exchange），是一款 Apache Spark&trade; 应用，用于在分布式环境中将集群中的数据批量迁移到 Nebula Graph 中，能支持多种不同格式的批式数据和流式数据的迁移。
 
