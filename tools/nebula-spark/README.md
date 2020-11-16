@@ -1,6 +1,6 @@
 # 欢迎使用 Spark Connector
 
-Spark Connector 是 Spark 与 Nebula Graph 之间进行数据交换的一个工具，包括 Spark-connector Reader 和 Spark-connector Writer。
+Spark Connector 是一个 Spark 连接器，提供了通过 Spark 标准形式读写 Nebula Graph 数据库的能力。Spark Connector 由 Reader 和 Writer 组成。
 
 ## 使用说明
 
