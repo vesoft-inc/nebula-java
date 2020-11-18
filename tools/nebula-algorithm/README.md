@@ -1,11 +1,10 @@
 # 欢迎使用 nebula-algorithm
 
-以下是 nebula-algorithm 使用说明。
+nebula-algorithm 是一款基于 [GraphX](https://spark.apache.org/graphx/) 的 Spark 应用程序，提供了 PageRank 和 Louvain 社区发现的图计算算法。使用 nebula-algorithm，您能以提交 Spark 任务的形式对 Nebula Graph 数据库中的数据执行图计算。
 
-- [什么是 nebula-algorithm](../../doc/tools/nebula-algorithm/na-ug-what-is-nebula-algorithm.md)
-- [使用限制](../../doc/tools/nebula-algorithm/na-ug-limitations.md)
-- [编译 nebula-algorithm](../../doc/tools/nebula-algorithm/na-ug-compile.md)
-- [使用示例](../../doc/tools/nebula-algorithm/na-ug-example.md)
+## 使用说明
+
+关于 nebula-algorithm 的详细使用说明，请参考文档[《nebula-algorithm 用户手册》](https://github.com/vesoft-inc/nebula-docs-cn/tree/master/nebula-algorithm)。
 
 ## 贡献
 
