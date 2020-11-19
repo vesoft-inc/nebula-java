@@ -226,6 +226,13 @@ class VerticesProcessor(data: DataFrame,
             }
           }
         }
+
+      val ingestStatement = s"DOWNLOAD HDFS ${fileBaseConfig.remotePath}; INGEST;"
+      NebulaUtils.submit(config.databaseConfig,
+                         config.connectionConfig,
+                         config.userConfig,
+                         config.executionConfig.retry,
+                         ingestStatement)
     } else {
       val vertices = data
         .map { row =>
@@ -261,6 +268,14 @@ class VerticesProcessor(data: DataFrame,
           .awaitTermination()
       } else
         vertices.foreachPartition(processEachPartition _)
+
+      val flushStatement = "SUBMIT JOB COMPACT; SUBMIT JOB FLUSH;"
+      NebulaUtils.submit(config.databaseConfig,
+                         config.connectionConfig,
+                         config.userConfig,
+                         config.executionConfig.retry,
+                         flushStatement)
     }
+
   }
 }

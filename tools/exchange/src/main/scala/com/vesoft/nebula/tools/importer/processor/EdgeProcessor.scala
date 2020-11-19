@@ -224,6 +224,12 @@ class EdgeProcessor(data: DataFrame,
             }
           }
         }
+      val ingestStatement = s"DOWNLOAD HDFS ${fileBaseConfig.remotePath}; INGEST;"
+      NebulaUtils.submit(config.databaseConfig,
+                         config.connectionConfig,
+                         config.userConfig,
+                         config.executionConfig.retry,
+                         ingestStatement)
     } else {
       val edgeFrame = data
         .map { row =>
@@ -287,6 +293,13 @@ class EdgeProcessor(data: DataFrame,
           .awaitTermination()
       } else
         edgeFrame.foreachPartition(processEachPartition _)
+
+      val flushStatement = "SUBMIT JOB COMPACT; SUBMIT JOB FLUSH;"
+      NebulaUtils.submit(config.databaseConfig,
+                         config.connectionConfig,
+                         config.userConfig,
+                         config.executionConfig.retry,
+                         flushStatement)
     }
   }
 

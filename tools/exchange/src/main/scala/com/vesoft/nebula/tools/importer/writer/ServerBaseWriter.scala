@@ -11,7 +11,6 @@ import java.util.concurrent.CountDownLatch
 import com.google.common.base.Optional
 import com.google.common.net.HostAndPort
 import com.google.common.util.concurrent.FutureCallback
-import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl
 import com.vesoft.nebula.graph.ErrorCode
@@ -22,7 +21,7 @@ import com.vesoft.nebula.tools.importer.config.{
   Type,
   UserConfigEntry
 }
-import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
 import com.vesoft.nebula.tools.importer.{
   Edges,
   KeyPolicy,
@@ -128,23 +127,10 @@ class NebulaGraphClientWriter(dataBaseConfigEntry: DataBaseConfigEntry,
 
   @transient lazy val LOG = Logger.getLogger(this.getClass)
 
-  val client = new AsyncGraphClientImpl(
-    dataBaseConfigEntry.addresses
-      .map(address => {
-        val pair = address.split(":")
-        if (pair.length != 2) {
-          throw new IllegalArgumentException("address should compose by host and port")
-        }
-        HostAndPort.fromParts(pair(0), pair(1).toInt)
-      })
-      .asJava,
-    connectionConfigEntry.timeout,
-    connectionConfigEntry.retry,
-    executionRetry
-  )
-
-  client.setUser(userConfigEntry.user)
-  client.setPassword(userConfigEntry.password)
+  val client = NebulaUtils.getClient(dataBaseConfigEntry,
+                                     connectionConfigEntry,
+                                     userConfigEntry,
+                                     executionRetry)
 
   def prepare(): Unit = {
     val code = client.connect()

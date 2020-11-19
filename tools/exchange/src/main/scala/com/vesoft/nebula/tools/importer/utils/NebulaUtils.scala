@@ -6,10 +6,21 @@
 
 package com.vesoft.nebula.tools.importer.utils
 
+import com.google.common.base.Optional
 import com.google.common.net.HostAndPort
+import com.google.common.util.concurrent.{FutureCallback, Futures}
+import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
-import com.vesoft.nebula.meta.{ErrorCode, TagItem}
-import com.vesoft.nebula.tools.importer.config.{EdgeConfigEntry, SchemaConfigEntry, TagConfigEntry}
+import com.vesoft.nebula.graph.ErrorCode
+import com.vesoft.nebula.meta.{TagItem}
+import com.vesoft.nebula.tools.importer.config.{
+  ConnectionConfigEntry,
+  DataBaseConfigEntry,
+  EdgeConfigEntry,
+  SchemaConfigEntry,
+  TagConfigEntry,
+  UserConfigEntry
+}
 import org.apache.log4j.Logger
 import org.apache.spark.sql.types.DataType
 import org.apache.spark.sql.types.DataTypes.{
@@ -120,5 +131,61 @@ object NebulaUtils {
       if (!Character.isDigit(char)) return false
     }
     true
+  }
+
+  def submit(dataBaseConfigEntry: DataBaseConfigEntry,
+             connectionConfigEntry: ConnectionConfigEntry,
+             userConfigEntry: UserConfigEntry,
+             executionRetry: Int,
+             statement: String): Unit = {
+
+    val client =
+      getClient(dataBaseConfigEntry, connectionConfigEntry, userConfigEntry, executionRetry)
+    client.connect()
+    val execResult = client.execute(statement)
+    Futures.addCallback(
+      execResult,
+      callBack()
+    )
+  }
+
+  def getClient(dataBaseConfigEntry: DataBaseConfigEntry,
+                connectionConfigEntry: ConnectionConfigEntry,
+                userConfigEntry: UserConfigEntry,
+                executionRetry: Int): AsyncGraphClientImpl = {
+    val client = new AsyncGraphClientImpl(
+      dataBaseConfigEntry.addresses
+        .map(address => {
+          val pair = address.split(":")
+          if (pair.length != 2) {
+            throw new IllegalArgumentException("address should compose by host and port")
+          }
+          HostAndPort.fromParts(pair(0), pair(1).toInt)
+        })
+        .asJava,
+      connectionConfigEntry.timeout,
+      connectionConfigEntry.retry,
+      executionRetry
+    )
+
+    client.setUser(userConfigEntry.user)
+    client.setPassword(userConfigEntry.password)
+    client
+  }
+
+  def callBack() = new FutureCallback[Optional[Integer]]() {
+    override def onSuccess(integerOptional: Optional[Integer]): Unit = {
+      if (integerOptional.isPresent) {
+
+        if (integerOptional.get() == ErrorCode.SUCCEEDED)
+          LOG.info("job execute  Succeed")
+        else LOG.error(String.format("job execute Error: %d", integerOptional.get))
+      } else
+        LOG.error("job execute Error")
+    }
+
+    override def onFailure(throwable: Throwable): Unit = {
+      LOG.error("job execute Error")
+    }
   }
 }
