@@ -152,7 +152,8 @@ class VerticesProcessor(data: DataFrame,
       val tagID = response
         .filter(item => item.tag_name == tagConfig.name)
         .map(_.tag_id)
-        .toList(0)
+        .toList
+        .head
       metaClient.close() // TODO Try?
 
       data
@@ -237,6 +238,8 @@ class VerticesProcessor(data: DataFrame,
                 case IntegerType => row.getInt(index)
                 case StringType  => row.getString(index)
               }
+              assert(NebulaUtils.isNumic(value.toString),
+                     s"Not support non-Numeric type for vertex id")
               value.toString
             } else {
               row.getString(row.schema.fieldIndex(tagConfig.vertexField))
