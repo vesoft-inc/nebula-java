@@ -51,7 +51,7 @@ public abstract class AbstractNebulaCatalog extends AbstractCatalog {
 
     @Override
     public void open() throws CatalogException{
-        // test graphClient connection
+        // test metaClient connection
         List<HostAndPort> hostAndPorts = NebulaUtils.getHostAndPorts(address);
         MetaClientImpl metaClient = new MetaClientImpl(hostAndPorts);
         try{
