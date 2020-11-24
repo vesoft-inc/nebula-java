@@ -67,63 +67,63 @@ public class VertexExecutionOptions extends ExecutionOptions {
         private PolicyEnum policy = null;
         private int idIndex = DEFAULT_ROW_INFO_INDEX;
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setGraphSpace(String graphSpace) {
+        public ExecutionOptionBuilder setGraphSpace(String graphSpace) {
             this.graphSpace = graphSpace;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setQueryStatement(String queryStatement) {
+        public ExecutionOptionBuilder setQueryStatement(String queryStatement) {
             this.queryStatement = queryStatement;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setExecuteStatement(String executeStatement) {
+        public ExecutionOptionBuilder setExecuteStatement(String executeStatement) {
             this.executeStatement = executeStatement;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setTag(String tag) {
+        public ExecutionOptionBuilder setTag(String tag) {
             this.tag = tag;
             return this;
         }
 
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setFields(List<String> fields) {
+        public ExecutionOptionBuilder setFields(List<String> fields) {
             this.fields = fields;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setAllCols(boolean allCols) {
+        public ExecutionOptionBuilder setAllCols(boolean allCols) {
             this.allCols = allCols;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setLimit(int limit) {
+        public ExecutionOptionBuilder setLimit(int limit) {
             this.limit = limit;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setStartTime(long startTime) {
+        public ExecutionOptionBuilder setStartTime(long startTime) {
             this.startTime = startTime;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setEndTime(long endTime) {
+        public ExecutionOptionBuilder setEndTime(long endTime) {
             this.endTime = endTime;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setBatch(int batch) {
+        public ExecutionOptionBuilder setBatch(int batch) {
             this.batch = batch;
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setPolicy(String policy) {
+        public ExecutionOptionBuilder setPolicy(String policy) {
             this.policy = PolicyEnum.valueOf(policy);
             return this;
         }
 
-        public VertexExecutionOptions.ExecutionOptionBuilder setIdIndex(int idIndex) {
+        public ExecutionOptionBuilder setIdIndex(int idIndex) {
             this.idIndex = idIndex;
             return this;
         }

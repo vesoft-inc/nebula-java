@@ -18,6 +18,8 @@ public class NebulaConstant {
     // Delimiter
     public static String COMMA = ",";
     public static String SUB_LINE = "_";
+    public static String POINT = ".";
+    public static String SPLIT_POINT = "\\.";
 
 
     // default value for read & write
