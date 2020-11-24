@@ -66,7 +66,7 @@ case class TagConfigEntry(override val name: String,
       s"vertex field ${vertexField} " +
       s"vertex policy ${vertexPolicy} " +
       s"batch ${batch} " +
-      s"partition ${partition}" +
+      s"partition ${partition} " +
       s"isImplicit ${isImplicit}"
   }
 }
@@ -125,7 +125,7 @@ case class EdgeConfigEntry(override val name: String,
         s"target field ${targetField} " +
         s"target policy ${targetPolicy} " +
         s"batch ${batch} " +
-        s"partition ${partition}" +
+        s"partition ${partition} " +
         s"isImplicit ${isImplicit}"
     } else {
       s"Edge name ${name} " +
@@ -137,7 +137,7 @@ case class EdgeConfigEntry(override val name: String,
         s"target field ${targetField} " +
         s"target policy ${targetPolicy} " +
         s"batch ${batch} " +
-        s"partition ${partition}" +
+        s"partition ${partition} " +
         s"isImplicit ${isImplicit}"
     }
   }
