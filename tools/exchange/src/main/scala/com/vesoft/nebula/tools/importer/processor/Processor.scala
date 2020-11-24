@@ -13,6 +13,7 @@ import com.vesoft.nebula.tools.importer.config.SchemaConfigEntry
 import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult}
 import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback
 import com.vesoft.nebula.tools.importer.utils.HDFSUtils
+import org.apache.commons.lang.StringEscapeUtils
 import org.apache.log4j.Logger
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{
@@ -70,7 +71,11 @@ trait Processor extends Serializable {
       }
       row.schema.fields(index).dataType match {
         case StringType => {
-          val result = row.getString(index).mkString("\"", "", "\"")
+          val result = if (StringEscapeUtils.escapeJava(row.getString(index)).contains('\\')) {
+            StringEscapeUtils.escapeJava(row.getString(index)).mkString("\"", "", "\"")
+          } else {
+            row.getString(index).mkString("\"", "", "\"")
+          }
           if (toBytes) return result.getBytes else return result
         }
         case _: Any => {
@@ -84,7 +89,11 @@ trait Processor extends Serializable {
         fieldTypeMap(field) match {
           case StringType =>
             val result = if (!row.isNullAt(index)) {
-              row.getString(index).mkString("\"", "", "\"")
+              if (StringEscapeUtils.escapeJava(row.getString(index)).contains('\\')) {
+                StringEscapeUtils.escapeJava(row.getString(index)).mkString("\"", "", "\"")
+              } else {
+                row.getString(index).mkString("\"", "", "\"")
+              }
             } else {
               "\"\""
             }
