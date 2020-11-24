@@ -21,7 +21,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import scala.collection.immutable
 
 object Spark {
-  private val master = "local[1]"
+  private val master  = "local[1]"
   private val appName = "exchange_testing"
   val sparkSession: SparkSession =
     new SparkSession.Builder().appName(appName).master(master).getOrCreate()
@@ -32,7 +32,7 @@ object MockGraphData {
 
   import Spark.sparkSession.implicits._
 
-  private val numberVertex = 5
+  private val numberVertex     = 5
   private val numberEdgeDegree = 1
 
   val policyList = List(Some(KeyPolicy.HASH), Some(KeyPolicy.UUID), None)
@@ -68,8 +68,8 @@ object MockGraphData {
 
   val edgeData: Seq[(Long, Long, Long, String, Double, Boolean)] = {
     val fromVertexId = Range(0, numberVertex).map(_.toLong).toList
-    var toVertexId = Range(0, numberVertex).map(_.toLong).toList
-    var id = numberVertex
+    var toVertexId   = Range(0, numberVertex).map(_.toLong).toList
+    var id           = numberVertex
     for (_ <- Range(0, numberEdgeDegree)) yield {
       toVertexId = toVertexId.last :: toVertexId.init
       for (ids <- Range(0, numberVertex)) yield {
@@ -111,12 +111,12 @@ object MockGraphData {
     keyPolicy match {
       case Some(KeyPolicy.HASH) => "hash(\"%d\")"
       case Some(KeyPolicy.UUID) => "uuid(\"%d\")"
-      case _ => "%d"
+      case _                    => "%d"
     }
 
   def createInsertVertexSentence(vertexPolicy: Option[KeyPolicy.Value]): String = {
     val vertexIdTemplate = getVertexIDTemplateFromKeyPolicy(vertexPolicy)
-    val s = if (vertexPolicy.isEmpty) "" else "\""
+    val s                = if (vertexPolicy.isEmpty) "" else "\""
 
     s"INSERT VERTEX ${vertexTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
       s"${vertexIdTemplate.format(0)}: (${s}0${s}, ${'"'}0${'"'}, 0.01, true), " +
@@ -129,8 +129,8 @@ object MockGraphData {
   def createInsertEdgeSentence(fromVertexPolicy: Option[KeyPolicy.Value],
                                toVertexPolicy: Option[KeyPolicy.Value],
                                hasRank: Boolean): String = {
-    val from = getVertexIDTemplateFromKeyPolicy(fromVertexPolicy)
-    val to = getVertexIDTemplateFromKeyPolicy(toVertexPolicy)
+    val from     = getVertexIDTemplateFromKeyPolicy(fromVertexPolicy)
+    val to       = getVertexIDTemplateFromKeyPolicy(toVertexPolicy)
     val rankList = for (i <- Range(5, 10)) yield if (hasRank) s"@${i}" else ""
 
     s"INSERT EDGE ${edgeTypeName}(idInt,idString,tDouble,tBoolean) VALUES " +
@@ -163,7 +163,8 @@ class MockGraphDataVertex(vertexPolicy: Option[KeyPolicy.Value] = None) {
       vertexPolicy,
       MockGraphData.vertexData.size,
       1,
-      None
+      None,
+      false
     )
   }
 
@@ -203,7 +204,8 @@ class MockGraphDataEdge(edgeSourcePolicy: Option[KeyPolicy.Value] = None,
       None,
       MockGraphData.edgeData.size,
       1,
-      None
+      None,
+      true
     )
   }
 

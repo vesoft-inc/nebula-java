@@ -28,6 +28,8 @@ sealed trait SchemaConfigEntry {
   def partition: Int
 
   def checkPointPath: Option[String]
+
+  def isImplicit: Boolean
 }
 
 /**
@@ -52,7 +54,8 @@ case class TagConfigEntry(override val name: String,
                           vertexPolicy: Option[KeyPolicy.Value],
                           override val batch: Int,
                           override val partition: Int,
-                          override val checkPointPath: Option[String])
+                          override val checkPointPath: Option[String],
+                          override val isImplicit: Boolean)
     extends SchemaConfigEntry {
   require(name.trim.nonEmpty && vertexField.trim.nonEmpty && batch > 0)
 
@@ -63,7 +66,8 @@ case class TagConfigEntry(override val name: String,
       s"vertex field ${vertexField} " +
       s"vertex policy ${vertexPolicy} " +
       s"batch ${batch} " +
-      s"partition ${partition}"
+      s"partition ${partition} " +
+      s"isImplicit ${isImplicit}"
   }
 }
 
@@ -101,7 +105,8 @@ case class EdgeConfigEntry(override val name: String,
                            longitude: Option[String],
                            override val batch: Int,
                            override val partition: Int,
-                           override val checkPointPath: Option[String])
+                           override val checkPointPath: Option[String],
+                           override val isImplicit: Boolean)
     extends SchemaConfigEntry {
   require(
     name.trim.nonEmpty && sourceField.trim.nonEmpty &&
@@ -120,7 +125,8 @@ case class EdgeConfigEntry(override val name: String,
         s"target field ${targetField} " +
         s"target policy ${targetPolicy} " +
         s"batch ${batch} " +
-        s"partition ${partition}"
+        s"partition ${partition} " +
+        s"isImplicit ${isImplicit}"
     } else {
       s"Edge name ${name} " +
         s"source ${dataSourceConfigEntry} " +
@@ -131,7 +137,8 @@ case class EdgeConfigEntry(override val name: String,
         s"target field ${targetField} " +
         s"target policy ${targetPolicy} " +
         s"batch ${batch} " +
-        s"partition ${partition}"
+        s"partition ${partition} " +
+        s"isImplicit ${isImplicit}"
     }
   }
 }

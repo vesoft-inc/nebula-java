@@ -87,10 +87,10 @@ object NebulaUtils {
 
   def getDataType(clazz: Class[_]): DataType = {
     if (classOf[java.lang.Boolean] == clazz) return BooleanType
-    else if (classOf[java.lang.Long] == clazz) return LongType
-    else if (classOf[java.lang.Double] == clazz) return DoubleType
-    else if (classOf[java.lang.Integer] == clazz) return LongType
-    else if (classOf[java.lang.Float] == clazz) return DoubleType
+    else if (classOf[java.lang.Long] == clazz || classOf[java.lang.Integer] == clazz)
+      return LongType
+    else if (classOf[java.lang.Double] == clazz || classOf[java.lang.Float] == clazz)
+      return DoubleType
     StringType
   }
 

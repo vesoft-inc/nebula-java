@@ -58,9 +58,26 @@ trait Processor extends Serializable {
   def extraValue(row: Row,
                  field: String,
                  fieldTypeMap: Map[String, DataType],
+                 isImplicit: Boolean,
                  toBytes: Boolean = false): Any = {
     // TODO
     val index = row.schema.fieldIndex(field)
+
+    if (!isImplicit) {
+      if (!row.isNullAt(index)) {
+        throw new IllegalArgumentException(
+          s"${field} has no value, Nebula does not support null value yet")
+      }
+      row.schema.fields(index).dataType match {
+        case StringType => {
+          val result = row.getString(index).mkString("\"", "", "\"")
+          if (toBytes) return result.getBytes else return result
+        }
+        case _: Any => {
+          return row.get(index)
+        }
+      }
+    }
 
     row.schema.fields(index).dataType match {
       case StringType => {
@@ -240,6 +257,7 @@ trait Processor extends Serializable {
         }
       }
     }
+
   }
 
   def fetchOffset(path: String): Long = {
