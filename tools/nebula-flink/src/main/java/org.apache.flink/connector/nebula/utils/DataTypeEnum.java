@@ -13,22 +13,19 @@ public enum DataTypeEnum {
 
     private String type;
 
-    DataTypeEnum(String type){
+    DataTypeEnum(String type) {
         this.type = type;
     }
 
-    public boolean isVertex(){
-        if(VERTEX.type.equalsIgnoreCase(this.type)){
+    public boolean isVertex() {
+        if (VERTEX.type.equalsIgnoreCase(this.type)) {
             return true;
         }
         return false;
     }
 
-    public static boolean checkValidDataType(String type){
-        if(VERTEX.name().equalsIgnoreCase(type)){
-            return true;
-        }
-        if(EDGE.name().equalsIgnoreCase(type)){
+    public static boolean checkValidDataType(String type) {
+        if (VERTEX.name().equalsIgnoreCase(type) || EDGE.name().equalsIgnoreCase(type)) {
             return true;
         }
         return false;
