@@ -68,7 +68,6 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
       }
     }
     if (dataIterator == null) {
-      if (storageClient != null) storageClient.close()
       if (metaClient != null) metaClient.close()
       return false
     }
