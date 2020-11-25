@@ -48,7 +48,7 @@ abstract class AbstractNebulaIterator extends Iterator[InternalRow] {
         this.returnCols.put(entry._1, entry._2.asJava)
       })
 
-    this.metaClient = NebulaUtils.createMetaClient(nebulaOptions.getHostAndPorts)
+    this.metaClient = NebulaUtils.createMetaClient(nebulaOptions.getHostAndPorts, nebulaOptions)
     this.storageClient = NebulaUtils.createStorageClient(metaClient)
 
     // allocate scanPart to this partition

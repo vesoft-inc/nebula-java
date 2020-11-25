@@ -35,7 +35,7 @@ private case class NebulaRelation(override val sqlContext: SQLContext, nebulaOpt
   def getSchema(nebulaOptions: NebulaOptions): StructType = {
     val returnColMap                    = nebulaOptions.getReturnColMap
     val fields: ListBuffer[StructField] = new ListBuffer[StructField]
-    val metaClient                      = NebulaUtils.createMetaClient(nebulaOptions.getHostAndPorts)
+    val metaClient                      = NebulaUtils.createMetaClient(nebulaOptions.getHostAndPorts, nebulaOptions)
 
     import scala.collection.JavaConverters._
     var schemaColAndType: mutable.Map[String, Class[_]] = mutable.Map[String, Class[_]]()
