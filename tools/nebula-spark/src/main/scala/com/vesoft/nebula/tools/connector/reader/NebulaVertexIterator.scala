@@ -50,7 +50,6 @@ class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schem
             case e: Exception =>
               LOG.error(s"Exception scanning vertex ${nebulaOptions.label}", e)
               NebulaUtils.closeMetaClient(metaClient)
-              NebulaUtils.closeStorageClient(storageClient)
               throw new GraphOperateException(e.getMessage, e)
           }
           // jump to the next loop
