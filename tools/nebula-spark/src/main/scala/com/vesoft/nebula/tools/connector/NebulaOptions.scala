@@ -94,6 +94,8 @@ class NebulaOptions(@transient val parameters: CaseInsensitiveMap[String])(
 
   var allCols: Boolean = false
 
+  val timeout: Int =
+    parameters.getOrElse(CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT).toString.toInt
   val connectionTimeout: Int =
     parameters.getOrElse(CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT).toString.toInt
   val connectionRetry: Int =
@@ -153,6 +155,7 @@ object NebulaOptions {
   val LABEL: String              = "label"
   val RETURN_COLS: String        = "returnCols"
   val PARTITION_NUMBER: String   = "partitionNumber"
+  val TIMEOUT: String            = "timeout"
   val CONNECTION_TIMEOUT: String = "connectionTimeout"
   val CONNECTION_RETRY: String   = "connectionRetry"
   val EXECUTION_RETRY: String    = "executionRetry"
@@ -167,6 +170,7 @@ object NebulaOptions {
   val DST_VERTEX_FIELD           = "dstVertexField"
   val ISBATCH: String            = "isbatch"
 
+  val DEFAULT_TIMEOUT: Int            = 3000
   val DEFAULT_CONNECTION_TIMEOUT: Int = 3000
   val DEFAULT_CONNECTION_RETRY: Int   = 3
   val DEFAULT_EXECUTION_RETRY: Int    = 3

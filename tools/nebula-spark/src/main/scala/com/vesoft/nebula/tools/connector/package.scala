@@ -8,6 +8,7 @@ package com.vesoft.nebula.tools
 
 import java.util.Map.Entry
 
+import com.vesoft.nebula.tools.connector.NebulaDataFrameReader
 import com.vesoft.nebula.tools.connector.reader.NebulaRelationProvider
 import com.vesoft.nebula.tools.connector.writer.NebulaBatchWriter
 import org.apache.spark.graphx.{Edge, VertexId}
@@ -33,6 +34,10 @@ package object connector {
     var space: String        = _
     var partitionNum: String = _
 
+    var timeout: Int         = 3000
+    var connectionRetry: Int = 1
+    var executionRetry: Int  = 1
+
     /**
       * @param address nebula-metad's address
       * @param partitionNum nebula space partition
@@ -42,6 +47,21 @@ package object connector {
       this.address = address
       this.space = space
       this.partitionNum = partitionNum
+      this
+    }
+
+    def withTimeout(timeout: Int): NebulaDataFrameReader = {
+      this.timeout = timeout
+      this
+    }
+
+    def withConnectionRetry(connectionRetry: Int): NebulaDataFrameReader = {
+      this.connectionRetry = connectionRetry
+      this
+    }
+
+    def withExecutionRetry(executionRetry: Int): NebulaDataFrameReader = {
+      this.executionRetry = executionRetry
       this
     }
 
@@ -69,6 +89,9 @@ package object connector {
         .option(NebulaOptions.TYPE, DataTypeEnum.VERTEX.toString)
         .option(NebulaOptions.LABEL, tag)
         .option(NebulaOptions.RETURN_COLS, fields)
+        .option(NebulaOptions.TIMEOUT, timeout)
+        .option(NebulaOptions.CONNECTION_RETRY, connectionRetry)
+        .option(NebulaOptions.EXECUTION_RETRY, executionRetry)
         .load()
     }
 
@@ -90,6 +113,9 @@ package object connector {
         .option(NebulaOptions.TYPE, DataTypeEnum.EDGE.toString)
         .option(NebulaOptions.LABEL, edge)
         .option(NebulaOptions.RETURN_COLS, fields)
+        .option(NebulaOptions.TIMEOUT, timeout)
+        .option(NebulaOptions.CONNECTION_RETRY, connectionRetry)
+        .option(NebulaOptions.EXECUTION_RETRY, executionRetry)
         .load()
     }
 
@@ -144,6 +170,9 @@ package object connector {
     var address: String      = _
     var space: String        = _
     var partitionNum: String = _
+    var timeout: Int         = 3000
+    var connectionRetry: Int = 1
+    var executionRetry: Int  = 1
 
     /**
       * @param address      nebula-metad's address
@@ -154,6 +183,21 @@ package object connector {
       this.address = address
       this.space = space
       this.partitionNum = partitionNum
+      this
+    }
+
+    def withTimeout(timeout: Int): NebulaDataFrameWriter = {
+      this.timeout = timeout
+      this
+    }
+
+    def withConnectionRetry(connectionRetry: Int): NebulaDataFrameWriter = {
+      this.connectionRetry = connectionRetry
+      this
+    }
+
+    def withExecutionRetry(executionRetry: Int): NebulaDataFrameWriter = {
+      this.executionRetry = executionRetry
       this
     }
 
@@ -170,6 +214,9 @@ package object connector {
         .option(NebulaOptions.TYPE, DataTypeEnum.VERTEX.toString)
         .option(NebulaOptions.VERTEX_FIELD, vertexFiled)
         .option(NebulaOptions.POLICY, policy)
+        .option(NebulaOptions.TIMEOUT, timeout)
+        .option(NebulaOptions.CONNECTION_RETRY, connectionRetry)
+        .option(NebulaOptions.EXECUTION_RETRY, executionRetry)
         .save()
     }
 
@@ -190,6 +237,9 @@ package object connector {
         .option(NebulaOptions.SRC_VERTEX_FIELD, srcVertexField)
         .option(NebulaOptions.DST_VERTEX_FIELD, dstVertexField)
         .option(NebulaOptions.POLICY, policy)
+        .option(NebulaOptions.TIMEOUT, timeout)
+        .option(NebulaOptions.CONNECTION_RETRY, connectionRetry)
+        .option(NebulaOptions.EXECUTION_RETRY, executionRetry)
         .save()
     }
   }

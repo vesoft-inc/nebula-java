@@ -60,8 +60,29 @@ object NebulaUtils {
     * get and connect nebula meta client
     */
   import scala.collection.JavaConverters._
+
   def createMetaClient(hostAndPorts: List[HostAndPort]): MetaClientImpl = {
     val metaClient = new MetaClientImpl(hostAndPorts.asJava)
+    try {
+      metaClient.connect()
+    } catch {
+      case te: TException =>
+        throw new GraphConnectException(
+          s"failed to connect nebula meta client with ${hostAndPorts}",
+          te)
+      case rpce: NebulaRPCException =>
+        throw new NebulaRPCException(s"failed to connect for rpc exception with ${hostAndPorts}",
+                                     rpce)
+    }
+    metaClient
+  }
+
+  def createMetaClient(hostAndPorts: List[HostAndPort],
+                       nebulaOptions: NebulaOptions): MetaClientImpl = {
+    val metaClient = new MetaClientImpl(hostAndPorts.asJava,
+                                        nebulaOptions.timeout,
+                                        nebulaOptions.connectionRetry,
+                                        nebulaOptions.executionRetry)
     try {
       metaClient.connect()
     } catch {

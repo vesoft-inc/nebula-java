@@ -49,7 +49,6 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
             case e: Exception =>
               LOG.error(s"Exception scanning edge ${nebulaOptions.label}", e)
               NebulaUtils.closeMetaClient(metaClient)
-              NebulaUtils.closeStorageClient(storageClient)
               throw new GraphOperateException(e.getMessage, e)
           }
           // jump to the next loop
@@ -69,7 +68,6 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
       }
     }
     if (dataIterator == null) {
-      if (storageClient != null) storageClient.close()
       if (metaClient != null) metaClient.close()
       return false
     }
