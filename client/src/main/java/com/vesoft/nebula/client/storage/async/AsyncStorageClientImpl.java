@@ -62,7 +62,7 @@ public class AsyncStorageClientImpl extends AsyncStorageClient {
                 transport = new TNonblockingSocket(ip, port, timeout);
                 TProtocolFactory protocol = new TBinaryProtocol.Factory();
                 StorageService.AsyncClient client = new StorageService.AsyncClient(protocol,
-                    manager, transport);
+                        manager, transport);
                 clientMap.put(addr, client);
                 return client;
             } catch (TTransportException tte) {
@@ -98,7 +98,9 @@ public class AsyncStorageClientImpl extends AsyncStorageClient {
 
     @Override
     public void close() {
-        transport.close();
+        if (transport != null && transport.isOpen()) {
+            transport.close();
+        }
         try {
             manager.stop();
         } catch (InterruptedException e) {

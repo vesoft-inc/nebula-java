@@ -967,8 +967,12 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      * @throws Exception close exception
      */
     public void close() {
-        threadPool.shutdownNow();
-        transport.close();
+        if (threadPool != null && !threadPool.isShutdown()) {
+            threadPool.shutdownNow();
+        }
+        if (transport != null && transport.isOpen()) {
+            transport.close();
+        }
     }
 }
 
