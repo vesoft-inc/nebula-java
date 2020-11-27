@@ -110,6 +110,8 @@ public abstract class AbstractClient implements Client {
     }
 
     public void close() {
-        transport.close();
+        if (transport != null && transport.isOpen()) {
+            transport.close();
+        }
     }
 }

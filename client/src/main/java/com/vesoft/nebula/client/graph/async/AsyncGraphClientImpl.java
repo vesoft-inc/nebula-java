@@ -178,8 +178,12 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
 
     @Override
     public void close() {
-        service.shutdown();
-        transport.close();
+        if (service != null && !service.isShutdown()) {
+            service.shutdown();
+        }
+        if (transport != null && transport.isOpen()) {
+            transport.close();
+        }
         try {
             manager.stop();
         } catch (InterruptedException e) {
