@@ -4,7 +4,7 @@ nebula-algorithm 是一款基于 [GraphX](https://spark.apache.org/graphx/) 的 
 
 ## 使用说明
 
-关于 nebula-algorithm 的详细使用说明，请参考文档[《nebula-algorithm 用户手册》](https://github.com/vesoft-inc/nebula-docs-cn/tree/master/nebula-algorithm)。
+关于 nebula-algorithm 的详细使用说明，请参考文档[《nebula-algorithm 用户手册》](https://docs.nebula-graph.com.cn/nebula-algorithm/na-ug-what-is-nebula-algorithm/ "点击前往 Nebula Graph 网站")。
 
 ## 贡献
 
