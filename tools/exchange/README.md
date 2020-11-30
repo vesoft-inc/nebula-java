@@ -4,7 +4,7 @@ Nebula Graph Exchange（简称为 Exchange），是一款 Apache Spark&trade; �
 
 ## 使用说明
 
-关于 Nebula Graph Exchange 的详细使用说明，请参考文档[《Nebula Graph Exchange 用户手册》](https://github.com/vesoft-inc/nebula-docs-cn/blob/master/nebula-exchange/ex-ug-toc.md)
+关于 Nebula Graph Exchange 的详细使用说明，请参考文档[《Nebula Graph Exchange 用户手册》](https://docs.nebula-graph.com.cn/nebula-exchange/about-exchange/ex-ug-what-is-exchange/ "点击前往 Nebula Graph 网站")。
 
 ## 贡献
 
