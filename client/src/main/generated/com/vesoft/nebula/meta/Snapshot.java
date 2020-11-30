@@ -33,13 +33,13 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
   private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)2);
   private static final TField HOSTS_FIELD_DESC = new TField("hosts", TType.STRING, (short)3);
 
-  public String name;
+  public byte[] name;
   /**
    * 
    * @see SnapshotStatus
    */
   public int status;
-  public String hosts;
+  public byte[] hosts;
   public static final int NAME = 1;
   public static final int STATUS = 2;
   public static final int HOSTS = 3;
@@ -69,9 +69,9 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public Snapshot(
-    String name,
+    byte[] name,
     int status,
-    String hosts)
+    byte[] hosts)
   {
     this();
     this.name = name;
@@ -104,11 +104,11 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     return new Snapshot(this);
   }
 
-  public String  getName() {
+  public byte[]  getName() {
     return this.name;
   }
 
-  public Snapshot setName(String name) {
+  public Snapshot setName(byte[] name) {
     this.name = name;
     return this;
   }
@@ -159,11 +159,11 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.set(__STATUS_ISSET_ID, value);
   }
 
-  public String  getHosts() {
+  public byte[]  getHosts() {
     return this.hosts;
   }
 
-  public Snapshot setHosts(String hosts) {
+  public Snapshot setHosts(byte[] hosts) {
     this.hosts = hosts;
     return this;
   }
@@ -189,7 +189,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetName();
       } else {
-        setName((String)value);
+        setName((byte[])value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetHosts();
       } else {
-        setHosts((String)value);
+        setHosts((byte[])value);
       }
       break;
 
@@ -264,7 +264,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     if (this_present_name || that_present_name) {
       if (!(this_present_name && that_present_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.name, that.name))
+      if (!TBaseHelper.equalsSlow(this.name, that.name))
         return false;
     }
 
@@ -282,7 +282,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     if (this_present_hosts || that_present_hosts) {
       if (!(this_present_hosts && that_present_hosts))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.hosts, that.hosts))
+      if (!TBaseHelper.equalsSlow(this.hosts, that.hosts))
         return false;
     }
 
@@ -363,7 +363,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       {
         case NAME:
           if (field.type == TType.STRING) {
-            this.name = iprot.readString();
+            this.name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -378,7 +378,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
           break;
         case HOSTS:
           if (field.type == TType.STRING) {
-            this.hosts = iprot.readString();
+            this.hosts = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -402,7 +402,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.name != null) {
       oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeString(this.name);
+      oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(STATUS_FIELD_DESC);
@@ -410,7 +410,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     oprot.writeFieldEnd();
     if (this.hosts != null) {
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
-      oprot.writeString(this.hosts);
+      oprot.writeBinary(this.hosts);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -445,7 +445,12 @@ String space = prettyPrint ? " " : "";
     if (this. getName() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getName(), indent + 1, prettyPrint));
+        int __name_size = Math.min(this. getName().length, 128);
+        for (int i = 0; i < __name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+        }
+        if (this. getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -471,7 +476,12 @@ String space = prettyPrint ? " " : "";
     if (this. getHosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHosts(), indent + 1, prettyPrint));
+        int __hosts_size = Math.min(this. getHosts().length, 128);
+        for (int i = 0; i < __hosts_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getHosts()[i]).length() > 1 ? Integer.toHexString(this. getHosts()[i]).substring(Integer.toHexString(this. getHosts()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getHosts()[i]).toUpperCase());
+        }
+        if (this. getHosts().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

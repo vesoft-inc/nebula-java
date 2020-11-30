@@ -29,25 +29,24 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class HostAddr implements TBase, java.io.Serializable, Cloneable, Comparable<HostAddr> {
   private static final TStruct STRUCT_DESC = new TStruct("HostAddr");
-  private static final TField IP_FIELD_DESC = new TField("ip", TType.I32, (short)1);
+  private static final TField HOST_FIELD_DESC = new TField("host", TType.STRING, (short)1);
   private static final TField PORT_FIELD_DESC = new TField("port", TType.I32, (short)2);
 
-  public int ip;
+  public String host;
   public int port;
-  public static final int IP = 1;
+  public static final int HOST = 1;
   public static final int PORT = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __IP_ISSET_ID = 0;
-  private static final int __PORT_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __PORT_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(IP, new FieldMetaData("ip", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(PORT, new FieldMetaData("port", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -61,12 +60,11 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public HostAddr(
-    int ip,
+    String host,
     int port)
   {
     this();
-    this.ip = ip;
-    setIpIsSet(true);
+    this.host = host;
     this.port = port;
     setPortIsSet(true);
   }
@@ -77,7 +75,9 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
   public HostAddr(HostAddr other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.ip = TBaseHelper.deepCopy(other.ip);
+    if (other.isSetHost()) {
+      this.host = TBaseHelper.deepCopy(other.host);
+    }
     this.port = TBaseHelper.deepCopy(other.port);
   }
 
@@ -90,27 +90,28 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
     return new HostAddr(this);
   }
 
-  public int  getIp() {
-    return this.ip;
+  public String  getHost() {
+    return this.host;
   }
 
-  public HostAddr setIp(int ip) {
-    this.ip = ip;
-    setIpIsSet(true);
+  public HostAddr setHost(String host) {
+    this.host = host;
     return this;
   }
 
-  public void unsetIp() {
-    __isset_bit_vector.clear(__IP_ISSET_ID);
+  public void unsetHost() {
+    this.host = null;
   }
 
-  // Returns true if field ip is set (has been assigned a value) and false otherwise
-  public boolean isSetIp() {
-    return __isset_bit_vector.get(__IP_ISSET_ID);
+  // Returns true if field host is set (has been assigned a value) and false otherwise
+  public boolean isSetHost() {
+    return this.host != null;
   }
 
-  public void setIpIsSet(boolean value) {
-    __isset_bit_vector.set(__IP_ISSET_ID, value);
+  public void setHostIsSet(boolean value) {
+    if (!value) {
+      this.host = null;
+    }
   }
 
   public int  getPort() {
@@ -138,11 +139,11 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case IP:
+    case HOST:
       if (value == null) {
-        unsetIp();
+        unsetHost();
       } else {
-        setIp((Integer)value);
+        setHost((String)value);
       }
       break;
 
@@ -161,8 +162,8 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case IP:
-      return new Integer(getIp());
+    case HOST:
+      return getHost();
 
     case PORT:
       return new Integer(getPort());
@@ -175,8 +176,8 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case IP:
-      return isSetIp();
+    case HOST:
+      return isSetHost();
     case PORT:
       return isSetPort();
     default:
@@ -199,12 +200,12 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
     if (this == that)
       return true;
 
-    boolean this_present_ip = true;
-    boolean that_present_ip = true;
-    if (this_present_ip || that_present_ip) {
-      if (!(this_present_ip && that_present_ip))
+    boolean this_present_host = true && this.isSetHost();
+    boolean that_present_host = true && that.isSetHost();
+    if (this_present_host || that_present_host) {
+      if (!(this_present_host && that_present_host))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.ip, that.ip))
+      if (!TBaseHelper.equalsNobinary(this.host, that.host))
         return false;
     }
 
@@ -224,10 +225,10 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_ip = true;
-    builder.append(present_ip);
-    if (present_ip)
-      builder.append(ip);
+    boolean present_host = true && (isSetHost());
+    builder.append(present_host);
+    if (present_host)
+      builder.append(host);
 
     boolean present_port = true;
     builder.append(present_port);
@@ -249,11 +250,11 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetIp()).compareTo(other.isSetIp());
+    lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(ip, other.ip);
+    lastComparison = TBaseHelper.compareTo(host, other.host);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -279,10 +280,9 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
       }
       switch (field.id)
       {
-        case IP:
-          if (field.type == TType.I32) {
-            this.ip = iprot.readI32();
-            setIpIsSet(true);
+        case HOST:
+          if (field.type == TType.STRING) {
+            this.host = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -312,9 +312,11 @@ public class HostAddr implements TBase, java.io.Serializable, Cloneable, Compara
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(IP_FIELD_DESC);
-    oprot.writeI32(this.ip);
-    oprot.writeFieldEnd();
+    if (this.host != null) {
+      oprot.writeFieldBegin(HOST_FIELD_DESC);
+      oprot.writeString(this.host);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(PORT_FIELD_DESC);
     oprot.writeI32(this.port);
     oprot.writeFieldEnd();
@@ -344,10 +346,14 @@ String space = prettyPrint ? " " : "";
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("ip");
+    sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getIp(), indent + 1, prettyPrint));
+    if (this. getHost() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getHost(), indent + 1, prettyPrint));
+    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

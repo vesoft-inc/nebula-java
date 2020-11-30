@@ -31,7 +31,7 @@ public class RevokeRoleReq implements TBase, java.io.Serializable, Cloneable, Co
   private static final TStruct STRUCT_DESC = new TStruct("RevokeRoleReq");
   private static final TField ROLE_ITEM_FIELD_DESC = new TField("role_item", TType.STRUCT, (short)1);
 
-  public com.vesoft.nebula.RoleItem role_item;
+  public RoleItem role_item;
   public static final int ROLE_ITEM = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -41,7 +41,7 @@ public class RevokeRoleReq implements TBase, java.io.Serializable, Cloneable, Co
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ROLE_ITEM, new FieldMetaData("role_item", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.RoleItem.class)));
+        new StructMetaData(TType.STRUCT, RoleItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -53,7 +53,7 @@ public class RevokeRoleReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public RevokeRoleReq(
-    com.vesoft.nebula.RoleItem role_item)
+    RoleItem role_item)
   {
     this();
     this.role_item = role_item;
@@ -77,11 +77,11 @@ public class RevokeRoleReq implements TBase, java.io.Serializable, Cloneable, Co
     return new RevokeRoleReq(this);
   }
 
-  public com.vesoft.nebula.RoleItem  getRole_item() {
+  public RoleItem  getRole_item() {
     return this.role_item;
   }
 
-  public RevokeRoleReq setRole_item(com.vesoft.nebula.RoleItem role_item) {
+  public RevokeRoleReq setRole_item(RoleItem role_item) {
     this.role_item = role_item;
     return this;
   }
@@ -107,7 +107,7 @@ public class RevokeRoleReq implements TBase, java.io.Serializable, Cloneable, Co
       if (value == null) {
         unsetRole_item();
       } else {
-        setRole_item((com.vesoft.nebula.RoleItem)value);
+        setRole_item((RoleItem)value);
       }
       break;
 
@@ -211,7 +211,7 @@ public class RevokeRoleReq implements TBase, java.io.Serializable, Cloneable, Co
       {
         case ROLE_ITEM:
           if (field.type == TType.STRUCT) {
-            this.role_item = new com.vesoft.nebula.RoleItem();
+            this.role_item = new RoleItem();
             this.role_item.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

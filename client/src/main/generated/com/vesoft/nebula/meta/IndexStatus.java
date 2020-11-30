@@ -32,8 +32,8 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)1);
   private static final TField STATUS_FIELD_DESC = new TField("status", TType.STRING, (short)2);
 
-  public String name;
-  public String status;
+  public byte[] name;
+  public byte[] status;
   public static final int NAME = 1;
   public static final int STATUS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -58,8 +58,8 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public IndexStatus(
-    String name,
-    String status)
+    byte[] name,
+    byte[] status)
   {
     this();
     this.name = name;
@@ -87,11 +87,11 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
     return new IndexStatus(this);
   }
 
-  public String  getName() {
+  public byte[]  getName() {
     return this.name;
   }
 
-  public IndexStatus setName(String name) {
+  public IndexStatus setName(byte[] name) {
     this.name = name;
     return this;
   }
@@ -111,11 +111,11 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public String  getStatus() {
+  public byte[]  getStatus() {
     return this.status;
   }
 
-  public IndexStatus setStatus(String status) {
+  public IndexStatus setStatus(byte[] status) {
     this.status = status;
     return this;
   }
@@ -141,7 +141,7 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetName();
       } else {
-        setName((String)value);
+        setName((byte[])value);
       }
       break;
 
@@ -149,7 +149,7 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetStatus();
       } else {
-        setStatus((String)value);
+        setStatus((byte[])value);
       }
       break;
 
@@ -203,7 +203,7 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_name || that_present_name) {
       if (!(this_present_name && that_present_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.name, that.name))
+      if (!TBaseHelper.equalsSlow(this.name, that.name))
         return false;
     }
 
@@ -212,7 +212,7 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_status || that_present_status) {
       if (!(this_present_status && that_present_status))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.status, that.status))
+      if (!TBaseHelper.equalsSlow(this.status, that.status))
         return false;
     }
 
@@ -280,14 +280,14 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case NAME:
           if (field.type == TType.STRING) {
-            this.name = iprot.readString();
+            this.name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case STATUS:
           if (field.type == TType.STRING) {
-            this.status = iprot.readString();
+            this.status = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -311,12 +311,12 @@ public class IndexStatus implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.name != null) {
       oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeString(this.name);
+      oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
     if (this.status != null) {
       oprot.writeFieldBegin(STATUS_FIELD_DESC);
-      oprot.writeString(this.status);
+      oprot.writeBinary(this.status);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -351,7 +351,12 @@ String space = prettyPrint ? " " : "";
     if (this. getName() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getName(), indent + 1, prettyPrint));
+        int __name_size = Math.min(this. getName().length, 128);
+        for (int i = 0; i < __name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+        }
+        if (this. getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -362,7 +367,12 @@ String space = prettyPrint ? " " : "";
     if (this. getStatus() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getStatus(), indent + 1, prettyPrint));
+        int __status_size = Math.min(this. getStatus().length, 128);
+        for (int i = 0; i < __status_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getStatus()[i]).length() > 1 ? Integer.toHexString(this. getStatus()[i]).substring(Integer.toHexString(this. getStatus()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getStatus()[i]).toUpperCase());
+        }
+        if (this. getStatus().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

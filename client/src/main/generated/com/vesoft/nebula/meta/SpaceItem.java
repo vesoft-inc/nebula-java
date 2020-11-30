@@ -33,7 +33,7 @@ public class SpaceItem implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField PROPERTIES_FIELD_DESC = new TField("properties", TType.STRUCT, (short)2);
 
   public int space_id;
-  public SpaceProperties properties;
+  public SpaceDesc properties;
   public static final int SPACE_ID = 1;
   public static final int PROPERTIES = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -48,7 +48,7 @@ public class SpaceItem implements TBase, java.io.Serializable, Cloneable, Compar
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PROPERTIES, new FieldMetaData("properties", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, SpaceProperties.class)));
+        new StructMetaData(TType.STRUCT, SpaceDesc.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -61,7 +61,7 @@ public class SpaceItem implements TBase, java.io.Serializable, Cloneable, Compar
 
   public SpaceItem(
     int space_id,
-    SpaceProperties properties)
+    SpaceDesc properties)
   {
     this();
     this.space_id = space_id;
@@ -113,11 +113,11 @@ public class SpaceItem implements TBase, java.io.Serializable, Cloneable, Compar
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public SpaceProperties  getProperties() {
+  public SpaceDesc  getProperties() {
     return this.properties;
   }
 
-  public SpaceItem setProperties(SpaceProperties properties) {
+  public SpaceItem setProperties(SpaceDesc properties) {
     this.properties = properties;
     return this;
   }
@@ -151,7 +151,7 @@ public class SpaceItem implements TBase, java.io.Serializable, Cloneable, Compar
       if (value == null) {
         unsetProperties();
       } else {
-        setProperties((SpaceProperties)value);
+        setProperties((SpaceDesc)value);
       }
       break;
 
@@ -290,7 +290,7 @@ public class SpaceItem implements TBase, java.io.Serializable, Cloneable, Compar
           break;
         case PROPERTIES:
           if (field.type == TType.STRUCT) {
-            this.properties = new SpaceProperties();
+            this.properties = new SpaceDesc();
             this.properties.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

@@ -431,16 +431,16 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
         case JOB_DESC:
           if (field.type == TType.LIST) {
             {
-              TList _list26 = iprot.readListBegin();
-              this.job_desc = new ArrayList<JobDesc>(Math.max(0, _list26.size));
-              for (int _i27 = 0; 
-                   (_list26.size < 0) ? iprot.peekList() : (_i27 < _list26.size); 
-                   ++_i27)
+              TList _list34 = iprot.readListBegin();
+              this.job_desc = new ArrayList<JobDesc>(Math.max(0, _list34.size));
+              for (int _i35 = 0; 
+                   (_list34.size < 0) ? iprot.peekList() : (_i35 < _list34.size); 
+                   ++_i35)
               {
-                JobDesc _elem28;
-                _elem28 = new JobDesc();
-                _elem28.read(iprot);
-                this.job_desc.add(_elem28);
+                JobDesc _elem36;
+                _elem36 = new JobDesc();
+                _elem36.read(iprot);
+                this.job_desc.add(_elem36);
               }
               iprot.readListEnd();
             }
@@ -451,16 +451,16 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
         case TASK_DESC:
           if (field.type == TType.LIST) {
             {
-              TList _list29 = iprot.readListBegin();
-              this.task_desc = new ArrayList<TaskDesc>(Math.max(0, _list29.size));
-              for (int _i30 = 0; 
-                   (_list29.size < 0) ? iprot.peekList() : (_i30 < _list29.size); 
-                   ++_i30)
+              TList _list37 = iprot.readListBegin();
+              this.task_desc = new ArrayList<TaskDesc>(Math.max(0, _list37.size));
+              for (int _i38 = 0; 
+                   (_list37.size < 0) ? iprot.peekList() : (_i38 < _list37.size); 
+                   ++_i38)
               {
-                TaskDesc _elem31;
-                _elem31 = new TaskDesc();
-                _elem31.read(iprot);
-                this.task_desc.add(_elem31);
+                TaskDesc _elem39;
+                _elem39 = new TaskDesc();
+                _elem39.read(iprot);
+                this.task_desc.add(_elem39);
               }
               iprot.readListEnd();
             }
@@ -503,8 +503,8 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
         oprot.writeFieldBegin(JOB_DESC_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.job_desc.size()));
-          for (JobDesc _iter32 : this.job_desc)          {
-            _iter32.write(oprot);
+          for (JobDesc _iter40 : this.job_desc)          {
+            _iter40.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -516,8 +516,8 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
         oprot.writeFieldBegin(TASK_DESC_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.task_desc.size()));
-          for (TaskDesc _iter33 : this.task_desc)          {
-            _iter33.write(oprot);
+          for (TaskDesc _iter41 : this.task_desc)          {
+            _iter41.write(oprot);
           }
           oprot.writeListEnd();
         }

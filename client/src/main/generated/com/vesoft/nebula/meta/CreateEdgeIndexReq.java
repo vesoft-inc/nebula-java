@@ -36,9 +36,9 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)5);
 
   public int space_id;
-  public String index_name;
-  public String edge_name;
-  public List<String> fields;
+  public byte[] index_name;
+  public byte[] edge_name;
+  public List<byte[]> fields;
   public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
@@ -78,9 +78,9 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
 
   public CreateEdgeIndexReq(
     int space_id,
-    String index_name,
-    String edge_name,
-    List<String> fields,
+    byte[] index_name,
+    byte[] edge_name,
+    List<byte[]> fields,
     boolean if_not_exists)
   {
     this();
@@ -144,11 +144,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getIndex_name() {
+  public byte[]  getIndex_name() {
     return this.index_name;
   }
 
-  public CreateEdgeIndexReq setIndex_name(String index_name) {
+  public CreateEdgeIndexReq setIndex_name(byte[] index_name) {
     this.index_name = index_name;
     return this;
   }
@@ -168,11 +168,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public String  getEdge_name() {
+  public byte[]  getEdge_name() {
     return this.edge_name;
   }
 
-  public CreateEdgeIndexReq setEdge_name(String edge_name) {
+  public CreateEdgeIndexReq setEdge_name(byte[] edge_name) {
     this.edge_name = edge_name;
     return this;
   }
@@ -192,11 +192,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public List<String>  getFields() {
+  public List<byte[]>  getFields() {
     return this.fields;
   }
 
-  public CreateEdgeIndexReq setFields(List<String> fields) {
+  public CreateEdgeIndexReq setFields(List<byte[]> fields) {
     this.fields = fields;
     return this;
   }
@@ -254,7 +254,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       if (value == null) {
         unsetIndex_name();
       } else {
-        setIndex_name((String)value);
+        setIndex_name((byte[])value);
       }
       break;
 
@@ -262,7 +262,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       if (value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((String)value);
+        setEdge_name((byte[])value);
       }
       break;
 
@@ -270,7 +270,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       if (value == null) {
         unsetFields();
       } else {
-        setFields((List<String>)value);
+        setFields((List<byte[]>)value);
       }
       break;
 
@@ -356,7 +356,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     if (this_present_index_name || that_present_index_name) {
       if (!(this_present_index_name && that_present_index_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.index_name, that.index_name))
+      if (!TBaseHelper.equalsSlow(this.index_name, that.index_name))
         return false;
     }
 
@@ -365,7 +365,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     if (this_present_edge_name || that_present_edge_name) {
       if (!(this_present_edge_name && that_present_edge_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_name, that.edge_name))
+      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
         return false;
     }
 
@@ -374,7 +374,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     if (this_present_fields || that_present_fields) {
       if (!(this_present_fields && that_present_fields))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
+      if (!TBaseHelper.equalsSlow(this.fields, that.fields))
         return false;
     }
 
@@ -498,14 +498,14 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
           break;
         case INDEX_NAME:
           if (field.type == TType.STRING) {
-            this.index_name = iprot.readString();
+            this.index_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case EDGE_NAME:
           if (field.type == TType.STRING) {
-            this.edge_name = iprot.readString();
+            this.edge_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -513,15 +513,15 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
         case FIELDS:
           if (field.type == TType.LIST) {
             {
-              TList _list116 = iprot.readListBegin();
-              this.fields = new ArrayList<String>(Math.max(0, _list116.size));
-              for (int _i117 = 0; 
-                   (_list116.size < 0) ? iprot.peekList() : (_i117 < _list116.size); 
-                   ++_i117)
+              TList _list124 = iprot.readListBegin();
+              this.fields = new ArrayList<byte[]>(Math.max(0, _list124.size));
+              for (int _i125 = 0; 
+                   (_list124.size < 0) ? iprot.peekList() : (_i125 < _list124.size); 
+                   ++_i125)
               {
-                String _elem118;
-                _elem118 = iprot.readString();
-                this.fields.add(_elem118);
+                byte[] _elem126;
+                _elem126 = iprot.readBinary();
+                this.fields.add(_elem126);
               }
               iprot.readListEnd();
             }
@@ -559,20 +559,20 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     oprot.writeFieldEnd();
     if (this.index_name != null) {
       oprot.writeFieldBegin(INDEX_NAME_FIELD_DESC);
-      oprot.writeString(this.index_name);
+      oprot.writeBinary(this.index_name);
       oprot.writeFieldEnd();
     }
     if (this.edge_name != null) {
       oprot.writeFieldBegin(EDGE_NAME_FIELD_DESC);
-      oprot.writeString(this.edge_name);
+      oprot.writeBinary(this.edge_name);
       oprot.writeFieldEnd();
     }
     if (this.fields != null) {
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (String _iter119 : this.fields)        {
-          oprot.writeString(_iter119);
+        for (byte[] _iter127 : this.fields)        {
+          oprot.writeBinary(_iter127);
         }
         oprot.writeListEnd();
       }
@@ -620,7 +620,12 @@ String space = prettyPrint ? " " : "";
     if (this. getIndex_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getIndex_name(), indent + 1, prettyPrint));
+        int __index_name_size = Math.min(this. getIndex_name().length, 128);
+        for (int i = 0; i < __index_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getIndex_name()[i]).length() > 1 ? Integer.toHexString(this. getIndex_name()[i]).substring(Integer.toHexString(this. getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getIndex_name()[i]).toUpperCase());
+        }
+        if (this. getIndex_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -631,7 +636,12 @@ String space = prettyPrint ? " " : "";
     if (this. getEdge_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdge_name(), indent + 1, prettyPrint));
+        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        for (int i = 0; i < __edge_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+        }
+        if (this. getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

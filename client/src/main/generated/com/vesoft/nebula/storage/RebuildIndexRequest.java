@@ -32,23 +32,19 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.LIST, (short)2);
   private static final TField INDEX_ID_FIELD_DESC = new TField("index_id", TType.I32, (short)3);
-  private static final TField IS_OFFLINE_FIELD_DESC = new TField("is_offline", TType.BOOL, (short)4);
 
   public int space_id;
   public List<Integer> parts;
   public int index_id;
-  public boolean is_offline;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int INDEX_ID = 3;
-  public static final int IS_OFFLINE = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __INDEX_ID_ISSET_ID = 1;
-  private static final int __IS_OFFLINE_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -60,8 +56,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
             new FieldValueMetaData(TType.I32))));
     tmpMetaDataMap.put(INDEX_ID, new FieldMetaData("index_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(IS_OFFLINE, new FieldMetaData("is_offline", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -75,8 +69,7 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
   public RebuildIndexRequest(
     int space_id,
     List<Integer> parts,
-    int index_id,
-    boolean is_offline)
+    int index_id)
   {
     this();
     this.space_id = space_id;
@@ -84,8 +77,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
     this.parts = parts;
     this.index_id = index_id;
     setIndex_idIsSet(true);
-    this.is_offline = is_offline;
-    setIs_offlineIsSet(true);
   }
 
   /**
@@ -99,7 +90,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
     this.index_id = TBaseHelper.deepCopy(other.index_id);
-    this.is_offline = TBaseHelper.deepCopy(other.is_offline);
   }
 
   public RebuildIndexRequest deepCopy() {
@@ -181,29 +171,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
     __isset_bit_vector.set(__INDEX_ID_ISSET_ID, value);
   }
 
-  public boolean  isIs_offline() {
-    return this.is_offline;
-  }
-
-  public RebuildIndexRequest setIs_offline(boolean is_offline) {
-    this.is_offline = is_offline;
-    setIs_offlineIsSet(true);
-    return this;
-  }
-
-  public void unsetIs_offline() {
-    __isset_bit_vector.clear(__IS_OFFLINE_ISSET_ID);
-  }
-
-  // Returns true if field is_offline is set (has been assigned a value) and false otherwise
-  public boolean isSetIs_offline() {
-    return __isset_bit_vector.get(__IS_OFFLINE_ISSET_ID);
-  }
-
-  public void setIs_offlineIsSet(boolean value) {
-    __isset_bit_vector.set(__IS_OFFLINE_ISSET_ID, value);
-  }
-
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -231,14 +198,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
-    case IS_OFFLINE:
-      if (value == null) {
-        unsetIs_offline();
-      } else {
-        setIs_offline((Boolean)value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -255,9 +214,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
     case INDEX_ID:
       return new Integer(getIndex_id());
 
-    case IS_OFFLINE:
-      return new Boolean(isIs_offline());
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -272,8 +228,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
       return isSetParts();
     case INDEX_ID:
       return isSetIndex_id();
-    case IS_OFFLINE:
-      return isSetIs_offline();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -321,15 +275,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
         return false;
     }
 
-    boolean this_present_is_offline = true;
-    boolean that_present_is_offline = true;
-    if (this_present_is_offline || that_present_is_offline) {
-      if (!(this_present_is_offline && that_present_is_offline))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.is_offline, that.is_offline))
-        return false;
-    }
-
     return true;
   }
 
@@ -351,11 +296,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
     builder.append(present_index_id);
     if (present_index_id)
       builder.append(index_id);
-
-    boolean present_is_offline = true;
-    builder.append(present_is_offline);
-    if (present_is_offline)
-      builder.append(is_offline);
 
     return builder.toHashCode();
   }
@@ -396,14 +336,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetIs_offline()).compareTo(other.isSetIs_offline());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(is_offline, other.is_offline);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
     return 0;
   }
 
@@ -429,15 +361,15 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
         case PARTS:
           if (field.type == TType.LIST) {
             {
-              TList _list233 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list233.size));
-              for (int _i234 = 0; 
-                   (_list233.size < 0) ? iprot.peekList() : (_i234 < _list233.size); 
-                   ++_i234)
+              TList _list208 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list208.size));
+              for (int _i209 = 0; 
+                   (_list208.size < 0) ? iprot.peekList() : (_i209 < _list208.size); 
+                   ++_i209)
               {
-                int _elem235;
-                _elem235 = iprot.readI32();
-                this.parts.add(_elem235);
+                int _elem210;
+                _elem210 = iprot.readI32();
+                this.parts.add(_elem210);
               }
               iprot.readListEnd();
             }
@@ -449,14 +381,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
           if (field.type == TType.I32) {
             this.index_id = iprot.readI32();
             setIndex_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case IS_OFFLINE:
-          if (field.type == TType.BOOL) {
-            this.is_offline = iprot.readBool();
-            setIs_offlineIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -485,8 +409,8 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter236 : this.parts)        {
-          oprot.writeI32(_iter236);
+        for (int _iter211 : this.parts)        {
+          oprot.writeI32(_iter211);
         }
         oprot.writeListEnd();
       }
@@ -494,9 +418,6 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
     }
     oprot.writeFieldBegin(INDEX_ID_FIELD_DESC);
     oprot.writeI32(this.index_id);
-    oprot.writeFieldEnd();
-    oprot.writeFieldBegin(IS_OFFLINE_FIELD_DESC);
-    oprot.writeBool(this.is_offline);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -546,13 +467,6 @@ String space = prettyPrint ? " " : "";
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getIndex_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("is_offline");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIs_offline(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

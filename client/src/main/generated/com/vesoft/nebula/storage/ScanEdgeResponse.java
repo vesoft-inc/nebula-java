@@ -30,21 +30,18 @@ import com.facebook.thrift.protocol.*;
 public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("ScanEdgeResponse");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField EDGE_SCHEMA_FIELD_DESC = new TField("edge_schema", TType.MAP, (short)2);
-  private static final TField EDGE_DATA_FIELD_DESC = new TField("edge_data", TType.LIST, (short)3);
-  private static final TField HAS_NEXT_FIELD_DESC = new TField("has_next", TType.BOOL, (short)4);
-  private static final TField NEXT_CURSOR_FIELD_DESC = new TField("next_cursor", TType.STRING, (short)5);
+  private static final TField EDGE_DATA_FIELD_DESC = new TField("edge_data", TType.STRUCT, (short)2);
+  private static final TField HAS_NEXT_FIELD_DESC = new TField("has_next", TType.BOOL, (short)3);
+  private static final TField NEXT_CURSOR_FIELD_DESC = new TField("next_cursor", TType.STRING, (short)4);
 
   public ResponseCommon result;
-  public Map<Integer,com.vesoft.nebula.Schema> edge_schema;
-  public List<ScanEdge> edge_data;
+  public com.vesoft.nebula.DataSet edge_data;
   public boolean has_next;
   public byte[] next_cursor;
   public static final int RESULT = 1;
-  public static final int EDGE_SCHEMA = 2;
-  public static final int EDGE_DATA = 3;
-  public static final int HAS_NEXT = 4;
-  public static final int NEXT_CURSOR = 5;
+  public static final int EDGE_DATA = 2;
+  public static final int HAS_NEXT = 3;
+  public static final int NEXT_CURSOR = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,16 +53,11 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(EDGE_SCHEMA, new FieldMetaData("edge_schema", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class))));
     tmpMetaDataMap.put(EDGE_DATA, new FieldMetaData("edge_data", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ScanEdge.class))));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
     tmpMetaDataMap.put(HAS_NEXT, new FieldMetaData("has_next", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
-    tmpMetaDataMap.put(NEXT_CURSOR, new FieldMetaData("next_cursor", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(NEXT_CURSOR, new FieldMetaData("next_cursor", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -86,14 +78,24 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
 
   public ScanEdgeResponse(
     ResponseCommon result,
-    Map<Integer,com.vesoft.nebula.Schema> edge_schema,
-    List<ScanEdge> edge_data,
+    com.vesoft.nebula.DataSet edge_data,
+    boolean has_next)
+  {
+    this();
+    this.result = result;
+    this.edge_data = edge_data;
+    this.has_next = has_next;
+    setHas_nextIsSet(true);
+  }
+
+  public ScanEdgeResponse(
+    ResponseCommon result,
+    com.vesoft.nebula.DataSet edge_data,
     boolean has_next,
     byte[] next_cursor)
   {
     this();
     this.result = result;
-    this.edge_schema = edge_schema;
     this.edge_data = edge_data;
     this.has_next = has_next;
     setHas_nextIsSet(true);
@@ -108,9 +110,6 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
-    }
-    if (other.isSetEdge_schema()) {
-      this.edge_schema = TBaseHelper.deepCopy(other.edge_schema);
     }
     if (other.isSetEdge_data()) {
       this.edge_data = TBaseHelper.deepCopy(other.edge_data);
@@ -154,35 +153,11 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     }
   }
 
-  public Map<Integer,com.vesoft.nebula.Schema>  getEdge_schema() {
-    return this.edge_schema;
-  }
-
-  public ScanEdgeResponse setEdge_schema(Map<Integer,com.vesoft.nebula.Schema> edge_schema) {
-    this.edge_schema = edge_schema;
-    return this;
-  }
-
-  public void unsetEdge_schema() {
-    this.edge_schema = null;
-  }
-
-  // Returns true if field edge_schema is set (has been assigned a value) and false otherwise
-  public boolean isSetEdge_schema() {
-    return this.edge_schema != null;
-  }
-
-  public void setEdge_schemaIsSet(boolean value) {
-    if (!value) {
-      this.edge_schema = null;
-    }
-  }
-
-  public List<ScanEdge>  getEdge_data() {
+  public com.vesoft.nebula.DataSet  getEdge_data() {
     return this.edge_data;
   }
 
-  public ScanEdgeResponse setEdge_data(List<ScanEdge> edge_data) {
+  public ScanEdgeResponse setEdge_data(com.vesoft.nebula.DataSet edge_data) {
     this.edge_data = edge_data;
     return this;
   }
@@ -249,7 +224,6 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case RESULT:
@@ -260,19 +234,11 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
       }
       break;
 
-    case EDGE_SCHEMA:
-      if (value == null) {
-        unsetEdge_schema();
-      } else {
-        setEdge_schema((Map<Integer,com.vesoft.nebula.Schema>)value);
-      }
-      break;
-
     case EDGE_DATA:
       if (value == null) {
         unsetEdge_data();
       } else {
-        setEdge_data((List<ScanEdge>)value);
+        setEdge_data((com.vesoft.nebula.DataSet)value);
       }
       break;
 
@@ -302,9 +268,6 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     case RESULT:
       return getResult();
 
-    case EDGE_SCHEMA:
-      return getEdge_schema();
-
     case EDGE_DATA:
       return getEdge_data();
 
@@ -324,8 +287,6 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     switch (fieldID) {
     case RESULT:
       return isSetResult();
-    case EDGE_SCHEMA:
-      return isSetEdge_schema();
     case EDGE_DATA:
       return isSetEdge_data();
     case HAS_NEXT:
@@ -358,15 +319,6 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
       if (!(this_present_result && that_present_result))
         return false;
       if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
-
-    boolean this_present_edge_schema = true && this.isSetEdge_schema();
-    boolean that_present_edge_schema = true && that.isSetEdge_schema();
-    if (this_present_edge_schema || that_present_edge_schema) {
-      if (!(this_present_edge_schema && that_present_edge_schema))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_schema, that.edge_schema))
         return false;
     }
 
@@ -409,11 +361,6 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
     if (present_result)
       builder.append(result);
 
-    boolean present_edge_schema = true && (isSetEdge_schema());
-    builder.append(present_edge_schema);
-    if (present_edge_schema)
-      builder.append(edge_schema);
-
     boolean present_edge_data = true && (isSetEdge_data());
     builder.append(present_edge_data);
     if (present_edge_data)
@@ -451,44 +398,10 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case EDGE_SCHEMA:
-          if (field.type == TType.MAP) {
-            {
-              TMap _map155 = iprot.readMapBegin();
-              this.edge_schema = new HashMap<Integer,com.vesoft.nebula.Schema>(Math.max(0, 2*_map155.size));
-              for (int _i156 = 0; 
-                   (_map155.size < 0) ? iprot.peekMap() : (_i156 < _map155.size); 
-                   ++_i156)
-              {
-                int _key157;
-                com.vesoft.nebula.Schema _val158;
-                _key157 = iprot.readI32();
-                _val158 = new com.vesoft.nebula.Schema();
-                _val158.read(iprot);
-                this.edge_schema.put(_key157, _val158);
-              }
-              iprot.readMapEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
         case EDGE_DATA:
-          if (field.type == TType.LIST) {
-            {
-              TList _list159 = iprot.readListBegin();
-              this.edge_data = new ArrayList<ScanEdge>(Math.max(0, _list159.size));
-              for (int _i160 = 0; 
-                   (_list159.size < 0) ? iprot.peekList() : (_i160 < _list159.size); 
-                   ++_i160)
-              {
-                ScanEdge _elem161;
-                _elem161 = new ScanEdge();
-                _elem161.read(iprot);
-                this.edge_data.add(_elem161);
-              }
-              iprot.readListEnd();
-            }
+          if (field.type == TType.STRUCT) {
+            this.edge_data = new com.vesoft.nebula.DataSet();
+            this.edge_data.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -530,36 +443,20 @@ public class ScanEdgeResponse implements TBase, java.io.Serializable, Cloneable 
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.edge_schema != null) {
-      oprot.writeFieldBegin(EDGE_SCHEMA_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.edge_schema.size()));
-        for (Map.Entry<Integer, com.vesoft.nebula.Schema> _iter162 : this.edge_schema.entrySet())        {
-          oprot.writeI32(_iter162.getKey());
-          _iter162.getValue().write(oprot);
-        }
-        oprot.writeMapEnd();
-      }
-      oprot.writeFieldEnd();
-    }
     if (this.edge_data != null) {
       oprot.writeFieldBegin(EDGE_DATA_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.edge_data.size()));
-        for (ScanEdge _iter163 : this.edge_data)        {
-          _iter163.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
+      this.edge_data.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(HAS_NEXT_FIELD_DESC);
     oprot.writeBool(this.has_next);
     oprot.writeFieldEnd();
     if (this.next_cursor != null) {
-      oprot.writeFieldBegin(NEXT_CURSOR_FIELD_DESC);
-      oprot.writeBinary(this.next_cursor);
-      oprot.writeFieldEnd();
+      if (isSetNext_cursor()) {
+        oprot.writeFieldBegin(NEXT_CURSOR_FIELD_DESC);
+        oprot.writeBinary(this.next_cursor);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -598,17 +495,6 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("edge_schema");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getEdge_schema() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getEdge_schema(), indent + 1, prettyPrint));
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
     sb.append("edge_data");
     sb.append(space);
     sb.append(":").append(space);
@@ -625,22 +511,25 @@ String space = prettyPrint ? " " : "";
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. isHas_next(), indent + 1, prettyPrint));
     first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("next_cursor");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getNext_cursor() == null) {
-      sb.append("null");
-    } else {
-        int __next_cursor_size = Math.min(this. getNext_cursor().length, 128);
-        for (int i = 0; i < __next_cursor_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getNext_cursor()[i]).length() > 1 ? Integer.toHexString(this. getNext_cursor()[i]).substring(Integer.toHexString(this. getNext_cursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getNext_cursor()[i]).toUpperCase());
-        }
-        if (this. getNext_cursor().length > 128) sb.append(" ...");
+    if (isSetNext_cursor())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("next_cursor");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getNext_cursor() == null) {
+        sb.append("null");
+      } else {
+          int __next_cursor_size = Math.min(this. getNext_cursor().length, 128);
+          for (int i = 0; i < __next_cursor_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getNext_cursor()[i]).length() > 1 ? Integer.toHexString(this. getNext_cursor()[i]).substring(Integer.toHexString(this. getNext_cursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getNext_cursor()[i]).toUpperCase());
+          }
+          if (this. getNext_cursor().length > 128) sb.append(" ...");
+      }
+      first = false;
     }
-    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

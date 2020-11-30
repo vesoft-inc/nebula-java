@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable {
+public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListEdgesResp> {
   private static final TStruct STRUCT_DESC = new TStruct("ListEdgesResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
@@ -313,6 +313,45 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable {
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(ListEdgesResp other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(code, other.code);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(leader, other.leader);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetEdges()).compareTo(other.isSetEdges());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(edges, other.edges);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -343,16 +382,16 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable {
         case EDGES:
           if (field.type == TType.LIST) {
             {
-              TList _list50 = iprot.readListBegin();
-              this.edges = new ArrayList<EdgeItem>(Math.max(0, _list50.size));
-              for (int _i51 = 0; 
-                   (_list50.size < 0) ? iprot.peekList() : (_i51 < _list50.size); 
-                   ++_i51)
+              TList _list58 = iprot.readListBegin();
+              this.edges = new ArrayList<EdgeItem>(Math.max(0, _list58.size));
+              for (int _i59 = 0; 
+                   (_list58.size < 0) ? iprot.peekList() : (_i59 < _list58.size); 
+                   ++_i59)
               {
-                EdgeItem _elem52;
-                _elem52 = new EdgeItem();
-                _elem52.read(iprot);
-                this.edges.add(_elem52);
+                EdgeItem _elem60;
+                _elem60 = new EdgeItem();
+                _elem60.read(iprot);
+                this.edges.add(_elem60);
               }
               iprot.readListEnd();
             }
@@ -389,8 +428,8 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(EDGES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.edges.size()));
-        for (EdgeItem _iter53 : this.edges)        {
-          _iter53.write(oprot);
+        for (EdgeItem _iter61 : this.edges)        {
+          _iter61.write(oprot);
         }
         oprot.writeListEnd();
       }

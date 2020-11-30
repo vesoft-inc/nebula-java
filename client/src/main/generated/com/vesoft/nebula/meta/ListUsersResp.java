@@ -39,7 +39,7 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public Map<String,String> users;
+  public Map<byte[],byte[]> users;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int USERS = 3;
@@ -73,7 +73,7 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
   public ListUsersResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    Map<String,String> users)
+    Map<byte[],byte[]> users)
   {
     this();
     this.code = code;
@@ -161,11 +161,11 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public Map<String,String>  getUsers() {
+  public Map<byte[],byte[]>  getUsers() {
     return this.users;
   }
 
-  public ListUsersResp setUsers(Map<String,String> users) {
+  public ListUsersResp setUsers(Map<byte[],byte[]> users) {
     this.users = users;
     return this;
   }
@@ -208,7 +208,7 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
       if (value == null) {
         unsetUsers();
       } else {
-        setUsers((Map<String,String>)value);
+        setUsers((Map<byte[],byte[]>)value);
       }
       break;
 
@@ -285,7 +285,7 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
     if (this_present_users || that_present_users) {
       if (!(this_present_users && that_present_users))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.users, that.users))
+      if (!TBaseHelper.equalsSlow(this.users, that.users))
         return false;
     }
 
@@ -383,17 +383,17 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
         case USERS:
           if (field.type == TType.MAP) {
             {
-              TMap _map124 = iprot.readMapBegin();
-              this.users = new HashMap<String,String>(Math.max(0, 2*_map124.size));
-              for (int _i125 = 0; 
-                   (_map124.size < 0) ? iprot.peekMap() : (_i125 < _map124.size); 
-                   ++_i125)
+              TMap _map132 = iprot.readMapBegin();
+              this.users = new HashMap<byte[],byte[]>(Math.max(0, 2*_map132.size));
+              for (int _i133 = 0; 
+                   (_map132.size < 0) ? iprot.peekMap() : (_i133 < _map132.size); 
+                   ++_i133)
               {
-                String _key126;
-                String _val127;
-                _key126 = iprot.readString();
-                _val127 = iprot.readString();
-                this.users.put(_key126, _val127);
+                byte[] _key134;
+                byte[] _val135;
+                _key134 = iprot.readBinary();
+                _val135 = iprot.readBinary();
+                this.users.put(_key134, _val135);
               }
               iprot.readMapEnd();
             }
@@ -430,9 +430,9 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(USERS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRING, this.users.size()));
-        for (Map.Entry<String, String> _iter128 : this.users.entrySet())        {
-          oprot.writeString(_iter128.getKey());
-          oprot.writeString(_iter128.getValue());
+        for (Map.Entry<byte[], byte[]> _iter136 : this.users.entrySet())        {
+          oprot.writeBinary(_iter136.getKey());
+          oprot.writeBinary(_iter136.getValue());
         }
         oprot.writeMapEnd();
       }

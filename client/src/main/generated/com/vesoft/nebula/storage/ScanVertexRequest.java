@@ -32,8 +32,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField CURSOR_FIELD_DESC = new TField("cursor", TType.STRING, (short)3);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.MAP, (short)4);
-  private static final TField ALL_COLUMNS_FIELD_DESC = new TField("all_columns", TType.BOOL, (short)5);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)4);
+  private static final TField NO_COLUMNS_FIELD_DESC = new TField("no_columns", TType.BOOL, (short)5);
   private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)6);
   private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)7);
   private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)8);
@@ -41,8 +41,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public int space_id;
   public int part_id;
   public byte[] cursor;
-  public Map<Integer,List<PropDef>> return_columns;
-  public boolean all_columns;
+  public List<VertexProp> return_columns;
+  public boolean no_columns;
   public int limit;
   public long start_time;
   public long end_time;
@@ -50,7 +50,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public static final int PART_ID = 2;
   public static final int CURSOR = 3;
   public static final int RETURN_COLUMNS = 4;
-  public static final int ALL_COLUMNS = 5;
+  public static final int NO_COLUMNS = 5;
   public static final int LIMIT = 6;
   public static final int START_TIME = 7;
   public static final int END_TIME = 8;
@@ -59,7 +59,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __PART_ID_ISSET_ID = 1;
-  private static final int __ALL_COLUMNS_ISSET_ID = 2;
+  private static final int __NO_COLUMNS_ISSET_ID = 2;
   private static final int __LIMIT_ISSET_ID = 3;
   private static final int __START_TIME_ISSET_ID = 4;
   private static final int __END_TIME_ISSET_ID = 5;
@@ -75,17 +75,15 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     tmpMetaDataMap.put(CURSOR, new FieldMetaData("cursor", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, PropDef.class)))));
-    tmpMetaDataMap.put(ALL_COLUMNS, new FieldMetaData("all_columns", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, VertexProp.class))));
+    tmpMetaDataMap.put(NO_COLUMNS, new FieldMetaData("no_columns", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(END_TIME, new FieldMetaData("end_time", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(END_TIME, new FieldMetaData("end_time", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -100,11 +98,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public ScanVertexRequest(
     int space_id,
     int part_id,
-    Map<Integer,List<PropDef>> return_columns,
-    boolean all_columns,
-    int limit,
-    long start_time,
-    long end_time)
+    List<VertexProp> return_columns,
+    boolean no_columns,
+    int limit)
   {
     this();
     this.space_id = space_id;
@@ -112,22 +108,18 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.return_columns = return_columns;
-    this.all_columns = all_columns;
-    setAll_columnsIsSet(true);
+    this.no_columns = no_columns;
+    setNo_columnsIsSet(true);
     this.limit = limit;
     setLimitIsSet(true);
-    this.start_time = start_time;
-    setStart_timeIsSet(true);
-    this.end_time = end_time;
-    setEnd_timeIsSet(true);
   }
 
   public ScanVertexRequest(
     int space_id,
     int part_id,
     byte[] cursor,
-    Map<Integer,List<PropDef>> return_columns,
-    boolean all_columns,
+    List<VertexProp> return_columns,
+    boolean no_columns,
     int limit,
     long start_time,
     long end_time)
@@ -139,8 +131,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     setPart_idIsSet(true);
     this.cursor = cursor;
     this.return_columns = return_columns;
-    this.all_columns = all_columns;
-    setAll_columnsIsSet(true);
+    this.no_columns = no_columns;
+    setNo_columnsIsSet(true);
     this.limit = limit;
     setLimitIsSet(true);
     this.start_time = start_time;
@@ -163,7 +155,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
     }
-    this.all_columns = TBaseHelper.deepCopy(other.all_columns);
+    this.no_columns = TBaseHelper.deepCopy(other.no_columns);
     this.limit = TBaseHelper.deepCopy(other.limit);
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.end_time = TBaseHelper.deepCopy(other.end_time);
@@ -248,11 +240,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public Map<Integer,List<PropDef>>  getReturn_columns() {
+  public List<VertexProp>  getReturn_columns() {
     return this.return_columns;
   }
 
-  public ScanVertexRequest setReturn_columns(Map<Integer,List<PropDef>> return_columns) {
+  public ScanVertexRequest setReturn_columns(List<VertexProp> return_columns) {
     this.return_columns = return_columns;
     return this;
   }
@@ -272,27 +264,27 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public boolean  isAll_columns() {
-    return this.all_columns;
+  public boolean  isNo_columns() {
+    return this.no_columns;
   }
 
-  public ScanVertexRequest setAll_columns(boolean all_columns) {
-    this.all_columns = all_columns;
-    setAll_columnsIsSet(true);
+  public ScanVertexRequest setNo_columns(boolean no_columns) {
+    this.no_columns = no_columns;
+    setNo_columnsIsSet(true);
     return this;
   }
 
-  public void unsetAll_columns() {
-    __isset_bit_vector.clear(__ALL_COLUMNS_ISSET_ID);
+  public void unsetNo_columns() {
+    __isset_bit_vector.clear(__NO_COLUMNS_ISSET_ID);
   }
 
-  // Returns true if field all_columns is set (has been assigned a value) and false otherwise
-  public boolean isSetAll_columns() {
-    return __isset_bit_vector.get(__ALL_COLUMNS_ISSET_ID);
+  // Returns true if field no_columns is set (has been assigned a value) and false otherwise
+  public boolean isSetNo_columns() {
+    return __isset_bit_vector.get(__NO_COLUMNS_ISSET_ID);
   }
 
-  public void setAll_columnsIsSet(boolean value) {
-    __isset_bit_vector.set(__ALL_COLUMNS_ISSET_ID, value);
+  public void setNo_columnsIsSet(boolean value) {
+    __isset_bit_vector.set(__NO_COLUMNS_ISSET_ID, value);
   }
 
   public int  getLimit() {
@@ -395,15 +387,15 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((Map<Integer,List<PropDef>>)value);
+        setReturn_columns((List<VertexProp>)value);
       }
       break;
 
-    case ALL_COLUMNS:
+    case NO_COLUMNS:
       if (value == null) {
-        unsetAll_columns();
+        unsetNo_columns();
       } else {
-        setAll_columns((Boolean)value);
+        setNo_columns((Boolean)value);
       }
       break;
 
@@ -450,8 +442,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     case RETURN_COLUMNS:
       return getReturn_columns();
 
-    case ALL_COLUMNS:
-      return new Boolean(isAll_columns());
+    case NO_COLUMNS:
+      return new Boolean(isNo_columns());
 
     case LIMIT:
       return new Integer(getLimit());
@@ -478,8 +470,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return isSetCursor();
     case RETURN_COLUMNS:
       return isSetReturn_columns();
-    case ALL_COLUMNS:
-      return isSetAll_columns();
+    case NO_COLUMNS:
+      return isSetNo_columns();
     case LIMIT:
       return isSetLimit();
     case START_TIME:
@@ -542,12 +534,12 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_all_columns = true;
-    boolean that_present_all_columns = true;
-    if (this_present_all_columns || that_present_all_columns) {
-      if (!(this_present_all_columns && that_present_all_columns))
+    boolean this_present_no_columns = true;
+    boolean that_present_no_columns = true;
+    if (this_present_no_columns || that_present_no_columns) {
+      if (!(this_present_no_columns && that_present_no_columns))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.all_columns, that.all_columns))
+      if (!TBaseHelper.equalsNobinary(this.no_columns, that.no_columns))
         return false;
     }
 
@@ -560,8 +552,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_start_time = true;
-    boolean that_present_start_time = true;
+    boolean this_present_start_time = true && this.isSetStart_time();
+    boolean that_present_start_time = true && that.isSetStart_time();
     if (this_present_start_time || that_present_start_time) {
       if (!(this_present_start_time && that_present_start_time))
         return false;
@@ -569,8 +561,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_end_time = true;
-    boolean that_present_end_time = true;
+    boolean this_present_end_time = true && this.isSetEnd_time();
+    boolean that_present_end_time = true && that.isSetEnd_time();
     if (this_present_end_time || that_present_end_time) {
       if (!(this_present_end_time && that_present_end_time))
         return false;
@@ -605,22 +597,22 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (present_return_columns)
       builder.append(return_columns);
 
-    boolean present_all_columns = true;
-    builder.append(present_all_columns);
-    if (present_all_columns)
-      builder.append(all_columns);
+    boolean present_no_columns = true;
+    builder.append(present_no_columns);
+    if (present_no_columns)
+      builder.append(no_columns);
 
     boolean present_limit = true;
     builder.append(present_limit);
     if (present_limit)
       builder.append(limit);
 
-    boolean present_start_time = true;
+    boolean present_start_time = true && (isSetStart_time());
     builder.append(present_start_time);
     if (present_start_time)
       builder.append(start_time);
 
-    boolean present_end_time = true;
+    boolean present_end_time = true && (isSetEnd_time());
     builder.append(present_end_time);
     if (present_end_time)
       builder.append(end_time);
@@ -672,11 +664,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetAll_columns()).compareTo(other.isSetAll_columns());
+    lastComparison = Boolean.valueOf(isSetNo_columns()).compareTo(other.isSetNo_columns());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(all_columns, other.all_columns);
+    lastComparison = TBaseHelper.compareTo(no_columns, other.no_columns);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -742,43 +734,29 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
           }
           break;
         case RETURN_COLUMNS:
-          if (field.type == TType.MAP) {
+          if (field.type == TType.LIST) {
             {
-              TMap _map164 = iprot.readMapBegin();
-              this.return_columns = new HashMap<Integer,List<PropDef>>(Math.max(0, 2*_map164.size));
-              for (int _i165 = 0; 
-                   (_map164.size < 0) ? iprot.peekMap() : (_i165 < _map164.size); 
-                   ++_i165)
+              TList _list175 = iprot.readListBegin();
+              this.return_columns = new ArrayList<VertexProp>(Math.max(0, _list175.size));
+              for (int _i176 = 0; 
+                   (_list175.size < 0) ? iprot.peekList() : (_i176 < _list175.size); 
+                   ++_i176)
               {
-                int _key166;
-                List<PropDef> _val167;
-                _key166 = iprot.readI32();
-                {
-                  TList _list168 = iprot.readListBegin();
-                  _val167 = new ArrayList<PropDef>(Math.max(0, _list168.size));
-                  for (int _i169 = 0; 
-                       (_list168.size < 0) ? iprot.peekList() : (_i169 < _list168.size); 
-                       ++_i169)
-                  {
-                    PropDef _elem170;
-                    _elem170 = new PropDef();
-                    _elem170.read(iprot);
-                    _val167.add(_elem170);
-                  }
-                  iprot.readListEnd();
-                }
-                this.return_columns.put(_key166, _val167);
+                VertexProp _elem177;
+                _elem177 = new VertexProp();
+                _elem177.read(iprot);
+                this.return_columns.add(_elem177);
               }
-              iprot.readMapEnd();
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ALL_COLUMNS:
+        case NO_COLUMNS:
           if (field.type == TType.BOOL) {
-            this.all_columns = iprot.readBool();
-            setAll_columnsIsSet(true);
+            this.no_columns = iprot.readBool();
+            setNo_columnsIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -840,33 +818,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (this.return_columns != null) {
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.return_columns.size()));
-        for (Map.Entry<Integer, List<PropDef>> _iter171 : this.return_columns.entrySet())        {
-          oprot.writeI32(_iter171.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter171.getValue().size()));
-            for (PropDef _iter172 : _iter171.getValue())            {
-              _iter172.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
+        oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
+        for (VertexProp _iter178 : this.return_columns)        {
+          _iter178.write(oprot);
         }
-        oprot.writeMapEnd();
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(ALL_COLUMNS_FIELD_DESC);
-    oprot.writeBool(this.all_columns);
+    oprot.writeFieldBegin(NO_COLUMNS_FIELD_DESC);
+    oprot.writeBool(this.no_columns);
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(LIMIT_FIELD_DESC);
     oprot.writeI32(this.limit);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(START_TIME_FIELD_DESC);
-    oprot.writeI64(this.start_time);
-    oprot.writeFieldEnd();
-    oprot.writeFieldBegin(END_TIME_FIELD_DESC);
-    oprot.writeI64(this.end_time);
-    oprot.writeFieldEnd();
+    if (isSetStart_time()) {
+      oprot.writeFieldBegin(START_TIME_FIELD_DESC);
+      oprot.writeI64(this.start_time);
+      oprot.writeFieldEnd();
+    }
+    if (isSetEnd_time()) {
+      oprot.writeFieldBegin(END_TIME_FIELD_DESC);
+      oprot.writeI64(this.end_time);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -937,10 +912,10 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("all_columns");
+    sb.append("no_columns");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isAll_columns(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this. isNo_columns(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
@@ -949,20 +924,26 @@ String space = prettyPrint ? " " : "";
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getLimit(), indent + 1, prettyPrint));
     first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("start_time");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getStart_time(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("end_time");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getEnd_time(), indent + 1, prettyPrint));
-    first = false;
+    if (isSetStart_time())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("start_time");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getStart_time(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetEnd_time())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("end_time");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getEnd_time(), indent + 1, prettyPrint));
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

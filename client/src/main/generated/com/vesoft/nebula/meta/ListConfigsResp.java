@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListConfigsResp> {
+public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("ListConfigsResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
@@ -313,45 +313,6 @@ public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable, 
     return builder.toHashCode();
   }
 
-  @Override
-  public int compareTo(ListConfigsResp other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(code, other.code);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(leader, other.leader);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetItems()).compareTo(other.isSetItems());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(items, other.items);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
-  }
-
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -382,16 +343,16 @@ public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable, 
         case ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list149 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list149.size));
-              for (int _i150 = 0; 
-                   (_list149.size < 0) ? iprot.peekList() : (_i150 < _list149.size); 
-                   ++_i150)
+              TList _list157 = iprot.readListBegin();
+              this.items = new ArrayList<ConfigItem>(Math.max(0, _list157.size));
+              for (int _i158 = 0; 
+                   (_list157.size < 0) ? iprot.peekList() : (_i158 < _list157.size); 
+                   ++_i158)
               {
-                ConfigItem _elem151;
-                _elem151 = new ConfigItem();
-                _elem151.read(iprot);
-                this.items.add(_elem151);
+                ConfigItem _elem159;
+                _elem159 = new ConfigItem();
+                _elem159.read(iprot);
+                this.items.add(_elem159);
               }
               iprot.readListEnd();
             }
@@ -428,8 +389,8 @@ public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter152 : this.items)        {
-          _iter152.write(oprot);
+        for (ConfigItem _iter160 : this.items)        {
+          _iter160.write(oprot);
         }
         oprot.writeListEnd();
       }
