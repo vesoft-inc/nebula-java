@@ -38,7 +38,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
   public int space_id;
   public byte[] index_name;
   public byte[] edge_name;
-  public List<byte[]> fields;
+  public List<IndexFieldDef> fields;
   public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
@@ -63,7 +63,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+            new StructMetaData(TType.STRUCT, IndexFieldDef.class))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -80,7 +80,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     int space_id,
     byte[] index_name,
     byte[] edge_name,
-    List<byte[]> fields,
+    List<IndexFieldDef> fields,
     boolean if_not_exists)
   {
     this();
@@ -192,11 +192,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public List<byte[]>  getFields() {
+  public List<IndexFieldDef>  getFields() {
     return this.fields;
   }
 
-  public CreateEdgeIndexReq setFields(List<byte[]> fields) {
+  public CreateEdgeIndexReq setFields(List<IndexFieldDef> fields) {
     this.fields = fields;
     return this;
   }
@@ -270,7 +270,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       if (value == null) {
         unsetFields();
       } else {
-        setFields((List<byte[]>)value);
+        setFields((List<IndexFieldDef>)value);
       }
       break;
 
@@ -374,7 +374,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     if (this_present_fields || that_present_fields) {
       if (!(this_present_fields && that_present_fields))
         return false;
-      if (!TBaseHelper.equalsSlow(this.fields, that.fields))
+      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
         return false;
     }
 
@@ -513,15 +513,16 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
         case FIELDS:
           if (field.type == TType.LIST) {
             {
-              TList _list124 = iprot.readListBegin();
-              this.fields = new ArrayList<byte[]>(Math.max(0, _list124.size));
-              for (int _i125 = 0; 
-                   (_list124.size < 0) ? iprot.peekList() : (_i125 < _list124.size); 
-                   ++_i125)
+              TList _list134 = iprot.readListBegin();
+              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list134.size));
+              for (int _i135 = 0; 
+                   (_list134.size < 0) ? iprot.peekList() : (_i135 < _list134.size); 
+                   ++_i135)
               {
-                byte[] _elem126;
-                _elem126 = iprot.readBinary();
-                this.fields.add(_elem126);
+                IndexFieldDef _elem136;
+                _elem136 = new IndexFieldDef();
+                _elem136.read(iprot);
+                this.fields.add(_elem136);
               }
               iprot.readListEnd();
             }
@@ -570,9 +571,9 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     if (this.fields != null) {
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (byte[] _iter127 : this.fields)        {
-          oprot.writeBinary(_iter127);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
+        for (IndexFieldDef _iter137 : this.fields)        {
+          _iter137.write(oprot);
         }
         oprot.writeListEnd();
       }

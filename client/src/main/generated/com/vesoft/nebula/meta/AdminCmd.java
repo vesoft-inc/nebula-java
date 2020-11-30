@@ -21,6 +21,8 @@ public class AdminCmd {
   public static final int FLUSH = 1;
   public static final int REBUILD_TAG_INDEX = 2;
   public static final int REBUILD_EDGE_INDEX = 3;
+  public static final int STATS = 4;
+  public static final int UNKNOWN = 5;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();

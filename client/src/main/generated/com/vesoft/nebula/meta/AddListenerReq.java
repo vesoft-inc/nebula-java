@@ -27,75 +27,89 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListPartsReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListPartsReq");
+public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, Comparable<AddListenerReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("AddListenerReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PART_IDS_FIELD_DESC = new TField("part_ids", TType.LIST, (short)2);
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)2);
+  private static final TField HOSTS_FIELD_DESC = new TField("hosts", TType.LIST, (short)3);
 
   public int space_id;
-  public List<Integer> part_ids;
+  /**
+   * 
+   * @see ListenerType
+   */
+  public int type;
+  public List<com.vesoft.nebula.HostAddr> hosts;
   public static final int SPACE_ID = 1;
-  public static final int PART_IDS = 2;
+  public static final int TYPE = 2;
+  public static final int HOSTS = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __TYPE_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PART_IDS, new FieldMetaData("part_ids", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(HOSTS, new FieldMetaData("hosts", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.I32))));
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListPartsReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(AddListenerReq.class, metaDataMap);
   }
 
-  public ListPartsReq() {
+  public AddListenerReq() {
   }
 
-  public ListPartsReq(
+  public AddListenerReq(
     int space_id,
-    List<Integer> part_ids)
+    int type,
+    List<com.vesoft.nebula.HostAddr> hosts)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.part_ids = part_ids;
+    this.type = type;
+    setTypeIsSet(true);
+    this.hosts = hosts;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListPartsReq(ListPartsReq other) {
+  public AddListenerReq(AddListenerReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetPart_ids()) {
-      this.part_ids = TBaseHelper.deepCopy(other.part_ids);
+    this.type = TBaseHelper.deepCopy(other.type);
+    if (other.isSetHosts()) {
+      this.hosts = TBaseHelper.deepCopy(other.hosts);
     }
   }
 
-  public ListPartsReq deepCopy() {
-    return new ListPartsReq(this);
+  public AddListenerReq deepCopy() {
+    return new AddListenerReq(this);
   }
 
   @Deprecated
-  public ListPartsReq clone() {
-    return new ListPartsReq(this);
+  public AddListenerReq clone() {
+    return new AddListenerReq(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public ListPartsReq setSpace_id(int space_id) {
+  public AddListenerReq setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -114,27 +128,58 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public List<Integer>  getPart_ids() {
-    return this.part_ids;
+  /**
+   * 
+   * @see ListenerType
+   */
+  public int  getType() {
+    return this.type;
   }
 
-  public ListPartsReq setPart_ids(List<Integer> part_ids) {
-    this.part_ids = part_ids;
+  /**
+   * 
+   * @see ListenerType
+   */
+  public AddListenerReq setType(int type) {
+    this.type = type;
+    setTypeIsSet(true);
     return this;
   }
 
-  public void unsetPart_ids() {
-    this.part_ids = null;
+  public void unsetType() {
+    __isset_bit_vector.clear(__TYPE_ISSET_ID);
   }
 
-  // Returns true if field part_ids is set (has been assigned a value) and false otherwise
-  public boolean isSetPart_ids() {
-    return this.part_ids != null;
+  // Returns true if field type is set (has been assigned a value) and false otherwise
+  public boolean isSetType() {
+    return __isset_bit_vector.get(__TYPE_ISSET_ID);
   }
 
-  public void setPart_idsIsSet(boolean value) {
+  public void setTypeIsSet(boolean value) {
+    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  }
+
+  public List<com.vesoft.nebula.HostAddr>  getHosts() {
+    return this.hosts;
+  }
+
+  public AddListenerReq setHosts(List<com.vesoft.nebula.HostAddr> hosts) {
+    this.hosts = hosts;
+    return this;
+  }
+
+  public void unsetHosts() {
+    this.hosts = null;
+  }
+
+  // Returns true if field hosts is set (has been assigned a value) and false otherwise
+  public boolean isSetHosts() {
+    return this.hosts != null;
+  }
+
+  public void setHostsIsSet(boolean value) {
     if (!value) {
-      this.part_ids = null;
+      this.hosts = null;
     }
   }
 
@@ -149,11 +194,19 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
-    case PART_IDS:
+    case TYPE:
       if (value == null) {
-        unsetPart_ids();
+        unsetType();
       } else {
-        setPart_ids((List<Integer>)value);
+        setType((Integer)value);
+      }
+      break;
+
+    case HOSTS:
+      if (value == null) {
+        unsetHosts();
+      } else {
+        setHosts((List<com.vesoft.nebula.HostAddr>)value);
       }
       break;
 
@@ -167,8 +220,11 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PART_IDS:
-      return getPart_ids();
+    case TYPE:
+      return getType();
+
+    case HOSTS:
+      return getHosts();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -180,8 +236,10 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     switch (fieldID) {
     case SPACE_ID:
       return isSetSpace_id();
-    case PART_IDS:
-      return isSetPart_ids();
+    case TYPE:
+      return isSetType();
+    case HOSTS:
+      return isSetHosts();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -191,12 +249,12 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ListPartsReq)
-      return this.equals((ListPartsReq)that);
+    if (that instanceof AddListenerReq)
+      return this.equals((AddListenerReq)that);
     return false;
   }
 
-  public boolean equals(ListPartsReq that) {
+  public boolean equals(AddListenerReq that) {
     if (that == null)
       return false;
     if (this == that)
@@ -211,12 +269,21 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
         return false;
     }
 
-    boolean this_present_part_ids = true && this.isSetPart_ids();
-    boolean that_present_part_ids = true && that.isSetPart_ids();
-    if (this_present_part_ids || that_present_part_ids) {
-      if (!(this_present_part_ids && that_present_part_ids))
+    boolean this_present_type = true;
+    boolean that_present_type = true;
+    if (this_present_type || that_present_type) {
+      if (!(this_present_type && that_present_type))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.part_ids, that.part_ids))
+      if (!TBaseHelper.equalsNobinary(this.type, that.type))
+        return false;
+    }
+
+    boolean this_present_hosts = true && this.isSetHosts();
+    boolean that_present_hosts = true && that.isSetHosts();
+    if (this_present_hosts || that_present_hosts) {
+      if (!(this_present_hosts && that_present_hosts))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.hosts, that.hosts))
         return false;
     }
 
@@ -232,16 +299,21 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     if (present_space_id)
       builder.append(space_id);
 
-    boolean present_part_ids = true && (isSetPart_ids());
-    builder.append(present_part_ids);
-    if (present_part_ids)
-      builder.append(part_ids);
+    boolean present_type = true;
+    builder.append(present_type);
+    if (present_type)
+      builder.append(type);
+
+    boolean present_hosts = true && (isSetHosts());
+    builder.append(present_hosts);
+    if (present_hosts)
+      builder.append(hosts);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(ListPartsReq other) {
+  public int compareTo(AddListenerReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -260,11 +332,19 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetPart_ids()).compareTo(other.isSetPart_ids());
+    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(part_ids, other.part_ids);
+    lastComparison = TBaseHelper.compareTo(type, other.type);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -290,18 +370,27 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case PART_IDS:
+        case TYPE:
+          if (field.type == TType.I32) {
+            this.type = iprot.readI32();
+            setTypeIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case HOSTS:
           if (field.type == TType.LIST) {
             {
-              TList _list84 = iprot.readListBegin();
-              this.part_ids = new ArrayList<Integer>(Math.max(0, _list84.size));
-              for (int _i85 = 0; 
-                   (_list84.size < 0) ? iprot.peekList() : (_i85 < _list84.size); 
-                   ++_i85)
+              TList _list211 = iprot.readListBegin();
+              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list211.size));
+              for (int _i212 = 0; 
+                   (_list211.size < 0) ? iprot.peekList() : (_i212 < _list211.size); 
+                   ++_i212)
               {
-                int _elem86;
-                _elem86 = iprot.readI32();
-                this.part_ids.add(_elem86);
+                com.vesoft.nebula.HostAddr _elem213;
+                _elem213 = new com.vesoft.nebula.HostAddr();
+                _elem213.read(iprot);
+                this.hosts.add(_elem213);
               }
               iprot.readListEnd();
             }
@@ -329,12 +418,15 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.part_ids != null) {
-      oprot.writeFieldBegin(PART_IDS_FIELD_DESC);
+    oprot.writeFieldBegin(TYPE_FIELD_DESC);
+    oprot.writeI32(this.type);
+    oprot.writeFieldEnd();
+    if (this.hosts != null) {
+      oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.I32, this.part_ids.size()));
-        for (int _iter87 : this.part_ids)        {
-          oprot.writeI32(_iter87);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
+        for (com.vesoft.nebula.HostAddr _iter214 : this.hosts)        {
+          _iter214.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -359,7 +451,7 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListPartsReq");
+    StringBuilder sb = new StringBuilder("AddListenerReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -373,13 +465,28 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("part_ids");
+    sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPart_ids() == null) {
+    String type_name = ListenerType.VALUES_TO_NAMES.get(this. getType());
+    if (type_name != null) {
+      sb.append(type_name);
+      sb.append(" (");
+    }
+    sb.append(this. getType());
+    if (type_name != null) {
+      sb.append(")");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("hosts");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getHosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPart_ids(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getHosts(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -390,6 +497,9 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
+    if (isSetType() && !ListenerType.VALID_VALUES.contains(type)){
+      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
+    }
   }
 
 }

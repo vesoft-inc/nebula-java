@@ -27,11 +27,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListGroupsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListGroupsResp");
+public class GetStatisResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetStatisResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetStatisResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField GROUPS_FIELD_DESC = new TField("groups", TType.LIST, (short)3);
+  private static final TField STATIS_FIELD_DESC = new TField("statis", TType.STRUCT, (short)3);
 
   /**
    * 
@@ -39,10 +39,10 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<Group> groups;
+  public StatisItem statis;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int GROUPS = 3;
+  public static final int STATIS = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,53 +56,52 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(GROUPS, new FieldMetaData("groups", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, Group.class))));
+    tmpMetaDataMap.put(STATIS, new FieldMetaData("statis", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, StatisItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListGroupsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetStatisResp.class, metaDataMap);
   }
 
-  public ListGroupsResp() {
+  public GetStatisResp() {
   }
 
-  public ListGroupsResp(
+  public GetStatisResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<Group> groups)
+    StatisItem statis)
   {
     this();
     this.code = code;
     setCodeIsSet(true);
     this.leader = leader;
-    this.groups = groups;
+    this.statis = statis;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListGroupsResp(ListGroupsResp other) {
+  public GetStatisResp(GetStatisResp other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.code = TBaseHelper.deepCopy(other.code);
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetGroups()) {
-      this.groups = TBaseHelper.deepCopy(other.groups);
+    if (other.isSetStatis()) {
+      this.statis = TBaseHelper.deepCopy(other.statis);
     }
   }
 
-  public ListGroupsResp deepCopy() {
-    return new ListGroupsResp(this);
+  public GetStatisResp deepCopy() {
+    return new GetStatisResp(this);
   }
 
   @Deprecated
-  public ListGroupsResp clone() {
-    return new ListGroupsResp(this);
+  public GetStatisResp clone() {
+    return new GetStatisResp(this);
   }
 
   /**
@@ -117,7 +116,7 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
    * 
    * @see ErrorCode
    */
-  public ListGroupsResp setCode(int code) {
+  public GetStatisResp setCode(int code) {
     this.code = code;
     setCodeIsSet(true);
     return this;
@@ -140,7 +139,7 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     return this.leader;
   }
 
-  public ListGroupsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public GetStatisResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -160,31 +159,30 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public List<Group>  getGroups() {
-    return this.groups;
+  public StatisItem  getStatis() {
+    return this.statis;
   }
 
-  public ListGroupsResp setGroups(List<Group> groups) {
-    this.groups = groups;
+  public GetStatisResp setStatis(StatisItem statis) {
+    this.statis = statis;
     return this;
   }
 
-  public void unsetGroups() {
-    this.groups = null;
+  public void unsetStatis() {
+    this.statis = null;
   }
 
-  // Returns true if field groups is set (has been assigned a value) and false otherwise
-  public boolean isSetGroups() {
-    return this.groups != null;
+  // Returns true if field statis is set (has been assigned a value) and false otherwise
+  public boolean isSetStatis() {
+    return this.statis != null;
   }
 
-  public void setGroupsIsSet(boolean value) {
+  public void setStatisIsSet(boolean value) {
     if (!value) {
-      this.groups = null;
+      this.statis = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case CODE:
@@ -203,11 +201,11 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
-    case GROUPS:
+    case STATIS:
       if (value == null) {
-        unsetGroups();
+        unsetStatis();
       } else {
-        setGroups((List<Group>)value);
+        setStatis((StatisItem)value);
       }
       break;
 
@@ -224,8 +222,8 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     case LEADER:
       return getLeader();
 
-    case GROUPS:
-      return getGroups();
+    case STATIS:
+      return getStatis();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -239,8 +237,8 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       return isSetCode();
     case LEADER:
       return isSetLeader();
-    case GROUPS:
-      return isSetGroups();
+    case STATIS:
+      return isSetStatis();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -250,12 +248,12 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ListGroupsResp)
-      return this.equals((ListGroupsResp)that);
+    if (that instanceof GetStatisResp)
+      return this.equals((GetStatisResp)that);
     return false;
   }
 
-  public boolean equals(ListGroupsResp that) {
+  public boolean equals(GetStatisResp that) {
     if (that == null)
       return false;
     if (this == that)
@@ -279,12 +277,12 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
         return false;
     }
 
-    boolean this_present_groups = true && this.isSetGroups();
-    boolean that_present_groups = true && that.isSetGroups();
-    if (this_present_groups || that_present_groups) {
-      if (!(this_present_groups && that_present_groups))
+    boolean this_present_statis = true && this.isSetStatis();
+    boolean that_present_statis = true && that.isSetStatis();
+    if (this_present_statis || that_present_statis) {
+      if (!(this_present_statis && that_present_statis))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.groups, that.groups))
+      if (!TBaseHelper.equalsNobinary(this.statis, that.statis))
         return false;
     }
 
@@ -305,16 +303,16 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     if (present_leader)
       builder.append(leader);
 
-    boolean present_groups = true && (isSetGroups());
-    builder.append(present_groups);
-    if (present_groups)
-      builder.append(groups);
+    boolean present_statis = true && (isSetStatis());
+    builder.append(present_statis);
+    if (present_statis)
+      builder.append(statis);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(ListGroupsResp other) {
+  public int compareTo(GetStatisResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -341,11 +339,11 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetGroups()).compareTo(other.isSetGroups());
+    lastComparison = Boolean.valueOf(isSetStatis()).compareTo(other.isSetStatis());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(groups, other.groups);
+    lastComparison = TBaseHelper.compareTo(statis, other.statis);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -379,22 +377,10 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case GROUPS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list207 = iprot.readListBegin();
-              this.groups = new ArrayList<Group>(Math.max(0, _list207.size));
-              for (int _i208 = 0; 
-                   (_list207.size < 0) ? iprot.peekList() : (_i208 < _list207.size); 
-                   ++_i208)
-              {
-                Group _elem209;
-                _elem209 = new Group();
-                _elem209.read(iprot);
-                this.groups.add(_elem209);
-              }
-              iprot.readListEnd();
-            }
+        case STATIS:
+          if (field.type == TType.STRUCT) {
+            this.statis = new StatisItem();
+            this.statis.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -424,15 +410,9 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.groups != null) {
-      oprot.writeFieldBegin(GROUPS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.groups.size()));
-        for (Group _iter210 : this.groups)        {
-          _iter210.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
+    if (this.statis != null) {
+      oprot.writeFieldBegin(STATIS_FIELD_DESC);
+      this.statis.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -454,7 +434,7 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListGroupsResp");
+    StringBuilder sb = new StringBuilder("GetStatisResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -487,13 +467,13 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("groups");
+    sb.append("statis");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGroups() == null) {
+    if (this. getStatis() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getGroups(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getStatis(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

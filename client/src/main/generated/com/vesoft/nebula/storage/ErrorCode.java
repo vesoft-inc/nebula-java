@@ -50,6 +50,7 @@ public class ErrorCode {
   public static final int E_TRANSFER_LEADER_FAILED = -46;
   public static final int E_INVALID_STAT_TYPE = -47;
   public static final int E_INVALID_VID = -48;
+  public static final int E_NO_TRANSFORMED = -49;
   public static final int E_LOAD_META_FAILED = -51;
   public static final int E_FAILED_TO_CHECKPOINT = -60;
   public static final int E_CHECKPOINT_BLOCKED = -61;

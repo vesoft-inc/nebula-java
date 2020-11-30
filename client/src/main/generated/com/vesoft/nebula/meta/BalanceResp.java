@@ -458,16 +458,16 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
         case TASKS:
           if (field.type == TType.LIST) {
             {
-              TList _list145 = iprot.readListBegin();
-              this.tasks = new ArrayList<BalanceTask>(Math.max(0, _list145.size));
-              for (int _i146 = 0; 
-                   (_list145.size < 0) ? iprot.peekList() : (_i146 < _list145.size); 
-                   ++_i146)
+              TList _list155 = iprot.readListBegin();
+              this.tasks = new ArrayList<BalanceTask>(Math.max(0, _list155.size));
+              for (int _i156 = 0; 
+                   (_list155.size < 0) ? iprot.peekList() : (_i156 < _list155.size); 
+                   ++_i156)
               {
-                BalanceTask _elem147;
-                _elem147 = new BalanceTask();
-                _elem147.read(iprot);
-                this.tasks.add(_elem147);
+                BalanceTask _elem157;
+                _elem157 = new BalanceTask();
+                _elem157.read(iprot);
+                this.tasks.add(_elem157);
               }
               iprot.readListEnd();
             }
@@ -507,8 +507,8 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(TASKS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tasks.size()));
-        for (BalanceTask _iter148 : this.tasks)        {
-          _iter148.write(oprot);
+        for (BalanceTask _iter158 : this.tasks)        {
+          _iter158.write(oprot);
         }
         oprot.writeListEnd();
       }

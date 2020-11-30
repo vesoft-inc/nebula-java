@@ -27,11 +27,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListGroupsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListGroupsResp");
+public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListFTClientsResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListFTClientsResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField GROUPS_FIELD_DESC = new TField("groups", TType.LIST, (short)3);
+  private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.LIST, (short)3);
 
   /**
    * 
@@ -39,10 +39,10 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<Group> groups;
+  public List<FTClient> clients;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int GROUPS = 3;
+  public static final int CLIENTS = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,53 +56,53 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(GROUPS, new FieldMetaData("groups", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(CLIENTS, new FieldMetaData("clients", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, Group.class))));
+            new StructMetaData(TType.STRUCT, FTClient.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListGroupsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListFTClientsResp.class, metaDataMap);
   }
 
-  public ListGroupsResp() {
+  public ListFTClientsResp() {
   }
 
-  public ListGroupsResp(
+  public ListFTClientsResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<Group> groups)
+    List<FTClient> clients)
   {
     this();
     this.code = code;
     setCodeIsSet(true);
     this.leader = leader;
-    this.groups = groups;
+    this.clients = clients;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListGroupsResp(ListGroupsResp other) {
+  public ListFTClientsResp(ListFTClientsResp other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.code = TBaseHelper.deepCopy(other.code);
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetGroups()) {
-      this.groups = TBaseHelper.deepCopy(other.groups);
+    if (other.isSetClients()) {
+      this.clients = TBaseHelper.deepCopy(other.clients);
     }
   }
 
-  public ListGroupsResp deepCopy() {
-    return new ListGroupsResp(this);
+  public ListFTClientsResp deepCopy() {
+    return new ListFTClientsResp(this);
   }
 
   @Deprecated
-  public ListGroupsResp clone() {
-    return new ListGroupsResp(this);
+  public ListFTClientsResp clone() {
+    return new ListFTClientsResp(this);
   }
 
   /**
@@ -117,7 +117,7 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
    * 
    * @see ErrorCode
    */
-  public ListGroupsResp setCode(int code) {
+  public ListFTClientsResp setCode(int code) {
     this.code = code;
     setCodeIsSet(true);
     return this;
@@ -140,7 +140,7 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     return this.leader;
   }
 
-  public ListGroupsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public ListFTClientsResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -160,27 +160,27 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public List<Group>  getGroups() {
-    return this.groups;
+  public List<FTClient>  getClients() {
+    return this.clients;
   }
 
-  public ListGroupsResp setGroups(List<Group> groups) {
-    this.groups = groups;
+  public ListFTClientsResp setClients(List<FTClient> clients) {
+    this.clients = clients;
     return this;
   }
 
-  public void unsetGroups() {
-    this.groups = null;
+  public void unsetClients() {
+    this.clients = null;
   }
 
-  // Returns true if field groups is set (has been assigned a value) and false otherwise
-  public boolean isSetGroups() {
-    return this.groups != null;
+  // Returns true if field clients is set (has been assigned a value) and false otherwise
+  public boolean isSetClients() {
+    return this.clients != null;
   }
 
-  public void setGroupsIsSet(boolean value) {
+  public void setClientsIsSet(boolean value) {
     if (!value) {
-      this.groups = null;
+      this.clients = null;
     }
   }
 
@@ -203,11 +203,11 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
-    case GROUPS:
+    case CLIENTS:
       if (value == null) {
-        unsetGroups();
+        unsetClients();
       } else {
-        setGroups((List<Group>)value);
+        setClients((List<FTClient>)value);
       }
       break;
 
@@ -224,8 +224,8 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     case LEADER:
       return getLeader();
 
-    case GROUPS:
-      return getGroups();
+    case CLIENTS:
+      return getClients();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -239,8 +239,8 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       return isSetCode();
     case LEADER:
       return isSetLeader();
-    case GROUPS:
-      return isSetGroups();
+    case CLIENTS:
+      return isSetClients();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -250,12 +250,12 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ListGroupsResp)
-      return this.equals((ListGroupsResp)that);
+    if (that instanceof ListFTClientsResp)
+      return this.equals((ListFTClientsResp)that);
     return false;
   }
 
-  public boolean equals(ListGroupsResp that) {
+  public boolean equals(ListFTClientsResp that) {
     if (that == null)
       return false;
     if (this == that)
@@ -279,12 +279,12 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
         return false;
     }
 
-    boolean this_present_groups = true && this.isSetGroups();
-    boolean that_present_groups = true && that.isSetGroups();
-    if (this_present_groups || that_present_groups) {
-      if (!(this_present_groups && that_present_groups))
+    boolean this_present_clients = true && this.isSetClients();
+    boolean that_present_clients = true && that.isSetClients();
+    if (this_present_clients || that_present_clients) {
+      if (!(this_present_clients && that_present_clients))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.groups, that.groups))
+      if (!TBaseHelper.equalsNobinary(this.clients, that.clients))
         return false;
     }
 
@@ -305,16 +305,16 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     if (present_leader)
       builder.append(leader);
 
-    boolean present_groups = true && (isSetGroups());
-    builder.append(present_groups);
-    if (present_groups)
-      builder.append(groups);
+    boolean present_clients = true && (isSetClients());
+    builder.append(present_clients);
+    if (present_clients)
+      builder.append(clients);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(ListGroupsResp other) {
+  public int compareTo(ListFTClientsResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -341,11 +341,11 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetGroups()).compareTo(other.isSetGroups());
+    lastComparison = Boolean.valueOf(isSetClients()).compareTo(other.isSetClients());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(groups, other.groups);
+    lastComparison = TBaseHelper.compareTo(clients, other.clients);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -379,19 +379,19 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case GROUPS:
+        case CLIENTS:
           if (field.type == TType.LIST) {
             {
-              TList _list207 = iprot.readListBegin();
-              this.groups = new ArrayList<Group>(Math.max(0, _list207.size));
-              for (int _i208 = 0; 
-                   (_list207.size < 0) ? iprot.peekList() : (_i208 < _list207.size); 
-                   ++_i208)
+              TList _list223 = iprot.readListBegin();
+              this.clients = new ArrayList<FTClient>(Math.max(0, _list223.size));
+              for (int _i224 = 0; 
+                   (_list223.size < 0) ? iprot.peekList() : (_i224 < _list223.size); 
+                   ++_i224)
               {
-                Group _elem209;
-                _elem209 = new Group();
-                _elem209.read(iprot);
-                this.groups.add(_elem209);
+                FTClient _elem225;
+                _elem225 = new FTClient();
+                _elem225.read(iprot);
+                this.clients.add(_elem225);
               }
               iprot.readListEnd();
             }
@@ -424,12 +424,12 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.groups != null) {
-      oprot.writeFieldBegin(GROUPS_FIELD_DESC);
+    if (this.clients != null) {
+      oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.groups.size()));
-        for (Group _iter210 : this.groups)        {
-          _iter210.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
+        for (FTClient _iter226 : this.clients)        {
+          _iter226.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -454,7 +454,7 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListGroupsResp");
+    StringBuilder sb = new StringBuilder("ListFTClientsResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -487,13 +487,13 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("groups");
+    sb.append("clients");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGroups() == null) {
+    if (this. getClients() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getGroups(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getClients(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

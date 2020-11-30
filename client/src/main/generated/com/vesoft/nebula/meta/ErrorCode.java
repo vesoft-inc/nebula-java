@@ -55,6 +55,7 @@ public class ErrorCode {
   public static final int E_STOP_JOB_FAILURE = -56;
   public static final int E_SAVE_JOB_FAILURE = -57;
   public static final int E_BALANCER_FAILURE = -58;
+  public static final int E_JOB_NOT_FINISHED = -59;
   public static final int E_UNKNOWN = -99;
 
   public static final IntRangeSet VALID_VALUES;

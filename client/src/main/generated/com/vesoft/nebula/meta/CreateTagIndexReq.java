@@ -38,7 +38,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
   public int space_id;
   public byte[] index_name;
   public byte[] tag_name;
-  public List<byte[]> fields;
+  public List<IndexFieldDef> fields;
   public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
@@ -63,7 +63,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+            new StructMetaData(TType.STRUCT, IndexFieldDef.class))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -80,7 +80,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     int space_id,
     byte[] index_name,
     byte[] tag_name,
-    List<byte[]> fields,
+    List<IndexFieldDef> fields,
     boolean if_not_exists)
   {
     this();
@@ -192,11 +192,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<byte[]>  getFields() {
+  public List<IndexFieldDef>  getFields() {
     return this.fields;
   }
 
-  public CreateTagIndexReq setFields(List<byte[]> fields) {
+  public CreateTagIndexReq setFields(List<IndexFieldDef> fields) {
     this.fields = fields;
     return this;
   }
@@ -270,7 +270,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetFields();
       } else {
-        setFields((List<byte[]>)value);
+        setFields((List<IndexFieldDef>)value);
       }
       break;
 
@@ -374,7 +374,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (this_present_fields || that_present_fields) {
       if (!(this_present_fields && that_present_fields))
         return false;
-      if (!TBaseHelper.equalsSlow(this.fields, that.fields))
+      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
         return false;
     }
 
@@ -513,15 +513,16 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         case FIELDS:
           if (field.type == TType.LIST) {
             {
-              TList _list116 = iprot.readListBegin();
-              this.fields = new ArrayList<byte[]>(Math.max(0, _list116.size));
-              for (int _i117 = 0; 
-                   (_list116.size < 0) ? iprot.peekList() : (_i117 < _list116.size); 
-                   ++_i117)
+              TList _list126 = iprot.readListBegin();
+              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list126.size));
+              for (int _i127 = 0; 
+                   (_list126.size < 0) ? iprot.peekList() : (_i127 < _list126.size); 
+                   ++_i127)
               {
-                byte[] _elem118;
-                _elem118 = iprot.readBinary();
-                this.fields.add(_elem118);
+                IndexFieldDef _elem128;
+                _elem128 = new IndexFieldDef();
+                _elem128.read(iprot);
+                this.fields.add(_elem128);
               }
               iprot.readListEnd();
             }
@@ -570,9 +571,9 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (this.fields != null) {
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (byte[] _iter119 : this.fields)        {
-          oprot.writeBinary(_iter119);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
+        for (IndexFieldDef _iter129 : this.fields)        {
+          _iter129.write(oprot);
         }
         oprot.writeListEnd();
       }

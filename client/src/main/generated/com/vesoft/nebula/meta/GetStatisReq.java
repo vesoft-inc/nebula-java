@@ -27,15 +27,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListPartsReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListPartsReq");
+public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetStatisReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetStatisReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PART_IDS_FIELD_DESC = new TField("part_ids", TType.LIST, (short)2);
 
   public int space_id;
-  public List<Integer> part_ids;
   public static final int SPACE_ID = 1;
-  public static final int PART_IDS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -47,55 +44,47 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PART_IDS, new FieldMetaData("part_ids", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.I32))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListPartsReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetStatisReq.class, metaDataMap);
   }
 
-  public ListPartsReq() {
+  public GetStatisReq() {
   }
 
-  public ListPartsReq(
-    int space_id,
-    List<Integer> part_ids)
+  public GetStatisReq(
+    int space_id)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.part_ids = part_ids;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListPartsReq(ListPartsReq other) {
+  public GetStatisReq(GetStatisReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetPart_ids()) {
-      this.part_ids = TBaseHelper.deepCopy(other.part_ids);
-    }
   }
 
-  public ListPartsReq deepCopy() {
-    return new ListPartsReq(this);
+  public GetStatisReq deepCopy() {
+    return new GetStatisReq(this);
   }
 
   @Deprecated
-  public ListPartsReq clone() {
-    return new ListPartsReq(this);
+  public GetStatisReq clone() {
+    return new GetStatisReq(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public ListPartsReq setSpace_id(int space_id) {
+  public GetStatisReq setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -114,31 +103,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public List<Integer>  getPart_ids() {
-    return this.part_ids;
-  }
-
-  public ListPartsReq setPart_ids(List<Integer> part_ids) {
-    this.part_ids = part_ids;
-    return this;
-  }
-
-  public void unsetPart_ids() {
-    this.part_ids = null;
-  }
-
-  // Returns true if field part_ids is set (has been assigned a value) and false otherwise
-  public boolean isSetPart_ids() {
-    return this.part_ids != null;
-  }
-
-  public void setPart_idsIsSet(boolean value) {
-    if (!value) {
-      this.part_ids = null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -146,14 +110,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
         unsetSpace_id();
       } else {
         setSpace_id((Integer)value);
-      }
-      break;
-
-    case PART_IDS:
-      if (value == null) {
-        unsetPart_ids();
-      } else {
-        setPart_ids((List<Integer>)value);
       }
       break;
 
@@ -167,9 +123,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PART_IDS:
-      return getPart_ids();
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -180,8 +133,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     switch (fieldID) {
     case SPACE_ID:
       return isSetSpace_id();
-    case PART_IDS:
-      return isSetPart_ids();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -191,12 +142,12 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ListPartsReq)
-      return this.equals((ListPartsReq)that);
+    if (that instanceof GetStatisReq)
+      return this.equals((GetStatisReq)that);
     return false;
   }
 
-  public boolean equals(ListPartsReq that) {
+  public boolean equals(GetStatisReq that) {
     if (that == null)
       return false;
     if (this == that)
@@ -208,15 +159,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
       if (!(this_present_space_id && that_present_space_id))
         return false;
       if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
-
-    boolean this_present_part_ids = true && this.isSetPart_ids();
-    boolean that_present_part_ids = true && that.isSetPart_ids();
-    if (this_present_part_ids || that_present_part_ids) {
-      if (!(this_present_part_ids && that_present_part_ids))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_ids, that.part_ids))
         return false;
     }
 
@@ -232,16 +174,11 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     if (present_space_id)
       builder.append(space_id);
 
-    boolean present_part_ids = true && (isSetPart_ids());
-    builder.append(present_part_ids);
-    if (present_part_ids)
-      builder.append(part_ids);
-
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(ListPartsReq other) {
+  public int compareTo(GetStatisReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -257,14 +194,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetPart_ids()).compareTo(other.isSetPart_ids());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(part_ids, other.part_ids);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -290,25 +219,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case PART_IDS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list84 = iprot.readListBegin();
-              this.part_ids = new ArrayList<Integer>(Math.max(0, _list84.size));
-              for (int _i85 = 0; 
-                   (_list84.size < 0) ? iprot.peekList() : (_i85 < _list84.size); 
-                   ++_i85)
-              {
-                int _elem86;
-                _elem86 = iprot.readI32();
-                this.part_ids.add(_elem86);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -329,17 +239,6 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.part_ids != null) {
-      oprot.writeFieldBegin(PART_IDS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.I32, this.part_ids.size()));
-        for (int _iter87 : this.part_ids)        {
-          oprot.writeI32(_iter87);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -359,7 +258,7 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListPartsReq");
+    StringBuilder sb = new StringBuilder("GetStatisReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -370,17 +269,6 @@ String space = prettyPrint ? " " : "";
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("part_ids");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getPart_ids() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getPart_ids(), indent + 1, prettyPrint));
-    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -16,19 +16,16 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class HostRole {
-  public static final int GRAPH = 0;
-  public static final int META = 1;
-  public static final int STORAGE = 2;
-  public static final int LISTENER = 3;
-  public static final int UNKNOWN = 4;
+public class ListenerType {
+  public static final int UNKNOWN = 0;
+  public static final int ELASTICSEARCH = 1;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
 
   static {
     try {
-      Class<?> klass = HostRole.class;
+      Class<?> klass = ListenerType.class;
       for (Field f : klass.getDeclaredFields()) {
         if (f.getType() == Integer.TYPE) {
           VALUES_TO_NAMES.put(f.getInt(null), f.getName());
