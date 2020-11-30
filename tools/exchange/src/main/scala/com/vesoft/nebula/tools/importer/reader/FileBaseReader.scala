@@ -79,10 +79,12 @@ class CSVReader(override val session: SparkSession, csvConfig: FileBaseSourceCon
     extends FileBaseReader(session, csvConfig.path) {
 
   override def read(): DataFrame = {
-    session.read
+    val df = session.read
       .option("delimiter", csvConfig.separator.get)
       .option("header", csvConfig.header.get)
+      .option("inferSchema", "true")
       .csv(path)
+    csvConfig.csvFields.map(df.toDF(_: _*)).getOrElse(df)
   }
 }
 

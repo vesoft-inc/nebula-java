@@ -482,10 +482,15 @@ object Configs {
             config.getBoolean("header")
           else
             false
+        val csvFields = if (config.hasPath("csv.fields"))
+          Some(config.getStringList("csv.fields").asScala.toList)
+        else
+          None
         FileBaseSourceConfigEntry(SourceCategory.CSV,
                                   config.getString("path"),
                                   Some(separator),
-                                  Some(header))
+                                  Some(header),
+                                  csvFields)
       case SourceCategory.HIVE =>
         HiveSourceConfigEntry(SourceCategory.HIVE, config.getString("exec"))
       case SourceCategory.NEO4J =>

@@ -60,14 +60,16 @@ sealed trait StreamingDataSourceConfigEntry extends DataSourceConfigEntry {
   * @param path
   * @param separator
   * @param header
+  * @param csvFields
   */
 case class FileBaseSourceConfigEntry(override val category: SourceCategory.Value,
                                      override val path: String,
                                      separator: Option[String] = None,
-                                     header: Option[Boolean] = None)
+                                     header: Option[Boolean] = None,
+                                     csvFields: Option[List[String]] = None)
     extends FileDataSourceConfigEntry {
   override def toString: String = {
-    s"File source path: ${path}, separator: ${separator}, header: ${header}"
+    s"File source path: ${path}, separator: ${separator}, header: ${header}, csvFields: ${csvFields}"
   }
 }
 

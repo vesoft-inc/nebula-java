@@ -109,8 +109,66 @@ trait Processor extends Serializable {
         }
       }
 
-      case ShortType   =>
-      case IntegerType =>
+      case ShortType   => {
+        fieldTypeMap(field) match {
+          case StringType =>
+            val result = if (!row.isNullAt(index)) {
+              row.getShort(index).toString.mkString("\"", "", "\"")
+            } else {
+              "\"\""
+            }
+            if (toBytes) result.getBytes else result
+          case LongType =>
+            if (!row.isNullAt(index)) {
+              row.getShort(index)
+            } else {
+              0L
+            }
+          case DoubleType =>
+            if (!row.isNullAt(index)) {
+              row.getShort(index).toDouble
+            } else {
+              0.0
+            }
+          case BooleanType =>
+            if (!row.isNullAt(index)) {
+              row.getShort(index).toString.toBoolean
+            } else {
+              false
+            }
+        }
+      }
+
+      case IntegerType => {
+        fieldTypeMap(field) match {
+          case StringType =>
+            val result = if (!row.isNullAt(index)) {
+              row.getInt(index).toString.mkString("\"", "", "\"")
+            } else {
+              "\"\""
+            }
+            if (toBytes) result.getBytes else result
+          case LongType =>
+            if (!row.isNullAt(index)) {
+              row.getInt(index)
+            } else {
+              0L
+            }
+          case DoubleType =>
+            if (!row.isNullAt(index)) {
+              row.getInt(index).toDouble
+            } else {
+              0.0
+            }
+          case BooleanType =>
+            if (!row.isNullAt(index)) {
+              row.getInt(index).toString.toBoolean
+            } else {
+              false
+            }
+        }
+      }
+
       case LongType => {
         fieldTypeMap(field) match {
           case StringType =>
@@ -141,7 +199,36 @@ trait Processor extends Serializable {
         }
       }
 
-      case FloatType =>
+      case FloatType => {
+        fieldTypeMap(field) match {
+          case StringType =>
+            val result = if (!row.isNullAt(index)) {
+              row.getFloat(index).toString.mkString("\"", "", "\"")
+            } else {
+              "\"\""
+            }
+            if (toBytes) result.getBytes else result
+          case LongType =>
+            if (!row.isNullAt(index)) {
+              row.getFloat(index).toLong
+            } else {
+              0L
+            }
+          case DoubleType =>
+            if (!row.isNullAt(index)) {
+              row.getFloat(index)
+            } else {
+              0.0
+            }
+          case BooleanType =>
+            if (!row.isNullAt(index)) {
+              row.getFloat(index).toString.toBoolean
+            } else {
+              false
+            }
+        }
+      }
+
       case DoubleType => {
         fieldTypeMap(field) match {
           case StringType =>
