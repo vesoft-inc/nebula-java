@@ -65,6 +65,9 @@ public class RowReader {
                 case STRING:
                     defs.add(new Pair(name, byte[].class.getName()));
                     break;
+                case TIMESTAMP:
+                    defs.add(new Pair(name, Long.class.getName()));
+                    break;
                 default:
                     throw new IllegalArgumentException("Invalid type in schema: " + type);
             }
