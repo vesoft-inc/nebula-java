@@ -1,22 +1,27 @@
-# nebula-java
+# nebula-java v1.0
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
 [![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
 
-This guide provides instructions and options for connecting **Nebula Graph** for Java developer. However, Nebula Java is not thread-safe.
+Nebula Java is a Java client for Java developers to connect their projects to Nebula Graph.
+
+> **NOTE**: Nebula Java is not thread-safe.
+
+This branch, v1.0, is for Nebula Java 1.0. It works with Nebula Graph v1.1.0 and earlier versions only.
+
+If you are using Nebula Graph v2.0, go to the `master` branch. For more information, see [README of v2.0](https://github.com/vesoft-inc/nebula-java).
 
 ## Prerequisites
 
-When developing with this Java driver, please use Java 8+. Depending on the version of **Nebula Graph** that you are connecting to, you will have to use a different version of this client.
+To use this Java client, do a check of these:
 
-| Nebula version | Nebula Java version |
-|:--------------:|:-----------------:|
-|     1.0.0      |      1.0.0        |
+- Java 8+ is installed.
+- Nebula Graph v1.1.0 or earlier versions is deployed.
 
-## Nebula Graph Java Driver
+## Nebula Graph Java Client
 
-When using Maven, add dependency to your `pom.xml` file:
+When using Maven, add this dependency to your `pom.xml` file:
 
 ```xml
 <dependency>
@@ -26,11 +31,9 @@ When using Maven, add dependency to your `pom.xml` file:
 </dependency>
 ```
 
-For more versions, please refer to [releases](https://github.com/vesoft-inc/nebula-java/releases).
-
 ### Graph Client Example
 
-Connect to the `graphd`:
+Connect to the `nebula-graphd` process:
 
 ```java
 GraphClient client = new GraphClientImpl("127.0.0.1", 3699);
@@ -39,7 +42,7 @@ client.setPassword("password");
 client.connect();
 ```
 
-Use a space:
+Use a graph space:
 
 ```java
 int code = client.switchSpace("space_test");
@@ -51,37 +54,43 @@ Execute a query:
 int code = client.execute("CREATE TAG course(name string, credits int);");
 ```
 
-If query executes successfully, `0` will be returned. For a more complete example, refer to [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
+If a query is executed successfully, `0` will be returned. For a more complete example, see [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
 
 ### Storage Client
 
-If you only use the interface of RPC, nothing to worry about.
+If you only use the interface of RPC, nothing need to be done.
 
-If you want to directly use storage client to encode/decode, you need to use the jni interface. We have already package a `libnebula_codec.so` in the [nebula-utils](https://repo1.maven.org/maven2/com/vesoft/nebula-utils/) jar package.
+If you want to directly use the storage client to encode or decode, you must use the `jni` interface. We have already packaged `libnebula_codec.so` in the [nebula-utils](https://repo1.maven.org/maven2/com/vesoft/nebula-utils/) jar package.
 
-However, if it doesn't work in your environment, you can compile it by following steps:
-- Compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni). 
-- Then install the jni jar into your local maven repo:
-```
-mvn install:install-file -Dfile=${your-nebula-utils.jar} -DgroupId=com.vesoft -DartifactId=nebula-utils -Dversion={version} -Dpackaging=jar
-```
+However, if it doesn't work in your environment, follow these steps to compile it:
 
-See more [Storage Client Examples](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/) for how to scan edges and vertices from storage directly.
+1. Compile the [dynamic link library](https://github.com/vesoft-inc/nebula/tree/master/src/jni).
+2. Install the `jni` jar into your local maven repo.
+
+    ```bash
+    mvn install:install-file -Dfile=${your-nebula-utils.jar} -DgroupId=com.vesoft -DartifactId=nebula-utils -Dversion={version} -Dpackaging=jar
+    ```
+
+See more [Storage Client Examples](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/) about how to scan edges and vertices from storage directly.
 
 ### Meta Client
 
 See [Meta Client Example](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/MetaClientExample.java) to access graph schemas.
 
+## Releases
+
+To download previous releases of Nebula Java, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
+
 ## FAQ
 
-Q: Error occurs when building from the source code.
+Q: An error occurs during the process of building from the source code.
 
 ```text
 Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6:sign (default) on project client: Exit code: 2 -> [Help 1]
 org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6:sign (default) on project client: Exit code: 2
 ```
 
-A: This means that you need to have a key to sign the jars
+A: You must generate a key to sign the jars
 
 ```text
 gpg --gen-key #generate your key pair
