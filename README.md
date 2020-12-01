@@ -27,7 +27,7 @@ To use this Java client, do a check of these:
 - Java 8+ is installed.
 - Nebula Graph v1.1.0 or earlier versions is deployed.
 
-## Nebula Graph Java Client
+## Use Nebula Java v1.0
 
 When using Maven, add this dependency to your `pom.xml` file:
 
@@ -39,7 +39,7 @@ When using Maven, add this dependency to your `pom.xml` file:
 </dependency>
 ```
 
-### Graph Client Example
+### Graph client example
 
 Connect to the `nebula-graphd` process:
 
@@ -64,7 +64,7 @@ int code = client.execute("CREATE TAG course(name string, credits int);");
 
 If a query is executed successfully, `0` will be returned. For a more complete example, see [Graph Java client example](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java).
 
-### Storage Client
+### Storage client example
 
 If you only use the interface of RPC, nothing need to be done.
 
@@ -81,7 +81,7 @@ However, if it doesn't work in your environment, follow these steps to compile i
 
 See more [Storage Client Examples](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/) about how to scan edges and vertices from storage directly.
 
-### Meta Client
+### Meta client example
 
 See [Meta Client Example](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/MetaClientExample.java) to access graph schemas.
 

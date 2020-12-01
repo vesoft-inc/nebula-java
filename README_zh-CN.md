@@ -26,7 +26,7 @@ git clone -b v1.0 https://github.com/vesoft-inc/nebula-java.git
 - 已经安装 Java 8 以上版本。
 - 已经部署 Nebula Graph v1.1.0 或以前版本。
 
-## Nebula Graph Java Driver
+## 使用 Nebula Java v1.0
 
 使用 Maven 时，添加以下依赖项到 `pom.xml` 文件：
 
@@ -63,7 +63,7 @@ int code = client.execute("CREATE TAG course(name string, credits int);");
 
 如果查询成功执行，则返回 `0`。完整示例请参考 [Graph Java 客户端示例](./examples/src/main/java/com/vesoft/nebula/examples/GraphClientExample.java)。
 
-### Storage 客户端
+### Storage 客户端示例
 
 如果仅使用 RPC 接口，则无需担心以下问题。
 
@@ -71,7 +71,7 @@ int code = client.execute("CREATE TAG course(name string, credits int);");
 
 参考 [Storage 客户端示例](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/StorageClientExample.java)。
 
-### Meta 客户端
+### Meta 客户端示例
 
 参考 [Meta 客户端示例](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/MetaClientExample.java)。
 
