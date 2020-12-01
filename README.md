@@ -1,4 +1,4 @@
-# nebula-java v1.0
+# nebula-java v1.x
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
@@ -8,7 +8,13 @@ Nebula Java is a Java client for Java developers to connect their projects to Ne
 
 > **NOTE**: Nebula Java is not thread-safe.
 
-This branch, v1.0, is for Nebula Java 1.0. It works with Nebula Graph v1.1.0 and earlier versions only.
+This branch, v1.0, is for Nebula Java v1.x. This table lists the versions of Nebula Java that can work with Nebula Graph v1.1.0 and earlier versions.
+
+| Nebula Graph version  |   Nebula Java v1.x |
+|   :-- |   :-- |
+| v1.1.0 and earlier versions   |   v1.0.0 <br /> v1.0.1 <br /> v1.1.0  |
+
+To download previous releases of Nebula Java, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 If you are using Nebula Graph v2.0, go to the `master` branch. For more information, see [README of v2.0](https://github.com/vesoft-inc/nebula-java).
 
@@ -25,7 +31,7 @@ git clone -b v1.0 https://github.com/vesoft-inc/nebula-java.git
 To use this Java client, do a check of these:
 
 - Java 8+ is installed.
-- Nebula Graph v1.1.0 or earlier versions is deployed.
+- Nebula Graph v1.1.0 or an earlier version is deployed.
 
 ## Use Nebula Java v1.0
 
@@ -84,10 +90,6 @@ See more [Storage Client Examples](https://github.com/vesoft-inc/nebula-java/blo
 ### Meta client example
 
 See [Meta Client Example](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/MetaClientExample.java) to access graph schemas.
-
-## Releases
-
-To download previous releases of Nebula Java, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ## FAQ
 

@@ -1,4 +1,4 @@
-# nebula-java v1.0
+# nebula-java v1.x
 
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
 [![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
@@ -7,9 +7,15 @@ Nebula Java 是一个 Java 客户端，供 Java 开发人员用于连接 Nebula 
 
 > **说明**：Nebula Java 非线程安全。
 
-本项目的 v1.0 分支仅包含 Nebula Java v1.0 的源代码。v1.0 仅能用于连接 Nebula Graph v1.1.0 或以前的版本。
+本项目的 `v1.0` 分支仅包含 Nebula Java v1.x 的源代码。下表列出了能用于连接 Nebula Graph v1.1.0 或以前版本的 Nebula Java 版本。
 
-如果您正在使用 Nebula Graph v2.0.0，必须使用 Nebula Java v2.0。详细信息参考 [v2.0 README](https://github.com/vesoft-inc/nebula-java)。
+| Nebula Graph |   Nebula Java v1.x |
+|   :-- |   :-- |
+| v1.1.0 及以前版本   |   v1.0.0 <br /> v1.0.1 <br /> v1.1.0  |
+
+如果需要下载已经发布的版本，请访问 [releases](https://github.com/vesoft-inc/nebula-java/releases)。
+
+如果您正在使用 Nebula Graph v2.0.0，必须使用 `master` 分支的 Nebula Java v2.0。详细信息参考 [v2.0 README](https://github.com/vesoft-inc/nebula-java)。
 
 ## 克隆 v1.0
 
@@ -74,10 +80,6 @@ int code = client.execute("CREATE TAG course(name string, credits int);");
 ### Meta 客户端示例
 
 参考 [Meta 客户端示例](https://github.com/vesoft-inc/nebula-java/blob/master/examples/src/main/java/com/vesoft/nebula/examples/MetaClientExample.java)。
-
-## 发布版本
-
-如果您需要下载已经发布的版本，请访问 [releases](https://github.com/vesoft-inc/nebula-java/releases)。
 
 ## FAQ
 
