@@ -19,7 +19,7 @@ import org.apache.log4j.Logger
   *    1. Configure application.conf file.
   *    2. Make sure your environment has installed spark and started spark service.
   *    3. Submit nebula algorithm application using this command:
-  *        spark-submit --class com.vesoft.nebula.tools.algorithm.Main /your-jar-path/nebula-algorithm-1.0.1.jar -p /your-application.conf-path/application.conf
+  *        spark-submit --class com.vesoft.nebula.tools.algorithm.Main /your-jar-path/nebula-algorithm-1.1.0.jar -p /your-application.conf-path/application.conf
   */
 object Main {
 
