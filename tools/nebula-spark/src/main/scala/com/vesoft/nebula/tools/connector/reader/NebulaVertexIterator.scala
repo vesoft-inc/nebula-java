@@ -69,8 +69,7 @@ class NebulaVertexIterator(split: Partition, nebulaOptions: NebulaOptions, schem
     }
 
     if (dataIterator == null) {
-//      if (storageClient != null) storageClient.close()
-//      if (metaClient != null) metaClient.close()
+      NebulaUtils.closeMetaClient(metaClient)
       return false
     }
     dataIterator.hasNext
