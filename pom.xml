@@ -16,11 +16,11 @@
     <!-- More Project Information -->
     <name>nebula-java</name>
     <description>Nebula Java Client 2.0</description>
-    <url>https://github.com/vesoft-inc/nebula-clients/java</url>
+    <url>https://github.com/vesoft-inc/nebula-java</url>
     <scm>
-        <connection>scm:git:https://github.com/vesoft-inc/nebula-clients/java</connection>
-        <url>https://github.com/vesoft-inc/nebula-clients/java</url>
-        <developerConnection>scm:git:https://github.com/vesoft-inc/nebula-clients/java</developerConnection>
+        <connection>scm:git:https://github.com/vesoft-inc/nebula-java</connection>
+        <url>https://github.com/vesoft-inc/nebula-java</url>
+        <developerConnection>scm:git:https://github.com/vesoft-inc/nebula-java</developerConnection>
     </scm>
     <licenses>
         <license>
