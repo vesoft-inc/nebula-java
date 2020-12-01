@@ -6,21 +6,13 @@
 
 package com.vesoft.nebula.examples;
 
-import com.vesoft.nebula.DataSet;
-import com.vesoft.nebula.Date;
-import com.vesoft.nebula.DateTime;
-import com.vesoft.nebula.Edge;
-import com.vesoft.nebula.Map;
-import com.vesoft.nebula.Path;
-import com.vesoft.nebula.Set;
-import com.vesoft.nebula.Time;
-import com.vesoft.nebula.Value;
-import com.vesoft.nebula.Vertex;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,59 +22,53 @@ import org.slf4j.LoggerFactory;
 public class GraphClientExample {
     private static final Logger log = LoggerFactory.getLogger(GraphClientExample.class);
 
-    private static void printResult(ResultSet resultSet) {
-        List<String> colNames = resultSet.getColumnNames();
+    private static void printResult(ResultSet resultSet) throws UnsupportedEncodingException {
+        List<String> colNames = resultSet.keys();
         for (String name : colNames) {
             System.out.printf("%15s |", name);
         }
         System.out.println();
-        for (ResultSet.Record record : resultSet.getRecords()) {
-            for (Value rec : record) {
-                Object value = rec.getFieldValue();
-                if (value instanceof Integer) {
-                    System.out.printf("%15s |", value);
+        for (int i = 0; i < resultSet.rowsSize(); i++) {
+            ResultSet.Record record = resultSet.rowValues(i);
+            for (ValueWrapper value : record.values()) {
+                if (value.isLong()) {
+                    System.out.printf("%15s |", value.asLong());
                 }
-                if (value instanceof Boolean) {
-                    System.out.printf("%15s |", value);
+                if (value.isBoolean()) {
+                    System.out.printf("%15s |", value.asBoolean());
                 }
-                if (value instanceof Long) {
-                    System.out.printf("%15s |", value);
+                if (value.isDouble()) {
+                    System.out.printf("%15s |", value.asDouble());
                 }
-                if (value instanceof Double) {
-                    System.out.printf("%15s |", value);
+                if (value.isString()) {
+                    System.out.printf("%15s |", value.asString());
                 }
-                if (value instanceof byte[]) {
-                    System.out.printf("%15s |", new String((byte[])value));
+                if (value.isTime()) {
+                    System.out.printf("%15s |", value.asTime());
                 }
-                if (value instanceof Date) {
-                    System.out.printf("%15s |", value);
+                if (value.isDate()) {
+                    System.out.printf("%15s |", value.asDate());
                 }
-                if (value instanceof Time) {
-                    System.out.printf("%15s |", value);
+                if (value.isDateTime()) {
+                    System.out.printf("%15s |", value.asDateTime());
                 }
-                if (value instanceof DateTime) {
-                    System.out.printf("%15s |", value);
+                if (value.isVertex()) {
+                    System.out.printf("%15s |", value.asNode());
                 }
-                if (value instanceof Vertex) {
-                    System.out.printf("%15s |", value);
+                if (value.isEdge()) {
+                    System.out.printf("%15s |", value.asRelationship());
                 }
-                if (value instanceof Edge) {
-                    System.out.printf("%15s |", value);
+                if (value.isPath()) {
+                    System.out.printf("%15s |", value.asPath());
                 }
-                if (value instanceof Path) {
-                    System.out.printf("%15s |", value);
+                if (value.isList()) {
+                    System.out.printf("%15s |", value.asList());
                 }
-                if (value instanceof List) {
-                    System.out.printf("%15s |", value);
+                if (value.isSet()) {
+                    System.out.printf("%15s |", value.asSet());
                 }
-                if (value instanceof Map) {
-                    System.out.printf("%15s |", value);
-                }
-                if (value instanceof Set) {
-                    System.out.printf("%15s |", value);
-                }
-                if (value instanceof DataSet) {
-                    System.out.printf("%15s |", value);
+                if (value.isMap()) {
+                    System.out.printf("%15s |", value.asMap());
                 }
             }
             System.out.println();
