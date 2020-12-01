@@ -33,6 +33,7 @@ import com.vesoft.nebula.tools.importer.{
 }
 import org.apache.log4j.Logger
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
+import org.apache.commons.lang.StringEscapeUtils
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.{IntegerType, LongType, StringType}
@@ -244,7 +245,12 @@ class VerticesProcessor(data: DataFrame,
                      s"Not support non-Numeric type for vertex id")
               value.toString
             } else {
-              row.getString(row.schema.fieldIndex(tagConfig.vertexField))
+              val vid = row.getString(row.schema.fieldIndex(tagConfig.vertexField))
+              if (StringEscapeUtils.escapeJava(vid).contains('\\')) {
+                StringEscapeUtils.escapeJava(vid)
+              } else {
+                vid
+              }
             }
 
           val values = for {
