@@ -7,7 +7,6 @@
 package com.vesoft.nebula.client.storage;
 
 import com.google.common.base.Optional;
-import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import java.io.IOException;
@@ -16,48 +15,48 @@ import java.util.List;
 import java.util.Map;
 
 public interface StorageClient extends AutoCloseable {
-    public static final boolean DEFAULT_RETURN_ALL_COLUMNS = false;
-    public static final int DEFAULT_SCAN_ROW_LIMIT = 1000;
-    public static final long DEFAULT_SCAN_START_TIME = 0;
-    public static final long DEFAULT_SCAN_END_TIME = Long.MAX_VALUE;
+    boolean DEFAULT_RETURN_ALL_COLUMNS = false;
+    int DEFAULT_SCAN_ROW_LIMIT = 1000;
+    long DEFAULT_SCAN_START_TIME = 0;
+    long DEFAULT_SCAN_END_TIME = Long.MAX_VALUE;
 
-    public boolean put(String space, String key, String value);
+    boolean put(String space, String key, String value);
 
-    public boolean put(String space, Map<String, String> kvs);
+    boolean put(String space, Map<String, String> kvs);
 
-    public Optional<String> get(String space, String key);
+    Optional<String> get(String space, String key);
 
-    public Optional<Map<String, String>> get(String space, List<String> keys);
+    Optional<Map<String, String>> get(String space, List<String> keys);
 
-    public boolean remove(String space, String key);
+    boolean remove(String space, String key);
 
-    public boolean remove(String space, List<String> keys);
+    boolean remove(String space, List<String> keys);
 
-    public Iterator<ScanEdgeResponse> scanEdge(
+    Iterator<ScanEdgeResponse> scanEdge(
             String space, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanEdgeResponse> scanEdge(
+    Iterator<ScanEdgeResponse> scanEdge(
             String space, Map<String, List<String>> returnCols, boolean allCols,
             int limit, long startTime, long endTime) throws IOException;
 
-    public Iterator<ScanEdgeResponse> scanEdge(
+    Iterator<ScanEdgeResponse> scanEdge(
             String space, int part, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanEdgeResponse> scanEdge(
+    Iterator<ScanEdgeResponse> scanEdge(
             String space, int part, Map<String, List<String>> returnCols, boolean allCols,
             int limit, long startTime, long endTime) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(
+    Iterator<ScanVertexResponse> scanVertex(
             String space, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(
+    Iterator<ScanVertexResponse> scanVertex(
             String space, Map<String, List<String>> returnCols, boolean allCols,
             int limit, long startTime, long endTime) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(
+    Iterator<ScanVertexResponse> scanVertex(
             String space, int part, Map<String, List<String>> returnCols) throws IOException;
 
-    public Iterator<ScanVertexResponse> scanVertex(
+    Iterator<ScanVertexResponse> scanVertex(
             String space, int part, Map<String, List<String>> returnCols, boolean allCols,
             int limit, long startTime, long endTime) throws IOException;
 }
