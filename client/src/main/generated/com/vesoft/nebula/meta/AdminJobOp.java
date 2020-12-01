@@ -22,7 +22,6 @@ public class AdminJobOp {
   public static final int SHOW = 3;
   public static final int STOP = 4;
   public static final int RECOVER = 5;
-  public static final int INVALID = 255;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();

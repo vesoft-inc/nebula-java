@@ -36,9 +36,9 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)5);
 
   public int space_id;
-  public String index_name;
-  public String tag_name;
-  public List<String> fields;
+  public byte[] index_name;
+  public byte[] tag_name;
+  public List<IndexFieldDef> fields;
   public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
@@ -63,7 +63,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+            new StructMetaData(TType.STRUCT, IndexFieldDef.class))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -78,9 +78,9 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
 
   public CreateTagIndexReq(
     int space_id,
-    String index_name,
-    String tag_name,
-    List<String> fields,
+    byte[] index_name,
+    byte[] tag_name,
+    List<IndexFieldDef> fields,
     boolean if_not_exists)
   {
     this();
@@ -144,11 +144,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getIndex_name() {
+  public byte[]  getIndex_name() {
     return this.index_name;
   }
 
-  public CreateTagIndexReq setIndex_name(String index_name) {
+  public CreateTagIndexReq setIndex_name(byte[] index_name) {
     this.index_name = index_name;
     return this;
   }
@@ -168,11 +168,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public String  getTag_name() {
+  public byte[]  getTag_name() {
     return this.tag_name;
   }
 
-  public CreateTagIndexReq setTag_name(String tag_name) {
+  public CreateTagIndexReq setTag_name(byte[] tag_name) {
     this.tag_name = tag_name;
     return this;
   }
@@ -192,11 +192,11 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<String>  getFields() {
+  public List<IndexFieldDef>  getFields() {
     return this.fields;
   }
 
-  public CreateTagIndexReq setFields(List<String> fields) {
+  public CreateTagIndexReq setFields(List<IndexFieldDef> fields) {
     this.fields = fields;
     return this;
   }
@@ -254,7 +254,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetIndex_name();
       } else {
-        setIndex_name((String)value);
+        setIndex_name((byte[])value);
       }
       break;
 
@@ -262,7 +262,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetTag_name();
       } else {
-        setTag_name((String)value);
+        setTag_name((byte[])value);
       }
       break;
 
@@ -270,7 +270,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetFields();
       } else {
-        setFields((List<String>)value);
+        setFields((List<IndexFieldDef>)value);
       }
       break;
 
@@ -356,7 +356,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (this_present_index_name || that_present_index_name) {
       if (!(this_present_index_name && that_present_index_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.index_name, that.index_name))
+      if (!TBaseHelper.equalsSlow(this.index_name, that.index_name))
         return false;
     }
 
@@ -365,7 +365,7 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     if (this_present_tag_name || that_present_tag_name) {
       if (!(this_present_tag_name && that_present_tag_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_name, that.tag_name))
+      if (!TBaseHelper.equalsSlow(this.tag_name, that.tag_name))
         return false;
     }
 
@@ -498,14 +498,14 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
           break;
         case INDEX_NAME:
           if (field.type == TType.STRING) {
-            this.index_name = iprot.readString();
+            this.index_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case TAG_NAME:
           if (field.type == TType.STRING) {
-            this.tag_name = iprot.readString();
+            this.tag_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -513,15 +513,16 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         case FIELDS:
           if (field.type == TType.LIST) {
             {
-              TList _list108 = iprot.readListBegin();
-              this.fields = new ArrayList<String>(Math.max(0, _list108.size));
-              for (int _i109 = 0; 
-                   (_list108.size < 0) ? iprot.peekList() : (_i109 < _list108.size); 
-                   ++_i109)
+              TList _list126 = iprot.readListBegin();
+              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list126.size));
+              for (int _i127 = 0; 
+                   (_list126.size < 0) ? iprot.peekList() : (_i127 < _list126.size); 
+                   ++_i127)
               {
-                String _elem110;
-                _elem110 = iprot.readString();
-                this.fields.add(_elem110);
+                IndexFieldDef _elem128;
+                _elem128 = new IndexFieldDef();
+                _elem128.read(iprot);
+                this.fields.add(_elem128);
               }
               iprot.readListEnd();
             }
@@ -559,20 +560,20 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
     oprot.writeFieldEnd();
     if (this.index_name != null) {
       oprot.writeFieldBegin(INDEX_NAME_FIELD_DESC);
-      oprot.writeString(this.index_name);
+      oprot.writeBinary(this.index_name);
       oprot.writeFieldEnd();
     }
     if (this.tag_name != null) {
       oprot.writeFieldBegin(TAG_NAME_FIELD_DESC);
-      oprot.writeString(this.tag_name);
+      oprot.writeBinary(this.tag_name);
       oprot.writeFieldEnd();
     }
     if (this.fields != null) {
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (String _iter111 : this.fields)        {
-          oprot.writeString(_iter111);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
+        for (IndexFieldDef _iter129 : this.fields)        {
+          _iter129.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -620,7 +621,12 @@ String space = prettyPrint ? " " : "";
     if (this. getIndex_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getIndex_name(), indent + 1, prettyPrint));
+        int __index_name_size = Math.min(this. getIndex_name().length, 128);
+        for (int i = 0; i < __index_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getIndex_name()[i]).length() > 1 ? Integer.toHexString(this. getIndex_name()[i]).substring(Integer.toHexString(this. getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getIndex_name()[i]).toUpperCase());
+        }
+        if (this. getIndex_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -631,7 +637,12 @@ String space = prettyPrint ? " " : "";
     if (this. getTag_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTag_name(), indent + 1, prettyPrint));
+        int __tag_name_size = Math.min(this. getTag_name().length, 128);
+        for (int i = 0; i < __tag_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getTag_name()[i]).length() > 1 ? Integer.toHexString(this. getTag_name()[i]).substring(Integer.toHexString(this. getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTag_name()[i]).toUpperCase());
+        }
+        if (this. getTag_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

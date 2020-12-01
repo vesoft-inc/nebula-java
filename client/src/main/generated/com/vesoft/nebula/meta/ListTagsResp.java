@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListTagsResp implements TBase, java.io.Serializable, Cloneable {
+public class ListTagsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListTagsResp> {
   private static final TStruct STRUCT_DESC = new TStruct("ListTagsResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
@@ -313,6 +313,45 @@ public class ListTagsResp implements TBase, java.io.Serializable, Cloneable {
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(ListTagsResp other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(code, other.code);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(leader, other.leader);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTags()).compareTo(other.isSetTags());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(tags, other.tags);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -343,16 +382,16 @@ public class ListTagsResp implements TBase, java.io.Serializable, Cloneable {
         case TAGS:
           if (field.type == TType.LIST) {
             {
-              TList _list42 = iprot.readListBegin();
-              this.tags = new ArrayList<TagItem>(Math.max(0, _list42.size));
-              for (int _i43 = 0; 
-                   (_list42.size < 0) ? iprot.peekList() : (_i43 < _list42.size); 
-                   ++_i43)
+              TList _list60 = iprot.readListBegin();
+              this.tags = new ArrayList<TagItem>(Math.max(0, _list60.size));
+              for (int _i61 = 0; 
+                   (_list60.size < 0) ? iprot.peekList() : (_i61 < _list60.size); 
+                   ++_i61)
               {
-                TagItem _elem44;
-                _elem44 = new TagItem();
-                _elem44.read(iprot);
-                this.tags.add(_elem44);
+                TagItem _elem62;
+                _elem62 = new TagItem();
+                _elem62.read(iprot);
+                this.tags.add(_elem62);
               }
               iprot.readListEnd();
             }
@@ -389,8 +428,8 @@ public class ListTagsResp implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(TAGS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tags.size()));
-        for (TagItem _iter45 : this.tags)        {
-          _iter45.write(oprot);
+        for (TagItem _iter63 : this.tags)        {
+          _iter63.write(oprot);
         }
         oprot.writeListEnd();
       }

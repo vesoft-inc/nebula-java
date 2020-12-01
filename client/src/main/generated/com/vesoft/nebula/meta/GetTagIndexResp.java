@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
+public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetTagIndexResp> {
   private static final TStruct STRUCT_DESC = new TStruct("GetTagIndexResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
@@ -39,7 +39,7 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public com.vesoft.nebula.IndexItem item;
+  public IndexItem item;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int ITEM = 3;
@@ -57,7 +57,7 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(ITEM, new FieldMetaData("item", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.IndexItem.class)));
+        new StructMetaData(TType.STRUCT, IndexItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -71,7 +71,7 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
   public GetTagIndexResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    com.vesoft.nebula.IndexItem item)
+    IndexItem item)
   {
     this();
     this.code = code;
@@ -159,11 +159,11 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public com.vesoft.nebula.IndexItem  getItem() {
+  public IndexItem  getItem() {
     return this.item;
   }
 
-  public GetTagIndexResp setItem(com.vesoft.nebula.IndexItem item) {
+  public GetTagIndexResp setItem(IndexItem item) {
     this.item = item;
     return this;
   }
@@ -205,7 +205,7 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetItem();
       } else {
-        setItem((com.vesoft.nebula.IndexItem)value);
+        setItem((IndexItem)value);
       }
       break;
 
@@ -311,6 +311,45 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(GetTagIndexResp other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(code, other.code);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(leader, other.leader);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetItem()).compareTo(other.isSetItem());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(item, other.item);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -340,7 +379,7 @@ public class GetTagIndexResp implements TBase, java.io.Serializable, Cloneable {
           break;
         case ITEM:
           if (field.type == TType.STRUCT) {
-            this.item = new com.vesoft.nebula.IndexItem();
+            this.item = new IndexItem();
             this.item.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

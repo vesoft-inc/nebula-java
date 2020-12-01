@@ -30,35 +30,23 @@ import com.facebook.thrift.protocol.*;
 public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("UpdateResponse");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)2);
-  private static final TField DATA_FIELD_DESC = new TField("data", TType.STRING, (short)3);
-  private static final TField UPSERT_FIELD_DESC = new TField("upsert", TType.BOOL, (short)4);
+  private static final TField PROPS_FIELD_DESC = new TField("props", TType.STRUCT, (short)2);
 
   public ResponseCommon result;
-  public com.vesoft.nebula.Schema schema;
-  public byte[] data;
-  public boolean upsert;
+  public com.vesoft.nebula.DataSet props;
   public static final int RESULT = 1;
-  public static final int SCHEMA = 2;
-  public static final int DATA = 3;
-  public static final int UPSERT = 4;
+  public static final int PROPS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __UPSERT_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.OPTIONAL, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
-    tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(UPSERT, new FieldMetaData("upsert", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(PROPS, new FieldMetaData("props", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -67,8 +55,6 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
   }
 
   public UpdateResponse() {
-    this.upsert = false;
-
   }
 
   public UpdateResponse(
@@ -80,34 +66,23 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
 
   public UpdateResponse(
     ResponseCommon result,
-    com.vesoft.nebula.Schema schema,
-    byte[] data,
-    boolean upsert)
+    com.vesoft.nebula.DataSet props)
   {
     this();
     this.result = result;
-    this.schema = schema;
-    this.data = data;
-    this.upsert = upsert;
-    setUpsertIsSet(true);
+    this.props = props;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public UpdateResponse(UpdateResponse other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetSchema()) {
-      this.schema = TBaseHelper.deepCopy(other.schema);
+    if (other.isSetProps()) {
+      this.props = TBaseHelper.deepCopy(other.props);
     }
-    if (other.isSetData()) {
-      this.data = TBaseHelper.deepCopy(other.data);
-    }
-    this.upsert = TBaseHelper.deepCopy(other.upsert);
   }
 
   public UpdateResponse deepCopy() {
@@ -143,75 +118,28 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
-    return this.schema;
+  public com.vesoft.nebula.DataSet  getProps() {
+    return this.props;
   }
 
-  public UpdateResponse setSchema(com.vesoft.nebula.Schema schema) {
-    this.schema = schema;
+  public UpdateResponse setProps(com.vesoft.nebula.DataSet props) {
+    this.props = props;
     return this;
   }
 
-  public void unsetSchema() {
-    this.schema = null;
+  public void unsetProps() {
+    this.props = null;
   }
 
-  // Returns true if field schema is set (has been assigned a value) and false otherwise
-  public boolean isSetSchema() {
-    return this.schema != null;
+  // Returns true if field props is set (has been assigned a value) and false otherwise
+  public boolean isSetProps() {
+    return this.props != null;
   }
 
-  public void setSchemaIsSet(boolean value) {
+  public void setPropsIsSet(boolean value) {
     if (!value) {
-      this.schema = null;
+      this.props = null;
     }
-  }
-
-  public byte[]  getData() {
-    return this.data;
-  }
-
-  public UpdateResponse setData(byte[] data) {
-    this.data = data;
-    return this;
-  }
-
-  public void unsetData() {
-    this.data = null;
-  }
-
-  // Returns true if field data is set (has been assigned a value) and false otherwise
-  public boolean isSetData() {
-    return this.data != null;
-  }
-
-  public void setDataIsSet(boolean value) {
-    if (!value) {
-      this.data = null;
-    }
-  }
-
-  public boolean  isUpsert() {
-    return this.upsert;
-  }
-
-  public UpdateResponse setUpsert(boolean upsert) {
-    this.upsert = upsert;
-    setUpsertIsSet(true);
-    return this;
-  }
-
-  public void unsetUpsert() {
-    __isset_bit_vector.clear(__UPSERT_ISSET_ID);
-  }
-
-  // Returns true if field upsert is set (has been assigned a value) and false otherwise
-  public boolean isSetUpsert() {
-    return __isset_bit_vector.get(__UPSERT_ISSET_ID);
-  }
-
-  public void setUpsertIsSet(boolean value) {
-    __isset_bit_vector.set(__UPSERT_ISSET_ID, value);
   }
 
   public void setFieldValue(int fieldID, Object value) {
@@ -224,27 +152,11 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
-    case SCHEMA:
+    case PROPS:
       if (value == null) {
-        unsetSchema();
+        unsetProps();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
-      }
-      break;
-
-    case DATA:
-      if (value == null) {
-        unsetData();
-      } else {
-        setData((byte[])value);
-      }
-      break;
-
-    case UPSERT:
-      if (value == null) {
-        unsetUpsert();
-      } else {
-        setUpsert((Boolean)value);
+        setProps((com.vesoft.nebula.DataSet)value);
       }
       break;
 
@@ -258,14 +170,8 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
     case RESULT:
       return getResult();
 
-    case SCHEMA:
-      return getSchema();
-
-    case DATA:
-      return getData();
-
-    case UPSERT:
-      return new Boolean(isUpsert());
+    case PROPS:
+      return getProps();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -277,12 +183,8 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
     switch (fieldID) {
     case RESULT:
       return isSetResult();
-    case SCHEMA:
-      return isSetSchema();
-    case DATA:
-      return isSetData();
-    case UPSERT:
-      return isSetUpsert();
+    case PROPS:
+      return isSetProps();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -312,30 +214,12 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
-    boolean this_present_schema = true && this.isSetSchema();
-    boolean that_present_schema = true && that.isSetSchema();
-    if (this_present_schema || that_present_schema) {
-      if (!(this_present_schema && that_present_schema))
+    boolean this_present_props = true && this.isSetProps();
+    boolean that_present_props = true && that.isSetProps();
+    if (this_present_props || that_present_props) {
+      if (!(this_present_props && that_present_props))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.schema, that.schema))
-        return false;
-    }
-
-    boolean this_present_data = true && this.isSetData();
-    boolean that_present_data = true && that.isSetData();
-    if (this_present_data || that_present_data) {
-      if (!(this_present_data && that_present_data))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.data, that.data))
-        return false;
-    }
-
-    boolean this_present_upsert = true && this.isSetUpsert();
-    boolean that_present_upsert = true && that.isSetUpsert();
-    if (this_present_upsert || that_present_upsert) {
-      if (!(this_present_upsert && that_present_upsert))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.upsert, that.upsert))
+      if (!TBaseHelper.equalsNobinary(this.props, that.props))
         return false;
     }
 
@@ -351,20 +235,10 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
     if (present_result)
       builder.append(result);
 
-    boolean present_schema = true && (isSetSchema());
-    builder.append(present_schema);
-    if (present_schema)
-      builder.append(schema);
-
-    boolean present_data = true && (isSetData());
-    builder.append(present_data);
-    if (present_data)
-      builder.append(data);
-
-    boolean present_upsert = true && (isSetUpsert());
-    builder.append(present_upsert);
-    if (present_upsert)
-      builder.append(upsert);
+    boolean present_props = true && (isSetProps());
+    builder.append(present_props);
+    if (present_props)
+      builder.append(props);
 
     return builder.toHashCode();
   }
@@ -388,25 +262,10 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case SCHEMA:
+        case PROPS:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
-            this.schema.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case DATA:
-          if (field.type == TType.STRING) {
-            this.data = iprot.readBinary();
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case UPSERT:
-          if (field.type == TType.BOOL) {
-            this.upsert = iprot.readBool();
-            setUpsertIsSet(true);
+            this.props = new com.vesoft.nebula.DataSet();
+            this.props.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -433,24 +292,12 @@ public class UpdateResponse implements TBase, java.io.Serializable, Cloneable {
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.schema != null) {
-      if (isSetSchema()) {
-        oprot.writeFieldBegin(SCHEMA_FIELD_DESC);
-        this.schema.write(oprot);
+    if (this.props != null) {
+      if (isSetProps()) {
+        oprot.writeFieldBegin(PROPS_FIELD_DESC);
+        this.props.write(oprot);
         oprot.writeFieldEnd();
       }
-    }
-    if (this.data != null) {
-      if (isSetData()) {
-        oprot.writeFieldBegin(DATA_FIELD_DESC);
-        oprot.writeBinary(this.data);
-        oprot.writeFieldEnd();
-      }
-    }
-    if (isSetUpsert()) {
-      oprot.writeFieldBegin(UPSERT_FIELD_DESC);
-      oprot.writeBool(this.upsert);
-      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -487,47 +334,18 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetSchema())
+    if (isSetProps())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("schema");
+      sb.append("props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSchema() == null) {
+      if (this. getProps() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this. getProps(), indent + 1, prettyPrint));
       }
-      first = false;
-    }
-    if (isSetData())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("data");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getData() == null) {
-        sb.append("null");
-      } else {
-          int __data_size = Math.min(this. getData().length, 128);
-          for (int i = 0; i < __data_size; i++) {
-            if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getData()[i]).length() > 1 ? Integer.toHexString(this. getData()[i]).substring(Integer.toHexString(this. getData()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getData()[i]).toUpperCase());
-          }
-          if (this. getData().length > 128) sb.append(" ...");
-      }
-      first = false;
-    }
-    if (isSetUpsert())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("upsert");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isUpsert(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

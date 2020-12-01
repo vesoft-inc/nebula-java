@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
+public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Comparable<EdgeItem> {
   private static final TStruct STRUCT_DESC = new TStruct("EdgeItem");
   private static final TField EDGE_TYPE_FIELD_DESC = new TField("edge_type", TType.I32, (short)1);
   private static final TField EDGE_NAME_FIELD_DESC = new TField("edge_name", TType.STRING, (short)2);
@@ -35,9 +35,9 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
   private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)4);
 
   public int edge_type;
-  public String edge_name;
+  public byte[] edge_name;
   public long version;
-  public com.vesoft.nebula.Schema schema;
+  public Schema schema;
   public static final int EDGE_TYPE = 1;
   public static final int EDGE_NAME = 2;
   public static final int VERSION = 3;
@@ -59,7 +59,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+        new StructMetaData(TType.STRUCT, Schema.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -72,9 +72,9 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
 
   public EdgeItem(
     int edge_type,
-    String edge_name,
+    byte[] edge_name,
     long version,
-    com.vesoft.nebula.Schema schema)
+    Schema schema)
   {
     this();
     this.edge_type = edge_type;
@@ -133,11 +133,11 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__EDGE_TYPE_ISSET_ID, value);
   }
 
-  public String  getEdge_name() {
+  public byte[]  getEdge_name() {
     return this.edge_name;
   }
 
-  public EdgeItem setEdge_name(String edge_name) {
+  public EdgeItem setEdge_name(byte[] edge_name) {
     this.edge_name = edge_name;
     return this;
   }
@@ -180,11 +180,11 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__VERSION_ISSET_ID, value);
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
+  public Schema  getSchema() {
     return this.schema;
   }
 
-  public EdgeItem setSchema(com.vesoft.nebula.Schema schema) {
+  public EdgeItem setSchema(Schema schema) {
     this.schema = schema;
     return this;
   }
@@ -218,7 +218,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((String)value);
+        setEdge_name((byte[])value);
       }
       break;
 
@@ -234,7 +234,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSchema();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
+        setSchema((Schema)value);
       }
       break;
 
@@ -307,7 +307,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
     if (this_present_edge_name || that_present_edge_name) {
       if (!(this_present_edge_name && that_present_edge_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_name, that.edge_name))
+      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
         return false;
     }
 
@@ -359,6 +359,53 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(EdgeItem other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetEdge_type()).compareTo(other.isSetEdge_type());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(edge_type, other.edge_type);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetEdge_name()).compareTo(other.isSetEdge_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(edge_name, other.edge_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(version, other.version);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSchema()).compareTo(other.isSetSchema());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(schema, other.schema);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -380,7 +427,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
           break;
         case EDGE_NAME:
           if (field.type == TType.STRING) {
-            this.edge_name = iprot.readString();
+            this.edge_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -395,7 +442,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
           break;
         case SCHEMA:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
+            this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -423,7 +470,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldEnd();
     if (this.edge_name != null) {
       oprot.writeFieldBegin(EDGE_NAME_FIELD_DESC);
-      oprot.writeString(this.edge_name);
+      oprot.writeBinary(this.edge_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(VERSION_FIELD_DESC);
@@ -473,7 +520,12 @@ String space = prettyPrint ? " " : "";
     if (this. getEdge_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdge_name(), indent + 1, prettyPrint));
+        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        for (int i = 0; i < __edge_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+        }
+        if (this. getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

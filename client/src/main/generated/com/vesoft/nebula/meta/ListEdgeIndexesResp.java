@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneable {
+public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListEdgeIndexesResp> {
   private static final TStruct STRUCT_DESC = new TStruct("ListEdgeIndexesResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
@@ -39,7 +39,7 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<com.vesoft.nebula.IndexItem> items;
+  public List<IndexItem> items;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int ITEMS = 3;
@@ -58,7 +58,7 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(ITEMS, new FieldMetaData("items", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.IndexItem.class))));
+            new StructMetaData(TType.STRUCT, IndexItem.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -72,7 +72,7 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
   public ListEdgeIndexesResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<com.vesoft.nebula.IndexItem> items)
+    List<IndexItem> items)
   {
     this();
     this.code = code;
@@ -160,11 +160,11 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  public List<com.vesoft.nebula.IndexItem>  getItems() {
+  public List<IndexItem>  getItems() {
     return this.items;
   }
 
-  public ListEdgeIndexesResp setItems(List<com.vesoft.nebula.IndexItem> items) {
+  public ListEdgeIndexesResp setItems(List<IndexItem> items) {
     this.items = items;
     return this;
   }
@@ -207,7 +207,7 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
       if (value == null) {
         unsetItems();
       } else {
-        setItems((List<com.vesoft.nebula.IndexItem>)value);
+        setItems((List<IndexItem>)value);
       }
       break;
 
@@ -313,6 +313,45 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(ListEdgeIndexesResp other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(code, other.code);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(leader, other.leader);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetItems()).compareTo(other.isSetItems());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(items, other.items);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -343,16 +382,16 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
         case ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list120 = iprot.readListBegin();
-              this.items = new ArrayList<com.vesoft.nebula.IndexItem>(Math.max(0, _list120.size));
-              for (int _i121 = 0; 
-                   (_list120.size < 0) ? iprot.peekList() : (_i121 < _list120.size); 
-                   ++_i121)
+              TList _list138 = iprot.readListBegin();
+              this.items = new ArrayList<IndexItem>(Math.max(0, _list138.size));
+              for (int _i139 = 0; 
+                   (_list138.size < 0) ? iprot.peekList() : (_i139 < _list138.size); 
+                   ++_i139)
               {
-                com.vesoft.nebula.IndexItem _elem122;
-                _elem122 = new com.vesoft.nebula.IndexItem();
-                _elem122.read(iprot);
-                this.items.add(_elem122);
+                IndexItem _elem140;
+                _elem140 = new IndexItem();
+                _elem140.read(iprot);
+                this.items.add(_elem140);
               }
               iprot.readListEnd();
             }
@@ -389,8 +428,8 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (com.vesoft.nebula.IndexItem _iter123 : this.items)        {
-          _iter123.write(oprot);
+        for (IndexItem _iter141 : this.items)        {
+          _iter141.write(oprot);
         }
         oprot.writeListEnd();
       }

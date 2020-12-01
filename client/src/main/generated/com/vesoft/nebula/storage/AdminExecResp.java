@@ -30,9 +30,12 @@ import com.facebook.thrift.protocol.*;
 public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Comparable<AdminExecResp> {
   private static final TStruct STRUCT_DESC = new TStruct("AdminExecResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
+  private static final TField STATIS_FIELD_DESC = new TField("statis", TType.STRUCT, (short)2);
 
   public ResponseCommon result;
+  public com.vesoft.nebula.meta.StatisItem statis;
   public static final int RESULT = 1;
+  public static final int STATIS = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -42,6 +45,8 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
+    tmpMetaDataMap.put(STATIS, new FieldMetaData("statis", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.meta.StatisItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -59,12 +64,24 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     this.result = result;
   }
 
+  public AdminExecResp(
+    ResponseCommon result,
+    com.vesoft.nebula.meta.StatisItem statis)
+  {
+    this();
+    this.result = result;
+    this.statis = statis;
+  }
+
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public AdminExecResp(AdminExecResp other) {
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
+    }
+    if (other.isSetStatis()) {
+      this.statis = TBaseHelper.deepCopy(other.statis);
     }
   }
 
@@ -101,6 +118,30 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
+  public com.vesoft.nebula.meta.StatisItem  getStatis() {
+    return this.statis;
+  }
+
+  public AdminExecResp setStatis(com.vesoft.nebula.meta.StatisItem statis) {
+    this.statis = statis;
+    return this;
+  }
+
+  public void unsetStatis() {
+    this.statis = null;
+  }
+
+  // Returns true if field statis is set (has been assigned a value) and false otherwise
+  public boolean isSetStatis() {
+    return this.statis != null;
+  }
+
+  public void setStatisIsSet(boolean value) {
+    if (!value) {
+      this.statis = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case RESULT:
@@ -108,6 +149,14 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
         unsetResult();
       } else {
         setResult((ResponseCommon)value);
+      }
+      break;
+
+    case STATIS:
+      if (value == null) {
+        unsetStatis();
+      } else {
+        setStatis((com.vesoft.nebula.meta.StatisItem)value);
       }
       break;
 
@@ -121,6 +170,9 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     case RESULT:
       return getResult();
 
+    case STATIS:
+      return getStatis();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -131,6 +183,8 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     switch (fieldID) {
     case RESULT:
       return isSetResult();
+    case STATIS:
+      return isSetStatis();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -160,6 +214,15 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
         return false;
     }
 
+    boolean this_present_statis = true && this.isSetStatis();
+    boolean that_present_statis = true && that.isSetStatis();
+    if (this_present_statis || that_present_statis) {
+      if (!(this_present_statis && that_present_statis))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.statis, that.statis))
+        return false;
+    }
+
     return true;
   }
 
@@ -171,6 +234,11 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     builder.append(present_result);
     if (present_result)
       builder.append(result);
+
+    boolean present_statis = true && (isSetStatis());
+    builder.append(present_statis);
+    if (present_statis)
+      builder.append(statis);
 
     return builder.toHashCode();
   }
@@ -192,6 +260,14 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetStatis()).compareTo(other.isSetStatis());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(statis, other.statis);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -217,6 +293,14 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case STATIS:
+          if (field.type == TType.STRUCT) {
+            this.statis = new com.vesoft.nebula.meta.StatisItem();
+            this.statis.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -238,6 +322,13 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(RESULT_FIELD_DESC);
       this.result.write(oprot);
       oprot.writeFieldEnd();
+    }
+    if (this.statis != null) {
+      if (isSetStatis()) {
+        oprot.writeFieldBegin(STATIS_FIELD_DESC);
+        this.statis.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -274,6 +365,20 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetStatis())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("statis");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getStatis() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getStatis(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

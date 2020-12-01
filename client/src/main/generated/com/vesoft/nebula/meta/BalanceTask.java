@@ -32,7 +32,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField ID_FIELD_DESC = new TField("id", TType.STRING, (short)1);
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.I32, (short)2);
 
-  public String id;
+  public byte[] id;
   /**
    * 
    * @see TaskResult
@@ -64,7 +64,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public BalanceTask(
-    String id,
+    byte[] id,
     int result)
   {
     this();
@@ -94,11 +94,11 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     return new BalanceTask(this);
   }
 
-  public String  getId() {
+  public byte[]  getId() {
     return this.id;
   }
 
-  public BalanceTask setId(String id) {
+  public BalanceTask setId(byte[] id) {
     this.id = id;
     return this;
   }
@@ -155,7 +155,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetId();
       } else {
-        setId((String)value);
+        setId((byte[])value);
       }
       break;
 
@@ -217,7 +217,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_id || that_present_id) {
       if (!(this_present_id && that_present_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
+      if (!TBaseHelper.equalsSlow(this.id, that.id))
         return false;
     }
 
@@ -294,7 +294,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case ID:
           if (field.type == TType.STRING) {
-            this.id = iprot.readString();
+            this.id = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -326,7 +326,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.id != null) {
       oprot.writeFieldBegin(ID_FIELD_DESC);
-      oprot.writeString(this.id);
+      oprot.writeBinary(this.id);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(RESULT_FIELD_DESC);
@@ -364,7 +364,12 @@ String space = prettyPrint ? " " : "";
     if (this. getId() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+        int __id_size = Math.min(this. getId().length, 128);
+        for (int i = 0; i < __id_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getId()[i]).length() > 1 ? Integer.toHexString(this. getId()[i]).substring(Integer.toHexString(this. getId()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getId()[i]).toUpperCase());
+        }
+        if (this. getId().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

@@ -32,7 +32,7 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
   private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)1);
   private static final TField IF_EXISTS_FIELD_DESC = new TField("if_exists", TType.BOOL, (short)2);
 
-  public String space_name;
+  public byte[] space_name;
   public boolean if_exists;
   public static final int SPACE_NAME = 1;
   public static final int IF_EXISTS = 2;
@@ -60,7 +60,7 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public DropSpaceReq(
-    String space_name,
+    byte[] space_name,
     boolean if_exists)
   {
     this();
@@ -90,11 +90,11 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     return new DropSpaceReq(this);
   }
 
-  public String  getSpace_name() {
+  public byte[]  getSpace_name() {
     return this.space_name;
   }
 
-  public DropSpaceReq setSpace_name(String space_name) {
+  public DropSpaceReq setSpace_name(byte[] space_name) {
     this.space_name = space_name;
     return this;
   }
@@ -143,7 +143,7 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
       if (value == null) {
         unsetSpace_name();
       } else {
-        setSpace_name((String)value);
+        setSpace_name((byte[])value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     if (this_present_space_name || that_present_space_name) {
       if (!(this_present_space_name && that_present_space_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.space_name, that.space_name))
+      if (!TBaseHelper.equalsSlow(this.space_name, that.space_name))
         return false;
     }
 
@@ -282,7 +282,7 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
       {
         case SPACE_NAME:
           if (field.type == TType.STRING) {
-            this.space_name = iprot.readString();
+            this.space_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -314,7 +314,7 @@ public class DropSpaceReq implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.space_name != null) {
       oprot.writeFieldBegin(SPACE_NAME_FIELD_DESC);
-      oprot.writeString(this.space_name);
+      oprot.writeBinary(this.space_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(IF_EXISTS_FIELD_DESC);
@@ -352,7 +352,12 @@ String space = prettyPrint ? " " : "";
     if (this. getSpace_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSpace_name(), indent + 1, prettyPrint));
+        int __space_name_size = Math.min(this. getSpace_name().length, 128);
+        for (int i = 0; i < __space_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getSpace_name()[i]).length() > 1 ? Integer.toHexString(this. getSpace_name()[i]).substring(Integer.toHexString(this. getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace_name()[i]).toUpperCase());
+        }
+        if (this. getSpace_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

@@ -36,7 +36,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
   private static final TField MAX_CONNECTIONS_PER_HOUR_FIELD_DESC = new TField("max_connections_per_hour", TType.I32, (short)5);
   private static final TField MAX_USER_CONNECTIONS_FIELD_DESC = new TField("max_user_connections", TType.I32, (short)6);
 
-  public String account;
+  public byte[] account;
   public boolean is_lock;
   public int max_queries_per_hour;
   public int max_updates_per_hour;
@@ -84,7 +84,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public UserItem(
-    String account,
+    byte[] account,
     boolean is_lock,
     int max_queries_per_hour,
     int max_updates_per_hour,
@@ -130,11 +130,11 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return new UserItem(this);
   }
 
-  public String  getAccount() {
+  public byte[]  getAccount() {
     return this.account;
   }
 
-  public UserItem setAccount(String account) {
+  public UserItem setAccount(byte[] account) {
     this.account = account;
     return this;
   }
@@ -275,7 +275,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       if (value == null) {
         unsetAccount();
       } else {
-        setAccount((String)value);
+        setAccount((byte[])value);
       }
       break;
 
@@ -389,7 +389,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     if (this_present_account || that_present_account) {
       if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.account, that.account))
+      if (!TBaseHelper.equalsSlow(this.account, that.account))
         return false;
     }
 
@@ -554,7 +554,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       {
         case ACCOUNT:
           if (field.type == TType.STRING) {
-            this.account = iprot.readString();
+            this.account = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -618,7 +618,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.account != null) {
       oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
-      oprot.writeString(this.account);
+      oprot.writeBinary(this.account);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(IS_LOCK_FIELD_DESC);
@@ -668,7 +668,12 @@ String space = prettyPrint ? " " : "";
     if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
+        int __account_size = Math.min(this. getAccount().length, 128);
+        for (int i = 0; i < __account_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+        }
+        if (this. getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

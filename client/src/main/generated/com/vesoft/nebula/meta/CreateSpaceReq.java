@@ -32,7 +32,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
   private static final TField PROPERTIES_FIELD_DESC = new TField("properties", TType.STRUCT, (short)1);
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)2);
 
-  public SpaceProperties properties;
+  public SpaceDesc properties;
   public boolean if_not_exists;
   public static final int PROPERTIES = 1;
   public static final int IF_NOT_EXISTS = 2;
@@ -46,7 +46,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(PROPERTIES, new FieldMetaData("properties", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, SpaceProperties.class)));
+        new StructMetaData(TType.STRUCT, SpaceDesc.class)));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -60,7 +60,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public CreateSpaceReq(
-    SpaceProperties properties,
+    SpaceDesc properties,
     boolean if_not_exists)
   {
     this();
@@ -90,11 +90,11 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
     return new CreateSpaceReq(this);
   }
 
-  public SpaceProperties  getProperties() {
+  public SpaceDesc  getProperties() {
     return this.properties;
   }
 
-  public CreateSpaceReq setProperties(SpaceProperties properties) {
+  public CreateSpaceReq setProperties(SpaceDesc properties) {
     this.properties = properties;
     return this;
   }
@@ -143,7 +143,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
       if (value == null) {
         unsetProperties();
       } else {
-        setProperties((SpaceProperties)value);
+        setProperties((SpaceDesc)value);
       }
       break;
 
@@ -282,7 +282,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
       {
         case PROPERTIES:
           if (field.type == TType.STRUCT) {
-            this.properties = new SpaceProperties();
+            this.properties = new SpaceDesc();
             this.properties.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

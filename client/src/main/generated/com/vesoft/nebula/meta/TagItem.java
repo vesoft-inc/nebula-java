@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class TagItem implements TBase, java.io.Serializable, Cloneable {
+public class TagItem implements TBase, java.io.Serializable, Cloneable, Comparable<TagItem> {
   private static final TStruct STRUCT_DESC = new TStruct("TagItem");
   private static final TField TAG_ID_FIELD_DESC = new TField("tag_id", TType.I32, (short)1);
   private static final TField TAG_NAME_FIELD_DESC = new TField("tag_name", TType.STRING, (short)2);
@@ -35,9 +35,9 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
   private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)4);
 
   public int tag_id;
-  public String tag_name;
+  public byte[] tag_name;
   public long version;
-  public com.vesoft.nebula.Schema schema;
+  public Schema schema;
   public static final int TAG_ID = 1;
   public static final int TAG_NAME = 2;
   public static final int VERSION = 3;
@@ -59,7 +59,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+        new StructMetaData(TType.STRUCT, Schema.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -72,9 +72,9 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
 
   public TagItem(
     int tag_id,
-    String tag_name,
+    byte[] tag_name,
     long version,
-    com.vesoft.nebula.Schema schema)
+    Schema schema)
   {
     this();
     this.tag_id = tag_id;
@@ -133,11 +133,11 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__TAG_ID_ISSET_ID, value);
   }
 
-  public String  getTag_name() {
+  public byte[]  getTag_name() {
     return this.tag_name;
   }
 
-  public TagItem setTag_name(String tag_name) {
+  public TagItem setTag_name(byte[] tag_name) {
     this.tag_name = tag_name;
     return this;
   }
@@ -180,11 +180,11 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__VERSION_ISSET_ID, value);
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
+  public Schema  getSchema() {
     return this.schema;
   }
 
-  public TagItem setSchema(com.vesoft.nebula.Schema schema) {
+  public TagItem setSchema(Schema schema) {
     this.schema = schema;
     return this;
   }
@@ -218,7 +218,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetTag_name();
       } else {
-        setTag_name((String)value);
+        setTag_name((byte[])value);
       }
       break;
 
@@ -234,7 +234,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSchema();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
+        setSchema((Schema)value);
       }
       break;
 
@@ -307,7 +307,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
     if (this_present_tag_name || that_present_tag_name) {
       if (!(this_present_tag_name && that_present_tag_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_name, that.tag_name))
+      if (!TBaseHelper.equalsSlow(this.tag_name, that.tag_name))
         return false;
     }
 
@@ -359,6 +359,53 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(TagItem other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetTag_id()).compareTo(other.isSetTag_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(tag_id, other.tag_id);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTag_name()).compareTo(other.isSetTag_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(tag_name, other.tag_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(version, other.version);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSchema()).compareTo(other.isSetSchema());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(schema, other.schema);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -380,7 +427,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
           break;
         case TAG_NAME:
           if (field.type == TType.STRING) {
-            this.tag_name = iprot.readString();
+            this.tag_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -395,7 +442,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
           break;
         case SCHEMA:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
+            this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -423,7 +470,7 @@ public class TagItem implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldEnd();
     if (this.tag_name != null) {
       oprot.writeFieldBegin(TAG_NAME_FIELD_DESC);
-      oprot.writeString(this.tag_name);
+      oprot.writeBinary(this.tag_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(VERSION_FIELD_DESC);
@@ -473,7 +520,12 @@ String space = prettyPrint ? " " : "";
     if (this. getTag_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTag_name(), indent + 1, prettyPrint));
+        int __tag_name_size = Math.min(this. getTag_name().length, 128);
+        for (int i = 0; i < __tag_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getTag_name()[i]).length() > 1 ? Integer.toHexString(this. getTag_name()[i]).substring(Integer.toHexString(this. getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTag_name()[i]).toUpperCase());
+        }
+        if (this. getTag_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
