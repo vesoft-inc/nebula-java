@@ -11,6 +11,14 @@ Nebula Java 是一个 Java 客户端，供 Java 开发人员用于连接 Nebula 
 
 如果您正在使用 Nebula Graph v2.0.0，必须使用 Nebula Java v2.0。详细信息参考 [v2.0 README](https://github.com/vesoft-inc/nebula-java)。
 
+## 克隆 v1.0
+
+运行以下命令克隆 Nebula Java v1.0 源代码：
+
+```bash
+git clone -b v1.0 https://github.com/vesoft-inc/nebula-java.git
+```
+
 ## 前提条件
 
 使用 Nebula Java v1.0 进行开发前，您需要确认以下信息：
