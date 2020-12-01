@@ -4,44 +4,62 @@
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
 [![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
 
-This guide provides instructions and options for connecting **Nebula Graph2.0** for Java developer. However, Nebula Java is not thread-safe.
+Nebula Java is a Java client for Java developers to connect their projects to Nebula Graph.
+
+> **NOTE**: Nebula Java is not thread-safe.
+
+## Two branches of this repository
+
+In this repository, you can find two branches for the source code of Nebula Java of different versions.
+
+### The master branch
+
+The master branch is for Nebula Java v2.0, which works with Nebula Graph v2.0 only.
+
+This README file provides Java developers with instructions and options to connect to Nebula Graph v2.0.
+
+### The v1.0 branch
+
+The v1.0 branch is for Nebula Java v1.0, which works with Nebula Graph v1.1.0 and earlier versions only.
+
+For more information, see [README of v1.0](https://github.com/vesoft-inc/nebula-java/blob/v1.0/README.md).
 
 ## Prerequisites
 
-When developing with this Java driver, please use Java 8+. Depending on the version of **Nebula Graph** that you are connecting to, you will have to use a different version of this client.
+To use this Java driver, do a check of  these:
 
-| Nebula version | Nebula Java version |
-|:--------------:|:-----------------:|
-|     2.0.0-beta |      2.0.0-beta   |
+- Java 8+ is installed.
+- Nebula Graph v2.0 is deployed. For more information, see [Deployment and installation of Nebula Graph](https://docs.nebula-graph.io/2.0/4.deployment-and-installation/1.resource-preparations/ "Click to go to Nebula Graph website").
 
-### Graph Client Example
+## Graph Client Example
 
-Connect to the `graphd`:
+To connect to the `nebula-graphd` process:
 
-When using Maven, add dependency to your `pom.xml` file:
+1. When using Maven, add this dependency to your `pom.xml` file.
 
-```xml
-<dependency>
-    <groupId>com.vesoft</groupId>
-    <artifactId>client</artifactId>
-    <version>2.0.0-beta</version>
-</dependency>
-```
+    ```xml
+    <dependency>
+        <groupId>com.vesoft</groupId>
+        <artifactId>client</artifactId>
+        <version>2.0.0-beta</version>
+    </dependency>
+    ```
 
-```java
-NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-nebulaPoolConfig.setMaxConnSize(10);
-List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
-        new HostAddress("127.0.0.1", 3700));
-NebulaPool pool = new NebulaPool();
-pool.init(addresses, nebulaPoolConfig);
-Session session = pool.getSession("root", "nebula", false);
-session.execute(stmt);
-session.release();
-pool.close();
-```
+2. Connect to Nebula Graph v2.0. This is the code example.
 
-For more versions, please refer to [releases](https://github.com/vesoft-inc/nebula-java/releases).
+    ```java
+    NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+    nebulaPoolConfig.setMaxConnSize(10);
+    List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699)  ,
+            new HostAddress("127.0.0.1", 3700));
+    NebulaPool pool = new NebulaPool();
+    pool.init(addresses, nebulaPoolConfig);
+    Session session = pool.getSession("root", "nebula", false);
+    session.execute(stmt);
+    session.release();
+    pool.close();
+    ```
 
-## How to use 1.0 nebula-java client
-git clone -b v1.0 https://github.com/vesoft-inc/nebula-java.git
+## Releases
+
+To download previous releases of Nebula Java, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
