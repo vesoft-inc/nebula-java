@@ -1,4 +1,4 @@
-# nebula-java v1.x
+# nebula-java v1.0
 
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
 [![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
@@ -7,11 +7,11 @@ Nebula Java 是一个 Java 客户端，供 Java 开发人员用于连接 Nebula 
 
 > **说明**：Nebula Java 非线程安全。
 
-本项目的 `v1.0` 分支仅包含 Nebula Java v1.x 的源代码。下表列出了能用于连接 Nebula Graph v1.1.0 或以前版本的 Nebula Java 版本。
+本项目的 `v1.0` 分支仅包含 Nebula Java v1.0 的源代码。下表列出了能用于连接 Nebula Graph v1.1.0 或以前版本的 Nebula Java 版本。
 
-| Nebula Graph |   Nebula Java v1.x |
+| Nebula Graph 版本 |   Nebula Java v1.0 |
 |   :-- |   :-- |
-| v1.1.0 及以前版本   |   v1.0.0 <br /> v1.0.1 <br /> v1.1.0  |
+| v1.1.0 及以前版本   |   v1.0.0 <br /> v1.0.1  |
 
 如果需要下载已经发布的版本，请访问 [releases](https://github.com/vesoft-inc/nebula-java/releases)。
 
@@ -43,6 +43,8 @@ git clone -b v1.0 https://github.com/vesoft-inc/nebula-java.git
     <version>1.0.0</version>
 </dependency>
 ```
+
+如果您要使用 Nebula Java v1.0.1，则在依赖项中使用 `<version>1.0.1</version>`。
 
 ### Graph 客户端示例
 

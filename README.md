@@ -1,4 +1,4 @@
-# nebula-java v1.x
+# nebula-java v1.0
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
 [![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
@@ -8,11 +8,11 @@ Nebula Java is a Java client for Java developers to connect their projects to Ne
 
 > **NOTE**: Nebula Java is not thread-safe.
 
-This branch, v1.0, is for Nebula Java v1.x. This table lists the versions of Nebula Java that can work with Nebula Graph v1.1.0 and earlier versions.
+This branch, v1.0, is for Nebula Java v1.0. This table lists the versions of Nebula Java that can work with Nebula Graph v1.1.0 and earlier versions.
 
-| Nebula Graph version  |   Nebula Java v1.x |
+| Nebula Graph version  |   Nebula Java v1.0 |
 |   :-- |   :-- |
-| v1.1.0 and earlier versions   |   v1.0.0 <br /> v1.0.1 <br /> v1.1.0  |
+| v1.1.0 and earlier versions   |   v1.0.0 <br /> v1.0.1  |
 
 To download previous releases of Nebula Java, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
@@ -44,6 +44,8 @@ When using Maven, add this dependency to your `pom.xml` file:
     <version>1.0.0</version>
 </dependency>
 ```
+
+If Nebula Java v1.0.1 is used, use `<version>1.0.1</version>` in the dependency.
 
 ### Graph client example
 
