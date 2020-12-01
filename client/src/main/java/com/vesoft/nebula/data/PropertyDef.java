@@ -18,6 +18,7 @@ public class PropertyDef {
         FLOAT(4),
         DOUBLE(5),
         STRING(6),
+        TIMESTAMP(21),
 
         // some default property in vertex/edge key
         VERTEX_ID(-1),
