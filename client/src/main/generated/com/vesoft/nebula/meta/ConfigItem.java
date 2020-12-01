@@ -27,43 +27,35 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Comparable<ConfigItem> {
+public class ConfigItem implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("ConfigItem");
   private static final TField MODULE_FIELD_DESC = new TField("module", TType.I32, (short)1);
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)2);
-  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)3);
-  private static final TField MODE_FIELD_DESC = new TField("mode", TType.I32, (short)4);
-  private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)5);
+  private static final TField MODE_FIELD_DESC = new TField("mode", TType.I32, (short)3);
+  private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRUCT, (short)4);
 
   /**
    * 
    * @see ConfigModule
    */
   public int module;
-  public String name;
-  /**
-   * 
-   * @see ConfigType
-   */
-  public int type;
+  public byte[] name;
   /**
    * 
    * @see ConfigMode
    */
   public int mode;
-  public byte[] value;
+  public com.vesoft.nebula.Value value;
   public static final int MODULE = 1;
   public static final int NAME = 2;
-  public static final int TYPE = 3;
-  public static final int MODE = 4;
-  public static final int VALUE = 5;
+  public static final int MODE = 3;
+  public static final int VALUE = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __MODULE_ISSET_ID = 0;
-  private static final int __TYPE_ISSET_ID = 1;
-  private static final int __MODE_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __MODE_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -72,12 +64,10 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(MODE, new FieldMetaData("mode", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -90,17 +80,14 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
 
   public ConfigItem(
     int module,
-    String name,
-    int type,
+    byte[] name,
     int mode,
-    byte[] value)
+    com.vesoft.nebula.Value value)
   {
     this();
     this.module = module;
     setModuleIsSet(true);
     this.name = name;
-    this.type = type;
-    setTypeIsSet(true);
     this.mode = mode;
     setModeIsSet(true);
     this.value = value;
@@ -116,7 +103,6 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     if (other.isSetName()) {
       this.name = TBaseHelper.deepCopy(other.name);
     }
-    this.type = TBaseHelper.deepCopy(other.type);
     this.mode = TBaseHelper.deepCopy(other.mode);
     if (other.isSetValue()) {
       this.value = TBaseHelper.deepCopy(other.value);
@@ -163,11 +149,11 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__MODULE_ISSET_ID, value);
   }
 
-  public String  getName() {
+  public byte[]  getName() {
     return this.name;
   }
 
-  public ConfigItem setName(String name) {
+  public ConfigItem setName(byte[] name) {
     this.name = name;
     return this;
   }
@@ -185,37 +171,6 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     if (!value) {
       this.name = null;
     }
-  }
-
-  /**
-   * 
-   * @see ConfigType
-   */
-  public int  getType() {
-    return this.type;
-  }
-
-  /**
-   * 
-   * @see ConfigType
-   */
-  public ConfigItem setType(int type) {
-    this.type = type;
-    setTypeIsSet(true);
-    return this;
-  }
-
-  public void unsetType() {
-    __isset_bit_vector.clear(__TYPE_ISSET_ID);
-  }
-
-  // Returns true if field type is set (has been assigned a value) and false otherwise
-  public boolean isSetType() {
-    return __isset_bit_vector.get(__TYPE_ISSET_ID);
-  }
-
-  public void setTypeIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
   }
 
   /**
@@ -249,11 +204,11 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__MODE_ISSET_ID, value);
   }
 
-  public byte[]  getValue() {
+  public com.vesoft.nebula.Value  getValue() {
     return this.value;
   }
 
-  public ConfigItem setValue(byte[] value) {
+  public ConfigItem setValue(com.vesoft.nebula.Value value) {
     this.value = value;
     return this;
   }
@@ -287,15 +242,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
       if (value == null) {
         unsetName();
       } else {
-        setName((String)value);
-      }
-      break;
-
-    case TYPE:
-      if (value == null) {
-        unsetType();
-      } else {
-        setType((Integer)value);
+        setName((byte[])value);
       }
       break;
 
@@ -311,7 +258,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
       if (value == null) {
         unsetValue();
       } else {
-        setValue((byte[])value);
+        setValue((com.vesoft.nebula.Value)value);
       }
       break;
 
@@ -327,9 +274,6 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
 
     case NAME:
       return getName();
-
-    case TYPE:
-      return getType();
 
     case MODE:
       return getMode();
@@ -349,8 +293,6 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
       return isSetModule();
     case NAME:
       return isSetName();
-    case TYPE:
-      return isSetType();
     case MODE:
       return isSetMode();
     case VALUE:
@@ -389,16 +331,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     if (this_present_name || that_present_name) {
       if (!(this_present_name && that_present_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.name, that.name))
-        return false;
-    }
-
-    boolean this_present_type = true;
-    boolean that_present_type = true;
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
+      if (!TBaseHelper.equalsSlow(this.name, that.name))
         return false;
     }
 
@@ -416,7 +349,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     if (this_present_value || that_present_value) {
       if (!(this_present_value && that_present_value))
         return false;
-      if (!TBaseHelper.equalsSlow(this.value, that.value))
+      if (!TBaseHelper.equalsNobinary(this.value, that.value))
         return false;
     }
 
@@ -437,11 +370,6 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     if (present_name)
       builder.append(name);
 
-    boolean present_type = true;
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
     boolean present_mode = true;
     builder.append(present_mode);
     if (present_mode)
@@ -453,61 +381,6 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
       builder.append(value);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(ConfigItem other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetModule()).compareTo(other.isSetModule());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(module, other.module);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetName()).compareTo(other.isSetName());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(type, other.type);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetMode()).compareTo(other.isSetMode());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(mode, other.mode);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetValue()).compareTo(other.isSetValue());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(value, other.value);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -531,15 +404,7 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
           break;
         case NAME:
           if (field.type == TType.STRING) {
-            this.name = iprot.readString();
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case TYPE:
-          if (field.type == TType.I32) {
-            this.type = iprot.readI32();
-            setTypeIsSet(true);
+            this.name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -553,8 +418,9 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
           }
           break;
         case VALUE:
-          if (field.type == TType.STRING) {
-            this.value = iprot.readBinary();
+          if (field.type == TType.STRUCT) {
+            this.value = new com.vesoft.nebula.Value();
+            this.value.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -581,18 +447,15 @@ public class ConfigItem implements TBase, java.io.Serializable, Cloneable, Compa
     oprot.writeFieldEnd();
     if (this.name != null) {
       oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeString(this.name);
+      oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(TYPE_FIELD_DESC);
-    oprot.writeI32(this.type);
-    oprot.writeFieldEnd();
     oprot.writeFieldBegin(MODE_FIELD_DESC);
     oprot.writeI32(this.mode);
     oprot.writeFieldEnd();
     if (this.value != null) {
       oprot.writeFieldBegin(VALUE_FIELD_DESC);
-      oprot.writeBinary(this.value);
+      this.value.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -642,22 +505,12 @@ String space = prettyPrint ? " " : "";
     if (this. getName() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getName(), indent + 1, prettyPrint));
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("type");
-    sb.append(space);
-    sb.append(":").append(space);
-    String type_name = ConfigType.VALUES_TO_NAMES.get(this. getType());
-    if (type_name != null) {
-      sb.append(type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getType());
-    if (type_name != null) {
-      sb.append(")");
+        int __name_size = Math.min(this. getName().length, 128);
+        for (int i = 0; i < __name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+        }
+        if (this. getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -683,12 +536,7 @@ String space = prettyPrint ? " " : "";
     if (this. getValue() == null) {
       sb.append("null");
     } else {
-        int __value_size = Math.min(this. getValue().length, 128);
-        for (int i = 0; i < __value_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getValue()[i]).length() > 1 ? Integer.toHexString(this. getValue()[i]).substring(Integer.toHexString(this. getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getValue()[i]).toUpperCase());
-        }
-        if (this. getValue().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getValue(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -701,9 +549,6 @@ String space = prettyPrint ? " " : "";
     // check that fields of type enum have valid values
     if (isSetModule() && !ConfigModule.VALID_VALUES.contains(module)){
       throw new TProtocolException("The field 'module' has been assigned the invalid value " + module);
-    }
-    if (isSetType() && !ConfigType.VALID_VALUES.contains(type)){
-      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
     }
     if (isSetMode() && !ConfigMode.VALID_VALUES.contains(mode)){
       throw new TProtocolException("The field 'mode' has been assigned the invalid value " + mode);

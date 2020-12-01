@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
+public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, Comparable<AlterSchemaItem> {
   private static final TStruct STRUCT_DESC = new TStruct("AlterSchemaItem");
   private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)1);
   private static final TField SCHEMA_FIELD_DESC = new TField("schema", TType.STRUCT, (short)2);
@@ -37,7 +37,7 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
    * @see AlterSchemaOp
    */
   public int op;
-  public com.vesoft.nebula.Schema schema;
+  public Schema schema;
   public static final int OP = 1;
   public static final int SCHEMA = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -52,7 +52,7 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(SCHEMA, new FieldMetaData("schema", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Schema.class)));
+        new StructMetaData(TType.STRUCT, Schema.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -65,7 +65,7 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
 
   public AlterSchemaItem(
     int op,
-    com.vesoft.nebula.Schema schema)
+    Schema schema)
   {
     this();
     this.op = op;
@@ -125,11 +125,11 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__OP_ISSET_ID, value);
   }
 
-  public com.vesoft.nebula.Schema  getSchema() {
+  public Schema  getSchema() {
     return this.schema;
   }
 
-  public AlterSchemaItem setSchema(com.vesoft.nebula.Schema schema) {
+  public AlterSchemaItem setSchema(Schema schema) {
     this.schema = schema;
     return this;
   }
@@ -163,7 +163,7 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSchema();
       } else {
-        setSchema((com.vesoft.nebula.Schema)value);
+        setSchema((Schema)value);
       }
       break;
 
@@ -250,6 +250,37 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
     return builder.toHashCode();
   }
 
+  @Override
+  public int compareTo(AlterSchemaItem other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetOp()).compareTo(other.isSetOp());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(op, other.op);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSchema()).compareTo(other.isSetSchema());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(schema, other.schema);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -271,7 +302,7 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable {
           break;
         case SCHEMA:
           if (field.type == TType.STRUCT) {
-            this.schema = new com.vesoft.nebula.Schema();
+            this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);

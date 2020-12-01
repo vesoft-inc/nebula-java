@@ -33,7 +33,7 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)2);
 
   public int space_id;
-  public String name;
+  public byte[] name;
   public static final int SPACE_ID = 1;
   public static final int NAME = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -61,7 +61,7 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
 
   public CreateCPRequest(
     int space_id,
-    String name)
+    byte[] name)
   {
     this();
     this.space_id = space_id;
@@ -113,11 +113,11 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getName() {
+  public byte[]  getName() {
     return this.name;
   }
 
-  public CreateCPRequest setName(String name) {
+  public CreateCPRequest setName(byte[] name) {
     this.name = name;
     return this;
   }
@@ -151,7 +151,7 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
       if (value == null) {
         unsetName();
       } else {
-        setName((String)value);
+        setName((byte[])value);
       }
       break;
 
@@ -214,7 +214,7 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
     if (this_present_name || that_present_name) {
       if (!(this_present_name && that_present_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.name, that.name))
+      if (!TBaseHelper.equalsSlow(this.name, that.name))
         return false;
     }
 
@@ -290,7 +290,7 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
           break;
         case NAME:
           if (field.type == TType.STRING) {
-            this.name = iprot.readString();
+            this.name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -317,7 +317,7 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldEnd();
     if (this.name != null) {
       oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeString(this.name);
+      oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -359,7 +359,12 @@ String space = prettyPrint ? " " : "";
     if (this. getName() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getName(), indent + 1, prettyPrint));
+        int __name_size = Math.min(this. getName().length, 128);
+        for (int i = 0; i < __name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+        }
+        if (this. getName().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -32,7 +32,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
   private static final TField SPACE_FIELD_DESC = new TField("space", TType.STRING, (short)1);
   private static final TField MODULE_FIELD_DESC = new TField("module", TType.I32, (short)2);
 
-  public String space;
+  public byte[] space;
   /**
    * 
    * @see ConfigModule
@@ -64,7 +64,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public ListConfigsReq(
-    String space,
+    byte[] space,
     int module)
   {
     this();
@@ -94,11 +94,11 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
     return new ListConfigsReq(this);
   }
 
-  public String  getSpace() {
+  public byte[]  getSpace() {
     return this.space;
   }
 
-  public ListConfigsReq setSpace(String space) {
+  public ListConfigsReq setSpace(byte[] space) {
     this.space = space;
     return this;
   }
@@ -155,7 +155,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
       if (value == null) {
         unsetSpace();
       } else {
-        setSpace((String)value);
+        setSpace((byte[])value);
       }
       break;
 
@@ -217,7 +217,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
     if (this_present_space || that_present_space) {
       if (!(this_present_space && that_present_space))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.space, that.space))
+      if (!TBaseHelper.equalsSlow(this.space, that.space))
         return false;
     }
 
@@ -294,7 +294,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
       {
         case SPACE:
           if (field.type == TType.STRING) {
-            this.space = iprot.readString();
+            this.space = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -326,7 +326,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.space != null) {
       oprot.writeFieldBegin(SPACE_FIELD_DESC);
-      oprot.writeString(this.space);
+      oprot.writeBinary(this.space);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(MODULE_FIELD_DESC);
@@ -364,7 +364,12 @@ String space = prettyPrint ? " " : "";
     if (this. getSpace() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSpace(), indent + 1, prettyPrint));
+        int __space_size = Math.min(this. getSpace().length, 128);
+        for (int i = 0; i < __space_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getSpace()[i]).length() > 1 ? Integer.toHexString(this. getSpace()[i]).substring(Integer.toHexString(this. getSpace()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace()[i]).toUpperCase());
+        }
+        if (this. getSpace().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

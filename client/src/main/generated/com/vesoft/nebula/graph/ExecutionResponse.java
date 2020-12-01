@@ -27,15 +27,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable, Comparable<ExecutionResponse> {
+public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("ExecutionResponse");
   private static final TField ERROR_CODE_FIELD_DESC = new TField("error_code", TType.I32, (short)1);
   private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I32, (short)2);
-  private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)3);
-  private static final TField COLUMN_NAMES_FIELD_DESC = new TField("column_names", TType.LIST, (short)4);
-  private static final TField ROWS_FIELD_DESC = new TField("rows", TType.LIST, (short)5);
-  private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)6);
-  private static final TField WARNING_MSG_FIELD_DESC = new TField("warning_msg", TType.STRING, (short)7);
+  private static final TField DATA_FIELD_DESC = new TField("data", TType.STRUCT, (short)3);
+  private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)4);
+  private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)5);
+  private static final TField PLAN_DESC_FIELD_DESC = new TField("plan_desc", TType.STRUCT, (short)6);
+  private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)7);
 
   /**
    * 
@@ -43,18 +43,18 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
    */
   public int error_code;
   public int latency_in_us;
-  public String error_msg;
-  public List<byte[]> column_names;
-  public List<RowValue> rows;
-  public String space_name;
-  public String warning_msg;
+  public com.vesoft.nebula.DataSet data;
+  public byte[] space_name;
+  public byte[] error_msg;
+  public PlanDescription plan_desc;
+  public byte[] comment;
   public static final int ERROR_CODE = 1;
   public static final int LATENCY_IN_US = 2;
-  public static final int ERROR_MSG = 3;
-  public static final int COLUMN_NAMES = 4;
-  public static final int ROWS = 5;
-  public static final int SPACE_NAME = 6;
-  public static final int WARNING_MSG = 7;
+  public static final int DATA = 3;
+  public static final int SPACE_NAME = 4;
+  public static final int ERROR_MSG = 5;
+  public static final int PLAN_DESC = 6;
+  public static final int COMMENT = 7;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -69,17 +69,15 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LATENCY_IN_US, new FieldMetaData("latency_in_us", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(ERROR_MSG, new FieldMetaData("error_msg", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(COLUMN_NAMES, new FieldMetaData("column_names", TFieldRequirementType.OPTIONAL, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
-    tmpMetaDataMap.put(ROWS, new FieldMetaData("rows", TFieldRequirementType.OPTIONAL, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, RowValue.class))));
+    tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
     tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(WARNING_MSG, new FieldMetaData("warning_msg", TFieldRequirementType.OPTIONAL, 
+    tmpMetaDataMap.put(ERROR_MSG, new FieldMetaData("error_msg", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(PLAN_DESC, new FieldMetaData("plan_desc", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, PlanDescription.class)));
+    tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -105,22 +103,22 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   public ExecutionResponse(
     int error_code,
     int latency_in_us,
-    String error_msg,
-    List<byte[]> column_names,
-    List<RowValue> rows,
-    String space_name,
-    String warning_msg)
+    com.vesoft.nebula.DataSet data,
+    byte[] space_name,
+    byte[] error_msg,
+    PlanDescription plan_desc,
+    byte[] comment)
   {
     this();
     this.error_code = error_code;
     setError_codeIsSet(true);
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
-    this.error_msg = error_msg;
-    this.column_names = column_names;
-    this.rows = rows;
+    this.data = data;
     this.space_name = space_name;
-    this.warning_msg = warning_msg;
+    this.error_msg = error_msg;
+    this.plan_desc = plan_desc;
+    this.comment = comment;
   }
 
   /**
@@ -131,20 +129,20 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.error_code = TBaseHelper.deepCopy(other.error_code);
     this.latency_in_us = TBaseHelper.deepCopy(other.latency_in_us);
-    if (other.isSetError_msg()) {
-      this.error_msg = TBaseHelper.deepCopy(other.error_msg);
-    }
-    if (other.isSetColumn_names()) {
-      this.column_names = TBaseHelper.deepCopy(other.column_names);
-    }
-    if (other.isSetRows()) {
-      this.rows = TBaseHelper.deepCopy(other.rows);
+    if (other.isSetData()) {
+      this.data = TBaseHelper.deepCopy(other.data);
     }
     if (other.isSetSpace_name()) {
       this.space_name = TBaseHelper.deepCopy(other.space_name);
     }
-    if (other.isSetWarning_msg()) {
-      this.warning_msg = TBaseHelper.deepCopy(other.warning_msg);
+    if (other.isSetError_msg()) {
+      this.error_msg = TBaseHelper.deepCopy(other.error_msg);
+    }
+    if (other.isSetPlan_desc()) {
+      this.plan_desc = TBaseHelper.deepCopy(other.plan_desc);
+    }
+    if (other.isSetComment()) {
+      this.comment = TBaseHelper.deepCopy(other.comment);
     }
   }
 
@@ -211,83 +209,35 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__LATENCY_IN_US_ISSET_ID, value);
   }
 
-  public String  getError_msg() {
-    return this.error_msg;
+  public com.vesoft.nebula.DataSet  getData() {
+    return this.data;
   }
 
-  public ExecutionResponse setError_msg(String error_msg) {
-    this.error_msg = error_msg;
+  public ExecutionResponse setData(com.vesoft.nebula.DataSet data) {
+    this.data = data;
     return this;
   }
 
-  public void unsetError_msg() {
-    this.error_msg = null;
+  public void unsetData() {
+    this.data = null;
   }
 
-  // Returns true if field error_msg is set (has been assigned a value) and false otherwise
-  public boolean isSetError_msg() {
-    return this.error_msg != null;
+  // Returns true if field data is set (has been assigned a value) and false otherwise
+  public boolean isSetData() {
+    return this.data != null;
   }
 
-  public void setError_msgIsSet(boolean value) {
+  public void setDataIsSet(boolean value) {
     if (!value) {
-      this.error_msg = null;
+      this.data = null;
     }
   }
 
-  public List<byte[]>  getColumn_names() {
-    return this.column_names;
-  }
-
-  public ExecutionResponse setColumn_names(List<byte[]> column_names) {
-    this.column_names = column_names;
-    return this;
-  }
-
-  public void unsetColumn_names() {
-    this.column_names = null;
-  }
-
-  // Returns true if field column_names is set (has been assigned a value) and false otherwise
-  public boolean isSetColumn_names() {
-    return this.column_names != null;
-  }
-
-  public void setColumn_namesIsSet(boolean value) {
-    if (!value) {
-      this.column_names = null;
-    }
-  }
-
-  public List<RowValue>  getRows() {
-    return this.rows;
-  }
-
-  public ExecutionResponse setRows(List<RowValue> rows) {
-    this.rows = rows;
-    return this;
-  }
-
-  public void unsetRows() {
-    this.rows = null;
-  }
-
-  // Returns true if field rows is set (has been assigned a value) and false otherwise
-  public boolean isSetRows() {
-    return this.rows != null;
-  }
-
-  public void setRowsIsSet(boolean value) {
-    if (!value) {
-      this.rows = null;
-    }
-  }
-
-  public String  getSpace_name() {
+  public byte[]  getSpace_name() {
     return this.space_name;
   }
 
-  public ExecutionResponse setSpace_name(String space_name) {
+  public ExecutionResponse setSpace_name(byte[] space_name) {
     this.space_name = space_name;
     return this;
   }
@@ -307,31 +257,78 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public String  getWarning_msg() {
-    return this.warning_msg;
+  public byte[]  getError_msg() {
+    return this.error_msg;
   }
 
-  public ExecutionResponse setWarning_msg(String warning_msg) {
-    this.warning_msg = warning_msg;
+  public ExecutionResponse setError_msg(byte[] error_msg) {
+    this.error_msg = error_msg;
     return this;
   }
 
-  public void unsetWarning_msg() {
-    this.warning_msg = null;
+  public void unsetError_msg() {
+    this.error_msg = null;
   }
 
-  // Returns true if field warning_msg is set (has been assigned a value) and false otherwise
-  public boolean isSetWarning_msg() {
-    return this.warning_msg != null;
+  // Returns true if field error_msg is set (has been assigned a value) and false otherwise
+  public boolean isSetError_msg() {
+    return this.error_msg != null;
   }
 
-  public void setWarning_msgIsSet(boolean value) {
+  public void setError_msgIsSet(boolean value) {
     if (!value) {
-      this.warning_msg = null;
+      this.error_msg = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
+  public PlanDescription  getPlan_desc() {
+    return this.plan_desc;
+  }
+
+  public ExecutionResponse setPlan_desc(PlanDescription plan_desc) {
+    this.plan_desc = plan_desc;
+    return this;
+  }
+
+  public void unsetPlan_desc() {
+    this.plan_desc = null;
+  }
+
+  // Returns true if field plan_desc is set (has been assigned a value) and false otherwise
+  public boolean isSetPlan_desc() {
+    return this.plan_desc != null;
+  }
+
+  public void setPlan_descIsSet(boolean value) {
+    if (!value) {
+      this.plan_desc = null;
+    }
+  }
+
+  public byte[]  getComment() {
+    return this.comment;
+  }
+
+  public ExecutionResponse setComment(byte[] comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  // Returns true if field comment is set (has been assigned a value) and false otherwise
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean value) {
+    if (!value) {
+      this.comment = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case ERROR_CODE:
@@ -350,27 +347,11 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case ERROR_MSG:
+    case DATA:
       if (value == null) {
-        unsetError_msg();
+        unsetData();
       } else {
-        setError_msg((String)value);
-      }
-      break;
-
-    case COLUMN_NAMES:
-      if (value == null) {
-        unsetColumn_names();
-      } else {
-        setColumn_names((List<byte[]>)value);
-      }
-      break;
-
-    case ROWS:
-      if (value == null) {
-        unsetRows();
-      } else {
-        setRows((List<RowValue>)value);
+        setData((com.vesoft.nebula.DataSet)value);
       }
       break;
 
@@ -378,15 +359,31 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetSpace_name();
       } else {
-        setSpace_name((String)value);
+        setSpace_name((byte[])value);
       }
       break;
 
-    case WARNING_MSG:
+    case ERROR_MSG:
       if (value == null) {
-        unsetWarning_msg();
+        unsetError_msg();
       } else {
-        setWarning_msg((String)value);
+        setError_msg((byte[])value);
+      }
+      break;
+
+    case PLAN_DESC:
+      if (value == null) {
+        unsetPlan_desc();
+      } else {
+        setPlan_desc((PlanDescription)value);
+      }
+      break;
+
+    case COMMENT:
+      if (value == null) {
+        unsetComment();
+      } else {
+        setComment((byte[])value);
       }
       break;
 
@@ -403,20 +400,20 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     case LATENCY_IN_US:
       return new Integer(getLatency_in_us());
 
-    case ERROR_MSG:
-      return getError_msg();
-
-    case COLUMN_NAMES:
-      return getColumn_names();
-
-    case ROWS:
-      return getRows();
+    case DATA:
+      return getData();
 
     case SPACE_NAME:
       return getSpace_name();
 
-    case WARNING_MSG:
-      return getWarning_msg();
+    case ERROR_MSG:
+      return getError_msg();
+
+    case PLAN_DESC:
+      return getPlan_desc();
+
+    case COMMENT:
+      return getComment();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -430,16 +427,16 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       return isSetError_code();
     case LATENCY_IN_US:
       return isSetLatency_in_us();
-    case ERROR_MSG:
-      return isSetError_msg();
-    case COLUMN_NAMES:
-      return isSetColumn_names();
-    case ROWS:
-      return isSetRows();
+    case DATA:
+      return isSetData();
     case SPACE_NAME:
       return isSetSpace_name();
-    case WARNING_MSG:
-      return isSetWarning_msg();
+    case ERROR_MSG:
+      return isSetError_msg();
+    case PLAN_DESC:
+      return isSetPlan_desc();
+    case COMMENT:
+      return isSetComment();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -478,30 +475,12 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_error_msg = true && this.isSetError_msg();
-    boolean that_present_error_msg = true && that.isSetError_msg();
-    if (this_present_error_msg || that_present_error_msg) {
-      if (!(this_present_error_msg && that_present_error_msg))
+    boolean this_present_data = true && this.isSetData();
+    boolean that_present_data = true && that.isSetData();
+    if (this_present_data || that_present_data) {
+      if (!(this_present_data && that_present_data))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.error_msg, that.error_msg))
-        return false;
-    }
-
-    boolean this_present_column_names = true && this.isSetColumn_names();
-    boolean that_present_column_names = true && that.isSetColumn_names();
-    if (this_present_column_names || that_present_column_names) {
-      if (!(this_present_column_names && that_present_column_names))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.column_names, that.column_names))
-        return false;
-    }
-
-    boolean this_present_rows = true && this.isSetRows();
-    boolean that_present_rows = true && that.isSetRows();
-    if (this_present_rows || that_present_rows) {
-      if (!(this_present_rows && that_present_rows))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.rows, that.rows))
+      if (!TBaseHelper.equalsNobinary(this.data, that.data))
         return false;
     }
 
@@ -510,16 +489,34 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     if (this_present_space_name || that_present_space_name) {
       if (!(this_present_space_name && that_present_space_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.space_name, that.space_name))
+      if (!TBaseHelper.equalsSlow(this.space_name, that.space_name))
         return false;
     }
 
-    boolean this_present_warning_msg = true && this.isSetWarning_msg();
-    boolean that_present_warning_msg = true && that.isSetWarning_msg();
-    if (this_present_warning_msg || that_present_warning_msg) {
-      if (!(this_present_warning_msg && that_present_warning_msg))
+    boolean this_present_error_msg = true && this.isSetError_msg();
+    boolean that_present_error_msg = true && that.isSetError_msg();
+    if (this_present_error_msg || that_present_error_msg) {
+      if (!(this_present_error_msg && that_present_error_msg))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.warning_msg, that.warning_msg))
+      if (!TBaseHelper.equalsSlow(this.error_msg, that.error_msg))
+        return false;
+    }
+
+    boolean this_present_plan_desc = true && this.isSetPlan_desc();
+    boolean that_present_plan_desc = true && that.isSetPlan_desc();
+    if (this_present_plan_desc || that_present_plan_desc) {
+      if (!(this_present_plan_desc && that_present_plan_desc))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.plan_desc, that.plan_desc))
+        return false;
+    }
+
+    boolean this_present_comment = true && this.isSetComment();
+    boolean that_present_comment = true && that.isSetComment();
+    if (this_present_comment || that_present_comment) {
+      if (!(this_present_comment && that_present_comment))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.comment, that.comment))
         return false;
     }
 
@@ -540,103 +537,32 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     if (present_latency_in_us)
       builder.append(latency_in_us);
 
-    boolean present_error_msg = true && (isSetError_msg());
-    builder.append(present_error_msg);
-    if (present_error_msg)
-      builder.append(error_msg);
-
-    boolean present_column_names = true && (isSetColumn_names());
-    builder.append(present_column_names);
-    if (present_column_names)
-      builder.append(column_names);
-
-    boolean present_rows = true && (isSetRows());
-    builder.append(present_rows);
-    if (present_rows)
-      builder.append(rows);
+    boolean present_data = true && (isSetData());
+    builder.append(present_data);
+    if (present_data)
+      builder.append(data);
 
     boolean present_space_name = true && (isSetSpace_name());
     builder.append(present_space_name);
     if (present_space_name)
       builder.append(space_name);
 
-    boolean present_warning_msg = true && (isSetWarning_msg());
-    builder.append(present_warning_msg);
-    if (present_warning_msg)
-      builder.append(warning_msg);
+    boolean present_error_msg = true && (isSetError_msg());
+    builder.append(present_error_msg);
+    if (present_error_msg)
+      builder.append(error_msg);
+
+    boolean present_plan_desc = true && (isSetPlan_desc());
+    builder.append(present_plan_desc);
+    if (present_plan_desc)
+      builder.append(plan_desc);
+
+    boolean present_comment = true && (isSetComment());
+    builder.append(present_comment);
+    if (present_comment)
+      builder.append(comment);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(ExecutionResponse other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetError_code()).compareTo(other.isSetError_code());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(error_code, other.error_code);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetLatency_in_us()).compareTo(other.isSetLatency_in_us());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(latency_in_us, other.latency_in_us);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetError_msg()).compareTo(other.isSetError_msg());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(error_msg, other.error_msg);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetColumn_names()).compareTo(other.isSetColumn_names());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(column_names, other.column_names);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetRows()).compareTo(other.isSetRows());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(rows, other.rows);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetSpace_name()).compareTo(other.isSetSpace_name());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_name, other.space_name);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetWarning_msg()).compareTo(other.isSetWarning_msg());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(warning_msg, other.warning_msg);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -666,62 +592,39 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ERROR_MSG:
-          if (field.type == TType.STRING) {
-            this.error_msg = iprot.readString();
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case COLUMN_NAMES:
-          if (field.type == TType.LIST) {
-            {
-              TList _list8 = iprot.readListBegin();
-              this.column_names = new ArrayList<byte[]>(Math.max(0, _list8.size));
-              for (int _i9 = 0; 
-                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
-                   ++_i9)
-              {
-                byte[] _elem10;
-                _elem10 = iprot.readBinary();
-                this.column_names.add(_elem10);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case ROWS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list11 = iprot.readListBegin();
-              this.rows = new ArrayList<RowValue>(Math.max(0, _list11.size));
-              for (int _i12 = 0; 
-                   (_list11.size < 0) ? iprot.peekList() : (_i12 < _list11.size); 
-                   ++_i12)
-              {
-                RowValue _elem13;
-                _elem13 = new RowValue();
-                _elem13.read(iprot);
-                this.rows.add(_elem13);
-              }
-              iprot.readListEnd();
-            }
+        case DATA:
+          if (field.type == TType.STRUCT) {
+            this.data = new com.vesoft.nebula.DataSet();
+            this.data.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case SPACE_NAME:
           if (field.type == TType.STRING) {
-            this.space_name = iprot.readString();
+            this.space_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case WARNING_MSG:
+        case ERROR_MSG:
           if (field.type == TType.STRING) {
-            this.warning_msg = iprot.readString();
+            this.error_msg = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case PLAN_DESC:
+          if (field.type == TType.STRUCT) {
+            this.plan_desc = new PlanDescription();
+            this.plan_desc.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case COMMENT:
+          if (field.type == TType.STRING) {
+            this.comment = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -755,50 +658,38 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     oprot.writeFieldBegin(LATENCY_IN_US_FIELD_DESC);
     oprot.writeI32(this.latency_in_us);
     oprot.writeFieldEnd();
-    if (this.error_msg != null) {
-      if (isSetError_msg()) {
-        oprot.writeFieldBegin(ERROR_MSG_FIELD_DESC);
-        oprot.writeString(this.error_msg);
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.column_names != null) {
-      if (isSetColumn_names()) {
-        oprot.writeFieldBegin(COLUMN_NAMES_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.STRING, this.column_names.size()));
-          for (byte[] _iter14 : this.column_names)          {
-            oprot.writeBinary(_iter14);
-          }
-          oprot.writeListEnd();
-        }
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.rows != null) {
-      if (isSetRows()) {
-        oprot.writeFieldBegin(ROWS_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.STRUCT, this.rows.size()));
-          for (RowValue _iter15 : this.rows)          {
-            _iter15.write(oprot);
-          }
-          oprot.writeListEnd();
-        }
+    if (this.data != null) {
+      if (isSetData()) {
+        oprot.writeFieldBegin(DATA_FIELD_DESC);
+        this.data.write(oprot);
         oprot.writeFieldEnd();
       }
     }
     if (this.space_name != null) {
       if (isSetSpace_name()) {
         oprot.writeFieldBegin(SPACE_NAME_FIELD_DESC);
-        oprot.writeString(this.space_name);
+        oprot.writeBinary(this.space_name);
         oprot.writeFieldEnd();
       }
     }
-    if (this.warning_msg != null) {
-      if (isSetWarning_msg()) {
-        oprot.writeFieldBegin(WARNING_MSG_FIELD_DESC);
-        oprot.writeString(this.warning_msg);
+    if (this.error_msg != null) {
+      if (isSetError_msg()) {
+        oprot.writeFieldBegin(ERROR_MSG_FIELD_DESC);
+        oprot.writeBinary(this.error_msg);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.plan_desc != null) {
+      if (isSetPlan_desc()) {
+        oprot.writeFieldBegin(PLAN_DESC_FIELD_DESC);
+        this.plan_desc.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.comment != null) {
+      if (isSetComment()) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeBinary(this.comment);
         oprot.writeFieldEnd();
       }
     }
@@ -848,45 +739,17 @@ String space = prettyPrint ? " " : "";
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getLatency_in_us(), indent + 1, prettyPrint));
     first = false;
-    if (isSetError_msg())
+    if (isSetData())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("error_msg");
+      sb.append("data");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getError_msg() == null) {
+      if (this. getData() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getError_msg(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetColumn_names())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("column_names");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getColumn_names() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getColumn_names(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetRows())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("rows");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getRows() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getRows(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this. getData(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -900,21 +763,64 @@ String space = prettyPrint ? " " : "";
       if (this. getSpace_name() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSpace_name(), indent + 1, prettyPrint));
+          int __space_name_size = Math.min(this. getSpace_name().length, 128);
+          for (int i = 0; i < __space_name_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getSpace_name()[i]).length() > 1 ? Integer.toHexString(this. getSpace_name()[i]).substring(Integer.toHexString(this. getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace_name()[i]).toUpperCase());
+          }
+          if (this. getSpace_name().length > 128) sb.append(" ...");
       }
       first = false;
     }
-    if (isSetWarning_msg())
+    if (isSetError_msg())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("warning_msg");
+      sb.append("error_msg");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getWarning_msg() == null) {
+      if (this. getError_msg() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getWarning_msg(), indent + 1, prettyPrint));
+          int __error_msg_size = Math.min(this. getError_msg().length, 128);
+          for (int i = 0; i < __error_msg_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getError_msg()[i]).length() > 1 ? Integer.toHexString(this. getError_msg()[i]).substring(Integer.toHexString(this. getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getError_msg()[i]).toUpperCase());
+          }
+          if (this. getError_msg().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetPlan_desc())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("plan_desc");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getPlan_desc() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getPlan_desc(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetComment())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("comment");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getComment() == null) {
+        sb.append("null");
+      } else {
+          int __comment_size = Math.min(this. getComment().length, 128);
+          for (int i = 0; i < __comment_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getComment()[i]).length() > 1 ? Integer.toHexString(this. getComment()[i]).substring(Integer.toHexString(this. getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getComment()[i]).toUpperCase());
+          }
+          if (this. getComment().length > 128) sb.append(" ...");
       }
       first = false;
     }

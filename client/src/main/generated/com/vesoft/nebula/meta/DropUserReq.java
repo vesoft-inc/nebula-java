@@ -32,7 +32,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
   private static final TField IF_EXISTS_FIELD_DESC = new TField("if_exists", TType.BOOL, (short)2);
 
-  public String account;
+  public byte[] account;
   public boolean if_exists;
   public static final int ACCOUNT = 1;
   public static final int IF_EXISTS = 2;
@@ -60,7 +60,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public DropUserReq(
-    String account,
+    byte[] account,
     boolean if_exists)
   {
     this();
@@ -90,11 +90,11 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new DropUserReq(this);
   }
 
-  public String  getAccount() {
+  public byte[]  getAccount() {
     return this.account;
   }
 
-  public DropUserReq setAccount(String account) {
+  public DropUserReq setAccount(byte[] account) {
     this.account = account;
     return this;
   }
@@ -143,7 +143,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetAccount();
       } else {
-        setAccount((String)value);
+        setAccount((byte[])value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_account || that_present_account) {
       if (!(this_present_account && that_present_account))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.account, that.account))
+      if (!TBaseHelper.equalsSlow(this.account, that.account))
         return false;
     }
 
@@ -282,7 +282,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case ACCOUNT:
           if (field.type == TType.STRING) {
-            this.account = iprot.readString();
+            this.account = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -314,7 +314,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.account != null) {
       oprot.writeFieldBegin(ACCOUNT_FIELD_DESC);
-      oprot.writeString(this.account);
+      oprot.writeBinary(this.account);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(IF_EXISTS_FIELD_DESC);
@@ -352,7 +352,12 @@ String space = prettyPrint ? " " : "";
     if (this. getAccount() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getAccount(), indent + 1, prettyPrint));
+        int __account_size = Math.min(this. getAccount().length, 128);
+        for (int i = 0; i < __account_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+        }
+        if (this. getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

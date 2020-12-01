@@ -27,7 +27,7 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Comparable<RegConfigReq> {
+public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("RegConfigReq");
   private static final TField ITEMS_FIELD_DESC = new TField("items", TType.LIST, (short)1);
 
@@ -177,29 +177,6 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
     return builder.toHashCode();
   }
 
-  @Override
-  public int compareTo(RegConfigReq other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetItems()).compareTo(other.isSetItems());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(items, other.items);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
-  }
-
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -214,16 +191,16 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
         case ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list141 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list141.size));
-              for (int _i142 = 0; 
-                   (_list141.size < 0) ? iprot.peekList() : (_i142 < _list141.size); 
-                   ++_i142)
+              TList _list159 = iprot.readListBegin();
+              this.items = new ArrayList<ConfigItem>(Math.max(0, _list159.size));
+              for (int _i160 = 0; 
+                   (_list159.size < 0) ? iprot.peekList() : (_i160 < _list159.size); 
+                   ++_i160)
               {
-                ConfigItem _elem143;
-                _elem143 = new ConfigItem();
-                _elem143.read(iprot);
-                this.items.add(_elem143);
+                ConfigItem _elem161;
+                _elem161 = new ConfigItem();
+                _elem161.read(iprot);
+                this.items.add(_elem161);
               }
               iprot.readListEnd();
             }
@@ -252,8 +229,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter144 : this.items)        {
-          _iter144.write(oprot);
+        for (ConfigItem _iter162 : this.items)        {
+          _iter162.write(oprot);
         }
         oprot.writeListEnd();
       }

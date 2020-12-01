@@ -27,18 +27,21 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneable, Comparable<AddVerticesRequest> {
+public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("AddVerticesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
-  private static final TField OVERWRITABLE_FIELD_DESC = new TField("overwritable", TType.BOOL, (short)3);
+  private static final TField PROP_NAMES_FIELD_DESC = new TField("prop_names", TType.MAP, (short)3);
+  private static final TField OVERWRITABLE_FIELD_DESC = new TField("overwritable", TType.BOOL, (short)4);
 
   public int space_id;
-  public Map<Integer,List<Vertex>> parts;
+  public Map<Integer,List<NewVertex>> parts;
+  public Map<Integer,List<byte[]>> prop_names;
   public boolean overwritable;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
-  public static final int OVERWRITABLE = 3;
+  public static final int PROP_NAMES = 3;
+  public static final int OVERWRITABLE = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -55,7 +58,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, Vertex.class)))));
+                new StructMetaData(TType.STRUCT, NewVertex.class)))));
+    tmpMetaDataMap.put(PROP_NAMES, new FieldMetaData("prop_names", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new FieldValueMetaData(TType.STRING)))));
     tmpMetaDataMap.put(OVERWRITABLE, new FieldMetaData("overwritable", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -66,17 +74,21 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
   }
 
   public AddVerticesRequest() {
+    this.overwritable = true;
+
   }
 
   public AddVerticesRequest(
     int space_id,
-    Map<Integer,List<Vertex>> parts,
+    Map<Integer,List<NewVertex>> parts,
+    Map<Integer,List<byte[]>> prop_names,
     boolean overwritable)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
+    this.prop_names = prop_names;
     this.overwritable = overwritable;
     setOverwritableIsSet(true);
   }
@@ -90,6 +102,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
+    }
+    if (other.isSetProp_names()) {
+      this.prop_names = TBaseHelper.deepCopy(other.prop_names);
     }
     this.overwritable = TBaseHelper.deepCopy(other.overwritable);
   }
@@ -126,11 +141,11 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,List<Vertex>>  getParts() {
+  public Map<Integer,List<NewVertex>>  getParts() {
     return this.parts;
   }
 
-  public AddVerticesRequest setParts(Map<Integer,List<Vertex>> parts) {
+  public AddVerticesRequest setParts(Map<Integer,List<NewVertex>> parts) {
     this.parts = parts;
     return this;
   }
@@ -147,6 +162,30 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
   public void setPartsIsSet(boolean value) {
     if (!value) {
       this.parts = null;
+    }
+  }
+
+  public Map<Integer,List<byte[]>>  getProp_names() {
+    return this.prop_names;
+  }
+
+  public AddVerticesRequest setProp_names(Map<Integer,List<byte[]>> prop_names) {
+    this.prop_names = prop_names;
+    return this;
+  }
+
+  public void unsetProp_names() {
+    this.prop_names = null;
+  }
+
+  // Returns true if field prop_names is set (has been assigned a value) and false otherwise
+  public boolean isSetProp_names() {
+    return this.prop_names != null;
+  }
+
+  public void setProp_namesIsSet(boolean value) {
+    if (!value) {
+      this.prop_names = null;
     }
   }
 
@@ -188,7 +227,15 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       if (value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<Vertex>>)value);
+        setParts((Map<Integer,List<NewVertex>>)value);
+      }
+      break;
+
+    case PROP_NAMES:
+      if (value == null) {
+        unsetProp_names();
+      } else {
+        setProp_names((Map<Integer,List<byte[]>>)value);
       }
       break;
 
@@ -213,6 +260,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     case PARTS:
       return getParts();
 
+    case PROP_NAMES:
+      return getProp_names();
+
     case OVERWRITABLE:
       return new Boolean(isOverwritable());
 
@@ -228,6 +278,8 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       return isSetSpace_id();
     case PARTS:
       return isSetParts();
+    case PROP_NAMES:
+      return isSetProp_names();
     case OVERWRITABLE:
       return isSetOverwritable();
     default:
@@ -268,6 +320,15 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         return false;
     }
 
+    boolean this_present_prop_names = true && this.isSetProp_names();
+    boolean that_present_prop_names = true && that.isSetProp_names();
+    if (this_present_prop_names || that_present_prop_names) {
+      if (!(this_present_prop_names && that_present_prop_names))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.prop_names, that.prop_names))
+        return false;
+    }
+
     boolean this_present_overwritable = true;
     boolean that_present_overwritable = true;
     if (this_present_overwritable || that_present_overwritable) {
@@ -294,51 +355,17 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     if (present_parts)
       builder.append(parts);
 
+    boolean present_prop_names = true && (isSetProp_names());
+    builder.append(present_prop_names);
+    if (present_prop_names)
+      builder.append(prop_names);
+
     boolean present_overwritable = true;
     builder.append(present_overwritable);
     if (present_overwritable)
       builder.append(overwritable);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(AddVerticesRequest other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetOverwritable()).compareTo(other.isSetOverwritable());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(overwritable, other.overwritable);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -363,30 +390,63 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map77 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Vertex>>(Math.max(0, 2*_map77.size));
-              for (int _i78 = 0; 
-                   (_map77.size < 0) ? iprot.peekMap() : (_i78 < _map77.size); 
-                   ++_i78)
+              TMap _map90 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<NewVertex>>(Math.max(0, 2*_map90.size));
+              for (int _i91 = 0; 
+                   (_map90.size < 0) ? iprot.peekMap() : (_i91 < _map90.size); 
+                   ++_i91)
               {
-                int _key79;
-                List<Vertex> _val80;
-                _key79 = iprot.readI32();
+                int _key92;
+                List<NewVertex> _val93;
+                _key92 = iprot.readI32();
                 {
-                  TList _list81 = iprot.readListBegin();
-                  _val80 = new ArrayList<Vertex>(Math.max(0, _list81.size));
-                  for (int _i82 = 0; 
-                       (_list81.size < 0) ? iprot.peekList() : (_i82 < _list81.size); 
-                       ++_i82)
+                  TList _list94 = iprot.readListBegin();
+                  _val93 = new ArrayList<NewVertex>(Math.max(0, _list94.size));
+                  for (int _i95 = 0; 
+                       (_list94.size < 0) ? iprot.peekList() : (_i95 < _list94.size); 
+                       ++_i95)
                   {
-                    Vertex _elem83;
-                    _elem83 = new Vertex();
-                    _elem83.read(iprot);
-                    _val80.add(_elem83);
+                    NewVertex _elem96;
+                    _elem96 = new NewVertex();
+                    _elem96.read(iprot);
+                    _val93.add(_elem96);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key79, _val80);
+                this.parts.put(_key92, _val93);
+              }
+              iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case PROP_NAMES:
+          if (field.type == TType.MAP) {
+            {
+              TMap _map97 = iprot.readMapBegin();
+              this.prop_names = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map97.size));
+              for (int _i98 = 0; 
+                   (_map97.size < 0) ? iprot.peekMap() : (_i98 < _map97.size); 
+                   ++_i98)
+              {
+                int _key99;
+                List<byte[]> _val100;
+                _key99 = iprot.readI32();
+                {
+                  TList _list101 = iprot.readListBegin();
+                  _val100 = new ArrayList<byte[]>(Math.max(0, _list101.size));
+                  for (int _i102 = 0; 
+                       (_list101.size < 0) ? iprot.peekList() : (_i102 < _list101.size); 
+                       ++_i102)
+                  {
+                    byte[] _elem103;
+                    _elem103 = iprot.readBinary();
+                    _val100.add(_elem103);
+                  }
+                  iprot.readListEnd();
+                }
+                this.prop_names.put(_key99, _val100);
               }
               iprot.readMapEnd();
             }
@@ -426,12 +486,30 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Vertex>> _iter84 : this.parts.entrySet())        {
-          oprot.writeI32(_iter84.getKey());
+        for (Map.Entry<Integer, List<NewVertex>> _iter104 : this.parts.entrySet())        {
+          oprot.writeI32(_iter104.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter84.getValue().size()));
-            for (Vertex _iter85 : _iter84.getValue())            {
-              _iter85.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter104.getValue().size()));
+            for (NewVertex _iter105 : _iter104.getValue())            {
+              _iter105.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+        }
+        oprot.writeMapEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.prop_names != null) {
+      oprot.writeFieldBegin(PROP_NAMES_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.prop_names.size()));
+        for (Map.Entry<Integer, List<byte[]>> _iter106 : this.prop_names.entrySet())        {
+          oprot.writeI32(_iter106.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRING, _iter106.getValue().size()));
+            for (byte[] _iter107 : _iter106.getValue())            {
+              oprot.writeBinary(_iter107);
             }
             oprot.writeListEnd();
           }
@@ -483,6 +561,17 @@ String space = prettyPrint ? " " : "";
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("prop_names");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getProp_names() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getProp_names(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

@@ -27,18 +27,21 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, Comparable<AddEdgesRequest> {
+public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("AddEdgesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
-  private static final TField OVERWRITABLE_FIELD_DESC = new TField("overwritable", TType.BOOL, (short)3);
+  private static final TField PROP_NAMES_FIELD_DESC = new TField("prop_names", TType.LIST, (short)3);
+  private static final TField OVERWRITABLE_FIELD_DESC = new TField("overwritable", TType.BOOL, (short)4);
 
   public int space_id;
-  public Map<Integer,List<Edge>> parts;
+  public Map<Integer,List<NewEdge>> parts;
+  public List<byte[]> prop_names;
   public boolean overwritable;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
-  public static final int OVERWRITABLE = 3;
+  public static final int PROP_NAMES = 3;
+  public static final int OVERWRITABLE = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -55,7 +58,10 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, Edge.class)))));
+                new StructMetaData(TType.STRUCT, NewEdge.class)))));
+    tmpMetaDataMap.put(PROP_NAMES, new FieldMetaData("prop_names", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(OVERWRITABLE, new FieldMetaData("overwritable", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -66,17 +72,21 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public AddEdgesRequest() {
+    this.overwritable = true;
+
   }
 
   public AddEdgesRequest(
     int space_id,
-    Map<Integer,List<Edge>> parts,
+    Map<Integer,List<NewEdge>> parts,
+    List<byte[]> prop_names,
     boolean overwritable)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
+    this.prop_names = prop_names;
     this.overwritable = overwritable;
     setOverwritableIsSet(true);
   }
@@ -90,6 +100,9 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
+    }
+    if (other.isSetProp_names()) {
+      this.prop_names = TBaseHelper.deepCopy(other.prop_names);
     }
     this.overwritable = TBaseHelper.deepCopy(other.overwritable);
   }
@@ -126,11 +139,11 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,List<Edge>>  getParts() {
+  public Map<Integer,List<NewEdge>>  getParts() {
     return this.parts;
   }
 
-  public AddEdgesRequest setParts(Map<Integer,List<Edge>> parts) {
+  public AddEdgesRequest setParts(Map<Integer,List<NewEdge>> parts) {
     this.parts = parts;
     return this;
   }
@@ -147,6 +160,30 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
   public void setPartsIsSet(boolean value) {
     if (!value) {
       this.parts = null;
+    }
+  }
+
+  public List<byte[]>  getProp_names() {
+    return this.prop_names;
+  }
+
+  public AddEdgesRequest setProp_names(List<byte[]> prop_names) {
+    this.prop_names = prop_names;
+    return this;
+  }
+
+  public void unsetProp_names() {
+    this.prop_names = null;
+  }
+
+  // Returns true if field prop_names is set (has been assigned a value) and false otherwise
+  public boolean isSetProp_names() {
+    return this.prop_names != null;
+  }
+
+  public void setProp_namesIsSet(boolean value) {
+    if (!value) {
+      this.prop_names = null;
     }
   }
 
@@ -188,7 +225,15 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
       if (value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<Edge>>)value);
+        setParts((Map<Integer,List<NewEdge>>)value);
+      }
+      break;
+
+    case PROP_NAMES:
+      if (value == null) {
+        unsetProp_names();
+      } else {
+        setProp_names((List<byte[]>)value);
       }
       break;
 
@@ -213,6 +258,9 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
     case PARTS:
       return getParts();
 
+    case PROP_NAMES:
+      return getProp_names();
+
     case OVERWRITABLE:
       return new Boolean(isOverwritable());
 
@@ -228,6 +276,8 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
       return isSetSpace_id();
     case PARTS:
       return isSetParts();
+    case PROP_NAMES:
+      return isSetProp_names();
     case OVERWRITABLE:
       return isSetOverwritable();
     default:
@@ -268,6 +318,15 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
         return false;
     }
 
+    boolean this_present_prop_names = true && this.isSetProp_names();
+    boolean that_present_prop_names = true && that.isSetProp_names();
+    if (this_present_prop_names || that_present_prop_names) {
+      if (!(this_present_prop_names && that_present_prop_names))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.prop_names, that.prop_names))
+        return false;
+    }
+
     boolean this_present_overwritable = true;
     boolean that_present_overwritable = true;
     if (this_present_overwritable || that_present_overwritable) {
@@ -294,51 +353,17 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
     if (present_parts)
       builder.append(parts);
 
+    boolean present_prop_names = true && (isSetProp_names());
+    builder.append(present_prop_names);
+    if (present_prop_names)
+      builder.append(prop_names);
+
     boolean present_overwritable = true;
     builder.append(present_overwritable);
     if (present_overwritable)
       builder.append(overwritable);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(AddEdgesRequest other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetOverwritable()).compareTo(other.isSetOverwritable());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(overwritable, other.overwritable);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -363,32 +388,51 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map86 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<Edge>>(Math.max(0, 2*_map86.size));
-              for (int _i87 = 0; 
-                   (_map86.size < 0) ? iprot.peekMap() : (_i87 < _map86.size); 
-                   ++_i87)
+              TMap _map108 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<NewEdge>>(Math.max(0, 2*_map108.size));
+              for (int _i109 = 0; 
+                   (_map108.size < 0) ? iprot.peekMap() : (_i109 < _map108.size); 
+                   ++_i109)
               {
-                int _key88;
-                List<Edge> _val89;
-                _key88 = iprot.readI32();
+                int _key110;
+                List<NewEdge> _val111;
+                _key110 = iprot.readI32();
                 {
-                  TList _list90 = iprot.readListBegin();
-                  _val89 = new ArrayList<Edge>(Math.max(0, _list90.size));
-                  for (int _i91 = 0; 
-                       (_list90.size < 0) ? iprot.peekList() : (_i91 < _list90.size); 
-                       ++_i91)
+                  TList _list112 = iprot.readListBegin();
+                  _val111 = new ArrayList<NewEdge>(Math.max(0, _list112.size));
+                  for (int _i113 = 0; 
+                       (_list112.size < 0) ? iprot.peekList() : (_i113 < _list112.size); 
+                       ++_i113)
                   {
-                    Edge _elem92;
-                    _elem92 = new Edge();
-                    _elem92.read(iprot);
-                    _val89.add(_elem92);
+                    NewEdge _elem114;
+                    _elem114 = new NewEdge();
+                    _elem114.read(iprot);
+                    _val111.add(_elem114);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key88, _val89);
+                this.parts.put(_key110, _val111);
               }
               iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case PROP_NAMES:
+          if (field.type == TType.LIST) {
+            {
+              TList _list115 = iprot.readListBegin();
+              this.prop_names = new ArrayList<byte[]>(Math.max(0, _list115.size));
+              for (int _i116 = 0; 
+                   (_list115.size < 0) ? iprot.peekList() : (_i116 < _list115.size); 
+                   ++_i116)
+              {
+                byte[] _elem117;
+                _elem117 = iprot.readBinary();
+                this.prop_names.add(_elem117);
+              }
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -426,17 +470,28 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<Edge>> _iter93 : this.parts.entrySet())        {
-          oprot.writeI32(_iter93.getKey());
+        for (Map.Entry<Integer, List<NewEdge>> _iter118 : this.parts.entrySet())        {
+          oprot.writeI32(_iter118.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter93.getValue().size()));
-            for (Edge _iter94 : _iter93.getValue())            {
-              _iter94.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter118.getValue().size()));
+            for (NewEdge _iter119 : _iter118.getValue())            {
+              _iter119.write(oprot);
             }
             oprot.writeListEnd();
           }
         }
         oprot.writeMapEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.prop_names != null) {
+      oprot.writeFieldBegin(PROP_NAMES_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.prop_names.size()));
+        for (byte[] _iter120 : this.prop_names)        {
+          oprot.writeBinary(_iter120);
+        }
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -483,6 +538,17 @@ String space = prettyPrint ? " " : "";
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("prop_names");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this. getProp_names() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getProp_names(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

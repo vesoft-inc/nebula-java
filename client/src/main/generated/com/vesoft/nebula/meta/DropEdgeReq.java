@@ -34,7 +34,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField IF_EXISTS_FIELD_DESC = new TField("if_exists", TType.BOOL, (short)3);
 
   public int space_id;
-  public String edge_name;
+  public byte[] edge_name;
   public boolean if_exists;
   public static final int SPACE_ID = 1;
   public static final int EDGE_NAME = 2;
@@ -67,7 +67,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public DropEdgeReq(
     int space_id,
-    String edge_name,
+    byte[] edge_name,
     boolean if_exists)
   {
     this();
@@ -123,11 +123,11 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public String  getEdge_name() {
+  public byte[]  getEdge_name() {
     return this.edge_name;
   }
 
-  public DropEdgeReq setEdge_name(String edge_name) {
+  public DropEdgeReq setEdge_name(byte[] edge_name) {
     this.edge_name = edge_name;
     return this;
   }
@@ -184,7 +184,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((String)value);
+        setEdge_name((byte[])value);
       }
       break;
 
@@ -260,7 +260,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_edge_name || that_present_edge_name) {
       if (!(this_present_edge_name && that_present_edge_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_name, that.edge_name))
+      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
         return false;
     }
 
@@ -358,7 +358,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
           break;
         case EDGE_NAME:
           if (field.type == TType.STRING) {
-            this.edge_name = iprot.readString();
+            this.edge_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -393,7 +393,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeFieldEnd();
     if (this.edge_name != null) {
       oprot.writeFieldBegin(EDGE_NAME_FIELD_DESC);
-      oprot.writeString(this.edge_name);
+      oprot.writeBinary(this.edge_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(IF_EXISTS_FIELD_DESC);
@@ -438,7 +438,12 @@ String space = prettyPrint ? " " : "";
     if (this. getEdge_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdge_name(), indent + 1, prettyPrint));
+        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        for (int i = 0; i < __edge_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+        }
+        if (this. getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);

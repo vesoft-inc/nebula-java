@@ -19,8 +19,9 @@ import java.util.HashMap;
 public class RoleType {
   public static final int GOD = 1;
   public static final int ADMIN = 2;
-  public static final int USER = 3;
-  public static final int GUEST = 4;
+  public static final int DBA = 3;
+  public static final int USER = 4;
+  public static final int GUEST = 5;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();

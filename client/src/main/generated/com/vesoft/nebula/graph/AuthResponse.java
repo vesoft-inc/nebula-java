@@ -30,19 +30,19 @@ import com.facebook.thrift.protocol.*;
 public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Comparable<AuthResponse> {
   private static final TStruct STRUCT_DESC = new TStruct("AuthResponse");
   private static final TField ERROR_CODE_FIELD_DESC = new TField("error_code", TType.I32, (short)1);
-  private static final TField SESSION_ID_FIELD_DESC = new TField("session_id", TType.I64, (short)2);
-  private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)3);
+  private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)2);
+  private static final TField SESSION_ID_FIELD_DESC = new TField("session_id", TType.I64, (short)3);
 
   /**
    * 
    * @see ErrorCode
    */
   public int error_code;
+  public byte[] error_msg;
   public long session_id;
-  public String error_msg;
   public static final int ERROR_CODE = 1;
-  public static final int SESSION_ID = 2;
-  public static final int ERROR_MSG = 3;
+  public static final int ERROR_MSG = 2;
+  public static final int SESSION_ID = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -55,10 +55,10 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(SESSION_ID, new FieldMetaData("session_id", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(ERROR_MSG, new FieldMetaData("error_msg", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(SESSION_ID, new FieldMetaData("session_id", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -79,15 +79,15 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
   public AuthResponse(
     int error_code,
-    long session_id,
-    String error_msg)
+    byte[] error_msg,
+    long session_id)
   {
     this();
     this.error_code = error_code;
     setError_codeIsSet(true);
+    this.error_msg = error_msg;
     this.session_id = session_id;
     setSession_idIsSet(true);
-    this.error_msg = error_msg;
   }
 
   /**
@@ -97,10 +97,10 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.error_code = TBaseHelper.deepCopy(other.error_code);
-    this.session_id = TBaseHelper.deepCopy(other.session_id);
     if (other.isSetError_msg()) {
       this.error_msg = TBaseHelper.deepCopy(other.error_msg);
     }
+    this.session_id = TBaseHelper.deepCopy(other.session_id);
   }
 
   public AuthResponse deepCopy() {
@@ -143,6 +143,30 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__ERROR_CODE_ISSET_ID, value);
   }
 
+  public byte[]  getError_msg() {
+    return this.error_msg;
+  }
+
+  public AuthResponse setError_msg(byte[] error_msg) {
+    this.error_msg = error_msg;
+    return this;
+  }
+
+  public void unsetError_msg() {
+    this.error_msg = null;
+  }
+
+  // Returns true if field error_msg is set (has been assigned a value) and false otherwise
+  public boolean isSetError_msg() {
+    return this.error_msg != null;
+  }
+
+  public void setError_msgIsSet(boolean value) {
+    if (!value) {
+      this.error_msg = null;
+    }
+  }
+
   public long  getSession_id() {
     return this.session_id;
   }
@@ -166,30 +190,6 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__SESSION_ID_ISSET_ID, value);
   }
 
-  public String  getError_msg() {
-    return this.error_msg;
-  }
-
-  public AuthResponse setError_msg(String error_msg) {
-    this.error_msg = error_msg;
-    return this;
-  }
-
-  public void unsetError_msg() {
-    this.error_msg = null;
-  }
-
-  // Returns true if field error_msg is set (has been assigned a value) and false otherwise
-  public boolean isSetError_msg() {
-    return this.error_msg != null;
-  }
-
-  public void setError_msgIsSet(boolean value) {
-    if (!value) {
-      this.error_msg = null;
-    }
-  }
-
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case ERROR_CODE:
@@ -200,19 +200,19 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
+    case ERROR_MSG:
+      if (value == null) {
+        unsetError_msg();
+      } else {
+        setError_msg((byte[])value);
+      }
+      break;
+
     case SESSION_ID:
       if (value == null) {
         unsetSession_id();
       } else {
         setSession_id((Long)value);
-      }
-      break;
-
-    case ERROR_MSG:
-      if (value == null) {
-        unsetError_msg();
-      } else {
-        setError_msg((String)value);
       }
       break;
 
@@ -226,11 +226,11 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     case ERROR_CODE:
       return getError_code();
 
-    case SESSION_ID:
-      return new Long(getSession_id());
-
     case ERROR_MSG:
       return getError_msg();
+
+    case SESSION_ID:
+      return new Long(getSession_id());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -242,10 +242,10 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     switch (fieldID) {
     case ERROR_CODE:
       return isSetError_code();
-    case SESSION_ID:
-      return isSetSession_id();
     case ERROR_MSG:
       return isSetError_msg();
+    case SESSION_ID:
+      return isSetSession_id();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -275,21 +275,21 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
         return false;
     }
 
+    boolean this_present_error_msg = true && this.isSetError_msg();
+    boolean that_present_error_msg = true && that.isSetError_msg();
+    if (this_present_error_msg || that_present_error_msg) {
+      if (!(this_present_error_msg && that_present_error_msg))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.error_msg, that.error_msg))
+        return false;
+    }
+
     boolean this_present_session_id = true && this.isSetSession_id();
     boolean that_present_session_id = true && that.isSetSession_id();
     if (this_present_session_id || that_present_session_id) {
       if (!(this_present_session_id && that_present_session_id))
         return false;
       if (!TBaseHelper.equalsNobinary(this.session_id, that.session_id))
-        return false;
-    }
-
-    boolean this_present_error_msg = true && this.isSetError_msg();
-    boolean that_present_error_msg = true && that.isSetError_msg();
-    if (this_present_error_msg || that_present_error_msg) {
-      if (!(this_present_error_msg && that_present_error_msg))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.error_msg, that.error_msg))
         return false;
     }
 
@@ -305,15 +305,15 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     if (present_error_code)
       builder.append(error_code);
 
-    boolean present_session_id = true && (isSetSession_id());
-    builder.append(present_session_id);
-    if (present_session_id)
-      builder.append(session_id);
-
     boolean present_error_msg = true && (isSetError_msg());
     builder.append(present_error_msg);
     if (present_error_msg)
       builder.append(error_msg);
+
+    boolean present_session_id = true && (isSetSession_id());
+    builder.append(present_session_id);
+    if (present_session_id)
+      builder.append(session_id);
 
     return builder.toHashCode();
   }
@@ -338,19 +338,19 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetSession_id()).compareTo(other.isSetSession_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(session_id, other.session_id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
     lastComparison = Boolean.valueOf(isSetError_msg()).compareTo(other.isSetError_msg());
     if (lastComparison != 0) {
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(error_msg, other.error_msg);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSession_id()).compareTo(other.isSetSession_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(session_id, other.session_id);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -376,17 +376,17 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case SESSION_ID:
-          if (field.type == TType.I64) {
-            this.session_id = iprot.readI64();
-            setSession_idIsSet(true);
+        case ERROR_MSG:
+          if (field.type == TType.STRING) {
+            this.error_msg = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ERROR_MSG:
-          if (field.type == TType.STRING) {
-            this.error_msg = iprot.readString();
+        case SESSION_ID:
+          if (field.type == TType.I64) {
+            this.session_id = iprot.readI64();
+            setSession_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -414,17 +414,17 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
     oprot.writeI32(this.error_code);
     oprot.writeFieldEnd();
+    if (this.error_msg != null) {
+      if (isSetError_msg()) {
+        oprot.writeFieldBegin(ERROR_MSG_FIELD_DESC);
+        oprot.writeBinary(this.error_msg);
+        oprot.writeFieldEnd();
+      }
+    }
     if (isSetSession_id()) {
       oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
       oprot.writeI64(this.session_id);
       oprot.writeFieldEnd();
-    }
-    if (this.error_msg != null) {
-      if (isSetError_msg()) {
-        oprot.writeFieldBegin(ERROR_MSG_FIELD_DESC);
-        oprot.writeString(this.error_msg);
-        oprot.writeFieldEnd();
-      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -465,16 +465,6 @@ String space = prettyPrint ? " " : "";
       sb.append(")");
     }
     first = false;
-    if (isSetSession_id())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("session_id");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getSession_id(), indent + 1, prettyPrint));
-      first = false;
-    }
     if (isSetError_msg())
     {
       if (!first) sb.append("," + newLine);
@@ -485,8 +475,23 @@ String space = prettyPrint ? " " : "";
       if (this. getError_msg() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getError_msg(), indent + 1, prettyPrint));
+          int __error_msg_size = Math.min(this. getError_msg().length, 128);
+          for (int i = 0; i < __error_msg_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getError_msg()[i]).length() > 1 ? Integer.toHexString(this. getError_msg()[i]).substring(Integer.toHexString(this. getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getError_msg()[i]).toUpperCase());
+          }
+          if (this. getError_msg().length > 128) sb.append(" ...");
       }
+      first = false;
+    }
+    if (isSetSession_id())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("session_id");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getSession_id(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

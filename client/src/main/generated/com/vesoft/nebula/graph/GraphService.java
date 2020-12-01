@@ -31,21 +31,25 @@ public class GraphService {
 
   public interface Iface {
 
-    public AuthResponse authenticate(String username, String password) throws TException;
+    public AuthResponse authenticate(byte[] username, byte[] password) throws TException;
 
     public void signout(long sessionId) throws TException;
 
-    public ExecutionResponse execute(long sessionId, String stmt) throws TException;
+    public ExecutionResponse execute(long sessionId, byte[] stmt) throws TException;
+
+    public byte[] executeJson(long sessionId, byte[] stmt) throws TException;
 
   }
 
   public interface AsyncIface {
 
-    public void authenticate(String username, String password, AsyncMethodCallback resultHandler) throws TException;
+    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler) throws TException;
 
     public void signout(long sessionId, AsyncMethodCallback resultHandler) throws TException;
 
-    public void execute(long sessionId, String stmt, AsyncMethodCallback resultHandler) throws TException;
+    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
+
+    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -78,7 +82,7 @@ public class GraphService {
       return this.oprot_;
     }
 
-    public AuthResponse authenticate(String username, String password) throws TException
+    public AuthResponse authenticate(byte[] username, byte[] password) throws TException
     {
       ContextStack ctx = getContextStack("GraphService.authenticate", null);
       this.setContextStack(ctx);
@@ -86,7 +90,7 @@ public class GraphService {
       return recv_authenticate();
     }
 
-    public void send_authenticate(String username, String password) throws TException
+    public void send_authenticate(byte[] username, byte[] password) throws TException
     {
       ContextStack ctx = this.getContextStack();
       super.preWrite(ctx, "GraphService.authenticate", null);
@@ -145,7 +149,7 @@ public class GraphService {
       return;
     }
 
-    public ExecutionResponse execute(long sessionId, String stmt) throws TException
+    public ExecutionResponse execute(long sessionId, byte[] stmt) throws TException
     {
       ContextStack ctx = getContextStack("GraphService.execute", null);
       this.setContextStack(ctx);
@@ -153,7 +157,7 @@ public class GraphService {
       return recv_execute();
     }
 
-    public void send_execute(long sessionId, String stmt) throws TException
+    public void send_execute(long sessionId, byte[] stmt) throws TException
     {
       ContextStack ctx = this.getContextStack();
       super.preWrite(ctx, "GraphService.execute", null);
@@ -191,6 +195,52 @@ public class GraphService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "execute failed: unknown result");
     }
 
+    public byte[] executeJson(long sessionId, byte[] stmt) throws TException
+    {
+      ContextStack ctx = getContextStack("GraphService.executeJson", null);
+      this.setContextStack(ctx);
+      send_executeJson(sessionId, stmt);
+      return recv_executeJson();
+    }
+
+    public void send_executeJson(long sessionId, byte[] stmt) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "GraphService.executeJson", null);
+      oprot_.writeMessageBegin(new TMessage("executeJson", TMessageType.CALL, seqid_));
+      executeJson_args args = new executeJson_args();
+      args.sessionId = sessionId;
+      args.stmt = stmt;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "GraphService.executeJson", args);
+      return;
+    }
+
+    public byte[] recv_executeJson() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "GraphService.executeJson");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      executeJson_result result = new executeJson_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "GraphService.executeJson", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeJson failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -209,18 +259,18 @@ public class GraphService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void authenticate(String username, String password, AsyncMethodCallback resultHandler22) throws TException {
+    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler33) throws TException {
       checkReady();
-      authenticate_call method_call = new authenticate_call(username, password, resultHandler22, this, ___protocolFactory, ___transport);
+      authenticate_call method_call = new authenticate_call(username, password, resultHandler33, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class authenticate_call extends TAsyncMethodCall {
-      private String username;
-      private String password;
-      public authenticate_call(String username, String password, AsyncMethodCallback resultHandler23, TAsyncClient client19, TProtocolFactory protocolFactory20, TNonblockingTransport transport21) throws TException {
-        super(client19, protocolFactory20, transport21, resultHandler23, false);
+      private byte[] username;
+      private byte[] password;
+      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler34, TAsyncClient client30, TProtocolFactory protocolFactory31, TNonblockingTransport transport32) throws TException {
+        super(client30, protocolFactory31, transport32, resultHandler34, false);
         this.username = username;
         this.password = password;
       }
@@ -244,17 +294,17 @@ public class GraphService {
       }
     }
 
-    public void signout(long sessionId, AsyncMethodCallback resultHandler27) throws TException {
+    public void signout(long sessionId, AsyncMethodCallback resultHandler38) throws TException {
       checkReady();
-      signout_call method_call = new signout_call(sessionId, resultHandler27, this, ___protocolFactory, ___transport);
+      signout_call method_call = new signout_call(sessionId, resultHandler38, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class signout_call extends TAsyncMethodCall {
       private long sessionId;
-      public signout_call(long sessionId, AsyncMethodCallback resultHandler28, TAsyncClient client24, TProtocolFactory protocolFactory25, TNonblockingTransport transport26) throws TException {
-        super(client24, protocolFactory25, transport26, resultHandler28, true);
+      public signout_call(long sessionId, AsyncMethodCallback resultHandler39, TAsyncClient client35, TProtocolFactory protocolFactory36, TNonblockingTransport transport37) throws TException {
+        super(client35, protocolFactory36, transport37, resultHandler39, true);
         this.sessionId = sessionId;
       }
 
@@ -275,18 +325,18 @@ public class GraphService {
       }
     }
 
-    public void execute(long sessionId, String stmt, AsyncMethodCallback resultHandler32) throws TException {
+    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler43) throws TException {
       checkReady();
-      execute_call method_call = new execute_call(sessionId, stmt, resultHandler32, this, ___protocolFactory, ___transport);
+      execute_call method_call = new execute_call(sessionId, stmt, resultHandler43, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class execute_call extends TAsyncMethodCall {
       private long sessionId;
-      private String stmt;
-      public execute_call(long sessionId, String stmt, AsyncMethodCallback resultHandler33, TAsyncClient client29, TProtocolFactory protocolFactory30, TNonblockingTransport transport31) throws TException {
-        super(client29, protocolFactory30, transport31, resultHandler33, false);
+      private byte[] stmt;
+      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler44, TAsyncClient client40, TProtocolFactory protocolFactory41, TNonblockingTransport transport42) throws TException {
+        super(client40, protocolFactory41, transport42, resultHandler44, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -310,6 +360,41 @@ public class GraphService {
       }
     }
 
+    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler48) throws TException {
+      checkReady();
+      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler48, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class executeJson_call extends TAsyncMethodCall {
+      private long sessionId;
+      private byte[] stmt;
+      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler49, TAsyncClient client45, TProtocolFactory protocolFactory46, TNonblockingTransport transport47) throws TException {
+        super(client45, protocolFactory46, transport47, resultHandler49, false);
+        this.sessionId = sessionId;
+        this.stmt = stmt;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("executeJson", TMessageType.CALL, 0));
+        executeJson_args args = new executeJson_args();
+        args.setSessionId(sessionId);
+        args.setStmt(stmt);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public byte[] getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_executeJson();
+      }
+    }
+
   }
 
   public static class Processor implements TProcessor {
@@ -321,6 +406,7 @@ public class GraphService {
       processMap_.put("authenticate", new authenticate());
       processMap_.put("signout", new signout());
       processMap_.put("execute", new execute());
+      processMap_.put("executeJson", new executeJson());
     }
 
     protected static interface ProcessFunction {
@@ -409,6 +495,27 @@ public class GraphService {
 
     }
 
+    private class executeJson implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("GraphService.executeJson", server_ctx);
+        executeJson_args args = new executeJson_args();
+        event_handler_.preRead(handler_ctx, "GraphService.executeJson");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "GraphService.executeJson", args);
+        executeJson_result result = new executeJson_result();
+        result.success = iface_.executeJson(args.sessionId, args.stmt);
+        event_handler_.preWrite(handler_ctx, "GraphService.executeJson", result);
+        oprot.writeMessageBegin(new TMessage("executeJson", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "GraphService.executeJson", result);
+      }
+
+    }
+
   }
 
   public static class authenticate_args implements TBase, java.io.Serializable, Cloneable, Comparable<authenticate_args>   {
@@ -416,8 +523,8 @@ public class GraphService {
     private static final TField USERNAME_FIELD_DESC = new TField("username", TType.STRING, (short)1);
     private static final TField PASSWORD_FIELD_DESC = new TField("password", TType.STRING, (short)2);
 
-    public String username;
-    public String password;
+    public byte[] username;
+    public byte[] password;
     public static final int USERNAME = 1;
     public static final int PASSWORD = 2;
     public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -442,8 +549,8 @@ public class GraphService {
     }
 
     public authenticate_args(
-      String username,
-      String password)
+      byte[] username,
+      byte[] password)
     {
       this();
       this.username = username;
@@ -471,11 +578,11 @@ public class GraphService {
       return new authenticate_args(this);
     }
 
-    public String  getUsername() {
+    public byte[]  getUsername() {
       return this.username;
     }
 
-    public authenticate_args setUsername(String username) {
+    public authenticate_args setUsername(byte[] username) {
       this.username = username;
       return this;
     }
@@ -495,11 +602,11 @@ public class GraphService {
       }
     }
 
-    public String  getPassword() {
+    public byte[]  getPassword() {
       return this.password;
     }
 
-    public authenticate_args setPassword(String password) {
+    public authenticate_args setPassword(byte[] password) {
       this.password = password;
       return this;
     }
@@ -525,7 +632,7 @@ public class GraphService {
         if (value == null) {
           unsetUsername();
         } else {
-          setUsername((String)value);
+          setUsername((byte[])value);
         }
         break;
 
@@ -533,7 +640,7 @@ public class GraphService {
         if (value == null) {
           unsetPassword();
         } else {
-          setPassword((String)value);
+          setPassword((byte[])value);
         }
         break;
 
@@ -587,7 +694,7 @@ public class GraphService {
       if (this_present_username || that_present_username) {
         if (!(this_present_username && that_present_username))
           return false;
-        if (!TBaseHelper.equalsNobinary(this.username, that.username))
+        if (!TBaseHelper.equalsSlow(this.username, that.username))
           return false;
       }
 
@@ -596,7 +703,7 @@ public class GraphService {
       if (this_present_password || that_present_password) {
         if (!(this_present_password && that_present_password))
           return false;
-        if (!TBaseHelper.equalsNobinary(this.password, that.password))
+        if (!TBaseHelper.equalsSlow(this.password, that.password))
           return false;
       }
 
@@ -664,14 +771,14 @@ public class GraphService {
         {
           case USERNAME:
             if (field.type == TType.STRING) {
-              this.username = iprot.readString();
+              this.username = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
           case PASSWORD:
             if (field.type == TType.STRING) {
-              this.password = iprot.readString();
+              this.password = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -695,12 +802,12 @@ public class GraphService {
       oprot.writeStructBegin(STRUCT_DESC);
       if (this.username != null) {
         oprot.writeFieldBegin(USERNAME_FIELD_DESC);
-        oprot.writeString(this.username);
+        oprot.writeBinary(this.username);
         oprot.writeFieldEnd();
       }
       if (this.password != null) {
         oprot.writeFieldBegin(PASSWORD_FIELD_DESC);
-        oprot.writeString(this.password);
+        oprot.writeBinary(this.password);
         oprot.writeFieldEnd();
       }
       oprot.writeFieldStop();
@@ -735,7 +842,12 @@ String space = prettyPrint ? " " : "";
       if (this. getUsername() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getUsername(), indent + 1, prettyPrint));
+          int __username_size = Math.min(this. getUsername().length, 128);
+          for (int i = 0; i < __username_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getUsername()[i]).length() > 1 ? Integer.toHexString(this. getUsername()[i]).substring(Integer.toHexString(this. getUsername()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getUsername()[i]).toUpperCase());
+          }
+          if (this. getUsername().length > 128) sb.append(" ...");
       }
       first = false;
       if (!first) sb.append("," + newLine);
@@ -746,7 +858,12 @@ String space = prettyPrint ? " " : "";
       if (this. getPassword() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getPassword(), indent + 1, prettyPrint));
+          int __password_size = Math.min(this. getPassword().length, 128);
+          for (int i = 0; i < __password_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getPassword()[i]).length() > 1 ? Integer.toHexString(this. getPassword()[i]).substring(Integer.toHexString(this. getPassword()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getPassword()[i]).toUpperCase());
+          }
+          if (this. getPassword().length > 128) sb.append(" ...");
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -1280,7 +1397,7 @@ String space = prettyPrint ? " " : "";
     private static final TField STMT_FIELD_DESC = new TField("stmt", TType.STRING, (short)2);
 
     public long sessionId;
-    public String stmt;
+    public byte[] stmt;
     public static final int SESSIONID = 1;
     public static final int STMT = 2;
     public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -1308,7 +1425,7 @@ String space = prettyPrint ? " " : "";
 
     public execute_args(
       long sessionId,
-      String stmt)
+      byte[] stmt)
     {
       this();
       this.sessionId = sessionId;
@@ -1360,11 +1477,11 @@ String space = prettyPrint ? " " : "";
       __isset_bit_vector.set(__SESSIONID_ISSET_ID, value);
     }
 
-    public String  getStmt() {
+    public byte[]  getStmt() {
       return this.stmt;
     }
 
-    public execute_args setStmt(String stmt) {
+    public execute_args setStmt(byte[] stmt) {
       this.stmt = stmt;
       return this;
     }
@@ -1398,7 +1515,7 @@ String space = prettyPrint ? " " : "";
         if (value == null) {
           unsetStmt();
         } else {
-          setStmt((String)value);
+          setStmt((byte[])value);
         }
         break;
 
@@ -1461,7 +1578,7 @@ String space = prettyPrint ? " " : "";
       if (this_present_stmt || that_present_stmt) {
         if (!(this_present_stmt && that_present_stmt))
           return false;
-        if (!TBaseHelper.equalsNobinary(this.stmt, that.stmt))
+        if (!TBaseHelper.equalsSlow(this.stmt, that.stmt))
           return false;
       }
 
@@ -1537,7 +1654,7 @@ String space = prettyPrint ? " " : "";
             break;
           case STMT:
             if (field.type == TType.STRING) {
-              this.stmt = iprot.readString();
+              this.stmt = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -1564,7 +1681,7 @@ String space = prettyPrint ? " " : "";
       oprot.writeFieldEnd();
       if (this.stmt != null) {
         oprot.writeFieldBegin(STMT_FIELD_DESC);
-        oprot.writeString(this.stmt);
+        oprot.writeBinary(this.stmt);
         oprot.writeFieldEnd();
       }
       oprot.writeFieldStop();
@@ -1606,7 +1723,12 @@ String space = prettyPrint ? " " : "";
       if (this. getStmt() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getStmt(), indent + 1, prettyPrint));
+          int __stmt_size = Math.min(this. getStmt().length, 128);
+          for (int i = 0; i < __stmt_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getStmt()[i]).length() > 1 ? Integer.toHexString(this. getStmt()[i]).substring(Integer.toHexString(this. getStmt()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getStmt()[i]).toUpperCase());
+          }
+          if (this. getStmt().length > 128) sb.append(" ...");
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -1621,7 +1743,7 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class execute_result implements TBase, java.io.Serializable, Cloneable, Comparable<execute_result>   {
+  public static class execute_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("execute_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
@@ -1769,29 +1891,6 @@ String space = prettyPrint ? " " : "";
       return builder.toHashCode();
     }
 
-    @Override
-    public int compareTo(execute_result other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      return 0;
-    }
-
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin(metaDataMap);
@@ -1865,6 +1964,620 @@ String space = prettyPrint ? " " : "";
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class executeJson_args implements TBase, java.io.Serializable, Cloneable, Comparable<executeJson_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeJson_args");
+    private static final TField SESSION_ID_FIELD_DESC = new TField("sessionId", TType.I64, (short)1);
+    private static final TField STMT_FIELD_DESC = new TField("stmt", TType.STRING, (short)2);
+
+    public long sessionId;
+    public byte[] stmt;
+    public static final int SESSIONID = 1;
+    public static final int STMT = 2;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+    private static final int __SESSIONID_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SESSIONID, new FieldMetaData("sessionId", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I64)));
+      tmpMetaDataMap.put(STMT, new FieldMetaData("stmt", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeJson_args.class, metaDataMap);
+    }
+
+    public executeJson_args() {
+    }
+
+    public executeJson_args(
+      long sessionId,
+      byte[] stmt)
+    {
+      this();
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      this.stmt = stmt;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeJson_args(executeJson_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      this.sessionId = TBaseHelper.deepCopy(other.sessionId);
+      if (other.isSetStmt()) {
+        this.stmt = TBaseHelper.deepCopy(other.stmt);
+      }
+    }
+
+    public executeJson_args deepCopy() {
+      return new executeJson_args(this);
+    }
+
+    @Deprecated
+    public executeJson_args clone() {
+      return new executeJson_args(this);
+    }
+
+    public long  getSessionId() {
+      return this.sessionId;
+    }
+
+    public executeJson_args setSessionId(long sessionId) {
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      return this;
+    }
+
+    public void unsetSessionId() {
+      __isset_bit_vector.clear(__SESSIONID_ISSET_ID);
+    }
+
+    // Returns true if field sessionId is set (has been assigned a value) and false otherwise
+    public boolean isSetSessionId() {
+      return __isset_bit_vector.get(__SESSIONID_ISSET_ID);
+    }
+
+    public void setSessionIdIsSet(boolean value) {
+      __isset_bit_vector.set(__SESSIONID_ISSET_ID, value);
+    }
+
+    public byte[]  getStmt() {
+      return this.stmt;
+    }
+
+    public executeJson_args setStmt(byte[] stmt) {
+      this.stmt = stmt;
+      return this;
+    }
+
+    public void unsetStmt() {
+      this.stmt = null;
+    }
+
+    // Returns true if field stmt is set (has been assigned a value) and false otherwise
+    public boolean isSetStmt() {
+      return this.stmt != null;
+    }
+
+    public void setStmtIsSet(boolean value) {
+      if (!value) {
+        this.stmt = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SESSIONID:
+        if (value == null) {
+          unsetSessionId();
+        } else {
+          setSessionId((Long)value);
+        }
+        break;
+
+      case STMT:
+        if (value == null) {
+          unsetStmt();
+        } else {
+          setStmt((byte[])value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SESSIONID:
+        return new Long(getSessionId());
+
+      case STMT:
+        return getStmt();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SESSIONID:
+        return isSetSessionId();
+      case STMT:
+        return isSetStmt();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof executeJson_args)
+        return this.equals((executeJson_args)that);
+      return false;
+    }
+
+    public boolean equals(executeJson_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_sessionId = true;
+      boolean that_present_sessionId = true;
+      if (this_present_sessionId || that_present_sessionId) {
+        if (!(this_present_sessionId && that_present_sessionId))
+          return false;
+        if (!TBaseHelper.equalsNobinary(this.sessionId, that.sessionId))
+          return false;
+      }
+
+      boolean this_present_stmt = true && this.isSetStmt();
+      boolean that_present_stmt = true && that.isSetStmt();
+      if (this_present_stmt || that_present_stmt) {
+        if (!(this_present_stmt && that_present_stmt))
+          return false;
+        if (!TBaseHelper.equalsSlow(this.stmt, that.stmt))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_sessionId = true;
+      builder.append(present_sessionId);
+      if (present_sessionId)
+        builder.append(sessionId);
+
+      boolean present_stmt = true && (isSetStmt());
+      builder.append(present_stmt);
+      if (present_stmt)
+        builder.append(stmt);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(executeJson_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSessionId()).compareTo(other.isSetSessionId());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(sessionId, other.sessionId);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetStmt()).compareTo(other.isSetStmt());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(stmt, other.stmt);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SESSIONID:
+            if (field.type == TType.I64) {
+              this.sessionId = iprot.readI64();
+              setSessionIdIsSet(true);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case STMT:
+            if (field.type == TType.STRING) {
+              this.stmt = iprot.readBinary();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
+      oprot.writeI64(this.sessionId);
+      oprot.writeFieldEnd();
+      if (this.stmt != null) {
+        oprot.writeFieldBegin(STMT_FIELD_DESC);
+        oprot.writeBinary(this.stmt);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeJson_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("sessionId");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. getSessionId(), indent + 1, prettyPrint));
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("stmt");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getStmt() == null) {
+        sb.append("null");
+      } else {
+          int __stmt_size = Math.min(this. getStmt().length, 128);
+          for (int i = 0; i < __stmt_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getStmt()[i]).length() > 1 ? Integer.toHexString(this. getStmt()[i]).substring(Integer.toHexString(this. getStmt()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getStmt()[i]).toUpperCase());
+          }
+          if (this. getStmt().length > 128) sb.append(" ...");
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class executeJson_result implements TBase, java.io.Serializable, Cloneable, Comparable<executeJson_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeJson_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
+
+    public byte[] success;
+    public static final int SUCCESS = 0;
+    public static boolean DEFAULT_PRETTY_PRINT = true;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeJson_result.class, metaDataMap);
+    }
+
+    public executeJson_result() {
+    }
+
+    public executeJson_result(
+      byte[] success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeJson_result(executeJson_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public executeJson_result deepCopy() {
+      return new executeJson_result(this);
+    }
+
+    @Deprecated
+    public executeJson_result clone() {
+      return new executeJson_result(this);
+    }
+
+    public byte[]  getSuccess() {
+      return this.success;
+    }
+
+    public executeJson_result setSuccess(byte[] success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((byte[])value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return isSetSuccess();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof executeJson_result)
+        return this.equals((executeJson_result)that);
+      return false;
+    }
+
+    public boolean equals(executeJson_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!TBaseHelper.equalsSlow(this.success, that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      HashCodeBuilder builder = new HashCodeBuilder();
+
+      boolean present_success = true && (isSetSuccess());
+      builder.append(present_success);
+      if (present_success)
+        builder.append(success);
+
+      return builder.toHashCode();
+    }
+
+    @Override
+    public int compareTo(executeJson_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case SUCCESS:
+            if (field.type == TType.STRING) {
+              this.success = iprot.readBinary();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        oprot.writeBinary(this.success);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(DEFAULT_PRETTY_PRINT);
+    }
+
+    @Override
+    public String toString(boolean prettyPrint) {
+      return toString(1, prettyPrint);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeJson_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getSuccess() == null) {
+        sb.append("null");
+      } else {
+          int __success_size = Math.min(this. getSuccess().length, 128);
+          for (int i = 0; i < __success_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getSuccess()[i]).length() > 1 ? Integer.toHexString(this. getSuccess()[i]).substring(Integer.toHexString(this. getSuccess()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSuccess()[i]).toUpperCase());
+          }
+          if (this. getSuccess().length > 128) sb.append(" ...");
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -27,17 +27,17 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparable<EdgeKey> {
+public class EdgeKey implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("EdgeKey");
-  private static final TField SRC_FIELD_DESC = new TField("src", TType.I64, (short)1);
+  private static final TField SRC_FIELD_DESC = new TField("src", TType.STRUCT, (short)1);
   private static final TField EDGE_TYPE_FIELD_DESC = new TField("edge_type", TType.I32, (short)2);
   private static final TField RANKING_FIELD_DESC = new TField("ranking", TType.I64, (short)3);
-  private static final TField DST_FIELD_DESC = new TField("dst", TType.I64, (short)4);
+  private static final TField DST_FIELD_DESC = new TField("dst", TType.STRUCT, (short)4);
 
-  public long src;
+  public com.vesoft.nebula.Value src;
   public int edge_type;
   public long ranking;
-  public long dst;
+  public com.vesoft.nebula.Value dst;
   public static final int SRC = 1;
   public static final int EDGE_TYPE = 2;
   public static final int RANKING = 3;
@@ -45,23 +45,21 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __SRC_ISSET_ID = 0;
-  private static final int __EDGE_TYPE_ISSET_ID = 1;
-  private static final int __RANKING_ISSET_ID = 2;
-  private static final int __DST_ISSET_ID = 3;
-  private BitSet __isset_bit_vector = new BitSet(4);
+  private static final int __EDGE_TYPE_ISSET_ID = 0;
+  private static final int __RANKING_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SRC, new FieldMetaData("src", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
     tmpMetaDataMap.put(EDGE_TYPE, new FieldMetaData("edge_type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(RANKING, new FieldMetaData("ranking", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(DST, new FieldMetaData("dst", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -73,20 +71,18 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
   }
 
   public EdgeKey(
-    long src,
+    com.vesoft.nebula.Value src,
     int edge_type,
     long ranking,
-    long dst)
+    com.vesoft.nebula.Value dst)
   {
     this();
     this.src = src;
-    setSrcIsSet(true);
     this.edge_type = edge_type;
     setEdge_typeIsSet(true);
     this.ranking = ranking;
     setRankingIsSet(true);
     this.dst = dst;
-    setDstIsSet(true);
   }
 
   /**
@@ -95,10 +91,14 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
   public EdgeKey(EdgeKey other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.src = TBaseHelper.deepCopy(other.src);
+    if (other.isSetSrc()) {
+      this.src = TBaseHelper.deepCopy(other.src);
+    }
     this.edge_type = TBaseHelper.deepCopy(other.edge_type);
     this.ranking = TBaseHelper.deepCopy(other.ranking);
-    this.dst = TBaseHelper.deepCopy(other.dst);
+    if (other.isSetDst()) {
+      this.dst = TBaseHelper.deepCopy(other.dst);
+    }
   }
 
   public EdgeKey deepCopy() {
@@ -110,27 +110,28 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
     return new EdgeKey(this);
   }
 
-  public long  getSrc() {
+  public com.vesoft.nebula.Value  getSrc() {
     return this.src;
   }
 
-  public EdgeKey setSrc(long src) {
+  public EdgeKey setSrc(com.vesoft.nebula.Value src) {
     this.src = src;
-    setSrcIsSet(true);
     return this;
   }
 
   public void unsetSrc() {
-    __isset_bit_vector.clear(__SRC_ISSET_ID);
+    this.src = null;
   }
 
   // Returns true if field src is set (has been assigned a value) and false otherwise
   public boolean isSetSrc() {
-    return __isset_bit_vector.get(__SRC_ISSET_ID);
+    return this.src != null;
   }
 
   public void setSrcIsSet(boolean value) {
-    __isset_bit_vector.set(__SRC_ISSET_ID, value);
+    if (!value) {
+      this.src = null;
+    }
   }
 
   public int  getEdge_type() {
@@ -179,27 +180,28 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
     __isset_bit_vector.set(__RANKING_ISSET_ID, value);
   }
 
-  public long  getDst() {
+  public com.vesoft.nebula.Value  getDst() {
     return this.dst;
   }
 
-  public EdgeKey setDst(long dst) {
+  public EdgeKey setDst(com.vesoft.nebula.Value dst) {
     this.dst = dst;
-    setDstIsSet(true);
     return this;
   }
 
   public void unsetDst() {
-    __isset_bit_vector.clear(__DST_ISSET_ID);
+    this.dst = null;
   }
 
   // Returns true if field dst is set (has been assigned a value) and false otherwise
   public boolean isSetDst() {
-    return __isset_bit_vector.get(__DST_ISSET_ID);
+    return this.dst != null;
   }
 
   public void setDstIsSet(boolean value) {
-    __isset_bit_vector.set(__DST_ISSET_ID, value);
+    if (!value) {
+      this.dst = null;
+    }
   }
 
   public void setFieldValue(int fieldID, Object value) {
@@ -208,7 +210,7 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
       if (value == null) {
         unsetSrc();
       } else {
-        setSrc((Long)value);
+        setSrc((com.vesoft.nebula.Value)value);
       }
       break;
 
@@ -232,7 +234,7 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
       if (value == null) {
         unsetDst();
       } else {
-        setDst((Long)value);
+        setDst((com.vesoft.nebula.Value)value);
       }
       break;
 
@@ -244,7 +246,7 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
     case SRC:
-      return new Long(getSrc());
+      return getSrc();
 
     case EDGE_TYPE:
       return new Integer(getEdge_type());
@@ -253,7 +255,7 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
       return new Long(getRanking());
 
     case DST:
-      return new Long(getDst());
+      return getDst();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -291,8 +293,8 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
     if (this == that)
       return true;
 
-    boolean this_present_src = true;
-    boolean that_present_src = true;
+    boolean this_present_src = true && this.isSetSrc();
+    boolean that_present_src = true && that.isSetSrc();
     if (this_present_src || that_present_src) {
       if (!(this_present_src && that_present_src))
         return false;
@@ -318,8 +320,8 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
         return false;
     }
 
-    boolean this_present_dst = true;
-    boolean that_present_dst = true;
+    boolean this_present_dst = true && this.isSetDst();
+    boolean that_present_dst = true && that.isSetDst();
     if (this_present_dst || that_present_dst) {
       if (!(this_present_dst && that_present_dst))
         return false;
@@ -334,7 +336,7 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_src = true;
+    boolean present_src = true && (isSetSrc());
     builder.append(present_src);
     if (present_src)
       builder.append(src);
@@ -349,59 +351,12 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
     if (present_ranking)
       builder.append(ranking);
 
-    boolean present_dst = true;
+    boolean present_dst = true && (isSetDst());
     builder.append(present_dst);
     if (present_dst)
       builder.append(dst);
 
     return builder.toHashCode();
-  }
-
-  @Override
-  public int compareTo(EdgeKey other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSrc()).compareTo(other.isSetSrc());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(src, other.src);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetEdge_type()).compareTo(other.isSetEdge_type());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(edge_type, other.edge_type);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetRanking()).compareTo(other.isSetRanking());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(ranking, other.ranking);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetDst()).compareTo(other.isSetDst());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(dst, other.dst);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -416,9 +371,9 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
       switch (field.id)
       {
         case SRC:
-          if (field.type == TType.I64) {
-            this.src = iprot.readI64();
-            setSrcIsSet(true);
+          if (field.type == TType.STRUCT) {
+            this.src = new com.vesoft.nebula.Value();
+            this.src.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -440,9 +395,9 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
           }
           break;
         case DST:
-          if (field.type == TType.I64) {
-            this.dst = iprot.readI64();
-            setDstIsSet(true);
+          if (field.type == TType.STRUCT) {
+            this.dst = new com.vesoft.nebula.Value();
+            this.dst.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -464,18 +419,22 @@ public class EdgeKey implements TBase, java.io.Serializable, Cloneable, Comparab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(SRC_FIELD_DESC);
-    oprot.writeI64(this.src);
-    oprot.writeFieldEnd();
+    if (this.src != null) {
+      oprot.writeFieldBegin(SRC_FIELD_DESC);
+      this.src.write(oprot);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(EDGE_TYPE_FIELD_DESC);
     oprot.writeI32(this.edge_type);
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(RANKING_FIELD_DESC);
     oprot.writeI64(this.ranking);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(DST_FIELD_DESC);
-    oprot.writeI64(this.dst);
-    oprot.writeFieldEnd();
+    if (this.dst != null) {
+      oprot.writeFieldBegin(DST_FIELD_DESC);
+      this.dst.write(oprot);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -505,7 +464,11 @@ String space = prettyPrint ? " " : "";
     sb.append("src");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSrc(), indent + 1, prettyPrint));
+    if (this. getSrc() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getSrc(), indent + 1, prettyPrint));
+    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
@@ -526,7 +489,11 @@ String space = prettyPrint ? " " : "";
     sb.append("dst");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getDst(), indent + 1, prettyPrint));
+    if (this. getDst() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this. getDst(), indent + 1, prettyPrint));
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
