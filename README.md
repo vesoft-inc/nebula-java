@@ -12,6 +12,14 @@ This branch, v1.0, is for Nebula Java 1.0. It works with Nebula Graph v1.1.0 and
 
 If you are using Nebula Graph v2.0, go to the `master` branch. For more information, see [README of v2.0](https://github.com/vesoft-inc/nebula-java).
 
+## Clone v1.0
+
+Run this command to clone Nebula Java v1.0:
+
+```bash
+git clone -b v1.0 https://github.com/vesoft-inc/nebula-java.git
+```
+
 ## Prerequisites
 
 To use this Java client, do a check of these:
