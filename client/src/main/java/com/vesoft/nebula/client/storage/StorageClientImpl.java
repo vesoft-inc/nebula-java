@@ -209,7 +209,11 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
             try {
                 response = client.put(request);
                 if (!isSuccessfully(response)) {
-                    handleResultCodes(response.result.failed_codes, space, client, leader);
+                    HostAndPort newLeader = handleResultCodes(response.result.failed_codes, space);
+                    if (newLeader == null) {
+                        return false;
+                    }
+                    client = clients.get(newLeader);
                 } else {
                     return true;
                 }
@@ -336,7 +340,11 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
             try {
                 response = client.get(request);
                 if (!isSuccessfully(response)) {
-                    handleResultCodes(response.result.failed_codes, space, client, leader);
+                    HostAndPort newLeader = handleResultCodes(response.result.failed_codes, space);
+                    if (newLeader == null) {
+                        return Optional.absent();
+                    }
+                    client = clients.get(newLeader);
                 } else {
                     return Optional.of(response.values);
                 }
@@ -459,7 +467,12 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
             try {
                 response = client.remove(request);
                 if (!isSuccessfully(response)) {
-                    handleResultCodes(response.result.failed_codes, spaceName, client, leader);
+                    HostAndPort newLeader =
+                            handleResultCodes(response.result.failed_codes, spaceName);
+                    if (newLeader == null) {
+                        return false;
+                    }
+                    client = clients.get(newLeader);
                 } else {
                     return true;
                 }
@@ -608,12 +621,6 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      */
     private Iterator<ScanEdgeResponse> doScanEdge(String space, HostAndPort leader,
                                                   ScanEdgeRequest request) throws IOException {
-        StorageService.Client client = connect(leader);
-        if (Objects.isNull(client)) {
-            disconnect(leader);
-            throw new IOException("Failed to connect " + leader);
-        }
-
         return new Iterator<ScanEdgeResponse>() {
             private byte[] cursor = null;
             private boolean haveNext = true;
@@ -625,6 +632,14 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
             @Override
             public ScanEdgeResponse next() {
+                StorageService.Client client = connect(leader);
+                if (Objects.isNull(client)) {
+                    disconnect(leader);
+                    LOGGER.error("Failed to connect " + leader);
+                    haveNext = false;
+                    return null;
+                }
+
                 request.setCursor(cursor);
                 int retry = executionRetry;
                 while (retry-- != 0) {
@@ -640,9 +655,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                     }
 
                     if (!response.result.failed_codes.isEmpty()) {
-                        handleResultCodes(response.result.failed_codes, space, client, leader);
-                        haveNext = false;
-                        return null;
+                        HostAndPort newLeader =
+                                handleResultCodes(response.result.failed_codes, space);
+                        if (newLeader == null) {
+                            haveNext = false;
+                            return null;
+                        }
+                        client = clients.get(newLeader);
                     } else {
                         return response;
                     }
@@ -702,7 +721,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
     private Iterator<ScanVertexResponse> scanVertex(
             String space, Iterator<Integer> parts, Map<String, List<String>> returnCols,
-            boolean allCols, int limit, long startTime, long endTime) throws IOException {
+            boolean allCols, int limit, long startTime, long endTime) {
 
         return new Iterator<ScanVertexResponse>() {
             Iterator<ScanVertexResponse> iterator;
@@ -736,12 +755,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                             .setLimit(limit)
                             .setStart_time(startTime)
                             .setEnd_time(endTime);
-
-                    try {
-                        iterator = doScanVertex(space, leader, request);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    iterator = doScanVertex(space, leader, request);
                 }
 
                 return iterator.next();
@@ -784,14 +798,8 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
      * @return response which contains next start cursor, done if next cursor is empty
      */
     private Iterator<ScanVertexResponse> doScanVertex(
-            String spaceName, HostAndPort leader, ScanVertexRequest request) throws IOException {
-        StorageService.Client client = connect(leader);
-        if (Objects.isNull(client)) {
-            disconnect(leader);
-            throw new IOException("Failed to connect " + leader);
-        }
+            String spaceName, HostAndPort leader, ScanVertexRequest request) {
 
-        int spaceID = metaClient.getSpaceIdFromCache(spaceName);
         return new Iterator<ScanVertexResponse>() {
             private byte[] cursor = null;
             private boolean haveNext = true;
@@ -803,6 +811,13 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
 
             @Override
             public ScanVertexResponse next() {
+                StorageService.Client client = connect(leader);
+                if (Objects.isNull(client)) {
+                    disconnect(leader);
+                    LOGGER.error("Failed to connect " + leader);
+                    return null;
+                }
+
                 request.setCursor(cursor);
                 int retry = executionRetry;
                 while (retry-- != 0) {
@@ -818,14 +833,19 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                     }
 
                     if (!response.result.failed_codes.isEmpty()) {
-                        handleResultCodes(response.result.failed_codes, spaceName, client, leader);
-                        haveNext = false;
-                        return null;
+                        HostAndPort newLeader =
+                                handleResultCodes(response.result.failed_codes, spaceName);
+                        if (newLeader == null) {
+                            haveNext = false;
+                            return null;
+                        }
+                        client = clients.get(newLeader);
                     } else {
                         return response;
                     }
                 }
                 // TODO: throw exceptions
+                haveNext = false;
                 return null;
             }
         };
@@ -884,8 +904,7 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
         }
     }
 
-    private void handleResultCodes(List<ResultCode> failedCodes, String space,
-                                   StorageService.Client client, HostAndPort leader) {
+    private HostAndPort handleResultCodes(List<ResultCode> failedCodes, String space) {
         for (ResultCode code : failedCodes) {
             if (code.getCode() == ErrorCode.E_LEADER_CHANGED) {
                 HostAddr addr = code.getLeader();
@@ -894,14 +913,23 @@ public class StorageClientImpl extends AbstractClient implements StorageClient {
                     HostAndPort newLeader = HostAndPort.fromParts(
                             AddressUtil.intToIPv4(ip), addr.getPort());
                     updateLeader(space, code.getPart_id(), newLeader);
+                    if (!clients.containsKey(newLeader)) {
+                        try {
+                            doConnect(Arrays.asList(newLeader));
+                        } catch (TException e) {
+                            LOGGER.error(String.format("connect storage server %s:%d error,",
+                                    newLeader.getHostText(), newLeader.getPort()), e);
+                            return null;
+                        }
+                    }
                     StorageService.Client newClient = clients.get(newLeader);
                     if (newClient != null) {
-                        client = newClient;
-                        leader = newLeader;
+                        return newLeader;
                     }
                 }
             }
         }
+        return null;
     }
 
     private StorageService.Client connect(HostAndPort address) {
