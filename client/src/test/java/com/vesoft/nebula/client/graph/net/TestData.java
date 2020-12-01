@@ -267,7 +267,6 @@ public class TestData {
             assert Objects.equals(resultSet.getComment(), "test_comment");
             assert Objects.equals(resultSet.getSpaceName(), "test_space");
             Assert.assertEquals(1000, resultSet.getLatency());
-            System.out.println("resultSet.getPlanDesc() = " + resultSet.getPlanDesc());
             assert resultSet.getPlanDesc() != null;
             List<String> expectColNames = Arrays.asList(
                 "col0_empty", "col1_null", "col2_bool", "col3_int", "col4_double", "col5_string",
