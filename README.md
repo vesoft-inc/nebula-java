@@ -11,7 +11,7 @@ nebula-java v1.x is composed of:
 
 - Tools such as Nebula Graph Exchange, Nebula Spark Connector, Nebula Flink Connector, and nebula-algorithm. For more information, see [nebula-java/tools](tools).
 
-This gives a brief introduction to Nebula Java v1.x.
+This article gives a brief introduction to Nebula Java v1.x.
 
 ## Nebula Graph supported
 
