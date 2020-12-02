@@ -68,7 +68,7 @@ class NebulaEdgeIterator(split: Partition, nebulaOptions: NebulaOptions, schema:
       }
     }
     if (dataIterator == null) {
-      if (metaClient != null) metaClient.close()
+      NebulaUtils.closeMetaClient(metaClient)
       return false
     }
     dataIterator.hasNext
