@@ -324,48 +324,51 @@ public class MetaClient extends AbstractMetaClient {
 
 
     /**
-     * get all parts and part's location
+     * method for fill meta cache
      *
      * @param spaceName nebula graph space
      * @return empty map if exception happen
      */
-    public Map<Integer, List<HostAndPort>> getPartsLocation(String spaceName) {
+    protected Map<Integer, List<HostAndPort>> getPartsLocation(String spaceName) {
         Map<Integer, List<HostAndPort>> result;
         try {
             result = getPartsAlloc(spaceName);
         } catch (ExecuteFailedException | TException e) {
+            LOGGER.error("getPartsAlloc error, ", e);
             return Maps.newHashMap();
         }
         return result;
     }
 
     /**
-     * get all tags info
+     * method for fill meta cache
      *
      * @param spaceName nebula graph space
      * @return empty list if exception happen
      */
-    public List<TagItem> listTags(String spaceName) {
+    protected List<TagItem> listTags(String spaceName) {
         List<TagItem> tagItems;
         try {
             tagItems = getTags(spaceName);
         } catch (TException | ExecuteFailedException e) {
+            LOGGER.error("getTags error, ", e);
             return Lists.newLinkedList();
         }
         return tagItems;
     }
 
     /**
-     * get all edges info
+     * method for fill meta cache
      *
      * @param spaceName nebula graph space
      * @return empty list if exception happen
      */
-    public List<EdgeItem> listEdges(String spaceName) {
+    protected List<EdgeItem> listEdges(String spaceName) {
         List<EdgeItem> edgeItems;
         try {
             edgeItems = getEdges(spaceName);
         } catch (TException | ExecuteFailedException e) {
+            LOGGER.error("getEdges error, ", e);
             return Lists.newLinkedList();
         }
         return edgeItems;

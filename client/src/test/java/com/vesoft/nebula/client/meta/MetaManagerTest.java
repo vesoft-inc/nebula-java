@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.meta;
 
+import com.facebook.thrift.TException;
 import com.google.common.net.HostAndPort;
 import java.util.Arrays;
 import junit.framework.TestCase;
@@ -28,59 +29,114 @@ public class MetaManagerTest extends TestCase {
 
 
     public void testGetSpaceId() {
-        assert (metaManager.getSpaceId("test1") == 1);
-        assert (metaManager.getSpaceId("test2") == 2);
+        try {
+            assert (metaManager.getSpaceId("test1") == 1);
+            assert (metaManager.getSpaceId("test2") == 2);
+        } catch (TException e) {
+            LOGGER.error("get spaceId error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetTagIds() {
-        assert (metaManager.getTagIds("test1").size() == 1);
-        assert (metaManager.getTagIds("test2").size() == 1);
+        try {
+            assert (metaManager.getTagIds("test1").size() == 1);
+            assert (metaManager.getTagIds("test2").size() == 1);
+        } catch (TException e) {
+            LOGGER.error("get tag ids error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetTagId() {
-        assert (metaManager.getTagId("test1", "tag") == MockMetaInfo.tagId);
-        assert (metaManager.getTagId("test2", "tag") == MockMetaInfo.tagId);
+        try {
+            assert (metaManager.getTagId("test1", "tag") == MockMetaInfo.tagId);
+            assert (metaManager.getTagId("test2", "tag") == MockMetaInfo.tagId);
+        } catch (TException e) {
+            LOGGER.error("get tag id error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetTag() {
-        assert (metaManager.getTag("test1", "tag").getTag_id() == MockMetaInfo.tagId);
-        assert (metaManager.getTag("test2", "tag").getTag_id() == MockMetaInfo.tagId);
+        try {
+            assert (metaManager.getTag("test1", "tag").getTag_id() == MockMetaInfo.tagId);
+            assert (metaManager.getTag("test2", "tag").getTag_id() == MockMetaInfo.tagId);
+        } catch (TException e) {
+            LOGGER.error("get tag error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetEdgeIds() {
-        assert (metaManager.getEdgeIds("test1").size() == 1);
-        assert (metaManager.getEdgeIds("test2").size() == 1);
+        try {
+            assert (metaManager.getEdgeIds("test1").size() == 1);
+            assert (metaManager.getEdgeIds("test2").size() == 1);
+        } catch (TException e) {
+            LOGGER.error("get edge ids error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetEdgeId() {
-        assert (metaManager.getEdgeId("test1", "edge") == MockMetaInfo.edgeId);
-        assert (metaManager.getEdgeId("test2", "edge") == MockMetaInfo.edgeId);
+        try {
+            assert (metaManager.getEdgeId("test1", "edge") == MockMetaInfo.edgeId);
+            assert (metaManager.getEdgeId("test2", "edge") == MockMetaInfo.edgeId);
+        } catch (TException e) {
+            LOGGER.error("get edge id error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetEdge() {
-        assert (metaManager.getEdge("test1", "edge").getEdge_type() == MockMetaInfo.edgeId);
+        try {
+            assert (metaManager.getEdge("test1", "edge").getEdge_type() == MockMetaInfo.edgeId);
+        } catch (TException e) {
+            LOGGER.error("get edge error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetTagName() {
-        assert (metaManager.getTagName("test1", MockMetaInfo.tagId).equals("tag"));
-        assert (metaManager.getTagName("test2", MockMetaInfo.tagId).equals("tag"));
+        try {
+            assert (metaManager.getTagName("test1", MockMetaInfo.tagId).equals("tag"));
+            assert (metaManager.getTagName("test2", MockMetaInfo.tagId).equals("tag"));
+        } catch (TException e) {
+            LOGGER.error("get tag name error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetEdgeName() {
-        assert (metaManager.getEdgeName("test1", MockMetaInfo.edgeId).equals("edge"));
-        assert (metaManager.getEdgeName("test2", MockMetaInfo.edgeId).equals("edge"));
+        try {
+            assert (metaManager.getEdgeName("test1", MockMetaInfo.edgeId).equals("edge"));
+            assert (metaManager.getEdgeName("test2", MockMetaInfo.edgeId).equals("edge"));
+        } catch (TException e) {
+            LOGGER.error("get edge name error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetLeader() {
-        assert (metaManager.getLeader("test1", 1).getHostText().equals("127.0.0.1"));
-        assert (metaManager.getLeader("test1", 1).getPort() == 45500);
-        assert (metaManager.getLeader("test2", 1).getHostText().equals("127.0.0.1"));
-        assert (metaManager.getLeader("test2", 1).getPort() == 45500);
+        try {
+            assert (metaManager.getLeader("test1", 1).getHostText().equals("127.0.0.1"));
+            assert (metaManager.getLeader("test1", 1).getPort() == 45500);
+            assert (metaManager.getLeader("test2", 1).getHostText().equals("127.0.0.1"));
+            assert (metaManager.getLeader("test2", 1).getPort() == 45500);
+        } catch (TException e) {
+            LOGGER.error("get leader error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetSpaceParts() {
-        assert (metaManager.getSpaceParts("test1").size() == 2);
-        assert (metaManager.getSpaceParts("test2").size() == 2);
+        try {
+            assert (metaManager.getSpaceParts("test1").size() == 2);
+            assert (metaManager.getSpaceParts("test2").size() == 2);
+        } catch (TException e) {
+            LOGGER.error("get space parts error, ", e);
+            assert (false);
+        }
     }
 
     public void testGetDecodeType() {
