@@ -60,10 +60,10 @@ public class SyncConnection extends Connection {
         }
     }
 
-    public ExecutionResponse execute(long sessionID, String stmt)
+    public ExecutionResponse execute(long sessionID, byte[] stmt)
             throws IOErrorException {
         try {
-            return client.execute(sessionID, stmt.getBytes());
+            return client.execute(sessionID, stmt);
         } catch (TException e) {
             if (e instanceof TTransportException) {
                 TTransportException te = (TTransportException) e;

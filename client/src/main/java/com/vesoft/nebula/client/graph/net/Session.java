@@ -8,52 +8,52 @@ package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.graph.ExecutionResponse;
-import java.io.UnsupportedEncodingException;
-import org.apache.commons.pool2.impl.GenericObjectPool;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Session it can use by multi thread. the every thread will get a connection from the pool
+ */
 public class Session {
     private final long sessionID;
-    private SyncConnection connection;
-    private final GenericObjectPool<SyncConnection> pool;
+    private SyncConnection connection = null;
+    private final NebulaPool pool;
     private final Boolean retryConnect;
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private Charset charset = StandardCharsets.UTF_8;
 
-    public Session(SyncConnection connection,
-                   long sessionID,
-                   GenericObjectPool<SyncConnection> connPool,
+    public Session(long sessionID,
+                   NebulaPool connPool,
                    Boolean retryConnect) {
-        this.connection = connection;
         this.sessionID = sessionID;
         this.pool = connPool;
         this.retryConnect = retryConnect;
     }
 
     /**
-     * Execute the query sentence.
+     * Execute the ngql. the interface is not thread-safe
      *
-     * @param stmt The query sentence.
+     * @param stmt The ngl.
      * @return The ResultSet.
      */
-    public ResultSet execute(String stmt) throws IOErrorException, UnsupportedEncodingException {
+    public ResultSet execute(String stmt)
+        throws IOErrorException, NotValidConnectionException {
+        if (connection == null) {
+            connection = pool.getConnection();
+        }
+        byte[] ngql = stmt.getBytes(charset);
         try {
-            if (connection == null) {
-                throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
-                        "Connection is null");
-            }
-            ExecutionResponse resp = connection.execute(sessionID, stmt);
+            ExecutionResponse resp = connection.execute(sessionID, ngql);
             return new ResultSet(resp);
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
-                if (pool.getFactory() instanceof ConnObjectPool) {
-                    ((ConnObjectPool) pool.getFactory()).updateServerStatus();
-                }
-
                 if (retryConnect) {
                     if (retryConnect()) {
-                        ExecutionResponse resp = connection.execute(sessionID, stmt);
+                        ExecutionResponse resp = connection.execute(sessionID, ngql);
                         return new ResultSet(resp);
                     } else {
                         throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
@@ -65,30 +65,63 @@ public class Session {
         }
     }
 
-    private boolean retryConnect() {
+    /**
+     * Execute the ngql. the interface is thread-safe,
+     * the interface use the connection from the pool
+     *
+     * @param stmt The ngl.
+     * @return The ResultSet.
+     */
+    public ResultSet executeThreadSafe(String stmt)
+        throws IOErrorException, NotValidConnectionException {
+        SyncConnection connection = pool.getConnection();
+        byte[] ngql = stmt.getBytes(charset);
         try {
-            try {
-                pool.invalidateObject(connection);
-            } catch (Exception e) {
-                log.error("Return object failed");
+            return new ResultSet(connection.execute(sessionID, ngql));
+        } catch (IOErrorException ie) {
+            if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                if (retryConnect) {
+                    connection = pool.getConnection();
+                    int retry = pool.getIdleConnNum();
+                    while (retry-- > 0) {
+                        connection = pool.getConnection();
+                        if (!connection.ping()) {
+                            pool.setInvalidateConn(connection);
+                            continue;
+                        }
+                        return new ResultSet(connection.execute(sessionID, ngql));
+                    }
+                }
+                throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
+                    "Connection is broken");
             }
-            SyncConnection newConn = pool.borrowObject();
-            if (newConn == null) {
-                log.error("Get connection object failed.");
-            }
-            connection = newConn;
-            return true;
-        } catch (Exception e) {
-            return false;
+            throw ie;
+        } finally {
+            pool.returnConnection(connection);
         }
     }
 
-    // Need server supported, v1.0 nebula-graph doesn't supported
-    public boolean ping() {
-        if (connection == null) {
+    private boolean retryConnect() {
+        try {
+            try {
+                pool.setInvalidateConn(connection);
+            } catch (Exception e) {
+                log.error("Return object failed");
+            }
+            int retry = pool.getCanUseNum();
+            while (retry-- > 0) {
+                SyncConnection newConn = pool.getConnection();
+                if (newConn.ping()) {
+                    connection = newConn;
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
             return false;
         }
-        return connection.ping();
     }
 
     public void release() {
@@ -97,7 +130,7 @@ public class Session {
         }
         connection.signout(sessionID);
         try {
-            pool.returnObject(connection);
+            pool.returnConnection(connection);
         } catch (Exception e) {
             log.warn("Return object to pool failed.");
         }

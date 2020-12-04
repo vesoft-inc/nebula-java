@@ -50,6 +50,10 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         return null;
     }
 
+    public int getHostNum() {
+        return addresses.size();
+    }
+
     public void updateServersStatus() {
         for (HostAddress addr : addresses) {
             if (ping(addr)) {

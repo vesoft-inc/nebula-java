@@ -88,31 +88,41 @@ public class NebulaPool {
 
     public Session getSession(String userName, String password, boolean reconnect)
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
+        SyncConnection connection = getConnection();
+        log.info(String.format("Get connection to %s:%d",
+            connection.getServerAddress().getHost(),
+            connection.getServerAddress().getPort()));
+        long sessionID = connection.authenticate(userName, password);
+        returnConnection(connection);
+        return new Session(sessionID,this, reconnect);
+    }
+
+    public SyncConnection getConnection() throws NotValidConnectionException {
+        SyncConnection connection;
         try {
-            // If no idle connection, try once
-            int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
-            SyncConnection connection = null;
-            while (retry-- > 0) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null || !connection.ping()) {
-                    continue;
-                }
-                break;
-            }
-            if (connection == null) {
-                throw new NotValidConnectionException("Get connection object failed.");
-            }
-            log.info(String.format("Get connection to %s:%d",
-                     connection.getServerAddress().getHost(),
-                     connection.getServerAddress().getPort()));
-            long sessionID = connection.authenticate(userName, password);
-            return new Session(connection, sessionID, this.objectPool, reconnect);
-        } catch (NotValidConnectionException | AuthFailedException | IOErrorException e) {
-            throw e;
-        } catch (IllegalStateException e) {
-            throw new NotValidConnectionException(e.getMessage());
+            connection = objectPool.borrowObject(waitTime);
         } catch (Exception e) {
-            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+            throw new NotValidConnectionException(e.getMessage());
+        }
+        if (connection == null) {
+            throw new NotValidConnectionException("Get connection object failed.");
+        }
+        return connection;
+    }
+
+    public void setInvalidateConn(SyncConnection connection) {
+        try {
+            objectPool.invalidateObject(connection);
+        } catch (Exception e) {
+            log.warn("Set connection invalidate failed");
+        }
+    }
+
+    public void returnConnection(SyncConnection connection) {
+        try {
+            objectPool.returnObject(connection);
+        } catch (Exception e) {
+            log.warn("Return object to pool failed.");
         }
     }
 
@@ -121,6 +131,14 @@ public class NebulaPool {
     }
 
     public int getIdleConnNum() {
+        return objectPool.getNumIdle();
+    }
+
+    public int getCanUseNum() {
+        if (objectPool.getMaxTotal() - objectPool.getCreatedCount() > 0) {
+            return (int) (objectPool.getMaxTotal()
+                - objectPool.getCreatedCount() + objectPool.getNumIdle());
+        }
         return objectPool.getNumIdle();
     }
 

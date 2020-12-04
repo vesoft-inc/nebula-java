@@ -10,4 +10,6 @@ public interface LoadBalancer {
     void updateServersStatus();
 
     boolean isServersOK();
+
+    int getHostNum();
 }

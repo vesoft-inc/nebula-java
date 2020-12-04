@@ -19,23 +19,23 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
 
     @Override
     public SyncConnection create() throws IOErrorException {
-        HostAddress address = loadBalancer.getAddress();
-        if (address == null) {
-            throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
-                    "All servers are broken.");
-        }
-        int retry = retryTime;
+        int retry = loadBalancer.getHostNum();
         SyncConnection conn = new SyncConnection();
         while (retry-- > 0) {
             try {
+                HostAddress address = loadBalancer.getAddress();
+                if (address == null) {
+                    throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                        "All servers are broken.");
+                }
                 conn.open(address, config.getTimeout());
                 return conn;
             } catch (IOErrorException e) {
-                if (retry == 0) {
-                    throw e;
-                }
                 this.loadBalancer.updateServersStatus();
             }
+        }
+        if (retry == 0) {
+            throw new IOErrorException(IOErrorException.E_ALL_BROKEN, "All servers are broken.");
         }
         return null;
     }
@@ -55,10 +55,6 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
     @Override
     public boolean validateObject(PooledObject<SyncConnection> p) {
         if (p.getObject() == null) {
-            return false;
-        }
-        if (!p.getObject().ping()) {
-            p.getObject().close();
             return false;
         }
         return true;
