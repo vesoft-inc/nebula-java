@@ -405,46 +405,6 @@ public class MetaManager {
     }
 
     /**
-     * get tag schema
-     */
-    public Map<String, Class> getTagSchema(String spaceName, String tagName, long version)
-            throws TException {
-        if (!metaInfo.getSpaceNameMap().containsKey(spaceName)) {
-            freshSpace(spaceName);
-        }
-        if (metaInfo.getSpaceNameMap().containsKey(spaceName)) {
-            int spaceId = metaInfo.getSpaceNameMap().get(spaceName);
-            return metaClient.getTagSchema(spaceId, tagName, version);
-        }
-        return Maps.newHashMap();
-    }
-
-    public Map<String, Class> getTagSchema(String spaceName, String tagName) throws TException {
-        return getTagSchema(spaceName, tagName, metaClient.getDefaultVersion());
-    }
-
-
-    /**
-     * get edge schema
-     */
-    public Map<String, Class> getEdgeSchema(String spaceName, String edgeName, long version)
-            throws TException {
-        if (!metaInfo.getSpaceNameMap().containsKey(spaceName)) {
-            freshSpace(spaceName);
-        }
-        if (metaInfo.getSpaceNameMap().containsKey(spaceName)) {
-            int spaceId = metaInfo.getSpaceNameMap().get(spaceName);
-            return metaClient.getEdgeSchema(spaceId, edgeName, version);
-        }
-        return Maps.newHashMap();
-    }
-
-    public Map<String, Class> getEdgeSchema(String spaceName, String edgeName) throws TException {
-        return getEdgeSchema(spaceName, edgeName, metaClient.getDefaultVersion());
-    }
-
-
-    /**
      * get all servers
      */
     public Set<HostAndPort> listHosts() {

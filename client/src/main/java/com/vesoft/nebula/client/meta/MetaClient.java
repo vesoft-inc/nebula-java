@@ -14,8 +14,6 @@ import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
-import com.vesoft.nebula.client.meta.utils.NebulaTypeUtil;
-import com.vesoft.nebula.meta.ColumnDef;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.ErrorCode;
 import com.vesoft.nebula.meta.GetEdgeReq;
@@ -449,67 +447,5 @@ public class MetaClient extends AbstractMetaClient {
             hostAndPorts.add(HostAndPort.fromParts(addr.getHost(), addr.getPort()));
         }
         return hostAndPorts;
-    }
-
-
-    /**
-     * get tag schema
-     */
-    public Map<String, Class> getTagSchema(int spaceId, String tagName, long version) {
-        GetTagReq request = new GetTagReq();
-        request.setSpace_id(spaceId);
-        request.setTag_name(tagName.getBytes());
-        request.setVersion(version);
-        GetTagResp response;
-        try {
-            response = client.getTag(request);
-        } catch (TException e) {
-            LOGGER.error("get tag error, ", e);
-            return Maps.newHashMap();
-        }
-        Map<String, Class> result = Maps.newHashMap();
-
-        for (ColumnDef column : response.getSchema().columns) {
-            result.put(new String(column.name),
-                    NebulaTypeUtil.supportedTypeToClass(column.type.type));
-        }
-        return result;
-    }
-
-    public Map<String, Class> getTagSchema(int spaceId, String tagName) {
-        return getTagSchema(spaceId, tagName, LATEST_SCHEMA_VERSION);
-    }
-
-    /**
-     * get edge schema
-     */
-    public Map<String, Class> getEdgeSchema(int spaceId, String edgeName, long version) {
-        GetEdgeReq request = new GetEdgeReq();
-        request.setSpace_id(spaceId);
-        request.setEdge_name(edgeName.getBytes());
-        request.setVersion(version);
-
-        Map<String, Class> result = Maps.newHashMap();
-        GetEdgeResp response;
-        try {
-            response = client.getEdge(request);
-        } catch (TException e) {
-            LOGGER.error("get edge error, ", e);
-            return result;
-        }
-
-        for (ColumnDef column : response.getSchema().columns) {
-            result.put(new String(column.name),
-                    NebulaTypeUtil.supportedTypeToClass(column.type.type));
-        }
-        return result;
-    }
-
-    public Map<String, Class> getEdgeSchema(int spaceId, String edgeName) {
-        return getEdgeSchema(spaceId, edgeName, LATEST_SCHEMA_VERSION);
-    }
-
-    protected int getDefaultVersion() {
-        return LATEST_SCHEMA_VERSION;
     }
 }
