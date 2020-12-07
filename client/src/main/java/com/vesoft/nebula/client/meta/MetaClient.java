@@ -65,6 +65,10 @@ public class MetaClient extends AbstractMetaClient {
         this(HostAndPort.fromParts(host, port));
     }
 
+    public MetaClient(String address) {
+        this(HostAndPort.fromString(address));
+    }
+
     public MetaClient(HostAndPort address) {
         this(Arrays.asList(address), DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
@@ -83,16 +87,14 @@ public class MetaClient extends AbstractMetaClient {
         this.addresses = addresses;
     }
 
-    public int connect() throws TException {
-        return doConnect();
+    public void connect() throws TException {
+        doConnect();
     }
 
     /**
      * connect nebula meta server
-     *
-     * @return 0 -> success, other -> fail
      */
-    private int doConnect() throws TException {
+    private void doConnect() throws TException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
@@ -100,7 +102,6 @@ public class MetaClient extends AbstractMetaClient {
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
-        return ErrorCode.SUCCEEDED;
     }
 
     /**
@@ -157,6 +158,7 @@ public class MetaClient extends AbstractMetaClient {
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getTags();
         } else {
+            // TODO: Processing leader change error
             LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
             throw new ExecuteFailedException("Get Tags Error:"
                     + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
@@ -190,6 +192,7 @@ public class MetaClient extends AbstractMetaClient {
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
+            // todo process leader change error
             LOGGER.error(String.format(
                     "Get tag execute Error: %s",
                     ErrorCode.VALUES_TO_NAMES.get(response.getCode())));
@@ -219,6 +222,7 @@ public class MetaClient extends AbstractMetaClient {
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getEdges();
         } else {
+            // todo process leader change error
             LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
             throw new ExecuteFailedException("Get Edges Error:"
                     + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
@@ -251,6 +255,7 @@ public class MetaClient extends AbstractMetaClient {
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
+            // todo process leader change error
             LOGGER.error(String.format(
                     "Get Edge execute Error: %s",
                     ErrorCode.VALUES_TO_NAMES.get(response.getCode())));
@@ -294,6 +299,7 @@ public class MetaClient extends AbstractMetaClient {
             }
             return addressMap;
         } else {
+            // todo process leader change error
             LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
             throw new ExecuteFailedException("Get Parts allocation failed: "
                     + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
@@ -301,71 +307,71 @@ public class MetaClient extends AbstractMetaClient {
     }
 
     /**
-     * get all spaces info
+     * get all spaces info, used by {@link MetaManager}
      *
      * @return empty list if exception happen
      */
-    public List<IdName> listSpaces() {
-        ListSpacesReq request = new ListSpacesReq();
-        ListSpacesResp response;
+    protected List<IdName> listSpaces() {
+        List<IdName> response;
         try {
-            response = client.listSpaces(request);
+            response = getSpaces();
         } catch (TException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()), e);
             return Lists.newLinkedList();
         }
-        if (response.getCode() == ErrorCode.SUCCEEDED) {
-            return response.getSpaces();
-        } else {
-            LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
+        if (response == null) {
             return Lists.newLinkedList();
         }
+        return response;
     }
 
 
     /**
-     * get all parts and part's location
+     * method for fill meta cache
      *
      * @param spaceName nebula graph space
      * @return empty map if exception happen
      */
-    public Map<Integer, List<HostAndPort>> getPartsLocation(String spaceName) {
+    protected Map<Integer, List<HostAndPort>> getPartsLocation(String spaceName) {
         Map<Integer, List<HostAndPort>> result;
         try {
             result = getPartsAlloc(spaceName);
         } catch (ExecuteFailedException | TException e) {
+            LOGGER.error("getPartsAlloc error, ", e);
             return Maps.newHashMap();
         }
         return result;
     }
 
     /**
-     * get all tags info
+     * method for fill meta cache
      *
      * @param spaceName nebula graph space
      * @return empty list if exception happen
      */
-    public List<TagItem> listTags(String spaceName) {
+    protected List<TagItem> listTags(String spaceName) {
         List<TagItem> tagItems;
         try {
             tagItems = getTags(spaceName);
         } catch (TException | ExecuteFailedException e) {
+            LOGGER.error("getTags error, ", e);
             return Lists.newLinkedList();
         }
         return tagItems;
     }
 
     /**
-     * get all edges info
+     * method for fill meta cache
      *
      * @param spaceName nebula graph space
      * @return empty list if exception happen
      */
-    public List<EdgeItem> listEdges(String spaceName) {
+    protected List<EdgeItem> listEdges(String spaceName) {
         List<EdgeItem> edgeItems;
         try {
             edgeItems = getEdges(spaceName);
         } catch (TException | ExecuteFailedException e) {
+            LOGGER.error("getEdges error, ", e);
             return Lists.newLinkedList();
         }
         return edgeItems;
@@ -428,6 +434,7 @@ public class MetaClient extends AbstractMetaClient {
      */
     public Set<HostAndPort> listHosts() {
         ListHostsReq request = new ListHostsReq();
+        // todo request.setType();
         ListHostsResp resp;
         try {
             resp = client.listHosts(request);

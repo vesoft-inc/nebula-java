@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.meta;
 import com.facebook.thrift.TException;
 import com.google.common.collect.Maps;
 import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
@@ -31,17 +32,15 @@ import org.slf4j.LoggerFactory;
 public class MetaManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaManager.class);
 
-    // todo set decodeType
-    private String decodeType = "utf-8";
-
-    MetaInfo metaInfo = new MetaInfo();
     private static MetaClient metaClient;
     private static MetaManager metaManager;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
 
-    private MetaManager(){}
+    private MetaInfo metaInfo = new MetaInfo();
+
+    private MetaManager() {
+    }
 
     /**
      * only way to get a MetaManager object
@@ -51,11 +50,10 @@ public class MetaManager {
             synchronized (MetaManager.class) {
                 if (metaManager == null) {
                     metaManager = new MetaManager();
+                    metaManager.getClient(address);
                 }
             }
         }
-        metaManager = new MetaManager();
-        metaManager.getClient(address);
         return metaManager;
     }
 
@@ -89,7 +87,7 @@ public class MetaManager {
     /**
      * fill the meta info
      */
-    private void fillMetaInfo() {
+    private synchronized void fillMetaInfo() {
         for (IdName space : metaClient.listSpaces()) {
             // space schema
             String spaceName = new String(space.getName());
@@ -97,30 +95,10 @@ public class MetaManager {
             metaInfo.getSpacePartLocation().put(spaceName, metaClient.getPartsLocation(spaceName));
 
             // tag schema
-            Map<Long, TagItem> tags = Maps.newHashMap();
-            Map<String, Long> tagsName = Maps.newHashMap();
-            Map<Long, String> tagsId = Maps.newHashMap();
-            for (TagItem item : metaClient.listTags(spaceName)) {
-                tags.put((long) item.getTag_id(), item);
-                tagsName.put(new String(item.getTag_name()), (long) item.getTag_id());
-                tagsId.put((long) item.getTag_id(), new String(item.getTag_name()));
-            }
-            metaInfo.getSpaceTagItems().put(spaceName, tags);
-            metaInfo.getTagNameMap().put(spaceName, tagsName);
-            metaInfo.getTagIdMap().put(spaceName, tagsId);
+            freshTags(spaceName);
 
             // edge schema
-            Map<Long, EdgeItem> edges = Maps.newHashMap();
-            Map<String, Long> edgesName = Maps.newHashMap();
-            Map<Long, String> edgesId = Maps.newHashMap();
-            for (EdgeItem item : metaClient.listEdges(spaceName)) {
-                edges.put((long) item.getEdge_type(), item);
-                edgesName.put(new String(item.edge_name), (long) item.getEdge_type());
-                edgesId.put((long) item.getEdge_type(), new String(item.edge_name));
-            }
-            metaInfo.getSpaceEdgeItems().put(spaceName, edges);
-            metaInfo.getEdgeNameMap().put(spaceName, edgesName);
-            metaInfo.getEdgeIdMap().put(spaceName, edgesId);
+            freshEdges(spaceName);
         }
     }
 
@@ -133,24 +111,12 @@ public class MetaManager {
      */
     public int getSpaceId(String spaceName) {
         if (!metaInfo.getSpaceNameMap().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException("space " + spaceName + " does not exist");
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+            fillMetaInfo();
         }
-        int spaceId;
-        readLock.lock();
-        try {
-            spaceId = metaInfo.getSpaceNameMap().get(spaceName);
-        } finally {
-            readLock.unlock();
+        if (!metaInfo.getSpaceNameMap().containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist");
         }
-        return spaceId;
+        return metaInfo.getSpaceNameMap().get(spaceName);
     }
 
     /**
@@ -159,19 +125,13 @@ public class MetaManager {
      * @param spaceName nebula graph space name
      */
     public Set<Long> getTagIds(String spaceName) {
-        if (!metaInfo.getTagIdMap().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException(String.format("space %s does not exist.",
-                        spaceName));
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+        if (!metaInfo.getSpaceTagItems().containsKey(spaceName)) {
+            fillMetaInfo();
         }
-        return metaInfo.getTagIdMap().get(spaceName).keySet();
+        if (!metaInfo.getSpaceTagItems().containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist");
+        }
+        return metaInfo.getSpaceTagItems().get(spaceName).keySet();
     }
 
 
@@ -182,27 +142,21 @@ public class MetaManager {
      * @param tagName   nebula tag name
      * @return long
      */
-    public long getTagId(String spaceName, String tagName) {
-        if (!metaInfo.getTagNameMap().get(spaceName).containsKey(tagName)) {
-            if (!metaClient.existTag(spaceName, tagName)) {
-                throw new IllegalArgumentException(String.format("Tag %s does not exist in space "
-                        + "%s", tagName, spaceName));
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+    private long getTagId(String spaceName, String tagName) {
+        if (!metaInfo.getTagNameMap().containsKey(spaceName)
+                || !metaInfo.getTagNameMap().get(spaceName).containsKey(tagName)) {
+            fillMetaInfo();
         }
-        long tagId;
-        readLock.lock();
-        try {
-            tagId = metaInfo.getTagNameMap().get(spaceName).get(tagName);
-        } finally {
-            readLock.unlock();
+        Map<String, Map<String, Long>> tagNameMap = metaInfo.getTagNameMap();
+        if (!tagNameMap.containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist.");
         }
-        return tagId;
+
+        if (!tagNameMap.get(spaceName).containsKey(tagName)) {
+            throw new IllegalArgumentException(String.format("tag %s does not exist in space %s",
+                    tagName, spaceName));
+        }
+        return tagNameMap.get(spaceName).get(tagName);
     }
 
     /**
@@ -224,19 +178,13 @@ public class MetaManager {
      * @param spaceName nebula graph space name
      */
     public Set<Long> getEdgeIds(String spaceName) {
-        if (!metaInfo.getEdgeIdMap().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException(String.format("space %s does not exist.",
-                        spaceName));
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+        if (!metaInfo.getSpaceEdgeItems().containsKey(spaceName)) {
+            fillMetaInfo();
         }
-        return metaInfo.getEdgeIdMap().get(spaceName).keySet();
+        if (!metaInfo.getSpaceEdgeItems().containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist");
+        }
+        return metaInfo.getSpaceEdgeItems().get(spaceName).keySet();
     }
 
 
@@ -247,27 +195,22 @@ public class MetaManager {
      * @param edgeName  nebula edge name
      * @return long
      */
-    public long getEdgeId(String spaceName, String edgeName) {
-        if (!metaInfo.getEdgeNameMap().get(spaceName).containsKey(edgeName)) {
-            if (!metaClient.existEdge(spaceName, edgeName)) {
-                throw new IllegalArgumentException(String.format("Edge %s does not exist in space"
-                        + " %s", edgeName, spaceName));
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+    private long getEdgeId(String spaceName, String edgeName) {
+        if (!metaInfo.getTagNameMap().containsKey(spaceName)
+                || !metaInfo.getTagNameMap().get(spaceName).containsKey(edgeName)) {
+            fillMetaInfo();
         }
-        long edgeId;
-        readLock.lock();
-        try {
-            edgeId = metaInfo.getEdgeNameMap().get(spaceName).get(edgeName);
-        } finally {
-            readLock.unlock();
+
+        Map<String, Map<String, Long>> edgeNameMap = metaInfo.getEdgeNameMap();
+        if (!edgeNameMap.containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist.");
         }
-        return edgeId;
+
+        if (!edgeNameMap.get(spaceName).containsKey(edgeName)) {
+            throw new IllegalArgumentException(String.format("edge %s does not exist in space %s",
+                    edgeName, spaceName));
+        }
+        return edgeNameMap.get(spaceName).get(edgeName);
     }
 
     /**
@@ -283,24 +226,20 @@ public class MetaManager {
     }
 
     public String getTagName(String spaceName, long tagId) {
-        if (!metaInfo.getTagIdMap().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException(String.format("space %s does not exist.",
-                        spaceName));
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+        if (!metaInfo.getSpaceTagItems().containsKey(spaceName)
+                || !metaInfo.getSpaceTagItems().get(spaceName).containsKey(tagId)) {
+            fillMetaInfo();
         }
-        Map<Long, String> tagIdName = metaInfo.getTagIdMap().get(spaceName);
-        if (tagIdName == null) {
-            return null;
-        } else {
-            return tagIdName.get(tagId);
+
+        Map<String, Map<Long, TagItem>> tagItems = metaInfo.getSpaceTagItems();
+        if (!tagItems.containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist.");
         }
+        if (!tagItems.get(spaceName).containsKey(tagId)) {
+            throw new IllegalArgumentException(String.format("tag %s does not exist in space %s",
+                    tagId, spaceName));
+        }
+        return new String(tagItems.get(spaceName).get(tagId).getTag_name());
     }
 
     /**
@@ -311,24 +250,19 @@ public class MetaManager {
      * @return
      */
     public String getEdgeName(String spaceName, long edgeId) {
-        if (!metaInfo.getEdgeIdMap().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException(String.format("space %s does not exist.",
-                        spaceName));
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+        if (!metaInfo.getSpaceEdgeItems().containsKey(spaceName)
+                || !metaInfo.getSpaceEdgeItems().get(spaceName).containsKey(edgeId)) {
+            fillMetaInfo();
         }
-        Map<Long, String> edgeIdName = metaInfo.getEdgeIdMap().get(spaceName);
-        if (edgeIdName == null) {
-            return null;
-        } else {
-            return edgeIdName.get(edgeId);
+        Map<String, Map<Long, EdgeItem>> edgeItems = metaInfo.getSpaceEdgeItems();
+        if (!edgeItems.containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist.");
         }
+        if (!edgeItems.get(spaceName).containsKey(edgeId)) {
+            throw new IllegalArgumentException(String.format("edge %s does not exist in space %s",
+                    edgeId, spaceName));
+        }
+        return new String(edgeItems.get(spaceName).get(edgeId).getEdge_name());
     }
 
 
@@ -341,24 +275,28 @@ public class MetaManager {
      */
     public HostAndPort getLeader(String spaceName, int part) {
 
+        if (!metaInfo.getSpacePartLocation().containsKey(spaceName)
+                || !metaInfo.getSpacePartLocation().containsKey(part)) {
+            fillMetaInfo();
+        }
+
         if (!metaInfo.getSpacePartLocation().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException("space " + spaceName + " does not exist");
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+            throw new IllegalArgumentException("space does not exist.");
+        }
+        if (!metaInfo.getSpacePartLocation().get(spaceName).containsKey(part)) {
+            throw new IllegalArgumentException(
+                    String.format("part %d does not exist in space %s.", part, spaceName));
         }
 
         Map<String, Map<Integer, HostAndPort>> leaders = metaInfo.getLeaders();
 
         if (!leaders.containsKey(spaceName)) {
             writeLock.lock();
-            leaders.put(spaceName, Maps.newConcurrentMap());
-            writeLock.unlock();
+            try {
+                leaders.put(spaceName, Maps.newConcurrentMap());
+            } finally {
+                writeLock.unlock();
+            }
         }
 
         if (leaders.get(spaceName).containsKey(part)) {
@@ -368,21 +306,20 @@ public class MetaManager {
             }
             return leader;
         }
+        Map<String, Map<Integer, List<HostAndPort>>> spacePartLocations =
+                metaInfo.getSpacePartLocation();
 
-        readLock.lock();
-        if (metaInfo.getSpacePartLocation().containsKey(spaceName)
-                && metaInfo.getSpacePartLocation().get(spaceName).containsKey(part)) {
+        if (spacePartLocations.containsKey(spaceName)
+                && spacePartLocations.get(spaceName).containsKey(part)) {
             List<HostAndPort> addresses;
-            try {
-                addresses = metaInfo.getSpacePartLocation().get(spaceName).get(part);
-            } finally {
-                readLock.unlock();
-            }
+            addresses = metaInfo.getSpacePartLocation().get(spaceName).get(part);
+
             if (addresses != null) {
                 Random random = new Random(System.currentTimeMillis());
                 int position = random.nextInt(addresses.size());
                 HostAndPort leader = addresses.get(position);
                 Map<Integer, HostAndPort> partLeader = leaders.get(spaceName);
+
                 writeLock.lock();
                 try {
                     partLeader.put(part, leader);
@@ -404,45 +341,28 @@ public class MetaManager {
      */
     public List<Integer> getSpaceParts(String spaceName) {
         if (!metaInfo.getSpacePartLocation().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                throw new IllegalArgumentException("space " + spaceName + " does not exist");
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+            fillMetaInfo();
         }
-        Set<Integer> spaceParts;
-        readLock.lock();
-        try {
-            spaceParts = metaInfo.getSpacePartLocation().get(spaceName).keySet();
-        } finally {
-            readLock.unlock();
-        }
+        Set<Integer> spaceParts = metaInfo.getSpacePartLocation().get(spaceName).keySet();
         return new ArrayList<>(spaceParts);
     }
 
+    /**
+     * get the size of parts for space
+     *
+     * @param spaceName nebula graph space name
+     */
     public int getPartSize(String spaceName) {
         if (!metaInfo.getSpacePartLocation().containsKey(spaceName)) {
-            if (!metaClient.existSpace(spaceName)) {
-                LOGGER.error(spaceName + "does not exist.");
-                return -1;
-            }
-            writeLock.lock();
-            try {
-                fillMetaInfo();
-            } finally {
-                writeLock.unlock();
-            }
+            fillMetaInfo();
         }
-        if (metaInfo.getSpacePartLocation().containsKey(spaceName)) {
-            return metaInfo.getSpacePartLocation().get(spaceName).keySet().size();
+        Map<String, Map<Integer, List<HostAndPort>>> spacePartLocations =
+                metaInfo.getSpacePartLocation();
+        if (!spacePartLocations.containsKey(spaceName)) {
+            throw new IllegalArgumentException("space does not exist.");
         }
-        return -1;
+        return spacePartLocations.get(spaceName).keySet().size();
     }
-
 
 
     /**
@@ -452,27 +372,24 @@ public class MetaManager {
      * @param part      nebula part
      * @param newLeader nebula part new leader
      */
-    public void freshLeader(String spaceName, int part, HostAndPort newLeader) {
+    public void freshLeader(String spaceName, int part, HostAndPort newLeader) throws TException {
         if (!metaInfo.getLeaders().containsKey(spaceName)) {
             getLeader(spaceName, part);
         }
-        metaInfo.getLeaders().get(spaceName).put(part, newLeader);
+        Map<Integer, HostAndPort> partLeader = metaInfo.getLeaders().get(spaceName);
+        writeLock.lock();
+        try {
+            partLeader.put(part, newLeader);
+        } finally {
+            writeLock.unlock();
+        }
     }
-
 
     /**
      * get all servers
      */
     public Set<HostAndPort> listHosts() {
         return metaClient.listHosts();
-    }
-
-    public MetaInfo getMetaInfo() {
-        return metaInfo;
-    }
-
-    public String getDecodeType() {
-        return decodeType;
     }
 
     public int getConnectionRetry() {
@@ -486,4 +403,136 @@ public class MetaManager {
     public int getExecutionRetry() {
         return metaClient.getExecutionRetry();
     }
+
+    /**
+     * fresh tags in meta info
+     */
+    private void freshTags(String spaceName) {
+        List<TagItem> tagItems = null;
+        try {
+            tagItems = metaClient.getTags(spaceName);
+        } catch (TException | ExecuteFailedException e) {
+            LOGGER.error("fresh tag error, ", e);
+        }
+
+        // get the latest schema
+        Map<Integer, TagItem> latestTagItems = Maps.newHashMap();
+        for (TagItem tagItem: tagItems) {
+            int tagId = tagItem.getTag_id();
+            if (!latestTagItems.containsKey(tagId)) {
+                latestTagItems.put(tagId, tagItem);
+            } else {
+                if (tagItem.getVersion() > latestTagItems.get(tagId).getVersion()) {
+                    latestTagItems.put(tagId, tagItem);
+                }
+            }
+        }
+
+        Map<String, Map<Long, TagItem>> spaceTagItems = metaInfo.getSpaceTagItems();
+        Map<String, Map<String, Long>> tagNameId = metaInfo.getTagNameMap();
+        writeLock.lock();
+        try {
+            for (TagItem item : latestTagItems.values()) {
+                long tagId = item.getTag_id();
+                String tagName = new String(item.getTag_name());
+                if (!spaceTagItems.containsKey(spaceName)) {
+                    spaceTagItems.put(spaceName, Maps.newHashMap());
+                    tagNameId.put(spaceName, Maps.newHashMap());
+                }
+
+                spaceTagItems.get(spaceName).put(tagId, item);
+                tagNameId.get(spaceName).put(tagName, tagId);
+            }
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    /**
+     * fresh edges in meta info
+     */
+    private void freshEdges(String spaceName) {
+        List<EdgeItem> edgeItems = null;
+        try {
+            edgeItems = metaClient.getEdges(spaceName);
+        } catch (TException | ExecuteFailedException e) {
+            LOGGER.error("fresh edge error, ", e);
+        }
+
+        // get the latest schema
+        Map<Integer, EdgeItem> latestEdgeItems = Maps.newHashMap();
+        for (EdgeItem edgeItem: edgeItems) {
+            int edgeId = edgeItem.getEdge_type();
+            if (!latestEdgeItems.containsKey(edgeId)) {
+                latestEdgeItems.put(edgeId, edgeItem);
+            } else {
+                if (edgeItem.getVersion() > latestEdgeItems.get(edgeId).getVersion()) {
+                    latestEdgeItems.put(edgeId, edgeItem);
+                }
+            }
+        }
+
+        Map<String, Map<Long, EdgeItem>> spaceEdgeItems = metaInfo.getSpaceEdgeItems();
+        Map<String, Map<String, Long>> edgeNameId = metaInfo.getEdgeNameMap();
+        writeLock.lock();
+        try {
+            for (EdgeItem item : edgeItems) {
+                long tagId = item.getEdge_type();
+                String tagName = new String(item.getEdge_name());
+                if (!spaceEdgeItems.containsKey(spaceName)) {
+                    spaceEdgeItems.put(spaceName, Maps.newHashMap());
+                    edgeNameId.put(spaceName, Maps.newHashMap());
+                }
+                spaceEdgeItems.get(spaceName).put(tagId, item);
+                edgeNameId.get(spaceName).put(tagName, tagId);
+            }
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+
+    /**
+     * inner class for meta cache
+     */
+    class MetaInfo {
+
+        private final Map<String, Integer> spaceNameMap = Maps.newHashMap();
+        private final Map<String, Map<Integer, List<HostAndPort>>>
+                spacePartLocation = Maps.newHashMap();
+        private final Map<String, Map<Long, TagItem>> spaceTagItems = Maps.newHashMap();
+        private final Map<String, Map<Long, EdgeItem>> spaceEdgeItems = Maps.newHashMap();
+        private final Map<String, Map<String, Long>> tagNameMap = Maps.newHashMap();
+        private final Map<String, Map<String, Long>> edgeNameMap = Maps.newHashMap();
+        private final Map<String, Map<Integer, HostAndPort>> leaders = Maps.newHashMap();
+
+        public Map<String, Integer> getSpaceNameMap() {
+            return spaceNameMap;
+        }
+
+        public Map<String, Map<Integer, List<HostAndPort>>> getSpacePartLocation() {
+            return spacePartLocation;
+        }
+
+        public Map<String, Map<Long, TagItem>> getSpaceTagItems() {
+            return spaceTagItems;
+        }
+
+        public Map<String, Map<Long, EdgeItem>> getSpaceEdgeItems() {
+            return spaceEdgeItems;
+        }
+
+        public Map<String, Map<String, Long>> getTagNameMap() {
+            return tagNameMap;
+        }
+
+        public Map<String, Map<String, Long>> getEdgeNameMap() {
+            return edgeNameMap;
+        }
+
+        public Map<String, Map<Integer, HostAndPort>> getLeaders() {
+            return leaders;
+        }
+    }
+
 }
