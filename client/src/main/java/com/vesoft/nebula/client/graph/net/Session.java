@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.graph.net;
 
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
@@ -24,13 +25,16 @@ public class Session {
     private final NebulaPool pool;
     private final Boolean retryConnect;
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private Charset charset = StandardCharsets.UTF_8;
+    private final Charset charset = StandardCharsets.UTF_8;
+    private final HostAddress safeAddress;
 
     public Session(long sessionID,
+                   HostAddress safeAddress,
                    NebulaPool connPool,
                    Boolean retryConnect) {
         this.sessionID = sessionID;
         this.pool = connPool;
+        this.safeAddress = safeAddress;
         this.retryConnect = retryConnect;
     }
 
@@ -43,7 +47,7 @@ public class Session {
     public ResultSet execute(String stmt)
         throws IOErrorException, NotValidConnectionException {
         if (connection == null) {
-            connection = pool.getConnection();
+            connection = pool.getConnectionByKey(safeAddress);
         }
         byte[] ngql = stmt.getBytes(charset);
         try {
@@ -67,24 +71,27 @@ public class Session {
 
     /**
      * Execute the ngql. the interface is thread-safe,
-     * the interface use the connection from the pool
+     * the interface use the connection from the pool. the pool should init one graph server
      *
      * @param stmt The ngl.
      * @return The ResultSet.
      */
     public ResultSet executeThreadSafe(String stmt)
         throws IOErrorException, NotValidConnectionException {
-        SyncConnection connection = pool.getConnection();
+        if (safeAddress == null) {
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, "Wrong graphd server address");
+        }
+        SyncConnection connection = pool.getConnectionByKey(safeAddress);
         byte[] ngql = stmt.getBytes(charset);
         try {
             return new ResultSet(connection.execute(sessionID, ngql));
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
                 if (retryConnect) {
-                    connection = pool.getConnection();
+                    connection = pool.getConnectionByKey(safeAddress);
                     int retry = pool.getIdleConnNum();
                     while (retry-- > 0) {
-                        connection = pool.getConnection();
+                        connection = pool.getConnectionByKey(safeAddress);
                         if (!connection.ping()) {
                             pool.setInvalidateConn(connection);
                             continue;

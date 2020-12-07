@@ -1,43 +1,29 @@
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License,
+ * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ */
+
 package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
-import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
+public class ConnObjectPool extends BaseKeyedPooledObjectFactory<HostAddress, SyncConnection> {
     private final NebulaPoolConfig config;
-    private LoadBalancer loadBalancer;
-    private static final int retryTime = 3;
 
-    public ConnObjectPool(LoadBalancer loadBalancer, NebulaPoolConfig config) {
-        this.loadBalancer = loadBalancer;
+    public ConnObjectPool(NebulaPoolConfig config) {
         this.config = config;
     }
 
     @Override
-    public SyncConnection create() throws IOErrorException {
-        int retry = loadBalancer.getHostNum();
+    public SyncConnection create(HostAddress key) throws Exception {
         SyncConnection conn = new SyncConnection();
-        while (retry-- > 0) {
-            try {
-                HostAddress address = loadBalancer.getAddress();
-                if (address == null) {
-                    throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
-                        "All servers are broken.");
-                }
-                conn.open(address, config.getTimeout());
-                return conn;
-            } catch (IOErrorException e) {
-                this.loadBalancer.updateServersStatus();
-            }
-        }
-        if (retry == 0) {
-            throw new IOErrorException(IOErrorException.E_ALL_BROKEN, "All servers are broken.");
-        }
-        return null;
+        conn.open(key, config.getTimeout());
+        return conn;
     }
 
     @Override
@@ -46,25 +32,16 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
     }
 
     @Override
-    public void destroyObject(PooledObject<SyncConnection> p) throws Exception {
+    public void destroyObject(HostAddress key, PooledObject<SyncConnection> p) throws Exception {
         p.getObject().close();
-        // TODO: update the server connection num into load balancer
-        super.destroyObject(p);
+        super.destroyObject(key, p);
     }
 
     @Override
-    public boolean validateObject(PooledObject<SyncConnection> p) {
+    public boolean validateObject(HostAddress key, PooledObject<SyncConnection> p) {
         if (p.getObject() == null) {
             return false;
         }
-        return true;
-    }
-
-    public boolean init() {
-        return loadBalancer.isServersOK();
-    }
-
-    public void updateServerStatus() {
-        loadBalancer.updateServersStatus();
+        return p.getObject().ping();
     }
 }

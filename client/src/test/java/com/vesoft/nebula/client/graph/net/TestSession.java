@@ -54,7 +54,7 @@ public class TestSession {
             ExecutorService executorService = Executors.newFixedThreadPool(4);
 
             // Test safe interface
-            ResultSet resultSet = session.execute("CREATE SPACE IF NOT EXISTS test;"
+            ResultSet resultSet = session.executeThreadSafe("CREATE SPACE IF NOT EXISTS test;"
                 + "USE test;CREATE TAG IF NOT EXISTS a()");
             assert resultSet.isSucceeded();
             AtomicInteger succeedCount = new AtomicInteger(0);
@@ -75,16 +75,16 @@ public class TestSession {
             }
             executorService.awaitTermination(2, TimeUnit.SECONDS);
             executorService.shutdown();
-            assert succeedCount.get() >= 1;
-            assert invalidSessionCount.get() >= 1;
+            Assert.assertEquals(4, succeedCount.get());
+            Assert.assertEquals(0, invalidSessionCount.get());
 
             // Test reconnect
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
                     runtime.exec("docker stop nebula-docker-compose_graphd0_1")
-                            .waitFor(5, TimeUnit.SECONDS);
+                        .waitFor(5, TimeUnit.SECONDS);
                     runtime.exec("docker stop nebula-docker-compose_graphd1_1")
-                             .waitFor(5, TimeUnit.SECONDS);
+                        .waitFor(5, TimeUnit.SECONDS);
                 }
                 try {
                     ResultSet resp = session.execute("SHOW SPACES");
@@ -116,9 +116,9 @@ public class TestSession {
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")
-                        .waitFor(5, TimeUnit.SECONDS);
+                    .waitFor(5, TimeUnit.SECONDS);
                 runtime.exec("docker start nebula-docker-compose_graphd1_1")
-                        .waitFor(5, TimeUnit.SECONDS);
+                    .waitFor(5, TimeUnit.SECONDS);
             } catch (Exception e) {
                 e.printStackTrace();
             }
