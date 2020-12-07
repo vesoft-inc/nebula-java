@@ -35,13 +35,21 @@ public class TestMetaClient extends TestCase {
 
     private void connect() {
         metaClient = new MetaClient(address, port);
-        assert metaClient.connect() == 0;
+        try {
+            metaClient.connect();
+        } catch (TException e) {
+            assert (false);
+        }
     }
 
     public void testFailConnect() {
         int port = 1111;
         MetaClient client = new MetaClient(address, port);
-        client.connect();
+        try {
+            client.connect();
+        } catch (TException e) {
+            assert (false);
+        }
     }
 
     public void testGetSpaces() {
