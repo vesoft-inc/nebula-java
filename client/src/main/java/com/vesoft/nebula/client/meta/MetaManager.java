@@ -119,21 +119,6 @@ public class MetaManager {
         return metaInfo.getSpaceNameMap().get(spaceName);
     }
 
-    /**
-     * get all tag id of space
-     *
-     * @param spaceName nebula graph space name
-     */
-    public Set<Long> getTagIds(String spaceName) {
-        if (!metaInfo.getSpaceTagItems().containsKey(spaceName)) {
-            fillMetaInfo();
-        }
-        if (!metaInfo.getSpaceTagItems().containsKey(spaceName)) {
-            throw new IllegalArgumentException("space does not exist");
-        }
-        return metaInfo.getSpaceTagItems().get(spaceName).keySet();
-    }
-
 
     /**
      * get tag id
@@ -169,22 +154,6 @@ public class MetaManager {
     public TagItem getTag(String spaceName, String tagName) {
         long tagId = getTagId(spaceName, tagName);
         return metaInfo.getSpaceTagItems().get(spaceName).get(tagId);
-    }
-
-
-    /**
-     * get all edge id of space
-     *
-     * @param spaceName nebula graph space name
-     */
-    public Set<Long> getEdgeIds(String spaceName) {
-        if (!metaInfo.getSpaceEdgeItems().containsKey(spaceName)) {
-            fillMetaInfo();
-        }
-        if (!metaInfo.getSpaceEdgeItems().containsKey(spaceName)) {
-            throw new IllegalArgumentException("space does not exist");
-        }
-        return metaInfo.getSpaceEdgeItems().get(spaceName).keySet();
     }
 
 
@@ -343,25 +312,14 @@ public class MetaManager {
         if (!metaInfo.getSpacePartLocation().containsKey(spaceName)) {
             fillMetaInfo();
         }
-        Set<Integer> spaceParts = metaInfo.getSpacePartLocation().get(spaceName).keySet();
-        return new ArrayList<>(spaceParts);
-    }
-
-    /**
-     * get the size of parts for space
-     *
-     * @param spaceName nebula graph space name
-     */
-    public int getPartSize(String spaceName) {
-        if (!metaInfo.getSpacePartLocation().containsKey(spaceName)) {
-            fillMetaInfo();
-        }
         Map<String, Map<Integer, List<HostAndPort>>> spacePartLocations =
                 metaInfo.getSpacePartLocation();
         if (!spacePartLocations.containsKey(spaceName)) {
             throw new IllegalArgumentException("space does not exist.");
         }
-        return spacePartLocations.get(spaceName).keySet().size();
+
+        Set<Integer> spaceParts = metaInfo.getSpacePartLocation().get(spaceName).keySet();
+        return new ArrayList<>(spaceParts);
     }
 
 
@@ -408,11 +366,12 @@ public class MetaManager {
      * fresh tags in meta info
      */
     private void freshTags(String spaceName) {
-        List<TagItem> tagItems = null;
+        List<TagItem> tagItems;
         try {
             tagItems = metaClient.getTags(spaceName);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error("fresh tag error, ", e);
+            return;
         }
 
         // get the latest schema
@@ -457,6 +416,7 @@ public class MetaManager {
             edgeItems = metaClient.getEdges(spaceName);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error("fresh edge error, ", e);
+            return;
         }
 
         // get the latest schema

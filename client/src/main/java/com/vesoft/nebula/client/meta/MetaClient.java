@@ -377,57 +377,6 @@ public class MetaClient extends AbstractMetaClient {
         return edgeItems;
     }
 
-    /**
-     * check if space exist
-     */
-    protected boolean existSpace(String spaceName) {
-        List<IdName> spaces = listSpaces();
-        for (IdName space : spaces) {
-            if (new String(space.getName()).equals(spaceName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * check if tag exist
-     */
-    protected boolean existTag(String spaceName, String tag) {
-        List<TagItem> tags;
-        try {
-            tags = getTags(spaceName);
-        } catch (Exception e) {
-            LOGGER.error("failed to get tags", e);
-            return false;
-        }
-        for (TagItem item : tags) {
-            if (new String(item.getTag_name()).equals(tag)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * check if edgeRow exist
-     */
-    protected boolean existEdge(String spaceName, String edgeRow) {
-        List<EdgeItem> edges;
-        try {
-            edges = getEdges(spaceName);
-        } catch (Exception e) {
-            LOGGER.error("failed to get edges", e);
-            return false;
-        }
-        for (EdgeItem item : edges) {
-            if (new String(item.getEdge_name()).equals(edgeRow)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     /**
      * get all servers

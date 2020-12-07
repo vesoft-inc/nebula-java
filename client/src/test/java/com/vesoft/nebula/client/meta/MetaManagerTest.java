@@ -30,14 +30,6 @@ public class MetaManagerTest extends TestCase {
         assert (metaManager.getSpaceId("testMeta") >= 0);
     }
 
-    public void testGetTagIds() {
-        assert (metaManager.getTagIds("testMeta").size() == 1);
-    }
-
-    public void testGetEdgeIds() {
-        assert (metaManager.getEdgeIds("testMeta").size() == 1);
-    }
-
     public void testGetEdge() {
         assert (metaManager.getEdge("testMeta", "friend").getEdge_type() >= 0);
     }
