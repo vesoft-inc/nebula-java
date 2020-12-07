@@ -57,15 +57,16 @@ public class MetaClient extends AbstractMetaClient {
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
 
-    // todo set decodeType
-    private String decodeType = "utf-8";
-
     // todo change client to Map<HostAndPost, MetaService.Client> when server changes
     private MetaService.Client client;
     private final List<HostAndPort> addresses;
 
     public MetaClient(String host, int port) {
         this(HostAndPort.fromParts(host, port));
+    }
+
+    public MetaClient(String addr) {
+        this(HostAndPort.fromString(addr));
     }
 
     public MetaClient(HostAndPort address) {
@@ -86,16 +87,20 @@ public class MetaClient extends AbstractMetaClient {
         this.addresses = addresses;
     }
 
-    public int connect() throws TException {
-        return doConnect();
+    public int connect() {
+        try {
+            doConnect();
+        } catch (TException e) {
+            LOGGER.error("failed to connect nebula meta server,", e);
+            return -ErrorCode.E_FAIL_TO_CONNECT;
+        }
+        return ErrorCode.SUCCEEDED;
     }
 
     /**
      * connect nebula meta server
-     *
-     * @return 0 -> success, other -> fail
      */
-    private int doConnect() throws TException {
+    private void doConnect() throws TException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
@@ -103,7 +108,6 @@ public class MetaClient extends AbstractMetaClient {
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
-        return ErrorCode.SUCCEEDED;
     }
 
     /**
@@ -304,25 +308,22 @@ public class MetaClient extends AbstractMetaClient {
     }
 
     /**
-     * get all spaces info
+     * get all spaces info, used by {@link MetaManager}
      *
      * @return empty list if exception happen
      */
-    public List<IdName> listSpaces() {
-        ListSpacesReq request = new ListSpacesReq();
-        ListSpacesResp response;
+    protected List<IdName> listSpaces() {
+        List<IdName> response;
         try {
-            response = client.listSpaces(request);
+            response = getSpaces();
         } catch (TException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()), e);
             return Lists.newLinkedList();
         }
-        if (response.getCode() == ErrorCode.SUCCEEDED) {
-            return response.getSpaces();
-        } else {
-            LOGGER.error(String.format("List Spaces Error Code: %d", response.getCode()));
+        if (response == null) {
             return Lists.newLinkedList();
         }
+        return response;
     }
 
 
@@ -434,6 +435,7 @@ public class MetaClient extends AbstractMetaClient {
      */
     public Set<HostAndPort> listHosts() {
         ListHostsReq request = new ListHostsReq();
+        // todo request.setType();
         ListHostsResp resp;
         try {
             resp = client.listHosts(request);
