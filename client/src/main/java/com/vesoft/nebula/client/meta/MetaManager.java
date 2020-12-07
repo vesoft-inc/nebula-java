@@ -32,11 +32,12 @@ import org.slf4j.LoggerFactory;
 public class MetaManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaManager.class);
 
-    MetaInfo metaInfo = new MetaInfo();
     private static MetaClient metaClient;
     private static MetaManager metaManager;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
+
+    private MetaInfo metaInfo = new MetaInfo();
 
     private MetaManager() {
     }
@@ -44,20 +45,19 @@ public class MetaManager {
     /**
      * only way to get a MetaManager object
      */
-    public static MetaManager getMetaManager(List<HostAndPort> address) {
+    public static MetaManager getMetaManager(List<HostAndPort> address) throws TException {
         if (metaManager == null) {
             synchronized (MetaManager.class) {
                 if (metaManager == null) {
                     metaManager = new MetaManager();
+                    metaManager.getClient(address);
                 }
             }
         }
-        metaManager = new MetaManager();
-        metaManager.getClient(address);
         return metaManager;
     }
 
-    private void getClient(List<HostAndPort> address) {
+    private void getClient(List<HostAndPort> address) throws TException {
         if (metaClient == null) {
             synchronized (this) {
                 if (metaClient == null) {
@@ -195,7 +195,7 @@ public class MetaManager {
      * @param edgeName  nebula edge name
      * @return long
      */
-    public long getEdgeId(String spaceName, String edgeName) {
+    private long getEdgeId(String spaceName, String edgeName) {
         if (!metaInfo.getTagNameMap().containsKey(spaceName)
                 || !metaInfo.getTagNameMap().get(spaceName).containsKey(edgeName)) {
             fillMetaInfo();
