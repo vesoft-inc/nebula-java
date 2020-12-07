@@ -12,7 +12,6 @@ import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
-import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,6 @@ public class MetaManager {
     private static MetaClient metaClient;
     private static MetaManager metaManager;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
 
     private MetaManager() {

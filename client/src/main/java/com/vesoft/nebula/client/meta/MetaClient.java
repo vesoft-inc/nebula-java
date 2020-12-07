@@ -65,8 +65,8 @@ public class MetaClient extends AbstractMetaClient {
         this(HostAndPort.fromParts(host, port));
     }
 
-    public MetaClient(String addr) {
-        this(HostAndPort.fromString(addr));
+    public MetaClient(String address) {
+        this(HostAndPort.fromString(address));
     }
 
     public MetaClient(HostAndPort address) {
@@ -92,7 +92,7 @@ public class MetaClient extends AbstractMetaClient {
             doConnect();
         } catch (TException e) {
             LOGGER.error("failed to connect nebula meta server,", e);
-            return -ErrorCode.E_FAIL_TO_CONNECT;
+            return ErrorCode.E_FAIL_TO_CONNECT;
         }
         return ErrorCode.SUCCEEDED;
     }
