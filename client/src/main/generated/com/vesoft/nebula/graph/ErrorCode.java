@@ -26,7 +26,7 @@ public class ErrorCode {
   public static final int E_SESSION_TIMEOUT = -6;
   public static final int E_SYNTAX_ERROR = -7;
   public static final int E_EXECUTION_ERROR = -8;
-  public static final int E_STATEMENT_EMTPY = -9;
+  public static final int E_STATEMENT_EMPTY = -9;
   public static final int E_USER_NOT_FOUND = -10;
   public static final int E_BAD_PERMISSION = -11;
   public static final int E_SEMANTIC_ERROR = -12;
