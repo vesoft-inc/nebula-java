@@ -13,6 +13,7 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -50,11 +51,11 @@ public class TestSession {
     public void testAll() {
         Runtime runtime = Runtime.getRuntime();
         try {
-            Session session = pool.getSession("root", "nebula", true);
+            Session safeSession = pool.getSession("root", "nebula", true);
             ExecutorService executorService = Executors.newFixedThreadPool(4);
 
             // Test safe interface
-            ResultSet resultSet = session.executeThreadSafe("CREATE SPACE IF NOT EXISTS test;"
+            ResultSet resultSet = safeSession.safeExecute("CREATE SPACE IF NOT EXISTS test;"
                 + "USE test;CREATE TAG IF NOT EXISTS a()");
             assert resultSet.isSucceeded();
             AtomicInteger succeedCount = new AtomicInteger(0);
@@ -62,7 +63,7 @@ public class TestSession {
             for (int i = 0; i < 4; i++) {
                 executorService.submit(() -> {
                     try {
-                        ResultSet resp = session.executeThreadSafe("SHOW TAGS;");
+                        ResultSet resp = safeSession.safeExecute("SHOW TAGS;");
                         succeedCount.incrementAndGet();
                         if (resp.getErrorCode() == ErrorCode.E_SESSION_INVALID) {
                             invalidSessionCount.incrementAndGet();
@@ -78,7 +79,19 @@ public class TestSession {
             Assert.assertEquals(4, succeedCount.get());
             Assert.assertEquals(0, invalidSessionCount.get());
 
+            // test use execute and safeExecute in the same session
+            try {
+                safeSession.execute("SHOW HOSTS;");
+                assert false;
+            } catch (IOErrorException e) {
+                assert Objects.equals(new String(e.getMessage()),
+                    "The session is already called safeExecute, "
+                        + "You can only use execute or safeExecute in the session");
+                assert true;
+            }
+
             // Test reconnect
+            Session session = pool.getSession("root", "nebula", true);
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
                     runtime.exec("docker stop nebula-docker-compose_graphd0_1")
@@ -88,10 +101,13 @@ public class TestSession {
                 }
                 try {
                     ResultSet resp = session.execute("SHOW SPACES");
+                    ResultSet resp1 = safeSession.safeExecute("SHOW SPACES");
                     if (i >= 3) {
                         Assert.assertEquals(ErrorCode.E_SESSION_INVALID, resp.getErrorCode());
+                        Assert.assertEquals(ErrorCode.E_SESSION_INVALID, resp1.getErrorCode());
                     } else {
                         Assert.assertEquals(ErrorCode.SUCCEEDED, resp.getErrorCode());
+                        Assert.assertEquals(ErrorCode.SUCCEEDED, resp1.getErrorCode());
                     }
                 } catch (IOErrorException ie) {
                     ie.printStackTrace();
@@ -99,6 +115,18 @@ public class TestSession {
                 }
                 TimeUnit.SECONDS.sleep(2);
             }
+
+            // test use execute and safeExecute in the same session
+            try {
+                session.safeExecute("SHOW HOSTS;");
+                assert false;
+            } catch (IOErrorException e) {
+                assert Objects.equals(new String(e.getMessage()),
+                    "The session is already called execute, "
+                        + "You can only use execute or safeExecute in the session");
+                assert true;
+            }
+            safeSession.release();
             session.release();
             // test release then execute ngql
             ResultSet result = session.execute("SHOW SPACES;");
@@ -112,7 +140,7 @@ public class TestSession {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(e.getMessage(),false);
+            Assert.assertFalse(e.getMessage(),true);
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")

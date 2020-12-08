@@ -13,11 +13,15 @@ import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Session it can use by multi thread. the every thread will get a connection from the pool
+ * The execute of Session can't use by multi thread.
+ * The safeExecute of Session can use by multi thread,
+ * the safeExecute will get a connection from the pool
  */
 public class Session {
     private final long sessionID;
@@ -26,7 +30,9 @@ public class Session {
     private final Boolean retryConnect;
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Charset charset = StandardCharsets.UTF_8;
-    private final HostAddress safeAddress;
+    private AtomicReference<HostAddress> safeAddress = new AtomicReference<>();
+    private final AtomicBoolean isSafeExecute = new AtomicBoolean(false);
+    private final AtomicBoolean isExecute = new AtomicBoolean(false);
 
     public Session(long sessionID,
                    HostAddress safeAddress,
@@ -34,7 +40,7 @@ public class Session {
                    Boolean retryConnect) {
         this.sessionID = sessionID;
         this.pool = connPool;
-        this.safeAddress = safeAddress;
+        this.safeAddress.set(safeAddress);
         this.retryConnect = retryConnect;
     }
 
@@ -46,11 +52,17 @@ public class Session {
      */
     public ResultSet execute(String stmt)
         throws IOErrorException, NotValidConnectionException {
-        if (connection == null) {
-            connection = pool.getConnectionByKey(safeAddress);
+        if (isSafeExecute.get()) {
+            throw new IOErrorException(IOErrorException.E_UNKNOWN,
+                "The session is already called safeExecute, "
+                    + "You can only use execute or safeExecute in the session");
         }
+        isExecute.set(true);
         byte[] ngql = stmt.getBytes(charset);
         try {
+            if (connection == null) {
+                connection = pool.getConnectionByKey(safeAddress.get());
+            }
             ExecutionResponse resp = connection.execute(sessionID, ngql);
             return new ResultSet(resp);
         } catch (IOErrorException ie) {
@@ -76,26 +88,35 @@ public class Session {
      * @param stmt The ngl.
      * @return The ResultSet.
      */
-    public ResultSet executeThreadSafe(String stmt)
+    public ResultSet safeExecute(String stmt)
         throws IOErrorException, NotValidConnectionException {
+        if (isExecute.get()) {
+            throw new IOErrorException(IOErrorException.E_UNKNOWN,
+                "The session is already called execute, "
+                    + "You can only use execute or safeExecute in the session");
+        }
+        isSafeExecute.set(true);
         if (safeAddress == null) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN, "Wrong graphd server address");
         }
-        SyncConnection connection = pool.getConnectionByKey(safeAddress);
         byte[] ngql = stmt.getBytes(charset);
+        SyncConnection connection = null;
         try {
+            connection = pool.getConnectionByKey(safeAddress.get());
             return new ResultSet(connection.execute(sessionID, ngql));
         } catch (IOErrorException ie) {
+            pool.setInvalidateConn(connection);
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
                 if (retryConnect) {
-                    connection = pool.getConnectionByKey(safeAddress);
-                    int retry = pool.getIdleConnNum();
+                    connection = pool.getConnection();
+                    int retry = pool.getCanUseNum();
                     while (retry-- > 0) {
-                        connection = pool.getConnectionByKey(safeAddress);
+                        connection = pool.getConnection();
                         if (!connection.ping()) {
                             pool.setInvalidateConn(connection);
                             continue;
                         }
+                        safeAddress.set(connection.getServerAddress());
                         return new ResultSet(connection.execute(sessionID, ngql));
                     }
                 }
@@ -104,17 +125,15 @@ public class Session {
             }
             throw ie;
         } finally {
-            pool.returnConnection(connection);
+            if (connection != null) {
+                pool.returnConnection(connection);
+            }
         }
     }
 
     private boolean retryConnect() {
         try {
-            try {
-                pool.setInvalidateConn(connection);
-            } catch (Exception e) {
-                log.error("Return object failed");
-            }
+            pool.setInvalidateConn(connection);
             int retry = pool.getCanUseNum();
             while (retry-- > 0) {
                 SyncConnection newConn = pool.getConnection();
@@ -136,10 +155,6 @@ public class Session {
             return;
         }
         connection.signout(sessionID);
-        try {
-            pool.returnConnection(connection);
-        } catch (Exception e) {
-            log.warn("Return object to pool failed.");
-        }
+        pool.returnConnection(connection);
     }
 }

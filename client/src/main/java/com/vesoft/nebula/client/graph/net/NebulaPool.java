@@ -92,11 +92,13 @@ public class NebulaPool {
         return new Session(sessionID,address, this, reconnect);
     }
 
-    public SyncConnection getConnection() throws NotValidConnectionException {
+    public SyncConnection getConnection()
+        throws NotValidConnectionException, IOErrorException {
         return getConnectionByKey(null);
     }
 
-    public SyncConnection getConnectionByKey(HostAddress key) throws NotValidConnectionException {
+    public SyncConnection getConnectionByKey(HostAddress key)
+        throws NotValidConnectionException, IOErrorException {
         HostAddress addr = key;
         if (addr == null) {
             addr = loadBalancer.getAddress();
@@ -105,11 +107,9 @@ public class NebulaPool {
         try {
             connection = objectPool.borrowObject(addr);
         } catch (Exception e) {
-            for (String keyStr : objectPool.listAllObjects().keySet()) {
-                System.out.print("Key = " + keyStr);
-                for (DefaultPooledObjectInfo conn : objectPool.listAllObjects().get(keyStr)) {
-                    System.out.print("Addr = " + conn.toString());
-                }
+            printPoolStatus();
+            if (e instanceof IOErrorException) {
+                throw (IOErrorException)e;
             }
             throw new NotValidConnectionException(e.getMessage());
         }
@@ -160,5 +160,20 @@ public class NebulaPool {
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool) objectPool.getFactory()).updateServerStatus();
         }
+    }
+
+    private void printPoolStatus() {
+        String errorStr = new String();
+        for (String keyStr : objectPool.listAllObjects().keySet()) {
+            List<String> objStrs = new ArrayList<>();
+            for (DefaultPooledObjectInfo obj : objectPool.listAllObjects().get(keyStr)) {
+                objStrs.add(obj.toString());
+            }
+            errorStr += "{ Key: " + keyStr + ", { Object: " + objStrs + "}, ";
+        }
+        log.error(errorStr);
+        log.info("objectPool.getMaxTotal() = " + objectPool.getMaxTotal());
+        log.info("objectPool.getCreatedCount() = " + objectPool.getCreatedCount());
+        log.info("objectPool.getNumIdle() = " + objectPool.getNumIdle());
     }
 }
