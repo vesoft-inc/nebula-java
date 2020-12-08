@@ -8,7 +8,7 @@ package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
 import com.google.common.collect.Maps;
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
@@ -45,7 +45,7 @@ public class MetaManager {
     /**
      * only way to get a MetaManager object
      */
-    public static MetaManager getMetaManager(List<HostAndPort> address) throws TException {
+    public static MetaManager getMetaManager(List<HostAddress> address) throws TException {
         if (metaManager == null) {
             synchronized (MetaManager.class) {
                 if (metaManager == null) {
@@ -57,7 +57,7 @@ public class MetaManager {
         return metaManager;
     }
 
-    private void getClient(List<HostAndPort> address) throws TException {
+    private void getClient(List<HostAddress> address) throws TException {
         if (metaClient == null) {
             synchronized (this) {
                 if (metaClient == null) {
@@ -242,7 +242,7 @@ public class MetaManager {
      * @param part      nebula part id
      * @return leader
      */
-    public HostAndPort getLeader(String spaceName, int part) {
+    public HostAddress getLeader(String spaceName, int part) {
 
         if (!metaInfo.getSpacePartLocation().containsKey(spaceName)
                 || !metaInfo.getSpacePartLocation().containsKey(part)) {
@@ -257,7 +257,7 @@ public class MetaManager {
                     String.format("part %d does not exist in space %s.", part, spaceName));
         }
 
-        Map<String, Map<Integer, HostAndPort>> leaders = metaInfo.getLeaders();
+        Map<String, Map<Integer, HostAddress>> leaders = metaInfo.getLeaders();
 
         if (!leaders.containsKey(spaceName)) {
             writeLock.lock();
@@ -269,25 +269,24 @@ public class MetaManager {
         }
 
         if (leaders.get(spaceName).containsKey(part)) {
-            HostAndPort leader = null;
+            HostAddress leader = null;
             if (leaders.get(spaceName).containsKey(part)) {
                 leader = leaders.get(spaceName).get(part);
             }
             return leader;
         }
-        Map<String, Map<Integer, List<HostAndPort>>> spacePartLocations =
+        Map<String, Map<Integer, List<HostAddress>>> spacePartLocations =
                 metaInfo.getSpacePartLocation();
 
         if (spacePartLocations.containsKey(spaceName)
                 && spacePartLocations.get(spaceName).containsKey(part)) {
-            List<HostAndPort> addresses;
-            addresses = metaInfo.getSpacePartLocation().get(spaceName).get(part);
+            List<HostAddress> addresses = metaInfo.getSpacePartLocation().get(spaceName).get(part);
 
             if (addresses != null) {
                 Random random = new Random(System.currentTimeMillis());
                 int position = random.nextInt(addresses.size());
-                HostAndPort leader = addresses.get(position);
-                Map<Integer, HostAndPort> partLeader = leaders.get(spaceName);
+                HostAddress leader = addresses.get(position);
+                Map<Integer, HostAddress> partLeader = leaders.get(spaceName);
 
                 writeLock.lock();
                 try {
@@ -312,7 +311,7 @@ public class MetaManager {
         if (!metaInfo.getSpacePartLocation().containsKey(spaceName)) {
             fillMetaInfo();
         }
-        Map<String, Map<Integer, List<HostAndPort>>> spacePartLocations =
+        Map<String, Map<Integer, List<HostAddress>>> spacePartLocations =
                 metaInfo.getSpacePartLocation();
         if (!spacePartLocations.containsKey(spaceName)) {
             throw new IllegalArgumentException("space does not exist.");
@@ -330,11 +329,11 @@ public class MetaManager {
      * @param part      nebula part
      * @param newLeader nebula part new leader
      */
-    public void freshLeader(String spaceName, int part, HostAndPort newLeader) throws TException {
+    public void freshLeader(String spaceName, int part, HostAddress newLeader) throws TException {
         if (!metaInfo.getLeaders().containsKey(spaceName)) {
             getLeader(spaceName, part);
         }
-        Map<Integer, HostAndPort> partLeader = metaInfo.getLeaders().get(spaceName);
+        Map<Integer, HostAddress> partLeader = metaInfo.getLeaders().get(spaceName);
         writeLock.lock();
         try {
             partLeader.put(part, newLeader);
@@ -346,7 +345,7 @@ public class MetaManager {
     /**
      * get all servers
      */
-    public Set<HostAndPort> listHosts() {
+    public Set<HostAddress> listHosts() {
         return metaClient.listHosts();
     }
 
@@ -458,19 +457,19 @@ public class MetaManager {
     class MetaInfo {
 
         private final Map<String, Integer> spaceNameMap = Maps.newHashMap();
-        private final Map<String, Map<Integer, List<HostAndPort>>>
+        private final Map<String, Map<Integer, List<HostAddress>>>
                 spacePartLocation = Maps.newHashMap();
         private final Map<String, Map<Long, TagItem>> spaceTagItems = Maps.newHashMap();
         private final Map<String, Map<Long, EdgeItem>> spaceEdgeItems = Maps.newHashMap();
         private final Map<String, Map<String, Long>> tagNameMap = Maps.newHashMap();
         private final Map<String, Map<String, Long>> edgeNameMap = Maps.newHashMap();
-        private final Map<String, Map<Integer, HostAndPort>> leaders = Maps.newHashMap();
+        private final Map<String, Map<Integer, HostAddress>> leaders = Maps.newHashMap();
 
         public Map<String, Integer> getSpaceNameMap() {
             return spaceNameMap;
         }
 
-        public Map<String, Map<Integer, List<HostAndPort>>> getSpacePartLocation() {
+        public Map<String, Map<Integer, List<HostAddress>>> getSpacePartLocation() {
             return spacePartLocation;
         }
 
@@ -490,7 +489,7 @@ public class MetaManager {
             return edgeNameMap;
         }
 
-        public Map<String, Map<Integer, HostAndPort>> getLeaders() {
+        public Map<String, Map<Integer, HostAddress>> getLeaders() {
             return leaders;
         }
     }

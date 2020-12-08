@@ -11,8 +11,8 @@ import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.ErrorCode;
@@ -59,29 +59,25 @@ public class MetaClient extends AbstractMetaClient {
 
     // todo change client to Map<HostAndPost, MetaService.Client> when server changes
     private MetaService.Client client;
-    private final List<HostAndPort> addresses;
+    private final List<HostAddress> addresses;
 
     public MetaClient(String host, int port) {
-        this(HostAndPort.fromParts(host, port));
+        this(new HostAddress(host, port));
     }
 
-    public MetaClient(String address) {
-        this(HostAndPort.fromString(address));
-    }
-
-    public MetaClient(HostAndPort address) {
+    public MetaClient(HostAddress address) {
         this(Arrays.asList(address), DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
-    public MetaClient(List<HostAndPort> addresses) {
+    public MetaClient(List<HostAddress> addresses) {
         this(addresses, DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
-    public MetaClient(List<HostAndPort> addresses, int connectionRetry, int executionRetry) {
+    public MetaClient(List<HostAddress> addresses, int connectionRetry, int executionRetry) {
         this(addresses, DEFAULT_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
-    public MetaClient(List<HostAndPort> addresses, int timeout, int connectionRetry,
+    public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
                       int executionRetry) {
         super(addresses, timeout, connectionRetry, executionRetry);
         this.addresses = addresses;
@@ -97,8 +93,8 @@ public class MetaClient extends AbstractMetaClient {
     private void doConnect() throws TException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
-        HostAndPort address = addresses.get(position);
-        transport = new TSocket(address.getHostText(), address.getPort(), timeout, timeout);
+        HostAddress address = addresses.get(position);
+        transport = new TSocket(address.getHost(), address.getPort(), timeout, timeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
@@ -273,7 +269,7 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName Nebula space name
      * @return
      */
-    public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName)
+    public Map<Integer, List<HostAddress>> getPartsAlloc(String spaceName)
             throws ExecuteFailedException, TException {
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -288,11 +284,11 @@ public class MetaClient extends AbstractMetaClient {
         }
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
-            Map<Integer, List<HostAndPort>> addressMap = Maps.newHashMap();
+            Map<Integer, List<HostAddress>> addressMap = Maps.newHashMap();
             for (Map.Entry<Integer, List<HostAddr>> entry : response.getParts().entrySet()) {
-                List<HostAndPort> addresses = Lists.newLinkedList();
+                List<HostAddress> addresses = Lists.newLinkedList();
                 for (HostAddr address : entry.getValue()) {
-                    HostAndPort pair = HostAndPort.fromParts(address.getHost(), address.getPort());
+                    HostAddress pair = new HostAddress(address.getHost(), address.getPort());
                     addresses.add(pair);
                 }
                 addressMap.put(entry.getKey(), addresses);
@@ -332,8 +328,8 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName nebula graph space
      * @return empty map if exception happen
      */
-    protected Map<Integer, List<HostAndPort>> getPartsLocation(String spaceName) {
-        Map<Integer, List<HostAndPort>> result;
+    protected Map<Integer, List<HostAddress>> getPartsLocation(String spaceName) {
+        Map<Integer, List<HostAddress>> result;
         try {
             result = getPartsAlloc(spaceName);
         } catch (ExecuteFailedException | TException e) {
@@ -381,7 +377,7 @@ public class MetaClient extends AbstractMetaClient {
     /**
      * get all servers
      */
-    public Set<HostAndPort> listHosts() {
+    public Set<HostAddress> listHosts() {
         ListHostsReq request = new ListHostsReq();
         // todo request.setType();
         ListHostsResp resp;
@@ -391,10 +387,10 @@ public class MetaClient extends AbstractMetaClient {
             LOGGER.error("listHosts error", e);
             return null;
         }
-        Set<HostAndPort> hostAndPorts = new HashSet<>();
+        Set<HostAddress> hostAndPorts = new HashSet<>();
         for (HostItem hostItem : resp.hosts) {
             HostAddr addr = hostItem.getHostAddr();
-            hostAndPorts.add(HostAndPort.fromParts(addr.getHost(), addr.getPort()));
+            hostAndPorts.add(new HostAddress(addr.getHost(), addr.getPort()));
         }
         return hostAndPorts;
     }

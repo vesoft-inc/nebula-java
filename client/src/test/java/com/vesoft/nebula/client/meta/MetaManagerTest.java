@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.client.meta;
 
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import java.util.Arrays;
 import junit.framework.TestCase;
 import org.slf4j.Logger;
@@ -19,8 +19,7 @@ public class MetaManagerTest extends TestCase {
 
     public void setUp() throws Exception {
         MockNebulaGraph.initGraph();
-        metaManager = MetaManager.getMetaManager(Arrays.asList(HostAndPort.fromString("127.0.0"
-                + ".1:45500")));
+        metaManager = MetaManager.getMetaManager(Arrays.asList(new HostAddress("127.0.0.1",45500)));
     }
 
     public void tearDown() {

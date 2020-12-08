@@ -9,12 +9,12 @@ package com.vesoft.nebula.client.meta;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TTransport;
 import com.google.common.base.Preconditions;
-import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import java.util.List;
 
 public class AbstractMetaClient {
-    protected final List<HostAndPort> addresses;
+    protected final List<HostAddress> addresses;
     protected final int connectionRetry;
     protected final int executionRetry;
     protected final int timeout;
@@ -22,13 +22,13 @@ public class AbstractMetaClient {
     protected TProtocol protocol;
     protected TTransport transport;
 
-    public AbstractMetaClient(List<HostAndPort> addresses, int timeout,
+    public AbstractMetaClient(List<HostAddress> addresses, int timeout,
                               int connectionRetry, int executionRetry) {
         Preconditions.checkArgument(timeout > 0);
         Preconditions.checkArgument(connectionRetry > 0);
         Preconditions.checkArgument(executionRetry > 0);
-        for (HostAndPort address : addresses) {
-            String host = address.getHostText();
+        for (HostAddress address : addresses) {
+            String host = address.getHost();
             int port = address.getPort();
             if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
