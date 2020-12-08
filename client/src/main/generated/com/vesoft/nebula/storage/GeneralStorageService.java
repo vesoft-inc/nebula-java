@@ -231,17 +231,17 @@ public class GeneralStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void get(KVGetRequest req, AsyncMethodCallback resultHandler418) throws TException {
+    public void get(KVGetRequest req, AsyncMethodCallback resultHandler410) throws TException {
       checkReady();
-      get_call method_call = new get_call(req, resultHandler418, this, ___protocolFactory, ___transport);
+      get_call method_call = new get_call(req, resultHandler410, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class get_call extends TAsyncMethodCall {
       private KVGetRequest req;
-      public get_call(KVGetRequest req, AsyncMethodCallback resultHandler419, TAsyncClient client415, TProtocolFactory protocolFactory416, TNonblockingTransport transport417) throws TException {
-        super(client415, protocolFactory416, transport417, resultHandler419, false);
+      public get_call(KVGetRequest req, AsyncMethodCallback resultHandler411, TAsyncClient client407, TProtocolFactory protocolFactory408, TNonblockingTransport transport409) throws TException {
+        super(client407, protocolFactory408, transport409, resultHandler411, false);
         this.req = req;
       }
 
@@ -263,17 +263,17 @@ public class GeneralStorageService {
       }
     }
 
-    public void put(KVPutRequest req, AsyncMethodCallback resultHandler423) throws TException {
+    public void put(KVPutRequest req, AsyncMethodCallback resultHandler415) throws TException {
       checkReady();
-      put_call method_call = new put_call(req, resultHandler423, this, ___protocolFactory, ___transport);
+      put_call method_call = new put_call(req, resultHandler415, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class put_call extends TAsyncMethodCall {
       private KVPutRequest req;
-      public put_call(KVPutRequest req, AsyncMethodCallback resultHandler424, TAsyncClient client420, TProtocolFactory protocolFactory421, TNonblockingTransport transport422) throws TException {
-        super(client420, protocolFactory421, transport422, resultHandler424, false);
+      public put_call(KVPutRequest req, AsyncMethodCallback resultHandler416, TAsyncClient client412, TProtocolFactory protocolFactory413, TNonblockingTransport transport414) throws TException {
+        super(client412, protocolFactory413, transport414, resultHandler416, false);
         this.req = req;
       }
 
@@ -295,17 +295,17 @@ public class GeneralStorageService {
       }
     }
 
-    public void remove(KVRemoveRequest req, AsyncMethodCallback resultHandler428) throws TException {
+    public void remove(KVRemoveRequest req, AsyncMethodCallback resultHandler420) throws TException {
       checkReady();
-      remove_call method_call = new remove_call(req, resultHandler428, this, ___protocolFactory, ___transport);
+      remove_call method_call = new remove_call(req, resultHandler420, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class remove_call extends TAsyncMethodCall {
       private KVRemoveRequest req;
-      public remove_call(KVRemoveRequest req, AsyncMethodCallback resultHandler429, TAsyncClient client425, TProtocolFactory protocolFactory426, TNonblockingTransport transport427) throws TException {
-        super(client425, protocolFactory426, transport427, resultHandler429, false);
+      public remove_call(KVRemoveRequest req, AsyncMethodCallback resultHandler421, TAsyncClient client417, TProtocolFactory protocolFactory418, TNonblockingTransport transport419) throws TException {
+        super(client417, protocolFactory418, transport419, resultHandler421, false);
         this.req = req;
       }
 

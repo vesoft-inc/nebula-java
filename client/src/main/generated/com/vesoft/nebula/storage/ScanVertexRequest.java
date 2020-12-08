@@ -32,20 +32,26 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField CURSOR_FIELD_DESC = new TField("cursor", TType.STRING, (short)3);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)4);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.STRUCT, (short)4);
   private static final TField NO_COLUMNS_FIELD_DESC = new TField("no_columns", TType.BOOL, (short)5);
   private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)6);
   private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)7);
   private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)8);
+  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)9);
+  private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)10);
+  private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)11);
 
   public int space_id;
   public int part_id;
   public byte[] cursor;
-  public List<VertexProp> return_columns;
+  public VertexProp return_columns;
   public boolean no_columns;
   public int limit;
   public long start_time;
   public long end_time;
+  public byte[] filter;
+  public boolean only_latest_version;
+  public boolean enable_read_from_follower;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int CURSOR = 3;
@@ -54,6 +60,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public static final int LIMIT = 6;
   public static final int START_TIME = 7;
   public static final int END_TIME = 8;
+  public static final int FILTER = 9;
+  public static final int ONLY_LATEST_VERSION = 10;
+  public static final int ENABLE_READ_FROM_FOLLOWER = 11;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -63,7 +72,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final int __LIMIT_ISSET_ID = 3;
   private static final int __START_TIME_ISSET_ID = 4;
   private static final int __END_TIME_ISSET_ID = 5;
-  private BitSet __isset_bit_vector = new BitSet(6);
+  private static final int __ONLY_LATEST_VERSION_ISSET_ID = 6;
+  private static final int __ENABLE_READ_FROM_FOLLOWER_ISSET_ID = 7;
+  private BitSet __isset_bit_vector = new BitSet(8);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -75,8 +86,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     tmpMetaDataMap.put(CURSOR, new FieldMetaData("cursor", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, VertexProp.class))));
+        new StructMetaData(TType.STRUCT, VertexProp.class)));
     tmpMetaDataMap.put(NO_COLUMNS, new FieldMetaData("no_columns", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
@@ -85,6 +95,12 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(END_TIME, new FieldMetaData("end_time", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(FILTER, new FieldMetaData("filter", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(ONLY_LATEST_VERSION, new FieldMetaData("only_latest_version", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(ENABLE_READ_FROM_FOLLOWER, new FieldMetaData("enable_read_from_follower", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -93,14 +109,20 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   }
 
   public ScanVertexRequest() {
+    this.only_latest_version = false;
+
+    this.enable_read_from_follower = true;
+
   }
 
   public ScanVertexRequest(
     int space_id,
     int part_id,
-    List<VertexProp> return_columns,
+    VertexProp return_columns,
     boolean no_columns,
-    int limit)
+    int limit,
+    boolean only_latest_version,
+    boolean enable_read_from_follower)
   {
     this();
     this.space_id = space_id;
@@ -112,17 +134,24 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     setNo_columnsIsSet(true);
     this.limit = limit;
     setLimitIsSet(true);
+    this.only_latest_version = only_latest_version;
+    setOnly_latest_versionIsSet(true);
+    this.enable_read_from_follower = enable_read_from_follower;
+    setEnable_read_from_followerIsSet(true);
   }
 
   public ScanVertexRequest(
     int space_id,
     int part_id,
     byte[] cursor,
-    List<VertexProp> return_columns,
+    VertexProp return_columns,
     boolean no_columns,
     int limit,
     long start_time,
-    long end_time)
+    long end_time,
+    byte[] filter,
+    boolean only_latest_version,
+    boolean enable_read_from_follower)
   {
     this();
     this.space_id = space_id;
@@ -139,6 +168,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     setStart_timeIsSet(true);
     this.end_time = end_time;
     setEnd_timeIsSet(true);
+    this.filter = filter;
+    this.only_latest_version = only_latest_version;
+    setOnly_latest_versionIsSet(true);
+    this.enable_read_from_follower = enable_read_from_follower;
+    setEnable_read_from_followerIsSet(true);
   }
 
   /**
@@ -159,6 +193,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     this.limit = TBaseHelper.deepCopy(other.limit);
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.end_time = TBaseHelper.deepCopy(other.end_time);
+    if (other.isSetFilter()) {
+      this.filter = TBaseHelper.deepCopy(other.filter);
+    }
+    this.only_latest_version = TBaseHelper.deepCopy(other.only_latest_version);
+    this.enable_read_from_follower = TBaseHelper.deepCopy(other.enable_read_from_follower);
   }
 
   public ScanVertexRequest deepCopy() {
@@ -240,11 +279,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<VertexProp>  getReturn_columns() {
+  public VertexProp  getReturn_columns() {
     return this.return_columns;
   }
 
-  public ScanVertexRequest setReturn_columns(List<VertexProp> return_columns) {
+  public ScanVertexRequest setReturn_columns(VertexProp return_columns) {
     this.return_columns = return_columns;
     return this;
   }
@@ -356,7 +395,76 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__END_TIME_ISSET_ID, value);
   }
 
-  @SuppressWarnings("unchecked")
+  public byte[]  getFilter() {
+    return this.filter;
+  }
+
+  public ScanVertexRequest setFilter(byte[] filter) {
+    this.filter = filter;
+    return this;
+  }
+
+  public void unsetFilter() {
+    this.filter = null;
+  }
+
+  // Returns true if field filter is set (has been assigned a value) and false otherwise
+  public boolean isSetFilter() {
+    return this.filter != null;
+  }
+
+  public void setFilterIsSet(boolean value) {
+    if (!value) {
+      this.filter = null;
+    }
+  }
+
+  public boolean  isOnly_latest_version() {
+    return this.only_latest_version;
+  }
+
+  public ScanVertexRequest setOnly_latest_version(boolean only_latest_version) {
+    this.only_latest_version = only_latest_version;
+    setOnly_latest_versionIsSet(true);
+    return this;
+  }
+
+  public void unsetOnly_latest_version() {
+    __isset_bit_vector.clear(__ONLY_LATEST_VERSION_ISSET_ID);
+  }
+
+  // Returns true if field only_latest_version is set (has been assigned a value) and false otherwise
+  public boolean isSetOnly_latest_version() {
+    return __isset_bit_vector.get(__ONLY_LATEST_VERSION_ISSET_ID);
+  }
+
+  public void setOnly_latest_versionIsSet(boolean value) {
+    __isset_bit_vector.set(__ONLY_LATEST_VERSION_ISSET_ID, value);
+  }
+
+  public boolean  isEnable_read_from_follower() {
+    return this.enable_read_from_follower;
+  }
+
+  public ScanVertexRequest setEnable_read_from_follower(boolean enable_read_from_follower) {
+    this.enable_read_from_follower = enable_read_from_follower;
+    setEnable_read_from_followerIsSet(true);
+    return this;
+  }
+
+  public void unsetEnable_read_from_follower() {
+    __isset_bit_vector.clear(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID);
+  }
+
+  // Returns true if field enable_read_from_follower is set (has been assigned a value) and false otherwise
+  public boolean isSetEnable_read_from_follower() {
+    return __isset_bit_vector.get(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID);
+  }
+
+  public void setEnable_read_from_followerIsSet(boolean value) {
+    __isset_bit_vector.set(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -387,7 +495,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((List<VertexProp>)value);
+        setReturn_columns((VertexProp)value);
       }
       break;
 
@@ -423,6 +531,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
+    case FILTER:
+      if (value == null) {
+        unsetFilter();
+      } else {
+        setFilter((byte[])value);
+      }
+      break;
+
+    case ONLY_LATEST_VERSION:
+      if (value == null) {
+        unsetOnly_latest_version();
+      } else {
+        setOnly_latest_version((Boolean)value);
+      }
+      break;
+
+    case ENABLE_READ_FROM_FOLLOWER:
+      if (value == null) {
+        unsetEnable_read_from_follower();
+      } else {
+        setEnable_read_from_follower((Boolean)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -454,6 +586,15 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     case END_TIME:
       return new Long(getEnd_time());
 
+    case FILTER:
+      return getFilter();
+
+    case ONLY_LATEST_VERSION:
+      return new Boolean(isOnly_latest_version());
+
+    case ENABLE_READ_FROM_FOLLOWER:
+      return new Boolean(isEnable_read_from_follower());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -478,6 +619,12 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return isSetStart_time();
     case END_TIME:
       return isSetEnd_time();
+    case FILTER:
+      return isSetFilter();
+    case ONLY_LATEST_VERSION:
+      return isSetOnly_latest_version();
+    case ENABLE_READ_FROM_FOLLOWER:
+      return isSetEnable_read_from_follower();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -570,6 +717,33 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
+    boolean this_present_filter = true && this.isSetFilter();
+    boolean that_present_filter = true && that.isSetFilter();
+    if (this_present_filter || that_present_filter) {
+      if (!(this_present_filter && that_present_filter))
+        return false;
+      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
+        return false;
+    }
+
+    boolean this_present_only_latest_version = true;
+    boolean that_present_only_latest_version = true;
+    if (this_present_only_latest_version || that_present_only_latest_version) {
+      if (!(this_present_only_latest_version && that_present_only_latest_version))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.only_latest_version, that.only_latest_version))
+        return false;
+    }
+
+    boolean this_present_enable_read_from_follower = true;
+    boolean that_present_enable_read_from_follower = true;
+    if (this_present_enable_read_from_follower || that_present_enable_read_from_follower) {
+      if (!(this_present_enable_read_from_follower && that_present_enable_read_from_follower))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.enable_read_from_follower, that.enable_read_from_follower))
+        return false;
+    }
+
     return true;
   }
 
@@ -616,6 +790,21 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     builder.append(present_end_time);
     if (present_end_time)
       builder.append(end_time);
+
+    boolean present_filter = true && (isSetFilter());
+    builder.append(present_filter);
+    if (present_filter)
+      builder.append(filter);
+
+    boolean present_only_latest_version = true;
+    builder.append(present_only_latest_version);
+    if (present_only_latest_version)
+      builder.append(only_latest_version);
+
+    boolean present_enable_read_from_follower = true;
+    builder.append(present_enable_read_from_follower);
+    if (present_enable_read_from_follower)
+      builder.append(enable_read_from_follower);
 
     return builder.toHashCode();
   }
@@ -696,6 +885,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetFilter()).compareTo(other.isSetFilter());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(filter, other.filter);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetOnly_latest_version()).compareTo(other.isSetOnly_latest_version());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(only_latest_version, other.only_latest_version);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetEnable_read_from_follower()).compareTo(other.isSetEnable_read_from_follower());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(enable_read_from_follower, other.enable_read_from_follower);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -734,21 +947,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
           }
           break;
         case RETURN_COLUMNS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list175 = iprot.readListBegin();
-              this.return_columns = new ArrayList<VertexProp>(Math.max(0, _list175.size));
-              for (int _i176 = 0; 
-                   (_list175.size < 0) ? iprot.peekList() : (_i176 < _list175.size); 
-                   ++_i176)
-              {
-                VertexProp _elem177;
-                _elem177 = new VertexProp();
-                _elem177.read(iprot);
-                this.return_columns.add(_elem177);
-              }
-              iprot.readListEnd();
-            }
+          if (field.type == TType.STRUCT) {
+            this.return_columns = new VertexProp();
+            this.return_columns.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -785,6 +986,29 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case FILTER:
+          if (field.type == TType.STRING) {
+            this.filter = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case ONLY_LATEST_VERSION:
+          if (field.type == TType.BOOL) {
+            this.only_latest_version = iprot.readBool();
+            setOnly_latest_versionIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case ENABLE_READ_FROM_FOLLOWER:
+          if (field.type == TType.BOOL) {
+            this.enable_read_from_follower = iprot.readBool();
+            setEnable_read_from_followerIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -817,13 +1041,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
     if (this.return_columns != null) {
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (VertexProp _iter178 : this.return_columns)        {
-          _iter178.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
+      this.return_columns.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(NO_COLUMNS_FIELD_DESC);
@@ -842,6 +1060,19 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeI64(this.end_time);
       oprot.writeFieldEnd();
     }
+    if (this.filter != null) {
+      if (isSetFilter()) {
+        oprot.writeFieldBegin(FILTER_FIELD_DESC);
+        oprot.writeBinary(this.filter);
+        oprot.writeFieldEnd();
+      }
+    }
+    oprot.writeFieldBegin(ONLY_LATEST_VERSION_FIELD_DESC);
+    oprot.writeBool(this.only_latest_version);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(ENABLE_READ_FROM_FOLLOWER_FIELD_DESC);
+    oprot.writeBool(this.enable_read_from_follower);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -944,6 +1175,39 @@ String space = prettyPrint ? " " : "";
       sb.append(TBaseHelper.toString(this. getEnd_time(), indent + 1, prettyPrint));
       first = false;
     }
+    if (isSetFilter())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("filter");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getFilter() == null) {
+        sb.append("null");
+      } else {
+          int __filter_size = Math.min(this. getFilter().length, 128);
+          for (int i = 0; i < __filter_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
+          }
+          if (this. getFilter().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("only_latest_version");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isOnly_latest_version(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("enable_read_from_follower");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. isEnable_read_from_follower(), indent + 1, prettyPrint));
+    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

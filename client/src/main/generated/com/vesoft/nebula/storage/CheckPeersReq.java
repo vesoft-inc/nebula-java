@@ -369,16 +369,16 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
         case PEERS:
           if (field.type == TType.LIST) {
             {
-              TList _list204 = iprot.readListBegin();
-              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list204.size));
-              for (int _i205 = 0; 
-                   (_list204.size < 0) ? iprot.peekList() : (_i205 < _list204.size); 
-                   ++_i205)
+              TList _list196 = iprot.readListBegin();
+              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list196.size));
+              for (int _i197 = 0; 
+                   (_list196.size < 0) ? iprot.peekList() : (_i197 < _list196.size); 
+                   ++_i197)
               {
-                com.vesoft.nebula.HostAddr _elem206;
-                _elem206 = new com.vesoft.nebula.HostAddr();
-                _elem206.read(iprot);
-                this.peers.add(_elem206);
+                com.vesoft.nebula.HostAddr _elem198;
+                _elem198 = new com.vesoft.nebula.HostAddr();
+                _elem198.read(iprot);
+                this.peers.add(_elem198);
               }
               iprot.readListEnd();
             }
@@ -413,8 +413,8 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(PEERS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.peers.size()));
-        for (com.vesoft.nebula.HostAddr _iter207 : this.peers)        {
-          _iter207.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter199 : this.peers)        {
+          _iter199.write(oprot);
         }
         oprot.writeListEnd();
       }

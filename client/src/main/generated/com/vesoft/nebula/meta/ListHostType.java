@@ -18,6 +18,9 @@ import java.util.HashMap;
 @SuppressWarnings({ "unused" })
 public class ListHostType {
   public static final int ALLOC = 0;
+  public static final int GRAPH = 1;
+  public static final int META = 2;
+  public static final int STORAGE = 3;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
