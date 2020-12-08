@@ -10,6 +10,9 @@ import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Edge;
+import com.vesoft.nebula.NList;
+import com.vesoft.nebula.NMap;
+import com.vesoft.nebula.NSet;
 import com.vesoft.nebula.NullType;
 import com.vesoft.nebula.Path;
 import com.vesoft.nebula.Row;
@@ -97,9 +100,9 @@ public class TestData {
         final HashSet<Value> set = new HashSet<>();
         set.add(new Value(Value.IVAL, new Long(1)));
         set.add(new Value(Value.IVAL, new Long(2)));
-        final HashMap<String, Value> map = new HashMap();
-        map.put("key1", new Value(Value.IVAL, new Long(1)));
-        map.put("key2", new Value(Value.IVAL, new Long(2)));
+        final HashMap<byte[], Value> map = new HashMap();
+        map.put("key1".getBytes(), new Value(Value.IVAL, new Long(1)));
+        map.put("key2".getBytes(), new Value(Value.IVAL, new Long(2)));
         final Row row = new Row(Arrays.asList(
                 new Value(),
                 new Value(Value.NVAL, NullType.OUT_OF_RANGE),
@@ -107,9 +110,9 @@ public class TestData {
                 new Value(Value.IVAL, new Long(1)),
                 new Value(Value.FVAL, 10.01),
                 new Value(Value.SVAL, "value1".getBytes()),
-                new Value(Value.LVAL, list),
-                new Value(Value.UVAL, set),
-                new Value(Value.MVAL, map),
+                new Value(Value.LVAL, new NList(list)),
+                new Value(Value.UVAL, new NSet(set)),
+                new Value(Value.MVAL, new NMap(map)),
                 new Value(Value.TVAL, new Time((byte)10, (byte)30, (byte)0, 100)),
                 new Value(Value.DVAL, new Date((short)2020, (byte)10, (byte)10)),
                 new Value(Value.DTVAL,
