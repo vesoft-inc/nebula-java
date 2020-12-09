@@ -88,11 +88,11 @@ public class Value extends TUnion<Value> {
     tmpMetaDataMap.put(PVAL, new FieldMetaData("pVal", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, Path.class)));
     tmpMetaDataMap.put(LVAL, new FieldMetaData("lVal", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.List.class)));
+        new StructMetaData(TType.STRUCT, NList.class)));
     tmpMetaDataMap.put(MVAL, new FieldMetaData("mVal", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Map.class)));
+        new StructMetaData(TType.STRUCT, NMap.class)));
     tmpMetaDataMap.put(UVAL, new FieldMetaData("uVal", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Set.class)));
+        new StructMetaData(TType.STRUCT, NSet.class)));
     tmpMetaDataMap.put(GVAL, new FieldMetaData("gVal", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, DataSet.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -179,19 +179,19 @@ public class Value extends TUnion<Value> {
     return x;
   }
 
-  public static Value lVal(List value) {
+  public static Value lVal(NList value) {
     Value x = new Value();
     x.setLVal(value);
     return x;
   }
 
-  public static Value mVal(Map value) {
+  public static Value mVal(NMap value) {
     Value x = new Value();
     x.setMVal(value);
     return x;
   }
 
-  public static Value uVal(Set value) {
+  public static Value uVal(NSet value) {
     Value x = new Value();
     x.setUVal(value);
     return x;
@@ -263,20 +263,20 @@ public class Value extends TUnion<Value> {
         }
         throw new ClassCastException("Was expecting value of type Path for field 'pVal', but got " + value.getClass().getSimpleName());
       case LVAL:
-        if (value instanceof List) {
+        if (value instanceof NList) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type List for field 'lVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NList for field 'lVal', but got " + value.getClass().getSimpleName());
       case MVAL:
-        if (value instanceof Map) {
+        if (value instanceof NMap) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Map for field 'mVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NMap for field 'mVal', but got " + value.getClass().getSimpleName());
       case UVAL:
-        if (value instanceof Set) {
+        if (value instanceof NSet) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Set for field 'uVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NSet for field 'uVal', but got " + value.getClass().getSimpleName());
       case GVAL:
         if (value instanceof DataSet) {
           break;
@@ -493,8 +493,8 @@ public class Value extends TUnion<Value> {
         }
       case LVAL:
         if (field.type == L_VAL_FIELD_DESC.type) {
-          com.vesoft.nebula.List lVal;
-          lVal = new com.vesoft.nebula.List();
+          NList lVal;
+          lVal = new NList();
           lVal.read(iprot);
           return lVal;
         } else {
@@ -503,8 +503,8 @@ public class Value extends TUnion<Value> {
         }
       case MVAL:
         if (field.type == M_VAL_FIELD_DESC.type) {
-          com.vesoft.nebula.Map mVal;
-          mVal = new com.vesoft.nebula.Map();
+          NMap mVal;
+          mVal = new NMap();
           mVal.read(iprot);
           return mVal;
         } else {
@@ -513,8 +513,8 @@ public class Value extends TUnion<Value> {
         }
       case UVAL:
         if (field.type == U_VAL_FIELD_DESC.type) {
-          com.vesoft.nebula.Set uVal;
-          uVal = new com.vesoft.nebula.Set();
+          NSet uVal;
+          uVal = new NSet();
           uVal.read(iprot);
           return uVal;
         } else {
@@ -585,15 +585,15 @@ public class Value extends TUnion<Value> {
         pVal.write(oprot);
         return;
       case LVAL:
-        com.vesoft.nebula.List lVal = (com.vesoft.nebula.List)getFieldValue();
+        NList lVal = (NList)getFieldValue();
         lVal.write(oprot);
         return;
       case MVAL:
-        com.vesoft.nebula.Map mVal = (com.vesoft.nebula.Map)getFieldValue();
+        NMap mVal = (NMap)getFieldValue();
         mVal.write(oprot);
         return;
       case UVAL:
-        com.vesoft.nebula.Set uVal = (com.vesoft.nebula.Set)getFieldValue();
+        NSet uVal = (NSet)getFieldValue();
         uVal.write(oprot);
         return;
       case GVAL:
@@ -806,43 +806,43 @@ public class Value extends TUnion<Value> {
     value_ = value;
   }
 
-  public List  getLVal() {
+  public NList  getLVal() {
     if (getSetField() == LVAL) {
-      return (List)getFieldValue();
+      return (NList)getFieldValue();
     } else {
       throw new RuntimeException("Cannot get field 'lVal' because union is currently set to " + getFieldDesc(getSetField()).name);
     }
   }
 
-  public void setLVal(List value) {
+  public void setLVal(NList value) {
     if (value == null) throw new NullPointerException();
     setField_ = LVAL;
     value_ = value;
   }
 
-  public Map  getMVal() {
+  public NMap  getMVal() {
     if (getSetField() == MVAL) {
-      return (Map)getFieldValue();
+      return (NMap)getFieldValue();
     } else {
       throw new RuntimeException("Cannot get field 'mVal' because union is currently set to " + getFieldDesc(getSetField()).name);
     }
   }
 
-  public void setMVal(Map value) {
+  public void setMVal(NMap value) {
     if (value == null) throw new NullPointerException();
     setField_ = MVAL;
     value_ = value;
   }
 
-  public Set  getUVal() {
+  public NSet  getUVal() {
     if (getSetField() == UVAL) {
-      return (Set)getFieldValue();
+      return (NSet)getFieldValue();
     } else {
       throw new RuntimeException("Cannot get field 'uVal' because union is currently set to " + getFieldDesc(getSetField()).name);
     }
   }
 
-  public void setUVal(Set value) {
+  public void setUVal(NSet value) {
     if (value == null) throw new NullPointerException();
     setField_ = UVAL;
     value_ = value;

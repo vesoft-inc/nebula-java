@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
@@ -26,11 +27,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class Set implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("Set");
+public class NSet implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("NSet");
   private static final TField VALUES_FIELD_DESC = new TField("values", TType.SET, (short)1);
 
-  public java.util.Set<Value> values;
+  public Set<Value> values;
   public static final int VALUES = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -46,14 +47,14 @@ public class Set implements TBase, java.io.Serializable, Cloneable {
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(Set.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(NSet.class, metaDataMap);
   }
 
-  public Set() {
+  public NSet() {
   }
 
-  public Set(
-          java.util.Set<Value> values)
+  public NSet(
+    Set<Value> values)
   {
     this();
     this.values = values;
@@ -62,26 +63,26 @@ public class Set implements TBase, java.io.Serializable, Cloneable {
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public Set(Set other) {
+  public NSet(NSet other) {
     if (other.isSetValues()) {
       this.values = TBaseHelper.deepCopy(other.values);
     }
   }
 
-  public Set deepCopy() {
-    return new Set(this);
+  public NSet deepCopy() {
+    return new NSet(this);
   }
 
   @Deprecated
-  public Set clone() {
-    return new Set(this);
+  public NSet clone() {
+    return new NSet(this);
   }
 
-  public java.util.Set<Value>  getValues() {
+  public Set<Value>  getValues() {
     return this.values;
   }
 
-  public Set setValues(java.util.Set<Value> values) {
+  public NSet setValues(Set<Value> values) {
     this.values = values;
     return this;
   }
@@ -108,7 +109,7 @@ public class Set implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetValues();
       } else {
-        setValues((java.util.Set<Value>)value);
+        setValues((Set<Value>)value);
       }
       break;
 
@@ -141,12 +142,12 @@ public class Set implements TBase, java.io.Serializable, Cloneable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof Set)
-      return this.equals((Set)that);
+    if (that instanceof NSet)
+      return this.equals((NSet)that);
     return false;
   }
 
-  public boolean equals(Set that) {
+  public boolean equals(NSet that) {
     if (that == null)
       return false;
     if (this == that)
@@ -254,7 +255,7 @@ public class Set implements TBase, java.io.Serializable, Cloneable {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("Set");
+    StringBuilder sb = new StringBuilder("NSet");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

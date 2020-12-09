@@ -9,6 +9,7 @@ package com.vesoft.nebula;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
@@ -26,90 +27,89 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class Map implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("Map");
-  private static final TField KVS_FIELD_DESC = new TField("kvs", TType.MAP, (short)1);
+public class NList implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("NList");
+  private static final TField VALUES_FIELD_DESC = new TField("values", TType.LIST, (short)1);
 
-  public java.util.Map<byte[],Value> kvs;
-  public static final int KVS = 1;
+  public List<Value> values;
+  public static final int VALUES = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
-  public static final java.util.Map<Integer, FieldMetaData> metaDataMap;
+  public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
-    java.util.Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(KVS, new FieldMetaData("kvs", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.STRING), 
+    Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(VALUES, new FieldMetaData("values", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, Value.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(Map.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(NList.class, metaDataMap);
   }
 
-  public Map() {
+  public NList() {
   }
 
-  public Map(
-          java.util.Map<byte[],Value> kvs)
+  public NList(
+    List<Value> values)
   {
     this();
-    this.kvs = kvs;
+    this.values = values;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public Map(Map other) {
-    if (other.isSetKvs()) {
-      this.kvs = TBaseHelper.deepCopy(other.kvs);
+  public NList(NList other) {
+    if (other.isSetValues()) {
+      this.values = TBaseHelper.deepCopy(other.values);
     }
   }
 
-  public Map deepCopy() {
-    return new Map(this);
+  public NList deepCopy() {
+    return new NList(this);
   }
 
   @Deprecated
-  public Map clone() {
-    return new Map(this);
+  public NList clone() {
+    return new NList(this);
   }
 
-  public java.util.Map<byte[],Value>  getKvs() {
-    return this.kvs;
+  public List<Value>  getValues() {
+    return this.values;
   }
 
-  public Map setKvs(java.util.Map<byte[],Value> kvs) {
-    this.kvs = kvs;
+  public NList setValues(List<Value> values) {
+    this.values = values;
     return this;
   }
 
-  public void unsetKvs() {
-    this.kvs = null;
+  public void unsetValues() {
+    this.values = null;
   }
 
-  // Returns true if field kvs is set (has been assigned a value) and false otherwise
-  public boolean isSetKvs() {
-    return this.kvs != null;
+  // Returns true if field values is set (has been assigned a value) and false otherwise
+  public boolean isSetValues() {
+    return this.values != null;
   }
 
-  public void setKvsIsSet(boolean value) {
+  public void setValuesIsSet(boolean value) {
     if (!value) {
-      this.kvs = null;
+      this.values = null;
     }
   }
 
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case KVS:
+    case VALUES:
       if (value == null) {
-        unsetKvs();
+        unsetValues();
       } else {
-        setKvs((java.util.Map<byte[],Value>)value);
+        setValues((List<Value>)value);
       }
       break;
 
@@ -120,8 +120,8 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case KVS:
-      return getKvs();
+    case VALUES:
+      return getValues();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -131,8 +131,8 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case KVS:
-      return isSetKvs();
+    case VALUES:
+      return isSetValues();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -142,23 +142,23 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof Map)
-      return this.equals((Map)that);
+    if (that instanceof NList)
+      return this.equals((NList)that);
     return false;
   }
 
-  public boolean equals(Map that) {
+  public boolean equals(NList that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_kvs = true && this.isSetKvs();
-    boolean that_present_kvs = true && that.isSetKvs();
-    if (this_present_kvs || that_present_kvs) {
-      if (!(this_present_kvs && that_present_kvs))
+    boolean this_present_values = true && this.isSetValues();
+    boolean that_present_values = true && that.isSetValues();
+    if (this_present_values || that_present_values) {
+      if (!(this_present_values && that_present_values))
         return false;
-      if (!TBaseHelper.equalsSlow(this.kvs, that.kvs))
+      if (!TBaseHelper.equalsNobinary(this.values, that.values))
         return false;
     }
 
@@ -169,10 +169,10 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_kvs = true && (isSetKvs());
-    builder.append(present_kvs);
-    if (present_kvs)
-      builder.append(kvs);
+    boolean present_values = true && (isSetValues());
+    builder.append(present_values);
+    if (present_values)
+      builder.append(values);
 
     return builder.toHashCode();
   }
@@ -188,23 +188,21 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
       }
       switch (field.id)
       {
-        case KVS:
-          if (field.type == TType.MAP) {
+        case VALUES:
+          if (field.type == TType.LIST) {
             {
-              TMap _map4 = iprot.readMapBegin();
-              this.kvs = new HashMap<byte[],Value>(Math.max(0, 2*_map4.size));
-              for (int _i5 = 0; 
-                   (_map4.size < 0) ? iprot.peekMap() : (_i5 < _map4.size); 
-                   ++_i5)
+              TList _list0 = iprot.readListBegin();
+              this.values = new ArrayList<Value>(Math.max(0, _list0.size));
+              for (int _i1 = 0; 
+                   (_list0.size < 0) ? iprot.peekList() : (_i1 < _list0.size); 
+                   ++_i1)
               {
-                byte[] _key6;
-                Value _val7;
-                _key6 = iprot.readBinary();
-                _val7 = new Value();
-                _val7.read(iprot);
-                this.kvs.put(_key6, _val7);
+                Value _elem2;
+                _elem2 = new Value();
+                _elem2.read(iprot);
+                this.values.add(_elem2);
               }
-              iprot.readMapEnd();
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -227,15 +225,14 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.kvs != null) {
-      oprot.writeFieldBegin(KVS_FIELD_DESC);
+    if (this.values != null) {
+      oprot.writeFieldBegin(VALUES_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.kvs.size()));
-        for (java.util.Map.Entry<byte[], Value> _iter8 : this.kvs.entrySet())        {
-          oprot.writeBinary(_iter8.getKey());
-          _iter8.getValue().write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.values.size()));
+        for (Value _iter3 : this.values)        {
+          _iter3.write(oprot);
         }
-        oprot.writeMapEnd();
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -258,20 +255,20 @@ public class Map implements TBase, java.io.Serializable, Cloneable {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("Map");
+    StringBuilder sb = new StringBuilder("NList");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("kvs");
+    sb.append("values");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getKvs() == null) {
+    if (this. getValues() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getKvs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getValues(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

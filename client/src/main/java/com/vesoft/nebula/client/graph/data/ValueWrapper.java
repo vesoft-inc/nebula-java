@@ -195,7 +195,7 @@ public class ValueWrapper {
                 "Cannot get field type `list' because value's type is " + descType());
         }
         ArrayList<ValueWrapper> values = new ArrayList<>();
-        for (Value value : (ArrayList<Value>)(value.getFieldValue())) {
+        for (Value value : value.getLVal().getValues()) {
             values.add(new ValueWrapper(value));
         }
         return values;
@@ -207,7 +207,7 @@ public class ValueWrapper {
                 "Cannot get field type `set' because value's type is " + descType());
         }
         HashSet<ValueWrapper> values = new HashSet<>();
-        for (Value value : ((HashSet<Value>)(value.getFieldValue()))) {
+        for (Value value : value.getUVal().getValues()) {
             values.add(new ValueWrapper(value));
         }
         return values;
@@ -220,9 +220,9 @@ public class ValueWrapper {
                 "Cannot get field type `set' because value's type is " + descType());
         }
         HashMap<String, ValueWrapper> kvs = new HashMap<>();
-        Map<Object, Value> inValues = value.getMVal();
-        for (Object key : inValues.keySet()) {
-            kvs.put((String)key, new ValueWrapper(inValues.get(key)));
+        Map<byte[], Value> inValues = value.getMVal().getKvs();
+        for (byte[] key : inValues.keySet()) {
+            kvs.put(new String(key, decodeType), new ValueWrapper(inValues.get(key)));
         }
         return kvs;
     }
