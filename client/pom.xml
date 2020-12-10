@@ -270,16 +270,6 @@
             <version>${guava.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vesoft</groupId>
-            <artifactId>nebula-utils</artifactId>
-            <version>${nebula-utils.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
             <version>2.2</version>
