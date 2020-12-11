@@ -121,4 +121,30 @@ object NebulaUtils {
     }
     true
   }
+
+  def escapeUtil(str: String): String = {
+    var s = str
+    if (s.contains("\\")) {
+      s = s.replaceAll("\\\\", "\\\\\\\\")
+    }
+    if (s.contains("\t")) {
+      s = s.replaceAll("\t", "\\\\t")
+    }
+    if (s.contains("\n")) {
+      s = s.replaceAll("\n", "\\\\n")
+    }
+    if (s.contains("\"")) {
+      s = s.replaceAll("\"", "\\\\\"")
+    }
+    if (s.contains("\'")) {
+      s = s.replaceAll("\'", "\\\\'")
+    }
+    if (s.contains("\r")) {
+      s = s.replaceAll("\r", "\\\\r")
+    }
+    if (s.contains("\b")) {
+      s = s.replaceAll("\b", "\\\\b")
+    }
+    s
+  }
 }
