@@ -34,7 +34,6 @@ import com.vesoft.nebula.tools.importer.{
 }
 import org.apache.log4j.Logger
 import com.vesoft.nebula.tools.importer.writer.{NebulaGraphClientWriter, NebulaSSTWriter}
-import org.apache.commons.lang.StringEscapeUtils
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.{DataFrame, Encoders, Row}
@@ -242,9 +241,7 @@ class EdgeProcessor(data: DataFrame,
             assert(NebulaUtils.isNumic(sourceField),
                    s"Not support non-Numeric type for source field")
           } else {
-            if (StringEscapeUtils.escapeJava(sourceField).contains('\\')) {
-              sourceField = StringEscapeUtils.escapeJava(sourceField)
-            }
+            sourceField = NebulaUtils.escapeUtil(sourceField)
           }
 
           val targetIndex = row.schema.fieldIndex(edgeConfig.targetField)
@@ -253,9 +250,7 @@ class EdgeProcessor(data: DataFrame,
             assert(NebulaUtils.isNumic(targetField),
                    s"Not support non-Numeric type for target field")
           } else {
-            if (StringEscapeUtils.escapeJava(targetField).contains('\\')) {
-              targetField = StringEscapeUtils.escapeJava(sourceField)
-            }
+            targetField = NebulaUtils.escapeUtil(targetField)
           }
 
           val values = for {
