@@ -7,10 +7,11 @@
 package com.vesoft.nebula.encoder;
 
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.meta.MetaCache;
 import com.vesoft.nebula.meta.ColumnDef;
 import com.vesoft.nebula.meta.ColumnTypeDef;
 import com.vesoft.nebula.meta.EdgeItem;
-import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.PropertyType;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.SpaceDesc;
@@ -109,6 +110,46 @@ public class MetaCacheImplTest implements MetaCache {
         return new Schema(columns, null);
     }
 
+    private TagItem createPersonTag() {
+        TagItem tagItem = new TagItem();
+        tagItem.tag_name = "person".getBytes();
+        tagItem.version = 0;
+        tagItem.tag_id = 2;
+
+
+        List<ColumnDef> columns = new ArrayList<>();
+        ColumnDef columnDef1 = new ColumnDef(("name").getBytes(),
+            new ColumnTypeDef(PropertyType.STRING));
+        columns.add(columnDef1);
+
+        ColumnDef columnDef2 = new ColumnDef(("age").getBytes(),
+            new ColumnTypeDef(PropertyType.INT64));
+        columns.add(columnDef2);
+
+        tagItem.schema = new Schema(columns, null);
+        return tagItem;
+    }
+
+    private EdgeItem createFriendEdge() {
+        EdgeItem edgeItem = new EdgeItem();
+        edgeItem.edge_name = "friend".getBytes();
+        edgeItem.version = 0;
+        edgeItem.edge_type = 3;
+
+
+        List<ColumnDef> columns = new ArrayList<>();
+        ColumnDef columnDef1 = new ColumnDef(("start").getBytes(),
+            new ColumnTypeDef(PropertyType.INT64));
+        columns.add(columnDef1);
+
+        ColumnDef columnDef2 = new ColumnDef(("end").getBytes(),
+            new ColumnTypeDef(PropertyType.INT64));
+        columns.add(columnDef2);
+
+        edgeItem.schema = new Schema(columns, null);
+        return edgeItem;
+    }
+
     public Schema genEmptyString() {
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef = new ColumnDef(("Col01").getBytes(),
@@ -129,6 +170,7 @@ public class MetaCacheImplTest implements MetaCache {
 
         this.spaceItem = spaceItem;
         this.spaceItem.properties = spaceDesc;
+
         TagItem tagItem1 = new TagItem();
         tagItem1.tag_name = "tag_no_default".getBytes();
         tagItem1.version = 12;
@@ -153,6 +195,7 @@ public class MetaCacheImplTest implements MetaCache {
         edgeItem1.schema = genNoDefaultVal();
         edgeItem1.version = 12;
         this.edgeItems.put(new String(edgeItem1.edge_name), edgeItem1);
+        this.tagItems.put("person", createPersonTag());
 
         EdgeItem edgeItem2 = new EdgeItem();
         edgeItem2.edge_name = "edge_with_default".getBytes();
@@ -165,16 +208,13 @@ public class MetaCacheImplTest implements MetaCache {
         edgeItem3.version = 0;
         edgeItem3.schema = genEmptyString();
         this.edgeItems.put(new String(edgeItem3.edge_name), edgeItem3);
+
+        this.edgeItems.put("friend", createFriendEdge());
     }
 
     @Override
     public SpaceItem getSpace(String spaceName) {
         return spaceItem;
-    }
-
-    @Override
-    public List<IdName> listSpaces() {
-        return null;
     }
 
     @Override
@@ -186,11 +226,6 @@ public class MetaCacheImplTest implements MetaCache {
     }
 
     @Override
-    public List<TagItem> listTags(String spaceName) {
-        return new ArrayList<TagItem>(tagItems.values());
-    }
-
-    @Override
     public EdgeItem getEdge(String spaceName, String edgeName) {
         if (!edgeItems.containsKey(edgeName)) {
             return null;
@@ -199,12 +234,13 @@ public class MetaCacheImplTest implements MetaCache {
     }
 
     @Override
-    public List<EdgeItem> listEdges(String spaceName) {
-        return new ArrayList<EdgeItem>(edgeItems.values());
-    }
-
-    @Override
     public Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName) {
-        return null;
+        int i = 1;
+        Map<Integer, List<HostAddr>> partAlloc = new HashMap<>();
+        while (i <= 1024) {
+            partAlloc.put(i, Arrays.asList());
+            i++;
+        }
+        return partAlloc;
     }
 }

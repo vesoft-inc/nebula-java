@@ -7,8 +7,12 @@
 package com.vesoft.nebula.client.meta;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.meta.EdgeItem;
+import com.vesoft.nebula.meta.TagItem;
 import java.util.Arrays;
+import java.util.Objects;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,15 +29,42 @@ public class MetaManagerTest extends TestCase {
     public void tearDown() {
     }
 
-    public void testGetSpaceId() {
-        assert (metaManager.getSpaceId("testMeta") >= 0);
+    public void testGetSpace() {
+        assert (metaManager.getSpaceId("testMeta") > 0);
+        assert Objects.equals("testMeta",
+            new String(metaManager.getSpace("testMeta").properties.getSpace_name()));
+        Assert.assertEquals(8,
+            metaManager.getSpace("testMeta").properties.getVid_type().getType_length());
+        Assert.assertEquals(10,
+            metaManager.getSpace("testMeta").properties.getPartition_num());
+    }
+
+    public void testGetTag() {
+        // get tag id
+        int tagId = metaManager.getTagId("testMeta", "person");
+        assert (tagId > 0);
+        // get tag item
+        TagItem tag = metaManager.getTag("testMeta", "person");
+        Assert.assertArrayEquals("person".getBytes(), tag.getTag_name());
+        Assert.assertEquals(0, tag.getVersion());
+        String tagName = metaManager.getTagName("testMeta", tagId);
+        Objects.equals(tagName, "person");
     }
 
     public void testGetEdge() {
-        assert (metaManager.getEdge("testMeta", "friend").getEdge_type() >= 0);
+        // get edge type
+        int edgeType = metaManager.getEdgeType("testMeta", "friend");
+        assert (edgeType > 0);
+        // get tag item
+        EdgeItem edge = metaManager.getEdge("testMeta", "friend");
+        Assert.assertArrayEquals("friend".getBytes(), edge.getEdge_name());
+        Assert.assertEquals(0, edge.getVersion());
+        Objects.equals(metaManager.getEdgeName("testMeta", edgeType), "friend");
     }
 
     public void testGetSpaceParts() {
         assert (metaManager.getSpaceParts("testMeta").size() == 10);
+        Assert.assertArrayEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).toArray(),
+            metaManager.getSpaceParts("testMeta").toArray());
     }
 }

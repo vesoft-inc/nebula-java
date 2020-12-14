@@ -61,39 +61,55 @@ public class TestEncoder {
     public void testVertexKey() {
         MetaCacheImplTest cacheImplTest = new MetaCacheImplTest();
         NebulaCodecImpl codec = new NebulaCodecImpl(cacheImplTest);
+        // test vertexKey
+        byte[] vertexKey = codec.vertexKey("test_space","Tom", "person");
+        String hexStr = Hex.encodeHexString(vertexKey);
+        String expectResult = "01d80100546f6d00000000000000000000000000"
+            + "00000000020000000000000000000000";
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+
         // less than vidLen
         String vid = "0123456789";
-        byte[] vertexKey = codec.vertexKey(10,123, vid.getBytes(), 2020, 10);
-        String hexStr = Hex.encodeHexString(vertexKey);
-        String expectResult = "017b000030313233343536373839e40700000a00000000000000";
-        Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+        vertexKey = codec.genVertexKey(10,123, vid.getBytes(), 2020, 10);
+        hexStr = Hex.encodeHexString(vertexKey);
+        expectResult = "017b000030313233343536373839e40700000a00000000000000";
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // large than vidLen
-        vertexKey = codec.vertexKey(100,123, vid.getBytes(), 2020, 10);
+        vertexKey = codec.genVertexKey(100,123, vid.getBytes(), 2020, 10);
         hexStr = Hex.encodeHexString(vertexKey);
         expectResult = "017b00003031323334353637383900000000000000000000000000000000000"
             + "00000000000000000000000000000000000000000000000000000000000000000000000000"
             + "00000000000000000000000000000000000000000000000000000000000000000000000e407"
             + "00000a00000000000000";
-        Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
     }
 
     @Test()
     public void testEdgeKey() {
         MetaCacheImplTest cacheImplTest = new MetaCacheImplTest();
         NebulaCodecImpl codec = new NebulaCodecImpl(cacheImplTest);
+
+        // test edgeKey
+        byte[] edgeKey = codec.edgeKey("test_space","Tom", "friend", 0, "Lily");
+        String hexStr = Hex.encodeHexString(edgeKey);
+        String expectResult = "01d80100546f6d000000000000000000000000000000000003000040000000"
+            + "00000000004c696c79000000000000000000000000000000000000000000000000";
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+
         String srcVid = "0123456789";
         String dstVid = "9876543210";
 
         // less than vidLen
-        byte[] edgeKey = codec.edgeKey(10,123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes(), 10);
-        String hexStr = Hex.encodeHexString(edgeKey);
-        String expectResult = "017b000030313233343536373839f20300400a00000000000"
+        edgeKey = codec.genEdgeKey(
+            10,123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes(), 10);
+        hexStr = Hex.encodeHexString(edgeKey);
+        expectResult = "017b000030313233343536373839f20300400a00000000000"
             + "000393837363534333231300a00000000000000";
-        Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // large than vidLen
-        edgeKey = codec.edgeKey(100,123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes(), 10);
+        edgeKey = codec.genEdgeKey(100,123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes(), 10);
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "017b0000303132333435363738390000000000000000000000000000000000000000000"
             + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000"
@@ -101,17 +117,17 @@ public class TestEncoder {
             + "37363534333231300000000000000000000000000000000000000000000000000000000000000000000"
             + "00000000000000000000000000000000000000000000000000000000000000000000000000000000000"
             + "0000000000000000000000000000000a00000000000000";
-        Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // less than vidLen with negative edgeType
-        edgeKey = codec.edgeKey(10,123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes(), 10);
+        edgeKey = codec.genEdgeKey(10,123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes(), 10);
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "017b0000303132333435363738390efcffff0a00000000000000"
             + "393837363534333231300a00000000000000";
-        Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // large than vidLen with negative edgeType
-        edgeKey = codec.edgeKey(100,123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes(), 10);
+        edgeKey = codec.genEdgeKey(100,123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes(), 10);
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "017b0000303132333435363738390000000000000000000000000000000000000000000"
             + "000000000000000000000000000000000000000000000000000000000000000000000000000000000"
@@ -119,7 +135,7 @@ public class TestEncoder {
             + "938373635343332313000000000000000000000000000000000000000000000000000000000000000"
             + "000000000000000000000000000000000000000000000000000000000000000000000000000000000"
             + "00000000000000000000000000000000000000a00000000000000";
-        Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
     }
 
     @Test()
@@ -144,7 +160,7 @@ public class TestEncoder {
             // File file = new File("encode_java.txt");
             // FileOutputStream fileOutputStream = new FileOutputStream(file);
             // fileOutputStream.write(encodeStr);
-            Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -156,7 +172,7 @@ public class TestEncoder {
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
-            Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -181,7 +197,7 @@ public class TestEncoder {
         try {
             byte[] encodeStr = codec.encode("test", "edge_no_default", getCols(), getValues());
             String hexStr = Hex.encodeHexString(encodeStr);
-            Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -192,7 +208,7 @@ public class TestEncoder {
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
-            Assert.assertArrayEquals(hexStr.getBytes(),  expectResult.getBytes());
+            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());

@@ -9,8 +9,6 @@ package com.vesoft.nebula.client.meta;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
@@ -114,7 +112,7 @@ public class MetaClient extends AbstractMetaClient {
      *
      * @return
      */
-    public List<IdName> getSpaces() throws TException {
+    public synchronized List<IdName> getSpaces() throws TException {
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response = client.listSpaces(request);
         return response.getSpaces();
@@ -126,7 +124,7 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName nebula graph space
      * @return SpaceItem
      */
-    public SpaceItem getSpace(String spaceName) throws TException {
+    public synchronized SpaceItem getSpace(String spaceName) throws TException {
         GetSpaceReq request = new GetSpaceReq();
         request.setSpace_name(spaceName.getBytes());
         GetSpaceResp response = client.getSpace(request);
@@ -139,7 +137,8 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName nebula graph space
      * @return TagItem list
      */
-    public List<TagItem> getTags(String spaceName) throws TException, ExecuteFailedException {
+    public synchronized List<TagItem> getTags(String spaceName)
+        throws TException, ExecuteFailedException {
 
         int spaceID = getSpace(spaceName).space_id;
         ListTagsReq request = new ListTagsReq(spaceID);
@@ -169,7 +168,7 @@ public class MetaClient extends AbstractMetaClient {
      * @param tagName   nebula tag name
      * @return Schema
      */
-    public Schema getTag(String spaceName, String tagName)
+    public synchronized Schema getTag(String spaceName, String tagName)
             throws TException, ExecuteFailedException {
         GetTagReq request = new GetTagReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -204,7 +203,8 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName nebula graph space
      * @return EdgeItem list
      */
-    public List<EdgeItem> getEdges(String spaceName) throws TException, ExecuteFailedException {
+    public synchronized List<EdgeItem> getEdges(String spaceName)
+        throws TException, ExecuteFailedException {
         int spaceID = getSpace(spaceName).getSpace_id();
         ListEdgesReq request = new ListEdgesReq(spaceID);
         ListEdgesResp response;
@@ -232,7 +232,7 @@ public class MetaClient extends AbstractMetaClient {
      * @param edgeName  nebula edgeRow name
      * @return Schema
      */
-    public Schema getEdge(String spaceName, String edgeName)
+    public synchronized Schema getEdge(String spaceName, String edgeName)
             throws TException, ExecuteFailedException {
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -269,7 +269,7 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName Nebula space name
      * @return
      */
-    public Map<Integer, List<HostAddress>> getPartsAlloc(String spaceName)
+    public synchronized Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
             throws ExecuteFailedException, TException {
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -284,16 +284,7 @@ public class MetaClient extends AbstractMetaClient {
         }
 
         if (response.getCode() == ErrorCode.SUCCEEDED) {
-            Map<Integer, List<HostAddress>> addressMap = Maps.newHashMap();
-            for (Map.Entry<Integer, List<HostAddr>> entry : response.getParts().entrySet()) {
-                List<HostAddress> addresses = Lists.newLinkedList();
-                for (HostAddr address : entry.getValue()) {
-                    HostAddress pair = new HostAddress(address.getHost(), address.getPort());
-                    addresses.add(pair);
-                }
-                addressMap.put(entry.getKey(), addresses);
-            }
-            return addressMap;
+            return response.getParts();
         } else {
             // todo process leader change error
             LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
@@ -303,81 +294,9 @@ public class MetaClient extends AbstractMetaClient {
     }
 
     /**
-     * get all spaces info, used by {@link MetaManager}
-     *
-     * @return empty list if exception happen
-     */
-    protected List<IdName> listSpaces() {
-        List<IdName> response;
-        try {
-            response = getSpaces();
-        } catch (TException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()), e);
-            return Lists.newLinkedList();
-        }
-        if (response == null) {
-            return Lists.newLinkedList();
-        }
-        return response;
-    }
-
-
-    /**
-     * method for fill meta cache
-     *
-     * @param spaceName nebula graph space
-     * @return empty map if exception happen
-     */
-    protected Map<Integer, List<HostAddress>> getPartsLocation(String spaceName) {
-        Map<Integer, List<HostAddress>> result;
-        try {
-            result = getPartsAlloc(spaceName);
-        } catch (ExecuteFailedException | TException e) {
-            LOGGER.error("getPartsAlloc error, ", e);
-            return Maps.newHashMap();
-        }
-        return result;
-    }
-
-    /**
-     * method for fill meta cache
-     *
-     * @param spaceName nebula graph space
-     * @return empty list if exception happen
-     */
-    protected List<TagItem> listTags(String spaceName) {
-        List<TagItem> tagItems;
-        try {
-            tagItems = getTags(spaceName);
-        } catch (TException | ExecuteFailedException e) {
-            LOGGER.error("getTags error, ", e);
-            return Lists.newLinkedList();
-        }
-        return tagItems;
-    }
-
-    /**
-     * method for fill meta cache
-     *
-     * @param spaceName nebula graph space
-     * @return empty list if exception happen
-     */
-    protected List<EdgeItem> listEdges(String spaceName) {
-        List<EdgeItem> edgeItems;
-        try {
-            edgeItems = getEdges(spaceName);
-        } catch (TException | ExecuteFailedException e) {
-            LOGGER.error("getEdges error, ", e);
-            return Lists.newLinkedList();
-        }
-        return edgeItems;
-    }
-
-
-    /**
      * get all servers
      */
-    public Set<HostAddress> listHosts() {
+    public synchronized Set<HostAddr> listHosts() {
         ListHostsReq request = new ListHostsReq();
         // todo request.setType();
         ListHostsResp resp;
@@ -387,11 +306,10 @@ public class MetaClient extends AbstractMetaClient {
             LOGGER.error("listHosts error", e);
             return null;
         }
-        Set<HostAddress> hostAndPorts = new HashSet<>();
+        Set<HostAddr> hostAddrs = new HashSet<>();
         for (HostItem hostItem : resp.hosts) {
-            HostAddr addr = hostItem.getHostAddr();
-            hostAndPorts.add(new HostAddress(addr.getHost(), addr.getPort()));
+            hostAddrs.add(hostItem.getHostAddr());
         }
-        return hostAndPorts;
+        return hostAddrs;
     }
 }

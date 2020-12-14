@@ -4,29 +4,21 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.encoder;
+package com.vesoft.nebula.client.meta;
 
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.meta.EdgeItem;
-import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
 import java.util.Map;
 
 public interface MetaCache {
-
     SpaceItem getSpace(String spaceName);
-
-    List<IdName> listSpaces();
 
     TagItem getTag(String spaceName, String tagName);
 
-    List<TagItem> listTags(String spaceName);
-
     EdgeItem getEdge(String spaceName, String edgeName);
-
-    List<EdgeItem> listEdges(String spaceName);
 
     Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName);
 }

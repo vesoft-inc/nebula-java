@@ -44,6 +44,8 @@ public class MockNebulaGraph {
                 | IOErrorException | AuthFailedException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
+        } finally {
+            pool.close();
         }
     }
 
