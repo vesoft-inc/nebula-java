@@ -10,6 +10,7 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,8 +29,41 @@ public class NebulaPool {
     // the wait time to get idle connection, unit ms
     private final int waitTime = 60 * 1000;
 
+    private List<HostAddress> hostToIp(List<HostAddress> addresses)
+        throws UnknownHostException {
+        List<HostAddress> newAddrs = new ArrayList<>();
+        for (HostAddress addr : addresses) {
+            String ip = InetAddress.getByName(addr.getHost()).getHostAddress();
+            newAddrs.add(new HostAddress(ip, addr.getPort()));
+        }
+        return newAddrs;
+    }
+
+    private void checkConfig(NebulaPoolConfig config) {
+        if (config.getIdleTime() < 0) {
+            throw new InvalidConfigException(
+                "Config idleTime:" + config.getIdleTime() + " is illegal");
+        }
+
+        if (config.getMaxConnSize() <= 0) {
+            throw new InvalidConfigException(
+                "Config maxConnSize:" + config.getMaxConnSize() + " is illegal");
+        }
+
+        if (config.getMinConnSize() < 0 || config.getMinConnSize() > config.getMaxConnSize()) {
+            throw new InvalidConfigException(
+                "Config minConnSize:" + config.getMinConnSize() + " is illegal");
+        }
+
+        if (config.getTimeout() < 0) {
+            throw new InvalidConfigException(
+                "Config timeout:" + config.getTimeout() + " is illegal");
+        }
+    }
+
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
-            throws UnknownHostException {
+            throws UnknownHostException, InvalidConfigException {
+        checkConfig(config);
         List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
@@ -98,15 +132,5 @@ public class NebulaPool {
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();
         }
-    }
-
-    private List<HostAddress> hostToIp(List<HostAddress> addresses)
-            throws UnknownHostException {
-        List<HostAddress> newAddrs = new ArrayList<>();
-        for (HostAddress addr : addresses) {
-            String ip = InetAddress.getByName(addr.getHost()).getHostAddress();
-            newAddrs.add(new HostAddress(ip, addr.getPort()));
-        }
-        return newAddrs;
     }
 }

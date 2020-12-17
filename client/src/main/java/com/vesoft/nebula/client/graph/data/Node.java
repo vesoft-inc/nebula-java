@@ -103,9 +103,14 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{"
-            + "vertex=" + vertex
-            + ", decodeType='" + decodeType
-            + '}';
+        try {
+            List<String> tagsStr = new ArrayList<>();
+            for (String name : labels()) {
+                tagsStr.add(":" + name + properties(name).toString());
+            }
+            return "('%s' %s)".format(getId(), tagsStr.toString());
+        } catch (UnsupportedEncodingException e) {
+            return e.getMessage();
+        }
     }
 }

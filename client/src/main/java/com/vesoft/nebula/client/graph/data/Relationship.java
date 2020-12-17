@@ -12,7 +12,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Relationship {
     private final Edge edge;
@@ -33,8 +35,8 @@ public class Relationship {
         return new ValueWrapper(edge.dst, decodeType);
     }
 
-    public String edgeName() throws UnsupportedEncodingException {
-        return new String(edge.name, decodeType);
+    public String edgeName() {
+        return new String(edge.name);
     }
 
     public long ranking() {
@@ -93,12 +95,16 @@ public class Relationship {
 
     @Override
     public String toString() {
-        return "Relationship{"
-                + "srcId='" + edge.src
-                + ", dstId='" + edge.dst
-                + ", edgeName='" + edge.name
-                + ", ranking=" + edge.ranking
-                + ", propss=" + edge.props
-                + '}';
+        try {
+            List<String> propStrs = new ArrayList<>();
+            Map<String, ValueWrapper> props = properties();
+            for (String key : props.keySet()) {
+                propStrs.add(key + ":" + props.get(key).toString());
+            }
+            return String.format("(\"%s\")-[:%s@%d%s]->(\"%s\")",
+                srcId(), edgeName(), ranking(), "{" + String.join(", ", propStrs) + "}", dstId());
+        } catch (UnsupportedEncodingException e) {
+            return e.getMessage();
+        }
     }
 }

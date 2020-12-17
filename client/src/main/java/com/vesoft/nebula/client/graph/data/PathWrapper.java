@@ -49,11 +49,11 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
 
         @Override
         public String toString() {
-            return this.getClass().toString()
-                    + "{startNode=" + startNode.toString()
-                    + ", relationShip=" + relationShip.toString()
-                    + ", endNode=" + endNode.toString()
-                    + '}';
+            return "{}-[:{}@{}{}]->{}".format(startNode.toString(),
+                relationShip.edgeName(),
+                relationShip.ranking(),
+                relationShip.toString(),
+                endNode.toString());
         }
 
         @Override
@@ -143,7 +143,8 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
             vids.add(step.dst.vid);
             Edge edge = new Edge(srcId,
                                  dstId,
-                                 type, step.name,
+                                 type,
+                                 step.name,
                                  step.ranking,
                                  step.props);
             Relationship relationShip = new Relationship(edge);
@@ -190,11 +191,38 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
 
     @Override
     public String toString() {
-        return  this.getClass().toString()
-                + "{segments=" + segments.toString()
-                + ", nodes=" + nodes.toString()
-                + ", relationShips=" + relationships.toString()
-                + '}';
+        Node startNode = getStartNode();
+        List<String> edgeStrs = new ArrayList<>();
+        if (segments.size() >= 1) {
+            if (segments.get(0).getStartNode() == startNode) {
+                edgeStrs.add(String.format("-[:%s@%d]->(\"%s\")",
+                    segments.get(0).getRelationShip().edgeName(),
+                    segments.get(0).getRelationShip().ranking(),
+                    segments.get(0).getEndNode().getId()));
+            } else {
+                edgeStrs.add(String.format("<-[:%s@%d]-(\"%s\")",
+                    segments.get(0).getRelationShip().edgeName(),
+                    segments.get(0).getRelationShip().ranking(),
+                    segments.get(0).getStartNode().getId()));
+            }
+
+        }
+
+        for (int i = 1; i < segments.size(); i++) {
+            if (segments.get(i).getStartNode() == segments.get(i - 1).getStartNode()) {
+                edgeStrs.add(String.format("-[:%s@%d]->(\"%s\")",
+                    segments.get(i).getRelationShip().edgeName(),
+                    segments.get(i).getRelationShip().ranking(),
+                    segments.get(i).getEndNode().getId()));
+            } else {
+                edgeStrs.add(String.format("<-[:%s@%d]-(\"%s\")",
+                    segments.get(i).getRelationShip().edgeName(),
+                    segments.get(i).getRelationShip().ranking(),
+                    segments.get(i).getStartNode().getId()));
+            }
+        }
+        return String.format("(\"%s\")%s",
+            getStartNode().getId(), String.join("", edgeStrs));
     }
 
     @Override

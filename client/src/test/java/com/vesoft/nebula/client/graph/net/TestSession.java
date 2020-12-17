@@ -55,10 +55,16 @@ public class TestSession {
                 TimeUnit.SECONDS.sleep(2);
             }
             session.release();
+            // test release then execute ngql
+            ResultSet result = session.execute("SHOW SPACES;");
+            Assert.assertFalse(result.isSucceeded());
+
+            // get new session from the pool
             Session session1 = pool.getSession("root", "nebula", false);
             Assert.assertNotNull(session1);
             Session session2 = pool.getSession("root", "nebula", false);
             Assert.assertNotNull(session2);
+
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertFalse(e.getMessage(),false);
