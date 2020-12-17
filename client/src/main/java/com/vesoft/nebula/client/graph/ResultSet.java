@@ -105,9 +105,11 @@ public class ResultSet {
             this.columns.add(new String(column).intern());
         }
         this.rows = rows;
-        this.results = new ArrayList<>(rows.size());
-        for (RowValue row : this.rows) {
-            this.results.add(new Result(this.columns, row));
+        if (rows != null && rows.size() > 0) {
+            this.results = new ArrayList<>(rows.size());
+            for (RowValue row : this.rows) {
+                this.results.add(new Result(this.columns, row));
+            }
         }
     }
 
