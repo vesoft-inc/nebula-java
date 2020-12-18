@@ -239,10 +239,11 @@ public class AsyncGraphClientExample {
                 }
             }, service);
             latch4.await();
-            client.close();
+
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
             client.close();
         }
     }
