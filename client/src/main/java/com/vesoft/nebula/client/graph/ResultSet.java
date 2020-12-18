@@ -110,6 +110,8 @@ public class ResultSet {
             for (RowValue row : this.rows) {
                 this.results.add(new Result(this.columns, row));
             }
+        } else {
+            this.rows = new ArrayList<>();
         }
     }
 
