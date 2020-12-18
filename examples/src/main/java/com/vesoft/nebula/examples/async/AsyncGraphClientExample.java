@@ -67,6 +67,7 @@ public class AsyncGraphClientExample {
                 + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
                 + "$$.student.age AS Age, $$.student.gender AS Gender;";
 
+    // create space first
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
             System.out.println("Usage: " + "com.vesoft.nebula.examples.GraphClientExample <host> "
