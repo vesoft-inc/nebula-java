@@ -33,19 +33,17 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField CURSOR_FIELD_DESC = new TField("cursor", TType.STRING, (short)3);
   private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.STRUCT, (short)4);
-  private static final TField NO_COLUMNS_FIELD_DESC = new TField("no_columns", TType.BOOL, (short)5);
-  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)6);
-  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)7);
-  private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)8);
-  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)9);
-  private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)10);
-  private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)11);
+  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)5);
+  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)6);
+  private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)7);
+  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)8);
+  private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)9);
+  private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)10);
 
   public int space_id;
   public int part_id;
   public byte[] cursor;
   public VertexProp return_columns;
-  public boolean no_columns;
   public int limit;
   public long start_time;
   public long end_time;
@@ -56,25 +54,23 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public static final int PART_ID = 2;
   public static final int CURSOR = 3;
   public static final int RETURN_COLUMNS = 4;
-  public static final int NO_COLUMNS = 5;
-  public static final int LIMIT = 6;
-  public static final int START_TIME = 7;
-  public static final int END_TIME = 8;
-  public static final int FILTER = 9;
-  public static final int ONLY_LATEST_VERSION = 10;
-  public static final int ENABLE_READ_FROM_FOLLOWER = 11;
+  public static final int LIMIT = 5;
+  public static final int START_TIME = 6;
+  public static final int END_TIME = 7;
+  public static final int FILTER = 8;
+  public static final int ONLY_LATEST_VERSION = 9;
+  public static final int ENABLE_READ_FROM_FOLLOWER = 10;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __PART_ID_ISSET_ID = 1;
-  private static final int __NO_COLUMNS_ISSET_ID = 2;
-  private static final int __LIMIT_ISSET_ID = 3;
-  private static final int __START_TIME_ISSET_ID = 4;
-  private static final int __END_TIME_ISSET_ID = 5;
-  private static final int __ONLY_LATEST_VERSION_ISSET_ID = 6;
-  private static final int __ENABLE_READ_FROM_FOLLOWER_ISSET_ID = 7;
-  private BitSet __isset_bit_vector = new BitSet(8);
+  private static final int __LIMIT_ISSET_ID = 2;
+  private static final int __START_TIME_ISSET_ID = 3;
+  private static final int __END_TIME_ISSET_ID = 4;
+  private static final int __ONLY_LATEST_VERSION_ISSET_ID = 5;
+  private static final int __ENABLE_READ_FROM_FOLLOWER_ISSET_ID = 6;
+  private BitSet __isset_bit_vector = new BitSet(7);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -87,8 +83,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, VertexProp.class)));
-    tmpMetaDataMap.put(NO_COLUMNS, new FieldMetaData("no_columns", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.OPTIONAL, 
@@ -119,7 +113,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     int space_id,
     int part_id,
     VertexProp return_columns,
-    boolean no_columns,
     int limit,
     boolean only_latest_version,
     boolean enable_read_from_follower)
@@ -130,8 +123,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.return_columns = return_columns;
-    this.no_columns = no_columns;
-    setNo_columnsIsSet(true);
     this.limit = limit;
     setLimitIsSet(true);
     this.only_latest_version = only_latest_version;
@@ -145,7 +136,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     int part_id,
     byte[] cursor,
     VertexProp return_columns,
-    boolean no_columns,
     int limit,
     long start_time,
     long end_time,
@@ -160,8 +150,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     setPart_idIsSet(true);
     this.cursor = cursor;
     this.return_columns = return_columns;
-    this.no_columns = no_columns;
-    setNo_columnsIsSet(true);
     this.limit = limit;
     setLimitIsSet(true);
     this.start_time = start_time;
@@ -189,7 +177,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
     }
-    this.no_columns = TBaseHelper.deepCopy(other.no_columns);
     this.limit = TBaseHelper.deepCopy(other.limit);
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.end_time = TBaseHelper.deepCopy(other.end_time);
@@ -301,29 +288,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (!value) {
       this.return_columns = null;
     }
-  }
-
-  public boolean  isNo_columns() {
-    return this.no_columns;
-  }
-
-  public ScanVertexRequest setNo_columns(boolean no_columns) {
-    this.no_columns = no_columns;
-    setNo_columnsIsSet(true);
-    return this;
-  }
-
-  public void unsetNo_columns() {
-    __isset_bit_vector.clear(__NO_COLUMNS_ISSET_ID);
-  }
-
-  // Returns true if field no_columns is set (has been assigned a value) and false otherwise
-  public boolean isSetNo_columns() {
-    return __isset_bit_vector.get(__NO_COLUMNS_ISSET_ID);
-  }
-
-  public void setNo_columnsIsSet(boolean value) {
-    __isset_bit_vector.set(__NO_COLUMNS_ISSET_ID, value);
   }
 
   public int  getLimit() {
@@ -499,14 +463,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case NO_COLUMNS:
-      if (value == null) {
-        unsetNo_columns();
-      } else {
-        setNo_columns((Boolean)value);
-      }
-      break;
-
     case LIMIT:
       if (value == null) {
         unsetLimit();
@@ -574,9 +530,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     case RETURN_COLUMNS:
       return getReturn_columns();
 
-    case NO_COLUMNS:
-      return new Boolean(isNo_columns());
-
     case LIMIT:
       return new Integer(getLimit());
 
@@ -611,8 +564,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return isSetCursor();
     case RETURN_COLUMNS:
       return isSetReturn_columns();
-    case NO_COLUMNS:
-      return isSetNo_columns();
     case LIMIT:
       return isSetLimit();
     case START_TIME:
@@ -678,15 +629,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       if (!(this_present_return_columns && that_present_return_columns))
         return false;
       if (!TBaseHelper.equalsNobinary(this.return_columns, that.return_columns))
-        return false;
-    }
-
-    boolean this_present_no_columns = true;
-    boolean that_present_no_columns = true;
-    if (this_present_no_columns || that_present_no_columns) {
-      if (!(this_present_no_columns && that_present_no_columns))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.no_columns, that.no_columns))
         return false;
     }
 
@@ -771,11 +713,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (present_return_columns)
       builder.append(return_columns);
 
-    boolean present_no_columns = true;
-    builder.append(present_no_columns);
-    if (present_no_columns)
-      builder.append(no_columns);
-
     boolean present_limit = true;
     builder.append(present_limit);
     if (present_limit)
@@ -850,14 +787,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(return_columns, other.return_columns);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetNo_columns()).compareTo(other.isSetNo_columns());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(no_columns, other.no_columns);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -954,14 +883,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case NO_COLUMNS:
-          if (field.type == TType.BOOL) {
-            this.no_columns = iprot.readBool();
-            setNo_columnsIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
         case LIMIT:
           if (field.type == TType.I32) {
             this.limit = iprot.readI32();
@@ -1044,9 +965,6 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       this.return_columns.write(oprot);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(NO_COLUMNS_FIELD_DESC);
-    oprot.writeBool(this.no_columns);
-    oprot.writeFieldEnd();
     oprot.writeFieldBegin(LIMIT_FIELD_DESC);
     oprot.writeI32(this.limit);
     oprot.writeFieldEnd();
@@ -1140,13 +1058,6 @@ String space = prettyPrint ? " " : "";
     } else {
       sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
     }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("no_columns");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isNo_columns(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

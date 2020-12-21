@@ -36,6 +36,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField COLLATE_NAME_FIELD_DESC = new TField("collate_name", TType.STRING, (short)5);
   private static final TField VID_TYPE_FIELD_DESC = new TField("vid_type", TType.STRUCT, (short)6);
   private static final TField GROUP_NAME_FIELD_DESC = new TField("group_name", TType.STRING, (short)7);
+  private static final TField ISOLATION_LEVEL_FIELD_DESC = new TField("isolation_level", TType.I32, (short)8);
 
   public byte[] space_name;
   public int partition_num;
@@ -44,6 +45,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   public byte[] collate_name;
   public ColumnTypeDef vid_type;
   public byte[] group_name;
+  /**
+   * 
+   * @see IsolationLevel
+   */
+  public int isolation_level;
   public static final int SPACE_NAME = 1;
   public static final int PARTITION_NUM = 2;
   public static final int REPLICA_FACTOR = 3;
@@ -51,12 +57,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   public static final int COLLATE_NAME = 5;
   public static final int VID_TYPE = 6;
   public static final int GROUP_NAME = 7;
+  public static final int ISOLATION_LEVEL = 8;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __PARTITION_NUM_ISSET_ID = 0;
   private static final int __REPLICA_FACTOR_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __ISOLATION_LEVEL_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -75,6 +83,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         new StructMetaData(TType.STRUCT, ColumnTypeDef.class)));
     tmpMetaDataMap.put(GROUP_NAME, new FieldMetaData("group_name", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(ISOLATION_LEVEL, new FieldMetaData("isolation_level", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -119,7 +129,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     byte[] charset_name,
     byte[] collate_name,
     ColumnTypeDef vid_type,
-    byte[] group_name)
+    byte[] group_name,
+    int isolation_level)
   {
     this();
     this.space_name = space_name;
@@ -131,6 +142,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.collate_name = collate_name;
     this.vid_type = vid_type;
     this.group_name = group_name;
+    this.isolation_level = isolation_level;
+    setIsolation_levelIsSet(true);
   }
 
   /**
@@ -156,6 +169,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     if (other.isSetGroup_name()) {
       this.group_name = TBaseHelper.deepCopy(other.group_name);
     }
+    this.isolation_level = TBaseHelper.deepCopy(other.isolation_level);
   }
 
   public SpaceDesc deepCopy() {
@@ -333,6 +347,37 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
+  /**
+   * 
+   * @see IsolationLevel
+   */
+  public int  getIsolation_level() {
+    return this.isolation_level;
+  }
+
+  /**
+   * 
+   * @see IsolationLevel
+   */
+  public SpaceDesc setIsolation_level(int isolation_level) {
+    this.isolation_level = isolation_level;
+    setIsolation_levelIsSet(true);
+    return this;
+  }
+
+  public void unsetIsolation_level() {
+    __isset_bit_vector.clear(__ISOLATION_LEVEL_ISSET_ID);
+  }
+
+  // Returns true if field isolation_level is set (has been assigned a value) and false otherwise
+  public boolean isSetIsolation_level() {
+    return __isset_bit_vector.get(__ISOLATION_LEVEL_ISSET_ID);
+  }
+
+  public void setIsolation_levelIsSet(boolean value) {
+    __isset_bit_vector.set(__ISOLATION_LEVEL_ISSET_ID, value);
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_NAME:
@@ -391,6 +436,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       }
       break;
 
+    case ISOLATION_LEVEL:
+      if (value == null) {
+        unsetIsolation_level();
+      } else {
+        setIsolation_level((Integer)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -419,6 +472,9 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     case GROUP_NAME:
       return getGroup_name();
 
+    case ISOLATION_LEVEL:
+      return getIsolation_level();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -441,6 +497,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return isSetVid_type();
     case GROUP_NAME:
       return isSetGroup_name();
+    case ISOLATION_LEVEL:
+      return isSetIsolation_level();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -524,6 +582,15 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         return false;
     }
 
+    boolean this_present_isolation_level = true && this.isSetIsolation_level();
+    boolean that_present_isolation_level = true && that.isSetIsolation_level();
+    if (this_present_isolation_level || that_present_isolation_level) {
+      if (!(this_present_isolation_level && that_present_isolation_level))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.isolation_level, that.isolation_level))
+        return false;
+    }
+
     return true;
   }
 
@@ -565,6 +632,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     builder.append(present_group_name);
     if (present_group_name)
       builder.append(group_name);
+
+    boolean present_isolation_level = true && (isSetIsolation_level());
+    builder.append(present_isolation_level);
+    if (present_isolation_level)
+      builder.append(isolation_level);
 
     return builder.toHashCode();
   }
@@ -637,6 +709,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     if (lastComparison != 0) {
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetIsolation_level()).compareTo(other.isSetIsolation_level());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(isolation_level, other.isolation_level);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -703,6 +783,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case ISOLATION_LEVEL:
+          if (field.type == TType.I32) {
+            this.isolation_level = iprot.readI32();
+            setIsolation_levelIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -752,6 +840,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         oprot.writeBinary(this.group_name);
         oprot.writeFieldEnd();
       }
+    }
+    if (isSetIsolation_level()) {
+      oprot.writeFieldBegin(ISOLATION_LEVEL_FIELD_DESC);
+      oprot.writeI32(this.isolation_level);
+      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -869,6 +962,24 @@ String space = prettyPrint ? " " : "";
       }
       first = false;
     }
+    if (isSetIsolation_level())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("isolation_level");
+      sb.append(space);
+      sb.append(":").append(space);
+      String isolation_level_name = IsolationLevel.VALUES_TO_NAMES.get(this. getIsolation_level());
+      if (isolation_level_name != null) {
+        sb.append(isolation_level_name);
+        sb.append(" (");
+      }
+      sb.append(this. getIsolation_level());
+      if (isolation_level_name != null) {
+        sb.append(")");
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
@@ -877,6 +988,9 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
+    if (isSetIsolation_level() && !IsolationLevel.VALID_VALUES.contains(isolation_level)){
+      throw new TProtocolException("The field 'isolation_level' has been assigned the invalid value " + isolation_level);
+    }
   }
 
 }

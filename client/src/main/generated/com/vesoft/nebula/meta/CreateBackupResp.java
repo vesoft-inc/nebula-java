@@ -27,11 +27,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListFTClientsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListFTClientsResp");
+public class CreateBackupResp implements TBase, java.io.Serializable, Cloneable, Comparable<CreateBackupResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("CreateBackupResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.LIST, (short)3);
+  private static final TField META_FIELD_DESC = new TField("meta", TType.STRUCT, (short)3);
 
   /**
    * 
@@ -39,10 +39,10 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    */
   public int code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<FTClient> clients;
+  public BackupMeta meta;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int CLIENTS = 3;
+  public static final int META = 3;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -56,53 +56,52 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(CLIENTS, new FieldMetaData("clients", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, FTClient.class))));
+    tmpMetaDataMap.put(META, new FieldMetaData("meta", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, BackupMeta.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListFTClientsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(CreateBackupResp.class, metaDataMap);
   }
 
-  public ListFTClientsResp() {
+  public CreateBackupResp() {
   }
 
-  public ListFTClientsResp(
+  public CreateBackupResp(
     int code,
     com.vesoft.nebula.HostAddr leader,
-    List<FTClient> clients)
+    BackupMeta meta)
   {
     this();
     this.code = code;
     setCodeIsSet(true);
     this.leader = leader;
-    this.clients = clients;
+    this.meta = meta;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListFTClientsResp(ListFTClientsResp other) {
+  public CreateBackupResp(CreateBackupResp other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.code = TBaseHelper.deepCopy(other.code);
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetClients()) {
-      this.clients = TBaseHelper.deepCopy(other.clients);
+    if (other.isSetMeta()) {
+      this.meta = TBaseHelper.deepCopy(other.meta);
     }
   }
 
-  public ListFTClientsResp deepCopy() {
-    return new ListFTClientsResp(this);
+  public CreateBackupResp deepCopy() {
+    return new CreateBackupResp(this);
   }
 
   @Deprecated
-  public ListFTClientsResp clone() {
-    return new ListFTClientsResp(this);
+  public CreateBackupResp clone() {
+    return new CreateBackupResp(this);
   }
 
   /**
@@ -117,7 +116,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    * 
    * @see ErrorCode
    */
-  public ListFTClientsResp setCode(int code) {
+  public CreateBackupResp setCode(int code) {
     this.code = code;
     setCodeIsSet(true);
     return this;
@@ -140,7 +139,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     return this.leader;
   }
 
-  public ListFTClientsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public CreateBackupResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -160,31 +159,30 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<FTClient>  getClients() {
-    return this.clients;
+  public BackupMeta  getMeta() {
+    return this.meta;
   }
 
-  public ListFTClientsResp setClients(List<FTClient> clients) {
-    this.clients = clients;
+  public CreateBackupResp setMeta(BackupMeta meta) {
+    this.meta = meta;
     return this;
   }
 
-  public void unsetClients() {
-    this.clients = null;
+  public void unsetMeta() {
+    this.meta = null;
   }
 
-  // Returns true if field clients is set (has been assigned a value) and false otherwise
-  public boolean isSetClients() {
-    return this.clients != null;
+  // Returns true if field meta is set (has been assigned a value) and false otherwise
+  public boolean isSetMeta() {
+    return this.meta != null;
   }
 
-  public void setClientsIsSet(boolean value) {
+  public void setMetaIsSet(boolean value) {
     if (!value) {
-      this.clients = null;
+      this.meta = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case CODE:
@@ -203,11 +201,11 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case CLIENTS:
+    case META:
       if (value == null) {
-        unsetClients();
+        unsetMeta();
       } else {
-        setClients((List<FTClient>)value);
+        setMeta((BackupMeta)value);
       }
       break;
 
@@ -224,8 +222,8 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     case LEADER:
       return getLeader();
 
-    case CLIENTS:
-      return getClients();
+    case META:
+      return getMeta();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -239,8 +237,8 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return isSetCode();
     case LEADER:
       return isSetLeader();
-    case CLIENTS:
-      return isSetClients();
+    case META:
+      return isSetMeta();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -250,12 +248,12 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ListFTClientsResp)
-      return this.equals((ListFTClientsResp)that);
+    if (that instanceof CreateBackupResp)
+      return this.equals((CreateBackupResp)that);
     return false;
   }
 
-  public boolean equals(ListFTClientsResp that) {
+  public boolean equals(CreateBackupResp that) {
     if (that == null)
       return false;
     if (this == that)
@@ -279,12 +277,12 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
         return false;
     }
 
-    boolean this_present_clients = true && this.isSetClients();
-    boolean that_present_clients = true && that.isSetClients();
-    if (this_present_clients || that_present_clients) {
-      if (!(this_present_clients && that_present_clients))
+    boolean this_present_meta = true && this.isSetMeta();
+    boolean that_present_meta = true && that.isSetMeta();
+    if (this_present_meta || that_present_meta) {
+      if (!(this_present_meta && that_present_meta))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.clients, that.clients))
+      if (!TBaseHelper.equalsNobinary(this.meta, that.meta))
         return false;
     }
 
@@ -305,16 +303,16 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     if (present_leader)
       builder.append(leader);
 
-    boolean present_clients = true && (isSetClients());
-    builder.append(present_clients);
-    if (present_clients)
-      builder.append(clients);
+    boolean present_meta = true && (isSetMeta());
+    builder.append(present_meta);
+    if (present_meta)
+      builder.append(meta);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(ListFTClientsResp other) {
+  public int compareTo(CreateBackupResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -341,11 +339,11 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetClients()).compareTo(other.isSetClients());
+    lastComparison = Boolean.valueOf(isSetMeta()).compareTo(other.isSetMeta());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(clients, other.clients);
+    lastComparison = TBaseHelper.compareTo(meta, other.meta);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -379,22 +377,10 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case CLIENTS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list248 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list248.size));
-              for (int _i249 = 0; 
-                   (_list248.size < 0) ? iprot.peekList() : (_i249 < _list248.size); 
-                   ++_i249)
-              {
-                FTClient _elem250;
-                _elem250 = new FTClient();
-                _elem250.read(iprot);
-                this.clients.add(_elem250);
-              }
-              iprot.readListEnd();
-            }
+        case META:
+          if (field.type == TType.STRUCT) {
+            this.meta = new BackupMeta();
+            this.meta.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -424,15 +410,9 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.clients != null) {
-      oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter251 : this.clients)        {
-          _iter251.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
+    if (this.meta != null) {
+      oprot.writeFieldBegin(META_FIELD_DESC);
+      this.meta.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -454,7 +434,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListFTClientsResp");
+    StringBuilder sb = new StringBuilder("CreateBackupResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -487,13 +467,13 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("clients");
+    sb.append("meta");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getClients() == null) {
+    if (this. getMeta() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getClients(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this. getMeta(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

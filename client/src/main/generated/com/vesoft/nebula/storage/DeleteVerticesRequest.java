@@ -264,30 +264,30 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map121 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Value>>(Math.max(0, 2*_map121.size));
-              for (int _i122 = 0; 
-                   (_map121.size < 0) ? iprot.peekMap() : (_i122 < _map121.size); 
-                   ++_i122)
+              TMap _map117 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Value>>(Math.max(0, 2*_map117.size));
+              for (int _i118 = 0; 
+                   (_map117.size < 0) ? iprot.peekMap() : (_i118 < _map117.size); 
+                   ++_i118)
               {
-                int _key123;
-                List<com.vesoft.nebula.Value> _val124;
-                _key123 = iprot.readI32();
+                int _key119;
+                List<com.vesoft.nebula.Value> _val120;
+                _key119 = iprot.readI32();
                 {
-                  TList _list125 = iprot.readListBegin();
-                  _val124 = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list125.size));
-                  for (int _i126 = 0; 
-                       (_list125.size < 0) ? iprot.peekList() : (_i126 < _list125.size); 
-                       ++_i126)
+                  TList _list121 = iprot.readListBegin();
+                  _val120 = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list121.size));
+                  for (int _i122 = 0; 
+                       (_list121.size < 0) ? iprot.peekList() : (_i122 < _list121.size); 
+                       ++_i122)
                   {
-                    com.vesoft.nebula.Value _elem127;
-                    _elem127 = new com.vesoft.nebula.Value();
-                    _elem127.read(iprot);
-                    _val124.add(_elem127);
+                    com.vesoft.nebula.Value _elem123;
+                    _elem123 = new com.vesoft.nebula.Value();
+                    _elem123.read(iprot);
+                    _val120.add(_elem123);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key123, _val124);
+                this.parts.put(_key119, _val120);
               }
               iprot.readMapEnd();
             }
@@ -319,12 +319,12 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Value>> _iter128 : this.parts.entrySet())        {
-          oprot.writeI32(_iter128.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Value>> _iter124 : this.parts.entrySet())        {
+          oprot.writeI32(_iter124.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter128.getValue().size()));
-            for (com.vesoft.nebula.Value _iter129 : _iter128.getValue())            {
-              _iter129.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter124.getValue().size()));
+            for (com.vesoft.nebula.Value _iter125 : _iter124.getValue())            {
+              _iter125.write(oprot);
             }
             oprot.writeListEnd();
           }

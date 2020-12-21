@@ -390,30 +390,30 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map90 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<NewVertex>>(Math.max(0, 2*_map90.size));
-              for (int _i91 = 0; 
-                   (_map90.size < 0) ? iprot.peekMap() : (_i91 < _map90.size); 
-                   ++_i91)
+              TMap _map86 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<NewVertex>>(Math.max(0, 2*_map86.size));
+              for (int _i87 = 0; 
+                   (_map86.size < 0) ? iprot.peekMap() : (_i87 < _map86.size); 
+                   ++_i87)
               {
-                int _key92;
-                List<NewVertex> _val93;
-                _key92 = iprot.readI32();
+                int _key88;
+                List<NewVertex> _val89;
+                _key88 = iprot.readI32();
                 {
-                  TList _list94 = iprot.readListBegin();
-                  _val93 = new ArrayList<NewVertex>(Math.max(0, _list94.size));
-                  for (int _i95 = 0; 
-                       (_list94.size < 0) ? iprot.peekList() : (_i95 < _list94.size); 
-                       ++_i95)
+                  TList _list90 = iprot.readListBegin();
+                  _val89 = new ArrayList<NewVertex>(Math.max(0, _list90.size));
+                  for (int _i91 = 0; 
+                       (_list90.size < 0) ? iprot.peekList() : (_i91 < _list90.size); 
+                       ++_i91)
                   {
-                    NewVertex _elem96;
-                    _elem96 = new NewVertex();
-                    _elem96.read(iprot);
-                    _val93.add(_elem96);
+                    NewVertex _elem92;
+                    _elem92 = new NewVertex();
+                    _elem92.read(iprot);
+                    _val89.add(_elem92);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key92, _val93);
+                this.parts.put(_key88, _val89);
               }
               iprot.readMapEnd();
             }
@@ -424,29 +424,29 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         case PROP_NAMES:
           if (field.type == TType.MAP) {
             {
-              TMap _map97 = iprot.readMapBegin();
-              this.prop_names = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map97.size));
-              for (int _i98 = 0; 
-                   (_map97.size < 0) ? iprot.peekMap() : (_i98 < _map97.size); 
-                   ++_i98)
+              TMap _map93 = iprot.readMapBegin();
+              this.prop_names = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map93.size));
+              for (int _i94 = 0; 
+                   (_map93.size < 0) ? iprot.peekMap() : (_i94 < _map93.size); 
+                   ++_i94)
               {
-                int _key99;
-                List<byte[]> _val100;
-                _key99 = iprot.readI32();
+                int _key95;
+                List<byte[]> _val96;
+                _key95 = iprot.readI32();
                 {
-                  TList _list101 = iprot.readListBegin();
-                  _val100 = new ArrayList<byte[]>(Math.max(0, _list101.size));
-                  for (int _i102 = 0; 
-                       (_list101.size < 0) ? iprot.peekList() : (_i102 < _list101.size); 
-                       ++_i102)
+                  TList _list97 = iprot.readListBegin();
+                  _val96 = new ArrayList<byte[]>(Math.max(0, _list97.size));
+                  for (int _i98 = 0; 
+                       (_list97.size < 0) ? iprot.peekList() : (_i98 < _list97.size); 
+                       ++_i98)
                   {
-                    byte[] _elem103;
-                    _elem103 = iprot.readBinary();
-                    _val100.add(_elem103);
+                    byte[] _elem99;
+                    _elem99 = iprot.readBinary();
+                    _val96.add(_elem99);
                   }
                   iprot.readListEnd();
                 }
-                this.prop_names.put(_key99, _val100);
+                this.prop_names.put(_key95, _val96);
               }
               iprot.readMapEnd();
             }
@@ -486,12 +486,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<NewVertex>> _iter104 : this.parts.entrySet())        {
-          oprot.writeI32(_iter104.getKey());
+        for (Map.Entry<Integer, List<NewVertex>> _iter100 : this.parts.entrySet())        {
+          oprot.writeI32(_iter100.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter104.getValue().size()));
-            for (NewVertex _iter105 : _iter104.getValue())            {
-              _iter105.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter100.getValue().size()));
+            for (NewVertex _iter101 : _iter100.getValue())            {
+              _iter101.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -504,12 +504,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PROP_NAMES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.prop_names.size()));
-        for (Map.Entry<Integer, List<byte[]>> _iter106 : this.prop_names.entrySet())        {
-          oprot.writeI32(_iter106.getKey());
+        for (Map.Entry<Integer, List<byte[]>> _iter102 : this.prop_names.entrySet())        {
+          oprot.writeI32(_iter102.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRING, _iter106.getValue().size()));
-            for (byte[] _iter107 : _iter106.getValue())            {
-              oprot.writeBinary(_iter107);
+            oprot.writeListBegin(new TList(TType.STRING, _iter102.getValue().size()));
+            for (byte[] _iter103 : _iter102.getValue())            {
+              oprot.writeBinary(_iter103);
             }
             oprot.writeListEnd();
           }
