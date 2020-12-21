@@ -13,13 +13,11 @@ import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
-public class PathWrapper implements Iterable<PathWrapper.Segment> {
+public class PathWrapper {
     private List<Segment> segments = new ArrayList<>();
     private List<Node> nodes = new ArrayList<>();
     private List<Relationship> relationships = new ArrayList<>();
@@ -45,15 +43,6 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
 
         public Node getEndNode() {
             return endNode;
-        }
-
-        @Override
-        public String toString() {
-            return "{}-[:{}@{}{}]->{}".format(startNode.toString(),
-                relationShip.edgeName(),
-                relationShip.ranking(),
-                relationShip.toString(),
-                endNode.toString());
         }
 
         @Override
@@ -169,21 +158,6 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
         return index >= 0;
     }
 
-    @Override
-    public Iterator<Segment> iterator() {
-        return null;
-    }
-
-    @Override
-    public void forEach(Consumer<? super Segment> action) {
-
-    }
-
-    @Override
-    public Spliterator<Segment> spliterator() {
-        return null;
-    }
-
     public boolean containRelationShip(Relationship relationShip) {
         int index = relationships.indexOf(relationShip);
         return index >= 0;
@@ -191,38 +165,56 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
 
     @Override
     public String toString() {
-        Node startNode = getStartNode();
-        List<String> edgeStrs = new ArrayList<>();
-        if (segments.size() >= 1) {
-            if (segments.get(0).getStartNode() == startNode) {
-                edgeStrs.add(String.format("-[:%s@%d]->(\"%s\")",
-                    segments.get(0).getRelationShip().edgeName(),
-                    segments.get(0).getRelationShip().ranking(),
-                    segments.get(0).getEndNode().getId()));
-            } else {
-                edgeStrs.add(String.format("<-[:%s@%d]-(\"%s\")",
-                    segments.get(0).getRelationShip().edgeName(),
-                    segments.get(0).getRelationShip().ranking(),
-                    segments.get(0).getStartNode().getId()));
+        try {
+            Node startNode = getStartNode();
+            List<String> edgeStrs = new ArrayList<>();
+            if (segments.size() >= 1) {
+                List<String> propStrs = new ArrayList<>();
+                Map<String, ValueWrapper> props = segments.get(0).getRelationShip().properties();
+                for (String key : props.keySet()) {
+                    propStrs.add(key + ":" + props.get(key).toString());
+                }
+                if (segments.get(0).getStartNode() == startNode) {
+                    edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
+                        segments.get(0).getRelationShip().edgeName(),
+                        segments.get(0).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(0).getEndNode().toString()));
+                } else {
+                    edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
+                        segments.get(0).getRelationShip().edgeName(),
+                        segments.get(0).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(0).getStartNode().toString()));
+                }
+
             }
 
-        }
-
-        for (int i = 1; i < segments.size(); i++) {
-            if (segments.get(i).getStartNode() == segments.get(i - 1).getStartNode()) {
-                edgeStrs.add(String.format("-[:%s@%d]->(\"%s\")",
-                    segments.get(i).getRelationShip().edgeName(),
-                    segments.get(i).getRelationShip().ranking(),
-                    segments.get(i).getEndNode().getId()));
-            } else {
-                edgeStrs.add(String.format("<-[:%s@%d]-(\"%s\")",
-                    segments.get(i).getRelationShip().edgeName(),
-                    segments.get(i).getRelationShip().ranking(),
-                    segments.get(i).getStartNode().getId()));
+            for (int i = 1; i < segments.size(); i++) {
+                List<String> propStrs = new ArrayList<>();
+                Map<String, ValueWrapper> props = segments.get(0).getRelationShip().properties();
+                for (String key : props.keySet()) {
+                    propStrs.add(key + ":" + props.get(key).toString());
+                }
+                if (segments.get(i).getStartNode() == segments.get(i - 1).getStartNode()) {
+                    edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
+                        segments.get(i).getRelationShip().edgeName(),
+                        segments.get(i).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(i).getEndNode().toString()));
+                } else {
+                    edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
+                        segments.get(i).getRelationShip().edgeName(),
+                        segments.get(i).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(i).getStartNode().toString()));
+                }
             }
+            return String.format("%s%s",
+                getStartNode().toString(), String.join("", edgeStrs));
+        } catch (UnsupportedEncodingException e) {
+            return e.getMessage();
         }
-        return String.format("(\"%s\")%s",
-            getStartNode().getId(), String.join("", edgeStrs));
     }
 
     @Override

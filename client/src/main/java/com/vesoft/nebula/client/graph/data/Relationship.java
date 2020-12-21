@@ -99,10 +99,10 @@ public class Relationship {
             List<String> propStrs = new ArrayList<>();
             Map<String, ValueWrapper> props = properties();
             for (String key : props.keySet()) {
-                propStrs.add(key + ":" + props.get(key).toString());
+                propStrs.add(key + ": " + props.get(key).toString());
             }
-            return String.format("(\"%s\")-[:%s@%d%s]->(\"%s\")",
-                srcId(), edgeName(), ranking(), "{" + String.join(", ", propStrs) + "}", dstId());
+            return String.format("(\"%s\")-[:%s@%d{%s}]->(\"%s\")",
+                srcId(), edgeName(), ranking(), String.join(", ", propStrs), dstId());
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }

@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Node {
@@ -105,10 +106,15 @@ public class Node {
     public String toString() {
         try {
             List<String> tagsStr = new ArrayList<>();
+            List<String> propStrs = new ArrayList<>();
             for (String name : labels()) {
-                tagsStr.add(":" + name + properties(name).toString());
+                Map<String, ValueWrapper> props = properties(name);
+                for (String key : props.keySet()) {
+                    propStrs.add(key + ": " + props.get(key).toString());
+                }
+                tagsStr.add(String.format(":%s {%s}", name, String.join(", ", propStrs)));
             }
-            return "('%s' %s)".format(getId(), tagsStr.toString());
+            return String.format("(\"%s\" %s)", getId(), String.join(" ", tagsStr));
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }

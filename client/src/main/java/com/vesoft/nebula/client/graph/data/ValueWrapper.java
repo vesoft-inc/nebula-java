@@ -310,8 +310,10 @@ public class ValueWrapper {
                 return String.valueOf(asBoolean());
             } else if (isLong()) {
                 return String.valueOf(asLong());
+            } else if (isDouble()) {
+                return String.valueOf(asDouble());
             } else if (isString()) {
-                return asString();
+                return "\"" + asString() + "\"";
             } else if (isList()) {
                 return asList().toString();
             } else if (isSet()) {
@@ -331,7 +333,7 @@ public class ValueWrapper {
             } else if (isPath()) {
                 return asPath().toString();
             }
-            return "Unknown";
+            return "Unknown type: " + descType();
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }
