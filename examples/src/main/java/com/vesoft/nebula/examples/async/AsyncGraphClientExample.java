@@ -16,6 +16,7 @@ import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClient;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl;
 import com.vesoft.nebula.graph.ErrorCode;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +30,14 @@ public class AsyncGraphClientExample {
     private static final String SPACE_NAME = "test";
 
     private static final String[] createTags = {
-        "CREATE TAG course(name string, credits int);",
-        "CREATE TAG building(name string);",
-        "CREATE TAG student(name string, age int, gender string);",
+        "CREATE TAG IF NOT EXISTS course(name string, credits int);",
+        "CREATE TAG IF NOT EXISTS building(name string);",
+        "CREATE TAG IF NOT EXISTS student(name string, age int, gender string);",
     };
 
     private static final String[] createEdges = {
-        "CREATE EDGE like(likeness double);",
-        "CREATE EDGE select(grade int);"
+        "CREATE EDGE IF NOT EXISTS like(likeness double);",
+        "CREATE EDGE IF NOT EXISTS select(grade int);"
     };
 
     private static final String[] insertVertices = {
@@ -66,6 +67,7 @@ public class AsyncGraphClientExample {
                 + "WHERE $$.student.age >= 17 YIELD $$.student.name AS Friend, "
                 + "$$.student.age AS Age, $$.student.gender AS Gender;";
 
+    // create space first
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
             System.out.println("Usage: " + "com.vesoft.nebula.examples.GraphClientExample <host> "
@@ -80,10 +82,12 @@ public class AsyncGraphClientExample {
 
         try {
             client.connect();
+            CountDownLatch latch = new CountDownLatch(1);
             ListenableFuture<Optional<Integer>> listenableFuture = client.switchSpace(SPACE_NAME);
             Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                 @Override
                 public void onSuccess(Optional<Integer> integerOptional) {
+                    latch.countDown();
                     if (integerOptional.isPresent()) {
                         if (integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Switch Space Succeed");
@@ -101,12 +105,15 @@ public class AsyncGraphClientExample {
                     LOGGER.error("Switch Space Error");
                 }
             }, service);
+            latch.await();
 
+            CountDownLatch latch2 = new CountDownLatch(5);
             for (final String statement : createTags) {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
                     public void onSuccess(Optional<Integer> integerOptional) {
+                        latch2.countDown();
                         if (integerOptional.isPresent()
                                 && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -129,6 +136,7 @@ public class AsyncGraphClientExample {
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
                     public void onSuccess(Optional<Integer> integerOptional) {
+                        latch2.countDown();
                         if (integerOptional.isPresent()
                                 && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -145,12 +153,15 @@ public class AsyncGraphClientExample {
                     }
                 }, service);
             }
+            latch2.await();
 
+            CountDownLatch latch3 = new CountDownLatch(12);
             for (final String statement : insertVertices) {
                 listenableFuture = client.execute(statement);
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
                     public void onSuccess(Optional<Integer> integerOptional) {
+                        latch3.countDown();
                         if (integerOptional.isPresent()
                                 && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -173,6 +184,7 @@ public class AsyncGraphClientExample {
                 Futures.addCallback(listenableFuture, new FutureCallback<Optional<Integer>>() {
                     @Override
                     public void onSuccess(Optional<Integer> integerOptional) {
+                        latch3.countDown();
                         if (integerOptional.isPresent()
                                 && integerOptional.get() == ErrorCode.SUCCEEDED) {
                             LOGGER.info("Succeed");
@@ -189,11 +201,14 @@ public class AsyncGraphClientExample {
                     }
                 }, service);
             }
+            latch3.await();
 
+            CountDownLatch latch4 = new CountDownLatch(2);
             ListenableFuture<Optional<ResultSet>> queryFuture = client.executeQuery(simpleQuery);
             Futures.addCallback(queryFuture, new FutureCallback<Optional<ResultSet>>() {
                 @Override
                 public void onSuccess(Optional<ResultSet> resultSetOptional) {
+                    latch4.countDown();
                     if (resultSetOptional.isPresent()) {
                         LOGGER.info(resultSetOptional.get().toString());
                     } else {
@@ -211,6 +226,7 @@ public class AsyncGraphClientExample {
             Futures.addCallback(queryFuture, new FutureCallback<Optional<ResultSet>>() {
                 @Override
                 public void onSuccess(Optional<ResultSet> resultSetOptional) {
+                    latch4.countDown();
                     if (resultSetOptional.isPresent()) {
                         LOGGER.info(resultSetOptional.get().toString());
                     } else {
@@ -223,8 +239,13 @@ public class AsyncGraphClientExample {
                     LOGGER.error("Execute Error");
                 }
             }, service);
+            latch4.await();
+
+            System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            client.close();
         }
     }
 }
