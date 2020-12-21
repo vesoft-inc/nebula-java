@@ -138,7 +138,7 @@ public class MetaManager implements MetaCache {
      * @param spaceName nebula space name
      * @return
      */
-    public int getSpaceId(String spaceName) {
+    public int getSpaceId(String spaceName) throws IllegalArgumentException {
         return getSpace(spaceName).space_id;
     }
 
@@ -149,7 +149,7 @@ public class MetaManager implements MetaCache {
      * @return SpaceItem
      */
     @Override
-    public SpaceItem getSpace(String spaceName) {
+    public SpaceItem getSpace(String spaceName) throws IllegalArgumentException {
         if (!spacesInfo.containsKey(spaceName)) {
             fillMetaInfo();
         }
@@ -241,52 +241,6 @@ public class MetaManager implements MetaCache {
         }
     }
 
-    public String getTagName(String spaceName, int tagId) {
-        if (!spacesInfo.containsKey(spaceName)
-            || !spacesInfo.get(spaceName).tagIdNames.containsKey(tagId)) {
-            fillMetaInfo();
-        }
-        try {
-            lock.readLock().lock();
-            if (!spacesInfo.containsKey(spaceName)) {
-                throw new IllegalArgumentException("space:" + spaceName + " does not exist.");
-            }
-            if (!spacesInfo.get(spaceName).tagIdNames.containsKey(tagId)) {
-                throw new IllegalArgumentException("TagId:" + tagId + " does not exist.");
-            }
-            return spacesInfo.get(spaceName).tagIdNames.get(tagId);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
-     * convert edgeID to edge name
-     *
-     * @param spaceName nebula graph space name
-     * @param edgeId    nebula edge id
-     * @return
-     */
-    public String getEdgeName(String spaceName, int edgeId) {
-        if (!spacesInfo.containsKey(spaceName)
-            || !spacesInfo.get(spaceName).edgeTypeNames.containsKey(edgeId)) {
-            fillMetaInfo();
-        }
-        try {
-            lock.readLock().lock();
-            if (!spacesInfo.containsKey(spaceName)) {
-                throw new IllegalArgumentException("space:" + spaceName + " does not exist.");
-            }
-            if (!spacesInfo.get(spaceName).edgeTypeNames.containsKey(edgeId)) {
-                throw new IllegalArgumentException("EdgeType:" + edgeId + " does not exist.");
-            }
-            return spacesInfo.get(spaceName).edgeTypeNames.get(edgeId);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-
     /**
      * get part leader
      *
@@ -294,7 +248,10 @@ public class MetaManager implements MetaCache {
      * @param part      nebula part id
      * @return leader
      */
-    public HostAddr getLeader(String spaceName, int part) {
+    public HostAddr getLeader(String spaceName, int part) throws IllegalArgumentException {
+        if (!spacesInfo.containsKey(spaceName)) {
+            fillMetaInfo();
+        }
         try {
             lock.readLock().lock();
             if (partLeaders == null) {
@@ -315,13 +272,27 @@ public class MetaManager implements MetaCache {
     }
 
     /**
+     * get all parts of one space
+     *
+     * @param spaceName nebula graph space name
+     * @return Lsit
+     */
+    public List<Integer> getSpaceParts(String spaceName) throws IllegalArgumentException {
+        return new ArrayList<>(getPartsAlloc(spaceName).keySet());
+    }
+
+    /**
      * get all parts alloc of one space
      *
      * @param spaceName nebula graph space name
      * @return Map
      */
     @Override
-    public Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName) {
+    public Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
+        throws IllegalArgumentException {
+        if (!spacesInfo.containsKey(spaceName)) {
+            fillMetaInfo();
+        }
         try {
             lock.readLock().lock();
             if (!spacesInfo.containsKey(spaceName)) {
@@ -332,17 +303,6 @@ public class MetaManager implements MetaCache {
             lock.readLock().unlock();
         }
     }
-
-    /**
-     * get all parts of one space
-     *
-     * @param spaceName nebula graph space name
-     * @return Lsit
-     */
-    public List<Integer> getSpaceParts(String spaceName) {
-        return new ArrayList<>(getPartsAlloc(spaceName).keySet());
-    }
-
 
     /**
      * cache new leader for part
