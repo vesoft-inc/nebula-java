@@ -205,7 +205,7 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.google.guava</pattern>
+                                    <pattern>com.google.common</pattern>
                                     <shadedPattern>nebula.shaded.guava.common</shadedPattern>
                                 </relocation>
                             </relocations>
