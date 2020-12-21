@@ -56,6 +56,10 @@ public class ErrorCode {
   public static final int E_SAVE_JOB_FAILURE = -57;
   public static final int E_BALANCER_FAILURE = -58;
   public static final int E_JOB_NOT_FINISHED = -59;
+  public static final int E_BACKUP_FAILURE = -60;
+  public static final int E_BACKUP_BUILDING_INDEX = -61;
+  public static final int E_BACKUP_SPACE_NOT_FOUND = -62;
+  public static final int E_RESTORE_FAILURE = -70;
   public static final int E_UNKNOWN = -99;
 
   public static final IntRangeSet VALID_VALUES;

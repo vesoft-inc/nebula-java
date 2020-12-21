@@ -16,21 +16,16 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class AdminCmd {
-  public static final int COMPACT = 0;
-  public static final int FLUSH = 1;
-  public static final int REBUILD_TAG_INDEX = 2;
-  public static final int REBUILD_EDGE_INDEX = 3;
-  public static final int STATS = 4;
-  public static final int DATA_BALANCE = 5;
-  public static final int UNKNOWN = 99;
+public class IsolationLevel {
+  public static final int DEFAULT = 0;
+  public static final int TOSS = 1;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
 
   static {
     try {
-      Class<?> klass = AdminCmd.class;
+      Class<?> klass = IsolationLevel.class;
       for (Field f : klass.getDeclaredFields()) {
         if (f.getType() == Integer.TYPE) {
           VALUES_TO_NAMES.put(f.getInt(null), f.getName());

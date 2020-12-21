@@ -678,16 +678,16 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         case UPDATED_PROPS:
           if (field.type == TType.LIST) {
             {
-              TList _list139 = iprot.readListBegin();
-              this.updated_props = new ArrayList<UpdatedProp>(Math.max(0, _list139.size));
-              for (int _i140 = 0; 
-                   (_list139.size < 0) ? iprot.peekList() : (_i140 < _list139.size); 
-                   ++_i140)
+              TList _list135 = iprot.readListBegin();
+              this.updated_props = new ArrayList<UpdatedProp>(Math.max(0, _list135.size));
+              for (int _i136 = 0; 
+                   (_list135.size < 0) ? iprot.peekList() : (_i136 < _list135.size); 
+                   ++_i136)
               {
-                UpdatedProp _elem141;
-                _elem141 = new UpdatedProp();
-                _elem141.read(iprot);
-                this.updated_props.add(_elem141);
+                UpdatedProp _elem137;
+                _elem137 = new UpdatedProp();
+                _elem137.read(iprot);
+                this.updated_props.add(_elem137);
               }
               iprot.readListEnd();
             }
@@ -706,15 +706,15 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         case RETURN_PROPS:
           if (field.type == TType.LIST) {
             {
-              TList _list142 = iprot.readListBegin();
-              this.return_props = new ArrayList<byte[]>(Math.max(0, _list142.size));
-              for (int _i143 = 0; 
-                   (_list142.size < 0) ? iprot.peekList() : (_i143 < _list142.size); 
-                   ++_i143)
+              TList _list138 = iprot.readListBegin();
+              this.return_props = new ArrayList<byte[]>(Math.max(0, _list138.size));
+              for (int _i139 = 0; 
+                   (_list138.size < 0) ? iprot.peekList() : (_i139 < _list138.size); 
+                   ++_i139)
               {
-                byte[] _elem144;
-                _elem144 = iprot.readBinary();
-                this.return_props.add(_elem144);
+                byte[] _elem140;
+                _elem140 = iprot.readBinary();
+                this.return_props.add(_elem140);
               }
               iprot.readListEnd();
             }
@@ -767,8 +767,8 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(UPDATED_PROPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.updated_props.size()));
-        for (UpdatedProp _iter145 : this.updated_props)        {
-          _iter145.write(oprot);
+        for (UpdatedProp _iter141 : this.updated_props)        {
+          _iter141.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -784,8 +784,8 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         oprot.writeFieldBegin(RETURN_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.return_props.size()));
-          for (byte[] _iter146 : this.return_props)          {
-            oprot.writeBinary(_iter146);
+          for (byte[] _iter142 : this.return_props)          {
+            oprot.writeBinary(_iter142);
           }
           oprot.writeListEnd();
         }

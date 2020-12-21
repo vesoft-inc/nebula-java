@@ -30,18 +30,16 @@ import com.facebook.thrift.protocol.*;
 public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("GetPropRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField COLUMN_NAMES_FIELD_DESC = new TField("column_names", TType.LIST, (short)2);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)3);
-  private static final TField VERTEX_PROPS_FIELD_DESC = new TField("vertex_props", TType.LIST, (short)4);
-  private static final TField EDGE_PROPS_FIELD_DESC = new TField("edge_props", TType.LIST, (short)5);
-  private static final TField EXPRESSIONS_FIELD_DESC = new TField("expressions", TType.LIST, (short)6);
-  private static final TField DEDUP_FIELD_DESC = new TField("dedup", TType.BOOL, (short)7);
-  private static final TField ORDER_BY_FIELD_DESC = new TField("order_by", TType.LIST, (short)8);
-  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)9);
-  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)10);
+  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField VERTEX_PROPS_FIELD_DESC = new TField("vertex_props", TType.LIST, (short)3);
+  private static final TField EDGE_PROPS_FIELD_DESC = new TField("edge_props", TType.LIST, (short)4);
+  private static final TField EXPRESSIONS_FIELD_DESC = new TField("expressions", TType.LIST, (short)5);
+  private static final TField DEDUP_FIELD_DESC = new TField("dedup", TType.BOOL, (short)6);
+  private static final TField ORDER_BY_FIELD_DESC = new TField("order_by", TType.LIST, (short)7);
+  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)8);
+  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)9);
 
   public int space_id;
-  public List<byte[]> column_names;
   public Map<Integer,List<com.vesoft.nebula.Row>> parts;
   public List<VertexProp> vertex_props;
   public List<EdgeProp> edge_props;
@@ -51,15 +49,14 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   public long limit;
   public byte[] filter;
   public static final int SPACE_ID = 1;
-  public static final int COLUMN_NAMES = 2;
-  public static final int PARTS = 3;
-  public static final int VERTEX_PROPS = 4;
-  public static final int EDGE_PROPS = 5;
-  public static final int EXPRESSIONS = 6;
-  public static final int DEDUP = 7;
-  public static final int ORDER_BY = 8;
-  public static final int LIMIT = 9;
-  public static final int FILTER = 10;
+  public static final int PARTS = 2;
+  public static final int VERTEX_PROPS = 3;
+  public static final int EDGE_PROPS = 4;
+  public static final int EXPRESSIONS = 5;
+  public static final int DEDUP = 6;
+  public static final int ORDER_BY = 7;
+  public static final int LIMIT = 8;
+  public static final int FILTER = 9;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -73,9 +70,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(COLUMN_NAMES, new FieldMetaData("column_names", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
@@ -113,14 +107,12 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
 
   public GetPropRequest(
     int space_id,
-    List<byte[]> column_names,
     Map<Integer,List<com.vesoft.nebula.Row>> parts,
     boolean dedup)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.column_names = column_names;
     this.parts = parts;
     this.dedup = dedup;
     setDedupIsSet(true);
@@ -128,7 +120,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
 
   public GetPropRequest(
     int space_id,
-    List<byte[]> column_names,
     Map<Integer,List<com.vesoft.nebula.Row>> parts,
     List<VertexProp> vertex_props,
     List<EdgeProp> edge_props,
@@ -141,7 +132,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.column_names = column_names;
     this.parts = parts;
     this.vertex_props = vertex_props;
     this.edge_props = edge_props;
@@ -161,9 +151,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetColumn_names()) {
-      this.column_names = TBaseHelper.deepCopy(other.column_names);
-    }
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
@@ -216,30 +203,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
 
   public void setSpace_idIsSet(boolean value) {
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
-  }
-
-  public List<byte[]>  getColumn_names() {
-    return this.column_names;
-  }
-
-  public GetPropRequest setColumn_names(List<byte[]> column_names) {
-    this.column_names = column_names;
-    return this;
-  }
-
-  public void unsetColumn_names() {
-    this.column_names = null;
-  }
-
-  // Returns true if field column_names is set (has been assigned a value) and false otherwise
-  public boolean isSetColumn_names() {
-    return this.column_names != null;
-  }
-
-  public void setColumn_namesIsSet(boolean value) {
-    if (!value) {
-      this.column_names = null;
-    }
   }
 
   public Map<Integer,List<com.vesoft.nebula.Row>>  getParts() {
@@ -443,14 +406,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
-    case COLUMN_NAMES:
-      if (value == null) {
-        unsetColumn_names();
-      } else {
-        setColumn_names((List<byte[]>)value);
-      }
-      break;
-
     case PARTS:
       if (value == null) {
         unsetParts();
@@ -525,9 +480,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case COLUMN_NAMES:
-      return getColumn_names();
-
     case PARTS:
       return getParts();
 
@@ -562,8 +514,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     switch (fieldID) {
     case SPACE_ID:
       return isSetSpace_id();
-    case COLUMN_NAMES:
-      return isSetColumn_names();
     case PARTS:
       return isSetParts();
     case VERTEX_PROPS:
@@ -606,15 +556,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       if (!(this_present_space_id && that_present_space_id))
         return false;
       if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
-
-    boolean this_present_column_names = true && this.isSetColumn_names();
-    boolean that_present_column_names = true && that.isSetColumn_names();
-    if (this_present_column_names || that_present_column_names) {
-      if (!(this_present_column_names && that_present_column_names))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.column_names, that.column_names))
         return false;
     }
 
@@ -702,11 +643,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     if (present_space_id)
       builder.append(space_id);
 
-    boolean present_column_names = true && (isSetColumn_names());
-    builder.append(present_column_names);
-    if (present_column_names)
-      builder.append(column_names);
-
     boolean present_parts = true && (isSetParts());
     builder.append(present_parts);
     if (present_parts)
@@ -769,52 +705,33 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case COLUMN_NAMES:
-          if (field.type == TType.LIST) {
-            {
-              TList _list49 = iprot.readListBegin();
-              this.column_names = new ArrayList<byte[]>(Math.max(0, _list49.size));
-              for (int _i50 = 0; 
-                   (_list49.size < 0) ? iprot.peekList() : (_i50 < _list49.size); 
-                   ++_i50)
-              {
-                byte[] _elem51;
-                _elem51 = iprot.readBinary();
-                this.column_names.add(_elem51);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
         case PARTS:
           if (field.type == TType.MAP) {
             {
-              TMap _map52 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map52.size));
-              for (int _i53 = 0; 
-                   (_map52.size < 0) ? iprot.peekMap() : (_i53 < _map52.size); 
-                   ++_i53)
+              TMap _map49 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map49.size));
+              for (int _i50 = 0; 
+                   (_map49.size < 0) ? iprot.peekMap() : (_i50 < _map49.size); 
+                   ++_i50)
               {
-                int _key54;
-                List<com.vesoft.nebula.Row> _val55;
-                _key54 = iprot.readI32();
+                int _key51;
+                List<com.vesoft.nebula.Row> _val52;
+                _key51 = iprot.readI32();
                 {
-                  TList _list56 = iprot.readListBegin();
-                  _val55 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list56.size));
-                  for (int _i57 = 0; 
-                       (_list56.size < 0) ? iprot.peekList() : (_i57 < _list56.size); 
-                       ++_i57)
+                  TList _list53 = iprot.readListBegin();
+                  _val52 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list53.size));
+                  for (int _i54 = 0; 
+                       (_list53.size < 0) ? iprot.peekList() : (_i54 < _list53.size); 
+                       ++_i54)
                   {
-                    com.vesoft.nebula.Row _elem58;
-                    _elem58 = new com.vesoft.nebula.Row();
-                    _elem58.read(iprot);
-                    _val55.add(_elem58);
+                    com.vesoft.nebula.Row _elem55;
+                    _elem55 = new com.vesoft.nebula.Row();
+                    _elem55.read(iprot);
+                    _val52.add(_elem55);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key54, _val55);
+                this.parts.put(_key51, _val52);
               }
               iprot.readMapEnd();
             }
@@ -825,16 +742,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case VERTEX_PROPS:
           if (field.type == TType.LIST) {
             {
-              TList _list59 = iprot.readListBegin();
-              this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list59.size));
-              for (int _i60 = 0; 
-                   (_list59.size < 0) ? iprot.peekList() : (_i60 < _list59.size); 
-                   ++_i60)
+              TList _list56 = iprot.readListBegin();
+              this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list56.size));
+              for (int _i57 = 0; 
+                   (_list56.size < 0) ? iprot.peekList() : (_i57 < _list56.size); 
+                   ++_i57)
               {
-                VertexProp _elem61;
-                _elem61 = new VertexProp();
-                _elem61.read(iprot);
-                this.vertex_props.add(_elem61);
+                VertexProp _elem58;
+                _elem58 = new VertexProp();
+                _elem58.read(iprot);
+                this.vertex_props.add(_elem58);
               }
               iprot.readListEnd();
             }
@@ -845,16 +762,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case EDGE_PROPS:
           if (field.type == TType.LIST) {
             {
-              TList _list62 = iprot.readListBegin();
-              this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list62.size));
-              for (int _i63 = 0; 
-                   (_list62.size < 0) ? iprot.peekList() : (_i63 < _list62.size); 
-                   ++_i63)
+              TList _list59 = iprot.readListBegin();
+              this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list59.size));
+              for (int _i60 = 0; 
+                   (_list59.size < 0) ? iprot.peekList() : (_i60 < _list59.size); 
+                   ++_i60)
               {
-                EdgeProp _elem64;
-                _elem64 = new EdgeProp();
-                _elem64.read(iprot);
-                this.edge_props.add(_elem64);
+                EdgeProp _elem61;
+                _elem61 = new EdgeProp();
+                _elem61.read(iprot);
+                this.edge_props.add(_elem61);
               }
               iprot.readListEnd();
             }
@@ -865,16 +782,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case EXPRESSIONS:
           if (field.type == TType.LIST) {
             {
-              TList _list65 = iprot.readListBegin();
-              this.expressions = new ArrayList<Expr>(Math.max(0, _list65.size));
-              for (int _i66 = 0; 
-                   (_list65.size < 0) ? iprot.peekList() : (_i66 < _list65.size); 
-                   ++_i66)
+              TList _list62 = iprot.readListBegin();
+              this.expressions = new ArrayList<Expr>(Math.max(0, _list62.size));
+              for (int _i63 = 0; 
+                   (_list62.size < 0) ? iprot.peekList() : (_i63 < _list62.size); 
+                   ++_i63)
               {
-                Expr _elem67;
-                _elem67 = new Expr();
-                _elem67.read(iprot);
-                this.expressions.add(_elem67);
+                Expr _elem64;
+                _elem64 = new Expr();
+                _elem64.read(iprot);
+                this.expressions.add(_elem64);
               }
               iprot.readListEnd();
             }
@@ -893,16 +810,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case ORDER_BY:
           if (field.type == TType.LIST) {
             {
-              TList _list68 = iprot.readListBegin();
-              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list68.size));
-              for (int _i69 = 0; 
-                   (_list68.size < 0) ? iprot.peekList() : (_i69 < _list68.size); 
-                   ++_i69)
+              TList _list65 = iprot.readListBegin();
+              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list65.size));
+              for (int _i66 = 0; 
+                   (_list65.size < 0) ? iprot.peekList() : (_i66 < _list65.size); 
+                   ++_i66)
               {
-                OrderBy _elem70;
-                _elem70 = new OrderBy();
-                _elem70.read(iprot);
-                this.order_by.add(_elem70);
+                OrderBy _elem67;
+                _elem67 = new OrderBy();
+                _elem67.read(iprot);
+                this.order_by.add(_elem67);
               }
               iprot.readListEnd();
             }
@@ -945,27 +862,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.column_names != null) {
-      oprot.writeFieldBegin(COLUMN_NAMES_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRING, this.column_names.size()));
-        for (byte[] _iter71 : this.column_names)        {
-          oprot.writeBinary(_iter71);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
     if (this.parts != null) {
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter72 : this.parts.entrySet())        {
-          oprot.writeI32(_iter72.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter68 : this.parts.entrySet())        {
+          oprot.writeI32(_iter68.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter72.getValue().size()));
-            for (com.vesoft.nebula.Row _iter73 : _iter72.getValue())            {
-              _iter73.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter68.getValue().size()));
+            for (com.vesoft.nebula.Row _iter69 : _iter68.getValue())            {
+              _iter69.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -979,8 +885,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(VERTEX_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.vertex_props.size()));
-          for (VertexProp _iter74 : this.vertex_props)          {
-            _iter74.write(oprot);
+          for (VertexProp _iter70 : this.vertex_props)          {
+            _iter70.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -992,8 +898,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(EDGE_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.edge_props.size()));
-          for (EdgeProp _iter75 : this.edge_props)          {
-            _iter75.write(oprot);
+          for (EdgeProp _iter71 : this.edge_props)          {
+            _iter71.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1005,8 +911,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(EXPRESSIONS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.expressions.size()));
-          for (Expr _iter76 : this.expressions)          {
-            _iter76.write(oprot);
+          for (Expr _iter72 : this.expressions)          {
+            _iter72.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1021,8 +927,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(ORDER_BY_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.order_by.size()));
-          for (OrderBy _iter77 : this.order_by)          {
-            _iter77.write(oprot);
+          for (OrderBy _iter73 : this.order_by)          {
+            _iter73.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1071,17 +977,6 @@ String space = prettyPrint ? " " : "";
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("column_names");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getColumn_names() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getColumn_names(), indent + 1, prettyPrint));
-    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

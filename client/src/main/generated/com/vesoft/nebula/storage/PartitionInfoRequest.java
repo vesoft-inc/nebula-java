@@ -27,15 +27,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("DeleteEdgesRequest");
+public class PartitionInfoRequest implements TBase, java.io.Serializable, Cloneable, Comparable<PartitionInfoRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("PartitionInfoRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField BACKUP_NAME_FIELD_DESC = new TField("backup_name", TType.STRING, (short)2);
 
   public int space_id;
-  public Map<Integer,List<EdgeKey>> parts;
+  public byte[] backup_name;
   public static final int SPACE_ID = 1;
-  public static final int PARTS = 2;
+  public static final int BACKUP_NAME = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -47,57 +47,54 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, EdgeKey.class)))));
+    tmpMetaDataMap.put(BACKUP_NAME, new FieldMetaData("backup_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(DeleteEdgesRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(PartitionInfoRequest.class, metaDataMap);
   }
 
-  public DeleteEdgesRequest() {
+  public PartitionInfoRequest() {
   }
 
-  public DeleteEdgesRequest(
+  public PartitionInfoRequest(
     int space_id,
-    Map<Integer,List<EdgeKey>> parts)
+    byte[] backup_name)
   {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.parts = parts;
+    this.backup_name = backup_name;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public DeleteEdgesRequest(DeleteEdgesRequest other) {
+  public PartitionInfoRequest(PartitionInfoRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetParts()) {
-      this.parts = TBaseHelper.deepCopy(other.parts);
+    if (other.isSetBackup_name()) {
+      this.backup_name = TBaseHelper.deepCopy(other.backup_name);
     }
   }
 
-  public DeleteEdgesRequest deepCopy() {
-    return new DeleteEdgesRequest(this);
+  public PartitionInfoRequest deepCopy() {
+    return new PartitionInfoRequest(this);
   }
 
   @Deprecated
-  public DeleteEdgesRequest clone() {
-    return new DeleteEdgesRequest(this);
+  public PartitionInfoRequest clone() {
+    return new PartitionInfoRequest(this);
   }
 
   public int  getSpace_id() {
     return this.space_id;
   }
 
-  public DeleteEdgesRequest setSpace_id(int space_id) {
+  public PartitionInfoRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -116,31 +113,30 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
   }
 
-  public Map<Integer,List<EdgeKey>>  getParts() {
-    return this.parts;
+  public byte[]  getBackup_name() {
+    return this.backup_name;
   }
 
-  public DeleteEdgesRequest setParts(Map<Integer,List<EdgeKey>> parts) {
-    this.parts = parts;
+  public PartitionInfoRequest setBackup_name(byte[] backup_name) {
+    this.backup_name = backup_name;
     return this;
   }
 
-  public void unsetParts() {
-    this.parts = null;
+  public void unsetBackup_name() {
+    this.backup_name = null;
   }
 
-  // Returns true if field parts is set (has been assigned a value) and false otherwise
-  public boolean isSetParts() {
-    return this.parts != null;
+  // Returns true if field backup_name is set (has been assigned a value) and false otherwise
+  public boolean isSetBackup_name() {
+    return this.backup_name != null;
   }
 
-  public void setPartsIsSet(boolean value) {
+  public void setBackup_nameIsSet(boolean value) {
     if (!value) {
-      this.parts = null;
+      this.backup_name = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -151,11 +147,11 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case PARTS:
+    case BACKUP_NAME:
       if (value == null) {
-        unsetParts();
+        unsetBackup_name();
       } else {
-        setParts((Map<Integer,List<EdgeKey>>)value);
+        setBackup_name((byte[])value);
       }
       break;
 
@@ -169,8 +165,8 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PARTS:
-      return getParts();
+    case BACKUP_NAME:
+      return getBackup_name();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -182,8 +178,8 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     switch (fieldID) {
     case SPACE_ID:
       return isSetSpace_id();
-    case PARTS:
-      return isSetParts();
+    case BACKUP_NAME:
+      return isSetBackup_name();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -193,12 +189,12 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof DeleteEdgesRequest)
-      return this.equals((DeleteEdgesRequest)that);
+    if (that instanceof PartitionInfoRequest)
+      return this.equals((PartitionInfoRequest)that);
     return false;
   }
 
-  public boolean equals(DeleteEdgesRequest that) {
+  public boolean equals(PartitionInfoRequest that) {
     if (that == null)
       return false;
     if (this == that)
@@ -213,12 +209,12 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
         return false;
     }
 
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
+    boolean this_present_backup_name = true && this.isSetBackup_name();
+    boolean that_present_backup_name = true && that.isSetBackup_name();
+    if (this_present_backup_name || that_present_backup_name) {
+      if (!(this_present_backup_name && that_present_backup_name))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
+      if (!TBaseHelper.equalsSlow(this.backup_name, that.backup_name))
         return false;
     }
 
@@ -234,12 +230,43 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     if (present_space_id)
       builder.append(space_id);
 
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
+    boolean present_backup_name = true && (isSetBackup_name());
+    builder.append(present_backup_name);
+    if (present_backup_name)
+      builder.append(backup_name);
 
     return builder.toHashCode();
+  }
+
+  @Override
+  public int compareTo(PartitionInfoRequest other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetBackup_name()).compareTo(other.isSetBackup_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(backup_name, other.backup_name);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -261,36 +288,9 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case PARTS:
-          if (field.type == TType.MAP) {
-            {
-              TMap _map126 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map126.size));
-              for (int _i127 = 0; 
-                   (_map126.size < 0) ? iprot.peekMap() : (_i127 < _map126.size); 
-                   ++_i127)
-              {
-                int _key128;
-                List<EdgeKey> _val129;
-                _key128 = iprot.readI32();
-                {
-                  TList _list130 = iprot.readListBegin();
-                  _val129 = new ArrayList<EdgeKey>(Math.max(0, _list130.size));
-                  for (int _i131 = 0; 
-                       (_list130.size < 0) ? iprot.peekList() : (_i131 < _list130.size); 
-                       ++_i131)
-                  {
-                    EdgeKey _elem132;
-                    _elem132 = new EdgeKey();
-                    _elem132.read(iprot);
-                    _val129.add(_elem132);
-                  }
-                  iprot.readListEnd();
-                }
-                this.parts.put(_key128, _val129);
-              }
-              iprot.readMapEnd();
-            }
+        case BACKUP_NAME:
+          if (field.type == TType.STRING) {
+            this.backup_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -315,22 +315,9 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.parts != null) {
-      oprot.writeFieldBegin(PARTS_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<EdgeKey>> _iter133 : this.parts.entrySet())        {
-          oprot.writeI32(_iter133.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter133.getValue().size()));
-            for (EdgeKey _iter134 : _iter133.getValue())            {
-              _iter134.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
-        }
-        oprot.writeMapEnd();
-      }
+    if (this.backup_name != null) {
+      oprot.writeFieldBegin(BACKUP_NAME_FIELD_DESC);
+      oprot.writeBinary(this.backup_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -352,7 +339,7 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("DeleteEdgesRequest");
+    StringBuilder sb = new StringBuilder("PartitionInfoRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -366,13 +353,18 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("parts");
+    sb.append("backup_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getParts() == null) {
+    if (this. getBackup_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+        int __backup_name_size = Math.min(this. getBackup_name().length, 128);
+        for (int i = 0; i < __backup_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this. getBackup_name()[i]).length() > 1 ? Integer.toHexString(this. getBackup_name()[i]).substring(Integer.toHexString(this. getBackup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getBackup_name()[i]).toUpperCase());
+        }
+        if (this. getBackup_name().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

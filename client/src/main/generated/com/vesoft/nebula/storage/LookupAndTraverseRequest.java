@@ -394,15 +394,15 @@ public class LookupAndTraverseRequest implements TBase, java.io.Serializable, Cl
         case PARTS:
           if (field.type == TType.LIST) {
             {
-              TList _list171 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list171.size));
-              for (int _i172 = 0; 
-                   (_list171.size < 0) ? iprot.peekList() : (_i172 < _list171.size); 
-                   ++_i172)
+              TList _list167 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list167.size));
+              for (int _i168 = 0; 
+                   (_list167.size < 0) ? iprot.peekList() : (_i168 < _list167.size); 
+                   ++_i168)
               {
-                int _elem173;
-                _elem173 = iprot.readI32();
-                this.parts.add(_elem173);
+                int _elem169;
+                _elem169 = iprot.readI32();
+                this.parts.add(_elem169);
               }
               iprot.readListEnd();
             }
@@ -453,8 +453,8 @@ public class LookupAndTraverseRequest implements TBase, java.io.Serializable, Cl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter174 : this.parts)        {
-          oprot.writeI32(_iter174);
+        for (int _iter170 : this.parts)        {
+          oprot.writeI32(_iter170);
         }
         oprot.writeListEnd();
       }

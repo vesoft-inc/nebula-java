@@ -27,25 +27,21 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GeneralStorageService {
+public class InternalStorageService {
 
   public interface Iface {
 
-    public KVGetResponse get(KVGetRequest req) throws TException;
+    public GetValueResponse getValue(GetValueRequest req) throws TException;
 
-    public ExecResponse put(KVPutRequest req) throws TException;
-
-    public ExecResponse remove(KVRemoveRequest req) throws TException;
+    public ExecResponse forwardTransaction(InternalTxnRequest req) throws TException;
 
   }
 
   public interface AsyncIface {
 
-    public void get(KVGetRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void getValue(GetValueRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void put(KVPutRequest req, AsyncMethodCallback resultHandler) throws TException;
-
-    public void remove(KVRemoveRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void forwardTransaction(InternalTxnRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -78,139 +74,94 @@ public class GeneralStorageService {
       return this.oprot_;
     }
 
-    public KVGetResponse get(KVGetRequest req) throws TException
+    public GetValueResponse getValue(GetValueRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("GeneralStorageService.get", null);
+      ContextStack ctx = getContextStack("InternalStorageService.getValue", null);
       this.setContextStack(ctx);
-      send_get(req);
-      return recv_get();
+      send_getValue(req);
+      return recv_getValue();
     }
 
-    public void send_get(KVGetRequest req) throws TException
+    public void send_getValue(GetValueRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GeneralStorageService.get", null);
-      oprot_.writeMessageBegin(new TMessage("get", TMessageType.CALL, seqid_));
-      get_args args = new get_args();
+      super.preWrite(ctx, "InternalStorageService.getValue", null);
+      oprot_.writeMessageBegin(new TMessage("getValue", TMessageType.CALL, seqid_));
+      getValue_args args = new getValue_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "GeneralStorageService.get", args);
+      super.postWrite(ctx, "InternalStorageService.getValue", args);
       return;
     }
 
-    public KVGetResponse recv_get() throws TException
+    public GetValueResponse recv_getValue() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "GeneralStorageService.get");
+      super.preRead(ctx, "InternalStorageService.getValue");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      get_result result = new get_result();
+      getValue_result result = new getValue_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "GeneralStorageService.get", result);
+      super.postRead(ctx, "InternalStorageService.getValue", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "get failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getValue failed: unknown result");
     }
 
-    public ExecResponse put(KVPutRequest req) throws TException
+    public ExecResponse forwardTransaction(InternalTxnRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("GeneralStorageService.put", null);
+      ContextStack ctx = getContextStack("InternalStorageService.forwardTransaction", null);
       this.setContextStack(ctx);
-      send_put(req);
-      return recv_put();
+      send_forwardTransaction(req);
+      return recv_forwardTransaction();
     }
 
-    public void send_put(KVPutRequest req) throws TException
+    public void send_forwardTransaction(InternalTxnRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GeneralStorageService.put", null);
-      oprot_.writeMessageBegin(new TMessage("put", TMessageType.CALL, seqid_));
-      put_args args = new put_args();
+      super.preWrite(ctx, "InternalStorageService.forwardTransaction", null);
+      oprot_.writeMessageBegin(new TMessage("forwardTransaction", TMessageType.CALL, seqid_));
+      forwardTransaction_args args = new forwardTransaction_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "GeneralStorageService.put", args);
+      super.postWrite(ctx, "InternalStorageService.forwardTransaction", args);
       return;
     }
 
-    public ExecResponse recv_put() throws TException
+    public ExecResponse recv_forwardTransaction() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "GeneralStorageService.put");
+      super.preRead(ctx, "InternalStorageService.forwardTransaction");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      put_result result = new put_result();
+      forwardTransaction_result result = new forwardTransaction_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "GeneralStorageService.put", result);
+      super.postRead(ctx, "InternalStorageService.forwardTransaction", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "put failed: unknown result");
-    }
-
-    public ExecResponse remove(KVRemoveRequest req) throws TException
-    {
-      ContextStack ctx = getContextStack("GeneralStorageService.remove", null);
-      this.setContextStack(ctx);
-      send_remove(req);
-      return recv_remove();
-    }
-
-    public void send_remove(KVRemoveRequest req) throws TException
-    {
-      ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GeneralStorageService.remove", null);
-      oprot_.writeMessageBegin(new TMessage("remove", TMessageType.CALL, seqid_));
-      remove_args args = new remove_args();
-      args.req = req;
-      args.write(oprot_);
-      oprot_.writeMessageEnd();
-      oprot_.getTransport().flush();
-      super.postWrite(ctx, "GeneralStorageService.remove", args);
-      return;
-    }
-
-    public ExecResponse recv_remove() throws TException
-    {
-      ContextStack ctx = super.getContextStack();
-      long bytes;
-      TMessageType mtype;
-      super.preRead(ctx, "GeneralStorageService.remove");
-      TMessage msg = iprot_.readMessageBegin();
-      if (msg.type == TMessageType.EXCEPTION) {
-        TApplicationException x = TApplicationException.read(iprot_);
-        iprot_.readMessageEnd();
-        throw x;
-      }
-      remove_result result = new remove_result();
-      result.read(iprot_);
-      iprot_.readMessageEnd();
-      super.postRead(ctx, "GeneralStorageService.remove", result);
-
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "remove failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "forwardTransaction failed: unknown result");
     }
 
   }
@@ -231,87 +182,55 @@ public class GeneralStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void get(KVGetRequest req, AsyncMethodCallback resultHandler420) throws TException {
+    public void getValue(GetValueRequest req, AsyncMethodCallback resultHandler437) throws TException {
       checkReady();
-      get_call method_call = new get_call(req, resultHandler420, this, ___protocolFactory, ___transport);
+      getValue_call method_call = new getValue_call(req, resultHandler437, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class get_call extends TAsyncMethodCall {
-      private KVGetRequest req;
-      public get_call(KVGetRequest req, AsyncMethodCallback resultHandler421, TAsyncClient client417, TProtocolFactory protocolFactory418, TNonblockingTransport transport419) throws TException {
-        super(client417, protocolFactory418, transport419, resultHandler421, false);
+    public static class getValue_call extends TAsyncMethodCall {
+      private GetValueRequest req;
+      public getValue_call(GetValueRequest req, AsyncMethodCallback resultHandler438, TAsyncClient client434, TProtocolFactory protocolFactory435, TNonblockingTransport transport436) throws TException {
+        super(client434, protocolFactory435, transport436, resultHandler438, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("get", TMessageType.CALL, 0));
-        get_args args = new get_args();
+        prot.writeMessageBegin(new TMessage("getValue", TMessageType.CALL, 0));
+        getValue_args args = new getValue_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public KVGetResponse getResult() throws TException {
+      public GetValueResponse getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_get();
+        return (new Client(prot)).recv_getValue();
       }
     }
 
-    public void put(KVPutRequest req, AsyncMethodCallback resultHandler425) throws TException {
+    public void forwardTransaction(InternalTxnRequest req, AsyncMethodCallback resultHandler442) throws TException {
       checkReady();
-      put_call method_call = new put_call(req, resultHandler425, this, ___protocolFactory, ___transport);
+      forwardTransaction_call method_call = new forwardTransaction_call(req, resultHandler442, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class put_call extends TAsyncMethodCall {
-      private KVPutRequest req;
-      public put_call(KVPutRequest req, AsyncMethodCallback resultHandler426, TAsyncClient client422, TProtocolFactory protocolFactory423, TNonblockingTransport transport424) throws TException {
-        super(client422, protocolFactory423, transport424, resultHandler426, false);
+    public static class forwardTransaction_call extends TAsyncMethodCall {
+      private InternalTxnRequest req;
+      public forwardTransaction_call(InternalTxnRequest req, AsyncMethodCallback resultHandler443, TAsyncClient client439, TProtocolFactory protocolFactory440, TNonblockingTransport transport441) throws TException {
+        super(client439, protocolFactory440, transport441, resultHandler443, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("put", TMessageType.CALL, 0));
-        put_args args = new put_args();
-        args.setReq(req);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public ExecResponse getResult() throws TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
-        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_put();
-      }
-    }
-
-    public void remove(KVRemoveRequest req, AsyncMethodCallback resultHandler430) throws TException {
-      checkReady();
-      remove_call method_call = new remove_call(req, resultHandler430, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class remove_call extends TAsyncMethodCall {
-      private KVRemoveRequest req;
-      public remove_call(KVRemoveRequest req, AsyncMethodCallback resultHandler431, TAsyncClient client427, TProtocolFactory protocolFactory428, TNonblockingTransport transport429) throws TException {
-        super(client427, protocolFactory428, transport429, resultHandler431, false);
-        this.req = req;
-      }
-
-      public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("remove", TMessageType.CALL, 0));
-        remove_args args = new remove_args();
+        prot.writeMessageBegin(new TMessage("forwardTransaction", TMessageType.CALL, 0));
+        forwardTransaction_args args = new forwardTransaction_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
@@ -323,7 +242,7 @@ public class GeneralStorageService {
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_remove();
+        return (new Client(prot)).recv_forwardTransaction();
       }
     }
 
@@ -335,9 +254,8 @@ public class GeneralStorageService {
     {
       iface_ = iface;
       event_handler_ = new TProcessorEventHandler(); // Empty handler
-      processMap_.put("get", new get());
-      processMap_.put("put", new put());
-      processMap_.put("remove", new remove());
+      processMap_.put("getValue", new getValue());
+      processMap_.put("forwardTransaction", new forwardTransaction());
     }
 
     protected static interface ProcessFunction {
@@ -370,76 +288,55 @@ public class GeneralStorageService {
       return true;
     }
 
-    private class get implements ProcessFunction {
+    private class getValue implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("GeneralStorageService.get", server_ctx);
-        get_args args = new get_args();
-        event_handler_.preRead(handler_ctx, "GeneralStorageService.get");
+        Object handler_ctx = event_handler_.getContext("InternalStorageService.getValue", server_ctx);
+        getValue_args args = new getValue_args();
+        event_handler_.preRead(handler_ctx, "InternalStorageService.getValue");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GeneralStorageService.get", args);
-        get_result result = new get_result();
-        result.success = iface_.get(args.req);
-        event_handler_.preWrite(handler_ctx, "GeneralStorageService.get", result);
-        oprot.writeMessageBegin(new TMessage("get", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "InternalStorageService.getValue", args);
+        getValue_result result = new getValue_result();
+        result.success = iface_.getValue(args.req);
+        event_handler_.preWrite(handler_ctx, "InternalStorageService.getValue", result);
+        oprot.writeMessageBegin(new TMessage("getValue", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GeneralStorageService.get", result);
+        event_handler_.postWrite(handler_ctx, "InternalStorageService.getValue", result);
       }
 
     }
 
-    private class put implements ProcessFunction {
+    private class forwardTransaction implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("GeneralStorageService.put", server_ctx);
-        put_args args = new put_args();
-        event_handler_.preRead(handler_ctx, "GeneralStorageService.put");
+        Object handler_ctx = event_handler_.getContext("InternalStorageService.forwardTransaction", server_ctx);
+        forwardTransaction_args args = new forwardTransaction_args();
+        event_handler_.preRead(handler_ctx, "InternalStorageService.forwardTransaction");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GeneralStorageService.put", args);
-        put_result result = new put_result();
-        result.success = iface_.put(args.req);
-        event_handler_.preWrite(handler_ctx, "GeneralStorageService.put", result);
-        oprot.writeMessageBegin(new TMessage("put", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "InternalStorageService.forwardTransaction", args);
+        forwardTransaction_result result = new forwardTransaction_result();
+        result.success = iface_.forwardTransaction(args.req);
+        event_handler_.preWrite(handler_ctx, "InternalStorageService.forwardTransaction", result);
+        oprot.writeMessageBegin(new TMessage("forwardTransaction", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GeneralStorageService.put", result);
-      }
-
-    }
-
-    private class remove implements ProcessFunction {
-      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
-      {
-        Object handler_ctx = event_handler_.getContext("GeneralStorageService.remove", server_ctx);
-        remove_args args = new remove_args();
-        event_handler_.preRead(handler_ctx, "GeneralStorageService.remove");
-        args.read(iprot);
-        iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GeneralStorageService.remove", args);
-        remove_result result = new remove_result();
-        result.success = iface_.remove(args.req);
-        event_handler_.preWrite(handler_ctx, "GeneralStorageService.remove", result);
-        oprot.writeMessageBegin(new TMessage("remove", TMessageType.REPLY, seqid));
-        result.write(oprot);
-        oprot.writeMessageEnd();
-        oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GeneralStorageService.remove", result);
+        event_handler_.postWrite(handler_ctx, "InternalStorageService.forwardTransaction", result);
       }
 
     }
 
   }
 
-  public static class get_args implements TBase, java.io.Serializable, Cloneable, Comparable<get_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("get_args");
+  public static class getValue_args implements TBase, java.io.Serializable, Cloneable, Comparable<getValue_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getValue_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public KVGetRequest req;
+    public GetValueRequest req;
     public static final int REQ = 1;
     public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -449,19 +346,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVGetRequest.class)));
+          new StructMetaData(TType.STRUCT, GetValueRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(get_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getValue_args.class, metaDataMap);
     }
 
-    public get_args() {
+    public getValue_args() {
     }
 
-    public get_args(
-      KVGetRequest req)
+    public getValue_args(
+      GetValueRequest req)
     {
       this();
       this.req = req;
@@ -470,26 +367,26 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public get_args(get_args other) {
+    public getValue_args(getValue_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public get_args deepCopy() {
-      return new get_args(this);
+    public getValue_args deepCopy() {
+      return new getValue_args(this);
     }
 
     @Deprecated
-    public get_args clone() {
-      return new get_args(this);
+    public getValue_args clone() {
+      return new getValue_args(this);
     }
 
-    public KVGetRequest  getReq() {
+    public GetValueRequest  getReq() {
       return this.req;
     }
 
-    public get_args setReq(KVGetRequest req) {
+    public getValue_args setReq(GetValueRequest req) {
       this.req = req;
       return this;
     }
@@ -515,7 +412,7 @@ public class GeneralStorageService {
         if (value == null) {
           unsetReq();
         } else {
-          setReq((KVGetRequest)value);
+          setReq((GetValueRequest)value);
         }
         break;
 
@@ -548,12 +445,12 @@ public class GeneralStorageService {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof get_args)
-        return this.equals((get_args)that);
+      if (that instanceof getValue_args)
+        return this.equals((getValue_args)that);
       return false;
     }
 
-    public boolean equals(get_args that) {
+    public boolean equals(getValue_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -584,7 +481,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(get_args other) {
+    public int compareTo(getValue_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -619,7 +516,7 @@ public class GeneralStorageService {
         {
           case REQ:
             if (field.type == TType.STRUCT) {
-              this.req = new KVGetRequest();
+              this.req = new GetValueRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
@@ -666,7 +563,7 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("get_args");
+      StringBuilder sb = new StringBuilder("getValue_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -694,11 +591,11 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class get_result implements TBase, java.io.Serializable, Cloneable, Comparable<get_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("get_result");
+  public static class getValue_result implements TBase, java.io.Serializable, Cloneable, Comparable<getValue_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getValue_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public KVGetResponse success;
+    public GetValueResponse success;
     public static final int SUCCESS = 0;
     public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -708,19 +605,19 @@ String space = prettyPrint ? " " : "";
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVGetResponse.class)));
+          new StructMetaData(TType.STRUCT, GetValueResponse.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(get_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getValue_result.class, metaDataMap);
     }
 
-    public get_result() {
+    public getValue_result() {
     }
 
-    public get_result(
-      KVGetResponse success)
+    public getValue_result(
+      GetValueResponse success)
     {
       this();
       this.success = success;
@@ -729,26 +626,26 @@ String space = prettyPrint ? " " : "";
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public get_result(get_result other) {
+    public getValue_result(getValue_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public get_result deepCopy() {
-      return new get_result(this);
+    public getValue_result deepCopy() {
+      return new getValue_result(this);
     }
 
     @Deprecated
-    public get_result clone() {
-      return new get_result(this);
+    public getValue_result clone() {
+      return new getValue_result(this);
     }
 
-    public KVGetResponse  getSuccess() {
+    public GetValueResponse  getSuccess() {
       return this.success;
     }
 
-    public get_result setSuccess(KVGetResponse success) {
+    public getValue_result setSuccess(GetValueResponse success) {
       this.success = success;
       return this;
     }
@@ -774,7 +671,7 @@ String space = prettyPrint ? " " : "";
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((KVGetResponse)value);
+          setSuccess((GetValueResponse)value);
         }
         break;
 
@@ -807,12 +704,12 @@ String space = prettyPrint ? " " : "";
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof get_result)
-        return this.equals((get_result)that);
+      if (that instanceof getValue_result)
+        return this.equals((getValue_result)that);
       return false;
     }
 
-    public boolean equals(get_result that) {
+    public boolean equals(getValue_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -843,7 +740,7 @@ String space = prettyPrint ? " " : "";
     }
 
     @Override
-    public int compareTo(get_result other) {
+    public int compareTo(getValue_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -878,7 +775,7 @@ String space = prettyPrint ? " " : "";
         {
           case SUCCESS:
             if (field.type == TType.STRUCT) {
-              this.success = new KVGetResponse();
+              this.success = new GetValueResponse();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
@@ -924,7 +821,7 @@ String space = prettyPrint ? " " : "";
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("get_result");
+      StringBuilder sb = new StringBuilder("getValue_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -952,11 +849,11 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class put_args implements TBase, java.io.Serializable, Cloneable, Comparable<put_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("put_args");
+  public static class forwardTransaction_args implements TBase, java.io.Serializable, Cloneable, Comparable<forwardTransaction_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("forwardTransaction_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public KVPutRequest req;
+    public InternalTxnRequest req;
     public static final int REQ = 1;
     public static boolean DEFAULT_PRETTY_PRINT = true;
 
@@ -966,19 +863,19 @@ String space = prettyPrint ? " " : "";
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVPutRequest.class)));
+          new StructMetaData(TType.STRUCT, InternalTxnRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(put_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(forwardTransaction_args.class, metaDataMap);
     }
 
-    public put_args() {
+    public forwardTransaction_args() {
     }
 
-    public put_args(
-      KVPutRequest req)
+    public forwardTransaction_args(
+      InternalTxnRequest req)
     {
       this();
       this.req = req;
@@ -987,26 +884,26 @@ String space = prettyPrint ? " " : "";
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public put_args(put_args other) {
+    public forwardTransaction_args(forwardTransaction_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public put_args deepCopy() {
-      return new put_args(this);
+    public forwardTransaction_args deepCopy() {
+      return new forwardTransaction_args(this);
     }
 
     @Deprecated
-    public put_args clone() {
-      return new put_args(this);
+    public forwardTransaction_args clone() {
+      return new forwardTransaction_args(this);
     }
 
-    public KVPutRequest  getReq() {
+    public InternalTxnRequest  getReq() {
       return this.req;
     }
 
-    public put_args setReq(KVPutRequest req) {
+    public forwardTransaction_args setReq(InternalTxnRequest req) {
       this.req = req;
       return this;
     }
@@ -1032,7 +929,7 @@ String space = prettyPrint ? " " : "";
         if (value == null) {
           unsetReq();
         } else {
-          setReq((KVPutRequest)value);
+          setReq((InternalTxnRequest)value);
         }
         break;
 
@@ -1065,12 +962,12 @@ String space = prettyPrint ? " " : "";
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof put_args)
-        return this.equals((put_args)that);
+      if (that instanceof forwardTransaction_args)
+        return this.equals((forwardTransaction_args)that);
       return false;
     }
 
-    public boolean equals(put_args that) {
+    public boolean equals(forwardTransaction_args that) {
       if (that == null)
         return false;
       if (this == that)
@@ -1101,7 +998,7 @@ String space = prettyPrint ? " " : "";
     }
 
     @Override
-    public int compareTo(put_args other) {
+    public int compareTo(forwardTransaction_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -1136,7 +1033,7 @@ String space = prettyPrint ? " " : "";
         {
           case REQ:
             if (field.type == TType.STRUCT) {
-              this.req = new KVPutRequest();
+              this.req = new InternalTxnRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
@@ -1183,7 +1080,7 @@ String space = prettyPrint ? " " : "";
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("put_args");
+      StringBuilder sb = new StringBuilder("forwardTransaction_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -1211,8 +1108,8 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class put_result implements TBase, java.io.Serializable, Cloneable, Comparable<put_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("put_result");
+  public static class forwardTransaction_result implements TBase, java.io.Serializable, Cloneable, Comparable<forwardTransaction_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("forwardTransaction_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
     public ExecResponse success;
@@ -1230,13 +1127,13 @@ String space = prettyPrint ? " " : "";
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(put_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(forwardTransaction_result.class, metaDataMap);
     }
 
-    public put_result() {
+    public forwardTransaction_result() {
     }
 
-    public put_result(
+    public forwardTransaction_result(
       ExecResponse success)
     {
       this();
@@ -1246,26 +1143,26 @@ String space = prettyPrint ? " " : "";
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public put_result(put_result other) {
+    public forwardTransaction_result(forwardTransaction_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public put_result deepCopy() {
-      return new put_result(this);
+    public forwardTransaction_result deepCopy() {
+      return new forwardTransaction_result(this);
     }
 
     @Deprecated
-    public put_result clone() {
-      return new put_result(this);
+    public forwardTransaction_result clone() {
+      return new forwardTransaction_result(this);
     }
 
     public ExecResponse  getSuccess() {
       return this.success;
     }
 
-    public put_result setSuccess(ExecResponse success) {
+    public forwardTransaction_result setSuccess(ExecResponse success) {
       this.success = success;
       return this;
     }
@@ -1324,12 +1221,12 @@ String space = prettyPrint ? " " : "";
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof put_result)
-        return this.equals((put_result)that);
+      if (that instanceof forwardTransaction_result)
+        return this.equals((forwardTransaction_result)that);
       return false;
     }
 
-    public boolean equals(put_result that) {
+    public boolean equals(forwardTransaction_result that) {
       if (that == null)
         return false;
       if (this == that)
@@ -1360,7 +1257,7 @@ String space = prettyPrint ? " " : "";
     }
 
     @Override
-    public int compareTo(put_result other) {
+    public int compareTo(forwardTransaction_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -1441,524 +1338,7 @@ String space = prettyPrint ? " " : "";
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("put_result");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("success");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getSuccess() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-      // check that fields of type enum have valid values
-    }
-
-  }
-
-  public static class remove_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("remove_args");
-    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
-
-    public KVRemoveRequest req;
-    public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVRemoveRequest.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(remove_args.class, metaDataMap);
-    }
-
-    public remove_args() {
-    }
-
-    public remove_args(
-      KVRemoveRequest req)
-    {
-      this();
-      this.req = req;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public remove_args(remove_args other) {
-      if (other.isSetReq()) {
-        this.req = TBaseHelper.deepCopy(other.req);
-      }
-    }
-
-    public remove_args deepCopy() {
-      return new remove_args(this);
-    }
-
-    @Deprecated
-    public remove_args clone() {
-      return new remove_args(this);
-    }
-
-    public KVRemoveRequest  getReq() {
-      return this.req;
-    }
-
-    public remove_args setReq(KVRemoveRequest req) {
-      this.req = req;
-      return this;
-    }
-
-    public void unsetReq() {
-      this.req = null;
-    }
-
-    // Returns true if field req is set (has been assigned a value) and false otherwise
-    public boolean isSetReq() {
-      return this.req != null;
-    }
-
-    public void setReqIsSet(boolean value) {
-      if (!value) {
-        this.req = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
-      case REQ:
-        if (value == null) {
-          unsetReq();
-        } else {
-          setReq((KVRemoveRequest)value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return getReq();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof remove_args)
-        return this.equals((remove_args)that);
-      return false;
-    }
-
-    public boolean equals(remove_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
-    }
-
-    @Override
-    public int compareTo(remove_args other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
-          break;
-        }
-        switch (field.id)
-        {
-          case REQ:
-            if (field.type == TType.STRUCT) {
-              this.req = new KVRemoveRequest();
-              this.req.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      if (this.req != null) {
-        oprot.writeFieldBegin(REQ_FIELD_DESC);
-        this.req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("remove_args");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getReq() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-      // check that fields of type enum have valid values
-    }
-
-  }
-
-  public static class remove_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("remove_result");
-    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-
-    public ExecResponse success;
-    public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, ExecResponse.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(remove_result.class, metaDataMap);
-    }
-
-    public remove_result() {
-    }
-
-    public remove_result(
-      ExecResponse success)
-    {
-      this();
-      this.success = success;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public remove_result(remove_result other) {
-      if (other.isSetSuccess()) {
-        this.success = TBaseHelper.deepCopy(other.success);
-      }
-    }
-
-    public remove_result deepCopy() {
-      return new remove_result(this);
-    }
-
-    @Deprecated
-    public remove_result clone() {
-      return new remove_result(this);
-    }
-
-    public ExecResponse  getSuccess() {
-      return this.success;
-    }
-
-    public remove_result setSuccess(ExecResponse success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    // Returns true if field success is set (has been assigned a value) and false otherwise
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
-        this.success = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
-      case SUCCESS:
-        if (value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((ExecResponse)value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return getSuccess();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof remove_result)
-        return this.equals((remove_result)that);
-      return false;
-    }
-
-    public boolean equals(remove_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
-    }
-
-    @Override
-    public int compareTo(remove_result other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
-          break;
-        }
-        switch (field.id)
-        {
-          case SUCCESS:
-            if (field.type == TType.STRUCT) {
-              this.success = new ExecResponse();
-              this.success.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      oprot.writeStructBegin(STRUCT_DESC);
-
-      if (this.isSetSuccess()) {
-        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-        this.success.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("remove_result");
+      StringBuilder sb = new StringBuilder("forwardTransaction_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
+package com.vesoft.nebula;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
@@ -27,12 +27,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Comparable<DrainZoneReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("DrainZoneReq");
-  private static final TField ZONE_NAME_FIELD_DESC = new TField("zone_name", TType.STRING, (short)1);
+public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<PartitionBackupInfo> {
+  private static final TStruct STRUCT_DESC = new TStruct("PartitionBackupInfo");
+  private static final TField INFO_FIELD_DESC = new TField("info", TType.MAP, (short)1);
 
-  public byte[] zone_name;
-  public static final int ZONE_NAME = 1;
+  public Map<Integer,LogInfo> info;
+  public static final int INFO = 1;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
@@ -40,74 +40,77 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ZONE_NAME, new FieldMetaData("zone_name", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new StructMetaData(TType.STRUCT, LogInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(DrainZoneReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(PartitionBackupInfo.class, metaDataMap);
   }
 
-  public DrainZoneReq() {
+  public PartitionBackupInfo() {
   }
 
-  public DrainZoneReq(
-    byte[] zone_name)
+  public PartitionBackupInfo(
+    Map<Integer,LogInfo> info)
   {
     this();
-    this.zone_name = zone_name;
+    this.info = info;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public DrainZoneReq(DrainZoneReq other) {
-    if (other.isSetZone_name()) {
-      this.zone_name = TBaseHelper.deepCopy(other.zone_name);
+  public PartitionBackupInfo(PartitionBackupInfo other) {
+    if (other.isSetInfo()) {
+      this.info = TBaseHelper.deepCopy(other.info);
     }
   }
 
-  public DrainZoneReq deepCopy() {
-    return new DrainZoneReq(this);
+  public PartitionBackupInfo deepCopy() {
+    return new PartitionBackupInfo(this);
   }
 
   @Deprecated
-  public DrainZoneReq clone() {
-    return new DrainZoneReq(this);
+  public PartitionBackupInfo clone() {
+    return new PartitionBackupInfo(this);
   }
 
-  public byte[]  getZone_name() {
-    return this.zone_name;
+  public Map<Integer,LogInfo>  getInfo() {
+    return this.info;
   }
 
-  public DrainZoneReq setZone_name(byte[] zone_name) {
-    this.zone_name = zone_name;
+  public PartitionBackupInfo setInfo(Map<Integer,LogInfo> info) {
+    this.info = info;
     return this;
   }
 
-  public void unsetZone_name() {
-    this.zone_name = null;
+  public void unsetInfo() {
+    this.info = null;
   }
 
-  // Returns true if field zone_name is set (has been assigned a value) and false otherwise
-  public boolean isSetZone_name() {
-    return this.zone_name != null;
+  // Returns true if field info is set (has been assigned a value) and false otherwise
+  public boolean isSetInfo() {
+    return this.info != null;
   }
 
-  public void setZone_nameIsSet(boolean value) {
+  public void setInfoIsSet(boolean value) {
     if (!value) {
-      this.zone_name = null;
+      this.info = null;
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
-    case ZONE_NAME:
+    case INFO:
       if (value == null) {
-        unsetZone_name();
+        unsetInfo();
       } else {
-        setZone_name((byte[])value);
+        setInfo((Map<Integer,LogInfo>)value);
       }
       break;
 
@@ -118,8 +121,8 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ZONE_NAME:
-      return getZone_name();
+    case INFO:
+      return getInfo();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -129,8 +132,8 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
   // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
-    case ZONE_NAME:
-      return isSetZone_name();
+    case INFO:
+      return isSetInfo();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -140,23 +143,23 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof DrainZoneReq)
-      return this.equals((DrainZoneReq)that);
+    if (that instanceof PartitionBackupInfo)
+      return this.equals((PartitionBackupInfo)that);
     return false;
   }
 
-  public boolean equals(DrainZoneReq that) {
+  public boolean equals(PartitionBackupInfo that) {
     if (that == null)
       return false;
     if (this == that)
       return true;
 
-    boolean this_present_zone_name = true && this.isSetZone_name();
-    boolean that_present_zone_name = true && that.isSetZone_name();
-    if (this_present_zone_name || that_present_zone_name) {
-      if (!(this_present_zone_name && that_present_zone_name))
+    boolean this_present_info = true && this.isSetInfo();
+    boolean that_present_info = true && that.isSetInfo();
+    if (this_present_info || that_present_info) {
+      if (!(this_present_info && that_present_info))
         return false;
-      if (!TBaseHelper.equalsSlow(this.zone_name, that.zone_name))
+      if (!TBaseHelper.equalsNobinary(this.info, that.info))
         return false;
     }
 
@@ -167,16 +170,16 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
   public int hashCode() {
     HashCodeBuilder builder = new HashCodeBuilder();
 
-    boolean present_zone_name = true && (isSetZone_name());
-    builder.append(present_zone_name);
-    if (present_zone_name)
-      builder.append(zone_name);
+    boolean present_info = true && (isSetInfo());
+    builder.append(present_info);
+    if (present_info)
+      builder.append(info);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(DrainZoneReq other) {
+  public int compareTo(PartitionBackupInfo other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -187,11 +190,11 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetZone_name()).compareTo(other.isSetZone_name());
+    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(zone_name, other.zone_name);
+    lastComparison = TBaseHelper.compareTo(info, other.info);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -209,9 +212,24 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (field.id)
       {
-        case ZONE_NAME:
-          if (field.type == TType.STRING) {
-            this.zone_name = iprot.readBinary();
+        case INFO:
+          if (field.type == TType.MAP) {
+            {
+              TMap _map48 = iprot.readMapBegin();
+              this.info = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map48.size));
+              for (int _i49 = 0; 
+                   (_map48.size < 0) ? iprot.peekMap() : (_i49 < _map48.size); 
+                   ++_i49)
+              {
+                int _key50;
+                LogInfo _val51;
+                _key50 = iprot.readI32();
+                _val51 = new LogInfo();
+                _val51.read(iprot);
+                this.info.put(_key50, _val51);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -233,9 +251,16 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.zone_name != null) {
-      oprot.writeFieldBegin(ZONE_NAME_FIELD_DESC);
-      oprot.writeBinary(this.zone_name);
+    if (this.info != null) {
+      oprot.writeFieldBegin(INFO_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.info.size()));
+        for (Map.Entry<Integer, LogInfo> _iter52 : this.info.entrySet())        {
+          oprot.writeI32(_iter52.getKey());
+          _iter52.getValue().write(oprot);
+        }
+        oprot.writeMapEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -257,25 +282,20 @@ public class DrainZoneReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("DrainZoneReq");
+    StringBuilder sb = new StringBuilder("PartitionBackupInfo");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("zone_name");
+    sb.append("info");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getZone_name() == null) {
+    if (this. getInfo() == null) {
       sb.append("null");
     } else {
-        int __zone_name_size = Math.min(this. getZone_name().length, 128);
-        for (int i = 0; i < __zone_name_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getZone_name()[i]).length() > 1 ? Integer.toHexString(this. getZone_name()[i]).substring(Integer.toHexString(this. getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getZone_name()[i]).toUpperCase());
-        }
-        if (this. getZone_name().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getInfo(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

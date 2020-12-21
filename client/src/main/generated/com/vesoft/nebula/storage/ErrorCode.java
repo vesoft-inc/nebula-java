@@ -54,9 +54,12 @@ public class ErrorCode {
   public static final int E_LOAD_META_FAILED = -51;
   public static final int E_FAILED_TO_CHECKPOINT = -60;
   public static final int E_CHECKPOINT_BLOCKED = -61;
+  public static final int E_BACKUP_FAILED = -65;
   public static final int E_PARTIAL_RESULT = -71;
   public static final int E_FILTER_OUT = -81;
   public static final int E_INVALID_DATA = -82;
+  public static final int E_MUTATE_EDGE_CONFLICT = -85;
+  public static final int E_OUTDATED_LOCK = -86;
   public static final int E_INVALID_TASK_PARA = -90;
   public static final int E_USER_CANCEL = -99;
   public static final int E_UNKNOWN = -100;

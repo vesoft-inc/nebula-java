@@ -260,16 +260,16 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
         case PROPS:
           if (field.type == TType.LIST) {
             {
-              TList _list86 = iprot.readListBegin();
-              this.props = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list86.size));
-              for (int _i87 = 0; 
-                   (_list86.size < 0) ? iprot.peekList() : (_i87 < _list86.size); 
-                   ++_i87)
+              TList _list82 = iprot.readListBegin();
+              this.props = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list82.size));
+              for (int _i83 = 0; 
+                   (_list82.size < 0) ? iprot.peekList() : (_i83 < _list82.size); 
+                   ++_i83)
               {
-                com.vesoft.nebula.Value _elem88;
-                _elem88 = new com.vesoft.nebula.Value();
-                _elem88.read(iprot);
-                this.props.add(_elem88);
+                com.vesoft.nebula.Value _elem84;
+                _elem84 = new com.vesoft.nebula.Value();
+                _elem84.read(iprot);
+                this.props.add(_elem84);
               }
               iprot.readListEnd();
             }
@@ -303,8 +303,8 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PROPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.props.size()));
-        for (com.vesoft.nebula.Value _iter89 : this.props)        {
-          _iter89.write(oprot);
+        for (com.vesoft.nebula.Value _iter85 : this.props)        {
+          _iter85.write(oprot);
         }
         oprot.writeListEnd();
       }
