@@ -19,7 +19,6 @@
         <junit.version>4.13.1</junit.version>
         <guava.version>14.0</guava.version>
         <commons-codec.version>1.13</commons-codec.version>
-        <nebula-utils.version>1.0.0-rc2</nebula-utils.version>
     </properties>
 
     <build>
