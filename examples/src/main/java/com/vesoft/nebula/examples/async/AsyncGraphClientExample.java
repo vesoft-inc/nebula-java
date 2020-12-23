@@ -6,16 +6,16 @@
 
 package com.vesoft.nebula.examples.async;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClient;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl;
 import com.vesoft.nebula.graph.ErrorCode;
+import com.vesoft.nebula.shaded.google.common.base.Optional;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.FutureCallback;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.Futures;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.ListenableFuture;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.ListeningExecutorService;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.MoreExecutors;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import org.slf4j.Logger;
