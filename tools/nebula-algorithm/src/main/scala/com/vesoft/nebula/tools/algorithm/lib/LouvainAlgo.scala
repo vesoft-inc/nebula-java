@@ -66,7 +66,7 @@ object LouvainAlgo {
 
     val louvainResult = sparkConfig.spark.sqlContext
       .createDataFrame(louvainResultRDD, schema)
-    louvainResult.write.parquet(resultPath)
+    louvainResult.write.csv(resultPath)
     louvainResult
   }
 

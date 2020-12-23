@@ -6,34 +6,40 @@
 
 package com.vesoft.nebula.tools.algorithm.lib
 
-import com.vesoft.nebula.tools.algorithm.config.{Configs, NebulaConfig, PRConfig, SparkConfig}
+import com.vesoft.nebula.tools.algorithm.config.{
+  CcConfig,
+  Configs,
+  NebulaConfig,
+  PRConfig,
+  SparkConfig
+}
 import org.apache.log4j.Logger
-import org.apache.spark.graphx.{Graph, VertexRDD}
+import org.apache.spark.graphx.{Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
-import org.apache.spark.graphx.lib.PageRank
+import org.apache.spark.graphx.lib.ConnectedComponents
 import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Dataset, Row}
 
-object PageRankAlgo {
+object ConnectedComponentsAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
 
-  val ALGORITHM: String = "PageRank"
+  val ALGORITHM: String = "ConnectedComponents"
 
   /**
-    * run the pagerank algorithm for nebula graph
+    * run the ConnectedComponents algorithm for nebula graph
     *
     * 1. get the configuration which is configured in application.conf
     * 2. read nebula edge data
     * 3. construct initial graph
-    * 4. execute pagerank algorithm
+    * 4. execute ConnectedComponents algorithm
     * 5. save the pagerank result
     */
   def apply(configs: Configs): DataFrame = {
 
-    val sparkConfig    = SparkConfig.getSpark(configs, ALGORITHM)
-    val nebulaConfig   = NebulaConfig.getNebula(configs)
-    val pageRankConfig = PRConfig.getPRConfig(configs)
+    val sparkConfig  = SparkConfig.getSpark(configs, ALGORITHM)
+    val nebulaConfig = NebulaConfig.getNebula(configs)
+    val ccConfig     = CcConfig.getCcConfig(configs)
 
     val dataSet: Dataset[Row] = {
       NebulaUtil.scanEdgeData(
@@ -48,25 +54,25 @@ object PageRankAlgo {
       )
     }
 
-    val resultPath                      = NebulaUtil.getResultPath(pageRankConfig.PRPath, ALGORITHM)
+    val resultPath                      = NebulaUtil.getResultPath(ccConfig.ccPath, ALGORITHM)
     val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
 
-    val prResultRDD = execute(graph, pageRankConfig.maxIter, pageRankConfig.resetProb)
+    val ccResultRDD = execute(graph, ccConfig.maxIter)
 
     val schema = StructType(
       List(
         StructField("_id", LongType, nullable = false),
-        StructField("_pagerank", DoubleType, nullable = true)
+        StructField("_cc", LongType, nullable = true)
       ))
     val algoResult = sparkConfig.spark.sqlContext
-      .createDataFrame(prResultRDD, schema)
+      .createDataFrame(ccResultRDD, schema)
 
     algoResult.write.csv(resultPath)
     algoResult
   }
 
-  def execute(graph: Graph[None.type, Double], maxIter: Int, resetProb: Double): RDD[Row] = {
-    val prResultRDD: VertexRDD[Double] = PageRank.run(graph, maxIter, resetProb).vertices
-    prResultRDD.map(row => Row(row._1, row._2))
+  def execute(graph: Graph[None.type, Double], maxIter: Int): RDD[Row] = {
+    val ccResultRDD: VertexRDD[VertexId] = ConnectedComponents.run(graph, maxIter).vertices
+    ccResultRDD.map(row => Row(row._1, row._2))
   }
 }

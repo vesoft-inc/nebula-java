@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.tools.algorithm.config
 
+import org.apache.spark.graphx.VertexId
+
 case class PRConfig(PRPath: String, maxIter: Int, resetProb: Double)
 
 /**
@@ -27,6 +29,60 @@ object PRConfig {
       else 0.15
 
     PRConfig(prPath, maxIter, resetProb)
+  }
+}
+
+case class LPAConfig(lpaPath: String, maxIter: Int)
+
+/**
+  * labelPropagation algorithm configuration
+  */
+object LPAConfig {
+  var lpaPath: String = _
+  var maxIter: Int    = _
+
+  def getLPAConfig(configs: Configs): LPAConfig = {
+    val lpaConfig = configs.algorithmConfig.map
+
+    lpaPath = lpaConfig("algorithm.path")
+    maxIter = lpaConfig("algorithm.labelpropagation.maxIter").toInt
+    LPAConfig(lpaPath, maxIter)
+  }
+}
+
+case class CcConfig(ccPath: String, maxIter: Int)
+
+/**
+  * ConnectedComponect algorithm configuration
+  */
+object CcConfig {
+  var ccPath: String = _
+  var maxIter: Int   = _
+
+  def getCcConfig(configs: Configs): CcConfig = {
+    val ccConfig = configs.algorithmConfig.map
+
+    ccPath = ccConfig("algorithm.path")
+    maxIter = ccConfig("algorithm.connectedcomonent.maxIter").toInt
+    CcConfig(ccPath, maxIter)
+  }
+}
+
+case class ShortestPathConfig(spPath: String, landmarks: Seq[VertexId])
+
+/**
+  * ConnectedComponect algorithm configuration
+  */
+object ShortestPathConfig {
+  var spPath: String       = _
+  var landmarks: Seq[Long] = _
+
+  def getShortestPathConfig(configs: Configs): ShortestPathConfig = {
+    val spConfig = configs.algorithmConfig.map
+
+    spPath = spConfig("algorithm.path")
+    landmarks = spConfig("algorithm.sp.landmarks").split(",").toSeq.map(_.toLong)
+    ShortestPathConfig(spPath, landmarks)
   }
 }
 
