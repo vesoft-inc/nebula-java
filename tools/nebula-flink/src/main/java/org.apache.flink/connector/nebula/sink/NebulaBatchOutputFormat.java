@@ -6,7 +6,7 @@
 
 package org.apache.flink.connector.nebula.sink;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl;
 import org.apache.flink.connector.nebula.connection.NebulaConnectionProvider;
 import org.apache.flink.connector.nebula.statement.ExecutionOptions;

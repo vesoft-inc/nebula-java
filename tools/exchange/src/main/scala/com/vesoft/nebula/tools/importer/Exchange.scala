@@ -10,9 +10,9 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.io.File
 import java.util.concurrent.{Executors, TimeUnit}
 
-import com.google.common.base.Optional
-import com.google.common.net.HostAndPort
-import com.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors, RateLimiter}
+import com.vesoft.nebula.shaded.google.common.base.Optional
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.util.concurrent.{FutureCallback, Futures, MoreExecutors, RateLimiter}
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.graph.ErrorCode
 import com.vesoft.nebula.tools.importer.config.{

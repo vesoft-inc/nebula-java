@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.bean;
 
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;

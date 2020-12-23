@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.tools.connector
 
-import com.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
 import com.vesoft.nebula.SupportedType
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import org.apache.spark.sql.types.{

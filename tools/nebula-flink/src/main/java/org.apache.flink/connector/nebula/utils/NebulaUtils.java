@@ -6,7 +6,7 @@
 
 package org.apache.flink.connector.nebula.utils;
 
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort;
 
 import java.util.ArrayList;
 import java.util.List;

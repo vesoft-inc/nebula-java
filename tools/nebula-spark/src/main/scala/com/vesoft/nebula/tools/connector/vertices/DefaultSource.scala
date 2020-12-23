@@ -8,7 +8,7 @@ package com.vesoft.nebula.tools.connector.vertices
 
 import java.util.Optional
 
-import com.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
 import com.vesoft.nebula.tools.connector.writer.NebulaDataSourceVertexWriter
 import com.vesoft.nebula.tools.connector.{
   AddressHandler,
