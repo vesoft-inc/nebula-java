@@ -81,7 +81,7 @@ object ShortestPathConfig {
     val spConfig = configs.algorithmConfig.map
 
     spPath = spConfig("algorithm.path")
-    landmarks = spConfig("algorithm.sp.landmarks").split(",").toSeq.map(_.toLong)
+    landmarks = spConfig("algorithm.shortestpath.landmarks").split(",").toSeq.map(_.toLong)
     ShortestPathConfig(spPath, landmarks)
   }
 }
