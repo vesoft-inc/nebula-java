@@ -61,11 +61,22 @@ object AlgorithmConfigEntry {
   }
 }
 
+/** DataSourceEntry is used to determine the data source , nebula or local */
+object DataSourceEntry {
+  def apply(config: Config): DataSourceEntry = {
+    val dataSource = config.getString("data.source")
+    DataSourceEntry(dataSource)
+  }
+}
+
 /**
   * NebulaConfig is used to read edge data
   */
 object NebulaConfigEntry {
   def apply(config: Config): NebulaConfigEntry = {
+    if (!config.hasPath("nebula")) {
+      return null
+    }
     val nebulaConfig       = config.getConfig("nebula")
     val addresses          = nebulaConfig.getString("addresses")
     val space              = nebulaConfig.getString("space")
@@ -76,6 +87,17 @@ object NebulaConfigEntry {
       nebulaConfig.getStringList("weightCols").asScala.toList
     } else { List() }
     NebulaConfigEntry(addresses, space, partitionNumber, labels, hasWeight, weightCols)
+  }
+}
+
+object LocalConfigEntry {
+  def apply(config: Config): LocalConfigEntry = {
+    if (config.hasPath("local.filePath")) {
+      val filePath = config.getString("local.filePath")
+      LocalConfigEntry(filePath)
+    } else {
+      null
+    }
   }
 }
 
@@ -98,6 +120,21 @@ case class SparkConfigEntry(map: Map[String, String]) {
 case class AlgorithmConfigEntry(map: Map[String, String]) {
   override def toString: String = {
     map.toString()
+  }
+}
+
+/**
+  * DataSourceEntry
+  */
+case class DataSourceEntry(source: String) {
+  override def toString: String = {
+    source
+  }
+}
+
+case class LocalConfigEntry(filePath: String) {
+  override def toString: String = {
+    filePath
   }
 }
 
@@ -144,6 +181,8 @@ object Configs {
     }
 
     val config            = ConfigFactory.parseFile(configPath)
+    val dataSourceEntry   = DataSourceEntry(config)
+    val localConfigEntry  = LocalConfigEntry(config)
     val nebulaConfigEntry = NebulaConfigEntry(config)
     val sparkEntry        = SparkConfigEntry(config)
     val algorithmEntry    = AlgorithmConfigEntry(config)
@@ -227,11 +266,7 @@ object Configs {
     }
   }
 
-  final case class Argument(config: File = new File("application.conf"),
-                            hive: Boolean = false,
-                            directly: Boolean = false,
-                            dry: Boolean = false,
-                            reload: String = "")
+  final case class Argument(config: File = new File("application.conf"))
 
   /**
     * Use to parse command line arguments.
