@@ -57,7 +57,7 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAndPort address = addresses.get(position);
-        transport = new TSocket(address.getHostText(), address.getPort(), timeout,
+        transport = new TSocket(address.getHost(), address.getPort(), timeout,
                 connectionTimeout);
         transport.open();
         protocol = new TCompactProtocol(transport);

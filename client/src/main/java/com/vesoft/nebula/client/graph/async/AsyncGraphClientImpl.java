@@ -71,7 +71,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
 
         try {
             manager = new TAsyncClientManager();
-            transport = new TNonblockingSocket(address.getHostText(),
+            transport = new TNonblockingSocket(address.getHost(),
                     address.getPort(), timeout);
             TProtocolFactory protocol = new TBinaryProtocol.Factory();
             client = new GraphService.AsyncClient(protocol, manager, transport);
