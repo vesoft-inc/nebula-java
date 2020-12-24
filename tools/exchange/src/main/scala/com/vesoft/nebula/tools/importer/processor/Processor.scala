@@ -8,7 +8,7 @@ package com.vesoft.nebula.tools.importer.processor
 
 import java.util.concurrent.{CountDownLatch, Executor}
 
-import com.google.common.util.concurrent.Futures
+import com.vesoft.nebula.shaded.google.common.util.concurrent.Futures
 import com.vesoft.nebula.tools.importer.config.SchemaConfigEntry
 import com.vesoft.nebula.tools.importer.{CheckPointHandler, ProcessResult}
 import com.vesoft.nebula.tools.importer.writer.NebulaWriterCallback

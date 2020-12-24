@@ -7,7 +7,7 @@
 package org.apache.flink.connector.nebula.catalog;
 
 import com.facebook.thrift.TException;
-import com.google.common.net.HostAndPort;
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import org.apache.flink.connector.nebula.table.NebulaDynamicTableFactory;
 import org.apache.flink.connector.nebula.utils.NebulaUtils;

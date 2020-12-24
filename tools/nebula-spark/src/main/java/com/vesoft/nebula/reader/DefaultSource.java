@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.reader;
 
-import com.google.common.base.Preconditions;
+import com.vesoft.nebula.shaded.google.common.base.Preconditions;
 import com.vesoft.nebula.bean.Parameters;
 import com.vesoft.nebula.bean.DataSourceConfig;
 import com.vesoft.nebula.common.Type;

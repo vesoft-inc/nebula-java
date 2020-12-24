@@ -8,7 +8,7 @@ package com.vesoft.nebula.tools.algorithm.utils
 
 import java.util
 
-import com.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
 import com.vesoft.nebula.bean.Parameters
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.common.Type

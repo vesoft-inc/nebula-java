@@ -6,10 +6,10 @@
 
 package com.vesoft.nebula.examples;
 
-import com.google.common.base.Optional;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.client.storage.StorageClient;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
+import com.vesoft.nebula.shaded.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

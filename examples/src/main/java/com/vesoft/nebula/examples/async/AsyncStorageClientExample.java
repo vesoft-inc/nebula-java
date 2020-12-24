@@ -6,8 +6,8 @@
 
 package com.vesoft.nebula.examples.async;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.ListeningExecutorService;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.MoreExecutors;
 import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

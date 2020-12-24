@@ -6,10 +6,10 @@
 
 package org.apache.flink.connector.nebula.sink;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.vesoft.nebula.shaded.google.common.base.Optional;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.FutureCallback;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.Futures;
+import com.vesoft.nebula.shaded.google.common.util.concurrent.ListenableFuture;
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl;
 import com.vesoft.nebula.graph.ErrorCode;
 import org.apache.flink.connector.nebula.statement.EdgeExecutionOptions;

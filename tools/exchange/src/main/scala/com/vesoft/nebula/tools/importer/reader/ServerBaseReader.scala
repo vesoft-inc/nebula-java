@@ -6,7 +6,7 @@
 
 package com.vesoft.nebula.tools.importer.reader
 
-import com.google.common.collect.Maps
+import com.vesoft.nebula.shaded.google.common.collect.Maps
 import com.vesoft.nebula.tools.importer.config._
 import com.vesoft.nebula.tools.importer.utils.{HDFSUtils, NebulaUtils}
 import org.apache.hadoop.hbase.HBaseConfiguration

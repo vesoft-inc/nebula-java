@@ -8,7 +8,7 @@ package com.vesoft.nebula.tools.connector
 
 import java.util.Properties
 import java.util.regex.Pattern
-import com.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
 import org.apache.commons.lang.StringUtils
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.catalyst.util.CaseInsensitiveMap

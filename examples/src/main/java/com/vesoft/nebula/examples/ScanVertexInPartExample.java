@@ -6,13 +6,13 @@
 
 package com.vesoft.nebula.examples;
 
-import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.client.meta.MetaClient;
 import com.vesoft.nebula.client.meta.MetaClientImpl;
 import com.vesoft.nebula.client.storage.StorageClient;
 import com.vesoft.nebula.client.storage.StorageClientImpl;
 import com.vesoft.nebula.client.storage.processor.ScanVertexProcessor;
 import com.vesoft.nebula.data.Result;
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -6,8 +6,8 @@
 
 package com.vesoft.nebula.tools
 
-import com.google.common.base.Optional
-import com.google.common.util.concurrent.ListenableFuture
+import com.vesoft.nebula.shaded.google.common.base.Optional
+import com.vesoft.nebula.shaded.google.common.util.concurrent.ListenableFuture
 
 import scala.collection.mutable.ListBuffer
 

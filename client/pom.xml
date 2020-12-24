@@ -184,14 +184,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
@@ -205,8 +197,8 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.google.guava</pattern>
-                                    <shadedPattern>nebula.shaded.guava.common</shadedPattern>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>com.vesoft.nebula.shaded.google.common</shadedPattern>
                                 </relocation>
                             </relocations>
                             <artifactSet>

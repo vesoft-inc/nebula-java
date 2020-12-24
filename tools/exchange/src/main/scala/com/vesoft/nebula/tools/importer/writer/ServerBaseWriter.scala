@@ -8,9 +8,9 @@ package com.vesoft.nebula.tools.importer.writer
 
 import java.util.concurrent.CountDownLatch
 
-import com.google.common.base.Optional
-import com.google.common.net.HostAndPort
-import com.google.common.util.concurrent.FutureCallback
+import com.vesoft.nebula.shaded.google.common.base.Optional
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.util.concurrent.FutureCallback
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.client.storage.StorageClientImpl

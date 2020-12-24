@@ -12,8 +12,8 @@ import java.nio.file.{Files, Paths, StandardCopyOption}
 import java.util.concurrent.{Executors, TimeUnit}
 
 import com.google.common.geometry.{S2CellId, S2LatLng}
-import com.google.common.net.HostAndPort
-import com.google.common.util.concurrent.{MoreExecutors, RateLimiter}
+import com.vesoft.nebula.shaded.google.common.net.HostAndPort
+import com.vesoft.nebula.shaded.google.common.util.concurrent.{MoreExecutors, RateLimiter}
 import com.vesoft.nebula.NebulaCodec
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.tools.importer.config.{
