@@ -37,7 +37,7 @@ public class TestSession {
 
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
-                    runtime.exec("docker stop nebula-docker-compose_graphd_1")
+                    runtime.exec("docker stop nebula-docker-compose_graphd0_1")
                             .waitFor(5, TimeUnit.SECONDS);
                     runtime.exec("docker stop nebula-docker-compose_graphd1_1")
                             .waitFor(5, TimeUnit.SECONDS);
@@ -64,7 +64,7 @@ public class TestSession {
             Assert.assertFalse(e.getMessage(),false);
         } finally {
             try {
-                runtime.exec("docker start nebula-docker-compose_graphd_1")
+                runtime.exec("docker start nebula-docker-compose_graphd0_1")
                         .waitFor(5, TimeUnit.SECONDS);
                 runtime.exec("docker start nebula-docker-compose_graphd1_1")
                         .waitFor(5, TimeUnit.SECONDS);

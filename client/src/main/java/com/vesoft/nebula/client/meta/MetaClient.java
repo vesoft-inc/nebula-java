@@ -26,6 +26,7 @@ import com.vesoft.nebula.meta.HostItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListEdgesReq;
 import com.vesoft.nebula.meta.ListEdgesResp;
+import com.vesoft.nebula.meta.ListHostType;
 import com.vesoft.nebula.meta.ListHostsReq;
 import com.vesoft.nebula.meta.ListHostsResp;
 import com.vesoft.nebula.meta.ListSpacesReq;
@@ -298,7 +299,7 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Set<HostAddr> listHosts() {
         ListHostsReq request = new ListHostsReq();
-        // todo request.setType();
+        request.setType(ListHostType.STORAGE);
         ListHostsResp resp;
         try {
             resp = client.listHosts(request);
