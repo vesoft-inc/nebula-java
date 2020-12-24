@@ -6,9 +6,16 @@
 
 package com.vesoft.nebula.tools.algorithm
 
+import com.sun.tools.internal.xjc.reader.gbind.ConnectedComponent
 import com.vesoft.nebula.tools.algorithm.config.Configs.Argument
 import com.vesoft.nebula.tools.algorithm.config.{AlgoConfig, Configs}
-import com.vesoft.nebula.tools.algorithm.lib.{LouvainAlgo, PageRankAlgo}
+import com.vesoft.nebula.tools.algorithm.lib.{
+  ConnectedComponentsAlgo,
+  LabelPropagationAlgo,
+  LouvainAlgo,
+  PageRankAlgo,
+  ShortestPathAlgo
+}
 import org.apache.commons.math3.ode.UnknownParameterException
 import org.apache.log4j.Logger
 
@@ -41,9 +48,12 @@ object Main {
     LOGGER.info(s"algoName= ${algoName}")
 
     algoName.toLowerCase match {
-      case "pagerank" => PageRankAlgo(configs)
-      case "louvain"  => LouvainAlgo(configs)
-      case _          => throw new UnknownParameterException("unknown executeAlgo name.")
+      case "pagerank"           => PageRankAlgo(configs)
+      case "louvain"            => LouvainAlgo(configs)
+      case "connectedcomponent" => ConnectedComponentsAlgo(configs)
+      case "labelpropagation"   => LabelPropagationAlgo(configs)
+      case "shortestPaths"      => ShortestPathAlgo(configs)
+      case _                    => throw new UnknownParameterException("unknown executeAlgo name.")
     }
   }
 }
