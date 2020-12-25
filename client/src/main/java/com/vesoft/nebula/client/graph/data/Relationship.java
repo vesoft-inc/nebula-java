@@ -25,12 +25,12 @@ public class Relationship {
         this.edge = edge;
     }
 
-    public String srcId() throws UnsupportedEncodingException {
-        return new String(edge.src, decodeType);
+    public ValueWrapper srcId() throws UnsupportedEncodingException {
+        return new ValueWrapper(edge.src, decodeType);
     }
 
-    public String dstId() throws UnsupportedEncodingException {
-        return new String(edge.dst, decodeType);
+    public ValueWrapper dstId() throws UnsupportedEncodingException {
+        return new ValueWrapper(edge.dst, decodeType);
     }
 
     public String edgeName() throws UnsupportedEncodingException {
@@ -52,7 +52,7 @@ public class Relationship {
     public List<ValueWrapper> values() {
         List<ValueWrapper> propVals = new ArrayList<>();
         for (Value val : edge.props.values()) {
-            propVals.add(new ValueWrapper(val));
+            propVals.add(new ValueWrapper(val, decodeType));
         }
         return propVals;
     }
@@ -60,7 +60,8 @@ public class Relationship {
     public HashMap<String, ValueWrapper> properties() throws UnsupportedEncodingException {
         HashMap<String, ValueWrapper> properties = new HashMap<>();
         for (byte[] key : edge.props.keySet()) {
-            properties.put(new String(key, decodeType), new ValueWrapper(edge.props.get(key)));
+            properties.put(new String(key, decodeType),
+                new ValueWrapper(edge.props.get(key), decodeType));
         }
         return properties;
     }

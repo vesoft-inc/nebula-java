@@ -29,10 +29,10 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class Vertex implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("Vertex");
-  private static final TField VID_FIELD_DESC = new TField("vid", TType.STRING, (short)1);
+  private static final TField VID_FIELD_DESC = new TField("vid", TType.STRUCT, (short)1);
   private static final TField TAGS_FIELD_DESC = new TField("tags", TType.LIST, (short)2);
 
-  public byte[] vid;
+  public Value vid;
   public List<Tag> tags;
   public static final int VID = 1;
   public static final int TAGS = 2;
@@ -44,7 +44,7 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(VID, new FieldMetaData("vid", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+        new StructMetaData(TType.STRUCT, Value.class)));
     tmpMetaDataMap.put(TAGS, new FieldMetaData("tags", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, Tag.class))));
@@ -59,7 +59,7 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Vertex(
-    byte[] vid,
+    Value vid,
     List<Tag> tags)
   {
     this();
@@ -88,11 +88,11 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     return new Vertex(this);
   }
 
-  public byte[]  getVid() {
+  public Value  getVid() {
     return this.vid;
   }
 
-  public Vertex setVid(byte[] vid) {
+  public Vertex setVid(Value vid) {
     this.vid = vid;
     return this;
   }
@@ -143,7 +143,7 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetVid();
       } else {
-        setVid((byte[])value);
+        setVid((Value)value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     if (this_present_vid || that_present_vid) {
       if (!(this_present_vid && that_present_vid))
         return false;
-      if (!TBaseHelper.equalsSlow(this.vid, that.vid))
+      if (!TBaseHelper.equalsNobinary(this.vid, that.vid))
         return false;
     }
 
@@ -250,8 +250,9 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
       switch (field.id)
       {
         case VID:
-          if (field.type == TType.STRING) {
-            this.vid = iprot.readBinary();
+          if (field.type == TType.STRUCT) {
+            this.vid = new Value();
+            this.vid.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -295,7 +296,7 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.vid != null) {
       oprot.writeFieldBegin(VID_FIELD_DESC);
-      oprot.writeBinary(this.vid);
+      this.vid.write(oprot);
       oprot.writeFieldEnd();
     }
     if (this.tags != null) {
@@ -341,12 +342,7 @@ String space = prettyPrint ? " " : "";
     if (this. getVid() == null) {
       sb.append("null");
     } else {
-        int __vid_size = Math.min(this. getVid().length, 128);
-        for (int i = 0; i < __vid_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getVid()[i]).length() > 1 ? Integer.toHexString(this. getVid()[i]).substring(Integer.toHexString(this. getVid()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getVid()[i]).toUpperCase());
-        }
-        if (this. getVid().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getVid(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

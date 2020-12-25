@@ -40,6 +40,7 @@ public class ErrorCode {
   public static final int E_NO_RUNNING_BALANCE_PLAN = -36;
   public static final int E_NO_VALID_HOST = -37;
   public static final int E_CORRUPTTED_BALANCE_PLAN = -38;
+  public static final int E_NO_INVALID_BALANCE_PLAN = -39;
   public static final int E_INVALID_PASSWORD = -41;
   public static final int E_IMPROPER_ROLE = -42;
   public static final int E_INVALID_PARTITION_NUM = -43;

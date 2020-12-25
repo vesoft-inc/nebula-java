@@ -51,21 +51,18 @@ public class TestData {
             Tag tag = new Tag(String.format("tag%d", i).getBytes(), props);
             tags.add(tag);
         }
-        return new Vertex(vid.getBytes(), tags);
+        return new Vertex(new Value(Value.SVAL, vid.getBytes()), tags);
     }
 
     public Edge getEdge(String srcId, String dstId) {
-        Edge edge = new Edge();
-        edge.setSrc(srcId.getBytes());
-        edge.setDst(dstId.getBytes());
         Map<byte[], Value> props = new HashMap<>();
         for (int i = 0; i < 5; i++) {
             Value value = new Value();
             value.setIVal(i);
             props.put(String.format("prop%d", i).getBytes(), value);
         }
-        return new Edge(srcId.getBytes(),
-                dstId.getBytes(),
+        return new Edge(new Value(Value.SVAL, srcId.getBytes()),
+                new Value(Value.SVAL, dstId.getBytes()),
                 1,
                 "classmate".getBytes(),
                 100,
@@ -144,7 +141,7 @@ public class TestData {
     public void testNode() {
         try {
             Node node = new Node(getVertex(new String("Tom")));
-            assert Objects.equals(node.getId(), "Tom");
+            assert Objects.equals(node.getId().asString(), "Tom");
             assert node.hasLabel("tag1");
             List<String> names = Arrays.asList("prop0", "prop1", "prop2", "prop3", "prop4");
             assert Objects.equals(
@@ -168,8 +165,8 @@ public class TestData {
         try {
             Edge edge = getEdge(new String("Tom"), new String("Lily"));
             Relationship relationShip = new Relationship(edge);
-            assert Objects.equals(relationShip.srcId(), "Tom");
-            assert Objects.equals(relationShip.dstId(), "Lily");
+            assert Objects.equals(relationShip.srcId().asString(), "Tom");
+            assert Objects.equals(relationShip.dstId().asString(), "Lily");
             assert Objects.equals(relationShip.edgeName(), "classmate");
             assert relationShip.ranking() == 100;
 

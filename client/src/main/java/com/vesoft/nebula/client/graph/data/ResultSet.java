@@ -27,7 +27,7 @@ public class ResultSet {
         private final List<ValueWrapper> colValues = new ArrayList<>();
         private List<String> columnNames = new ArrayList<>();
 
-        public Record(List<String> columnNames, Row row) {
+        public Record(List<String> columnNames, Row row, String decodeType) {
             if (columnNames == null) {
                 return;
             }
@@ -37,7 +37,7 @@ public class ResultSet {
             }
 
             for (Value value : row.values) {
-                this.colValues.add(new ValueWrapper(value));
+                this.colValues.add(new ValueWrapper(value, decodeType));
             }
 
             this.columnNames = columnNames;
@@ -183,7 +183,7 @@ public class ResultSet {
         if (index >= response.data.rows.size()) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return new Record(columnNames, response.data.rows.get(index));
+        return new Record(columnNames, response.data.rows.get(index), decodeType);
     }
 
     /**
@@ -199,7 +199,7 @@ public class ResultSet {
         }
         List<ValueWrapper> values = new ArrayList<>();
         for (int i = 0; i < response.data.rows.size(); i++) {
-            values.add(new ValueWrapper(response.data.rows.get(i).values.get(index)));
+            values.add(new ValueWrapper(response.data.rows.get(i).values.get(index), decodeType));
         }
         return values;
     }
