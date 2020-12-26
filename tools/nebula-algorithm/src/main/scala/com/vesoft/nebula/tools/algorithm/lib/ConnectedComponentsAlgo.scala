@@ -9,6 +9,7 @@ package com.vesoft.nebula.tools.algorithm.lib
 import com.vesoft.nebula.tools.algorithm.config.{
   CcConfig,
   Configs,
+  LPAConfig,
   NebulaConfig,
   PRConfig,
   SparkConfig
@@ -19,7 +20,7 @@ import org.apache.spark.rdd.RDD
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.spark.graphx.lib.ConnectedComponents
 import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Dataset, Row}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
 object ConnectedComponentsAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
@@ -35,27 +36,12 @@ object ConnectedComponentsAlgo {
     * 4. execute ConnectedComponents algorithm
     * 5. save the pagerank result
     */
-  def apply(configs: Configs): DataFrame = {
+  def apply(spark: SparkSession,
+            dataset: Dataset[Row],
+            ccConfig: CcConfig,
+            hasWeight: Boolean): DataFrame = {
 
-    val sparkConfig  = SparkConfig.getSpark(configs, ALGORITHM)
-    val nebulaConfig = NebulaConfig.getNebula(configs)
-    val ccConfig     = CcConfig.getCcConfig(configs)
-
-    val dataSet: Dataset[Row] = {
-      NebulaUtil.scanEdgeData(
-        sparkConfig.spark,
-        sparkConfig.partitionNum,
-        nebulaConfig.hostPorts,
-        nebulaConfig.partitionNumber,
-        nebulaConfig.nameSpace,
-        nebulaConfig.labels,
-        nebulaConfig.hasWeight,
-        nebulaConfig.weightCols
-      )
-    }
-
-    val resultPath                      = NebulaUtil.getResultPath(ccConfig.ccPath, ALGORITHM)
-    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
+    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, hasWeight)
 
     val ccResultRDD = execute(graph, ccConfig.maxIter)
 
@@ -64,10 +50,9 @@ object ConnectedComponentsAlgo {
         StructField("_id", LongType, nullable = false),
         StructField("_cc", LongType, nullable = true)
       ))
-    val algoResult = sparkConfig.spark.sqlContext
+    val algoResult = spark.sqlContext
       .createDataFrame(ccResultRDD, schema)
 
-    algoResult.write.csv(resultPath)
     algoResult
   }
 

@@ -7,6 +7,7 @@
 package com.vesoft.nebula.tools.algorithm.lib
 
 import com.vesoft.nebula.tools.algorithm.config.{
+  CcConfig,
   Configs,
   NebulaConfig,
   PRConfig,
@@ -20,7 +21,7 @@ import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.spark.graphx.lib.ShortestPaths
 import org.apache.spark.graphx.lib.ShortestPaths.SPMap
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Dataset, Row}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
 object ShortestPathAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
@@ -36,27 +37,12 @@ object ShortestPathAlgo {
     * 4. execute pagerank algorithm
     * 5. save the pagerank result
     */
-  def apply(configs: Configs): DataFrame = {
+  def apply(spark: SparkSession,
+            dataset: Dataset[Row],
+            shortestPathConfig: ShortestPathConfig,
+            hasWeight: Boolean): DataFrame = {
 
-    val sparkConfig        = SparkConfig.getSpark(configs, ALGORITHM)
-    val nebulaConfig       = NebulaConfig.getNebula(configs)
-    val shortestPathConfig = ShortestPathConfig.getShortestPathConfig(configs)
-
-    val dataSet: Dataset[Row] = {
-      NebulaUtil.scanEdgeData(
-        sparkConfig.spark,
-        sparkConfig.partitionNum,
-        nebulaConfig.hostPorts,
-        nebulaConfig.partitionNumber,
-        nebulaConfig.nameSpace,
-        nebulaConfig.labels,
-        nebulaConfig.hasWeight,
-        nebulaConfig.weightCols
-      )
-    }
-
-    val resultPath                      = NebulaUtil.getResultPath(shortestPathConfig.spPath, ALGORITHM)
-    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
+    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, hasWeight)
 
     val prResultRDD = execute(graph, shortestPathConfig.landmarks)
 
@@ -65,10 +51,9 @@ object ShortestPathAlgo {
         StructField("_id", LongType, nullable = false),
         StructField("_pagerank", StringType, nullable = true)
       ))
-    val algoResult = sparkConfig.spark.sqlContext
+    val algoResult = spark.sqlContext
       .createDataFrame(prResultRDD, schema)
 
-    algoResult.write.csv(resultPath)
     algoResult
   }
 

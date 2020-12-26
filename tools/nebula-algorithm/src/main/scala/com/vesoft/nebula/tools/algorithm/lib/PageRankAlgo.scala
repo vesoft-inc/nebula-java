@@ -13,7 +13,7 @@ import org.apache.spark.rdd.RDD
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.spark.graphx.lib.PageRank
 import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Dataset, Row}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
 object PageRankAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
@@ -29,27 +29,12 @@ object PageRankAlgo {
     * 4. execute pagerank algorithm
     * 5. save the pagerank result
     */
-  def apply(configs: Configs): DataFrame = {
+  def apply(spark: SparkSession,
+            dataset: Dataset[Row],
+            pageRankConfig: PRConfig,
+            hasWeight: Boolean): DataFrame = {
 
-    val sparkConfig    = SparkConfig.getSpark(configs, ALGORITHM)
-    val nebulaConfig   = NebulaConfig.getNebula(configs)
-    val pageRankConfig = PRConfig.getPRConfig(configs)
-
-    val dataSet: Dataset[Row] = {
-      NebulaUtil.scanEdgeData(
-        sparkConfig.spark,
-        sparkConfig.partitionNum,
-        nebulaConfig.hostPorts,
-        nebulaConfig.partitionNumber,
-        nebulaConfig.nameSpace,
-        nebulaConfig.labels,
-        nebulaConfig.hasWeight,
-        nebulaConfig.weightCols
-      )
-    }
-
-    val resultPath                      = NebulaUtil.getResultPath(pageRankConfig.PRPath, ALGORITHM)
-    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
+    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, hasWeight)
 
     val prResultRDD = execute(graph, pageRankConfig.maxIter, pageRankConfig.resetProb)
 
@@ -58,10 +43,9 @@ object PageRankAlgo {
         StructField("_id", LongType, nullable = false),
         StructField("_pagerank", DoubleType, nullable = true)
       ))
-    val algoResult = sparkConfig.spark.sqlContext
+    val algoResult = spark.sqlContext
       .createDataFrame(prResultRDD, schema)
 
-    algoResult.write.csv(resultPath)
     algoResult
   }
 

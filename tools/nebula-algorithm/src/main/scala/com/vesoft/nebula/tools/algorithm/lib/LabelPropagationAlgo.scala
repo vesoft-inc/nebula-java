@@ -6,20 +6,14 @@
 
 package com.vesoft.nebula.tools.algorithm.lib
 
-import com.vesoft.nebula.tools.algorithm.config.{
-  Configs,
-  LPAConfig,
-  NebulaConfig,
-  PRConfig,
-  SparkConfig
-}
+import com.vesoft.nebula.tools.algorithm.config.LPAConfig
 import org.apache.log4j.Logger
 import org.apache.spark.graphx.{Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.spark.graphx.lib.LabelPropagation
 import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Dataset, Row}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
 object LabelPropagationAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
@@ -35,27 +29,11 @@ object LabelPropagationAlgo {
     * 4. execute LabelPropagation algorithm
     * 5. save the pagerank result
     */
-  def apply(configs: Configs): DataFrame = {
-
-    val sparkConfig  = SparkConfig.getSpark(configs, ALGORITHM)
-    val nebulaConfig = NebulaConfig.getNebula(configs)
-    val lpaConfig    = LPAConfig.getLPAConfig(configs)
-
-    val dataSet: Dataset[Row] = {
-      NebulaUtil.scanEdgeData(
-        sparkConfig.spark,
-        sparkConfig.partitionNum,
-        nebulaConfig.hostPorts,
-        nebulaConfig.partitionNumber,
-        nebulaConfig.nameSpace,
-        nebulaConfig.labels,
-        nebulaConfig.hasWeight,
-        nebulaConfig.weightCols
-      )
-    }
-
-    val resultPath                      = NebulaUtil.getResultPath(lpaConfig.lpaPath, ALGORITHM)
-    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
+  def apply(spark: SparkSession,
+            dataset: Dataset[Row],
+            lpaConfig: LPAConfig,
+            hasWeight: Boolean): DataFrame = {
+    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, hasWeight)
 
     val lpaResultRDD = execute(graph, lpaConfig.maxIter)
 
@@ -64,10 +42,9 @@ object LabelPropagationAlgo {
         StructField("_id", LongType, nullable = false),
         StructField("_lpa", LongType, nullable = true)
       ))
-    val algoResult = sparkConfig.spark.sqlContext
+    val algoResult = spark.sqlContext
       .createDataFrame(lpaResultRDD, schema)
 
-    algoResult.write.csv(resultPath)
     algoResult
   }
 

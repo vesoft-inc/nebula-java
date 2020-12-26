@@ -8,104 +8,113 @@ package com.vesoft.nebula.tools.algorithm.config
 
 import org.apache.spark.graphx.VertexId
 
-case class PRConfig(PRPath: String, maxIter: Int, resetProb: Double)
+case class PRConfig(maxIter: Int, resetProb: Double)
 
 /**
   * pagerank algorithm configuration
   */
 object PRConfig {
-  var prPath: String    = _
   var maxIter: Int      = _
   var resetProb: Double = _
 
   def getPRConfig(configs: Configs): PRConfig = {
     val prConfig = configs.algorithmConfig.map
 
-    prPath = prConfig("algorithm.path")
     maxIter = prConfig("algorithm.pagerank.maxIter").toInt
     resetProb =
       if (prConfig.contains("algorithm.pagerank.resetProb"))
         prConfig("algorithm.pagerank.resetProb").toDouble
       else 0.15
 
-    PRConfig(prPath, maxIter, resetProb)
+    PRConfig(maxIter, resetProb)
   }
 }
 
-case class LPAConfig(lpaPath: String, maxIter: Int)
+case class LPAConfig(maxIter: Int)
 
 /**
   * labelPropagation algorithm configuration
   */
 object LPAConfig {
-  var lpaPath: String = _
-  var maxIter: Int    = _
+  var maxIter: Int = _
 
   def getLPAConfig(configs: Configs): LPAConfig = {
     val lpaConfig = configs.algorithmConfig.map
 
-    lpaPath = lpaConfig("algorithm.path")
     maxIter = lpaConfig("algorithm.labelpropagation.maxIter").toInt
-    LPAConfig(lpaPath, maxIter)
+    LPAConfig(maxIter)
   }
 }
 
-case class CcConfig(ccPath: String, maxIter: Int)
+case class CcConfig(maxIter: Int)
 
 /**
   * ConnectedComponect algorithm configuration
   */
 object CcConfig {
-  var ccPath: String = _
-  var maxIter: Int   = _
+  var maxIter: Int = _
 
   def getCcConfig(configs: Configs): CcConfig = {
     val ccConfig = configs.algorithmConfig.map
 
-    ccPath = ccConfig("algorithm.path")
-    maxIter = ccConfig("algorithm.connectedcomonent.maxIter").toInt
-    CcConfig(ccPath, maxIter)
+    maxIter = ccConfig("algorithm.connectedcomponent.maxIter").toInt
+    CcConfig(maxIter)
   }
 }
 
-case class ShortestPathConfig(spPath: String, landmarks: Seq[VertexId])
+case class ShortestPathConfig(landmarks: Seq[VertexId])
 
 /**
   * ConnectedComponect algorithm configuration
   */
 object ShortestPathConfig {
-  var spPath: String       = _
   var landmarks: Seq[Long] = _
 
   def getShortestPathConfig(configs: Configs): ShortestPathConfig = {
     val spConfig = configs.algorithmConfig.map
 
-    spPath = spConfig("algorithm.path")
-    landmarks = spConfig("algorithm.shortestpath.landmarks").split(",").toSeq.map(_.toLong)
-    ShortestPathConfig(spPath, landmarks)
+    landmarks = spConfig("algorithm.shortestpaths.landmarks").split(",").toSeq.map(_.toLong)
+    ShortestPathConfig(landmarks)
   }
 }
 
-case class LouvainConfig(louvainPath: String, maxIter: Int, internalIter: Int, tol: Double)
+case class LouvainConfig(maxIter: Int, internalIter: Int, tol: Double)
 
 /**
   * louvain algorithm configuration
   */
 object LouvainConfig {
-  var louvainPath: String = _
-  var maxIter: Int        = _
-  var internalIter: Int   = _
-  var tol: Double         = _
+  var maxIter: Int      = _
+  var internalIter: Int = _
+  var tol: Double       = _
 
   def getLouvainConfig(configs: Configs): LouvainConfig = {
     val louvainConfig = configs.algorithmConfig.map
 
-    louvainPath = louvainConfig("algorithm.path")
     maxIter = louvainConfig("algorithm.louvain.maxIter").toInt
     internalIter = louvainConfig("algorithm.louvain.internalIter").toInt
     tol = louvainConfig("algorithm.louvain.tol").toDouble
 
-    LouvainConfig(louvainPath, maxIter, internalIter, tol)
+    LouvainConfig(maxIter, internalIter, tol)
+  }
+}
+
+/**
+  * degree static
+  */
+case class DegreeStaticConfig(degree: Boolean, inDegree: Boolean, outDegree: Boolean)
+
+object DegreeStaticConfig {
+  var degree: Boolean    = false
+  var inDegree: Boolean  = false
+  var outDegree: Boolean = false
+
+  def getDegreeStaticConfig(configs: Configs): DegreeStaticConfig = {
+    val degreeConfig = configs.algorithmConfig.map
+    degree = ConfigUtil.getOrElseBoolean(degreeConfig, "algorithm.degreestatic.degree", false)
+    inDegree = ConfigUtil.getOrElseBoolean(degreeConfig, "algorithm.degreestatic.indegree", false)
+    outDegree = ConfigUtil.getOrElseBoolean(degreeConfig, "algorithm.degreestatic.outdegree", false)
+    DegreeStaticConfig(degree, inDegree, outDegree)
   }
 }
 
@@ -116,4 +125,15 @@ object AlgoConfig {
     val algoConfig = configs.algorithmConfig.map
     algoConfig("algorithm.executeAlgo")
   }
+}
+
+object ConfigUtil {
+  def getOrElseBoolean(config: Map[String, String], key: String, defaultValue: Boolean): Boolean = {
+    if (config.contains(key)) {
+      config(key).toBoolean
+    } else {
+      defaultValue
+    }
+  }
+
 }
