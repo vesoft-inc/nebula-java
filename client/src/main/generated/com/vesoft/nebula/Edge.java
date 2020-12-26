@@ -29,15 +29,15 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class Edge implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("Edge");
-  private static final TField SRC_FIELD_DESC = new TField("src", TType.STRING, (short)1);
-  private static final TField DST_FIELD_DESC = new TField("dst", TType.STRING, (short)2);
+  private static final TField SRC_FIELD_DESC = new TField("src", TType.STRUCT, (short)1);
+  private static final TField DST_FIELD_DESC = new TField("dst", TType.STRUCT, (short)2);
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)3);
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)4);
   private static final TField RANKING_FIELD_DESC = new TField("ranking", TType.I64, (short)5);
   private static final TField PROPS_FIELD_DESC = new TField("props", TType.MAP, (short)6);
 
-  public byte[] src;
-  public byte[] dst;
+  public Value src;
+  public Value dst;
   public int type;
   public byte[] name;
   public long ranking;
@@ -59,9 +59,9 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SRC, new FieldMetaData("src", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+        new StructMetaData(TType.STRUCT, Value.class)));
     tmpMetaDataMap.put(DST, new FieldMetaData("dst", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+        new StructMetaData(TType.STRUCT, Value.class)));
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
@@ -83,8 +83,8 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Edge(
-    byte[] src,
-    byte[] dst,
+    Value src,
+    Value dst,
     int type,
     byte[] name,
     long ranking,
@@ -132,11 +132,11 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
     return new Edge(this);
   }
 
-  public byte[]  getSrc() {
+  public Value  getSrc() {
     return this.src;
   }
 
-  public Edge setSrc(byte[] src) {
+  public Edge setSrc(Value src) {
     this.src = src;
     return this;
   }
@@ -156,11 +156,11 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public byte[]  getDst() {
+  public Value  getDst() {
     return this.dst;
   }
 
-  public Edge setDst(byte[] dst) {
+  public Edge setDst(Value dst) {
     this.dst = dst;
     return this;
   }
@@ -281,7 +281,7 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetSrc();
       } else {
-        setSrc((byte[])value);
+        setSrc((Value)value);
       }
       break;
 
@@ -289,7 +289,7 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
       if (value == null) {
         unsetDst();
       } else {
-        setDst((byte[])value);
+        setDst((Value)value);
       }
       break;
 
@@ -395,7 +395,7 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
     if (this_present_src || that_present_src) {
       if (!(this_present_src && that_present_src))
         return false;
-      if (!TBaseHelper.equalsSlow(this.src, that.src))
+      if (!TBaseHelper.equalsNobinary(this.src, that.src))
         return false;
     }
 
@@ -404,7 +404,7 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
     if (this_present_dst || that_present_dst) {
       if (!(this_present_dst && that_present_dst))
         return false;
-      if (!TBaseHelper.equalsSlow(this.dst, that.dst))
+      if (!TBaseHelper.equalsNobinary(this.dst, that.dst))
         return false;
     }
 
@@ -496,15 +496,17 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
       switch (field.id)
       {
         case SRC:
-          if (field.type == TType.STRING) {
-            this.src = iprot.readBinary();
+          if (field.type == TType.STRUCT) {
+            this.src = new Value();
+            this.src.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         case DST:
-          if (field.type == TType.STRING) {
-            this.dst = iprot.readBinary();
+          if (field.type == TType.STRUCT) {
+            this.dst = new Value();
+            this.dst.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -573,12 +575,12 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
     oprot.writeStructBegin(STRUCT_DESC);
     if (this.src != null) {
       oprot.writeFieldBegin(SRC_FIELD_DESC);
-      oprot.writeBinary(this.src);
+      this.src.write(oprot);
       oprot.writeFieldEnd();
     }
     if (this.dst != null) {
       oprot.writeFieldBegin(DST_FIELD_DESC);
-      oprot.writeBinary(this.dst);
+      this.dst.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(TYPE_FIELD_DESC);
@@ -636,12 +638,7 @@ String space = prettyPrint ? " " : "";
     if (this. getSrc() == null) {
       sb.append("null");
     } else {
-        int __src_size = Math.min(this. getSrc().length, 128);
-        for (int i = 0; i < __src_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSrc()[i]).length() > 1 ? Integer.toHexString(this. getSrc()[i]).substring(Integer.toHexString(this. getSrc()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSrc()[i]).toUpperCase());
-        }
-        if (this. getSrc().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getSrc(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -652,12 +649,7 @@ String space = prettyPrint ? " " : "";
     if (this. getDst() == null) {
       sb.append("null");
     } else {
-        int __dst_size = Math.min(this. getDst().length, 128);
-        for (int i = 0; i < __dst_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getDst()[i]).length() > 1 ? Integer.toHexString(this. getDst()[i]).substring(Integer.toHexString(this. getDst()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getDst()[i]).toUpperCase());
-        }
-        if (this. getDst().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getDst(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

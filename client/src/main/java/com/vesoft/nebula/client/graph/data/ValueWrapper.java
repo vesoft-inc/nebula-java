@@ -40,7 +40,7 @@ public class ValueWrapper {
     }
 
     private final Value value;
-    private final String decodeType = "utf-8";
+    private String decodeType = "utf-8";
 
     private String descType() {
         switch (value.getSetField()) {
@@ -79,8 +79,9 @@ public class ValueWrapper {
         }
     }
 
-    public ValueWrapper(Value value) {
+    public ValueWrapper(Value value, String decodeType) {
         this.value = value;
+        this.decodeType = decodeType;
     }
 
     public Value getValue() {
@@ -196,7 +197,7 @@ public class ValueWrapper {
         }
         ArrayList<ValueWrapper> values = new ArrayList<>();
         for (Value value : value.getLVal().getValues()) {
-            values.add(new ValueWrapper(value));
+            values.add(new ValueWrapper(value, decodeType));
         }
         return values;
     }
@@ -208,7 +209,7 @@ public class ValueWrapper {
         }
         HashSet<ValueWrapper> values = new HashSet<>();
         for (Value value : value.getUVal().getValues()) {
-            values.add(new ValueWrapper(value));
+            values.add(new ValueWrapper(value, decodeType));
         }
         return values;
     }
@@ -222,7 +223,7 @@ public class ValueWrapper {
         HashMap<String, ValueWrapper> kvs = new HashMap<>();
         Map<byte[], Value> inValues = value.getMVal().getKvs();
         for (byte[] key : inValues.keySet()) {
-            kvs.put(new String(key, decodeType), new ValueWrapper(inValues.get(key)));
+            kvs.put(new String(key, decodeType), new ValueWrapper(inValues.get(key), decodeType));
         }
         return kvs;
     }

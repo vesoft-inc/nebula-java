@@ -33,22 +33,26 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)2);
   private static final TField HOST_DEL_FIELD_DESC = new TField("host_del", TType.LIST, (short)3);
   private static final TField STOP_FIELD_DESC = new TField("stop", TType.BOOL, (short)4);
+  private static final TField RESET_FIELD_DESC = new TField("reset", TType.BOOL, (short)5);
 
   public int space_id;
   public long id;
   public List<com.vesoft.nebula.HostAddr> host_del;
   public boolean stop;
+  public boolean reset;
   public static final int SPACE_ID = 1;
   public static final int ID = 2;
   public static final int HOST_DEL = 3;
   public static final int STOP = 4;
+  public static final int RESET = 5;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __ID_ISSET_ID = 1;
   private static final int __STOP_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __RESET_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -61,6 +65,8 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
     tmpMetaDataMap.put(STOP, new FieldMetaData("stop", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(RESET, new FieldMetaData("reset", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -76,7 +82,8 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     int space_id,
     long id,
     List<com.vesoft.nebula.HostAddr> host_del,
-    boolean stop)
+    boolean stop,
+    boolean reset)
   {
     this();
     this.space_id = space_id;
@@ -86,6 +93,8 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     this.host_del = host_del;
     this.stop = stop;
     setStopIsSet(true);
+    this.reset = reset;
+    setResetIsSet(true);
   }
 
   /**
@@ -100,6 +109,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       this.host_del = TBaseHelper.deepCopy(other.host_del);
     }
     this.stop = TBaseHelper.deepCopy(other.stop);
+    this.reset = TBaseHelper.deepCopy(other.reset);
   }
 
   public BalanceReq deepCopy() {
@@ -204,6 +214,29 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__STOP_ISSET_ID, value);
   }
 
+  public boolean  isReset() {
+    return this.reset;
+  }
+
+  public BalanceReq setReset(boolean reset) {
+    this.reset = reset;
+    setResetIsSet(true);
+    return this;
+  }
+
+  public void unsetReset() {
+    __isset_bit_vector.clear(__RESET_ISSET_ID);
+  }
+
+  // Returns true if field reset is set (has been assigned a value) and false otherwise
+  public boolean isSetReset() {
+    return __isset_bit_vector.get(__RESET_ISSET_ID);
+  }
+
+  public void setResetIsSet(boolean value) {
+    __isset_bit_vector.set(__RESET_ISSET_ID, value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -239,6 +272,14 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
+    case RESET:
+      if (value == null) {
+        unsetReset();
+      } else {
+        setReset((Boolean)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -258,6 +299,9 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     case STOP:
       return new Boolean(isStop());
 
+    case RESET:
+      return new Boolean(isReset());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -274,6 +318,8 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return isSetHost_del();
     case STOP:
       return isSetStop();
+    case RESET:
+      return isSetReset();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -330,6 +376,15 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         return false;
     }
 
+    boolean this_present_reset = true && this.isSetReset();
+    boolean that_present_reset = true && that.isSetReset();
+    if (this_present_reset || that_present_reset) {
+      if (!(this_present_reset && that_present_reset))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.reset, that.reset))
+        return false;
+    }
+
     return true;
   }
 
@@ -356,6 +411,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     builder.append(present_stop);
     if (present_stop)
       builder.append(stop);
+
+    boolean present_reset = true && (isSetReset());
+    builder.append(present_reset);
+    if (present_reset)
+      builder.append(reset);
 
     return builder.toHashCode();
   }
@@ -401,6 +461,14 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(stop, other.stop);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetReset()).compareTo(other.isSetReset());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(reset, other.reset);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -462,6 +530,14 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case RESET:
+          if (field.type == TType.BOOL) {
+            this.reset = iprot.readBool();
+            setResetIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -505,6 +581,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     if (isSetStop()) {
       oprot.writeFieldBegin(STOP_FIELD_DESC);
       oprot.writeBool(this.stop);
+      oprot.writeFieldEnd();
+    }
+    if (isSetReset()) {
+      oprot.writeFieldBegin(RESET_FIELD_DESC);
+      oprot.writeBool(this.reset);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -573,6 +654,16 @@ String space = prettyPrint ? " " : "";
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this. isStop(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetReset())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("reset");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this. isReset(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

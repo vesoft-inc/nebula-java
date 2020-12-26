@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph.data;
 import com.vesoft.nebula.Edge;
 import com.vesoft.nebula.Path;
 import com.vesoft.nebula.Step;
+import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -117,10 +118,10 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
             return;
         }
         nodes.add(new Node(path.src));
-        List<byte[]> vids = new ArrayList<>();
+        List<Value> vids = new ArrayList<>();
         vids.add(path.src.vid);
-        byte[] srcId;
-        byte[] dstId;
+        Value srcId;
+        Value dstId;
         for (Step step : path.steps) {
             Node startNode;
             Node endNode;

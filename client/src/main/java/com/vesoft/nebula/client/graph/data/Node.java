@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class Node {
     private Vertex vertex;
-    private String vid;
+    private ValueWrapper vid;
     private String decodeType = "utf-8";
     List<String> tagNames = new ArrayList<>();
 
@@ -25,14 +25,14 @@ public class Node {
         if (vertex == null) {
             throw new RuntimeException("Input an null vertex object");
         }
-        vid = new String(vertex.vid);
+        vid = new ValueWrapper(vertex.vid, this.decodeType);
         this.vertex = vertex;
         for (Tag tag : vertex.tags) {
             this.tagNames.add(new String(tag.name, decodeType));
         }
     }
 
-    public String getId() {
+    public ValueWrapper getId() {
         return vid;
     }
 
@@ -51,7 +51,7 @@ public class Node {
         }
         List<ValueWrapper> values = new ArrayList<>();
         for (Value val : vertex.tags.get(index).props.values()) {
-            values.add(new ValueWrapper(val));
+            values.add(new ValueWrapper(val, decodeType));
         }
         return values;
     }
@@ -79,7 +79,7 @@ public class Node {
         HashMap<String, ValueWrapper> properties = new HashMap();
         for (byte[] name : vertex.tags.get(index).props.keySet()) {
             properties.put(new String(name, decodeType),
-                new ValueWrapper(vertex.tags.get(index).props.get(name)));
+                new ValueWrapper(vertex.tags.get(index).props.get(name), decodeType));
         }
         return properties;
     }

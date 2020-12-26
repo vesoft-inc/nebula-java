@@ -6675,7 +6675,7 @@ String space = prettyPrint ? " " : "";
 
   }
 
-  public static class getUUID_result implements TBase, java.io.Serializable, Cloneable, Comparable<getUUID_result>   {
+  public static class getUUID_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("getUUID_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
@@ -6821,29 +6821,6 @@ String space = prettyPrint ? " " : "";
         builder.append(success);
 
       return builder.toHashCode();
-    }
-
-    @Override
-    public int compareTo(getUUID_result other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      return 0;
     }
 
     public void read(TProtocol iprot) throws TException {

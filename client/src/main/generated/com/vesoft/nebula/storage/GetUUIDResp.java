@@ -27,13 +27,13 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetUUIDResp> {
+public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("GetUUIDResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField ID_FIELD_DESC = new TField("id", TType.STRING, (short)2);
+  private static final TField ID_FIELD_DESC = new TField("id", TType.STRUCT, (short)2);
 
   public ResponseCommon result;
-  public byte[] id;
+  public com.vesoft.nebula.Value id;
   public static final int RESULT = 1;
   public static final int ID = 2;
   public static boolean DEFAULT_PRETTY_PRINT = true;
@@ -46,7 +46,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -66,7 +66,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
 
   public GetUUIDResp(
     ResponseCommon result,
-    byte[] id)
+    com.vesoft.nebula.Value id)
   {
     this();
     this.result = result;
@@ -118,11 +118,11 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public byte[]  getId() {
+  public com.vesoft.nebula.Value  getId() {
     return this.id;
   }
 
-  public GetUUIDResp setId(byte[] id) {
+  public GetUUIDResp setId(com.vesoft.nebula.Value id) {
     this.id = id;
     return this;
   }
@@ -156,7 +156,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
       if (value == null) {
         unsetId();
       } else {
-        setId((byte[])value);
+        setId((com.vesoft.nebula.Value)value);
       }
       break;
 
@@ -219,7 +219,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     if (this_present_id || that_present_id) {
       if (!(this_present_id && that_present_id))
         return false;
-      if (!TBaseHelper.equalsSlow(this.id, that.id))
+      if (!TBaseHelper.equalsNobinary(this.id, that.id))
         return false;
     }
 
@@ -243,37 +243,6 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     return builder.toHashCode();
   }
 
-  @Override
-  public int compareTo(GetUUIDResp other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetResult()).compareTo(other.isSetResult());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(id, other.id);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    return 0;
-  }
-
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin(metaDataMap);
@@ -294,8 +263,9 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
           }
           break;
         case ID:
-          if (field.type == TType.STRING) {
-            this.id = iprot.readBinary();
+          if (field.type == TType.STRUCT) {
+            this.id = new com.vesoft.nebula.Value();
+            this.id.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -324,7 +294,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable, Comp
     }
     if (this.id != null) {
       oprot.writeFieldBegin(ID_FIELD_DESC);
-      oprot.writeBinary(this.id);
+      this.id.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -370,12 +340,7 @@ String space = prettyPrint ? " " : "";
     if (this. getId() == null) {
       sb.append("null");
     } else {
-        int __id_size = Math.min(this. getId().length, 128);
-        for (int i = 0; i < __id_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getId()[i]).length() > 1 ? Integer.toHexString(this. getId()[i]).substring(Integer.toHexString(this. getId()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getId()[i]).toUpperCase());
-        }
-        if (this. getId().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
