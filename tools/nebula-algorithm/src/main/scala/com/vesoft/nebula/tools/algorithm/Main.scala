@@ -88,9 +88,15 @@ object Main {
       }
 
       case "csv" => {
-        val data = sparkConfig.spark.read.option("header", true).csv(localPath)
+        val delimiter = configs.localConfigEntry.delimiter
+        val header    = configs.localConfigEntry.header
+        val data =
+          sparkConfig.spark.read
+            .option("header", header)
+            .option("delimiter", delimiter)
+            .csv(localPath)
 
-        if (weight == null) {
+        if (weight == null || weight.trim.isEmpty) {
           data.select(src, dst)
         } else {
           data.select(src, dst, weight)
@@ -98,7 +104,7 @@ object Main {
       }
       case "json" => {
         val data = sparkConfig.spark.read.json(localPath)
-        if (weight == null) {
+        if (weight == null || weight.trim.isEmpty) {
           data.select(src, dst)
         } else {
           data.select(src, dst, weight)
@@ -106,7 +112,7 @@ object Main {
       }
       case "parquet" => {
         val data = sparkConfig.spark.read.parquet(localPath)
-        if (weight == null) {
+        if (weight == null || weight.trim.isEmpty) {
           data.select(src, dst)
         } else {
           data.select(src, dst, weight)

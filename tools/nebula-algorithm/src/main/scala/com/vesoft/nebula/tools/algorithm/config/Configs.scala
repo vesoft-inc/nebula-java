@@ -117,6 +117,8 @@ object LocalConfigEntry {
     var dst: String        = ""
     var weight: String     = ""
     var resultPath: String = null
+    var header: Boolean    = false
+    var delimiter: String  = ","
 
     if (config.hasPath("local.read.filePath")) {
       filePath = config.getString("local.read.filePath")
@@ -125,11 +127,18 @@ object LocalConfigEntry {
       if (config.hasPath("local.read.weight")) {
         weight = config.getString("local.read.weight")
       }
+      if (config.hasPath("local.read.delimiter")) {
+        delimiter = config.getString("local.read.delimiter")
+      }
+      if (config.hasPath("local.read.header")) {
+        header = config.getBoolean("local.read.header")
+      }
     }
     if (config.hasPath("local.write.resultPath")) {
       resultPath = config.getString("local.write.resultPath")
     }
-    LocalConfigEntry(filePath, src, dst, weight, resultPath)
+
+    LocalConfigEntry(filePath, src, dst, weight, resultPath, header, delimiter)
   }
 }
 
@@ -164,14 +173,16 @@ case class DataSourceSinkEntry(source: String, sink: String, hasWeight: Boolean)
   }
 }
 
-case class LocalConfigEntry(filePath: String = "",
-                            srcId: String = "",
-                            dstId: String = "",
-                            weight: String = "",
-                            resultPath: String = "") {
+case class LocalConfigEntry(filePath: String,
+                            srcId: String,
+                            dstId: String,
+                            weight: String,
+                            resultPath: String,
+                            header: Boolean,
+                            delimiter: String) {
   override def toString: String = {
     s"LocalConfigEntry: {filePath: $filePath, srcId: $srcId, dstId: $dstId, " +
-      s"weight:$weight, resultPath:$resultPath}"
+      s"weight:$weight, resultPath:$resultPath, delimiter:$delimiter}"
   }
 }
 
