@@ -8,16 +8,18 @@ package com.vesoft.nebula.tools.algorithm.lib
 
 import java.io.{File, PrintWriter}
 
-import org.apache.spark.sql.{Encoder, SparkSession}
+import org.apache.spark.sql.types.{LongType, StringType, DoubleType,StructField, StructType}
+import org.apache.spark.sql.{Encoder, Row, SparkSession}
 
 /**
   * community analysis report
   */
 object CommunityReport {
+
   def main(args: Array[String]): Unit = {
     if (args.length != 2) {
       System.out.println(
-        "Usage: " + "spark-submit --class com.vesoft.nebula.tools.algorithm.lib.CommunityReport nebula-algorithm-1.1.0.jar <file> <result.path>")
+        "Usage: " + "spark-submit --class com.vesoft.nebula.tools.algorithm.lib.CommunityReport nebula-algorithm-xx.jar <file> <result.path>")
       return
     }
 
@@ -25,17 +27,22 @@ object CommunityReport {
     val resultPath                              = args(1)
     val spark                                   = SparkSession.builder().appName("report").master("local").getOrCreate()
     implicit val encoder: Encoder[(Long, Long)] = org.apache.spark.sql.Encoders.kryo[(Long, Long)]
-    val df = spark.read
-      .csv(file)
+
+    val df          = spark.read.csv(file)
+    val vertexCount = df.count()
 
     // 社区详情
     val community = df
       .map(row => (row.get(1).toString.toLong, row.get(0).toString.toLong))(encoder)
       .rdd
       .groupByKey()
+      .map(comm => {
+        (comm._1, comm._2.toSeq, comm._2.toSeq.size / vertexCount)
+      })
+
     // 社区数量
     val communityNum = community.count()
-    val vertexCount  = df.count()
+
     // 平均一个社区内的节点数量
     val averageCommunityDegree = vertexCount / communityNum
 
