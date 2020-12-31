@@ -47,16 +47,16 @@ public class NebulaRowEdgeOutputFormatConverter implements NebulaOutputFormatCon
         }
         String srcFormatId = srcId.toString();
         String dstFormatId = dstId.toString();
-        if (policy == null) {
+        if (policy != null) {
             srcFormatId = String.format(NebulaConstant.ENDPOINT_TEMPLATE, policy.policy(), srcId.toString());
             dstFormatId = String.format(NebulaConstant.ENDPOINT_TEMPLATE, policy.policy(), dstId.toString());
         }
         if (rankIndex >= 0) {
             assert row.getField(rankIndex) != null;
             String rank = row.getField(rankIndex).toString();
-            return String.format(NebulaConstant.EDGE_VALUE_TEMPLATE, srcFormatId, dstFormatId, rank, edgeProps);
+            return String.format(NebulaConstant.EDGE_VALUE_TEMPLATE, srcFormatId, dstFormatId, rank, String.join(",", edgeProps));
         } else {
-            return String.format(NebulaConstant.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE, srcFormatId, dstFormatId, edgeProps);
+            return String.format(NebulaConstant.EDGE_VALUE_WITHOUT_RANKING_TEMPLATE, srcFormatId, dstFormatId, String.join(",", edgeProps));
         }
     }
 }
