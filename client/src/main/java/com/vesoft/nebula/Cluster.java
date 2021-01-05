@@ -48,7 +48,7 @@ public class Cluster {
          */
         public Cluster.Builder addNode(String host, int port) {
             for (HostAndPort address : addresses) {
-                if (address.getHostText().equals(host) && address.getPort() == port) {
+                if (address.getHost().equals(host) && address.getPort() == port) {
                     throw new IllegalArgumentException("Address have duplicate");
                 }
             }
