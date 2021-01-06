@@ -120,9 +120,14 @@ public class MetaManager implements MetaCache {
                     if (!partLeaders.containsKey(spaceName)) {
                         partLeaders.put(spaceName, Maps.newConcurrentMap());
                         for (int partId : spacesInfo.get(spaceName).partsAlloc.keySet()) {
-                            partLeaders.get(spaceName).put(
-                                    partId,
-                                    spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
+                            if (spacesInfo.get(spaceName).partsAlloc.get(partId).size() < 1) {
+                                LOGGER.error("space {} part {} has not allocation host.",
+                                        spaceName, partId);
+                            } else {
+                                partLeaders.get(spaceName).put(partId,
+                                        spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
+                            }
+
                         }
                     }
                 }
