@@ -20,13 +20,12 @@ public class VertexTableRow extends BaseTableRow {
 
     /**
      * vertex id in vertexTableRow
-     * todo int vid
      */
-    public String getVid() {
+    public Object getVid() {
         if (values.size() < 1) {
             throw new IllegalArgumentException("no vertex id is returned");
         }
-        return (String) values.get(0);
+        return values.get(0);
     }
 
 

@@ -8,6 +8,7 @@ package com.vesoft.nebula.client.storage.scan;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.DataSet;
+import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.GraphStorageConnection;
@@ -34,7 +35,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
     private ScanEdgeResultIterator(MetaManager metaManager,
                                    StorageConnPool pool,
                                    Set<PartScanInfo> partScanInfoList,
-                                   Set<HostAddress> addresses,
+                                   List<HostAddress> addresses,
                                    ScanEdgeRequest request,
                                    String spaceName,
                                    String labelName,
@@ -76,7 +77,8 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
                 GraphStorageConnection connection;
                 try {
-                    connection = pool.getStorageConnection(addr);
+                    connection = pool.getStorageConnection(new HostAddress(addr.getHost(),
+                            addr.getPort()));
                 } catch (Exception e) {
                     LOGGER.error("get storage client error, ", e);
                     exceptions.add(e);
@@ -112,7 +114,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                 } else {
                     handleNullResult(partInfo, exceptions);
                 }
-                pool.release(addr, connection);
+                pool.release(new HostAddress(addr.getHost(), addr.getPort()), connection);
                 countDownLatch.countDown();
             });
 
@@ -185,7 +187,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         MetaManager metaManager;
         StorageConnPool pool;
         Set<PartScanInfo> partScanInfoList;
-        Set<HostAddress> addresses;
+        List<HostAddress> addresses;
         ScanEdgeRequest request;
         String spaceName;
         String edgeName;
@@ -206,7 +208,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             return this;
         }
 
-        public ScanEdgeResultBuilder withAddresses(Set<HostAddress> addresses) {
+        public ScanEdgeResultBuilder withAddresses(List<HostAddress> addresses) {
             this.addresses = addresses;
             return this;
         }

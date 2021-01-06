@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Value;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import java.io.UnsupportedEncodingException;
@@ -36,15 +37,12 @@ public class EdgeProcessor {
                     Value dstId = values.get(1);
                     Value rank = values.get(2);
                     Map<String, Object> props = Maps.newHashMap();
-                    for (int i = 0; i < values.size(); i++) {
+                    for (int i = 3; i < values.size(); i++) {
                         String colName = new String(colNames.get(i)).split("\\.")[1];
-                        if (!colName.equals("_src")
-                                && !colName.equals("_dst")
-                                && !colName.equals("_rank")) {
-                            props.put(colName, getField(values.get(i).getFieldValue(), decodeType));
-                        }
+                        props.put(colName, getField(values.get(i).getFieldValue(), decodeType));
                     }
-                    EdgeRow edgeRow = new EdgeRow(srcId, dstId, rank, props);
+                    EdgeRow edgeRow = new EdgeRow(new ValueWrapper(srcId, decodeType),
+                            new ValueWrapper(dstId, decodeType), rank.getIVal(), props);
                     edgeRows.add(edgeRow);
                 }
             }

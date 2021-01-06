@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.storage.data;
 
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.util.List;
 
 public class EdgeTableRow extends BaseTableRow {
@@ -18,20 +19,19 @@ public class EdgeTableRow extends BaseTableRow {
         super(values, decodeType);
     }
 
-    //todo int srcId
-    public String getSrcId() {
+    public Object getSrcId() {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no src id is returned");
         }
-        return (String) values.get(0);
+        return values.get(0);
     }
 
-    // todo int dstId
-    public String getDstId() {
+
+    public Object getDstId() {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no dst id is returned");
         }
-        return (String) values.get(1);
+        return values.get(1);
     }
 
     public long getRank() {

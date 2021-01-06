@@ -6,29 +6,21 @@
 
 package com.vesoft.nebula.client.storage.data;
 
-import com.vesoft.nebula.Value;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class VertexRow {
-    private final Value vid;
+    private final ValueWrapper vid;
     private final Map<String, Object> props;
-    private final String decodeType;
 
-    public VertexRow(Value vid, Map<String, Object> props) {
-        this(vid, props, "utf-8");
-    }
-
-    public VertexRow(Value vid, Map<String, Object> props, String decodeType) {
+    public VertexRow(ValueWrapper vid, Map<String, Object> props) {
         this.vid = vid;
         this.props = props;
-        this.decodeType = decodeType;
     }
 
-
-    // todo int vid
-    public String getVid() throws UnsupportedEncodingException {
-        return new String(vid.getSVal(), decodeType);
+    public ValueWrapper getVid() throws UnsupportedEncodingException {
+        return vid;
     }
 
 
@@ -39,15 +31,10 @@ public class VertexRow {
 
     @Override
     public String toString() {
-        try {
-            return "Vertex{"
-                    + "vid=" + new String(vid.getSVal(), decodeType)
-                    + ", props=" + props
-                    + '}';
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return "Vertex{"
+                + "vid=" + vid.getValue()
+                + ", props=" + props
+                + '}';
     }
 }
 

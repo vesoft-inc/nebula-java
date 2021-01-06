@@ -6,43 +6,33 @@
 
 package com.vesoft.nebula.client.storage.data;
 
-import com.vesoft.nebula.Value;
-import java.io.UnsupportedEncodingException;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.util.Map;
 
 
 public class EdgeRow {
-    private final Value srcId;
-    private final Value dstId;
-    private final Value rank;
+    private final ValueWrapper srcId;
+    private final ValueWrapper dstId;
+    private final long rank;
     private final Map<String, Object> props;
-    private final String decodeType;
 
-    public EdgeRow(Value srcId, Value dstId, Value rank, Map<String, Object> props) {
-        this(srcId, dstId, rank, props, "utf-8");
-    }
-
-    public EdgeRow(Value srcId, Value dstId, Value rank, Map<String, Object> props,
-                   String decodeType) {
+    public EdgeRow(ValueWrapper srcId, ValueWrapper dstId, long rank, Map<String, Object> props) {
         this.srcId = srcId;
         this.dstId = dstId;
         this.rank = rank;
         this.props = props;
-        this.decodeType = decodeType;
     }
 
-    // todo int srcId
-    public String getSrcId() throws UnsupportedEncodingException {
-        return new String(srcId.getSVal(), decodeType);
+    public ValueWrapper getSrcId() {
+        return srcId;
     }
 
-    // todo int dstId
-    public String getDstId() throws UnsupportedEncodingException {
-        return new String(dstId.getSVal(), decodeType);
+    public ValueWrapper getDstId() {
+        return dstId;
     }
 
     public long getRank() {
-        return rank.getIVal();
+        return rank;
     }
 
     public Map<String, Object> getProps() {
@@ -51,16 +41,11 @@ public class EdgeRow {
 
     @Override
     public String toString() {
-        try {
-            return "Edge{"
-                    + "srcId='" + getSrcId() + '\''
-                    + ", dstId='" + getDstId() + '\''
-                    + ", rank=" + getRank()
-                    + ", props=" + props
-                    + '}';
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return "Edge{"
+                + "srcId='" + srcId.getValue() + '\''
+                + ", dstId='" + dstId.getClass() + '\''
+                + ", rank=" + rank
+                + ", props=" + props
+                + '}';
     }
 }

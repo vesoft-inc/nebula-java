@@ -7,6 +7,7 @@
 package com.vesoft.nebula.client.storage.scan;
 
 import com.vesoft.nebula.DataSet;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.storage.data.ScanStatus;
 import com.vesoft.nebula.client.storage.data.VertexRow;
 import com.vesoft.nebula.client.storage.data.VertexTableRow;
@@ -39,7 +40,7 @@ public class ScanVertexResult {
      */
     private List<VertexRow> verticeRows;
 
-    private Map<String, VertexRow> vidVertices;
+    private Map<ValueWrapper, VertexRow> vidVertices;
 
     private String decodeType = "utf-8";
 
@@ -91,7 +92,7 @@ public class ScanVertexResult {
     }
 
 
-    public Map<String, VertexRow> getVidVertices() {
+    public Map<ValueWrapper, VertexRow> getVidVertices() {
         if (vidVertices == null) {
             constructVertexRow();
         }

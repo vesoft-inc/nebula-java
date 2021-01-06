@@ -28,10 +28,7 @@ public class MockStorageData {
 
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
-        List<HostAddress> addresses = Arrays.asList(
-                new HostAddress("127.0.0.1", 3699),
-                new HostAddress("127.0.0.1", 3700),
-                new HostAddress("127.0.0.1", 3701));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3701));
         NebulaPool pool = new NebulaPool();
         Session session = null;
         try {
@@ -39,11 +36,18 @@ public class MockStorageData {
             session = pool.getSession("root", "nebula", true);
 
             ResultSet resp = session.execute(createSpace());
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             ResultSet insertVertexResult = session.execute(insertData());
             if (!resp.isSucceeded() || !insertVertexResult.isSucceeded()) {
                 LOGGER.error(resp.getErrorMessage());
                 LOGGER.error(insertVertexResult.getErrorMessage());
-                System.exit(1);
+                assert (false);
             }
         } catch (UnknownHostException | NotValidConnectionException
                 | IOErrorException | AuthFailedException

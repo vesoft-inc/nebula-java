@@ -31,19 +31,15 @@ public class GraphStorageConnection {
 
     protected GraphStorageConnection open(HostAddress address, int timeout) throws Exception {
         this.address = address;
-        try {
-            int newTimeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
-            this.transport = new TSocket(
-                    InetAddress.getByName(address.getHost()).getHostAddress(),
-                    address.getPort(),
-                    newTimeout,
-                    newTimeout);
-            this.transport.open();
-            this.protocol = new TCompactProtocol(transport);
-            client = new GraphStorageService.Client(protocol);
-        } catch (TException | UnknownHostException e) {
-            throw e;
-        }
+        int newTimeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
+        this.transport = new TSocket(
+                InetAddress.getByName(address.getHost()).getHostAddress(),
+                address.getPort(),
+                newTimeout,
+                newTimeout);
+        this.transport.open();
+        this.protocol = new TCompactProtocol(transport);
+        client = new GraphStorageService.Client(protocol);
         return this;
     }
 

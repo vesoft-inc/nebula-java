@@ -37,7 +37,7 @@ public class ScanVertexResultIterator extends ScanResultIterator {
     private ScanVertexResultIterator(MetaManager metaManager,
                                      StorageConnPool pool,
                                      Set<PartScanInfo> partScanInfoList,
-                                     Set<HostAddress> addresses,
+                                     List<HostAddress> addresses,
                                      ScanVertexRequest request,
                                      String spaceName,
                                      String labelName,
@@ -186,7 +186,7 @@ public class ScanVertexResultIterator extends ScanResultIterator {
         MetaManager metaManager;
         StorageConnPool pool;
         Set<PartScanInfo> partScanInfoList;
-        Set<HostAddress> addresses;
+        List<HostAddress> addresses;
         ScanVertexRequest request;
         String spaceName;
         String tagName;
@@ -207,7 +207,7 @@ public class ScanVertexResultIterator extends ScanResultIterator {
             return this;
         }
 
-        public ScanVertexResultBuilder withAddresses(Set<HostAddress> addresses) {
+        public ScanVertexResultBuilder withAddresses(List<HostAddress> addresses) {
             this.addresses = addresses;
             return this;
         }

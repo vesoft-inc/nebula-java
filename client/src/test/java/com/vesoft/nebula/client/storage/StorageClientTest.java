@@ -60,7 +60,8 @@ public class StorageClientTest {
             List<VertexRow> rows = result.getVertices();
             for (VertexRow row : rows) {
                 try {
-                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(row.getVid()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getVid().asString()));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
@@ -70,7 +71,8 @@ public class StorageClientTest {
 
             List<VertexTableRow> tableRows = result.getVertexTableRows();
             for (VertexTableRow tableRow : tableRows) {
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getVid()));
+                assert (Arrays.asList("1", "2", "3", "4", "5")
+                        .contains(tableRow.getVid().toString()));
                 assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
             }
         }
@@ -106,7 +108,8 @@ public class StorageClientTest {
             List<VertexRow> rows = result.getVertices();
             for (VertexRow row : rows) {
                 try {
-                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(row.getVid()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getVid().asString()));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
@@ -156,8 +159,10 @@ public class StorageClientTest {
             List<EdgeRow> rows = result.getEdges();
             for (EdgeRow row : rows) {
                 try {
-                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(row.getSrcId()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(row.getDstId()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getSrcId().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getDstId().asString()));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
@@ -167,8 +172,10 @@ public class StorageClientTest {
 
             List<EdgeTableRow> tableRows = result.getEdgeTableRows();
             for (EdgeTableRow tableRow : tableRows) {
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getSrcId()));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getDstId()));
+                assert (Arrays.asList("1", "2", "3", "4", "5")
+                        .contains(tableRow.getSrcId().toString()));
+                assert (Arrays.asList("1", "2", "3", "4", "5")
+                        .contains(tableRow.getDstId().toString()));
                 assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
                 assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(1)));
             }
@@ -206,13 +213,15 @@ public class StorageClientTest {
             List<EdgeRow> rows = result.getEdges();
             for (EdgeRow row : rows) {
                 try {
-                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(row.getSrcId()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(row.getDstId()));
-                    assert (Arrays.asList(0L).contains(row.getRank()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getSrcId().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getDstId().asString()));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
                 }
+                assert (Arrays.asList(0L).contains(row.getRank()));
                 assert (row.getProps().size() == 1);
                 assert (Arrays.asList(1.0, 2.1, 3.2, 4.5, 5.9)
                         .contains(row.getProps().get("likeness")));

@@ -32,13 +32,13 @@ public class ScanResultIterator {
     protected final MetaManager metaManager;
     protected final StorageConnPool pool;
     protected final PartScanQueue partScanQueue;
-    protected final Set<HostAddress> addresses;
+    protected final List<HostAddress> addresses;
     protected final String spaceName;
     protected final String labelName;
     protected final boolean partSuccess;
 
     protected ScanResultIterator(MetaManager metaManager, StorageConnPool pool,
-                                 PartScanQueue partScanQueue, Set<HostAddress> addresses,
+                                 PartScanQueue partScanQueue, List<HostAddress> addresses,
                                  String spaceName, String labelName, boolean partSuccess) {
         this.metaManager = metaManager;
         this.pool = pool;
@@ -71,13 +71,7 @@ public class ScanResultIterator {
      * @param leader    part new leader
      */
     protected void freshLeader(String spaceName, int part, HostAddr leader) {
-        HostAddress newLeader = getLeader(leader);
-        try {
-            metaManager.freshLeader(spaceName, part, newLeader);
-        } catch (TException e) {
-            //todo exception thrown by metaManager is no need
-            LOGGER.error("fresh leader error", e);
-        }
+        metaManager.updateLeader(spaceName, part, leader);
     }
 
     protected HostAddress getLeader(HostAddr leader) {

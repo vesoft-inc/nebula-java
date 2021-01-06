@@ -7,6 +7,7 @@
 package com.vesoft.nebula.client.storage.processor;
 
 import com.vesoft.nebula.DataSet;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.storage.MockUtil;
 import com.vesoft.nebula.client.storage.data.VertexRow;
 import com.vesoft.nebula.client.storage.data.VertexTableRow;
@@ -21,11 +22,12 @@ public class VertexProcessorTest {
     @Test
     public void testConstructVertexRow() {
         List<DataSet> dataSets = MockUtil.mockVertexDataSets();
-        Map<String, VertexRow> vertexRows = VertexProcessor.constructVertexRow(dataSets, "utf-8");
+        Map<ValueWrapper, VertexRow> vertexRows = VertexProcessor.constructVertexRow(dataSets,
+                "utf-8");
         List<VertexRow> rows = new ArrayList<>(vertexRows.values());
         assert (vertexRows.size() == dataSets.get(0).getRows().size());
         try {
-            assert (rows.get(0).getVid().equals("Tom"));
+            assert (rows.get(0).getVid().asString().equals("Tom"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             assert (false);

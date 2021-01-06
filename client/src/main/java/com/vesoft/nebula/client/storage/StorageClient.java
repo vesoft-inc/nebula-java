@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.storage;
 
+import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.scan.PartScanInfo;
@@ -79,7 +80,7 @@ public class StorageClient {
      * scan vertex of all parts with no return cols
      */
     public ScanVertexResultIterator scanVertex(String spaceName, String tagName) {
-        return scanVertex(spaceName, tagName, true, DEFAULT_LIMIT,
+        return scanVertex(spaceName, tagName, DEFAULT_LIMIT,
                 DEFAULT_START_TIME, DEFAULT_END_TIME, false, true);
     }
 
@@ -87,7 +88,7 @@ public class StorageClient {
      * scan vertex of specific part with no return cols
      */
     public ScanVertexResultIterator scanVertex(String spaceName, int part, String tagName) {
-        return scanVertex(spaceName, part, tagName, true, DEFAULT_LIMIT,
+        return scanVertex(spaceName, part, tagName, DEFAULT_LIMIT,
                 DEFAULT_START_TIME, DEFAULT_END_TIME, false, true);
     }
 
@@ -106,7 +107,7 @@ public class StorageClient {
      * scan vertex of all part with specific return cols and limit
      */
     public ScanVertexResultIterator scanVertex(String spaceName, String tagName, int limit) {
-        return scanVertex(spaceName, tagName, true, limit, DEFAULT_START_TIME,
+        return scanVertex(spaceName, tagName, limit, DEFAULT_START_TIME,
                 DEFAULT_END_TIME, false, true);
     }
 
@@ -169,7 +170,6 @@ public class StorageClient {
      * @param spaceName nebula graph space
      * @param part      part to scan
      * @param tagName   nebula tag name
-     * @param noColumns return no cols
      * @param limit     return data limit
      * @param startTime start time
      * @param endTime   end time
@@ -178,7 +178,6 @@ public class StorageClient {
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
                                                String tagName,
-                                               boolean noColumns,
                                                int limit,
                                                long startTime,
                                                long endTime,
@@ -188,7 +187,7 @@ public class StorageClient {
                 Arrays.asList(part),
                 tagName,
                 new ArrayList<>(),
-                noColumns,
+                true,
                 limit,
                 startTime,
                 endTime,
@@ -202,7 +201,6 @@ public class StorageClient {
      *
      * @param spaceName nebula graph space
      * @param tagName   nebula tag name
-     * @param noColumns return no cols
      * @param limit     return data limit
      * @param startTime start time
      * @param endTime   end time
@@ -210,7 +208,6 @@ public class StorageClient {
      */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
-                                               boolean noColumns,
                                                int limit,
                                                long startTime,
                                                long endTime,
@@ -225,7 +222,7 @@ public class StorageClient {
                 parts,
                 tagName,
                 new ArrayList<>(),
-                noColumns,
+                true,
                 limit,
                 startTime,
                 endTime,
@@ -260,14 +257,13 @@ public class StorageClient {
 
         Set<PartScanInfo> partScanInfoSet = new HashSet<>();
         for (int part : parts) {
-            partScanInfoSet.add(new PartScanInfo(part, metaManager.getLeader(spaceName, part)));
+            HostAddr leader = metaManager.getLeader(spaceName, part);
+            partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
+                    leader.getPort())));
         }
-        Set<HostAddress> addrs;
-        try {
-            addrs = metaManager.listHosts();
-        } catch (Exception e) {
-            LOGGER.error("list hosts error,", e);
-            throw e;
+        List<HostAddress> addrs = new ArrayList<>();
+        for (HostAddr addr : metaManager.listHosts()) {
+            addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
         }
 
         long tag = metaManager.getTag(spaceName, tagName).getTag_id();
@@ -296,18 +292,19 @@ public class StorageClient {
     /**
      * do scan vertex
      *
-     * @param spaceName       nebula graph space
-     * @param tagName         nebula tag name
-     * @param partScanInfoSet leaders of all parts
-     * @param request         {@link ScanVertexRequest}
-     * @param addrs           storage address set
+     * @param spaceName        nebula graph space
+     * @param tagName          nebula tag name
+     * @param partScanInfoSet  leaders of all parts
+     * @param request          {@link ScanVertexRequest}
+     * @param addrs            storage address list
+     * @param allowPartSuccess whether allow part success
      * @return result iterator
      */
     private ScanVertexResultIterator doScanVertex(String spaceName,
                                                   String tagName,
                                                   Set<PartScanInfo> partScanInfoSet,
                                                   ScanVertexRequest request,
-                                                  Set<HostAddress> addrs,
+                                                  List<HostAddress> addrs,
                                                   boolean allowPartSuccess) {
         assert (spaceName != null && tagName != null);
 
@@ -348,15 +345,15 @@ public class StorageClient {
      * scan edge of all parts with no return cols
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName) {
-        return scanEdge(spaceName, edgeName, true,
-                DEFAULT_LIMIT, DEFAULT_START_TIME, DEFAULT_END_TIME, false, true);
+        return scanEdge(spaceName, edgeName, DEFAULT_LIMIT, DEFAULT_START_TIME,
+                DEFAULT_END_TIME, false, true);
     }
 
     /**
      * scan edge of specific part with no return cols
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, int part, String edgeName) {
-        return scanEdge(spaceName, part, edgeName, true,
+        return scanEdge(spaceName, part, edgeName,
                 DEFAULT_LIMIT, DEFAULT_START_TIME, DEFAULT_END_TIME, false);
     }
 
@@ -373,9 +370,8 @@ public class StorageClient {
     /**
      * scan edge of all part with specific return cols and limit
      */
-    public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName, int limit)
-            throws Exception {
-        return scanEdge(spaceName, edgeName, true, limit,
+    public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName, int limit) {
+        return scanEdge(spaceName, edgeName, limit,
                 DEFAULT_START_TIME, DEFAULT_END_TIME, false, true);
     }
 
@@ -384,6 +380,7 @@ public class StorageClient {
      *
      * @param spaceName  nebula graph space
      * @param part       part to scan
+     * @param edgeName   nebula edge name
      * @param returnCols return cols
      * @param limit      return data limit
      * @param startTime  start time
@@ -435,24 +432,23 @@ public class StorageClient {
     /**
      * scan edge of specific part with no return cols
      *
-     * @param spaceName nebula graph space
-     * @param edgeName  nebula edge name
-     * @param part      part to scan
-     * @param noColumns return no cols
-     * @param limit     return data limit
-     * @param startTime start time
-     * @param endTime   end time
+     * @param spaceName        nebula graph space
+     * @param part             part to scan
+     * @param edgeName         nebula edge name
+     * @param limit            return data limit
+     * @param startTime        start time
+     * @param endTime          end time
+     * @param allowPartSuccess whether allow part success
      * @return
      */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            int part,
                                            String edgeName,
-                                           boolean noColumns,
                                            int limit,
                                            long startTime,
                                            long endTime,
                                            boolean allowPartSuccess) {
-        return scanEdge(spaceName, Arrays.asList(part), edgeName, new ArrayList<>(), noColumns,
+        return scanEdge(spaceName, Arrays.asList(part), edgeName, new ArrayList<>(), true,
                 limit, startTime, endTime, allowPartSuccess, true);
     }
 
@@ -460,17 +456,17 @@ public class StorageClient {
     /**
      * scan edge of all parts with no return cols
      *
-     * @param spaceName nebula graph space
-     * @param edgeName  nebula edge name
-     * @param noColumns return no cols
-     * @param limit     return data limit
-     * @param startTime start time
-     * @param endTime   end time
+     * @param spaceName             nebula graph space
+     * @param edgeName              nebula edge name
+     * @param limit                 return data limit
+     * @param startTime             start time
+     * @param endTime               end time
+     * @param allowPartSuccess      whether allow part success
+     * @param allowReadFromFollower whether allow read data from follower
      * @return
      */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            String edgeName,
-                                           boolean noColumns,
                                            int limit,
                                            long startTime,
                                            long endTime,
@@ -481,7 +477,7 @@ public class StorageClient {
         if (parts.isEmpty()) {
             throw new IllegalArgumentException("No valid part in space " + spaceName);
         }
-        return scanEdge(spaceName, parts, edgeName, new ArrayList<>(), noColumns,
+        return scanEdge(spaceName, parts, edgeName, new ArrayList<>(), true,
                 limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
     }
 
@@ -489,14 +485,16 @@ public class StorageClient {
     /**
      * scan edge with parts
      *
-     * @param spaceName  nebula graph space
-     * @param parts      parts to scan
-     * @param edgeName   nebula edge name
-     * @param returnCols return cols
-     * @param noColumns  if return no col, if noColumns is true, returnCols is useless
-     * @param limit      return data limit
-     * @param startTime  start time
-     * @param endTime    end time
+     * @param spaceName             nebula graph space
+     * @param parts                 parts to scan
+     * @param edgeName              nebula edge name
+     * @param returnCols            return cols
+     * @param noColumns             if return no col, if noColumns is true, returnCols is useless
+     * @param limit                 return data limit
+     * @param startTime             start time
+     * @param endTime               end time
+     * @param allowPartSuccess      whether allow part success
+     * @param allowReadFromFollower whether allow read data from follower
      * @return
      */
     private ScanEdgeResultIterator scanEdge(String spaceName,
@@ -512,16 +510,14 @@ public class StorageClient {
 
         Set<PartScanInfo> partScanInfoSet = new HashSet<>();
         for (int part : parts) {
-            partScanInfoSet.add(new PartScanInfo(part, metaManager.getLeader(spaceName, part)));
+            HostAddr leader = metaManager.getLeader(spaceName, part);
+            partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
+                    leader.getPort())));
         }
-        Set<HostAddress> addrs;
-        try {
-            addrs = metaManager.listHosts();
-        } catch (Exception e) {
-            LOGGER.error("list hosts error,", e);
-            throw e;
+        List<HostAddress> addrs = new ArrayList<>();
+        for (HostAddr addr : metaManager.listHosts()) {
+            addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
         }
-
         List<byte[]> props = new ArrayList<>();
         props.add("_src".getBytes());
         props.add("_dst".getBytes());
@@ -561,7 +557,7 @@ public class StorageClient {
                                               String edgeName,
                                               Set<PartScanInfo> partScanInfoSet,
                                               ScanEdgeRequest request,
-                                              Set<HostAddress> addrs,
+                                              List<HostAddress> addrs,
                                               boolean allowPartSuccess) {
         assert (spaceName != null && edgeName != null && addrs != null);
 

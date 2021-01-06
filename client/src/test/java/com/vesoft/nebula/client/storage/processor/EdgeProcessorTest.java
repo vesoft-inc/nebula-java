@@ -24,8 +24,8 @@ public class EdgeProcessorTest {
         List<EdgeRow> edgeRows = EdgeProcessor.constructEdgeRow(dataSets, "utf-8");
         assert (edgeRows.size() == dataSets.get(0).getRows().size());
         try {
-            assert (!edgeRows.get(0).getSrcId().contains("friend"));
-            assert (!edgeRows.get(0).getDstId().contains("friend"));
+            assert (!edgeRows.get(0).getSrcId().asString().equals("friend"));
+            assert (!edgeRows.get(0).getDstId().asString().equals("friend"));
             assert (edgeRows.get(0).getRank() == 1);
 
         } catch (UnsupportedEncodingException e) {
