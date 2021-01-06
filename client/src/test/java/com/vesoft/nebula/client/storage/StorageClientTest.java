@@ -30,6 +30,12 @@ public class StorageClientTest {
     public void before() {
         MockStorageData.initGraph();
         List<HostAddress> address = Arrays.asList(new HostAddress(ip, 45500));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            assert (false);
+        }
         client = new StorageClient(address);
     }
 
