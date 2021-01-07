@@ -213,21 +213,18 @@ public class NebulaCodecImpl implements NebulaCodec {
         if (names == null || values == null || names.size() != values.size()) {
             throw new RuntimeException("NebulaCodeImpl input wrong value");
         }
-
-        TagItem tag = metaCache.getTag(spaceName, schemaName);
         Schema schema;
         long ver;
-        if (tag == null) {
+        try {
+            TagItem tag = metaCache.getTag(spaceName, schemaName);
+            schema = tag.getSchema();
+            ver = tag.getVersion();
+        } catch (IllegalArgumentException e) {
             EdgeItem edge = metaCache.getEdge(spaceName, schemaName);
-            if (edge == null) {
-                throw new RuntimeException("Schema name `" + schemaName + "' is not exist.");
-            }
-            schema = edge.schema;
-            ver = edge.version;
-        } else {
-            schema = tag.schema;
-            ver = tag.version;
+            schema = edge.getSchema();
+            ver = edge.getVersion();
         }
+
         RowWriterImpl writer = new RowWriterImpl(genSchemaProvider(ver, schema), this.byteOrder);
         for (int i = 0; i < names.size(); i++) {
             writer.setValue(names.get(i), values.get(i));
