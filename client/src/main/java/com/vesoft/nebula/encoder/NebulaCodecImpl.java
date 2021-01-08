@@ -220,7 +220,13 @@ public class NebulaCodecImpl implements NebulaCodec {
             schema = tag.getSchema();
             ver = tag.getVersion();
         } catch (IllegalArgumentException e) {
-            EdgeItem edge = metaCache.getEdge(spaceName, schemaName);
+            EdgeItem edge;
+            try {
+                edge = metaCache.getEdge(spaceName, schemaName);
+            } catch (IllegalArgumentException exception) {
+                throw new IllegalArgumentException(String.format(
+                        "schemaName %s does not exist in space %s.", schemaName, spaceName));
+            }
             schema = edge.getSchema();
             ver = edge.getVersion();
         }
