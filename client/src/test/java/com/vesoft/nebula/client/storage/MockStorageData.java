@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.meta;
+package com.vesoft.nebula.client.storage;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
@@ -18,18 +18,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * two spaces: test1, test2, both have 2 parts
- * each space has one tag and one edge
- */
-public class MockNebulaGraph {
+public class MockStorageData {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MockStorageData.class);
+
     public static void initGraph() {
 
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
-        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
-                new HostAddress("127.0.0.1", 3700));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3701));
         NebulaPool pool = new NebulaPool();
         Session session = null;
         try {
@@ -37,23 +36,47 @@ public class MockNebulaGraph {
             session = pool.getSession("root", "nebula", true);
 
             ResultSet resp = session.execute(createSpace());
-            if (!resp.isSucceeded()) {
-                System.exit(1);
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            ResultSet insertVertexResult = session.execute(insertData());
+            if (!resp.isSucceeded() || !insertVertexResult.isSucceeded()) {
+                LOGGER.error(resp.getErrorMessage());
+                LOGGER.error(insertVertexResult.getErrorMessage());
+                assert (false);
             }
         } catch (UnknownHostException | NotValidConnectionException
                 | IOErrorException | AuthFailedException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
-        } finally {
-            pool.close();
         }
     }
 
     public static String createSpace() {
-        String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10);"
-                + "USE testMeta;"
+        String exec = "CREATE SPACE IF NOT EXISTS testStorage(partition_num=10);"
+                + "USE testStorage;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int);"
                 + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        return exec;
+    }
+
+    public static String insertData() {
+        String exec = "INSERT VERTEX person(name, age) VALUES "
+                + "\"1\":(\"Tom\", 18), "
+                + "\"2\":(\"Jina\", 20), "
+                + "\"3\":(\"Bob\", 23), "
+                + "\"4\":(\"Tim\", 15), "
+                + "\"5\":(\"Viki\", 25);"
+                + "INSERT EDGE friend(likeness) VALUES "
+                + "\"1\" -> \"2\":(1.0), "
+                + "\"2\" -> \"3\":(2.1), "
+                + "\"3\" -> \"4\":(3.2), "
+                + "\"4\" -> \"2\":(4.5), "
+                + "\"5\" -> \"1\":(5.9);";
         return exec;
     }
 }

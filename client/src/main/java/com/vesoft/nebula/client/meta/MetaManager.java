@@ -115,11 +115,19 @@ public class MetaManager implements MetaCache {
                 spacesInfo = tempSpacesInfo;
                 if (partLeaders == null) {
                     partLeaders = new HashMap<>();
-                    for (String spaceName : spacesInfo.keySet()) {
+                }
+                for (String spaceName : spacesInfo.keySet()) {
+                    if (!partLeaders.containsKey(spaceName)) {
                         partLeaders.put(spaceName, Maps.newConcurrentMap());
                         for (int partId : spacesInfo.get(spaceName).partsAlloc.keySet()) {
-                            partLeaders.get(spaceName).put(
-                                partId, spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
+                            if (spacesInfo.get(spaceName).partsAlloc.get(partId).size() < 1) {
+                                LOGGER.error("space {} part {} has not allocation host.",
+                                        spaceName, partId);
+                            } else {
+                                partLeaders.get(spaceName).put(partId,
+                                        spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
+                            }
+
                         }
                     }
                 }
@@ -168,7 +176,7 @@ public class MetaManager implements MetaCache {
      * get tag id
      *
      * @param spaceName nebula graph space name
-     * @param tagName  nebula tag name
+     * @param tagName   nebula tag name
      * @return int
      */
     public int getTagId(String spaceName, String tagName) throws IllegalArgumentException {
@@ -185,7 +193,7 @@ public class MetaManager implements MetaCache {
     @Override
     public TagItem getTag(String spaceName, String tagName) throws IllegalArgumentException {
         if (!spacesInfo.containsKey(spaceName)
-            || !spacesInfo.get(spaceName).tagItems.containsKey(tagName)) {
+                || !spacesInfo.get(spaceName).tagItems.containsKey(tagName)) {
             fillMetaInfo();
         }
         try {
@@ -224,7 +232,7 @@ public class MetaManager implements MetaCache {
     @Override
     public EdgeItem getEdge(String spaceName, String edgeName) throws IllegalArgumentException {
         if (!spacesInfo.containsKey(spaceName)
-            || !spacesInfo.get(spaceName).tagItems.containsKey(edgeName)) {
+                || !spacesInfo.get(spaceName).tagItems.containsKey(edgeName)) {
             fillMetaInfo();
         }
         try {
@@ -289,7 +297,7 @@ public class MetaManager implements MetaCache {
      */
     @Override
     public Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
-        throws IllegalArgumentException {
+            throws IllegalArgumentException {
         if (!spacesInfo.containsKey(spaceName)) {
             fillMetaInfo();
         }
@@ -312,7 +320,7 @@ public class MetaManager implements MetaCache {
      * @param newLeader nebula part new leader
      */
     public void updateLeader(String spaceName, int part, HostAddr newLeader)
-        throws IllegalArgumentException {
+            throws IllegalArgumentException {
         try {
             lock.writeLock().lock();
             if (partLeaders == null) {
