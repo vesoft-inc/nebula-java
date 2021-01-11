@@ -199,7 +199,7 @@ public class MetaManager implements MetaCache {
         try {
             lock.readLock().lock();
             if (!spacesInfo.containsKey(spaceName)) {
-                throw new IllegalArgumentException("space:" + spaceName + " does not exist.");
+                throw new IllegalArgumentException("Space:" + spaceName + " does not exist.");
             }
             if (!spacesInfo.get(spaceName).tagItems.containsKey(tagName)) {
                 throw new IllegalArgumentException("Tag:" + tagName + " does not exist.");
@@ -238,7 +238,7 @@ public class MetaManager implements MetaCache {
         try {
             lock.readLock().lock();
             if (!spacesInfo.containsKey(spaceName)) {
-                throw new IllegalArgumentException("space:" + spaceName + " does not exist.");
+                throw new IllegalArgumentException("Space:" + spaceName + " does not exist.");
             }
             if (!spacesInfo.get(spaceName).edgeItems.containsKey(edgeName)) {
                 throw new IllegalArgumentException("Edge:" + edgeName + " does not exist.");

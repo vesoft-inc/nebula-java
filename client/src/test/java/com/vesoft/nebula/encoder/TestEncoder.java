@@ -146,7 +146,7 @@ public class TestEncoder {
         List<String> colNames = Arrays.asList("Col01", "Col02", "Col03", "Col04", "Col05");
         List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long)100);
         try {
-            codec.encode("test","tag_no_default", colNames, colVals);
+            codec.encodeTag("test","tag_no_default", colNames, colVals);
             Assert.fail();
         } catch (Exception exception) {
             assert (true);
@@ -154,7 +154,7 @@ public class TestEncoder {
 
         // encode all type succeeded
         try {
-            byte[] encodeStr = codec.encode("test", "tag_no_default", getCols(), getValues());
+            byte[] encodeStr = codec.encodeTag("test", "tag_no_default", getCols(), getValues());
             String hexStr = Hex.encodeHexString(encodeStr);
             // write into file to use storage test to decode
             // File file = new File("encode_java.txt");
@@ -168,7 +168,7 @@ public class TestEncoder {
 
         // encode empty string succeeded
         try {
-            byte[] encodeStr = codec.encode("test", "tag_with_empty_string",
+            byte[] encodeStr = codec.encodeTag("test", "tag_with_empty_string",
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
@@ -176,6 +176,18 @@ public class TestEncoder {
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
+        }
+
+        // test with default
+        try {
+            codec.encodeTag("test",
+                "tag_with_default",
+                Arrays.asList("Col01", "Col02"),
+                Arrays.asList(true, 8));
+        } catch (RuntimeException e) {
+            Assert.assertArrayEquals(e.getMessage().getBytes(),
+                "Unsupported default value yet".getBytes());
+            assert (true);
         }
     }
 
@@ -187,7 +199,7 @@ public class TestEncoder {
         List<String> colNames = Arrays.asList("Col01", "Col02", "Col03", "Col04", "Col05");
         List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long)100);
         try {
-            codec.encode("test", "edge_no_default", colNames, colVals);
+            codec.encodeEdge("test", "edge_no_default", colNames, colVals);
             Assert.fail();
         } catch (Exception exception) {
             assert (true);
@@ -195,7 +207,7 @@ public class TestEncoder {
 
         // encode succeeded
         try {
-            byte[] encodeStr = codec.encode("test", "edge_no_default", getCols(), getValues());
+            byte[] encodeStr = codec.encodeEdge("test", "edge_no_default", getCols(), getValues());
             String hexStr = Hex.encodeHexString(encodeStr);
             Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
         } catch (Exception exception) {
@@ -204,7 +216,7 @@ public class TestEncoder {
         }
         // encode empty string succeeded
         try {
-            byte[] encodeStr = codec.encode("test", "edge_with_empty_string",
+            byte[] encodeStr = codec.encodeEdge("test", "edge_with_empty_string",
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
@@ -212,6 +224,31 @@ public class TestEncoder {
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
+        }
+    }
+
+    @Test()
+    public void testEncodeWithNotExistedSchema() {
+        MetaCacheImplTest cacheImplTest = new MetaCacheImplTest();
+        NebulaCodecImpl codec = new NebulaCodecImpl(cacheImplTest);
+        List<String> colNames = Arrays.asList("Col01", "Col02", "Col03", "Col04", "Col05");
+        List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long) 100);
+        try {
+            codec.encodeTag("test", "not_existed", colNames, colVals);
+            Assert.fail();
+        } catch (RuntimeException e) {
+            Assert.assertArrayEquals(e.getMessage().getBytes(),
+                "Tag: not_existed does not exist.".getBytes());
+            assert (true);
+        }
+
+        try {
+            codec.encodeEdge("test", "not_existed", colNames, colVals);
+            Assert.fail();
+        } catch (RuntimeException e) {
+            Assert.assertArrayEquals(e.getMessage().getBytes(),
+                "Edge: not_existed does not exist.".getBytes());
+            assert (true);
         }
     }
 }
