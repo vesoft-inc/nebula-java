@@ -65,6 +65,10 @@ public class PathWrapper {
         }
     }
 
+    /**
+     * get the start node from the path
+     * @return Node
+     */
     public Node getStartNode() {
         if (nodes == null || nodes.isEmpty()) {
             return null;
@@ -72,6 +76,10 @@ public class PathWrapper {
         return nodes.get(0);
     }
 
+    /**
+     * get the end node from the path
+     * @return Node
+     */
     public Node getEndNode() {
         if (nodes == null || nodes.isEmpty()) {
             return null;
@@ -79,24 +87,54 @@ public class PathWrapper {
         return nodes.get(nodes.size() - 1);
     }
 
-    public boolean contains(Node node) {
+    /**
+     * determine if path contains the given node
+     * @param node the given node
+     * @return boolean
+     */
+    public boolean containNode(Node node) {
         return nodes.contains(node);
     }
 
-    public boolean contains(Relationship relationship) {
+    /**
+     * determine if path contains the given relationShip
+     * @param relationship the given relationship
+     * @return boolean
+     */
+    public boolean containRelationShip(Relationship relationship) {
         return relationships.contains(relationship);
     }
 
-    public Iterable<Node> getNodes() {
+    /**
+     * get all nodes from the path
+     * @return the list of Node
+     */
+    public List<Node> getNodes() {
         return nodes;
     }
 
-    public Iterable<Relationship> getRelationships() {
+    /**
+     * get all relationship from the path
+     * @return the List of Relationship
+     */
+    public List<Relationship> getRelationships() {
         return relationships;
     }
 
-    public Iterable<Segment> getSegments() {
+    /**
+     * get all segments from the path
+     * @return the List of Segment
+     */
+    public List<Segment> getSegments() {
         return segments;
+    }
+
+    /**
+     * get the length of the path
+     * @return int
+     */
+    public int length() {
+        return segments.size();
     }
 
     public PathWrapper(Path path) throws InvalidValueException, UnsupportedEncodingException {
@@ -147,20 +185,6 @@ public class PathWrapper {
             }
             segments.add(segment);
         }
-    }
-
-    public int length() {
-        return segments.size();
-    }
-
-    public boolean containNode(Node node) {
-        int index = nodes.indexOf(node);
-        return index >= 0;
-    }
-
-    public boolean containRelationShip(Relationship relationShip) {
-        int index = relationships.indexOf(relationShip);
-        return index >= 0;
     }
 
     @Override

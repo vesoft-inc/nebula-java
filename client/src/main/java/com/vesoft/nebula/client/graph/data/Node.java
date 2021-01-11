@@ -33,18 +33,37 @@ public class Node {
         }
     }
 
+    /**
+     * get vid from the node
+     * @return ValueWrapper, if int id, you can call getId().asLong(),
+     *     if string id, you can call getId().asString()
+     */
     public ValueWrapper getId() {
         return vid;
     }
 
+    /**
+     * get all tag name from the node
+     * @return the list of tag name
+     */
     public List<String> labels() {
         return tagNames;
     }
 
+    /**
+     * determine if node contains the given tag
+     * @param tagName the tag name
+     * @return boolean
+     */
     public boolean hasLabel(String tagName) {
         return tagNames.contains(tagName);
     }
 
+    /**
+     * get property values from the node
+     * @param tagName the tag name
+     * @return the list of ValueWrapper
+     */
     public List<ValueWrapper> values(String tagName) {
         int index = tagNames.indexOf(tagName);
         if (index < 0) {
@@ -57,6 +76,12 @@ public class Node {
         return values;
     }
 
+    /**
+     * get property names from the node
+     * @param tagName the given tag name
+     * @return the list of property names
+     * @throws UnsupportedEncodingException decode error exception
+     */
     public List<String> keys(String tagName) throws UnsupportedEncodingException {
         int index = tagNames.indexOf(tagName);
         if (index < 0) {
@@ -70,6 +95,12 @@ public class Node {
         return keys;
     }
 
+    /**
+     * get property names and values from the node
+     * @param tagName the given tag name
+     * @return the HashMap, key is property name, value is ValueWrapper
+     * @throws UnsupportedEncodingException decode error exception
+     */
     public HashMap<String, ValueWrapper> properties(String tagName)
         throws UnsupportedEncodingException {
         int index = tagNames.indexOf(tagName);
@@ -114,7 +145,7 @@ public class Node {
                 }
                 tagsStr.add(String.format(":%s {%s}", name, String.join(", ", propStrs)));
             }
-            return String.format("(\"%s\" %s)", getId(), String.join(" ", tagsStr));
+            return String.format("(%s %s)", getId(), String.join(" ", tagsStr));
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }

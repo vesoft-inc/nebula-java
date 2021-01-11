@@ -27,18 +27,38 @@ public class Relationship {
         this.edge = edge;
     }
 
-    public ValueWrapper srcId() throws UnsupportedEncodingException {
-        return new ValueWrapper(edge.src, decodeType);
+    /**
+     * get the src id from the relationship
+     * @return ValueWrapper, if int id, you can call srcId().asLong(),
+     *     if string id, you can call srcId().asString()
+     */
+    public ValueWrapper srcId() {
+        return edge.type > 0 ? new ValueWrapper(edge.src, decodeType)
+            : new ValueWrapper(edge.dst, decodeType);
     }
 
-    public ValueWrapper dstId() throws UnsupportedEncodingException {
-        return new ValueWrapper(edge.dst, decodeType);
+    /**
+     * get the dst id from the relationship
+     * @return ValueWrapper, if int id, you can call srcId().asLong(),
+     *     if string id, you can call srcId().asString()
+     */
+    public ValueWrapper dstId() {
+        return edge.type > 0 ? new ValueWrapper(edge.dst, decodeType)
+            : new ValueWrapper(edge.src, decodeType);
     }
 
+    /**
+     * get edge name from the relationship
+     * @return String
+     */
     public String edgeName() {
         return new String(edge.name);
     }
 
+    /**
+     * get ranking from the relationship
+     * @return long
+     */
     public long ranking() {
         return edge.ranking;
     }
@@ -51,6 +71,10 @@ public class Relationship {
         return propNames;
     }
 
+    /**
+     * get property values from the relationship
+     * @return the List of ValueWrapper
+     */
     public List<ValueWrapper> values() {
         List<ValueWrapper> propVals = new ArrayList<>();
         for (Value val : edge.props.values()) {
@@ -59,6 +83,10 @@ public class Relationship {
         return propVals;
     }
 
+    /**
+     * get property names and values from the relationship
+     * @return the HashMap, key is String, value is ValueWrapper>
+     */
     public HashMap<String, ValueWrapper> properties() throws UnsupportedEncodingException {
         HashMap<String, ValueWrapper> properties = new HashMap<>();
         for (byte[] key : edge.props.keySet()) {
@@ -77,15 +105,10 @@ public class Relationship {
             return false;
         }
         Relationship that = (Relationship) o;
-        try {
-            return ranking() == that.ranking()
-                && Objects.equals(srcId(), that.srcId())
-                && Objects.equals(dstId(), that.dstId())
-                && Objects.equals(edgeName(), that.edgeName());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return ranking() == that.ranking()
+            && Objects.equals(srcId(), that.srcId())
+            && Objects.equals(dstId(), that.dstId())
+            && Objects.equals(edgeName(), that.edgeName());
     }
 
     @Override
@@ -101,7 +124,7 @@ public class Relationship {
             for (String key : props.keySet()) {
                 propStrs.add(key + ": " + props.get(key).toString());
             }
-            return String.format("(\"%s\")-[:%s@%d{%s}]->(\"%s\")",
+            return String.format("(%s)-[:%s@%d{%s}]->(%s)",
                 srcId(), edgeName(), ranking(), String.join(", ", propStrs), dstId());
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();

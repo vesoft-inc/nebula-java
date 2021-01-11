@@ -4,7 +4,7 @@
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
 
-package com.vesoft.nebula.client.graph.net;
+package com.vesoft.nebula.client.graph.data;
 
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
@@ -19,6 +19,8 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
+import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class TestDataFromServer {
             + "CREATE EDGE IF NOT EXISTS friend(start_year int, end_year int);"
             + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));");
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(6);
         String insertVertexes = "INSERT VERTEX person(name, age, grade,friends, book_num, "
             + "birthday, start_school, morning, property,"
             + "is_girl, child_name, expend, first_out_city) VALUES "
@@ -97,11 +99,11 @@ public class TestDataFromServer {
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
         insertEdges = "INSERT EDGE friend(start_year, end_year) VALUES "
-            + "'Bob'->'Lily':(2018, 2020), "
-            + "'Bob'->'Tom':(2018, 2020), "
-            + "'Jerry'->'Lily':(2018, 2020), "
-            + "'Tom'->'Jerry':(2018, 2020), "
-            + "'Bob'->'John':(2018, 2020);";
+            + "'Bob'->'Lily'@100:(2018, 2020), "
+            + "'Bob'->'Tom'@100:(2018, 2020), "
+            + "'Jerry'->'Lily'@100:(2018, 2020), "
+            + "'Tom'->'Jerry'@100:(2018, 2020), "
+            + "'Bob'->'John'@100:(2018, 2020);";
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
@@ -241,7 +243,7 @@ public class TestDataFromServer {
             Assert.assertEquals(1, result.rowsSize());
             Assert.assertTrue(result.rowValues(0).get(0).isVertex());
             Node node = result.rowValues(0).get(0).asNode();
-            Assert.assertEquals("Bob", node.getId());
+            Assert.assertEquals("Bob", node.getId().asString());
             Assert.assertTrue(node.hasLabel("person"));
             Assert.assertTrue(node.hasLabel("student"));
             Assert.assertEquals(
@@ -269,13 +271,33 @@ public class TestDataFromServer {
     public void testRelationship() {
         try {
             ResultSet result = session.execute(
-                "MATCH (:person{name:'Bob'}) -[e:friend]-> (:person{name:'Lily'}) RETURN e");
+                "MATCH (:person{name:'Lily'}) <-[e:friend]- (:person{name:'Bob'}) RETURN e");
             Assert.assertTrue(result.isSucceeded());
             Assert.assertEquals(1, result.rowsSize());
             Assert.assertTrue(result.rowValues(0).get(0).isEdge());
+            Relationship r = result.rowValues(0).get(0).asRelationship();
+            Assert.assertEquals("Bob", r.srcId().asString());
+            Assert.assertEquals("Lily", r.dstId().asString());
+            Assert.assertEquals(100, r.ranking());
+            Assert.assertEquals("friend", r.edgeName());
             Assert.assertEquals(
-                "(\"Bob\")-[:friend@0{start_year: 2018, end_year: 2020}]->(\"Lily\")",
+                "(\"Bob\")-[:friend@100{start_year: 2018, end_year: 2020}]->(\"Lily\")",
                 result.rowValues(0).get(0).asRelationship().toString());
+
+            // test reversely
+            ResultSet result2 = session.execute(
+                "MATCH (:person{name:'Lily'}) <-[e:friend]- (:person{name:'Bob'}) RETURN e");
+            Assert.assertTrue(result2.isSucceeded());
+            Assert.assertEquals(1, result2.rowsSize());
+            Assert.assertTrue(result2.rowValues(0).get(0).isEdge());
+            Relationship r2 = result2.rowValues(0).get(0).asRelationship();
+            Assert.assertEquals("Bob", r2.srcId().asString());
+            Assert.assertEquals("Lily", r2.dstId().asString());
+            Assert.assertEquals(100, r2.ranking());
+            Assert.assertEquals("friend", r2.edgeName());
+            Assert.assertEquals(
+                "(\"Bob\")-[:friend@100{start_year: 2018, end_year: 2020}]->(\"Lily\")",
+                result2.rowValues(0).get(0).asRelationship().toString());
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
             assert false;
@@ -296,7 +318,7 @@ public class TestDataFromServer {
                 + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
                 + "grade: 3, property: 1000.0, name: \"Bob\", first_out_city: 1111, "
                 + "age: 10, hobby: __NULL__})"
-                + "-[:friend@0{start_year:2018, end_year:2020}]->"
+                + "-[:friend@100{start_year:2018, end_year:2020}]->"
                 + "(\"Lily\" :student {name: \"Lily\"} "
                 + ":person {name: \"Lily\", birthday: 2010-09-10T10:08:02.000000, "
                 + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
@@ -315,16 +337,16 @@ public class TestDataFromServer {
                 + ":person {name: \"Bob\", birthday: 2010-09-10T10:08:02.000000, "
                 + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
                 + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
-                + "grade: 3, property: 1000.0, name: \"Bob\", first_out_city: 1111, "
+                + "grade: 3, name: \"Bob\", property: 1000.0, first_out_city: 1111, "
                 + "age: 10, hobby: __NULL__})"
-                + "-[:friend@0{start_year:2018, end_year:2020}]->"
+                + "-[:friend@100{start_year:2018, end_year:2020}]->"
                 + "(\"Lily\" :student {name: \"Lily\"} "
                 + ":person {name: \"Lily\", birthday: 2010-09-10T10:08:02.000000, "
                 + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
                 + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
                 + "grade: 3, name: \"Lily\", property: 1000.0, "
                 + "first_out_city: 1111, age: 9, hobby: __NULL__})"
-                + "<-[:friend@0{start_year:2018, end_year:2020}]-"
+                + "<-[:friend@100{start_year:2018, end_year:2020}]-"
                 + "(\"Jerry\" :student {name: \"Jerry\"} "
                 + ":person {name: \"Jerry\", birthday: 2010-09-10T10:08:02.000000, "
                 + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
