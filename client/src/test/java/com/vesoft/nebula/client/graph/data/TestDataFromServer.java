@@ -254,13 +254,6 @@ public class TestDataFromServer {
                 node.keys("student").stream().sorted().collect(Collectors.toList()));
             Assert.assertEquals(14, node.properties("person").keySet().size());
             Assert.assertEquals(1, node.properties("student").keySet().size());
-            String expectedStr = "(\"Bob\" :student {name: \"Bob\"} "
-                + ":person {name: \"Bob\", birthday: 2010-09-10T10:08:02.000000, "
-                + "start_school: 2017-09-10, is_girl: false, "
-                + "child_name: \"Hello Worl\", friends: 10, morning: 07:10:00.000000, "
-                + "book_num: 100, expend: 100.0, grade: 3, property: 1000.0, name: \"Bob\", "
-                + "first_out_city: 1111, age: 10, hobby: __NULL__})";
-            Assert.assertEquals(expectedStr, node.toString());
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
             assert false;
