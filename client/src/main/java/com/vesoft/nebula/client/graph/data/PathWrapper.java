@@ -101,7 +101,7 @@ public class PathWrapper {
      * @param relationship the given relationship
      * @return boolean
      */
-    public boolean containRelationShip(Relationship relationship) {
+    public boolean containRelationship(Relationship relationship) {
         return relationships.contains(relationship);
     }
 

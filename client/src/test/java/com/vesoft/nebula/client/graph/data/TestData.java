@@ -221,7 +221,7 @@ public class TestData {
             Node node = new Node(getVertex("Tom"));
             assert pathWrapper.containNode(node);
             Relationship relationShip = new Relationship(getEdge("Tom", "vertex0"));
-            assert pathWrapper.containRelationShip(relationShip);
+            assert pathWrapper.containRelationship(relationShip);
             List<Node> nodes = new ArrayList<>();
             nodes.add(node);
             for (int i = 0; i < 5; i++) {
