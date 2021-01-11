@@ -37,6 +37,11 @@ public class ValueWrapper {
         public int getNullType() {
             return nullType;
         }
+
+        @Override
+        public String toString() {
+            return com.vesoft.nebula.NullType.VALUES_TO_NAMES.get(nullType);
+        }
     }
 
     private final Value value;
@@ -228,25 +233,25 @@ public class ValueWrapper {
         return kvs;
     }
 
-    public Time asTime() throws InvalidValueException {
+    public TimeWrapper asTime() throws InvalidValueException {
         if (value.getSetField() == Value.TVAL) {
-            return (Time)value.getFieldValue();
+            return new TimeWrapper(value.getTVal());
         }
         throw new InvalidValueException(
             "Cannot get field time because value's type is " + descType());
     }
 
-    public Date asDate() throws InvalidValueException {
+    public DateWrapper asDate() throws InvalidValueException {
         if (value.getSetField() == Value.DVAL) {
-            return (Date)value.getFieldValue();
+            return new DateWrapper(value.getDVal());
         }
         throw new InvalidValueException(
             "Cannot get field date because value's type is " + descType());
     }
 
-    public DateTime asDateTime() throws InvalidValueException {
+    public DateTimeWrapper asDateTime() throws InvalidValueException {
         if (value.getSetField() == Value.DTVAL) {
-            return (DateTime) value.getFieldValue();
+            return new DateTimeWrapper(value.getDtVal());
         }
         throw new InvalidValueException(
             "Cannot get field datetime because value's type is " + descType());
@@ -292,5 +297,45 @@ public class ValueWrapper {
     @Override
     public int hashCode() {
         return Objects.hash(value, decodeType);
+    }
+
+    @Override
+    public String toString() {
+        try {
+            if (isEmpty()) {
+                return "__EMPTY__";
+            } else if (isNull()) {
+                return asNull().toString();
+            } else if (isBoolean()) {
+                return String.valueOf(asBoolean());
+            } else if (isLong()) {
+                return String.valueOf(asLong());
+            } else if (isDouble()) {
+                return String.valueOf(asDouble());
+            } else if (isString()) {
+                return "\"" + asString() + "\"";
+            } else if (isList()) {
+                return asList().toString();
+            } else if (isSet()) {
+                return asSet().toString();
+            } else if (isMap()) {
+                return asMap().toString();
+            } else if (isTime()) {
+                return asTime().toString();
+            } else if (isDate()) {
+                return asDate().toString();
+            } else if (isDateTime()) {
+                return asDateTime().toString();
+            } else if (isVertex()) {
+                return asNode().toString();
+            } else if (isEdge()) {
+                return asRelationship().toString();
+            } else if (isPath()) {
+                return asPath().toString();
+            }
+            return "Unknown type: " + descType();
+        } catch (UnsupportedEncodingException e) {
+            return e.getMessage();
+        }
     }
 }

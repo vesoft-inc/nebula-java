@@ -13,13 +13,11 @@ import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
-public class PathWrapper implements Iterable<PathWrapper.Segment> {
+public class PathWrapper {
     private List<Segment> segments = new ArrayList<>();
     private List<Node> nodes = new ArrayList<>();
     private List<Relationship> relationships = new ArrayList<>();
@@ -48,15 +46,6 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
         }
 
         @Override
-        public String toString() {
-            return this.getClass().toString()
-                    + "{startNode=" + startNode.toString()
-                    + ", relationShip=" + relationShip.toString()
-                    + ", endNode=" + endNode.toString()
-                    + '}';
-        }
-
-        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -76,6 +65,10 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
         }
     }
 
+    /**
+     * get the start node from the path
+     * @return Node
+     */
     public Node getStartNode() {
         if (nodes == null || nodes.isEmpty()) {
             return null;
@@ -83,6 +76,10 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
         return nodes.get(0);
     }
 
+    /**
+     * get the end node from the path
+     * @return Node
+     */
     public Node getEndNode() {
         if (nodes == null || nodes.isEmpty()) {
             return null;
@@ -90,24 +87,54 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
         return nodes.get(nodes.size() - 1);
     }
 
-    public boolean contains(Node node) {
+    /**
+     * determine if path contains the given node
+     * @param node the given node
+     * @return boolean
+     */
+    public boolean containNode(Node node) {
         return nodes.contains(node);
     }
 
-    public boolean contains(Relationship relationship) {
+    /**
+     * determine if path contains the given relationShip
+     * @param relationship the given relationship
+     * @return boolean
+     */
+    public boolean containRelationship(Relationship relationship) {
         return relationships.contains(relationship);
     }
 
-    public Iterable<Node> getNodes() {
+    /**
+     * get all nodes from the path
+     * @return the list of Node
+     */
+    public List<Node> getNodes() {
         return nodes;
     }
 
-    public Iterable<Relationship> getRelationships() {
+    /**
+     * get all relationship from the path
+     * @return the List of Relationship
+     */
+    public List<Relationship> getRelationships() {
         return relationships;
     }
 
-    public Iterable<Segment> getSegments() {
+    /**
+     * get all segments from the path
+     * @return the List of Segment
+     */
+    public List<Segment> getSegments() {
         return segments;
+    }
+
+    /**
+     * get the length of the path
+     * @return int
+     */
+    public int length() {
+        return segments.size();
     }
 
     public PathWrapper(Path path) throws InvalidValueException, UnsupportedEncodingException {
@@ -143,7 +170,8 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
             vids.add(step.dst.vid);
             Edge edge = new Edge(srcId,
                                  dstId,
-                                 type, step.name,
+                                 type,
+                                 step.name,
                                  step.ranking,
                                  step.props);
             Relationship relationShip = new Relationship(edge);
@@ -159,42 +187,58 @@ public class PathWrapper implements Iterable<PathWrapper.Segment> {
         }
     }
 
-    public int length() {
-        return segments.size();
-    }
-
-    public boolean containNode(Node node) {
-        int index = nodes.indexOf(node);
-        return index >= 0;
-    }
-
-    @Override
-    public Iterator<Segment> iterator() {
-        return null;
-    }
-
-    @Override
-    public void forEach(Consumer<? super Segment> action) {
-
-    }
-
-    @Override
-    public Spliterator<Segment> spliterator() {
-        return null;
-    }
-
-    public boolean containRelationShip(Relationship relationShip) {
-        int index = relationships.indexOf(relationShip);
-        return index >= 0;
-    }
-
     @Override
     public String toString() {
-        return  this.getClass().toString()
-                + "{segments=" + segments.toString()
-                + ", nodes=" + nodes.toString()
-                + ", relationShips=" + relationships.toString()
-                + '}';
+        try {
+            Node startNode = getStartNode();
+            List<String> edgeStrs = new ArrayList<>();
+            if (segments.size() >= 1) {
+                List<String> propStrs = new ArrayList<>();
+                Map<String, ValueWrapper> props = segments.get(0).getRelationShip().properties();
+                for (String key : props.keySet()) {
+                    propStrs.add(key + ":" + props.get(key).toString());
+                }
+                if (segments.get(0).getStartNode() == startNode) {
+                    edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
+                        segments.get(0).getRelationShip().edgeName(),
+                        segments.get(0).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(0).getEndNode().toString()));
+                } else {
+                    edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
+                        segments.get(0).getRelationShip().edgeName(),
+                        segments.get(0).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(0).getStartNode().toString()));
+                }
+
+            }
+
+            for (int i = 1; i < segments.size(); i++) {
+                List<String> propStrs = new ArrayList<>();
+                Map<String, ValueWrapper> props = segments.get(0).getRelationShip().properties();
+                for (String key : props.keySet()) {
+                    propStrs.add(key + ":" + props.get(key).toString());
+                }
+                if (segments.get(i).getStartNode() == segments.get(i - 1).getStartNode()) {
+                    edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
+                        segments.get(i).getRelationShip().edgeName(),
+                        segments.get(i).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(i).getEndNode().toString()));
+                } else {
+                    edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
+                        segments.get(i).getRelationShip().edgeName(),
+                        segments.get(i).getRelationShip().ranking(),
+                        String.join(", ", propStrs),
+                        segments.get(i).getStartNode().toString()));
+                }
+            }
+            return String.format("%s%s",
+                getStartNode().toString(), String.join("", edgeStrs));
+        } catch (UnsupportedEncodingException e) {
+            return e.getMessage();
+        }
     }
 
     @Override

@@ -221,7 +221,7 @@ public class TestData {
             Node node = new Node(getVertex("Tom"));
             assert pathWrapper.containNode(node);
             Relationship relationShip = new Relationship(getEdge("Tom", "vertex0"));
-            assert pathWrapper.containRelationShip(relationShip);
+            assert pathWrapper.containRelationship(relationShip);
             List<Node> nodes = new ArrayList<>();
             nodes.add(node);
             for (int i = 0; i < 5; i++) {
@@ -313,13 +313,24 @@ public class TestData {
                 Arrays.asList((long)1, (long)2).toArray());
 
             assert record.get(9).isTime();
-            assert record.get(9).asTime() instanceof Time;
+            assert record.get(9).asTime() instanceof TimeWrapper;
+            TimeWrapper timeWrapper = new TimeWrapper(new Time((byte)10, (byte)30, (byte)0, 100));
+            assert Objects.equals(record.get(9).asTime(), timeWrapper);
+            Assert.assertEquals("10:30:00.000100", timeWrapper.toString());
 
             assert record.get(10).isDate();
-            assert record.get(10).asDate() instanceof Date;
+            assert record.get(10).asDate() instanceof DateWrapper;
+            DateWrapper dateWrapper = new DateWrapper(new Date((short)2020, (byte)10, (byte)10));
+            assert Objects.equals(record.get(10).asDate(), dateWrapper);
+            Assert.assertEquals("2020-10-10", dateWrapper.toString());
 
             assert record.get(11).isDateTime();
-            assert record.get(11).asDateTime() instanceof DateTime;
+            DateTimeWrapper dateTimeWrapper = new DateTimeWrapper(
+                new DateTime((short)2020, (byte)10,
+                (byte)10, (byte)10, (byte)30, (byte)0, 100));
+            assert record.get(11).asDateTime() instanceof DateTimeWrapper;
+            assert Objects.equals(record.get(11).asDateTime(), dateTimeWrapper);
+            Assert.assertEquals("2020-10-10T10:30:00.000100", dateTimeWrapper.toString());
 
             assert record.get(12).isVertex();
             assert Objects.equals(record.get(12).asNode(),
