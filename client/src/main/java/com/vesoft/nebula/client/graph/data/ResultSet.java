@@ -62,14 +62,19 @@ public class ResultSet {
         @Override
         public String toString() {
             StringBuilder rowStr = new StringBuilder();
+            List<String> valueStr = new ArrayList<>();
             for (ValueWrapper v : colValues) {
-                rowStr.append(v.toString()).append(',');
+                valueStr.add(v.toString());
             }
-            return "Record{row=" + rowStr
-                    + ", columnNames=" + columnNames.toString()
-                    + '}';
+            return String.format("ColumnName: %s, Values: %s",
+                columnNames.toString(), valueStr.toString());
         }
 
+        /**
+         * get column value by index
+         * @param index the index of the rows
+         * @return ValueWrapper
+         */
         public ValueWrapper get(int index) {
             if (index >= columnNames.size()) {
                 throw new IllegalArgumentException(
@@ -78,32 +83,48 @@ public class ResultSet {
             return this.colValues.get(index);
         }
 
-        public ValueWrapper get(String key) {
-            int index = columnNames.indexOf(key);
+        /**
+         * get column value by column name
+         * @param columnName the columna name
+         * @return ValueWrapper
+         */
+        public ValueWrapper get(String columnName) {
+            int index = columnNames.indexOf(columnName);
             if (index == -1) {
                 throw new IllegalArgumentException(
-                        "Cannot get field because the key '" + key + "' is not exist");
+                        "Cannot get field because the columnName '"
+                            + columnName + "' is not exists");
             }
             return this.colValues.get(index);
         }
 
+        /**
+         * get all values
+         * @return
+         */
         public List<ValueWrapper> values() {
             return colValues;
         }
 
+        /**
+         * get the size of record
+         * @return int
+         */
         public int size() {
             return this.columnNames.size();
         }
 
-        public boolean contains(String key) {
-            return this.columnNames.contains(key);
+        /**
+         * if the column name exists
+         * @param columnName the column name
+         * @return boolean
+         */
+        public boolean contains(String columnName) {
+            return this.columnNames.contains(columnName);
         }
 
     }
 
-    /**
-     * Constructor
-     */
     public ResultSet(ExecutionResponse resp) {
         if (resp == null) {
             throw new RuntimeException("Input an null `ExecutionResponse' object");
@@ -118,18 +139,34 @@ public class ResultSet {
         }
     }
 
+    /**
+     * the execute result is succeeded
+     * @return boolean
+     */
     public boolean isSucceeded() {
         return response.error_code == ErrorCode.SUCCEEDED;
     }
 
+    /**
+     * the result data is empty
+     * @return boolean
+     */
     public boolean isEmpty() {
         return response.data == null || response.data.rows.isEmpty();
     }
 
+    /**
+     * get errorCode of execute result
+     * @return int
+     */
     public int getErrorCode() {
         return response.error_code;
     }
 
+    /**
+     * get the space name of current session
+     * @return String
+     */
     public String getSpaceName() {
         if (response.space_name == null) {
             return "";
@@ -138,6 +175,10 @@ public class ResultSet {
         return new String(response.space_name);
     }
 
+    /**
+     * get the error message of the execute result
+     * @return String
+     */
     public String getErrorMessage() {
         if (response.error_msg == null) {
             return "";
@@ -146,6 +187,10 @@ public class ResultSet {
         return new String(response.error_msg);
     }
 
+    /**
+     * get the comment from the server
+     * @return String
+     */
     public String getComment() {
         if (response.comment == null) {
             return "";
@@ -154,18 +199,42 @@ public class ResultSet {
         return new String(response.comment);
     }
 
+    /**
+     * get latency of the query execute time
+     * @return int
+     */
     public int getLatency() {
         return response.latency_in_us;
     }
 
+    /**
+     * get the PalnDesc
+     * @return PlanDescription
+     */
     public PlanDescription getPlanDesc() {
         return response.getPlan_desc();
     }
 
+    /**
+     * get keys of the dataset
+     * @return
+     */
     public List<String> keys() {
         return columnNames;
     }
 
+    /**
+     * get column names of the dataset
+     * @return
+     */
+    public List<String> getColumnNames() {
+        return columnNames;
+    }
+
+    /**
+     * get the size of rows
+     * @return int
+     */
     public int rowsSize() {
         if (response.data == null) {
             return 0;
@@ -174,7 +243,9 @@ public class ResultSet {
     }
 
     /**
-     * get all row values on the row index
+     * get row values with the row index
+     * @param index the index of the rows
+     * @return Record
      */
     public Record rowValues(int index) {
         if (response.data == null) {
@@ -187,13 +258,15 @@ public class ResultSet {
     }
 
     /**
-     * get all col values on the col key
+     * get col values on the column key
+     * @param columnName the column name
+     * @return
      */
-    public List<ValueWrapper> colValues(String key) {
+    public List<ValueWrapper> colValues(String columnName) {
         if (response.data == null) {
             throw new RuntimeException("Empty data");
         }
-        int index = columnNames.indexOf(key);
+        int index = columnNames.indexOf(columnName);
         if (index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -205,12 +278,28 @@ public class ResultSet {
     }
 
     /**
-     * get all rows, the value is the origin value, the string is bianry
+     * get all rows, the value is the origin value, the string is binary
+     * @return
      */
     public List<Row> getRows() {
         if (response.data == null) {
             throw new RuntimeException("Empty data");
         }
         return response.data.rows;
+    }
+
+    @Override
+    public String toString() {
+        int i = 0;
+        List<String> rowStrs = new ArrayList<>();
+        while (i < rowsSize()) {
+            List<String> valueStrs = new ArrayList<>();
+            for (ValueWrapper value : rowValues(i)) {
+                valueStrs.add(value.toString());
+            }
+            rowStrs.add(String.join(",", valueStrs));
+        }
+        return String.format("ColumnName: %s, Rows: %s",
+            columnNames.toString(), rowStrs.toString());
     }
 }

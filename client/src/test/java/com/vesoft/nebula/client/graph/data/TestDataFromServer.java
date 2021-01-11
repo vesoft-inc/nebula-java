@@ -312,20 +312,10 @@ public class TestDataFromServer {
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(1, result.rowsSize());
             Assert.assertTrue(result.rowValues(0).get(0).isPath());
-            String expectedStr = "(\"Bob\" :student {name: \"Bob\"} "
-                + ":person {name: \"Bob\", birthday: 2010-09-10T10:08:02.000000, "
-                + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
-                + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
-                + "grade: 3, property: 1000.0, name: \"Bob\", first_out_city: 1111, "
-                + "age: 10, hobby: __NULL__})"
-                + "-[:friend@100{start_year:2018, end_year:2020}]->"
-                + "(\"Lily\" :student {name: \"Lily\"} "
-                + ":person {name: \"Lily\", birthday: 2010-09-10T10:08:02.000000, "
-                + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
-                + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
-                + "grade: 3, property: 1000.0, name: \"Lily\", "
-                + "first_out_city: 1111, age: 9, hobby: __NULL__})";
-            Assert.assertEquals(expectedStr, result.rowValues(0).get(0).asPath().toString());
+            PathWrapper path = result.rowValues(0).get(0).asPath();
+            Assert.assertEquals("Bob", path.getStartNode().getId().asString());
+            Assert.assertEquals("Lily", path.getEndNode().getId().asString());
+            Assert.assertEquals(1, path.length());
 
             result = session.execute(
                 "MATCH p = (:person{name:'Bob'})-[:friend]->(:person{name:'Lily'})"
@@ -333,27 +323,10 @@ public class TestDataFromServer {
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(1, result.rowsSize());
             Assert.assertTrue(result.rowValues(0).get(0).isPath());
-            expectedStr = "(\"Bob\" :student {name: \"Bob\"} "
-                + ":person {name: \"Bob\", birthday: 2010-09-10T10:08:02.000000, "
-                + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
-                + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
-                + "grade: 3, name: \"Bob\", property: 1000.0, first_out_city: 1111, "
-                + "age: 10, hobby: __NULL__})"
-                + "-[:friend@100{start_year:2018, end_year:2020}]->"
-                + "(\"Lily\" :student {name: \"Lily\"} "
-                + ":person {name: \"Lily\", birthday: 2010-09-10T10:08:02.000000, "
-                + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
-                + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
-                + "grade: 3, name: \"Lily\", property: 1000.0, "
-                + "first_out_city: 1111, age: 9, hobby: __NULL__})"
-                + "<-[:friend@100{start_year:2018, end_year:2020}]-"
-                + "(\"Jerry\" :student {name: \"Jerry\"} "
-                + ":person {name: \"Jerry\", birthday: 2010-09-10T10:08:02.000000, "
-                + "start_school: 2017-09-10, is_girl: false, child_name: \"Hello Worl\", "
-                + "friends: 10, morning: 07:10:00.000000, book_num: 100, expend: 100.0, "
-                + "grade: 3, property: 1000.0, name: \"Jerry\", first_out_city: 1111, "
-                + "age: 9, hobby: __NULL__})";
-            Assert.assertEquals(expectedStr, result.rowValues(0).get(0).asPath().toString());
+            path = result.rowValues(0).get(0).asPath();
+            Assert.assertEquals("Bob", path.getStartNode().getId().asString());
+            Assert.assertEquals("Jerry", path.getEndNode().getId().asString());
+            Assert.assertEquals(2, path.length());
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
             assert false;

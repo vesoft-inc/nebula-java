@@ -36,13 +36,13 @@ To use this Java client, do a check of  these:
 
 ## Modify pom.xml
 
-If you use Maven to manage your project, add the following dependency to your `pom.xml` file. Replace `2.0.0-beta` with an appropriate Nebula Java v2.x version. For more versions, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
+If you use Maven to manage your project, add the following dependency to your `pom.xml` file. Replace `2.0.0-rc1` with an appropriate Nebula Java v2.x version. For more versions, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ```xml
   <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>2.0.0-beta</version>
+    <version>2.0.0-rc1</version>
   </dependency>
 ```
 
