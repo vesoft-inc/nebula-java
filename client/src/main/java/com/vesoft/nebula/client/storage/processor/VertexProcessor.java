@@ -34,14 +34,13 @@ public class VertexProcessor extends Processor {
                     LOGGER.error("values size error for row: " + row.toString());
                 } else {
                     Value vid = values.get(0);
-                    Map<String, Object> props = Maps.newHashMap();
+                    Map<String, ValueWrapper> props = Maps.newHashMap();
                     for (int i = 1; i < values.size(); i++) {
                         String colName = new String(colNames.get(i)).split("\\.")[1];
-                        props.put(colName, getField(values.get(i), decodeType));
+                        props.put(colName, new ValueWrapper(values.get(i), decodeType));
                     }
                     VertexRow vertexRow = new VertexRow(new ValueWrapper(vid, decodeType), props);
-                    vidVertices.put(new ValueWrapper(vid, decodeType),
-                            vertexRow);
+                    vidVertices.put(new ValueWrapper(vid, decodeType), vertexRow);
                 }
             }
         }
@@ -55,9 +54,9 @@ public class VertexProcessor extends Processor {
             List<Row> rows = dataSet.getRows();
             for (Row row : rows) {
                 List<Value> values = row.getValues();
-                List<Object> props = new ArrayList<>();
+                List<ValueWrapper> props = new ArrayList<>();
                 for (int i = 0; i < values.size(); i++) {
-                    props.add(getField(values.get(i), decodeType));
+                    props.add(new ValueWrapper(values.get(i), decodeType));
                 }
                 vertexRows.add(new VertexTableRow(props));
             }

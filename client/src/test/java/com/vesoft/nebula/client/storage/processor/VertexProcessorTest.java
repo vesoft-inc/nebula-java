@@ -43,13 +43,17 @@ public class VertexProcessorTest {
         List<VertexTableRow> tableRows = VertexProcessor.constructVertexTableRow(dataSets, "utf-8");
         assert (tableRows.size() == dataSets.get(0).getRows().size());
         assert (tableRows.get(0).getValues().size() == 7);
-        assert (tableRows.get(0).getVid().equals("Tom"));
-        assert (tableRows.get(0).getString(0).equals("Tom"));
+        try {
+            assert (tableRows.get(0).getVid().asString().equals("Tom"));
+            assert (tableRows.get(0).getString(0).equals("Tom"));
+        } catch (UnsupportedEncodingException e) {
+            assert (false);
+        }
         assert (tableRows.get(0).getBoolean(1));
         assert (tableRows.get(0).getLong(2) == 12);
         assert (tableRows.get(0).getDouble(3) < 1.1);
         assert (tableRows.get(0).getDate(4).getYear() == 2020);
-        assert (tableRows.get(0).getTime(5).getSec() == 1);
+        assert (tableRows.get(0).getTime(5).getSecond() == 1);
         assert (tableRows.get(0).getDateTime(6).getDay() == 1);
     }
 }

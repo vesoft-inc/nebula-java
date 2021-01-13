@@ -35,10 +35,10 @@ public class EdgeProcessor extends Processor {
                     Value srcId = values.get(0);
                     Value dstId = values.get(1);
                     Value rank = values.get(2);
-                    Map<String, Object> props = Maps.newHashMap();
+                    Map<String, ValueWrapper> props = Maps.newHashMap();
                     for (int i = 3; i < values.size(); i++) {
                         String colName = new String(colNames.get(i)).split("\\.")[1];
-                        props.put(colName, getField(values.get(i), decodeType));
+                        props.put(colName, new ValueWrapper(values.get(i), decodeType));
                     }
                     EdgeRow edgeRow = new EdgeRow(new ValueWrapper(srcId, decodeType),
                             new ValueWrapper(dstId, decodeType), rank.getIVal(), props);
@@ -56,9 +56,9 @@ public class EdgeProcessor extends Processor {
             List<Row> rows = dataSet.getRows();
             for (Row row : rows) {
                 List<Value> values = row.getValues();
-                List<Object> props = new ArrayList<>();
+                List<ValueWrapper> props = new ArrayList<>();
                 for (int i = 0; i < values.size(); i++) {
-                    props.add(getField(values.get(i), decodeType));
+                    props.add(new ValueWrapper(values.get(i), decodeType));
                 }
                 edgeRows.add(new EdgeTableRow(props));
             }

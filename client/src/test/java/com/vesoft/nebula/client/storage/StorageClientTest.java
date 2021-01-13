@@ -77,9 +77,15 @@ public class StorageClientTest {
 
             List<VertexTableRow> tableRows = result.getVertexTableRows();
             for (VertexTableRow tableRow : tableRows) {
-                assert (Arrays.asList("1", "2", "3", "4", "5")
-                        .contains(tableRow.getVid().toString()));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
+                try {
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getVid().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(0)));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
             }
         }
     }
@@ -116,24 +122,60 @@ public class StorageClientTest {
                 try {
                     assert (Arrays.asList("1", "2", "3", "4", "5")
                             .contains(row.getVid().asString()));
+                    assert (row.getProps().size() == 2);
+                    assert (Arrays.asList("Tom", "Jina", "Bob", "Tim", "Viki")
+                            .contains(row.getProps().get("name").asString()));
+                    assert (Arrays.asList(18L, 20L, 23L, 15L, 25L)
+                            .contains(row.getProps().get("age").asLong()));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
                 }
-                assert (row.getProps().size() == 2);
-                assert (Arrays.asList("Tom", "Jina", "Bob", "Tim", "Viki")
-                        .contains(row.getProps().get("name")));
-                assert (Arrays.asList(18L, 20L, 23L, 15L, 25L).contains(row.getProps().get("age")));
             }
 
             List<VertexTableRow> tableRows = result.getVertexTableRows();
             for (VertexTableRow tableRow : tableRows) {
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getVid()));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
-                assert (Arrays.asList("Tom", "Jina", "Bob", "Tim", "Viki")
-                        .contains(tableRow.getString(1)));
+                try {
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getVid().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(0)));
+                    assert (Arrays.asList("Tom", "Jina", "Bob", "Tim", "Viki")
+                            .contains(tableRow.getString(1)));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
                 assert (Arrays.asList(18L, 20L, 23L, 15L, 25L).contains(tableRow.getLong(2)));
             }
+        }
+    }
+
+    @Test
+    public void testScanVertexWithAllCol() {
+        try {
+            client.connect();
+        } catch (Exception e) {
+            assert (false);
+        }
+
+        ScanVertexResultIterator resultIterator = client.scanVertex(
+                "testStorage",
+                "person",
+                Arrays.asList());
+        while (resultIterator.hasNext()) {
+            ScanVertexResult result = null;
+            try {
+                result = resultIterator.next();
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert (false);
+            }
+            assert (result.getPropNames().size() == 3);
+            assert (result.getPropNames().get(0).equals("_vid"));
+            assert (Arrays.asList("name", "age").contains(result.getPropNames().get(1)));
+            assert (Arrays.asList("name", "age").contains(result.getPropNames().get(2)));
+            assert (result.isAllSuccess());
         }
     }
 
@@ -178,12 +220,19 @@ public class StorageClientTest {
 
             List<EdgeTableRow> tableRows = result.getEdgeTableRows();
             for (EdgeTableRow tableRow : tableRows) {
-                assert (Arrays.asList("1", "2", "3", "4", "5")
-                        .contains(tableRow.getSrcId().toString()));
-                assert (Arrays.asList("1", "2", "3", "4", "5")
-                        .contains(tableRow.getDstId().toString()));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(1)));
+                try {
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getSrcId().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getDstId().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(1)));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
             }
         }
     }
@@ -230,17 +279,59 @@ public class StorageClientTest {
                 assert (Arrays.asList(0L).contains(row.getRank()));
                 assert (row.getProps().size() == 1);
                 assert (Arrays.asList(1.0, 2.1, 3.2, 4.5, 5.9)
-                        .contains(row.getProps().get("likeness")));
+                        .contains(row.getProps().get("likeness").asDouble()));
             }
 
             List<EdgeTableRow> tableRows = result.getEdgeTableRows();
             for (EdgeTableRow tableRow : tableRows) {
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getSrcId()));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getDstId()));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
-                assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(1)));
+                try {
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getSrcId().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getDstId().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(1)));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
                 assert (Arrays.asList(1.0, 2.1, 3.2, 4.5, 5.9).contains(tableRow.getDouble(3)));
             }
+        }
+    }
+
+    @Test
+    public void testScanEdgeWithAllCols() {
+        try {
+            client.connect();
+        } catch (Exception e) {
+            assert (false);
+        }
+
+        ScanEdgeResultIterator resultIterator = client.scanEdge(
+                "testStorage",
+                "friend",
+                Arrays.asList());
+        while (resultIterator.hasNext()) {
+            ScanEdgeResult result = null;
+            try {
+                result = resultIterator.next();
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert (false);
+            }
+            assert (result.getPropNames().size() == 4);
+            assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
+                    .contains(result.getPropNames().get(0)));
+            assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
+                    .contains(result.getPropNames().get(1)));
+            assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
+                    .contains(result.getPropNames().get(2)));
+            assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
+                    .contains(result.getPropNames().get(3)));
+            assert (result.isAllSuccess());
         }
     }
 }

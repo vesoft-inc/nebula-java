@@ -43,8 +43,12 @@ public class EdgeProcessorTest {
         List<EdgeTableRow> tableRows = EdgeProcessor.constructEdgeTableRow(dataSets, "utf-8");
         assert (tableRows.size() == dataSets.get(0).getRows().size());
         assert (tableRows.get(0).getValues().size() == 5);
-        assert (tableRows.get(0).getSrcId().equals("Tom"));
-        assert (tableRows.get(0).getDstId().equals("Jina"));
+        try {
+            assert (tableRows.get(0).getSrcId().asString().equals("Tom"));
+            assert (tableRows.get(0).getDstId().asString().equals("Jina"));
+        } catch (UnsupportedEncodingException e) {
+            assert (false);
+        }
         assert (tableRows.get(0).getRank() == 1);
     }
 
