@@ -118,6 +118,23 @@ object DegreeStaticConfig {
   }
 }
 
+/**
+ * k-core
+ */
+case class KCoreConfig(maxIter:Int, degree:Int)
+
+object KCoreConfig {
+  var maxIter:Int = _
+  var degree:Int = _
+
+  def getKCoreConfig(configs: Configs): KCoreConfig = {
+    val kCoreConfig = configs.algorithmConfig.map
+    maxIter = kCoreConfig("algorithm.kcore.maxIter").toInt
+    degree = kCoreConfig("algorithm.kcore.degree").toInt
+    KCoreConfig(maxIter, degree)
+  }
+}
+
 case class AlgoConfig(configs: Configs)
 
 object AlgoConfig {

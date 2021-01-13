@@ -12,6 +12,7 @@ import com.vesoft.nebula.tools.algorithm.config.{
   CcConfig,
   Configs,
   DegreeStaticConfig,
+  KCoreConfig,
   LPAConfig,
   LouvainConfig,
   NebulaConfig,
@@ -23,6 +24,7 @@ import com.vesoft.nebula.tools.algorithm.lib.PageRankAlgo.ALGORITHM
 import com.vesoft.nebula.tools.algorithm.lib.{
   ConnectedComponentsAlgo,
   DegreeStaticAlgo,
+  KCoreAlgo,
   LabelPropagationAlgo,
   LouvainAlgo,
   PageRankAlgo,
@@ -144,6 +146,10 @@ object Main {
         }
         case "degreestatic" => {
           DegreeStaticAlgo(sparkConfig.spark, dataSet)
+        }
+        case "kcore" => {
+          val kCoreConfig = KCoreConfig.getKCoreConfig(configs)
+          KCoreAlgo(sparkConfig.spark, dataSet, kCoreConfig)
         }
         case _ => throw new UnknownParameterException("unknown executeAlgo name.")
       }
