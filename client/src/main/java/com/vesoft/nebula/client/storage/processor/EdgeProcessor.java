@@ -19,7 +19,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EdgeProcessor extends Processor {
+public class EdgeProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(EdgeProcessor.class);
 
     public static List<EdgeRow> constructEdgeRow(List<DataSet> dataSets, String decodeType) {

@@ -19,7 +19,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VertexProcessor extends Processor {
+public class VertexProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(VertexProcessor.class);
 
     public static Map<ValueWrapper, VertexRow> constructVertexRow(List<DataSet> dataSets,
