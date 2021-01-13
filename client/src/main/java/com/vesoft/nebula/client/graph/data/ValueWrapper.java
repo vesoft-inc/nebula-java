@@ -89,8 +89,8 @@ public class ValueWrapper {
         this.decodeType = decodeType;
     }
 
-    public Object getValue() {
-        return value.getFieldValue();
+    public Value getValue() {
+        return value;
     }
 
     public boolean isEmpty() {
