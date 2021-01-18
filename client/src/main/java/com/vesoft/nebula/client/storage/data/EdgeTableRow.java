@@ -38,7 +38,7 @@ public class EdgeTableRow extends BaseTableRow {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no rank is returned");
         }
-        return (long) values.get(2).asLong();
+        return values.get(2).asLong();
     }
 
 
