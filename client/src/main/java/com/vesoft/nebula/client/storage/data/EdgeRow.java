@@ -14,9 +14,10 @@ public class EdgeRow {
     private final ValueWrapper srcId;
     private final ValueWrapper dstId;
     private final long rank;
-    private final Map<String, Object> props;
+    private final Map<String, ValueWrapper> props;
 
-    public EdgeRow(ValueWrapper srcId, ValueWrapper dstId, long rank, Map<String, Object> props) {
+    public EdgeRow(ValueWrapper srcId, ValueWrapper dstId, long rank,
+                   Map<String, ValueWrapper> props) {
         this.srcId = srcId;
         this.dstId = dstId;
         this.rank = rank;
@@ -35,7 +36,7 @@ public class EdgeRow {
         return rank;
     }
 
-    public Map<String, Object> getProps() {
+    public Map<String, ValueWrapper> getProps() {
         return props;
     }
 

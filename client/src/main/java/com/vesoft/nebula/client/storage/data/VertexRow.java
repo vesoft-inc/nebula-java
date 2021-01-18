@@ -12,9 +12,9 @@ import java.util.Map;
 
 public class VertexRow {
     private final ValueWrapper vid;
-    private final Map<String, Object> props;
+    private final Map<String, ValueWrapper> props;
 
-    public VertexRow(ValueWrapper vid, Map<String, Object> props) {
+    public VertexRow(ValueWrapper vid, Map<String, ValueWrapper> props) {
         this.vid = vid;
         this.props = props;
     }
@@ -24,7 +24,7 @@ public class VertexRow {
     }
 
 
-    public Map<String, Object> getProps() {
+    public Map<String, ValueWrapper> getProps() {
         return props;
     }
 

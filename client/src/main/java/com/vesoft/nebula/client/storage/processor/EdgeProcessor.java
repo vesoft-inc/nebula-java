@@ -13,7 +13,6 @@ import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +35,10 @@ public class EdgeProcessor {
                     Value srcId = values.get(0);
                     Value dstId = values.get(1);
                     Value rank = values.get(2);
-                    Map<String, Object> props = Maps.newHashMap();
+                    Map<String, ValueWrapper> props = Maps.newHashMap();
                     for (int i = 3; i < values.size(); i++) {
                         String colName = new String(colNames.get(i)).split("\\.")[1];
-                        props.put(colName, getField(values.get(i).getFieldValue(), decodeType));
+                        props.put(colName, new ValueWrapper(values.get(i), decodeType));
                     }
                     EdgeRow edgeRow = new EdgeRow(new ValueWrapper(srcId, decodeType),
                             new ValueWrapper(dstId, decodeType), rank.getIVal(), props);
@@ -57,29 +56,13 @@ public class EdgeProcessor {
             List<Row> rows = dataSet.getRows();
             for (Row row : rows) {
                 List<Value> values = row.getValues();
-                List<Object> props = new ArrayList<>();
+                List<ValueWrapper> props = new ArrayList<>();
                 for (int i = 0; i < values.size(); i++) {
-                    props.add(getField(values.get(i).getFieldValue(), decodeType));
+                    props.add(new ValueWrapper(values.get(i), decodeType));
                 }
                 edgeRows.add(new EdgeTableRow(props));
             }
         }
         return edgeRows;
-    }
-
-
-    /**
-     * get decoded field
-     */
-    private static Object getField(Object obj, String decodeType) {
-        if (obj.getClass().getTypeName().equals("byte[]")) {
-            try {
-                return new String((byte[]) obj, decodeType);
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.error("encode error with " + decodeType, e);
-                return null;
-            }
-        }
-        return obj;
     }
 }

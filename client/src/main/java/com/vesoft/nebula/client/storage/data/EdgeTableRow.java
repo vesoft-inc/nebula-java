@@ -11,15 +11,15 @@ import java.util.List;
 
 public class EdgeTableRow extends BaseTableRow {
 
-    public EdgeTableRow(List<Object> values) {
+    public EdgeTableRow(List<ValueWrapper> values) {
         super(values);
     }
 
-    public EdgeTableRow(List<Object> values, String decodeType) {
+    public EdgeTableRow(List<ValueWrapper> values, String decodeType) {
         super(values, decodeType);
     }
 
-    public Object getSrcId() {
+    public ValueWrapper getSrcId() {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no src id is returned");
         }
@@ -27,7 +27,7 @@ public class EdgeTableRow extends BaseTableRow {
     }
 
 
-    public Object getDstId() {
+    public ValueWrapper getDstId() {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no dst id is returned");
         }
@@ -38,7 +38,7 @@ public class EdgeTableRow extends BaseTableRow {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no rank is returned");
         }
-        return (long) values.get(2);
+        return values.get(2).asLong();
     }
 
 

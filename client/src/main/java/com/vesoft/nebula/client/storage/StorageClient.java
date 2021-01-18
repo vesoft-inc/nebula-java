@@ -12,6 +12,8 @@ import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.scan.PartScanInfo;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
+import com.vesoft.nebula.meta.ColumnDef;
+import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.storage.EdgeProp;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanVertexRequest;
@@ -368,8 +370,15 @@ public class StorageClient {
         List<byte[]> props = new ArrayList<>();
         props.add("_vid".getBytes());
         if (!noColumns) {
-            for (String prop : returnCols) {
-                props.add(prop.getBytes());
+            if (returnCols.size() == 0) {
+                Schema schema = metaManager.getTag(spaceName, tagName).getSchema();
+                for (ColumnDef columnDef : schema.getColumns()) {
+                    props.add(columnDef.getName());
+                }
+            } else {
+                for (String prop : returnCols) {
+                    props.add(prop.getBytes());
+                }
             }
         }
         VertexProp vertexCols = new VertexProp((int) tag, props);
@@ -676,10 +685,18 @@ public class StorageClient {
         props.add("_dst".getBytes());
         props.add("_rank".getBytes());
         if (!noColumns) {
-            for (String prop : returnCols) {
-                props.add(prop.getBytes());
+            if (returnCols.size() == 0) {
+                Schema schema = metaManager.getEdge(spaceName, edgeName).getSchema();
+                for (ColumnDef columnDef : schema.getColumns()) {
+                    props.add(columnDef.name);
+                }
+            } else {
+                for (String prop : returnCols) {
+                    props.add(prop.getBytes());
+                }
             }
         }
+
         long edgeId = getEdgeId(spaceName, edgeName);
         EdgeProp edgeCols = new EdgeProp((int) edgeId, props);
 

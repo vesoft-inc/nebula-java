@@ -9,18 +9,22 @@ package com.vesoft.nebula.client.storage.data;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Time;
+import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
+import com.vesoft.nebula.client.graph.data.DateWrapper;
+import com.vesoft.nebula.client.graph.data.TimeWrapper;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class BaseTableRow {
-    protected final List<Object> values;
+    protected final List<ValueWrapper> values;
     protected String decodeType = "utf-8";
 
-    public BaseTableRow(List<Object> values) {
+    public BaseTableRow(List<ValueWrapper> values) {
         this.values = values;
     }
 
-    public BaseTableRow(List<Object> values, String decodeType) {
+    public BaseTableRow(List<ValueWrapper> values, String decodeType) {
         this.values = values;
         this.decodeType = decodeType;
     }
@@ -39,64 +43,36 @@ public class BaseTableRow {
         return values.get(i) == null;
     }
 
-    public String getString(int i) {
-        if (values.get(i) instanceof String) {
-            return (String) values.get(i);
-        } else {
-            throw new ClassCastException("value is not String type");
-        }
+    public String getString(int i) throws UnsupportedEncodingException {
+        return values.get(i).asString();
     }
 
     public long getLong(int i) {
-        if (values.get(i) instanceof Long) {
-            return (long) values.get(i);
-        } else {
-            throw new ClassCastException("value is not long type");
-        }
+        return values.get(i).asLong();
     }
 
     public boolean getBoolean(int i) {
-        if (values.get(i) instanceof Boolean) {
-            return (boolean) values.get(i);
-        } else {
-            throw new ClassCastException("value is not boolean type");
-        }
+        return values.get(i).asBoolean();
     }
 
     public double getDouble(int i) {
-        if (values.get(i) instanceof Double) {
-            return (double) values.get(i);
-        } else {
-            throw new ClassCastException("value is not boolean type");
-        }
+        return values.get(i).asDouble();
     }
 
-    public Date getDate(int i) {
-        if (values.get(i) instanceof Date) {
-            return (Date) values.get(i);
-        } else {
-            throw new ClassCastException("value is not nebula Date type");
-        }
+    public DateWrapper getDate(int i) {
+        return values.get(i).asDate();
     }
 
 
-    public Time getTime(int i) {
-        if (values.get(i) instanceof Time) {
-            return (Time) values.get(i);
-        } else {
-            throw new ClassCastException("value is not nebula Time type");
-        }
+    public TimeWrapper getTime(int i) {
+        return values.get(i).asTime();
     }
 
-    public DateTime getDateTime(int i) {
-        if (values.get(i) instanceof DateTime) {
-            return (DateTime) values.get(i);
-        } else {
-            throw new ClassCastException("value is not nebula DateTime type");
-        }
+    public DateTimeWrapper getDateTime(int i) {
+        return values.get(i).asDateTime();
     }
 
-    public List<Object> getValues() {
+    public List<ValueWrapper> getValues() {
         return values;
     }
 
