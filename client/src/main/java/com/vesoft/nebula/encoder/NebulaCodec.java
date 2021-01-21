@@ -19,8 +19,13 @@ public interface NebulaCodec {
                    long edgeRank,
                    String dstId);
 
-    byte[] encode(String spaceName,
-                  String schemaName,
-                  List<String> names,
-                  List<Object> values);
+    byte[] encodeTag(String spaceName,
+                     String tagName,
+                     List<String> names,
+                     List<Object> values);
+
+    byte[] encodeEdge(String spaceName,
+                      String edgeName,
+                      List<String> names,
+                      List<Object> values);
 }

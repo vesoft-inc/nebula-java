@@ -191,46 +191,73 @@ public class NebulaCodecImpl implements NebulaCodec {
                                     type.type,
                                     len,
                                     nullable,
-                                    hasDefault ? null : null);
+                                    hasDefault ? col.getDefault_value() : null);
         }
         return schemaProvider;
     }
 
     /**
      * @param spaceName the space name
-     * @param schemaName the tag name or edge name
+     * @param tagName the tag name
      * @param names the property names
      * @param values the property values
      * @return the encode byte[]
      * @throws RuntimeException expection
      */
     @Override
-    public byte[] encode(String spaceName,
-                         String schemaName,
-                         List<String> names,
-                         List<Object> values)
-        throws RuntimeException {
-        if (names == null || values == null || names.size() != values.size()) {
-            throw new RuntimeException("NebulaCodeImpl input wrong value");
+    public byte[] encodeTag(String spaceName,
+                            String tagName,
+                            List<String> names,
+                            List<Object> values) throws RuntimeException  {
+        TagItem tag = metaCache.getTag(spaceName, tagName);
+        if (tag == null) {
+            throw new RuntimeException(
+                String.format("TagItem is null when getting tagName `%s'", tagName));
         }
-        Schema schema;
-        long ver;
-        try {
-            TagItem tag = metaCache.getTag(spaceName, schemaName);
-            schema = tag.getSchema();
-            ver = tag.getVersion();
-        } catch (IllegalArgumentException e) {
-            EdgeItem edge;
-            try {
-                edge = metaCache.getEdge(spaceName, schemaName);
-            } catch (IllegalArgumentException exception) {
-                throw new IllegalArgumentException(String.format(
-                        "schemaName %s does not exist in space %s.", schemaName, spaceName));
-            }
-            schema = edge.getSchema();
-            ver = edge.getVersion();
-        }
+        Schema schema = tag.getSchema();
+        return encode(schema, tag.getVersion(), names, values);
+    }
 
+    /**
+     * @param spaceName the space name
+     * @param edgeName the edge name
+     * @param names the property names
+     * @param values the property values
+     * @return the encode byte[]
+     * @throws RuntimeException expection
+     */
+    @Override
+    public byte[] encodeEdge(String spaceName,
+                             String edgeName,
+                             List<String> names,
+                             List<Object> values) throws RuntimeException  {
+        EdgeItem edge = metaCache.getEdge(spaceName, edgeName);
+        if (edge == null) {
+            throw new RuntimeException(
+                String.format("EdgeItem is null when getting edgeName `%s'", edgeName));
+        }
+        Schema schema = edge.getSchema();
+        return encode(schema, edge.getVersion(), names, values);
+    }
+
+    /**
+     * @param schema the schema
+     * @param ver the version of tag or edge
+     * @param names the property names
+     * @param values the property values
+     * @return the encode byte[]
+     * @throws RuntimeException expection
+     */
+    private byte[] encode(Schema schema,
+                          long ver,
+                          List<String> names,
+                          List<Object> values)
+        throws RuntimeException {
+        if (names.size() != values.size()) {
+            throw new RuntimeException(
+                String.format("The names' size no equal with values' size, [%d] != [%d]",
+                    names.size(), values.size()));
+        }
         RowWriterImpl writer = new RowWriterImpl(genSchemaProvider(ver, schema), this.byteOrder);
         for (int i = 0; i < names.size(); i++) {
             writer.setValue(names.get(i), values.get(i));

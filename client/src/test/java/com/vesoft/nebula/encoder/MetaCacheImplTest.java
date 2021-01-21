@@ -220,7 +220,7 @@ public class MetaCacheImplTest implements MetaCache {
     @Override
     public TagItem getTag(String spaceName, String tagName) {
         if (!tagItems.containsKey(tagName)) {
-            throw new IllegalArgumentException("tag " + tagName + "does not exist.");
+            throw new IllegalArgumentException("Tag: " + tagName + " does not exist.");
         }
         return tagItems.get(tagName);
     }
@@ -228,7 +228,7 @@ public class MetaCacheImplTest implements MetaCache {
     @Override
     public EdgeItem getEdge(String spaceName, String edgeName) {
         if (!edgeItems.containsKey(edgeName)) {
-            throw new IllegalArgumentException("tag " + edgeName + "does not exist.");
+            throw new IllegalArgumentException("Edge: " + edgeName + " does not exist.");
         }
         return edgeItems.get(edgeName);
     }
