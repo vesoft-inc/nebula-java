@@ -212,7 +212,7 @@ public class NebulaCodecImpl implements NebulaCodec {
         TagItem tag = metaCache.getTag(spaceName, tagName);
         if (tag == null) {
             throw new RuntimeException(
-                String.format("TagName `%s' is null", tagName));
+                String.format("TagItem is null when getting tagName `%s'", tagName));
         }
         Schema schema = tag.getSchema();
         return encode(schema, tag.getVersion(), names, values);
@@ -234,7 +234,7 @@ public class NebulaCodecImpl implements NebulaCodec {
         EdgeItem edge = metaCache.getEdge(spaceName, edgeName);
         if (edge == null) {
             throw new RuntimeException(
-                String.format("EdgeName `%s' is null", edgeName));
+                String.format("EdgeItem is null when getting edgeName `%s'", edgeName));
         }
         Schema schema = edge.getSchema();
         return encode(schema, edge.getVersion(), names, values);
