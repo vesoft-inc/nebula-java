@@ -26,6 +26,10 @@ object KCoreAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
 
   val ALGORITHM: String = "LabelPropagation"
+
+  /**
+    * run the louvain algorithm for nebula graph
+    */
   def apply(spark: SparkSession, dataset: Dataset[Row], kCoreConfig: KCoreConfig): DataFrame = {
 
     val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, false)

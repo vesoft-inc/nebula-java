@@ -23,12 +23,6 @@ object LouvainAlgo {
 
   /**
     * run the louvain algorithm for nebula graph
-    *
-    * 1. get the configuration which is configured in application.conf
-    * 2. read nebula edge data
-    * 3. construct initial graph
-    * 4. execute louvain algorithm
-    * 5. save the louvain result
     */
   def apply(spark: SparkSession,
             dataset: Dataset[Row],

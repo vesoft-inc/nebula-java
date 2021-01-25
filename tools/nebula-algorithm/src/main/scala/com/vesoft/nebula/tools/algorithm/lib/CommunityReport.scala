@@ -8,7 +8,7 @@ package com.vesoft.nebula.tools.algorithm.lib
 
 import java.io.{File, PrintWriter}
 
-import org.apache.spark.sql.types.{LongType, StringType, DoubleType,StructField, StructType}
+import org.apache.spark.sql.types.{LongType, StringType, DoubleType, StructField, StructType}
 import org.apache.spark.sql.{Encoder, Row, SparkSession}
 
 /**

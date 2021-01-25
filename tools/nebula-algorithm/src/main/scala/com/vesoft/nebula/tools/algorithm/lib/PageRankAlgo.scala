@@ -22,12 +22,6 @@ object PageRankAlgo {
 
   /**
     * run the pagerank algorithm for nebula graph
-    *
-    * 1. get the configuration which is configured in application.conf
-    * 2. read nebula edge data
-    * 3. construct initial graph
-    * 4. execute pagerank algorithm
-    * 5. save the pagerank result
     */
   def apply(spark: SparkSession,
             dataset: Dataset[Row],
