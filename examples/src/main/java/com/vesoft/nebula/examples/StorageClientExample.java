@@ -8,6 +8,7 @@ package com.vesoft.nebula.examples;
 
 import com.vesoft.nebula.client.storage.StorageClient;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
+import com.vesoft.nebula.client.storage.data.VertexRow;
 import com.vesoft.nebula.client.storage.data.VertexTableRow;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
@@ -23,7 +24,7 @@ public class StorageClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientExample.class);
 
     public static void main(String[] args) {
-        StorageClient client = new StorageClient("127.0.0.1", 45509);
+        StorageClient client = new StorageClient("127.0.0.1", 45500);
         try {
             client.connect();
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class StorageClientExample {
         ScanVertexResultIterator iterator = client.scanVertex(
                 "test",
                 "person",
-                Arrays.asList("first_name", "last_name", "gender", "birthday"));
+                Arrays.asList("name","age"));
 
         while (iterator.hasNext()) {
             ScanVertexResult result = null;
@@ -53,17 +54,25 @@ public class StorageClientExample {
                 LOGGER.error("scan error, ", e);
                 System.exit(1);
             }
+            if(result.isEmpty()){
+                continue;
+            }
             System.out.println(result.getPropNames());
-            System.out.println("vid : " + result.getVertex("Tom"));
+            List<VertexRow> vertexRows = result.getVertices();
+            for(VertexRow row: vertexRows){
+                if(result.getVertex(row.getVid()) != null){
+                    System.out.println("vid : " + result.getVertex(row.getVid()));
+                }
+            }
             System.out.println(result.getVidVertices());
+
 
             System.out.println("result vertex table view:");
             List<VertexTableRow> vertexTableRows = result.getVertexTableRows();
             for (VertexTableRow vertex : vertexTableRows) {
-                System.out.println("_vid: " + vertex.getVid());
-                System.out.println(vertex.getValues());
                 try {
-                    System.out.println("last_name: " + vertex.getString(1));
+                    System.out.println("_vid: " + vertex.getVid().asString());
+                    System.out.println(vertex.getValues());
                 } catch (UnsupportedEncodingException e) {
                     LOGGER.error("decode String error, ", e);
                 }
@@ -80,8 +89,8 @@ public class StorageClientExample {
     public static void scanEdge(StorageClient client) {
         ScanEdgeResultIterator iterator = client.scanEdge(
                 "test",
-                "friend",
-                Arrays.asList("degree"));
+                "like",
+                Arrays.asList("likeness"));
 
         while (iterator.hasNext()) {
             ScanEdgeResult result = null;
@@ -91,14 +100,21 @@ public class StorageClientExample {
                 LOGGER.error("scan error, ", e);
                 System.exit(1);
             }
+            if(result.isEmpty()){
+                continue;
+            }
             System.out.println(result.getPropNames());
             System.out.println(result.getEdges());
 
             System.out.println("result edge table view:");
             List<EdgeTableRow> edgeTableRows = result.getEdgeTableRows();
             for (EdgeTableRow edge : edgeTableRows) {
-                System.out.println("_src:" + edge.getDstId());
-                System.out.println("_dst:" + edge.getDstId());
+                try {
+                    System.out.println("_src:" + edge.getSrcId().asString());
+                    System.out.println("_dst:" + edge.getDstId().asString());
+                } catch (UnsupportedEncodingException e) {
+                    LOGGER.error("decode String error, ", e);
+                }
                 System.out.println("_rank:" + edge.getRank());
                 System.out.println(edge.getValues());
             }
