@@ -9,7 +9,6 @@ package com.vesoft.nebula.client.storage.data;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.util.Map;
 
-
 public class EdgeRow {
     private final ValueWrapper srcId;
     private final ValueWrapper dstId;
@@ -43,8 +42,8 @@ public class EdgeRow {
     @Override
     public String toString() {
         return "Edge{"
-                + "srcId='" + srcId.getValue() + '\''
-                + ", dstId='" + dstId.getClass() + '\''
+                + "srcId='" + srcId.toString() + '\''
+                + ", dstId='" + dstId.toString() + '\''
                 + ", rank=" + rank
                 + ", props=" + props
                 + '}';

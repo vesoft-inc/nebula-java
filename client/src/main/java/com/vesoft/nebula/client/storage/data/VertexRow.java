@@ -7,7 +7,6 @@
 package com.vesoft.nebula.client.storage.data;
 
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class VertexRow {
@@ -19,20 +18,18 @@ public class VertexRow {
         this.props = props;
     }
 
-    public ValueWrapper getVid() throws UnsupportedEncodingException {
+    public ValueWrapper getVid() {
         return vid;
     }
-
 
     public Map<String, ValueWrapper> getProps() {
         return props;
     }
 
-
     @Override
     public String toString() {
         return "Vertex{"
-                + "vid=" + vid.getValue()
+                + "vid=" + vid.toString()
                 + ", props=" + props
                 + '}';
     }

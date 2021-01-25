@@ -6,9 +6,6 @@
 
 package com.vesoft.nebula.client.storage.data;
 
-import com.vesoft.nebula.Date;
-import com.vesoft.nebula.DateTime;
-import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;

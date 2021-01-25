@@ -29,11 +29,10 @@ public class VertexTableRow extends BaseTableRow {
         return values.get(0);
     }
 
-
     @Override
     public String toString() {
         return "VertexTableView{"
-                + "vid=" + getVid()
+                + "vid=" + getVid().toString()
                 + ", values=" + mkString(",")
                 + '}';
     }

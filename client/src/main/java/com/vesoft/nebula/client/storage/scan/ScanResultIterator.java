@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.client.storage.scan;
 
-import com.facebook.thrift.TException;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
@@ -15,7 +14,6 @@ import com.vesoft.nebula.client.storage.StorageConnPool;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.slf4j.Logger;
