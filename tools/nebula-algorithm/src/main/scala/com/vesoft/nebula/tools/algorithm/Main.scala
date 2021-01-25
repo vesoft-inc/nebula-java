@@ -20,7 +20,6 @@ import com.vesoft.nebula.tools.algorithm.config.{
   ShortestPathConfig,
   SparkConfig
 }
-import com.vesoft.nebula.tools.algorithm.lib.PageRankAlgo.ALGORITHM
 import com.vesoft.nebula.tools.algorithm.lib.{
   ConnectedComponentsAlgo,
   DegreeStaticAlgo,
@@ -63,7 +62,7 @@ object Main {
     val algoName: String = AlgoConfig.getAlgoName(configs)
     LOGGER.info(s"algoName= ${algoName}")
 
-    val sparkConfig = SparkConfig.getSpark(configs, ALGORITHM)
+    val sparkConfig = SparkConfig.getSpark(configs)
     val dataSource  = configs.dataSourceSinkEntry.source
     val hasWeight   = configs.dataSourceSinkEntry.hasWeight
 

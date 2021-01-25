@@ -16,7 +16,7 @@ object SparkConfig {
 
   var partitionNum: String = _
 
-  def getSpark(configs: Configs, defaultAppName: String): SparkConfig = {
+  def getSpark(configs: Configs, defaultAppName: String = "algorithm"): SparkConfig = {
     val sparkConfigs = configs.sparkConfig.map
     val appName      = sparkConfigs.getOrElse("spark.app.name", defaultAppName)
     val master       = sparkConfigs.getOrElse("spark.master", "local")
