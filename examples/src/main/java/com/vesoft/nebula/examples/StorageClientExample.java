@@ -44,7 +44,7 @@ public class StorageClientExample {
         ScanVertexResultIterator iterator = client.scanVertex(
                 "test",
                 "person",
-                Arrays.asList("name","age"));
+                Arrays.asList("name", "age"));
 
         while (iterator.hasNext()) {
             ScanVertexResult result = null;
@@ -54,13 +54,13 @@ public class StorageClientExample {
                 LOGGER.error("scan error, ", e);
                 System.exit(1);
             }
-            if(result.isEmpty()){
+            if (result.isEmpty()) {
                 continue;
             }
             System.out.println(result.getPropNames());
             List<VertexRow> vertexRows = result.getVertices();
-            for(VertexRow row: vertexRows){
-                if(result.getVertex(row.getVid()) != null){
+            for (VertexRow row : vertexRows) {
+                if (result.getVertex(row.getVid()) != null) {
                     System.out.println("vid : " + result.getVertex(row.getVid()));
                 }
             }
@@ -100,7 +100,7 @@ public class StorageClientExample {
                 LOGGER.error("scan error, ", e);
                 System.exit(1);
             }
-            if(result.isEmpty()){
+            if (result.isEmpty()) {
                 continue;
             }
             System.out.println(result.getPropNames());
