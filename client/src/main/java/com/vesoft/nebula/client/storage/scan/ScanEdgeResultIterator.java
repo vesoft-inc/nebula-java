@@ -8,7 +8,6 @@ package com.vesoft.nebula.client.storage.scan;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.DataSet;
-import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.GraphStorageConnection;

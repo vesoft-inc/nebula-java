@@ -45,8 +45,8 @@ public class EdgeTableRow extends BaseTableRow {
     @Override
     public String toString() {
         return "EdgeTableView{"
-                + "srcId=" + getSrcId()
-                + ", dstId=" + getDstId()
+                + "srcId=" + getSrcId().toString()
+                + ", dstId=" + getDstId().toString()
                 + ", rank=" + getRank()
                 + ", values=" + getValues()
                 + '}';

@@ -66,10 +66,10 @@ public class ScanVertexResult {
     /**
      * get vertex with id
      *
-     * @param vid Long type
+     * @param vid ValueWrapper, int type or string type
      * @return Vertex
      */
-    public VertexRow getVertex(String vid) {
+    public VertexRow getVertex(ValueWrapper vid) {
         if (vidVertices == null) {
             constructVertexRow();
         }
