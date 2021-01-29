@@ -368,16 +368,16 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
         case CP_DIRS:
           if (field.type == TType.LIST) {
             {
-              TList _list219 = iprot.readListBegin();
-              this.cp_dirs = new ArrayList<CheckpointInfo>(Math.max(0, _list219.size));
-              for (int _i220 = 0; 
-                   (_list219.size < 0) ? iprot.peekList() : (_i220 < _list219.size); 
-                   ++_i220)
+              TList _list228 = iprot.readListBegin();
+              this.cp_dirs = new ArrayList<CheckpointInfo>(Math.max(0, _list228.size));
+              for (int _i229 = 0; 
+                   (_list228.size < 0) ? iprot.peekList() : (_i229 < _list228.size); 
+                   ++_i229)
               {
-                CheckpointInfo _elem221;
-                _elem221 = new CheckpointInfo();
-                _elem221.read(iprot);
-                this.cp_dirs.add(_elem221);
+                CheckpointInfo _elem230;
+                _elem230 = new CheckpointInfo();
+                _elem230.read(iprot);
+                this.cp_dirs.add(_elem230);
               }
               iprot.readListEnd();
             }
@@ -416,8 +416,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(CP_DIRS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.cp_dirs.size()));
-        for (CheckpointInfo _iter222 : this.cp_dirs)        {
-          _iter222.write(oprot);
+        for (CheckpointInfo _iter231 : this.cp_dirs)        {
+          _iter231.write(oprot);
         }
         oprot.writeListEnd();
       }

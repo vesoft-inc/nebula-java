@@ -382,15 +382,15 @@ public class GetGroupResp implements TBase, java.io.Serializable, Cloneable, Com
         case ZONE_NAMES:
           if (field.type == TType.LIST) {
             {
-              TList _list199 = iprot.readListBegin();
-              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list199.size));
-              for (int _i200 = 0; 
-                   (_list199.size < 0) ? iprot.peekList() : (_i200 < _list199.size); 
-                   ++_i200)
+              TList _list208 = iprot.readListBegin();
+              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list208.size));
+              for (int _i209 = 0; 
+                   (_list208.size < 0) ? iprot.peekList() : (_i209 < _list208.size); 
+                   ++_i209)
               {
-                byte[] _elem201;
-                _elem201 = iprot.readBinary();
-                this.zone_names.add(_elem201);
+                byte[] _elem210;
+                _elem210 = iprot.readBinary();
+                this.zone_names.add(_elem210);
               }
               iprot.readListEnd();
             }
@@ -427,8 +427,8 @@ public class GetGroupResp implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(ZONE_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.zone_names.size()));
-        for (byte[] _iter202 : this.zone_names)        {
-          oprot.writeBinary(_iter202);
+        for (byte[] _iter211 : this.zone_names)        {
+          oprot.writeBinary(_iter211);
         }
         oprot.writeListEnd();
       }

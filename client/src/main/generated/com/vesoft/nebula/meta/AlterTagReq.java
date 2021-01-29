@@ -438,16 +438,16 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable, Comp
         case TAG_ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list56 = iprot.readListBegin();
-              this.tag_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list56.size));
-              for (int _i57 = 0; 
-                   (_list56.size < 0) ? iprot.peekList() : (_i57 < _list56.size); 
-                   ++_i57)
+              TList _list65 = iprot.readListBegin();
+              this.tag_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list65.size));
+              for (int _i66 = 0; 
+                   (_list65.size < 0) ? iprot.peekList() : (_i66 < _list65.size); 
+                   ++_i66)
               {
-                AlterSchemaItem _elem58;
-                _elem58 = new AlterSchemaItem();
-                _elem58.read(iprot);
-                this.tag_items.add(_elem58);
+                AlterSchemaItem _elem67;
+                _elem67 = new AlterSchemaItem();
+                _elem67.read(iprot);
+                this.tag_items.add(_elem67);
               }
               iprot.readListEnd();
             }
@@ -492,8 +492,8 @@ public class AlterTagReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(TAG_ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tag_items.size()));
-        for (AlterSchemaItem _iter59 : this.tag_items)        {
-          _iter59.write(oprot);
+        for (AlterSchemaItem _iter68 : this.tag_items)        {
+          _iter68.write(oprot);
         }
         oprot.writeListEnd();
       }

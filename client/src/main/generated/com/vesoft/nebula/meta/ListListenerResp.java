@@ -382,16 +382,16 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
         case LISTENERS:
           if (field.type == TType.LIST) {
             {
-              TList _list215 = iprot.readListBegin();
-              this.listeners = new ArrayList<ListenerInfo>(Math.max(0, _list215.size));
-              for (int _i216 = 0; 
-                   (_list215.size < 0) ? iprot.peekList() : (_i216 < _list215.size); 
-                   ++_i216)
+              TList _list224 = iprot.readListBegin();
+              this.listeners = new ArrayList<ListenerInfo>(Math.max(0, _list224.size));
+              for (int _i225 = 0; 
+                   (_list224.size < 0) ? iprot.peekList() : (_i225 < _list224.size); 
+                   ++_i225)
               {
-                ListenerInfo _elem217;
-                _elem217 = new ListenerInfo();
-                _elem217.read(iprot);
-                this.listeners.add(_elem217);
+                ListenerInfo _elem226;
+                _elem226 = new ListenerInfo();
+                _elem226.read(iprot);
+                this.listeners.add(_elem226);
               }
               iprot.readListEnd();
             }
@@ -428,8 +428,8 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
       oprot.writeFieldBegin(LISTENERS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.listeners.size()));
-        for (ListenerInfo _iter218 : this.listeners)        {
-          _iter218.write(oprot);
+        for (ListenerInfo _iter227 : this.listeners)        {
+          _iter227.write(oprot);
         }
         oprot.writeListEnd();
       }

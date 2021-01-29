@@ -343,16 +343,16 @@ public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable {
         case ITEMS:
           if (field.type == TType.LIST) {
             {
-              TList _list167 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list167.size));
-              for (int _i168 = 0; 
-                   (_list167.size < 0) ? iprot.peekList() : (_i168 < _list167.size); 
-                   ++_i168)
+              TList _list176 = iprot.readListBegin();
+              this.items = new ArrayList<ConfigItem>(Math.max(0, _list176.size));
+              for (int _i177 = 0; 
+                   (_list176.size < 0) ? iprot.peekList() : (_i177 < _list176.size); 
+                   ++_i177)
               {
-                ConfigItem _elem169;
-                _elem169 = new ConfigItem();
-                _elem169.read(iprot);
-                this.items.add(_elem169);
+                ConfigItem _elem178;
+                _elem178 = new ConfigItem();
+                _elem178.read(iprot);
+                this.items.add(_elem178);
               }
               iprot.readListEnd();
             }
@@ -389,8 +389,8 @@ public class ListConfigsResp implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter170 : this.items)        {
-          _iter170.write(oprot);
+        for (ConfigItem _iter179 : this.items)        {
+          _iter179.write(oprot);
         }
         oprot.writeListEnd();
       }
