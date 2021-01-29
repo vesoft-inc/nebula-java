@@ -18,7 +18,6 @@ import com.vesoft.nebula.storage.ScanEdgeResponse;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class GraphStorageConnection {
     protected TTransport transport = null;

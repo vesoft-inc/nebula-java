@@ -6,9 +6,6 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-import com.vesoft.nebula.Date;
-import com.vesoft.nebula.DateTime;
-import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
 import java.io.UnsupportedEncodingException;
