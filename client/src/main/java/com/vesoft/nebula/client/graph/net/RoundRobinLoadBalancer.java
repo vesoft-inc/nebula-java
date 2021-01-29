@@ -11,7 +11,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 public class RoundRobinLoadBalancer implements LoadBalancer {
     private static final int S_OK = 0;
     private static final int S_BAD = 1;

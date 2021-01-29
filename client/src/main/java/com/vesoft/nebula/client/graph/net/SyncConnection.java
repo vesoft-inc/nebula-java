@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.client.graph.net;
 
-
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.TProtocol;
