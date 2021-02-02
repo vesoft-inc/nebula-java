@@ -28,7 +28,7 @@ object CommunityReport {
     val spark                                   = SparkSession.builder().appName("report").master("local").getOrCreate()
     implicit val encoder: Encoder[(Long, Long)] = org.apache.spark.sql.Encoders.kryo[(Long, Long)]
 
-    val df          = spark.read.csv(file)
+    val df          = spark.read.option("header", true).csv(file)
     val vertexCount = df.count()
 
     // 社区详情

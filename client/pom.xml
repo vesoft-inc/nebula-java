@@ -195,12 +195,12 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.google.common</pattern>
-                                    <shadedPattern>com.vesoft.nebula.shaded.google.common</shadedPattern>
-                                </relocation>
-                            </relocations>
+<!--                            <relocations>-->
+<!--                                <relocation>-->
+<!--                                    <pattern>com.google.common</pattern>-->
+<!--                                    <shadedPattern>com.vesoft.nebula.shaded.google.common</shadedPattern>-->
+<!--                                </relocation>-->
+<!--                            </relocations>-->
                             <artifactSet>
                                 <excludes>
                                     <exclude>org.apache.spark:*</exclude>

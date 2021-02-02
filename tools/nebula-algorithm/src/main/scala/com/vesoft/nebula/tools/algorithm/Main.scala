@@ -27,7 +27,8 @@ import com.vesoft.nebula.tools.algorithm.lib.{
   LabelPropagationAlgo,
   LouvainAlgo,
   PageRankAlgo,
-  ShortestPathAlgo
+  ShortestPathAlgo,
+  StronglyConnectedComponentsAlgo
 }
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.commons.math3.ode.UnknownParameterException
@@ -150,6 +151,10 @@ object Main {
           val kCoreConfig = KCoreConfig.getKCoreConfig(configs)
           KCoreAlgo(sparkConfig.spark, dataSet, kCoreConfig)
         }
+        case "stronglyconnectedcomponent" => {
+          val ccConfig = CcConfig.getCcConfig(configs)
+          StronglyConnectedComponentsAlgo(sparkConfig.spark, dataSet, ccConfig)
+        }
         case _ => throw new UnknownParameterException("unknown executeAlgo name.")
       }
     }
@@ -163,10 +168,10 @@ object Main {
         NebulaUtil.writeNebula(algoResult, nebulaWriteConfig, algoName)
       }
       case "csv" => {
-        algoResult.write.option("header", "true").csv(resultPath)
+        algoResult.repartition(1).write.option("header", "true").csv(resultPath)
       }
       case "txt" => {
-        algoResult.write.option("header", "true").text(resultPath)
+        algoResult.repartition(1).write.option("header", "true").text(resultPath)
       }
       case _ => throw new UnsupportedOperationException("unsupported data sink")
     }

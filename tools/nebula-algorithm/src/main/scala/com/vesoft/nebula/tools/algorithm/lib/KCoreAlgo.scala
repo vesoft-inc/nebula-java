@@ -62,7 +62,7 @@ object KCoreAlgo {
     var subGraph: Graph[Int, Double] = null
 
     while (iterNum < maxIter) {
-      subGraph = degreeGraph.subgraph(vpred = (vid, degree) => degree > k)
+      subGraph = degreeGraph.subgraph(vpred = (vid, degree) => degree >= k)
       degreeGraph = subGraph
         .outerJoinVertices(subGraph.degrees) { (vid, vd, degree) =>
           degree.getOrElse(0)
