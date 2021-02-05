@@ -149,8 +149,6 @@ public class GraphClientExample {
                 LOGGER.error("Query Failed: ", e.getMessage());
             } catch (TException e) {
                 e.printStackTrace();
-            } catch (NGQLException e) {
-                e.printStackTrace();
             }
 
             LOGGER.info(String.format("Columns: %s", Joiner.on(" ").join(resultSet.getColumns())));
@@ -166,15 +164,11 @@ public class GraphClientExample {
                 LOGGER.error("Query Failed: ", e.getMessage());
             } catch (TException e) {
                 e.printStackTrace();
-            } catch (NGQLException e) {
-                e.printStackTrace();
             }
 
             try {
                 LOGGER.info(complexQuery);
                 resultSet = client.executeQuery(complexQuery);
-            } catch (NGQLException e) {
-                e.printStackTrace();
             } catch (TException e) {
                 e.printStackTrace();
             } catch (ConnectionException e) {

@@ -14,9 +14,9 @@ import com.facebook.thrift.protocol.TProtocolFactory;
 import com.facebook.thrift.transport.TNonblockingSocket;
 import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.vesoft.nebula.client.graph.NGQLException;
 import com.vesoft.nebula.client.graph.ResultSet;
 import com.vesoft.nebula.client.graph.async.entry.AuthenticateCallback;
 import com.vesoft.nebula.client.graph.async.entry.ExecuteCallback;
@@ -163,11 +163,21 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                     ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
                     int code = resp.getError_code();
                     if (code == ErrorCode.SUCCEEDED) {
-                        ResultSet rs = new ResultSet(resp.getColumn_names(), resp.getRows());
+                        ResultSet rs = new ResultSet(resp.getColumn_names(), resp.getRows(), code,
+                                resp.getError_msg(), resp.getWarning_msg());
                         return Optional.of(rs);
                     } else {
-                        LOGGER.error("Execute error: " + resp.getError_msg());
-                        throw new NGQLException(code);
+                        String errorMsg = resp.getError_msg();
+                        String warnMsg = resp.getWarning_msg();
+                        if (errorMsg != null || !errorMsg.isEmpty()) {
+                            LOGGER.error("Execute error: " + resp.getError_msg());
+                        }
+                        if (warnMsg != null && !warnMsg.isEmpty()) {
+                            LOGGER.warn("Execute warn: " + resp.getWarning_msg());
+                        }
+                        ResultSet rs = new ResultSet(Lists.newArrayList(), Lists.newArrayList(),
+                                code, resp.getError_msg(), resp.getWarning_msg());
+                        return Optional.of(rs);
                     }
                 } else {
                     return Optional.absent();

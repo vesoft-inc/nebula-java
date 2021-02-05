@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
+import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.vesoft.nebula.AbstractClient;
 import com.vesoft.nebula.graph.AuthResponse;
@@ -124,23 +125,28 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
      * @return The result set of the query sentence.
      */
     @Override
-    public ResultSet executeQuery(String statement) throws ConnectionException,
-            NGQLException, TException {
+    public ResultSet executeQuery(String statement) throws ConnectionException, TException {
         if (!checkTransportOpened(transport)) {
             LOGGER.error("Thrift rpc call failed");
-            throw new ConnectionException();
+            throw new ConnectionException("Thrift rpc call failed");
         }
 
         ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
         int code = executionResponse.getError_code();
         if (code == ErrorCode.SUCCEEDED) {
-            return new ResultSet(Optional.ofNullable(executionResponse.getColumn_names())
-                    .orElse(Collections.emptyList()),
-                    Optional.ofNullable(executionResponse.getRows())
-                            .orElse(Collections.emptyList()));
+            return new ResultSet(executionResponse.getColumn_names(), executionResponse.getRows(),
+                    code, executionResponse.getError_msg(), executionResponse.getWarning_msg());
         } else {
-            LOGGER.error("Execute error: " + executionResponse.getError_msg());
-            throw new NGQLException(code);
+            String errorMsg = executionResponse.getError_msg();
+            String warnMsg = executionResponse.getWarning_msg();
+            if (errorMsg != null || !errorMsg.isEmpty()) {
+                LOGGER.error("Execute error: " + executionResponse.getError_msg());
+            }
+            if (warnMsg != null && !warnMsg.isEmpty()) {
+                LOGGER.warn("Execute warn: " + executionResponse.getWarning_msg());
+            }
+            return new ResultSet(Lists.newArrayList(), Lists.newArrayList(), code, errorMsg,
+                    warnMsg);
         }
     }
 

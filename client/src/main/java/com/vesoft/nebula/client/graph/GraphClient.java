@@ -42,5 +42,5 @@ public interface GraphClient extends AuthProvider, AutoCloseable {
      * @throws TException          the thrift exception
      */
     public ResultSet executeQuery(String statement)
-            throws ConnectionException, NGQLException, TException;
+            throws ConnectionException, TException;
 }
