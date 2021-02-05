@@ -22,6 +22,10 @@ public class ResultSet {
     private List<RowValue> rows;
     private List<Result> results;
 
+    private int resultCode;
+    private String errorMsg;
+    private String warnMsg;
+
     public static class Result {
         private final RowValue row;
         private final List<String> columns;
@@ -39,7 +43,7 @@ public class ResultSet {
             int index = columns.indexOf(key);
             if (index == -1) {
                 throw new IllegalArgumentException(
-                    "Cannot get field because the key '" + key + "' is not exist");
+                        "Cannot get field because the key '" + key + "' is not exist");
             }
             return this.row.columns.get(index);
         }
@@ -89,14 +93,18 @@ public class ResultSet {
      * Constructor
      */
     public ResultSet() {
-        this(Lists.newArrayList(), Lists.newArrayList());
+        this(Lists.newArrayList(), Lists.newArrayList(), 0, null, null);
     }
 
     /**
      * @param columns schema info
      * @param rows    field values
      */
-    public ResultSet(List<byte[]> columns, List<RowValue> rows) {
+    public ResultSet(List<byte[]> columns, List<RowValue> rows, int resultCode, String errorMsg,
+                     String warnMsg) {
+        this.resultCode = resultCode;
+        this.errorMsg = errorMsg;
+        this.warnMsg = warnMsg;
         if (columns == null) {
             columns = Lists.newArrayList();
         }
@@ -130,6 +138,18 @@ public class ResultSet {
 
     public List<Result> getResults() {
         return this.results;
+    }
+
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public String getWarnMsg() {
+        return warnMsg;
     }
 
     @Override

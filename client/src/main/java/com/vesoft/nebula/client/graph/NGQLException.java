@@ -7,18 +7,29 @@
 package com.vesoft.nebula.client.graph;
 
 /**
- *
+ * NGQLException for Graph Query
  */
 public class NGQLException extends Exception {
     private int code;
+    private String message;
 
     public NGQLException(int code) {
         super();
         this.code = code;
     }
 
+    public NGQLException(int code, String message) {
+        super();
+        this.code = code;
+        this.message = message;
+    }
+
     public int getCode() {
         return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
 
