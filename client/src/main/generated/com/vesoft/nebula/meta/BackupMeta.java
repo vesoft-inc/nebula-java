@@ -354,18 +354,18 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case BACKUP_INFO:
           if (field.type == TType.MAP) {
             {
-              TMap _map223 = iprot.readMapBegin();
-              this.backup_info = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map223.size));
-              for (int _i224 = 0; 
-                   (_map223.size < 0) ? iprot.peekMap() : (_i224 < _map223.size); 
-                   ++_i224)
+              TMap _map232 = iprot.readMapBegin();
+              this.backup_info = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map232.size));
+              for (int _i233 = 0; 
+                   (_map232.size < 0) ? iprot.peekMap() : (_i233 < _map232.size); 
+                   ++_i233)
               {
-                int _key225;
-                SpaceBackupInfo _val226;
-                _key225 = iprot.readI32();
-                _val226 = new SpaceBackupInfo();
-                _val226.read(iprot);
-                this.backup_info.put(_key225, _val226);
+                int _key234;
+                SpaceBackupInfo _val235;
+                _key234 = iprot.readI32();
+                _val235 = new SpaceBackupInfo();
+                _val235.read(iprot);
+                this.backup_info.put(_key234, _val235);
               }
               iprot.readMapEnd();
             }
@@ -376,15 +376,15 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case META_FILES:
           if (field.type == TType.LIST) {
             {
-              TList _list227 = iprot.readListBegin();
-              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list227.size));
-              for (int _i228 = 0; 
-                   (_list227.size < 0) ? iprot.peekList() : (_i228 < _list227.size); 
-                   ++_i228)
+              TList _list236 = iprot.readListBegin();
+              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list236.size));
+              for (int _i237 = 0; 
+                   (_list236.size < 0) ? iprot.peekList() : (_i237 < _list236.size); 
+                   ++_i237)
               {
-                byte[] _elem229;
-                _elem229 = iprot.readBinary();
-                this.meta_files.add(_elem229);
+                byte[] _elem238;
+                _elem238 = iprot.readBinary();
+                this.meta_files.add(_elem238);
               }
               iprot.readListEnd();
             }
@@ -420,9 +420,9 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(BACKUP_INFO_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.backup_info.size()));
-        for (Map.Entry<Integer, SpaceBackupInfo> _iter230 : this.backup_info.entrySet())        {
-          oprot.writeI32(_iter230.getKey());
-          _iter230.getValue().write(oprot);
+        for (Map.Entry<Integer, SpaceBackupInfo> _iter239 : this.backup_info.entrySet())        {
+          oprot.writeI32(_iter239.getKey());
+          _iter239.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -432,8 +432,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(META_FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.meta_files.size()));
-        for (byte[] _iter231 : this.meta_files)        {
-          oprot.writeBinary(_iter231);
+        for (byte[] _iter240 : this.meta_files)        {
+          oprot.writeBinary(_iter240);
         }
         oprot.writeListEnd();
       }

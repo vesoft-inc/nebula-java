@@ -129,39 +129,40 @@ public class TestDataFromServer {
             Assert.assertEquals("test_data", result.getSpaceName());
             Assert.assertFalse(result.isEmpty());
             Assert.assertEquals(1, result.rowsSize());
-            List<String> names = Arrays.asList("VertexID", "person.name", "person.age",
-                    "person.grade", "person.friends", "person.book_num", "person.birthday",
-                    "person.start_school", "person.morning", "person.property", "person.is_girl",
-                    "person.child_name", "person.expend", "person.first_out_city", "person.hobby");
+            List<String> names = Arrays.asList("vertices_");
 
             Assert.assertEquals(names.stream().sorted().collect(Collectors.toList()),
                     result.keys().stream().sorted().collect(Collectors.toList()));
 
-            Assert.assertEquals("Bob", result.rowValues(0).get(0).asString());
-            Assert.assertEquals("Bob", result.rowValues(0).get(1).asString());
-            Assert.assertEquals(10, result.rowValues(0).get(2).asLong());
-            Assert.assertEquals(3, result.rowValues(0).get(3).asLong());
-            Assert.assertEquals(10, result.rowValues(0).get(4).asLong());
-            Assert.assertEquals(100, result.rowValues(0).get(5).asLong());
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            Node node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Bob", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("person"), node.labels());
+            HashMap<String, ValueWrapper> properties = node.properties("person");
+            Assert.assertEquals("Bob", properties.get("name").asString());
+            Assert.assertEquals(10, properties.get("age").asLong());
+            Assert.assertEquals(3, properties.get("grade").asLong());
+            Assert.assertEquals(10, properties.get("friends").asLong());
+            Assert.assertEquals(100, properties.get("book_num").asLong());
 
             DateTimeWrapper dateTimeWrapper = new DateTimeWrapper(
                     new DateTime((short) 2010, (byte) 9,
                             (byte) 10, (byte) 10, (byte) 8, (byte) 2, 0));
-            Assert.assertEquals(dateTimeWrapper, result.rowValues(0).get(6).asDateTime());
+            Assert.assertEquals(dateTimeWrapper, properties.get("birthday").asDateTime());
 
             DateWrapper dateWrapper = new DateWrapper(new Date((short) 2017, (byte) 9, (byte) 10));
-            Assert.assertEquals(dateWrapper, result.rowValues(0).get(7).asDate());
+            Assert.assertEquals(dateWrapper, properties.get("start_school").asDate());
 
             TimeWrapper timeWrapper = new TimeWrapper(new Time((byte) 7, (byte) 10, (byte) 0, 0));
-            Assert.assertEquals(timeWrapper, result.rowValues(0).get(8).asTime());
+            Assert.assertEquals(timeWrapper, properties.get("morning").asTime());
 
-            Assert.assertEquals(1000.0, result.rowValues(0).get(9).asDouble(), 0.0);
-            Assert.assertEquals(false, result.rowValues(0).get(10).asBoolean());
-            Assert.assertEquals("Hello Worl", result.rowValues(0).get(11).asString());
-            Assert.assertEquals(100.0, result.rowValues(0).get(12).asDouble(), 0.0);
-            Assert.assertEquals(1111, result.rowValues(0).get(13).asLong());
+            Assert.assertEquals(1000.0, properties.get("property").asDouble(), 0.0);
+            Assert.assertEquals(false, properties.get("is_girl").asBoolean());
+            Assert.assertEquals("Hello Worl", properties.get("child_name").asString());
+            Assert.assertEquals(100.0, properties.get("expend").asDouble(), 0.0);
+            Assert.assertEquals(1111, properties.get("first_out_city").asLong());
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
-                    result.rowValues(0).get(14).asNull().getNullType());
+                    properties.get("hobby").asNull().getNullType());
 
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();

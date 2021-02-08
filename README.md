@@ -8,13 +8,13 @@ Nebula Java is a Java client for developers to connect their projects to Nebula 
 
 > **NOTE**: Nebula Java is not thread-safe.
 
-## Two branches of this repository
+## Two main branches of this repository
 
 In this repository, you can find two branches for the source code of Nebula Java of different versions.
 
 ### The master branch
 
-The master branch is for Nebula Java v2.0, which works with Nebula Graph v2.0 only.
+The master branch is for Nebula Java v2.0, which works with Nebula Graph v2.0 nightly.
 
 This README file provides Java developers with instructions on how to connect to Nebula Graph v2.0.
 
@@ -27,6 +27,10 @@ In the v1.0 branch, you can find source code of these:
 
 For more information, see [README of v1.0](https://github.com/vesoft-inc/nebula-java/blob/v1.0/README.md).
 
+### The v2.0.0-rc branch
+
+The v2.0.0-rc branch works with Nebula Graph v2.0.0-beta and v2.0.0-rc1, but not for the latest nightly Nebula Graph.
+
 ## Prerequisites
 
 To use this Java client, do a check of  these:
@@ -36,15 +40,27 @@ To use this Java client, do a check of  these:
 
 ## Modify pom.xml
 
-If you use Maven to manage your project, add the following dependency to your `pom.xml` file. Replace `2.0.0-rc1` with an appropriate Nebula Java v2.x version. For more versions, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
+If you use Maven to manage your project, add the following dependency to your `pom.xml` file. 
+Replace `2.0.0-SNAPSHOT` with an appropriate Nebula Java v2.x version. 
+For more versions, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ```xml
   <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>2.0.0-rc1</version>
+    <version>2.0.0-SNAPSHOT</version>
   </dependency>
 ```
+There are the version correspondence between client and Nebula:
+
+| Client version | Nebula Version |
+|:--------------:|:-------------------:|
+|     1.0.0      |       1.0.0         |
+|     1.0.1      |    1.1.0，1.2.0     |
+|     1.1.0      |    1.1.0，1.2.0     |
+|    2.0.0-beta  |      2.0.0-beta     |
+|    2.0.0-rc1   |       2.0.0-rc1     |
+|  2.0.0-SNAPSHOT|    2.0.0-nightly    |
 
 ## Graph client example
 

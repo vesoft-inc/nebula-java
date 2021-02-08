@@ -290,15 +290,15 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
         case ZONE_NAMES:
           if (field.type == TType.LIST) {
             {
-              TList _list203 = iprot.readListBegin();
-              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list203.size));
-              for (int _i204 = 0; 
-                   (_list203.size < 0) ? iprot.peekList() : (_i204 < _list203.size); 
-                   ++_i204)
+              TList _list212 = iprot.readListBegin();
+              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list212.size));
+              for (int _i213 = 0; 
+                   (_list212.size < 0) ? iprot.peekList() : (_i213 < _list212.size); 
+                   ++_i213)
               {
-                byte[] _elem205;
-                _elem205 = iprot.readBinary();
-                this.zone_names.add(_elem205);
+                byte[] _elem214;
+                _elem214 = iprot.readBinary();
+                this.zone_names.add(_elem214);
               }
               iprot.readListEnd();
             }
@@ -332,8 +332,8 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
       oprot.writeFieldBegin(ZONE_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.zone_names.size()));
-        for (byte[] _iter206 : this.zone_names)        {
-          oprot.writeBinary(_iter206);
+        for (byte[] _iter215 : this.zone_names)        {
+          oprot.writeBinary(_iter215);
         }
         oprot.writeListEnd();
       }

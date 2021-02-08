@@ -452,16 +452,16 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
         case PEERS:
           if (field.type == TType.LIST) {
             {
-              TList _list76 = iprot.readListBegin();
-              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list76.size));
-              for (int _i77 = 0; 
-                   (_list76.size < 0) ? iprot.peekList() : (_i77 < _list76.size); 
-                   ++_i77)
+              TList _list85 = iprot.readListBegin();
+              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list85.size));
+              for (int _i86 = 0; 
+                   (_list85.size < 0) ? iprot.peekList() : (_i86 < _list85.size); 
+                   ++_i86)
               {
-                com.vesoft.nebula.HostAddr _elem78;
-                _elem78 = new com.vesoft.nebula.HostAddr();
-                _elem78.read(iprot);
-                this.peers.add(_elem78);
+                com.vesoft.nebula.HostAddr _elem87;
+                _elem87 = new com.vesoft.nebula.HostAddr();
+                _elem87.read(iprot);
+                this.peers.add(_elem87);
               }
               iprot.readListEnd();
             }
@@ -472,16 +472,16 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
         case LOSTS:
           if (field.type == TType.LIST) {
             {
-              TList _list79 = iprot.readListBegin();
-              this.losts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list79.size));
-              for (int _i80 = 0; 
-                   (_list79.size < 0) ? iprot.peekList() : (_i80 < _list79.size); 
-                   ++_i80)
+              TList _list88 = iprot.readListBegin();
+              this.losts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list88.size));
+              for (int _i89 = 0; 
+                   (_list88.size < 0) ? iprot.peekList() : (_i89 < _list88.size); 
+                   ++_i89)
               {
-                com.vesoft.nebula.HostAddr _elem81;
-                _elem81 = new com.vesoft.nebula.HostAddr();
-                _elem81.read(iprot);
-                this.losts.add(_elem81);
+                com.vesoft.nebula.HostAddr _elem90;
+                _elem90 = new com.vesoft.nebula.HostAddr();
+                _elem90.read(iprot);
+                this.losts.add(_elem90);
               }
               iprot.readListEnd();
             }
@@ -523,8 +523,8 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(PEERS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.peers.size()));
-        for (com.vesoft.nebula.HostAddr _iter82 : this.peers)        {
-          _iter82.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter91 : this.peers)        {
+          _iter91.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -534,8 +534,8 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(LOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.losts.size()));
-        for (com.vesoft.nebula.HostAddr _iter83 : this.losts)        {
-          _iter83.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter92 : this.losts)        {
+          _iter92.write(oprot);
         }
         oprot.writeListEnd();
       }

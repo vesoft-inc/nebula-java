@@ -382,16 +382,16 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
         case HOSTS:
           if (field.type == TType.LIST) {
             {
-              TList _list72 = iprot.readListBegin();
-              this.hosts = new ArrayList<HostItem>(Math.max(0, _list72.size));
-              for (int _i73 = 0; 
-                   (_list72.size < 0) ? iprot.peekList() : (_i73 < _list72.size); 
-                   ++_i73)
+              TList _list81 = iprot.readListBegin();
+              this.hosts = new ArrayList<HostItem>(Math.max(0, _list81.size));
+              for (int _i82 = 0; 
+                   (_list81.size < 0) ? iprot.peekList() : (_i82 < _list81.size); 
+                   ++_i82)
               {
-                HostItem _elem74;
-                _elem74 = new HostItem();
-                _elem74.read(iprot);
-                this.hosts.add(_elem74);
+                HostItem _elem83;
+                _elem83 = new HostItem();
+                _elem83.read(iprot);
+                this.hosts.add(_elem83);
               }
               iprot.readListEnd();
             }
@@ -428,8 +428,8 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (HostItem _iter75 : this.hosts)        {
-          _iter75.write(oprot);
+        for (HostItem _iter84 : this.hosts)        {
+          _iter84.write(oprot);
         }
         oprot.writeListEnd();
       }

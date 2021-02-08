@@ -740,18 +740,18 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
         case CONFIGS:
           if (field.type == TType.MAP) {
             {
-              TMap _map252 = iprot.readMapBegin();
-              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map252.size));
-              for (int _i253 = 0; 
-                   (_map252.size < 0) ? iprot.peekMap() : (_i253 < _map252.size); 
-                   ++_i253)
+              TMap _map261 = iprot.readMapBegin();
+              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map261.size));
+              for (int _i262 = 0; 
+                   (_map261.size < 0) ? iprot.peekMap() : (_i262 < _map261.size); 
+                   ++_i262)
               {
-                byte[] _key254;
-                com.vesoft.nebula.Value _val255;
-                _key254 = iprot.readBinary();
-                _val255 = new com.vesoft.nebula.Value();
-                _val255.read(iprot);
-                this.configs.put(_key254, _val255);
+                byte[] _key263;
+                com.vesoft.nebula.Value _val264;
+                _key263 = iprot.readBinary();
+                _val264 = new com.vesoft.nebula.Value();
+                _val264.read(iprot);
+                this.configs.put(_key263, _val264);
               }
               iprot.readMapEnd();
             }
@@ -812,9 +812,9 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CONFIGS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.configs.size()));
-        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter256 : this.configs.entrySet())        {
-          oprot.writeBinary(_iter256.getKey());
-          _iter256.getValue().write(oprot);
+        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter265 : this.configs.entrySet())        {
+          oprot.writeBinary(_iter265.getKey());
+          _iter265.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

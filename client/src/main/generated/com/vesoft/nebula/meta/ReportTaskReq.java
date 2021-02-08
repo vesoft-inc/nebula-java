@@ -27,92 +27,105 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comparable<BalanceResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("BalanceResp");
+public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Comparable<ReportTaskReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("ReportTaskReq");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
-  private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)2);
-  private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)3);
-  private static final TField TASKS_FIELD_DESC = new TField("tasks", TType.LIST, (short)4);
+  private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)2);
+  private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)3);
+  private static final TField STATIS_FIELD_DESC = new TField("statis", TType.STRUCT, (short)4);
 
   /**
    * 
    * @see ErrorCode
    */
   public int code;
-  public long id;
-  public com.vesoft.nebula.HostAddr leader;
-  public List<BalanceTask> tasks;
+  public int job_id;
+  public int task_id;
+  public StatisItem statis;
   public static final int CODE = 1;
-  public static final int ID = 2;
-  public static final int LEADER = 3;
-  public static final int TASKS = 4;
+  public static final int JOB_ID = 2;
+  public static final int TASK_ID = 3;
+  public static final int STATIS = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __CODE_ISSET_ID = 0;
-  private static final int __ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __JOB_ID_ISSET_ID = 1;
+  private static final int __TASK_ID_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(TASKS, new FieldMetaData("tasks", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, BalanceTask.class))));
+    tmpMetaDataMap.put(JOB_ID, new FieldMetaData("job_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(TASK_ID, new FieldMetaData("task_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(STATIS, new FieldMetaData("statis", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, StatisItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(BalanceResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ReportTaskReq.class, metaDataMap);
   }
 
-  public BalanceResp() {
+  public ReportTaskReq() {
   }
 
-  public BalanceResp(
+  public ReportTaskReq(
     int code,
-    long id,
-    com.vesoft.nebula.HostAddr leader,
-    List<BalanceTask> tasks)
+    int job_id,
+    int task_id)
   {
     this();
     this.code = code;
     setCodeIsSet(true);
-    this.id = id;
-    setIdIsSet(true);
-    this.leader = leader;
-    this.tasks = tasks;
+    this.job_id = job_id;
+    setJob_idIsSet(true);
+    this.task_id = task_id;
+    setTask_idIsSet(true);
+  }
+
+  public ReportTaskReq(
+    int code,
+    int job_id,
+    int task_id,
+    StatisItem statis)
+  {
+    this();
+    this.code = code;
+    setCodeIsSet(true);
+    this.job_id = job_id;
+    setJob_idIsSet(true);
+    this.task_id = task_id;
+    setTask_idIsSet(true);
+    this.statis = statis;
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public BalanceResp(BalanceResp other) {
+  public ReportTaskReq(ReportTaskReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.code = TBaseHelper.deepCopy(other.code);
-    this.id = TBaseHelper.deepCopy(other.id);
-    if (other.isSetLeader()) {
-      this.leader = TBaseHelper.deepCopy(other.leader);
-    }
-    if (other.isSetTasks()) {
-      this.tasks = TBaseHelper.deepCopy(other.tasks);
+    this.job_id = TBaseHelper.deepCopy(other.job_id);
+    this.task_id = TBaseHelper.deepCopy(other.task_id);
+    if (other.isSetStatis()) {
+      this.statis = TBaseHelper.deepCopy(other.statis);
     }
   }
 
-  public BalanceResp deepCopy() {
-    return new BalanceResp(this);
+  public ReportTaskReq deepCopy() {
+    return new ReportTaskReq(this);
   }
 
   @Deprecated
-  public BalanceResp clone() {
-    return new BalanceResp(this);
+  public ReportTaskReq clone() {
+    return new ReportTaskReq(this);
   }
 
   /**
@@ -127,7 +140,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
    * 
    * @see ErrorCode
    */
-  public BalanceResp setCode(int code) {
+  public ReportTaskReq setCode(int code) {
     this.code = code;
     setCodeIsSet(true);
     return this;
@@ -146,78 +159,76 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     __isset_bit_vector.set(__CODE_ISSET_ID, value);
   }
 
-  public long  getId() {
-    return this.id;
+  public int  getJob_id() {
+    return this.job_id;
   }
 
-  public BalanceResp setId(long id) {
-    this.id = id;
-    setIdIsSet(true);
+  public ReportTaskReq setJob_id(int job_id) {
+    this.job_id = job_id;
+    setJob_idIsSet(true);
     return this;
   }
 
-  public void unsetId() {
-    __isset_bit_vector.clear(__ID_ISSET_ID);
+  public void unsetJob_id() {
+    __isset_bit_vector.clear(__JOB_ID_ISSET_ID);
   }
 
-  // Returns true if field id is set (has been assigned a value) and false otherwise
-  public boolean isSetId() {
-    return __isset_bit_vector.get(__ID_ISSET_ID);
+  // Returns true if field job_id is set (has been assigned a value) and false otherwise
+  public boolean isSetJob_id() {
+    return __isset_bit_vector.get(__JOB_ID_ISSET_ID);
   }
 
-  public void setIdIsSet(boolean value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, value);
+  public void setJob_idIsSet(boolean value) {
+    __isset_bit_vector.set(__JOB_ID_ISSET_ID, value);
   }
 
-  public com.vesoft.nebula.HostAddr  getLeader() {
-    return this.leader;
+  public int  getTask_id() {
+    return this.task_id;
   }
 
-  public BalanceResp setLeader(com.vesoft.nebula.HostAddr leader) {
-    this.leader = leader;
+  public ReportTaskReq setTask_id(int task_id) {
+    this.task_id = task_id;
+    setTask_idIsSet(true);
     return this;
   }
 
-  public void unsetLeader() {
-    this.leader = null;
+  public void unsetTask_id() {
+    __isset_bit_vector.clear(__TASK_ID_ISSET_ID);
   }
 
-  // Returns true if field leader is set (has been assigned a value) and false otherwise
-  public boolean isSetLeader() {
-    return this.leader != null;
+  // Returns true if field task_id is set (has been assigned a value) and false otherwise
+  public boolean isSetTask_id() {
+    return __isset_bit_vector.get(__TASK_ID_ISSET_ID);
   }
 
-  public void setLeaderIsSet(boolean value) {
+  public void setTask_idIsSet(boolean value) {
+    __isset_bit_vector.set(__TASK_ID_ISSET_ID, value);
+  }
+
+  public StatisItem  getStatis() {
+    return this.statis;
+  }
+
+  public ReportTaskReq setStatis(StatisItem statis) {
+    this.statis = statis;
+    return this;
+  }
+
+  public void unsetStatis() {
+    this.statis = null;
+  }
+
+  // Returns true if field statis is set (has been assigned a value) and false otherwise
+  public boolean isSetStatis() {
+    return this.statis != null;
+  }
+
+  public void setStatisIsSet(boolean value) {
     if (!value) {
-      this.leader = null;
+      this.statis = null;
     }
   }
 
-  public List<BalanceTask>  getTasks() {
-    return this.tasks;
-  }
-
-  public BalanceResp setTasks(List<BalanceTask> tasks) {
-    this.tasks = tasks;
-    return this;
-  }
-
-  public void unsetTasks() {
-    this.tasks = null;
-  }
-
-  // Returns true if field tasks is set (has been assigned a value) and false otherwise
-  public boolean isSetTasks() {
-    return this.tasks != null;
-  }
-
-  public void setTasksIsSet(boolean value) {
-    if (!value) {
-      this.tasks = null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case CODE:
@@ -228,27 +239,27 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       }
       break;
 
-    case ID:
+    case JOB_ID:
       if (value == null) {
-        unsetId();
+        unsetJob_id();
       } else {
-        setId((Long)value);
+        setJob_id((Integer)value);
       }
       break;
 
-    case LEADER:
+    case TASK_ID:
       if (value == null) {
-        unsetLeader();
+        unsetTask_id();
       } else {
-        setLeader((com.vesoft.nebula.HostAddr)value);
+        setTask_id((Integer)value);
       }
       break;
 
-    case TASKS:
+    case STATIS:
       if (value == null) {
-        unsetTasks();
+        unsetStatis();
       } else {
-        setTasks((List<BalanceTask>)value);
+        setStatis((StatisItem)value);
       }
       break;
 
@@ -262,14 +273,14 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     case CODE:
       return getCode();
 
-    case ID:
-      return new Long(getId());
+    case JOB_ID:
+      return new Integer(getJob_id());
 
-    case LEADER:
-      return getLeader();
+    case TASK_ID:
+      return new Integer(getTask_id());
 
-    case TASKS:
-      return getTasks();
+    case STATIS:
+      return getStatis();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -281,12 +292,12 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     switch (fieldID) {
     case CODE:
       return isSetCode();
-    case ID:
-      return isSetId();
-    case LEADER:
-      return isSetLeader();
-    case TASKS:
-      return isSetTasks();
+    case JOB_ID:
+      return isSetJob_id();
+    case TASK_ID:
+      return isSetTask_id();
+    case STATIS:
+      return isSetStatis();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -296,12 +307,12 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof BalanceResp)
-      return this.equals((BalanceResp)that);
+    if (that instanceof ReportTaskReq)
+      return this.equals((ReportTaskReq)that);
     return false;
   }
 
-  public boolean equals(BalanceResp that) {
+  public boolean equals(ReportTaskReq that) {
     if (that == null)
       return false;
     if (this == that)
@@ -316,30 +327,30 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
         return false;
     }
 
-    boolean this_present_id = true;
-    boolean that_present_id = true;
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
+    boolean this_present_job_id = true;
+    boolean that_present_job_id = true;
+    if (this_present_job_id || that_present_job_id) {
+      if (!(this_present_job_id && that_present_job_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
-        return false;
-    }
-
-    boolean this_present_leader = true && this.isSetLeader();
-    boolean that_present_leader = true && that.isSetLeader();
-    if (this_present_leader || that_present_leader) {
-      if (!(this_present_leader && that_present_leader))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader, that.leader))
+      if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id))
         return false;
     }
 
-    boolean this_present_tasks = true && this.isSetTasks();
-    boolean that_present_tasks = true && that.isSetTasks();
-    if (this_present_tasks || that_present_tasks) {
-      if (!(this_present_tasks && that_present_tasks))
+    boolean this_present_task_id = true;
+    boolean that_present_task_id = true;
+    if (this_present_task_id || that_present_task_id) {
+      if (!(this_present_task_id && that_present_task_id))
         return false;
-      if (!TBaseHelper.equalsNobinary(this.tasks, that.tasks))
+      if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id))
+        return false;
+    }
+
+    boolean this_present_statis = true && this.isSetStatis();
+    boolean that_present_statis = true && that.isSetStatis();
+    if (this_present_statis || that_present_statis) {
+      if (!(this_present_statis && that_present_statis))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.statis, that.statis))
         return false;
     }
 
@@ -355,26 +366,26 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     if (present_code)
       builder.append(code);
 
-    boolean present_id = true;
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
+    boolean present_job_id = true;
+    builder.append(present_job_id);
+    if (present_job_id)
+      builder.append(job_id);
 
-    boolean present_leader = true && (isSetLeader());
-    builder.append(present_leader);
-    if (present_leader)
-      builder.append(leader);
+    boolean present_task_id = true;
+    builder.append(present_task_id);
+    if (present_task_id)
+      builder.append(task_id);
 
-    boolean present_tasks = true && (isSetTasks());
-    builder.append(present_tasks);
-    if (present_tasks)
-      builder.append(tasks);
+    boolean present_statis = true && (isSetStatis());
+    builder.append(present_statis);
+    if (present_statis)
+      builder.append(statis);
 
     return builder.toHashCode();
   }
 
   @Override
-  public int compareTo(BalanceResp other) {
+  public int compareTo(ReportTaskReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -393,27 +404,27 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+    lastComparison = Boolean.valueOf(isSetJob_id()).compareTo(other.isSetJob_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(id, other.id);
+    lastComparison = TBaseHelper.compareTo(job_id, other.job_id);
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
+    lastComparison = Boolean.valueOf(isSetTask_id()).compareTo(other.isSetTask_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(leader, other.leader);
+    lastComparison = TBaseHelper.compareTo(task_id, other.task_id);
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetTasks()).compareTo(other.isSetTasks());
+    lastComparison = Boolean.valueOf(isSetStatis()).compareTo(other.isSetStatis());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(tasks, other.tasks);
+    lastComparison = TBaseHelper.compareTo(statis, other.statis);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -439,38 +450,26 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ID:
-          if (field.type == TType.I64) {
-            this.id = iprot.readI64();
-            setIdIsSet(true);
+        case JOB_ID:
+          if (field.type == TType.I32) {
+            this.job_id = iprot.readI32();
+            setJob_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case LEADER:
+        case TASK_ID:
+          if (field.type == TType.I32) {
+            this.task_id = iprot.readI32();
+            setTask_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case STATIS:
           if (field.type == TType.STRUCT) {
-            this.leader = new com.vesoft.nebula.HostAddr();
-            this.leader.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, field.type);
-          }
-          break;
-        case TASKS:
-          if (field.type == TType.LIST) {
-            {
-              TList _list164 = iprot.readListBegin();
-              this.tasks = new ArrayList<BalanceTask>(Math.max(0, _list164.size));
-              for (int _i165 = 0; 
-                   (_list164.size < 0) ? iprot.peekList() : (_i165 < _list164.size); 
-                   ++_i165)
-              {
-                BalanceTask _elem166;
-                _elem166 = new BalanceTask();
-                _elem166.read(iprot);
-                this.tasks.add(_elem166);
-              }
-              iprot.readListEnd();
-            }
+            this.statis = new StatisItem();
+            this.statis.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -495,24 +494,18 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeFieldBegin(CODE_FIELD_DESC);
     oprot.writeI32(this.code);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(ID_FIELD_DESC);
-    oprot.writeI64(this.id);
+    oprot.writeFieldBegin(JOB_ID_FIELD_DESC);
+    oprot.writeI32(this.job_id);
     oprot.writeFieldEnd();
-    if (this.leader != null) {
-      oprot.writeFieldBegin(LEADER_FIELD_DESC);
-      this.leader.write(oprot);
-      oprot.writeFieldEnd();
-    }
-    if (this.tasks != null) {
-      oprot.writeFieldBegin(TASKS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.tasks.size()));
-        for (BalanceTask _iter167 : this.tasks)        {
-          _iter167.write(oprot);
-        }
-        oprot.writeListEnd();
+    oprot.writeFieldBegin(TASK_ID_FIELD_DESC);
+    oprot.writeI32(this.task_id);
+    oprot.writeFieldEnd();
+    if (this.statis != null) {
+      if (isSetStatis()) {
+        oprot.writeFieldBegin(STATIS_FIELD_DESC);
+        this.statis.write(oprot);
+        oprot.writeFieldEnd();
       }
-      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -533,7 +526,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
 String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("BalanceResp");
+    StringBuilder sb = new StringBuilder("ReportTaskReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -555,33 +548,32 @@ String space = prettyPrint ? " " : "";
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("id");
+    sb.append("job_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this. getJob_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("leader");
+    sb.append("task_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLeader() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getLeader(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this. getTask_id(), indent + 1, prettyPrint));
     first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("tasks");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this. getTasks() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this. getTasks(), indent + 1, prettyPrint));
+    if (isSetStatis())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("statis");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this. getStatis() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this. getStatis(), indent + 1, prettyPrint));
+      }
+      first = false;
     }
-    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

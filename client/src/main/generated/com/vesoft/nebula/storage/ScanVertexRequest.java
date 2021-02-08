@@ -33,7 +33,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField CURSOR_FIELD_DESC = new TField("cursor", TType.STRING, (short)3);
   private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.STRUCT, (short)4);
-  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)5);
+  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)5);
   private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)6);
   private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)7);
   private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)8);
@@ -44,7 +44,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public int part_id;
   public byte[] cursor;
   public VertexProp return_columns;
-  public int limit;
+  public long limit;
   public long start_time;
   public long end_time;
   public byte[] filter;
@@ -84,7 +84,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, VertexProp.class)));
     tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
+        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(END_TIME, new FieldMetaData("end_time", TFieldRequirementType.OPTIONAL, 
@@ -113,7 +113,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     int space_id,
     int part_id,
     VertexProp return_columns,
-    int limit,
+    long limit,
     boolean only_latest_version,
     boolean enable_read_from_follower)
   {
@@ -136,7 +136,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     int part_id,
     byte[] cursor,
     VertexProp return_columns,
-    int limit,
+    long limit,
     long start_time,
     long end_time,
     byte[] filter,
@@ -290,11 +290,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public int  getLimit() {
+  public long  getLimit() {
     return this.limit;
   }
 
-  public ScanVertexRequest setLimit(int limit) {
+  public ScanVertexRequest setLimit(long limit) {
     this.limit = limit;
     setLimitIsSet(true);
     return this;
@@ -467,7 +467,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       if (value == null) {
         unsetLimit();
       } else {
-        setLimit((Integer)value);
+        setLimit((Long)value);
       }
       break;
 
@@ -531,7 +531,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return getReturn_columns();
 
     case LIMIT:
-      return new Integer(getLimit());
+      return new Long(getLimit());
 
     case START_TIME:
       return new Long(getStart_time());
@@ -884,8 +884,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
           }
           break;
         case LIMIT:
-          if (field.type == TType.I32) {
-            this.limit = iprot.readI32();
+          if (field.type == TType.I64) {
+            this.limit = iprot.readI64();
             setLimitIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -966,7 +966,7 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(LIMIT_FIELD_DESC);
-    oprot.writeI32(this.limit);
+    oprot.writeI64(this.limit);
     oprot.writeFieldEnd();
     if (isSetStart_time()) {
       oprot.writeFieldBegin(START_TIME_FIELD_DESC);

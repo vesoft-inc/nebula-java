@@ -293,15 +293,15 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
         case PART_IDS:
           if (field.type == TType.LIST) {
             {
-              TList _list84 = iprot.readListBegin();
-              this.part_ids = new ArrayList<Integer>(Math.max(0, _list84.size));
-              for (int _i85 = 0; 
-                   (_list84.size < 0) ? iprot.peekList() : (_i85 < _list84.size); 
-                   ++_i85)
+              TList _list93 = iprot.readListBegin();
+              this.part_ids = new ArrayList<Integer>(Math.max(0, _list93.size));
+              for (int _i94 = 0; 
+                   (_list93.size < 0) ? iprot.peekList() : (_i94 < _list93.size); 
+                   ++_i94)
               {
-                int _elem86;
-                _elem86 = iprot.readI32();
-                this.part_ids.add(_elem86);
+                int _elem95;
+                _elem95 = iprot.readI32();
+                this.part_ids.add(_elem95);
               }
               iprot.readListEnd();
             }
@@ -333,8 +333,8 @@ public class ListPartsReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(PART_IDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.part_ids.size()));
-        for (int _iter87 : this.part_ids)        {
-          oprot.writeI32(_iter87);
+        for (int _iter96 : this.part_ids)        {
+          oprot.writeI32(_iter96);
         }
         oprot.writeListEnd();
       }
