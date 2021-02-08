@@ -143,8 +143,9 @@ public class GraphClientExample {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            assert session != null;
-            session.release();
+            if (session != null) {
+                session.release();
+            }
             pool.close();
         }
     }
