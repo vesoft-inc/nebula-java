@@ -119,19 +119,34 @@ object DegreeStaticConfig {
 }
 
 /**
- * k-core
- */
-case class KCoreConfig(maxIter:Int, degree:Int)
+  * k-core
+  */
+case class KCoreConfig(maxIter: Int, degree: Int)
 
 object KCoreConfig {
-  var maxIter:Int = _
-  var degree:Int = _
+  var maxIter: Int = _
+  var degree: Int  = _
 
   def getKCoreConfig(configs: Configs): KCoreConfig = {
     val kCoreConfig = configs.algorithmConfig.map
     maxIter = kCoreConfig("algorithm.kcore.maxIter").toInt
     degree = kCoreConfig("algorithm.kcore.degree").toInt
     KCoreConfig(maxIter, degree)
+  }
+}
+
+/**
+  * Betweenness
+  */
+case class BetweennessConfig(maxIter: Int)
+
+object BetweennessConfig {
+  var maxIter: Int = _
+
+  def getBetweennessConfig(configs: Configs): BetweennessConfig = {
+    val betweennessConfig = configs.algorithmConfig.map
+    maxIter = betweennessConfig("algorithm.betweenness.maxIter").toInt
+    BetweennessConfig(maxIter)
   }
 }
 

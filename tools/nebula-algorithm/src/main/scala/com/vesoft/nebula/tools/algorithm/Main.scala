@@ -9,6 +9,7 @@ package com.vesoft.nebula.tools.algorithm
 import com.vesoft.nebula.tools.algorithm.config.Configs.Argument
 import com.vesoft.nebula.tools.algorithm.config.{
   AlgoConfig,
+  BetweennessConfig,
   CcConfig,
   Configs,
   DegreeStaticConfig,
@@ -21,6 +22,7 @@ import com.vesoft.nebula.tools.algorithm.config.{
   SparkConfig
 }
 import com.vesoft.nebula.tools.algorithm.lib.{
+  BetweennessCentralityAlgo,
   ConnectedComponentsAlgo,
   DegreeStaticAlgo,
   KCoreAlgo,
@@ -28,7 +30,8 @@ import com.vesoft.nebula.tools.algorithm.lib.{
   LouvainAlgo,
   PageRankAlgo,
   ShortestPathAlgo,
-  StronglyConnectedComponentsAlgo
+  StronglyConnectedComponentsAlgo,
+  TriangleCountAlgo
 }
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.commons.math3.ode.UnknownParameterException
@@ -153,7 +156,14 @@ object Main {
         }
         case "stronglyconnectedcomponent" => {
           val ccConfig = CcConfig.getCcConfig(configs)
-          StronglyConnectedComponentsAlgo(sparkConfig.spark, dataSet, ccConfig)
+          StronglyConnectedComponentsAlgo(sparkConfig.spark, dataSet, ccConfig, hasWeight)
+        }
+        case "betweenness" => {
+          val betweennessConfig = BetweennessConfig.getBetweennessConfig(configs)
+          BetweennessCentralityAlgo(sparkConfig.spark, dataSet, betweennessConfig, hasWeight)
+        }
+        case "trianglecount" => {
+          TriangleCountAlgo(sparkConfig.spark, dataSet)
         }
         case _ => throw new UnknownParameterException("unknown executeAlgo name.")
       }
