@@ -30,18 +30,16 @@ import org.apache.commons.codec.digest.MurmurHash2;
 public class NebulaCodecImpl implements NebulaCodec {
     private static final int PARTITION_ID_SIZE = 4;
     private static final int TAG_ID_SIZE = 4;
-    private static final int TAG_VERSION_SIZE = 8;
     private static final int EDGE_TYPE_SIZE = 4;
     private static final int EDGE_RANKING_SIZE = 8;
-    private static final int EDGE_VERSION_SIZE = 8;
-    private static final int VERTEX_SIZE = PARTITION_ID_SIZE + TAG_ID_SIZE + TAG_VERSION_SIZE;
+    private static final int EDGE_VER_PLACE_HOLDER_SIZE = 1;
+    private static final int VERTEX_SIZE = PARTITION_ID_SIZE + TAG_ID_SIZE;
     private static final int EDGE_SIZE = PARTITION_ID_SIZE + EDGE_TYPE_SIZE
-        + EDGE_RANKING_SIZE + EDGE_VERSION_SIZE;
+        + EDGE_RANKING_SIZE + EDGE_VER_PLACE_HOLDER_SIZE;
 
-    private static final int DATA_KEY_TYPE = 0x00000001;
-    private static final int TAG_MASK      = 0xBFFFFFFF;
-    private static final int EDGE_MASK     = 0x40000000;
-    private static final int SEEK          = 0xc70f6907;
+    private static final int VERTEX_KEY_TYPE = 0x00000001;
+    private static final int EDGE_KEY_TYPE = 0x00000002;
+    private static final int SEEK = 0xc70f6907;
     private final MetaCache metaCache;
     private final ByteOrder byteOrder;
 
@@ -73,11 +71,9 @@ public class NebulaCodecImpl implements NebulaCodec {
     public byte[] vertexKey(String spaceName, String vertexId, String tagName)
         throws RuntimeException {
         int vidLen = getSpaceVidLen(spaceName);
-        long hash = MurmurHash2.hash64(vertexId.getBytes(), vertexId.length(), SEEK);
-        int partitionId = (int) (hash % getPartSize(spaceName) + 1);
+        int partitionId = getPartId(spaceName, vertexId);
         TagItem tagItem = metaCache.getTag(spaceName, tagName);
-        return genVertexKey(vidLen, partitionId,
-            vertexId.getBytes(), tagItem.tag_id, tagItem.version);
+        return genVertexKey(vidLen, partitionId, vertexId.getBytes(), tagItem.tag_id);
     }
 
     /**
@@ -96,11 +92,10 @@ public class NebulaCodecImpl implements NebulaCodec {
                           String dstId)
         throws RuntimeException {
         int vidLen = getSpaceVidLen(spaceName);
-        long hash = MurmurHash2.hash64(srcId.getBytes(), srcId.length(), SEEK);
-        int partitionId = (int) (hash % getPartSize(spaceName) + 1);
+        int partitionId = getPartId(spaceName, srcId);
         EdgeItem edgeItem = metaCache.getEdge(spaceName, edgeName);
-        return genEdgeKey(vidLen,partitionId, srcId.getBytes(),
-            edgeItem.edge_type, edgeRank, dstId.getBytes(), edgeItem.version);
+        return genEdgeKeyByDefaultVer(vidLen,partitionId, srcId.getBytes(),
+            edgeItem.edge_type, edgeRank, dstId.getBytes());
     }
 
     /**
@@ -108,22 +103,19 @@ public class NebulaCodecImpl implements NebulaCodec {
      * @param partitionId the partitionId
      * @param vertexId the vertex id
      * @param tagId the tag id
-     * @param tagVersion the version
      * @return
      */
     public byte[] genVertexKey(int vidLen,
                                int partitionId,
                                byte[] vertexId,
-                               int tagId,
-                               long tagVersion) {
+                               int tagId) {
         if (vertexId.length > vidLen) {
             throw new RuntimeException(
                 "The length of vid size is out of the range, expected vidLen less then " + vidLen);
         }
         ByteBuffer buffer = ByteBuffer.allocate(VERTEX_SIZE + vidLen);
         buffer.order(this.byteOrder);
-        partitionId = (partitionId << 8) | DATA_KEY_TYPE;
-        tagId &= TAG_MASK;
+        partitionId = (partitionId << 8) | VERTEX_KEY_TYPE;
         buffer.putInt(partitionId)
             .put(vertexId);
         if (vertexId.length < vidLen) {
@@ -132,7 +124,6 @@ public class NebulaCodecImpl implements NebulaCodec {
             buffer.put(complementVid);
         }
         buffer.putInt(tagId);
-        buffer.putLong(tagVersion);
         return buffer.array();
     }
 
@@ -143,8 +134,26 @@ public class NebulaCodecImpl implements NebulaCodec {
      * @param edgeType the edge type
      * @param edgeRank the ranking
      * @param dstId the dstId
-     * @param edgeVersion the edgeVersion
-     * @return
+     * @return byte[]
+     */
+    public byte[] genEdgeKeyByDefaultVer(int vidLen,
+                                         int partitionId,
+                                         byte[] srcId,
+                                         int edgeType,
+                                         long edgeRank,
+                                         byte[] dstId) {
+        return genEdgeKey(vidLen, partitionId, srcId, edgeType, edgeRank, dstId, (byte)1);
+    }
+
+    /**
+     * @param vidLen the vidLen from the space description
+     * @param partitionId the partitionId
+     * @param srcId the src id
+     * @param edgeType the edge type
+     * @param edgeRank the ranking
+     * @param dstId the dstId
+     * @param edgeVerHolder the edgeVerHolder
+     * @return byte[]
      */
     public byte[] genEdgeKey(int vidLen,
                              int partitionId,
@@ -152,14 +161,14 @@ public class NebulaCodecImpl implements NebulaCodec {
                              int edgeType,
                              long edgeRank,
                              byte[] dstId,
-                             long edgeVersion) {
+                             byte edgeVerHolder) {
         if (srcId.length > vidLen || dstId.length > vidLen) {
             throw new RuntimeException(
                 "The length of vid size is out of the range, expected vidLen less then " + vidLen);
         }
         ByteBuffer buffer = ByteBuffer.allocate(EDGE_SIZE + (vidLen << 1));
         buffer.order(this.byteOrder);
-        partitionId = (partitionId << 8) | DATA_KEY_TYPE;
+        partitionId = (partitionId << 8) | EDGE_KEY_TYPE;
         buffer.putInt(partitionId);
         buffer.put(srcId);
         if (srcId.length < vidLen) {
@@ -167,16 +176,15 @@ public class NebulaCodecImpl implements NebulaCodec {
             Arrays.fill(complementVid.array(), (byte) '\0');
             buffer.put(complementVid);
         }
-        edgeType |= EDGE_MASK;
         buffer.putInt(edgeType);
-        buffer.putLong(edgeRank);
+        buffer.put(encodeRank(edgeRank));
         buffer.put(dstId);
         if (dstId.length < vidLen) {
             ByteBuffer complementVid = ByteBuffer.allocate(vidLen - dstId.length);
             Arrays.fill(complementVid.array(), (byte) '\0');
             buffer.put(complementVid);
         }
-        buffer.putLong(edgeVersion);
+        buffer.put(edgeVerHolder);
         return buffer.array();
     }
 
@@ -238,6 +246,20 @@ public class NebulaCodecImpl implements NebulaCodec {
         }
         Schema schema = edge.getSchema();
         return encode(schema, edge.getVersion(), names, values);
+    }
+
+    private byte[] encodeRank(long rank) {
+        long newRank = rank ^ (1L << 63);
+        ByteBuffer rankBuf = ByteBuffer.allocate(Long.BYTES);
+        rankBuf.order(ByteOrder.BIG_ENDIAN);
+        rankBuf.putLong(newRank);
+        return rankBuf.array();
+    }
+
+    private int getPartId(String spaceName, String vertexId) {
+        long hash = MurmurHash2.hash64(vertexId.getBytes(), vertexId.length(), SEEK);
+        long hashValue = Long.parseUnsignedLong(Long.toUnsignedString(hash));
+        return (int) (Math.floorMod(hashValue, getPartSize(spaceName)) + 1);
     }
 
     /**
