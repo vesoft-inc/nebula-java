@@ -54,6 +54,7 @@ public class RowReader {
                     break;
                 case INT:
                 case VID:
+                case TIMESTAMP:
                     defs.add(new Pair(name, Long.class.getName()));
                     break;
                 case FLOAT:
@@ -64,9 +65,6 @@ public class RowReader {
                     break;
                 case STRING:
                     defs.add(new Pair(name, byte[].class.getName()));
-                    break;
-                case TIMESTAMP:
-                    defs.add(new Pair(name, Long.class.getName()));
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid type in schema: " + type);
@@ -98,6 +96,7 @@ public class RowReader {
                         break;
                     case INT:
                     case VID:
+                    case TIMESTAMP:
                         properties[i] = getIntProperty(field, data);
                         break;
                     case FLOAT:
