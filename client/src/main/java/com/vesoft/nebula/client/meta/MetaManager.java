@@ -232,7 +232,7 @@ public class MetaManager implements MetaCache {
     @Override
     public EdgeItem getEdge(String spaceName, String edgeName) throws IllegalArgumentException {
         if (!spacesInfo.containsKey(spaceName)
-                || !spacesInfo.get(spaceName).tagItems.containsKey(edgeName)) {
+                || !spacesInfo.get(spaceName).edgeItems.containsKey(edgeName)) {
             fillMetaInfo();
         }
         try {
