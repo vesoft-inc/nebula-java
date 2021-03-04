@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.encoder;
 
+import com.google.common.primitives.UnsignedLong;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.meta.MetaCache;
 import com.vesoft.nebula.meta.ColumnDef;
@@ -96,6 +97,28 @@ public class NebulaCodecImpl implements NebulaCodec {
         EdgeItem edgeItem = metaCache.getEdge(spaceName, edgeName);
         return genEdgeKeyByDefaultVer(vidLen,partitionId, srcId.getBytes(),
             edgeItem.edge_type, edgeRank, dstId.getBytes());
+    }
+
+    /**
+     * @param spaceName the space name
+     * @param srcId the src id
+     * @param edgeName the edge name
+     * @param edgeRank the ranking
+     * @param dstId the dst id
+     * @return
+     */
+    @Override
+    public byte[] inboundEdgeKey(String spaceName,
+                          String srcId,
+                          String edgeName,
+                          long edgeRank,
+                          String dstId)
+        throws RuntimeException {
+        int vidLen = getSpaceVidLen(spaceName);
+        int partitionId = getPartId(spaceName, srcId);
+        EdgeItem edgeItem = metaCache.getEdge(spaceName, edgeName);
+        return genEdgeKeyByDefaultVer(vidLen,partitionId, srcId.getBytes(),
+            -edgeItem.edge_type, edgeRank, dstId.getBytes());
     }
 
     /**
@@ -258,8 +281,9 @@ public class NebulaCodecImpl implements NebulaCodec {
 
     private int getPartId(String spaceName, String vertexId) {
         long hash = MurmurHash2.hash64(vertexId.getBytes(), vertexId.length(), SEEK);
-        long hashValue = Long.parseUnsignedLong(Long.toUnsignedString(hash));
-        return (int) (Math.floorMod(hashValue, getPartSize(spaceName)) + 1);
+        UnsignedLong hashValue = UnsignedLong.fromLongBits(hash);
+        UnsignedLong partSize = UnsignedLong.fromLongBits(getPartSize(spaceName));
+        return hashValue.mod(partSize).intValue() + 1;
     }
 
     /**
