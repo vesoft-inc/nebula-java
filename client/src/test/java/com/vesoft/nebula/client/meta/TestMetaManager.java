@@ -66,7 +66,7 @@ public class TestMetaManager extends TestCase {
         // get edge type
         int edgeType = metaManager.getEdgeType("testMeta", "friend");
         assert (edgeType > 0);
-        // get tag item
+        // get edge item
         EdgeItem edge = metaManager.getEdge("testMeta", "friend");
         Assert.assertArrayEquals("friend".getBytes(), edge.getEdge_name());
         Assert.assertEquals(0, edge.getVersion());
@@ -87,13 +87,13 @@ public class TestMetaManager extends TestCase {
         // test get leader
         HostAddr hostAddr = metaManager.getLeader("testMeta", 1);
         Assert.assertNotNull(hostAddr);
-        Assert.assertEquals(hostAddr.port, 9779);
+        Assert.assertEquals(9779, hostAddr.port);
 
         // test update leader
         HostAddr newHostAddr = new HostAddr("127.0.0.1", 4400);
         metaManager.updateLeader("testMeta", 1, newHostAddr);
         hostAddr = metaManager.getLeader("testMeta", 1);
         Assert.assertNotNull(hostAddr);
-        Assert.assertEquals(hostAddr.port, 4400);
+        Assert.assertEquals(4400, hostAddr.port);
     }
 }

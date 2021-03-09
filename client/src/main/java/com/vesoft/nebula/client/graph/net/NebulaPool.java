@@ -156,12 +156,6 @@ public class NebulaPool {
         return objectPool.getNumWaiters();
     }
 
-    public void updateServerStatus() {
-        if (objectPool.getFactory() instanceof ConnObjectPool) {
-            ((ConnObjectPool) objectPool.getFactory()).updateServerStatus();
-        }
-    }
-
     private void printPoolStatus() {
         String errorStr = new String();
         for (String keyStr : objectPool.listAllObjects().keySet()) {

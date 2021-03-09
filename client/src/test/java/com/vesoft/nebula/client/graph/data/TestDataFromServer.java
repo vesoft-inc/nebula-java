@@ -19,6 +19,7 @@ import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
@@ -164,7 +165,7 @@ public class TestDataFromServer {
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
                     properties.get("hobby").asNull().getNullType());
 
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }
@@ -185,7 +186,7 @@ public class TestDataFromServer {
             }
             Assert.assertEquals(names.stream().sorted().collect(Collectors.toList()),
                     listVal.stream().sorted().collect(Collectors.toList()));
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }
@@ -211,7 +212,7 @@ public class TestDataFromServer {
             Assert.assertEquals(result.toString(),
                 "ColumnName: [{\"name\",\"name\",\"age\",\"birthday\"}], "
                 + "Rows: [[\"birthday\", \"name\", \"age\"]]");
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }
@@ -236,7 +237,7 @@ public class TestDataFromServer {
             assert mapVals.containsKey("birthday");
             assert mapVals.get("birthday").isString();
             Assert.assertEquals("2010-10-10", mapVals.get("birthday").asString());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }
@@ -262,7 +263,7 @@ public class TestDataFromServer {
                     node.keys("student").stream().sorted().collect(Collectors.toList()));
             Assert.assertEquals(14, node.properties("person").keySet().size());
             Assert.assertEquals(1, node.properties("student").keySet().size());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }
@@ -299,7 +300,7 @@ public class TestDataFromServer {
             Assert.assertEquals(
                     "(\"Bob\")-[:friend@100{start_year: 2018, end_year: 2020}]->(\"Lily\")",
                     result2.rowValues(0).get(0).asRelationship().toString());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }
@@ -328,7 +329,7 @@ public class TestDataFromServer {
             Assert.assertEquals("Bob", path.getStartNode().getId().asString());
             Assert.assertEquals("Jerry", path.getEndNode().getId().asString());
             Assert.assertEquals(2, path.length());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;
         }

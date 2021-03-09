@@ -81,7 +81,11 @@ public class GraphClientExample {
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(100);
+<<<<<<< HEAD
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
+=======
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9699),
+>>>>>>> modify the port
                     new HostAddress("127.0.0.1", 9670));
             pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", false);
