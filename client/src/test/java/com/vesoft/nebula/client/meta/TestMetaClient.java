@@ -98,7 +98,6 @@ public class TestMetaClient extends TestCase {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
-        System.out.println("metaClient.listHosts(): " + metaClient.listHosts());
         assert (metaClient.listHosts().size() == 3);
     }
 }
