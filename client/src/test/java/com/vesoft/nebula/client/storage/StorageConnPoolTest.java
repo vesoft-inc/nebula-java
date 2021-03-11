@@ -32,7 +32,7 @@ public class StorageConnPoolTest extends TestCase {
     public void testPoolInit() {
         // invalidate host
         try {
-            List<HostAddress> address = Arrays.asList(new HostAddress("hostname", 45500));
+            List<HostAddress> address = Arrays.asList(new HostAddress("hostname", 9559));
             StoragePoolConfig config = new StoragePoolConfig();
             config.setMaxTotal(20);
             config.setMaxTotalPerKey(8);
@@ -44,13 +44,13 @@ public class StorageConnPoolTest extends TestCase {
         // normal
         try {
             List<HostAddress> address = Arrays.asList(
-                    new HostAddress("127.0.0.1", 45500),
-                    new HostAddress("127.0.0.1", 45501),
-                    new HostAddress("127.0.0.1", 45502)
+                    new HostAddress("127.0.0.1", 9559),
+                    new HostAddress("127.0.0.1", 9560),
+                    new HostAddress("127.0.0.1", 9561)
             );
             StoragePoolConfig config = new StoragePoolConfig();
             pool = new StorageConnPool(config);
-            assertEquals(pool.getNumActive(new HostAddress("127.0.0.1", 45500)), 0);
+            assertEquals(pool.getNumActive(new HostAddress("127.0.0.1", 9559)), 0);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -61,7 +61,7 @@ public class StorageConnPoolTest extends TestCase {
     public void testGetConnection() {
         try {
             List<HostAddress> address = Arrays.asList(new HostAddress("127.0.0.1",
-                    45500));
+                    9559));
             StoragePoolConfig config = new StoragePoolConfig();
             pool = new StorageConnPool(config);
             pool.getStorageConnection(address.get(0));

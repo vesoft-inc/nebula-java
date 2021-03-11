@@ -45,7 +45,7 @@ public class TestDataFromServer {
     public void setUp() throws Exception {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(1);
-        Assert.assertTrue(pool.init(Arrays.asList(new HostAddress("127.0.0.1", 3701)),
+        Assert.assertTrue(pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9671)),
                 nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
         ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data; "

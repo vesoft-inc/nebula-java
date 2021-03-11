@@ -125,7 +125,7 @@ public class TestConnectionPool {
             nebulaPoolConfig.setMinConnSize(2);
             nebulaPoolConfig.setMaxConnSize(4);
             List<HostAddress> addresses = Collections.singletonList(
-                    new HostAddress("127.0.0.1", 3701));
+                    new HostAddress("127.0.0.1", 9671));
             NebulaPool pool = new NebulaPool();
             assert pool.init(addresses, nebulaPoolConfig);
             int i = 0;
@@ -176,7 +176,7 @@ public class TestConnectionPool {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(1);
             List<HostAddress> addresses = Collections.singletonList(
-                    new HostAddress("127.0.0.1", 3701));
+                    new HostAddress("127.0.0.1", 9671));
             NebulaPool pool = new NebulaPool();
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             pool.close();

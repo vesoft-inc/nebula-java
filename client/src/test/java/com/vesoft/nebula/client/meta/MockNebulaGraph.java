@@ -28,8 +28,8 @@ public class MockNebulaGraph {
 
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
-        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 3699),
-                new HostAddress("127.0.0.1", 3700));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
+                new HostAddress("127.0.0.1", 9670));
         NebulaPool pool = new NebulaPool();
         Session session = null;
         try {
