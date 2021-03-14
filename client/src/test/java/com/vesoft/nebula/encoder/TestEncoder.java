@@ -31,7 +31,7 @@ public class TestEncoder {
     private final MetaCacheImplTest cacheImplTest = new MetaCacheImplTest();
     private final NebulaCodecImpl codec = new NebulaCodecImpl();
 
-    final String expectResult = "090cc001081000200000004000000000000000db0f494069"
+    final String allTypeValueExpectResult = "090cc001081000200000004000000000000000db0f494069"
         + "57148b0abf05405d0000000c0000004e6562756c61204772617068bb334e5e000000"
         + "00e40702140a1e2d00000000e40702140a1e2d00000000000000000000000000000000"
         + "48656c6c6f20776f726c6421";
@@ -225,7 +225,8 @@ public class TestEncoder {
             // File file = new File("encode_java.txt");
             // FileOutputStream fileOutputStream = new FileOutputStream(file);
             // fileOutputStream.write(encodeStr);
-            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+            Assert.assertArrayEquals(allTypeValueExpectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -237,7 +238,8 @@ public class TestEncoder {
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
-            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -271,7 +273,9 @@ public class TestEncoder {
         try {
             byte[] encodeStr = codec.encodeEdge(edgeItem1, getCols(), getValues());
             String hexStr = Hex.encodeHexString(encodeStr);
-            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+            Assert.assertArrayEquals(
+                allTypeValueExpectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -282,7 +286,8 @@ public class TestEncoder {
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
-            Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
