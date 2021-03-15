@@ -23,7 +23,7 @@ public class TestMetaManager extends TestCase {
     public void setUp() throws Exception {
         MockNebulaGraph.initGraph();
         metaManager = MetaManager.getMetaManager(
-            Collections.singletonList(new HostAddress("127.0.0.1", 45500)));
+            Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
     }
 
     public void tearDown() {
@@ -87,7 +87,7 @@ public class TestMetaManager extends TestCase {
         // test get leader
         HostAddr hostAddr = metaManager.getLeader("testMeta", 1);
         Assert.assertNotNull(hostAddr);
-        Assert.assertEquals(hostAddr.port, 44500);
+        Assert.assertEquals(hostAddr.port, 9779);
 
         // test update leader
         HostAddr newHostAddr = new HostAddr("127.0.0.1", 4400);
