@@ -21,7 +21,7 @@ public class TestMetaClient extends TestCase {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestMetaClient.class);
 
     private final String address = "127.0.0.1";
-    private final int port = 45500;
+    private final int port = 9559;
 
     private MetaClient metaClient;
 

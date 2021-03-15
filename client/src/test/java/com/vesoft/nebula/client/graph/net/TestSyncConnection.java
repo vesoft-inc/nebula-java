@@ -18,7 +18,7 @@ public class TestSyncConnection {
         try {
             // Test open
             SyncConnection connection = new SyncConnection();
-            connection.open(new HostAddress("127.0.0.1", 3701), 1000);
+            connection.open(new HostAddress("127.0.0.1", 9671), 1000);
 
             // Test authenticate
             long sessionId = connection.authenticate("root", "nebula");
