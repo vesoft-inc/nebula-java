@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph;
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.graph.ColumnValue;
 import com.vesoft.nebula.graph.DateTime;
+import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.RowValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,8 @@ import java.util.List;
 public class ResultSet {
 
     private List<String> columns;
-    private List<RowValue> rows;
+    private ExecutionResponse response;
     private List<Result> results;
-
-    private int resultCode;
-    private String errorMsg;
-    private String warnMsg;
 
     public static class Result {
         private final RowValue row;
@@ -89,74 +86,120 @@ public class ResultSet {
         }
     }
 
-    /**
-     * Constructor
-     */
-    public ResultSet() {
-        this(Lists.newArrayList(), Lists.newArrayList(), 0, null, null);
-    }
-
-    /**
-     * @param columns schema info
-     * @param rows    field values
-     */
-    public ResultSet(List<byte[]> columns, List<RowValue> rows, int resultCode, String errorMsg,
-                     String warnMsg) {
-        this.resultCode = resultCode;
-        this.errorMsg = errorMsg;
-        this.warnMsg = warnMsg;
-        if (columns == null) {
+    public ResultSet(ExecutionResponse resp) {
+        response = resp;
+        if (response == null) {
             columns = Lists.newArrayList();
+            results = Lists.newArrayList();
+            return;
         }
-        this.columns = Lists.newArrayListWithCapacity(columns.size());
-        for (byte[] column : columns) {
-            this.columns.add(new String(column).intern());
-        }
-        this.rows = rows;
-        if (rows != null && rows.size() > 0) {
-            this.results = new ArrayList<>(rows.size());
-            for (RowValue row : this.rows) {
-                this.results.add(new Result(this.columns, row));
+
+        if (resp.column_names != null) {
+            columns = Lists.newArrayListWithCapacity(resp.column_names.size());
+            for (byte[] column : resp.column_names) {
+                columns.add(new String(column).intern());
             }
         } else {
-            this.rows = new ArrayList<>();
+            columns = Lists.newArrayList();
+        }
+
+        if (response.rows != null && response.rows.size() > 0) {
+            results = new ArrayList<>(response.rows.size());
+            for (RowValue row : response.rows) {
+                results.add(new Result(columns, row));
+            }
+        } else {
+            results = Lists.newArrayList();
         }
     }
 
     /**
      * Get Column Names
-     *
      * @return
      */
     public List<String> getColumns() {
         return this.columns;
     }
 
+    /**
+     * Get Rows
+     * @return
+     */
     public List<RowValue> getRows() {
-        return this.rows;
+        if (response == null || response.rows == null) {
+            return Lists.newArrayList();
+        }
+        return response.getRows();
     }
 
+    /**
+     * Get Results from rows
+     * @return
+     */
     public List<Result> getResults() {
         return this.results;
     }
 
+    /**
+     * Get Result code
+     * @return
+     */
     public int getResultCode() {
-        return resultCode;
+        if (response == null) {
+            return 0;
+        }
+        return response.getError_code();
     }
 
+    /**
+     * Get Error message
+     * @return String
+     */
     public String getErrorMsg() {
-        return errorMsg;
+        if (response == null) {
+            return null;
+        }
+        return response.getError_msg();
     }
 
+    /**
+     * Get Warn message
+     * @return String
+     */
     public String getWarnMsg() {
-        return warnMsg;
+        if (response == null) {
+            return null;
+        }
+        return response.getWarning_msg();
+    }
+
+    /**
+     * Get Latency
+     * @return int, unit is us
+     */
+    public int getLatency() {
+        if (response == null) {
+            return 0;
+        }
+        return response.getLatency_in_us();
+    }
+
+    /**
+     * Get current spaceName
+     * @return String
+     */
+    public String getSpaceName() {
+        if (response == null) {
+            return null;
+        }
+        return response.getSpace_name();
     }
 
     @Override
     public String toString() {
         return "ResultSet{"
                 + "columns=" + this.columns
-                + ", rows=" + this.rows
+                + ", rows=" + this.response.getRows()
                 + '}';
     }
 }
