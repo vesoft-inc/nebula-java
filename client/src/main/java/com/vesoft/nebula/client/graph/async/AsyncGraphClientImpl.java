@@ -163,8 +163,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                     ExecutionResponse resp = (ExecutionResponse) callback.getResult().get();
                     int code = resp.getError_code();
                     if (code == ErrorCode.SUCCEEDED) {
-                        ResultSet rs = new ResultSet(resp.getColumn_names(), resp.getRows(), code,
-                                resp.getError_msg(), resp.getWarning_msg());
+                        ResultSet rs = new ResultSet(resp);
                         return Optional.of(rs);
                     } else {
                         String errorMsg = resp.getError_msg();
@@ -175,8 +174,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                         if (warnMsg != null && !warnMsg.isEmpty()) {
                             LOGGER.warn("Execute warn: " + resp.getWarning_msg());
                         }
-                        ResultSet rs = new ResultSet(Lists.newArrayList(), Lists.newArrayList(),
-                                code, resp.getError_msg(), resp.getWarning_msg());
+                        ResultSet rs = new ResultSet(null);
                         return Optional.of(rs);
                     }
                 } else {
