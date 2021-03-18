@@ -174,7 +174,7 @@ public class AsyncGraphClientImpl extends AsyncGraphClient {
                         if (warnMsg != null && !warnMsg.isEmpty()) {
                             LOGGER.warn("Execute warn: " + resp.getWarning_msg());
                         }
-                        ResultSet rs = new ResultSet(null);
+                        ResultSet rs = new ResultSet(resp);
                         return Optional.of(rs);
                     }
                 } else {

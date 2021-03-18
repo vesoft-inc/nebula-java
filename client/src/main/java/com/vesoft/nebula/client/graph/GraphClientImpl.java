@@ -139,12 +139,12 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
             String errorMsg = executionResponse.getError_msg();
             String warnMsg = executionResponse.getWarning_msg();
             if (errorMsg != null || !errorMsg.isEmpty()) {
-                LOGGER.error("Execute error: " + executionResponse.getError_msg());
+                LOGGER.error("Execute error: " + errorMsg);
             }
             if (warnMsg != null && !warnMsg.isEmpty()) {
-                LOGGER.warn("Execute warn: " + executionResponse.getWarning_msg());
+                LOGGER.warn("Execute warn: " + warnMsg);
             }
-            return new ResultSet(null);
+            return new ResultSet(executionResponse);
         }
     }
 

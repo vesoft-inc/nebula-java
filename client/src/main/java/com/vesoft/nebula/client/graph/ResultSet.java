@@ -21,7 +21,6 @@ public class ResultSet {
 
     private List<String> columns;
     private ExecutionResponse response;
-    private List<RowValue> rows;
     private List<Result> results;
 
     public static class Result {
@@ -87,22 +86,30 @@ public class ResultSet {
         }
     }
 
-    /**
-     * Constructor
-     */
-    public ResultSet() {
-        this(null);
-    }
-
     public ResultSet(ExecutionResponse resp) {
         response = resp;
-        if (resp != null && resp.column_names != null) {
+        if (response == null) {
+            columns = Lists.newArrayList();
+            results = Lists.newArrayList();
+            return;
+        }
+
+        if (resp.column_names != null) {
             columns = Lists.newArrayListWithCapacity(resp.column_names.size());
             for (byte[] column : resp.column_names) {
                 columns.add(new String(column).intern());
             }
         } else {
             columns = Lists.newArrayList();
+        }
+
+        if (response.rows != null && response.rows.size() > 0) {
+            results = new ArrayList<>(response.rows.size());
+            for (RowValue row : response.rows) {
+                results.add(new Result(columns, row));
+            }
+        } else {
+            results = Lists.newArrayList();
         }
     }
 
@@ -114,17 +121,29 @@ public class ResultSet {
         return this.columns;
     }
 
+    /**
+     * Get Rows
+     * @return
+     */
     public List<RowValue> getRows() {
-        if (response == null) {
+        if (response == null || response.rows == null) {
             return Lists.newArrayList();
         }
         return response.getRows();
     }
 
+    /**
+     * Get Results from rows
+     * @return
+     */
     public List<Result> getResults() {
         return this.results;
     }
 
+    /**
+     * Get Result code
+     * @return
+     */
     public int getResultCode() {
         if (response == null) {
             return 0;
@@ -132,6 +151,10 @@ public class ResultSet {
         return response.getError_code();
     }
 
+    /**
+     * Get Error message
+     * @return String
+     */
     public String getErrorMsg() {
         if (response == null) {
             return null;
@@ -139,6 +162,10 @@ public class ResultSet {
         return response.getError_msg();
     }
 
+    /**
+     * Get Warn message
+     * @return String
+     */
     public String getWarnMsg() {
         if (response == null) {
             return null;
@@ -147,7 +174,8 @@ public class ResultSet {
     }
 
     /**
-     * @return the latency, unit is us
+     * Get Latency
+     * @return int, unit is us
      */
     public int getLatency() {
         if (response == null) {
@@ -156,6 +184,10 @@ public class ResultSet {
         return response.getLatency_in_us();
     }
 
+    /**
+     * Get current spaceName
+     * @return String
+     */
     public String getSpaceName() {
         if (response == null) {
             return null;
@@ -167,7 +199,7 @@ public class ResultSet {
     public String toString() {
         return "ResultSet{"
                 + "columns=" + this.columns
-                + ", rows=" + this.rows
+                + ", rows=" + this.response.getRows()
                 + '}';
     }
 }
