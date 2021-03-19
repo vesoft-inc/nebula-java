@@ -142,7 +142,7 @@ public class TestData {
         try {
             Node node = new Node(getVertex(new String("Tom")));
             assert Objects.equals(node.getId().asString(), "Tom");
-            assert node.hasLabel("tag1");
+            assert node.hasTagName("tag1");
             List<String> names = Arrays.asList("prop0", "prop1", "prop2", "prop3", "prop4");
             assert Objects.equals(
                     node.keys("tag0").stream().sorted().collect(Collectors.toList()),

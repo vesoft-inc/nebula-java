@@ -46,7 +46,7 @@ public class Node {
      * get all tag name from the node
      * @return the list of tag name
      */
-    public List<String> labels() {
+    public List<String> tagNames() {
         return tagNames;
     }
 
@@ -55,7 +55,7 @@ public class Node {
      * @param tagName the tag name
      * @return boolean
      */
-    public boolean hasLabel(String tagName) {
+    public boolean hasTagName(String tagName) {
         return tagNames.contains(tagName);
     }
 
@@ -138,7 +138,7 @@ public class Node {
         try {
             List<String> tagsStr = new ArrayList<>();
             List<String> propStrs = new ArrayList<>();
-            for (String name : labels()) {
+            for (String name : tagNames()) {
                 Map<String, ValueWrapper> props = properties(name);
                 for (String key : props.keySet()) {
                     propStrs.add(key + ": " + props.get(key).toString());
