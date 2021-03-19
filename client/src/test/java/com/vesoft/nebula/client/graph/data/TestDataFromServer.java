@@ -137,7 +137,7 @@ public class TestDataFromServer {
             Assert.assertTrue(result.rowValues(0).get(0).isVertex());
             Node node = result.rowValues(0).get(0).asNode();
             Assert.assertEquals("Bob", node.getId().asString());
-            Assert.assertEquals(Arrays.asList("person"), node.labels());
+            Assert.assertEquals(Arrays.asList("person"), node.tagNames());
             HashMap<String, ValueWrapper> properties = node.properties("person");
             Assert.assertEquals("Bob", properties.get("name").asString());
             Assert.assertEquals(10, properties.get("age").asLong());
@@ -252,11 +252,11 @@ public class TestDataFromServer {
             Assert.assertTrue(result.rowValues(0).get(0).isVertex());
             Node node = result.rowValues(0).get(0).asNode();
             Assert.assertEquals("Bob", node.getId().asString());
-            Assert.assertTrue(node.hasLabel("person"));
-            Assert.assertTrue(node.hasLabel("student"));
+            Assert.assertTrue(node.hasTagName("person"));
+            Assert.assertTrue(node.hasTagName("student"));
             Assert.assertEquals(Arrays.asList("person", "student")
                             .stream().sorted().collect(Collectors.toList()),
-                    node.labels().stream().sorted().collect(Collectors.toList()));
+                    node.tagNames().stream().sorted().collect(Collectors.toList()));
             Assert.assertEquals(
                     Arrays.asList("name").stream().sorted().collect(Collectors.toList()),
                     node.keys("student").stream().sorted().collect(Collectors.toList()));
