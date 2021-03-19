@@ -343,6 +343,7 @@ public class TestData {
             assert record.get(14).isPath();
             assert Objects.equals(record.get(14).asPath(),
                 new PathWrapper(getPath("Tom", 3)));
+            assert resultSet.toString().length() > 100;
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);

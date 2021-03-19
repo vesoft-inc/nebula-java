@@ -298,6 +298,7 @@ public class ResultSet {
                 valueStrs.add(value.toString());
             }
             rowStrs.add(String.join(",", valueStrs));
+            i++;
         }
         return String.format("ColumnName: %s, Rows: %s",
             columnNames.toString(), rowStrs.toString());

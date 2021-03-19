@@ -207,6 +207,10 @@ public class TestDataFromServer {
 
             Assert.assertEquals(names.stream().sorted().collect(Collectors.toList()),
                     setVal.stream().sorted().collect(Collectors.toList()));
+
+            Assert.assertEquals(result.toString(),
+                "ColumnName: [{\"name\",\"name\",\"age\",\"birthday\"}], "
+                + "Rows: [[\"birthday\", \"name\", \"age\"]]");
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
             assert false;
