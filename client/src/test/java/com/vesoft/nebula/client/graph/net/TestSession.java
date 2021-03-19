@@ -26,9 +26,9 @@ public class TestSession {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(6);
             List<HostAddress> addresses = Arrays.asList(
-                    new HostAddress("127.0.0.1", 3699),
-                    new HostAddress("127.0.0.1", 3700),
-                    new HostAddress("127.0.0.1", 3701));
+                    new HostAddress("127.0.0.1", 9669),
+                    new HostAddress("127.0.0.1", 9670),
+                    new HostAddress("127.0.0.1", 9671));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             Session session = pool.getSession("root", "nebula", true);
 

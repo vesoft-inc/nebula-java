@@ -29,7 +29,7 @@ public class StorageClientTest {
     @Before
     public void before() {
         MockStorageData.initGraph();
-        List<HostAddress> address = Arrays.asList(new HostAddress(ip, 45500));
+        List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {

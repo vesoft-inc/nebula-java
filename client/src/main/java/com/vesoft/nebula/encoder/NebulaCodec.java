@@ -6,26 +6,36 @@
 
 package com.vesoft.nebula.encoder;
 
+import com.vesoft.nebula.meta.EdgeItem;
+import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
 
 public interface NebulaCodec {
-    byte[] vertexKey(String spaceName,
-                     String vertexId,
-                     String tagName);
+    byte[] vertexKey(int vidLen,
+                     int partitionId,
+                     byte[] vertexId,
+                     int tagId);
 
-    byte[] edgeKey(String spaceName,
-                   String srcId,
-                   String edgeName,
+    byte[] edgeKey(int vidLen,
+                   int partitionId,
+                   byte[] srcId,
+                   int edgeType,
                    long edgeRank,
-                   String dstId);
+                   byte[] dstId,
+                   byte edgeVerHolder);
 
-    byte[] encodeTag(String spaceName,
-                     String tagName,
+    byte[] edgeKeyByDefaultVer(int vidLen,
+                               int partitionId,
+                               byte[] srcId,
+                               int edgeType,
+                               long edgeRank,
+                               byte[] dstId);
+
+    byte[] encodeTag(TagItem tag,
                      List<String> names,
                      List<Object> values);
 
-    byte[] encodeEdge(String spaceName,
-                      String edgeName,
+    byte[] encodeEdge(EdgeItem edge,
                       List<String> names,
                       List<Object> values);
 }
