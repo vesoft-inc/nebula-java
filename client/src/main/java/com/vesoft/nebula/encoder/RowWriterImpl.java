@@ -762,7 +762,7 @@ public class RowWriterImpl implements RowWriter {
     public ByteBuffer processOutOfSpace() {
         ByteBuffer temp;
         temp = ByteBuffer.allocate((int) (headerLen
-            + numNullBytes + schema.size() + approxStrLen));
+            + numNullBytes + schema.size() + approxStrLen + Long.BYTES));
         temp.order(this.byteOrder);
 
         // Reserve enough space to avoid memory re-allocation
@@ -811,5 +811,13 @@ public class RowWriterImpl implements RowWriter {
         if (outOfSpaceStr) {
             buf = processOutOfSpace();
         }
+        // Save the timestamp to the tail of buf
+        buf.putLong(getTimestamp());
+    }
+
+    private long getTimestamp() {
+        long curTime = System.currentTimeMillis() * 1000;
+        long nanoTime = System.nanoTime();
+        return curTime + (nanoTime - nanoTime / 1000000 * 1000000) / 1000;
     }
 }

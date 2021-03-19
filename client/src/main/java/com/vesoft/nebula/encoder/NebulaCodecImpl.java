@@ -40,62 +40,10 @@ public class NebulaCodecImpl implements NebulaCodec {
     private static final int VERTEX_KEY_TYPE = 0x00000001;
     private static final int EDGE_KEY_TYPE = 0x00000002;
     private static final int SEEK = 0xc70f6907;
-    private final MetaCache metaCache;
     private final ByteOrder byteOrder;
 
-    public NebulaCodecImpl(MetaCache metaCache) {
+    public NebulaCodecImpl() {
         this.byteOrder = ByteOrder.nativeOrder();
-        this.metaCache = metaCache;
-    }
-
-    private int getSpaceVidLen(String spaceName) throws RuntimeException {
-        SpaceItem spaceItem = metaCache.getSpace(spaceName);
-        if (spaceItem == null) {
-            throw new RuntimeException("SpaceName: " + spaceName + "is not existed");
-        }
-        if (spaceItem.properties.vid_type.type != PropertyType.FIXED_STRING) {
-            throw new RuntimeException("Only supported fixed string vid type.");
-        }
-        return spaceItem.properties.vid_type.type_length;
-    }
-
-    private int getPartSize(String spaceName) throws RuntimeException {
-        Map<Integer, List<HostAddr>> partsAlloc = metaCache.getPartsAlloc(spaceName);
-        if (partsAlloc == null) {
-            throw new RuntimeException("SpaceName: " + spaceName + " is not existed");
-        }
-        return partsAlloc.size();
-    }
-
-    @Override
-    public byte[] vertexKey(String spaceName, String vertexId, String tagName)
-        throws RuntimeException {
-        int vidLen = getSpaceVidLen(spaceName);
-        int partitionId = getPartId(spaceName, vertexId);
-        TagItem tagItem = metaCache.getTag(spaceName, tagName);
-        return genVertexKey(vidLen, partitionId, vertexId.getBytes(), tagItem.tag_id);
-    }
-
-    /**
-     * @param spaceName the space name
-     * @param srcId the src id
-     * @param edgeName the edge name
-     * @param edgeRank the ranking
-     * @param dstId the dst id
-     * @return
-     */
-    @Override
-    public byte[] edgeKey(String spaceName,
-                          String srcId,
-                          String edgeName,
-                          long edgeRank,
-                          String dstId)
-        throws RuntimeException {
-        int vidLen = getSpaceVidLen(spaceName);
-        int partitionId = getPartId(spaceName, srcId);
-        EdgeItem edgeItem = metaCache.getEdge(spaceName, edgeName);
-        return genEdgeKeyByDefaultVer(vidLen,partitionId, srcId.getBytes(),
-            edgeItem.edge_type, edgeRank, dstId.getBytes());
     }
 
     /**
@@ -105,10 +53,11 @@ public class NebulaCodecImpl implements NebulaCodec {
      * @param tagId the tag id
      * @return
      */
-    public byte[] genVertexKey(int vidLen,
-                               int partitionId,
-                               byte[] vertexId,
-                               int tagId) {
+    @Override
+    public byte[] vertexKey(int vidLen,
+                            int partitionId,
+                            byte[] vertexId,
+                            int tagId) {
         if (vertexId.length > vidLen) {
             throw new RuntimeException(
                 "The length of vid size is out of the range, expected vidLen less then " + vidLen);
@@ -136,13 +85,14 @@ public class NebulaCodecImpl implements NebulaCodec {
      * @param dstId the dstId
      * @return byte[]
      */
-    public byte[] genEdgeKeyByDefaultVer(int vidLen,
-                                         int partitionId,
-                                         byte[] srcId,
-                                         int edgeType,
-                                         long edgeRank,
-                                         byte[] dstId) {
-        return genEdgeKey(vidLen, partitionId, srcId, edgeType, edgeRank, dstId, (byte)1);
+    @Override
+    public byte[] edgeKeyByDefaultVer(int vidLen,
+                                      int partitionId,
+                                      byte[] srcId,
+                                      int edgeType,
+                                      long edgeRank,
+                                      byte[] dstId) {
+        return edgeKey(vidLen, partitionId, srcId, edgeType, edgeRank, dstId, (byte)1);
     }
 
     /**
@@ -155,13 +105,14 @@ public class NebulaCodecImpl implements NebulaCodec {
      * @param edgeVerHolder the edgeVerHolder
      * @return byte[]
      */
-    public byte[] genEdgeKey(int vidLen,
-                             int partitionId,
-                             byte[] srcId,
-                             int edgeType,
-                             long edgeRank,
-                             byte[] dstId,
-                             byte edgeVerHolder) {
+    @Override
+    public byte[] edgeKey(int vidLen,
+                          int partitionId,
+                          byte[] srcId,
+                          int edgeType,
+                          long edgeRank,
+                          byte[] dstId,
+                          byte edgeVerHolder) {
         if (srcId.length > vidLen || dstId.length > vidLen) {
             throw new RuntimeException(
                 "The length of vid size is out of the range, expected vidLen less then " + vidLen);
@@ -188,78 +139,40 @@ public class NebulaCodecImpl implements NebulaCodec {
         return buffer.array();
     }
 
-    public SchemaProviderImpl genSchemaProvider(long ver, Schema schema) {
-        SchemaProviderImpl schemaProvider = new SchemaProviderImpl(ver);
-        for (ColumnDef col : schema.getColumns()) {
-            ColumnTypeDef type = col.getType();
-            boolean nullable = col.isSetNullable();
-            boolean hasDefault = col.isSetDefault_value();
-            int len = type.isSetType_length() ? type.getType_length() : 0;
-            schemaProvider.addField(new String(col.getName()),
-                                    type.type,
-                                    len,
-                                    nullable,
-                                    hasDefault ? col.getDefault_value() : null);
-        }
-        return schemaProvider;
-    }
-
     /**
-     * @param spaceName the space name
-     * @param tagName the tag name
+     * @param tag the TagItem
      * @param names the property names
      * @param values the property values
      * @return the encode byte[]
      * @throws RuntimeException expection
      */
     @Override
-    public byte[] encodeTag(String spaceName,
-                            String tagName,
+    public byte[] encodeTag(TagItem tag,
                             List<String> names,
                             List<Object> values) throws RuntimeException  {
-        TagItem tag = metaCache.getTag(spaceName, tagName);
         if (tag == null) {
-            throw new RuntimeException(
-                String.format("TagItem is null when getting tagName `%s'", tagName));
+            throw new RuntimeException("TagItem is null");
         }
         Schema schema = tag.getSchema();
         return encode(schema, tag.getVersion(), names, values);
     }
 
     /**
-     * @param spaceName the space name
-     * @param edgeName the edge name
+     * @param edge the EdgeItem
      * @param names the property names
      * @param values the property values
      * @return the encode byte[]
      * @throws RuntimeException expection
      */
     @Override
-    public byte[] encodeEdge(String spaceName,
-                             String edgeName,
+    public byte[] encodeEdge(EdgeItem edge,
                              List<String> names,
                              List<Object> values) throws RuntimeException  {
-        EdgeItem edge = metaCache.getEdge(spaceName, edgeName);
         if (edge == null) {
-            throw new RuntimeException(
-                String.format("EdgeItem is null when getting edgeName `%s'", edgeName));
+            throw new RuntimeException("EdgeItem is null");
         }
         Schema schema = edge.getSchema();
         return encode(schema, edge.getVersion(), names, values);
-    }
-
-    private byte[] encodeRank(long rank) {
-        long newRank = rank ^ (1L << 63);
-        ByteBuffer rankBuf = ByteBuffer.allocate(Long.BYTES);
-        rankBuf.order(ByteOrder.BIG_ENDIAN);
-        rankBuf.putLong(newRank);
-        return rankBuf.array();
-    }
-
-    private int getPartId(String spaceName, String vertexId) {
-        long hash = MurmurHash2.hash64(vertexId.getBytes(), vertexId.length(), SEEK);
-        long hashValue = Long.parseUnsignedLong(Long.toUnsignedString(hash));
-        return (int) (Math.floorMod(hashValue, getPartSize(spaceName)) + 1);
     }
 
     /**
@@ -286,5 +199,29 @@ public class NebulaCodecImpl implements NebulaCodec {
         }
         writer.finish();
         return writer.encodeStr();
+    }
+
+    private SchemaProviderImpl genSchemaProvider(long ver, Schema schema) {
+        SchemaProviderImpl schemaProvider = new SchemaProviderImpl(ver);
+        for (ColumnDef col : schema.getColumns()) {
+            ColumnTypeDef type = col.getType();
+            boolean nullable = col.isSetNullable();
+            boolean hasDefault = col.isSetDefault_value();
+            int len = type.isSetType_length() ? type.getType_length() : 0;
+            schemaProvider.addField(new String(col.getName()),
+                type.type,
+                len,
+                nullable,
+                hasDefault ? col.getDefault_value() : null);
+        }
+        return schemaProvider;
+    }
+
+    private byte[] encodeRank(long rank) {
+        long newRank = rank ^ (1L << 63);
+        ByteBuffer rankBuf = ByteBuffer.allocate(Long.BYTES);
+        rankBuf.order(ByteOrder.BIG_ENDIAN);
+        rankBuf.putLong(newRank);
+        return rankBuf.array();
     }
 }
