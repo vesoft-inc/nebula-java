@@ -51,11 +51,27 @@ public class Node {
     }
 
     /**
+     * Used to be compatible with older versions of interfaces
+     * @return the list of tag name
+     */
+    public List<String> labels() {
+        return tagNames;
+    }
+
+    /**
      * determine if node contains the given tag
      * @param tagName the tag name
      * @return boolean
      */
     public boolean hasTagName(String tagName) {
+        return tagNames.contains(tagName);
+    }
+
+    /**
+     * Used to be compatible with older versions of interfaces
+     * @return tboolean
+     */
+    public boolean hasLabel(String tagName) {
         return tagNames.contains(tagName);
     }
 
