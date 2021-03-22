@@ -24,6 +24,7 @@ public class StorageClientExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClientExample.class);
 
     public static void main(String[] args) {
+        // input params are the metad's ip and port
         StorageClient client = new StorageClient("127.0.0.1", 9559);
         try {
             client.connect();

@@ -35,15 +35,26 @@ public class StorageClient {
     private final List<HostAddress> addresses;
     private int timeout = 10000; // ms
 
+    /**
+     * @param ip the ip of metad server
+     * @param port the port of meted server
+     */
     public StorageClient(String ip, int port) {
         this(Arrays.asList(new HostAddress(ip, port)));
     }
 
+    /**
+     * @param addresses the address of metad server
+     */
     public StorageClient(List<HostAddress> addresses) {
         this.connection = new GraphStorageConnection();
         this.addresses = addresses;
     }
 
+    /**
+     * @param addresses the address of metad server
+     * @param timeout the timeout of scan vertex or edge
+     */
     public StorageClient(List<HostAddress> addresses, int timeout) {
         this.connection = new GraphStorageConnection();
         this.addresses = addresses;
