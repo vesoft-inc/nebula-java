@@ -31,6 +31,7 @@ public class ErrorCode {
   public static final int E_BAD_PERMISSION = -11;
   public static final int E_SEMANTIC_ERROR = -12;
   public static final int E_TOO_MANY_CONNECTIONS = -13;
+  public static final int E_PARTIAL_SUCCEEDED = -14;
 
   public static final IntRangeSet VALID_VALUES;
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();

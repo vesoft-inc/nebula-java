@@ -23,6 +23,8 @@ public class AdminCmd {
   public static final int REBUILD_EDGE_INDEX = 3;
   public static final int STATS = 4;
   public static final int DATA_BALANCE = 5;
+  public static final int DOWELOAD = 6;
+  public static final int INGEST = 7;
   public static final int UNKNOWN = 99;
 
   public static final IntRangeSet VALID_VALUES;

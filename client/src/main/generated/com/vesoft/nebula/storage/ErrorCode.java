@@ -35,6 +35,7 @@ public class ErrorCode {
   public static final int E_FIELD_UNSET = -22;
   public static final int E_OUT_OF_RANGE = -23;
   public static final int E_ATOMIC_OP_FAILED = -24;
+  public static final int E_DATA_CONFLICT_ERROR = -25;
   public static final int E_EDGE_PROP_NOT_FOUND = -31;
   public static final int E_TAG_PROP_NOT_FOUND = -32;
   public static final int E_IMPROPER_DATA_TYPE = -33;

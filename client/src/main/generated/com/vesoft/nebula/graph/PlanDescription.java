@@ -32,16 +32,21 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
   private static final TField PLAN_NODE_DESCS_FIELD_DESC = new TField("plan_node_descs", TType.LIST, (short)1);
   private static final TField NODE_INDEX_MAP_FIELD_DESC = new TField("node_index_map", TType.MAP, (short)2);
   private static final TField FORMAT_FIELD_DESC = new TField("format", TType.STRING, (short)3);
+  private static final TField OPTIMIZE_TIME_IN_US_FIELD_DESC = new TField("optimize_time_in_us", TType.I32, (short)4);
 
   public List<PlanNodeDescription> plan_node_descs;
   public Map<Long,Long> node_index_map;
   public byte[] format;
+  public int optimize_time_in_us;
   public static final int PLAN_NODE_DESCS = 1;
   public static final int NODE_INDEX_MAP = 2;
   public static final int FORMAT = 3;
+  public static final int OPTIMIZE_TIME_IN_US = 4;
   public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
+  private static final int __OPTIMIZE_TIME_IN_US_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
   static {
@@ -55,6 +60,8 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
             new FieldValueMetaData(TType.I64))));
     tmpMetaDataMap.put(FORMAT, new FieldMetaData("format", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(OPTIMIZE_TIME_IN_US, new FieldMetaData("optimize_time_in_us", TFieldRequirementType.REQUIRED, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -68,18 +75,23 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
   public PlanDescription(
     List<PlanNodeDescription> plan_node_descs,
     Map<Long,Long> node_index_map,
-    byte[] format)
+    byte[] format,
+    int optimize_time_in_us)
   {
     this();
     this.plan_node_descs = plan_node_descs;
     this.node_index_map = node_index_map;
     this.format = format;
+    this.optimize_time_in_us = optimize_time_in_us;
+    setOptimize_time_in_usIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public PlanDescription(PlanDescription other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetPlan_node_descs()) {
       this.plan_node_descs = TBaseHelper.deepCopy(other.plan_node_descs);
     }
@@ -89,6 +101,7 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     if (other.isSetFormat()) {
       this.format = TBaseHelper.deepCopy(other.format);
     }
+    this.optimize_time_in_us = TBaseHelper.deepCopy(other.optimize_time_in_us);
   }
 
   public PlanDescription deepCopy() {
@@ -172,6 +185,29 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
+  public int  getOptimize_time_in_us() {
+    return this.optimize_time_in_us;
+  }
+
+  public PlanDescription setOptimize_time_in_us(int optimize_time_in_us) {
+    this.optimize_time_in_us = optimize_time_in_us;
+    setOptimize_time_in_usIsSet(true);
+    return this;
+  }
+
+  public void unsetOptimize_time_in_us() {
+    __isset_bit_vector.clear(__OPTIMIZE_TIME_IN_US_ISSET_ID);
+  }
+
+  // Returns true if field optimize_time_in_us is set (has been assigned a value) and false otherwise
+  public boolean isSetOptimize_time_in_us() {
+    return __isset_bit_vector.get(__OPTIMIZE_TIME_IN_US_ISSET_ID);
+  }
+
+  public void setOptimize_time_in_usIsSet(boolean value) {
+    __isset_bit_vector.set(__OPTIMIZE_TIME_IN_US_ISSET_ID, value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
@@ -199,6 +235,14 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
+    case OPTIMIZE_TIME_IN_US:
+      if (value == null) {
+        unsetOptimize_time_in_us();
+      } else {
+        setOptimize_time_in_us((Integer)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -215,6 +259,9 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     case FORMAT:
       return getFormat();
 
+    case OPTIMIZE_TIME_IN_US:
+      return new Integer(getOptimize_time_in_us());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -229,6 +276,8 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       return isSetNode_index_map();
     case FORMAT:
       return isSetFormat();
+    case OPTIMIZE_TIME_IN_US:
+      return isSetOptimize_time_in_us();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -276,6 +325,15 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
         return false;
     }
 
+    boolean this_present_optimize_time_in_us = true;
+    boolean that_present_optimize_time_in_us = true;
+    if (this_present_optimize_time_in_us || that_present_optimize_time_in_us) {
+      if (!(this_present_optimize_time_in_us && that_present_optimize_time_in_us))
+        return false;
+      if (!TBaseHelper.equalsNobinary(this.optimize_time_in_us, that.optimize_time_in_us))
+        return false;
+    }
+
     return true;
   }
 
@@ -297,6 +355,11 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     builder.append(present_format);
     if (present_format)
       builder.append(format);
+
+    boolean present_optimize_time_in_us = true;
+    builder.append(present_optimize_time_in_us);
+    if (present_optimize_time_in_us)
+      builder.append(optimize_time_in_us);
 
     return builder.toHashCode();
   }
@@ -334,6 +397,14 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(format, other.format);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetOptimize_time_in_us()).compareTo(other.isSetOptimize_time_in_us());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(optimize_time_in_us, other.optimize_time_in_us);
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -399,6 +470,14 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case OPTIMIZE_TIME_IN_US:
+          if (field.type == TType.I32) {
+            this.optimize_time_in_us = iprot.readI32();
+            setOptimize_time_in_usIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -409,6 +488,9 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
+    if (!isSetOptimize_time_in_us()) {
+      throw new TProtocolException("Required field 'optimize_time_in_us' was not found in serialized data! Struct: " + toString());
+    }
     validate();
   }
 
@@ -444,6 +526,9 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeBinary(this.format);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(OPTIMIZE_TIME_IN_US_FIELD_DESC);
+    oprot.writeI32(this.optimize_time_in_us);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -506,6 +591,13 @@ String space = prettyPrint ? " " : "";
         if (this. getFormat().length > 128) sb.append(" ...");
     }
     first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("optimize_time_in_us");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this. getOptimize_time_in_us(), indent + 1, prettyPrint));
+    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
@@ -522,6 +614,7 @@ String space = prettyPrint ? " " : "";
     if (format == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'format' was not present! Struct: " + toString());
     }
+    // alas, we cannot check 'optimize_time_in_us' because it's a primitive and you chose the non-beans generator.
     // check that fields of type enum have valid values
   }
 
