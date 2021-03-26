@@ -53,6 +53,8 @@ public class MockStorageData {
                 | IOErrorException | AuthFailedException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
+        } finally {
+            pool.close();
         }
     }
 
