@@ -18,13 +18,14 @@ import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class StorageClientTest {
 
     private final String ip = "127.0.0.1";
-    private StorageClient client;
+    private StorageClient client = null;
 
     @Before
     public void before() {
@@ -39,6 +40,12 @@ public class StorageClientTest {
         client = new StorageClient(address);
     }
 
+    @After
+    public void after() {
+        if (client != null) {
+            client.close();
+        }
+    }
 
     @Test
     public void testScanVertexWithNoCol() {
