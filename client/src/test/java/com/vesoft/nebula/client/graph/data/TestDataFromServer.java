@@ -209,9 +209,9 @@ public class TestDataFromServer {
             Assert.assertEquals(names.stream().sorted().collect(Collectors.toList()),
                     setVal.stream().sorted().collect(Collectors.toList()));
 
-            Assert.assertEquals(result.toString(),
+            Assert.assertEquals(
                 "ColumnName: [{\"name\",\"name\",\"age\",\"birthday\"}], "
-                + "Rows: [[\"birthday\", \"name\", \"age\"]]");
+                + "Rows: [[\"birthday\", \"name\", \"age\"]]", result.toString());
         } catch (IOErrorException | UnsupportedEncodingException | NotValidConnectionException e) {
             e.printStackTrace();
             assert false;

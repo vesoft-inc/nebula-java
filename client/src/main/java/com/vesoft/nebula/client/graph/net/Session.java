@@ -52,6 +52,7 @@ public class Session {
      */
     public ResultSet execute(String stmt)
         throws IOErrorException, NotValidConnectionException {
+        log.debug("Execute connect to address: " + safeAddress);
         if (isSafeExecute.get()) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN,
                 "The session is already called safeExecute, "
@@ -90,6 +91,7 @@ public class Session {
      */
     public ResultSet safeExecute(String stmt)
         throws IOErrorException, NotValidConnectionException {
+        log.debug("SafeExecute connect address: " + safeAddress);
         if (isExecute.get()) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN,
                 "The session is already called execute, "
@@ -117,6 +119,7 @@ public class Session {
                             continue;
                         }
                         safeAddress.set(connection.getServerAddress());
+                        log.debug("SafeExecute reconnect to address: " + safeAddress);
                         return new ResultSet(connection.execute(sessionID, ngql));
                     }
                 }

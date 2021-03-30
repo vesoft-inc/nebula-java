@@ -166,8 +166,8 @@ public class NebulaPool {
             errorStr += "{ Key: " + keyStr + ", { Object: " + objStrs + "}, ";
         }
         log.error(errorStr);
-        log.info("objectPool.getMaxTotal() = " + objectPool.getMaxTotal());
-        log.info("objectPool.getCreatedCount() = " + objectPool.getCreatedCount());
-        log.info("objectPool.getNumIdle() = " + objectPool.getNumIdle());
+        log.info("objectPool.getMaxTotal(): " + objectPool.getMaxTotal());
+        log.info("objectPool.getCreatedCount(): " + objectPool.getCreatedCount());
+        log.info("objectPool.getNumIdle(): " + objectPool.getNumIdle());
     }
 }
