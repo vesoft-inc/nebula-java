@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -45,13 +42,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public static final int SCHEMA_ID = 3;
   public static final int SCHEMA_NAME = 4;
   public static final int FIELDS = 5;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __INDEX_ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(INDEX_ID, new FieldMetaData("index_id", TFieldRequirementType.DEFAULT, 
@@ -76,12 +73,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   }
 
   public IndexItem(
-    int index_id,
-    byte[] index_name,
-    SchemaID schema_id,
-    byte[] schema_name,
-    List<ColumnDef> fields)
-  {
+      int index_id,
+      byte[] index_name,
+      SchemaID schema_id,
+      byte[] schema_name,
+      List<ColumnDef> fields) {
     this();
     this.index_id = index_id;
     setIndex_idIsSet(true);
@@ -89,6 +85,61 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     this.schema_id = schema_id;
     this.schema_name = schema_name;
     this.fields = fields;
+  }
+
+  public static class Builder {
+    private int index_id;
+    private byte[] index_name;
+    private SchemaID schema_id;
+    private byte[] schema_name;
+    private List<ColumnDef> fields;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setIndex_id(final int index_id) {
+      this.index_id = index_id;
+      __optional_isset.set(__INDEX_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setIndex_name(final byte[] index_name) {
+      this.index_name = index_name;
+      return this;
+    }
+
+    public Builder setSchema_id(final SchemaID schema_id) {
+      this.schema_id = schema_id;
+      return this;
+    }
+
+    public Builder setSchema_name(final byte[] schema_name) {
+      this.schema_name = schema_name;
+      return this;
+    }
+
+    public Builder setFields(final List<ColumnDef> fields) {
+      this.fields = fields;
+      return this;
+    }
+
+    public IndexItem build() {
+      IndexItem result = new IndexItem();
+      if (__optional_isset.get(__INDEX_ID_ISSET_ID)) {
+        result.setIndex_id(this.index_id);
+      }
+      result.setIndex_name(this.index_name);
+      result.setSchema_id(this.schema_id);
+      result.setSchema_name(this.schema_name);
+      result.setFields(this.fields);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -116,12 +167,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     return new IndexItem(this);
   }
 
-  @Deprecated
-  public IndexItem clone() {
-    return new IndexItem(this);
-  }
-
-  public int  getIndex_id() {
+  public int getIndex_id() {
     return this.index_id;
   }
 
@@ -140,11 +186,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     return __isset_bit_vector.get(__INDEX_ID_ISSET_ID);
   }
 
-  public void setIndex_idIsSet(boolean value) {
-    __isset_bit_vector.set(__INDEX_ID_ISSET_ID, value);
+  public void setIndex_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__INDEX_ID_ISSET_ID, __value);
   }
 
-  public byte[]  getIndex_name() {
+  public byte[] getIndex_name() {
     return this.index_name;
   }
 
@@ -162,13 +208,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     return this.index_name != null;
   }
 
-  public void setIndex_nameIsSet(boolean value) {
-    if (!value) {
+  public void setIndex_nameIsSet(boolean __value) {
+    if (!__value) {
       this.index_name = null;
     }
   }
 
-  public SchemaID  getSchema_id() {
+  public SchemaID getSchema_id() {
     return this.schema_id;
   }
 
@@ -186,13 +232,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     return this.schema_id != null;
   }
 
-  public void setSchema_idIsSet(boolean value) {
-    if (!value) {
+  public void setSchema_idIsSet(boolean __value) {
+    if (!__value) {
       this.schema_id = null;
     }
   }
 
-  public byte[]  getSchema_name() {
+  public byte[] getSchema_name() {
     return this.schema_name;
   }
 
@@ -210,13 +256,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     return this.schema_name != null;
   }
 
-  public void setSchema_nameIsSet(boolean value) {
-    if (!value) {
+  public void setSchema_nameIsSet(boolean __value) {
+    if (!__value) {
       this.schema_name = null;
     }
   }
 
-  public List<ColumnDef>  getFields() {
+  public List<ColumnDef> getFields() {
     return this.fields;
   }
 
@@ -234,52 +280,52 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     return this.fields != null;
   }
 
-  public void setFieldsIsSet(boolean value) {
-    if (!value) {
+  public void setFieldsIsSet(boolean __value) {
+    if (!__value) {
       this.fields = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case INDEX_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetIndex_id();
       } else {
-        setIndex_id((Integer)value);
+        setIndex_id((Integer)__value);
       }
       break;
 
     case INDEX_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetIndex_name();
       } else {
-        setIndex_name((byte[])value);
+        setIndex_name((byte[])__value);
       }
       break;
 
     case SCHEMA_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema_id();
       } else {
-        setSchema_id((SchemaID)value);
+        setSchema_id((SchemaID)__value);
       }
       break;
 
     case SCHEMA_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema_name();
       } else {
-        setSchema_name((byte[])value);
+        setSchema_name((byte[])__value);
       }
       break;
 
     case FIELDS:
-      if (value == null) {
+      if (__value == null) {
         unsetFields();
       } else {
-        setFields((List<ColumnDef>)value);
+        setFields((List<ColumnDef>)__value);
       }
       break;
 
@@ -310,117 +356,32 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case INDEX_ID:
-      return isSetIndex_id();
-    case INDEX_NAME:
-      return isSetIndex_name();
-    case SCHEMA_ID:
-      return isSetSchema_id();
-    case SCHEMA_NAME:
-      return isSetSchema_name();
-    case FIELDS:
-      return isSetFields();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof IndexItem)
-      return this.equals((IndexItem)that);
-    return false;
-  }
-
-  public boolean equals(IndexItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof IndexItem))
+      return false;
+    IndexItem that = (IndexItem)_that;
 
-    boolean this_present_index_id = true;
-    boolean that_present_index_id = true;
-    if (this_present_index_id || that_present_index_id) {
-      if (!(this_present_index_id && that_present_index_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.index_id, that.index_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.index_id, that.index_id)) { return false; }
 
-    boolean this_present_index_name = true && this.isSetIndex_name();
-    boolean that_present_index_name = true && that.isSetIndex_name();
-    if (this_present_index_name || that_present_index_name) {
-      if (!(this_present_index_name && that_present_index_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.index_name, that.index_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetIndex_name(), that.isSetIndex_name(), this.index_name, that.index_name)) { return false; }
 
-    boolean this_present_schema_id = true && this.isSetSchema_id();
-    boolean that_present_schema_id = true && that.isSetSchema_id();
-    if (this_present_schema_id || that_present_schema_id) {
-      if (!(this_present_schema_id && that_present_schema_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.schema_id, that.schema_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema_id(), that.isSetSchema_id(), this.schema_id, that.schema_id)) { return false; }
 
-    boolean this_present_schema_name = true && this.isSetSchema_name();
-    boolean that_present_schema_name = true && that.isSetSchema_name();
-    if (this_present_schema_name || that_present_schema_name) {
-      if (!(this_present_schema_name && that_present_schema_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.schema_name, that.schema_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSchema_name(), that.isSetSchema_name(), this.schema_name, that.schema_name)) { return false; }
 
-    boolean this_present_fields = true && this.isSetFields();
-    boolean that_present_fields = true && that.isSetFields();
-    if (this_present_fields || that_present_fields) {
-      if (!(this_present_fields && that_present_fields))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetFields(), that.isSetFields(), this.fields, that.fields)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_index_id = true;
-    builder.append(present_index_id);
-    if (present_index_id)
-      builder.append(index_id);
-
-    boolean present_index_name = true && (isSetIndex_name());
-    builder.append(present_index_name);
-    if (present_index_name)
-      builder.append(index_name);
-
-    boolean present_schema_id = true && (isSetSchema_id());
-    builder.append(present_schema_id);
-    if (present_schema_id)
-      builder.append(schema_id);
-
-    boolean present_schema_name = true && (isSetSchema_name());
-    builder.append(present_schema_name);
-    if (present_schema_name)
-      builder.append(schema_name);
-
-    boolean present_fields = true && (isSetFields());
-    builder.append(present_fields);
-    if (present_fields)
-      builder.append(fields);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields});
   }
 
   @Override
@@ -440,7 +401,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(index_id, other.index_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIndex_name()).compareTo(other.isSetIndex_name());
@@ -448,7 +409,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(index_name, other.index_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema_id()).compareTo(other.isSetSchema_id());
@@ -456,7 +417,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema_id, other.schema_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema_name()).compareTo(other.isSetSchema_name());
@@ -464,7 +425,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema_name, other.schema_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetFields()).compareTo(other.isSetFields());
@@ -472,55 +433,55 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(fields, other.fields);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case INDEX_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.index_id = iprot.readI32();
             setIndex_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case INDEX_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.index_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA_ID:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.schema_id = new SchemaID();
             this.schema_id.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.schema_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case FIELDS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list4 = iprot.readListBegin();
               this.fields = new ArrayList<ColumnDef>(Math.max(0, _list4.size));
@@ -536,11 +497,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -591,19 +552,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("IndexItem");
     sb.append(space);
     sb.append("(");
@@ -614,22 +570,22 @@ String space = prettyPrint ? " " : "";
     sb.append("index_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getIndex_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getIndex_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("index_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getIndex_name() == null) {
+    if (this.getIndex_name() == null) {
       sb.append("null");
     } else {
-        int __index_name_size = Math.min(this. getIndex_name().length, 128);
+        int __index_name_size = Math.min(this.getIndex_name().length, 128);
         for (int i = 0; i < __index_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getIndex_name()[i]).length() > 1 ? Integer.toHexString(this. getIndex_name()[i]).substring(Integer.toHexString(this. getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getIndex_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getIndex_name()[i]).length() > 1 ? Integer.toHexString(this.getIndex_name()[i]).substring(Integer.toHexString(this.getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getIndex_name()[i]).toUpperCase());
         }
-        if (this. getIndex_name().length > 128) sb.append(" ...");
+        if (this.getIndex_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -637,10 +593,10 @@ String space = prettyPrint ? " " : "";
     sb.append("schema_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema_id() == null) {
+    if (this.getSchema_id() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSchema_id(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSchema_id(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -648,15 +604,15 @@ String space = prettyPrint ? " " : "";
     sb.append("schema_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema_name() == null) {
+    if (this.getSchema_name() == null) {
       sb.append("null");
     } else {
-        int __schema_name_size = Math.min(this. getSchema_name().length, 128);
+        int __schema_name_size = Math.min(this.getSchema_name().length, 128);
         for (int i = 0; i < __schema_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSchema_name()[i]).length() > 1 ? Integer.toHexString(this. getSchema_name()[i]).substring(Integer.toHexString(this. getSchema_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSchema_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSchema_name()[i]).length() > 1 ? Integer.toHexString(this.getSchema_name()[i]).substring(Integer.toHexString(this.getSchema_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSchema_name()[i]).toUpperCase());
         }
-        if (this. getSchema_name().length > 128) sb.append(" ...");
+        if (this.getSchema_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -664,10 +620,10 @@ String space = prettyPrint ? " " : "";
     sb.append("fields");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFields() == null) {
+    if (this.getFields() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getFields(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getFields(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -677,7 +633,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -45,7 +42,6 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
   public static final int HOST_DEL = 3;
   public static final int STOP = 4;
   public static final int RESET = 5;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -55,6 +51,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
   private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.OPTIONAL, 
@@ -79,12 +76,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public BalanceReq(
-    int space_id,
-    long id,
-    List<com.vesoft.nebula.HostAddr> host_del,
-    boolean stop,
-    boolean reset)
-  {
+      int space_id,
+      long id,
+      List<com.vesoft.nebula.HostAddr> host_del,
+      boolean stop,
+      boolean reset) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -95,6 +91,70 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     setStopIsSet(true);
     this.reset = reset;
     setResetIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private long id;
+    private List<com.vesoft.nebula.HostAddr> host_del;
+    private boolean stop;
+    private boolean reset;
+
+    BitSet __optional_isset = new BitSet(4);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setId(final long id) {
+      this.id = id;
+      __optional_isset.set(__ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setHost_del(final List<com.vesoft.nebula.HostAddr> host_del) {
+      this.host_del = host_del;
+      return this;
+    }
+
+    public Builder setStop(final boolean stop) {
+      this.stop = stop;
+      __optional_isset.set(__STOP_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setReset(final boolean reset) {
+      this.reset = reset;
+      __optional_isset.set(__RESET_ISSET_ID, true);
+      return this;
+    }
+
+    public BalanceReq build() {
+      BalanceReq result = new BalanceReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__ID_ISSET_ID)) {
+        result.setId(this.id);
+      }
+      result.setHost_del(this.host_del);
+      if (__optional_isset.get(__STOP_ISSET_ID)) {
+        result.setStop(this.stop);
+      }
+      if (__optional_isset.get(__RESET_ISSET_ID)) {
+        result.setReset(this.reset);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -116,12 +176,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     return new BalanceReq(this);
   }
 
-  @Deprecated
-  public BalanceReq clone() {
-    return new BalanceReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -140,11 +195,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public long  getId() {
+  public long getId() {
     return this.id;
   }
 
@@ -163,11 +218,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__ID_ISSET_ID);
   }
 
-  public void setIdIsSet(boolean value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, value);
+  public void setIdIsSet(boolean __value) {
+    __isset_bit_vector.set(__ID_ISSET_ID, __value);
   }
 
-  public List<com.vesoft.nebula.HostAddr>  getHost_del() {
+  public List<com.vesoft.nebula.HostAddr> getHost_del() {
     return this.host_del;
   }
 
@@ -185,13 +240,13 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     return this.host_del != null;
   }
 
-  public void setHost_delIsSet(boolean value) {
-    if (!value) {
+  public void setHost_delIsSet(boolean __value) {
+    if (!__value) {
       this.host_del = null;
     }
   }
 
-  public boolean  isStop() {
+  public boolean isStop() {
     return this.stop;
   }
 
@@ -210,11 +265,11 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__STOP_ISSET_ID);
   }
 
-  public void setStopIsSet(boolean value) {
-    __isset_bit_vector.set(__STOP_ISSET_ID, value);
+  public void setStopIsSet(boolean __value) {
+    __isset_bit_vector.set(__STOP_ISSET_ID, __value);
   }
 
-  public boolean  isReset() {
+  public boolean isReset() {
     return this.reset;
   }
 
@@ -233,50 +288,50 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__RESET_ISSET_ID);
   }
 
-  public void setResetIsSet(boolean value) {
-    __isset_bit_vector.set(__RESET_ISSET_ID, value);
+  public void setResetIsSet(boolean __value) {
+    __isset_bit_vector.set(__RESET_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case ID:
-      if (value == null) {
+      if (__value == null) {
         unsetId();
       } else {
-        setId((Long)value);
+        setId((Long)__value);
       }
       break;
 
     case HOST_DEL:
-      if (value == null) {
+      if (__value == null) {
         unsetHost_del();
       } else {
-        setHost_del((List<com.vesoft.nebula.HostAddr>)value);
+        setHost_del((List<com.vesoft.nebula.HostAddr>)__value);
       }
       break;
 
     case STOP:
-      if (value == null) {
+      if (__value == null) {
         unsetStop();
       } else {
-        setStop((Boolean)value);
+        setStop((Boolean)__value);
       }
       break;
 
     case RESET:
-      if (value == null) {
+      if (__value == null) {
         unsetReset();
       } else {
-        setReset((Boolean)value);
+        setReset((Boolean)__value);
       }
       break;
 
@@ -307,117 +362,32 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case ID:
-      return isSetId();
-    case HOST_DEL:
-      return isSetHost_del();
-    case STOP:
-      return isSetStop();
-    case RESET:
-      return isSetReset();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof BalanceReq)
-      return this.equals((BalanceReq)that);
-    return false;
-  }
-
-  public boolean equals(BalanceReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof BalanceReq))
+      return false;
+    BalanceReq that = (BalanceReq)_that;
 
-    boolean this_present_space_id = true && this.isSetSpace_id();
-    boolean that_present_space_id = true && that.isSetSpace_id();
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSpace_id(), that.isSetSpace_id(), this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_id = true && this.isSetId();
-    boolean that_present_id = true && that.isSetId();
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetId(), that.isSetId(), this.id, that.id)) { return false; }
 
-    boolean this_present_host_del = true && this.isSetHost_del();
-    boolean that_present_host_del = true && that.isSetHost_del();
-    if (this_present_host_del || that_present_host_del) {
-      if (!(this_present_host_del && that_present_host_del))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.host_del, that.host_del))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost_del(), that.isSetHost_del(), this.host_del, that.host_del)) { return false; }
 
-    boolean this_present_stop = true && this.isSetStop();
-    boolean that_present_stop = true && that.isSetStop();
-    if (this_present_stop || that_present_stop) {
-      if (!(this_present_stop && that_present_stop))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.stop, that.stop))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStop(), that.isSetStop(), this.stop, that.stop)) { return false; }
 
-    boolean this_present_reset = true && this.isSetReset();
-    boolean that_present_reset = true && that.isSetReset();
-    if (this_present_reset || that_present_reset) {
-      if (!(this_present_reset && that_present_reset))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.reset, that.reset))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetReset(), that.isSetReset(), this.reset, that.reset)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true && (isSetSpace_id());
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_id = true && (isSetId());
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
-
-    boolean present_host_del = true && (isSetHost_del());
-    builder.append(present_host_del);
-    if (present_host_del)
-      builder.append(host_del);
-
-    boolean present_stop = true && (isSetStop());
-    builder.append(present_stop);
-    if (present_stop)
-      builder.append(stop);
-
-    boolean present_reset = true && (isSetReset());
-    builder.append(present_reset);
-    if (present_reset)
-      builder.append(reset);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, id, host_del, stop, reset});
   }
 
   @Override
@@ -437,7 +407,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
@@ -445,7 +415,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(id, other.id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHost_del()).compareTo(other.isSetHost_del());
@@ -453,7 +423,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host_del, other.host_del);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStop()).compareTo(other.isSetStop());
@@ -461,7 +431,7 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(stop, other.stop);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetReset()).compareTo(other.isSetReset());
@@ -469,77 +439,77 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(reset, other.reset);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.id = iprot.readI64();
             setIdIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOST_DEL:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list160 = iprot.readListBegin();
-              this.host_del = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list160.size));
-              for (int _i161 = 0; 
-                   (_list160.size < 0) ? iprot.peekList() : (_i161 < _list160.size); 
-                   ++_i161)
+              TList _list169 = iprot.readListBegin();
+              this.host_del = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list169.size));
+              for (int _i170 = 0; 
+                   (_list169.size < 0) ? iprot.peekList() : (_i170 < _list169.size); 
+                   ++_i170)
               {
-                com.vesoft.nebula.HostAddr _elem162;
-                _elem162 = new com.vesoft.nebula.HostAddr();
-                _elem162.read(iprot);
-                this.host_del.add(_elem162);
+                com.vesoft.nebula.HostAddr _elem171;
+                _elem171 = new com.vesoft.nebula.HostAddr();
+                _elem171.read(iprot);
+                this.host_del.add(_elem171);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STOP:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.stop = iprot.readBool();
             setStopIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RESET:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.reset = iprot.readBool();
             setResetIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -570,8 +540,8 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
         oprot.writeFieldBegin(HOST_DEL_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.host_del.size()));
-          for (com.vesoft.nebula.HostAddr _iter163 : this.host_del)          {
-            _iter163.write(oprot);
+          for (com.vesoft.nebula.HostAddr _iter172 : this.host_del)          {
+            _iter172.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -594,19 +564,14 @@ public class BalanceReq implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("BalanceReq");
     sb.append(space);
     sb.append("(");
@@ -619,7 +584,7 @@ String space = prettyPrint ? " " : "";
       sb.append("space_id");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetId())
@@ -629,7 +594,7 @@ String space = prettyPrint ? " " : "";
       sb.append("id");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetHost_del())
@@ -639,10 +604,10 @@ String space = prettyPrint ? " " : "";
       sb.append("host_del");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getHost_del() == null) {
+      if (this.getHost_del() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getHost_del(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getHost_del(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -653,7 +618,7 @@ String space = prettyPrint ? " " : "";
       sb.append("stop");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isStop(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.isStop(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetReset())
@@ -663,7 +628,7 @@ String space = prettyPrint ? " " : "";
       sb.append("reset");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isReset(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.isReset(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -673,7 +638,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
   public byte[] name;
   public static final int ID = 1;
   public static final int NAME = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
@@ -58,12 +55,40 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
   }
 
   public IdName(
-    ID id,
-    byte[] name)
-  {
+      ID id,
+      byte[] name) {
     this();
     this.id = id;
     this.name = name;
+  }
+
+  public static class Builder {
+    private ID id;
+    private byte[] name;
+
+    public Builder() {
+    }
+
+    public Builder setId(final ID id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public IdName build() {
+      IdName result = new IdName();
+      result.setId(this.id);
+      result.setName(this.name);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
     return new IdName(this);
   }
 
-  @Deprecated
-  public IdName clone() {
-    return new IdName(this);
-  }
-
-  public ID  getId() {
+  public ID getId() {
     return this.id;
   }
 
@@ -105,13 +125,13 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
     return this.id != null;
   }
 
-  public void setIdIsSet(boolean value) {
-    if (!value) {
+  public void setIdIsSet(boolean __value) {
+    if (!__value) {
       this.id = null;
     }
   }
 
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -129,27 +149,27 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ID:
-      if (value == null) {
+      if (__value == null) {
         unsetId();
       } else {
-        setId((ID)value);
+        setId((ID)__value);
       }
       break;
 
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ID:
-      return isSetId();
-    case NAME:
-      return isSetName();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof IdName)
-      return this.equals((IdName)that);
-    return false;
-  }
-
-  public boolean equals(IdName that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof IdName))
+      return false;
+    IdName that = (IdName)_that;
 
-    boolean this_present_id = true && this.isSetId();
-    boolean that_present_id = true && that.isSetId();
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetId(), that.isSetId(), this.id, that.id)) { return false; }
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_id = true && (isSetId());
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {id, name});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(id, other.id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetName()).compareTo(other.isSetName());
@@ -261,40 +238,40 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ID:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.id = new ID();
             this.id.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -326,19 +303,14 @@ public class IdName implements TBase, java.io.Serializable, Cloneable, Comparabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("IdName");
     sb.append(space);
     sb.append("(");
@@ -349,10 +321,10 @@ String space = prettyPrint ? " " : "";
     sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getId() == null) {
+    if (this.getId() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -360,15 +332,15 @@ String space = prettyPrint ? " " : "";
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -378,7 +350,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

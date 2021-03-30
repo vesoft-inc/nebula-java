@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
   public List<NewTag> tags;
   public static final int ID = 1;
   public static final int TAGS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
   }
 
   public NewVertex(
-    com.vesoft.nebula.Value id,
-    List<NewTag> tags)
-  {
+      com.vesoft.nebula.Value id,
+      List<NewTag> tags) {
     this();
     this.id = id;
     this.tags = tags;
+  }
+
+  public static class Builder {
+    private com.vesoft.nebula.Value id;
+    private List<NewTag> tags;
+
+    public Builder() {
+    }
+
+    public Builder setId(final com.vesoft.nebula.Value id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder setTags(final List<NewTag> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public NewVertex build() {
+      NewVertex result = new NewVertex();
+      result.setId(this.id);
+      result.setTags(this.tags);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     return new NewVertex(this);
   }
 
-  @Deprecated
-  public NewVertex clone() {
-    return new NewVertex(this);
-  }
-
-  public com.vesoft.nebula.Value  getId() {
+  public com.vesoft.nebula.Value getId() {
     return this.id;
   }
 
@@ -106,13 +126,13 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     return this.id != null;
   }
 
-  public void setIdIsSet(boolean value) {
-    if (!value) {
+  public void setIdIsSet(boolean __value) {
+    if (!__value) {
       this.id = null;
     }
   }
 
-  public List<NewTag>  getTags() {
+  public List<NewTag> getTags() {
     return this.tags;
   }
 
@@ -130,28 +150,28 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     return this.tags != null;
   }
 
-  public void setTagsIsSet(boolean value) {
-    if (!value) {
+  public void setTagsIsSet(boolean __value) {
+    if (!__value) {
       this.tags = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ID:
-      if (value == null) {
+      if (__value == null) {
         unsetId();
       } else {
-        setId((com.vesoft.nebula.Value)value);
+        setId((com.vesoft.nebula.Value)__value);
       }
       break;
 
     case TAGS:
-      if (value == null) {
+      if (__value == null) {
         unsetTags();
       } else {
-        setTags((List<NewTag>)value);
+        setTags((List<NewTag>)__value);
       }
       break;
 
@@ -173,92 +193,49 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ID:
-      return isSetId();
-    case TAGS:
-      return isSetTags();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof NewVertex)
-      return this.equals((NewVertex)that);
-    return false;
-  }
-
-  public boolean equals(NewVertex that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof NewVertex))
+      return false;
+    NewVertex that = (NewVertex)_that;
 
-    boolean this_present_id = true && this.isSetId();
-    boolean that_present_id = true && that.isSetId();
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetId(), that.isSetId(), this.id, that.id)) { return false; }
 
-    boolean this_present_tags = true && this.isSetTags();
-    boolean that_present_tags = true && that.isSetTags();
-    if (this_present_tags || that_present_tags) {
-      if (!(this_present_tags && that_present_tags))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.tags, that.tags))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetTags(), that.isSetTags(), this.tags, that.tags)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_id = true && (isSetId());
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
-
-    boolean present_tags = true && (isSetTags());
-    builder.append(present_tags);
-    if (present_tags)
-      builder.append(tags);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {id, tags});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ID:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.id = new com.vesoft.nebula.Value();
             this.id.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TAGS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list78 = iprot.readListBegin();
               this.tags = new ArrayList<NewTag>(Math.max(0, _list78.size));
@@ -274,11 +251,11 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -316,19 +293,14 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("NewVertex");
     sb.append(space);
     sb.append("(");
@@ -339,10 +311,10 @@ String space = prettyPrint ? " " : "";
     sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getId() == null) {
+    if (this.getId() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -350,10 +322,10 @@ String space = prettyPrint ? " " : "";
     sb.append("tags");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTags() == null) {
+    if (this.getTags() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTags(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getTags(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -363,7 +335,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

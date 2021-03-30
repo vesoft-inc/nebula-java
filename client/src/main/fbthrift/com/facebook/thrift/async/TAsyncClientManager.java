@@ -1,23 +1,23 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.facebook.thrift.async;
 
+import com.facebook.thrift.TException;
+import com.facebook.thrift.utils.Logger;
 import java.io.IOException;
 import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
@@ -29,18 +29,13 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeoutException;
 
-import com.facebook.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Contains selector thread which transitions method call objects
- */
+/** Contains selector thread which transitions method call objects */
 public class TAsyncClientManager {
-  private static final Logger LOGGER = LoggerFactory.getLogger(TAsyncClientManager.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(TAsyncClientManager.class.getName());
 
   private final SelectThread selectThread;
-  private final ConcurrentLinkedQueue<TAsyncMethodCall> pendingCalls = new ConcurrentLinkedQueue<TAsyncMethodCall>();
+  private final ConcurrentLinkedQueue<TAsyncMethodCall> pendingCalls =
+      new ConcurrentLinkedQueue<TAsyncMethodCall>();
 
   public TAsyncClientManager() throws IOException {
     this.selectThread = new SelectThread();
@@ -68,7 +63,8 @@ public class TAsyncClientManager {
   private class SelectThread extends Thread {
     private final Selector selector;
     private volatile boolean running;
-    private final TreeSet<TAsyncMethodCall> timeoutWatchSet = new TreeSet<TAsyncMethodCall>(new TAsyncMethodCallTimeoutComparator());
+    private final TreeSet<TAsyncMethodCall> timeoutWatchSet =
+        new TreeSet<TAsyncMethodCall>(new TAsyncMethodCallTimeoutComparator());
 
     public SelectThread() throws IOException {
       this.selector = SelectorProvider.provider().openSelector();
@@ -96,7 +92,8 @@ public class TAsyncClientManager {
               // No timeouts, so select indefinitely
               selector.select();
             } else {
-              // We have a timeout pending, so calculate the time until then and select appropriately
+              // We have a timeout pending, so calculate the time until then and select
+              // appropriately
               long nextTimeout = timeoutWatchSet.first().getTimeoutTimestamp();
               long selectTime = nextTimeout - System.currentTimeMillis();
               if (selectTime > 0) {
@@ -133,7 +130,7 @@ public class TAsyncClientManager {
             // just skip
             continue;
           }
-          TAsyncMethodCall methodCall = (TAsyncMethodCall)key.attachment();
+          TAsyncMethodCall methodCall = (TAsyncMethodCall) key.attachment();
           methodCall.transition(key);
 
           // If done or error occurred, remove from timeout watch set
@@ -154,7 +151,13 @@ public class TAsyncClientManager {
         TAsyncMethodCall methodCall = iterator.next();
         if (currentTime >= methodCall.getTimeoutTimestamp()) {
           iterator.remove();
-          methodCall.onError(new TimeoutException("Operation " + methodCall.getClass() + " timed out after " + (currentTime - methodCall.getStartTime()) + " ms."));
+          methodCall.onError(
+              new TimeoutException(
+                  "Operation "
+                      + methodCall.getClass()
+                      + " timed out after "
+                      + (currentTime - methodCall.getStartTime())
+                      + " ms."));
         } else {
           break;
         }
@@ -186,9 +189,9 @@ public class TAsyncClientManager {
   private static class TAsyncMethodCallTimeoutComparator implements Comparator<TAsyncMethodCall> {
     public int compare(TAsyncMethodCall left, TAsyncMethodCall right) {
       if (left.getTimeoutTimestamp() == right.getTimeoutTimestamp()) {
-        return (int)(left.getSequenceId() - right.getSequenceId());
+        return (int) (left.getSequenceId() - right.getSequenceId());
       } else {
-        return (int)(left.getTimeoutTimestamp() - right.getTimeoutTimestamp());
+        return (int) (left.getTimeoutTimestamp() - right.getTimeoutTimestamp());
       }
     }
   }

@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift.transport;
@@ -22,15 +19,10 @@ package com.facebook.thrift.transport;
 import com.facebook.thrift.TByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
-/**
- * Memory buffer-based implementation of the TTransport interface.
- *
- */
+/** Memory buffer-based implementation of the TTransport interface. */
 public class TMemoryBuffer extends TTransport {
 
-  /**
-   *
-   */
+  /** */
   public TMemoryBuffer(int size) {
     reset(size);
   }
@@ -67,9 +59,9 @@ public class TMemoryBuffer extends TTransport {
   }
 
   /**
-   * Output the contents of the memory buffer as a String, using the supplied
-   * encoding
-   * @param enc  the encoding to use
+   * Output the contents of the memory buffer as a String, using the supplied encoding
+   *
+   * @param enc the encoding to use
    * @return the contents of the memory buffer as a String
    */
   public String toString(String enc) throws UnsupportedEncodingException {
@@ -80,7 +72,7 @@ public class TMemoryBuffer extends TTransport {
     String buf = "";
     byte[] bytes = arr_.toByteArray();
     for (int i = 0; i < bytes.length; i++) {
-      buf += (pos_ == i ? "==>" : "" ) + Integer.toHexString(bytes[i] & 0xff) + " ";
+      buf += (pos_ == i ? "==>" : "") + Integer.toHexString(bytes[i] & 0xff) + " ";
     }
     return buf;
   }
@@ -90,10 +82,6 @@ public class TMemoryBuffer extends TTransport {
 
   // Position to read next byte from
   private int pos_;
-
-  public byte[] getBuffer() {
-    return arr_.get();
-  }
 
   public int length() {
     return arr_.len();

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   public static final int PARTS = 2;
   public static final int PROP_NAMES = 3;
   public static final int OVERWRITABLE = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -50,6 +46,7 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -77,11 +74,10 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   }
 
   public AddEdgesRequest(
-    int space_id,
-    Map<Integer,List<NewEdge>> parts,
-    List<byte[]> prop_names,
-    boolean overwritable)
-  {
+      int space_id,
+      Map<Integer,List<NewEdge>> parts,
+      List<byte[]> prop_names,
+      boolean overwritable) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -89,6 +85,57 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     this.prop_names = prop_names;
     this.overwritable = overwritable;
     setOverwritableIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private Map<Integer,List<NewEdge>> parts;
+    private List<byte[]> prop_names;
+    private boolean overwritable;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setParts(final Map<Integer,List<NewEdge>> parts) {
+      this.parts = parts;
+      return this;
+    }
+
+    public Builder setProp_names(final List<byte[]> prop_names) {
+      this.prop_names = prop_names;
+      return this;
+    }
+
+    public Builder setOverwritable(final boolean overwritable) {
+      this.overwritable = overwritable;
+      __optional_isset.set(__OVERWRITABLE_ISSET_ID, true);
+      return this;
+    }
+
+    public AddEdgesRequest build() {
+      AddEdgesRequest result = new AddEdgesRequest();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setParts(this.parts);
+      result.setProp_names(this.prop_names);
+      if (__optional_isset.get(__OVERWRITABLE_ISSET_ID)) {
+        result.setOverwritable(this.overwritable);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -111,12 +158,7 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     return new AddEdgesRequest(this);
   }
 
-  @Deprecated
-  public AddEdgesRequest clone() {
-    return new AddEdgesRequest(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -135,11 +177,11 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<NewEdge>>  getParts() {
+  public Map<Integer,List<NewEdge>> getParts() {
     return this.parts;
   }
 
@@ -157,13 +199,13 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     return this.parts != null;
   }
 
-  public void setPartsIsSet(boolean value) {
-    if (!value) {
+  public void setPartsIsSet(boolean __value) {
+    if (!__value) {
       this.parts = null;
     }
   }
 
-  public List<byte[]>  getProp_names() {
+  public List<byte[]> getProp_names() {
     return this.prop_names;
   }
 
@@ -181,13 +223,13 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     return this.prop_names != null;
   }
 
-  public void setProp_namesIsSet(boolean value) {
-    if (!value) {
+  public void setProp_namesIsSet(boolean __value) {
+    if (!__value) {
       this.prop_names = null;
     }
   }
 
-  public boolean  isOverwritable() {
+  public boolean isOverwritable() {
     return this.overwritable;
   }
 
@@ -206,42 +248,42 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__OVERWRITABLE_ISSET_ID);
   }
 
-  public void setOverwritableIsSet(boolean value) {
-    __isset_bit_vector.set(__OVERWRITABLE_ISSET_ID, value);
+  public void setOverwritableIsSet(boolean __value) {
+    __isset_bit_vector.set(__OVERWRITABLE_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<NewEdge>>)value);
+        setParts((Map<Integer,List<NewEdge>>)__value);
       }
       break;
 
     case PROP_NAMES:
-      if (value == null) {
+      if (__value == null) {
         unsetProp_names();
       } else {
-        setProp_names((List<byte[]>)value);
+        setProp_names((List<byte[]>)__value);
       }
       break;
 
     case OVERWRITABLE:
-      if (value == null) {
+      if (__value == null) {
         unsetOverwritable();
       } else {
-        setOverwritable((Boolean)value);
+        setOverwritable((Boolean)__value);
       }
       break;
 
@@ -269,124 +311,53 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PARTS:
-      return isSetParts();
-    case PROP_NAMES:
-      return isSetProp_names();
-    case OVERWRITABLE:
-      return isSetOverwritable();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AddEdgesRequest)
-      return this.equals((AddEdgesRequest)that);
-    return false;
-  }
-
-  public boolean equals(AddEdgesRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AddEdgesRequest))
+      return false;
+    AddEdgesRequest that = (AddEdgesRequest)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
-    boolean this_present_prop_names = true && this.isSetProp_names();
-    boolean that_present_prop_names = true && that.isSetProp_names();
-    if (this_present_prop_names || that_present_prop_names) {
-      if (!(this_present_prop_names && that_present_prop_names))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.prop_names, that.prop_names))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetProp_names(), that.isSetProp_names(), this.prop_names, that.prop_names)) { return false; }
 
-    boolean this_present_overwritable = true;
-    boolean that_present_overwritable = true;
-    if (this_present_overwritable || that_present_overwritable) {
-      if (!(this_present_overwritable && that_present_overwritable))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.overwritable, that.overwritable))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.overwritable, that.overwritable)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
-
-    boolean present_prop_names = true && (isSetProp_names());
-    builder.append(present_prop_names);
-    if (present_prop_names)
-      builder.append(prop_names);
-
-    boolean present_overwritable = true;
-    builder.append(present_overwritable);
-    if (present_overwritable)
-      builder.append(overwritable);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, overwritable});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map104 = iprot.readMapBegin();
               this.parts = new HashMap<Integer,List<NewEdge>>(Math.max(0, 2*_map104.size));
@@ -416,11 +387,11 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROP_NAMES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list111 = iprot.readListBegin();
               this.prop_names = new ArrayList<byte[]>(Math.max(0, _list111.size));
@@ -435,19 +406,19 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case OVERWRITABLE:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.overwritable = iprot.readBool();
             setOverwritableIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -504,19 +475,14 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AddEdgesRequest");
     sb.append(space);
     sb.append("(");
@@ -527,17 +493,17 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getParts() == null) {
+    if (this.getParts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -545,10 +511,10 @@ String space = prettyPrint ? " " : "";
     sb.append("prop_names");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProp_names() == null) {
+    if (this.getProp_names() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProp_names(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProp_names(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -556,7 +522,7 @@ String space = prettyPrint ? " " : "";
     sb.append("overwritable");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isOverwritable(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isOverwritable(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -565,7 +531,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -197,40 +197,44 @@ public class SchemaProviderImpl implements SchemaProvider {
 
     @Override
     public int fieldSize(int type, int fixedStrLimit) {
-        switch (type) {
-            case PropertyType.BOOL:
+        PropertyType typeEnum = PropertyType.findByValue(type);
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + type);
+        }
+        switch (typeEnum) {
+            case BOOL:
                 return 1;
-            case PropertyType.VID:
-            case PropertyType.INT64:
-            case PropertyType.TIMESTAMP:
+            case VID:
+            case INT64:
+            case TIMESTAMP:
                 return Long.BYTES;
-            case PropertyType.INT32:
+            case INT32:
                 return Integer.BYTES;
-            case PropertyType.INT16:
+            case INT16:
                 return Short.BYTES;
-            case PropertyType.INT8:
+            case INT8:
                 return Byte.BYTES;
-            case PropertyType.FLOAT:
+            case FLOAT:
                 return Float.BYTES;
-            case PropertyType.DOUBLE:
+            case DOUBLE:
                 return Double.BYTES;
-            case PropertyType.STRING:
+            case STRING:
                 return 8;  // string offset + string length
-            case PropertyType.FIXED_STRING:
+            case FIXED_STRING:
                 if (fixedStrLimit < 0)  {
                     throw new RuntimeException("Fixed string length must be greater than zero");
                 }
                 return fixedStrLimit;
-            case PropertyType.DATE:
+            case DATE:
                 return Short.BYTES        // year
                       + Byte.BYTES        // month
                       + Byte.BYTES;       // day
-            case PropertyType.TIME:
+            case TIME:
                 return Byte.BYTES         // hour
                       + Byte.BYTES        // minute
                       + Byte.BYTES        // sec
                       + Integer.BYTES;    // microsec
-            case PropertyType.DATETIME:
+            case DATETIME:
                 return Short.BYTES          // year
                       + Byte.BYTES          // month
                       + Byte.BYTES          // day
@@ -239,8 +243,7 @@ public class SchemaProviderImpl implements SchemaProvider {
                       + Byte.BYTES          // sec
                       + Integer.BYTES;      // microsec
             default:
-                throw new RuntimeException(
-                    "Incorrect field type " + PropertyType.VALUES_TO_NAMES.get(type));
+                throw new RuntimeException("Incorrect field type " + type);
         }
     }
 }

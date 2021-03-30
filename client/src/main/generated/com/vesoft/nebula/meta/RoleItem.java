@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,18 +36,17 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see RoleType
    */
-  public int role_type;
+  public RoleType role_type;
   public static final int USER_ID = 1;
   public static final int SPACE_ID = 2;
   public static final int ROLE_TYPE = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private static final int __ROLE_TYPE_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(USER_ID, new FieldMetaData("user_id", TFieldRequirementType.DEFAULT, 
@@ -70,16 +66,55 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public RoleItem(
-    byte[] user_id,
-    int space_id,
-    int role_type)
-  {
+      byte[] user_id,
+      int space_id,
+      RoleType role_type) {
     this();
     this.user_id = user_id;
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.role_type = role_type;
-    setRole_typeIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] user_id;
+    private int space_id;
+    private RoleType role_type;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setUser_id(final byte[] user_id) {
+      this.user_id = user_id;
+      return this;
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setRole_type(final RoleType role_type) {
+      this.role_type = role_type;
+      return this;
+    }
+
+    public RoleItem build() {
+      RoleItem result = new RoleItem();
+      result.setUser_id(this.user_id);
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setRole_type(this.role_type);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -92,19 +127,16 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
       this.user_id = TBaseHelper.deepCopy(other.user_id);
     }
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    this.role_type = TBaseHelper.deepCopy(other.role_type);
+    if (other.isSetRole_type()) {
+      this.role_type = TBaseHelper.deepCopy(other.role_type);
+    }
   }
 
   public RoleItem deepCopy() {
     return new RoleItem(this);
   }
 
-  @Deprecated
-  public RoleItem clone() {
-    return new RoleItem(this);
-  }
-
-  public byte[]  getUser_id() {
+  public byte[] getUser_id() {
     return this.user_id;
   }
 
@@ -122,13 +154,13 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.user_id != null;
   }
 
-  public void setUser_idIsSet(boolean value) {
-    if (!value) {
+  public void setUser_idIsSet(boolean __value) {
+    if (!__value) {
       this.user_id = null;
     }
   }
 
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -147,15 +179,15 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
   /**
    * 
    * @see RoleType
    */
-  public int  getRole_type() {
+  public RoleType getRole_type() {
     return this.role_type;
   }
 
@@ -163,48 +195,49 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see RoleType
    */
-  public RoleItem setRole_type(int role_type) {
+  public RoleItem setRole_type(RoleType role_type) {
     this.role_type = role_type;
-    setRole_typeIsSet(true);
     return this;
   }
 
   public void unsetRole_type() {
-    __isset_bit_vector.clear(__ROLE_TYPE_ISSET_ID);
+    this.role_type = null;
   }
 
   // Returns true if field role_type is set (has been assigned a value) and false otherwise
   public boolean isSetRole_type() {
-    return __isset_bit_vector.get(__ROLE_TYPE_ISSET_ID);
+    return this.role_type != null;
   }
 
-  public void setRole_typeIsSet(boolean value) {
-    __isset_bit_vector.set(__ROLE_TYPE_ISSET_ID, value);
+  public void setRole_typeIsSet(boolean __value) {
+    if (!__value) {
+      this.role_type = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case USER_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetUser_id();
       } else {
-        setUser_id((byte[])value);
+        setUser_id((byte[])__value);
       }
       break;
 
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case ROLE_TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetRole_type();
       } else {
-        setRole_type((Integer)value);
+        setRole_type((RoleType)__value);
       }
       break;
 
@@ -229,85 +262,28 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case USER_ID:
-      return isSetUser_id();
-    case SPACE_ID:
-      return isSetSpace_id();
-    case ROLE_TYPE:
-      return isSetRole_type();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof RoleItem)
-      return this.equals((RoleItem)that);
-    return false;
-  }
-
-  public boolean equals(RoleItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof RoleItem))
+      return false;
+    RoleItem that = (RoleItem)_that;
 
-    boolean this_present_user_id = true && this.isSetUser_id();
-    boolean that_present_user_id = true && that.isSetUser_id();
-    if (this_present_user_id || that_present_user_id) {
-      if (!(this_present_user_id && that_present_user_id))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.user_id, that.user_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetUser_id(), that.isSetUser_id(), this.user_id, that.user_id)) { return false; }
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_role_type = true;
-    boolean that_present_role_type = true;
-    if (this_present_role_type || that_present_role_type) {
-      if (!(this_present_role_type && that_present_role_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.role_type, that.role_type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRole_type(), that.isSetRole_type(), this.role_type, that.role_type)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_user_id = true && (isSetUser_id());
-    builder.append(present_user_id);
-    if (present_user_id)
-      builder.append(user_id);
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_role_type = true;
-    builder.append(present_role_type);
-    if (present_role_type)
-      builder.append(role_type);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {user_id, space_id, role_type});
   }
 
   @Override
@@ -327,7 +303,7 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(user_id, other.user_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
@@ -335,7 +311,7 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetRole_type()).compareTo(other.isSetRole_type());
@@ -343,48 +319,47 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(role_type, other.role_type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case USER_ID:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.user_id = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ROLE_TYPE:
-          if (field.type == TType.I32) {
-            this.role_type = iprot.readI32();
-            setRole_typeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.role_type = RoleType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -408,28 +383,25 @@ public class RoleItem implements TBase, java.io.Serializable, Cloneable, Compara
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(ROLE_TYPE_FIELD_DESC);
-    oprot.writeI32(this.role_type);
-    oprot.writeFieldEnd();
+    if (this.role_type != null) {
+      oprot.writeFieldBegin(ROLE_TYPE_FIELD_DESC);
+      oprot.writeI32(this.role_type == null ? 0 : this.role_type.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("RoleItem");
     sb.append(space);
     sb.append("(");
@@ -440,15 +412,15 @@ String space = prettyPrint ? " " : "";
     sb.append("user_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getUser_id() == null) {
+    if (this.getUser_id() == null) {
       sb.append("null");
     } else {
-        int __user_id_size = Math.min(this. getUser_id().length, 128);
+        int __user_id_size = Math.min(this.getUser_id().length, 128);
         for (int i = 0; i < __user_id_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getUser_id()[i]).length() > 1 ? Integer.toHexString(this. getUser_id()[i]).substring(Integer.toHexString(this. getUser_id()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getUser_id()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getUser_id()[i]).length() > 1 ? Integer.toHexString(this.getUser_id()[i]).substring(Integer.toHexString(this.getUser_id()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getUser_id()[i]).toUpperCase());
         }
-        if (this. getUser_id().length > 128) sb.append(" ...");
+        if (this.getUser_id().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -456,21 +428,25 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("role_type");
     sb.append(space);
     sb.append(":").append(space);
-    String role_type_name = RoleType.VALUES_TO_NAMES.get(this. getRole_type());
-    if (role_type_name != null) {
-      sb.append(role_type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getRole_type());
-    if (role_type_name != null) {
-      sb.append(")");
+    if (this.getRole_type() == null) {
+      sb.append("null");
+    } else {
+      String role_type_name = this.getRole_type() == null ? "null" : this.getRole_type().name();
+      if (role_type_name != null) {
+        sb.append(role_type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getRole_type());
+      if (role_type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -480,10 +456,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetRole_type() && !RoleType.VALID_VALUES.contains(role_type)){
-      throw new TProtocolException("The field 'role_type' has been assigned the invalid value " + role_type);
-    }
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
   public List<byte[]> props;
   public static final int TAG = 1;
   public static final int PROPS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __TAG_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TAG, new FieldMetaData("tag", TFieldRequirementType.DEFAULT, 
@@ -61,13 +58,46 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public VertexProp(
-    int tag,
-    List<byte[]> props)
-  {
+      int tag,
+      List<byte[]> props) {
     this();
     this.tag = tag;
     setTagIsSet(true);
     this.props = props;
+  }
+
+  public static class Builder {
+    private int tag;
+    private List<byte[]> props;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setTag(final int tag) {
+      this.tag = tag;
+      __optional_isset.set(__TAG_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setProps(final List<byte[]> props) {
+      this.props = props;
+      return this;
+    }
+
+    public VertexProp build() {
+      VertexProp result = new VertexProp();
+      if (__optional_isset.get(__TAG_ISSET_ID)) {
+        result.setTag(this.tag);
+      }
+      result.setProps(this.props);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -86,12 +116,7 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
     return new VertexProp(this);
   }
 
-  @Deprecated
-  public VertexProp clone() {
-    return new VertexProp(this);
-  }
-
-  public int  getTag() {
+  public int getTag() {
     return this.tag;
   }
 
@@ -110,11 +135,11 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__TAG_ISSET_ID);
   }
 
-  public void setTagIsSet(boolean value) {
-    __isset_bit_vector.set(__TAG_ISSET_ID, value);
+  public void setTagIsSet(boolean __value) {
+    __isset_bit_vector.set(__TAG_ISSET_ID, __value);
   }
 
-  public List<byte[]>  getProps() {
+  public List<byte[]> getProps() {
     return this.props;
   }
 
@@ -132,28 +157,28 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
     return this.props != null;
   }
 
-  public void setPropsIsSet(boolean value) {
-    if (!value) {
+  public void setPropsIsSet(boolean __value) {
+    if (!__value) {
       this.props = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TAG:
-      if (value == null) {
+      if (__value == null) {
         unsetTag();
       } else {
-        setTag((Integer)value);
+        setTag((Integer)__value);
       }
       break;
 
     case PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetProps();
       } else {
-        setProps((List<byte[]>)value);
+        setProps((List<byte[]>)__value);
       }
       break;
 
@@ -175,69 +200,26 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TAG:
-      return isSetTag();
-    case PROPS:
-      return isSetProps();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof VertexProp)
-      return this.equals((VertexProp)that);
-    return false;
-  }
-
-  public boolean equals(VertexProp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof VertexProp))
+      return false;
+    VertexProp that = (VertexProp)_that;
 
-    boolean this_present_tag = true;
-    boolean that_present_tag = true;
-    if (this_present_tag || that_present_tag) {
-      if (!(this_present_tag && that_present_tag))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.tag, that.tag))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.tag, that.tag)) { return false; }
 
-    boolean this_present_props = true && this.isSetProps();
-    boolean that_present_props = true && that.isSetProps();
-    if (this_present_props || that_present_props) {
-      if (!(this_present_props && that_present_props))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.props, that.props))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetProps(), that.isSetProps(), this.props, that.props)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_tag = true;
-    builder.append(present_tag);
-    if (present_tag)
-      builder.append(tag);
-
-    boolean present_props = true && (isSetProps());
-    builder.append(present_props);
-    if (present_props)
-      builder.append(props);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {tag, props});
   }
 
   @Override
@@ -257,7 +239,7 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(tag, other.tag);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetProps()).compareTo(other.isSetProps());
@@ -265,33 +247,33 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(props, other.props);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TAG:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.tag = iprot.readI32();
             setTagIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list8 = iprot.readListBegin();
               this.props = new ArrayList<byte[]>(Math.max(0, _list8.size));
@@ -306,11 +288,11 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -346,19 +328,14 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("VertexProp");
     sb.append(space);
     sb.append("(");
@@ -369,17 +346,17 @@ String space = prettyPrint ? " " : "";
     sb.append("tag");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTag(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTag(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("props");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProps() == null) {
+    if (this.getProps() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProps(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProps(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -389,7 +366,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

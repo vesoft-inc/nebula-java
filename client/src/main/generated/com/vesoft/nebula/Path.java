@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
   public List<Step> steps;
   public static final int SRC = 1;
   public static final int STEPS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SRC, new FieldMetaData("src", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Path(
-    Vertex src,
-    List<Step> steps)
-  {
+      Vertex src,
+      List<Step> steps) {
     this();
     this.src = src;
     this.steps = steps;
+  }
+
+  public static class Builder {
+    private Vertex src;
+    private List<Step> steps;
+
+    public Builder() {
+    }
+
+    public Builder setSrc(final Vertex src) {
+      this.src = src;
+      return this;
+    }
+
+    public Builder setSteps(final List<Step> steps) {
+      this.steps = steps;
+      return this;
+    }
+
+    public Path build() {
+      Path result = new Path();
+      result.setSrc(this.src);
+      result.setSteps(this.steps);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
     return new Path(this);
   }
 
-  @Deprecated
-  public Path clone() {
-    return new Path(this);
-  }
-
-  public Vertex  getSrc() {
+  public Vertex getSrc() {
     return this.src;
   }
 
@@ -106,13 +126,13 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
     return this.src != null;
   }
 
-  public void setSrcIsSet(boolean value) {
-    if (!value) {
+  public void setSrcIsSet(boolean __value) {
+    if (!__value) {
       this.src = null;
     }
   }
 
-  public List<Step>  getSteps() {
+  public List<Step> getSteps() {
     return this.steps;
   }
 
@@ -130,28 +150,28 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
     return this.steps != null;
   }
 
-  public void setStepsIsSet(boolean value) {
-    if (!value) {
+  public void setStepsIsSet(boolean __value) {
+    if (!__value) {
       this.steps = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SRC:
-      if (value == null) {
+      if (__value == null) {
         unsetSrc();
       } else {
-        setSrc((Vertex)value);
+        setSrc((Vertex)__value);
       }
       break;
 
     case STEPS:
-      if (value == null) {
+      if (__value == null) {
         unsetSteps();
       } else {
-        setSteps((List<Step>)value);
+        setSteps((List<Step>)__value);
       }
       break;
 
@@ -173,92 +193,49 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SRC:
-      return isSetSrc();
-    case STEPS:
-      return isSetSteps();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Path)
-      return this.equals((Path)that);
-    return false;
-  }
-
-  public boolean equals(Path that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Path))
+      return false;
+    Path that = (Path)_that;
 
-    boolean this_present_src = true && this.isSetSrc();
-    boolean that_present_src = true && that.isSetSrc();
-    if (this_present_src || that_present_src) {
-      if (!(this_present_src && that_present_src))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.src, that.src))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSrc(), that.isSetSrc(), this.src, that.src)) { return false; }
 
-    boolean this_present_steps = true && this.isSetSteps();
-    boolean that_present_steps = true && that.isSetSteps();
-    if (this_present_steps || that_present_steps) {
-      if (!(this_present_steps && that_present_steps))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.steps, that.steps))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSteps(), that.isSetSteps(), this.steps, that.steps)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_src = true && (isSetSrc());
-    builder.append(present_src);
-    if (present_src)
-      builder.append(src);
-
-    boolean present_steps = true && (isSetSteps());
-    builder.append(present_steps);
-    if (present_steps)
-      builder.append(steps);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {src, steps});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SRC:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.src = new Vertex();
             this.src.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STEPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list44 = iprot.readListBegin();
               this.steps = new ArrayList<Step>(Math.max(0, _list44.size));
@@ -274,11 +251,11 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -316,19 +293,14 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Path");
     sb.append(space);
     sb.append("(");
@@ -339,10 +311,10 @@ String space = prettyPrint ? " " : "";
     sb.append("src");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSrc() == null) {
+    if (this.getSrc() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSrc(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSrc(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -350,10 +322,10 @@ String space = prettyPrint ? " " : "";
     sb.append("steps");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSteps() == null) {
+    if (this.getSteps() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSteps(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSteps(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -363,7 +335,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -104,10 +104,14 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, boolean v) throws RuntimeException {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.BOOL:
-            case PropertyType.INT8: {
+        switch (typeEnum) {
+            case BOOL:
+            case INT8: {
                 if (v) {
                     buf.put(offset, (byte)0x01);
                 } else  {
@@ -115,7 +119,7 @@ public class RowWriterImpl implements RowWriter {
                 }
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 if (v) {
                     buf.put(offset, (byte)0x01);
                 } else  {
@@ -124,7 +128,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.put(offset + 1, (byte) 0);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 if (v) {
                     buf.put(offset, (byte)0x01);
                 } else  {
@@ -135,8 +139,8 @@ public class RowWriterImpl implements RowWriter {
                      .put(offset + 3, (byte) 0);
                 break;
             }
-            case PropertyType.TIMESTAMP:
-            case PropertyType.INT64: {
+            case TIMESTAMP:
+            case INT64: {
                 if (v) {
                     buf.put(offset, (byte)0x01);
                 } else  {
@@ -152,8 +156,7 @@ public class RowWriterImpl implements RowWriter {
                 break;
             }
             default:
-                throw new RuntimeException("Write boolean with unsupported type "
-                        + PropertyType.VALUES_TO_NAMES.get(field.type()));
+                throw new RuntimeException("Write boolean with unsupported type: " + field.type());
         }
         if (field.nullable()) {
             clearNullBit(field.nullFlagPos());
@@ -164,9 +167,13 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, float v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.INT8: {
+        switch (typeEnum) {
+            case INT8: {
                 if (v > 127 || v < 0x80) {
                     throw new RuntimeException(
                       "Value: " + v + " is out of range, the type is byte");
@@ -174,7 +181,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.put(offset, (byte)v);
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 if (v > 0x7FFF || v < 0x8000) {
                     throw new RuntimeException(
                       "Value: " + v + " is out of range, the type is short");
@@ -182,7 +189,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.putShort(offset, (short) v);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 if (v > 0x7FFFFFFF || v < 0x80000000) {
                     throw new RuntimeException(
                       "Value: " + v + " is out of range, the type is int");
@@ -190,8 +197,8 @@ public class RowWriterImpl implements RowWriter {
                 buf.putInt(offset, (int) v);
                 break;
             }
-            case PropertyType.TIMESTAMP:
-            case PropertyType.INT64: {
+            case TIMESTAMP:
+            case INT64: {
                 if (v > 0x7FFFFFFFFFFFFFFFL || v < 0x8000000000000000L) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is long");
@@ -199,11 +206,11 @@ public class RowWriterImpl implements RowWriter {
                 buf.putLong(offset, (long) v);
                 break;
             }
-            case PropertyType.FLOAT: {
+            case FLOAT: {
                 buf.putFloat(offset, v);
                 break;
             }
-            case PropertyType.DOUBLE: {
+            case DOUBLE: {
                 buf.putDouble(offset, v);
                 break;
             }
@@ -219,9 +226,13 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, double v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.INT8: {
+        switch (typeEnum) {
+            case INT8: {
                 if (v > 127 || v < 0x80) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is byte");
@@ -229,7 +240,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.put(offset, (byte)v);
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 if (v > 0x7FFF || v < 0x8000) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is short");
@@ -237,7 +248,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.putShort(offset, (short) v);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 if (v > 0x7FFFFFFF || v < 0x80000000) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is int");
@@ -245,8 +256,8 @@ public class RowWriterImpl implements RowWriter {
                 buf.putInt(offset, (int) v);
                 break;
             }
-            case PropertyType.TIMESTAMP:
-            case PropertyType.INT64: {
+            case TIMESTAMP:
+            case INT64: {
                 if (v > 0x7FFFFFFFFFFFFFFFL || v < 0x8000000000000000L) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is long");
@@ -254,11 +265,11 @@ public class RowWriterImpl implements RowWriter {
                 buf.putLong(offset, (long) v);
                 break;
             }
-            case PropertyType.FLOAT: {
+            case FLOAT: {
                 buf.putFloat(offset, (float)v);
                 break;
             }
-            case PropertyType.DOUBLE: {
+            case DOUBLE: {
                 buf.putDouble(offset, v);
                 break;
             }
@@ -274,34 +285,38 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, byte v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.BOOL: {
+        switch (typeEnum) {
+            case BOOL: {
                 buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
                 break;
             }
-            case PropertyType.INT8: {
+            case INT8: {
                 buf.put(offset, v);
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 buf.putShort(offset, v);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 buf.putInt(offset, v);
                 break;
             }
-            case PropertyType.TIMESTAMP:
-            case PropertyType.INT64: {
+            case TIMESTAMP:
+            case INT64: {
                 buf.putLong(offset, v);
                 break;
             }
-            case PropertyType.FLOAT: {
+            case FLOAT: {
                 buf.putFloat(offset, v);
                 break;
             }
-            case PropertyType.DOUBLE: {
+            case DOUBLE: {
                 buf.putDouble(offset, v);
                 break;
             }
@@ -317,13 +332,17 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, short v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.BOOL: {
+        switch (typeEnum) {
+            case BOOL: {
                 buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
                 break;
             }
-            case PropertyType.INT8: {
+            case INT8: {
                 if (v > 0x7F || v < -0x7F) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is byte");
@@ -331,24 +350,24 @@ public class RowWriterImpl implements RowWriter {
                 buf.put(offset, (byte)v);
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 buf.putShort(offset, v);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 buf.putInt(offset, v);
                 break;
             }
-            case PropertyType.TIMESTAMP:
-            case PropertyType.INT64: {
+            case TIMESTAMP:
+            case INT64: {
                 buf.putLong(offset, v);
                 break;
             }
-            case PropertyType.FLOAT: {
+            case FLOAT: {
                 buf.putFloat(offset, v);
                 break;
             }
-            case PropertyType.DOUBLE: {
+            case DOUBLE: {
                 buf.putDouble(offset, v);
                 break;
             }
@@ -364,13 +383,17 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, int v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.BOOL: {
+        switch (typeEnum) {
+            case BOOL: {
                 buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
                 break;
             }
-            case PropertyType.INT8: {
+            case INT8: {
                 if (v > 0x7F || v < -0x7F) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is byte");
@@ -378,7 +401,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.put(offset, (byte)v);
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 if (v > 0x7FFF || v < -0x7FFF) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is short");
@@ -386,20 +409,20 @@ public class RowWriterImpl implements RowWriter {
                 buf.putShort(offset, (short) v);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 buf.putInt(offset, v);
                 break;
             }
-            case PropertyType.TIMESTAMP:
-            case PropertyType.INT64: {
+            case TIMESTAMP:
+            case INT64: {
                 buf.putLong(offset, v);
                 break;
             }
-            case PropertyType.FLOAT: {
+            case FLOAT: {
                 buf.putFloat(offset, v);
                 break;
             }
-            case PropertyType.DOUBLE: {
+            case DOUBLE: {
                 buf.putDouble(offset, v);
                 break;
             }
@@ -416,13 +439,17 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, long v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.BOOL: {
+        switch (typeEnum) {
+            case BOOL: {
                 buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
                 break;
             }
-            case PropertyType.INT8: {
+            case INT8: {
                 if (v > 0x7F || v < -0x7F) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is byte");
@@ -430,7 +457,7 @@ public class RowWriterImpl implements RowWriter {
                 buf.put(offset, (byte)v);
                 break;
             }
-            case PropertyType.INT16: {
+            case INT16: {
                 if (v > 0x7FFF || v < -0x7FFF) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is short");
@@ -438,18 +465,18 @@ public class RowWriterImpl implements RowWriter {
                 buf.putShort(offset, (short) v);
                 break;
             }
-            case PropertyType.INT32: {
+            case INT32: {
                 if (v > 0x7FFFFFFF || v < -0x7FFFFFFF) {
                     throw new RuntimeException("Value: " + v + " is out of range, the type is int");
                 }
                 buf.putInt(offset, (int)v);
                 break;
             }
-            case PropertyType.INT64: {
+            case INT64: {
                 buf.putLong(offset, v);
                 break;
             }
-            case PropertyType.TIMESTAMP: {
+            case TIMESTAMP: {
                 if (v < 0 || v >  Long.MAX_VALUE / 1000000000) {
                     throw new RuntimeException(
                         "Value: " + v + " is out of range, the type is timestamp");
@@ -457,11 +484,11 @@ public class RowWriterImpl implements RowWriter {
                 buf.putLong(offset, v);
                 break;
             }
-            case PropertyType.FLOAT: {
+            case FLOAT: {
                 buf.putFloat(offset, v);
                 break;
             }
-            case PropertyType.DOUBLE: {
+            case DOUBLE: {
                 buf.putDouble(offset, v);
                 break;
             }
@@ -477,15 +504,19 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, byte[] v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.STRING: {
+        switch (typeEnum) {
+            case STRING: {
                 strList.add(new String(v));
                 outOfSpaceStr = true;
                 approxStrLen += v.length;
                 break;
             }
-            case PropertyType.FIXED_STRING: {
+            case FIXED_STRING: {
                 // In-place string. If the pass-in string is longer than the pre-defined
                 // fixed length, the string will be truncated to the fixed length
                 int len = Math.min(v.length, field.size());
@@ -512,8 +543,12 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, Time v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        if (field.type() == PropertyType.TIME) {
+        if (typeEnum == PropertyType.TIME) {
             buf.put(offset, v.hour)
                  .put(offset + Byte.BYTES, v.minute)
                  .put(offset  + 2 * Byte.BYTES, v.sec)
@@ -530,14 +565,18 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, Date v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.DATE:
+        switch (typeEnum) {
+            case DATE:
                 buf.putShort(offset, v.year)
                     .put(offset + Short.BYTES, v.month)
                     .put(offset + Short.BYTES + Byte.BYTES, v.day);
                 break;
-            case PropertyType.DATETIME:
+            case DATETIME:
                 buf.putShort(offset, v.year)
                     .put(offset + Short.BYTES, v.month)
                     .put(offset + Short.BYTES + Byte.BYTES, v.day)
@@ -558,14 +597,18 @@ public class RowWriterImpl implements RowWriter {
     @Override
     public void write(int index, DateTime v) {
         SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
         int offset = headerLen + numNullBytes + field.offset();
-        switch (field.type()) {
-            case PropertyType.DATE:
+        switch (typeEnum) {
+            case DATE:
                 buf.putShort(offset, v.year)
                     .put(offset + Short.BYTES, v.month)
                     .put(offset + Short.BYTES + Byte.BYTES, v.day);
                 break;
-            case PropertyType.DATETIME:
+            case DATETIME:
                 buf.putShort(offset, v.year)
                     .put(offset + Short.BYTES, v.month)
                     .put(offset + Short.BYTES + Byte.BYTES, v.day)
@@ -775,7 +818,11 @@ public class RowWriterImpl implements RowWriter {
         int strNum = 0;
         for (int i = 0;  i < schema.getNumFields(); i++) {
             SchemaProvider.Field field = schema.field(i);
-            if (field.type() != PropertyType.STRING) {
+            PropertyType typeEnum = PropertyType.findByValue(field.type());
+            if (typeEnum == null) {
+                throw new RuntimeException("Incorrect field type " + field.type());
+            }
+            if (typeEnum != PropertyType.STRING) {
                 continue;
             }
             int offset = headerLen + numNullBytes + field.offset();

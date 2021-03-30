@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,7 +36,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
    * 
    * @see HostRole
    */
-  public int role;
+  public HostRole role;
   public com.vesoft.nebula.HostAddr host;
   public long cluster_id;
   public Map<Integer,List<Integer>> leader_partIds;
@@ -49,14 +46,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public static final int CLUSTER_ID = 3;
   public static final int LEADER_PARTIDS = 4;
   public static final int GIT_INFO_SHA = 5;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __ROLE_ISSET_ID = 0;
-  private static final int __CLUSTER_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __CLUSTER_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ROLE, new FieldMetaData("role", TFieldRequirementType.DEFAULT, 
@@ -83,14 +79,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   }
 
   public HBReq(
-    int role,
-    com.vesoft.nebula.HostAddr host,
-    long cluster_id,
-    byte[] git_info_sha)
-  {
+      HostRole role,
+      com.vesoft.nebula.HostAddr host,
+      long cluster_id,
+      byte[] git_info_sha) {
     this();
     this.role = role;
-    setRoleIsSet(true);
     this.host = host;
     this.cluster_id = cluster_id;
     setCluster_idIsSet(true);
@@ -98,20 +92,73 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   }
 
   public HBReq(
-    int role,
-    com.vesoft.nebula.HostAddr host,
-    long cluster_id,
-    Map<Integer,List<Integer>> leader_partIds,
-    byte[] git_info_sha)
-  {
+      HostRole role,
+      com.vesoft.nebula.HostAddr host,
+      long cluster_id,
+      Map<Integer,List<Integer>> leader_partIds,
+      byte[] git_info_sha) {
     this();
     this.role = role;
-    setRoleIsSet(true);
     this.host = host;
     this.cluster_id = cluster_id;
     setCluster_idIsSet(true);
     this.leader_partIds = leader_partIds;
     this.git_info_sha = git_info_sha;
+  }
+
+  public static class Builder {
+    private HostRole role;
+    private com.vesoft.nebula.HostAddr host;
+    private long cluster_id;
+    private Map<Integer,List<Integer>> leader_partIds;
+    private byte[] git_info_sha;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setRole(final HostRole role) {
+      this.role = role;
+      return this;
+    }
+
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
+    public Builder setCluster_id(final long cluster_id) {
+      this.cluster_id = cluster_id;
+      __optional_isset.set(__CLUSTER_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLeader_partIds(final Map<Integer,List<Integer>> leader_partIds) {
+      this.leader_partIds = leader_partIds;
+      return this;
+    }
+
+    public Builder setGit_info_sha(final byte[] git_info_sha) {
+      this.git_info_sha = git_info_sha;
+      return this;
+    }
+
+    public HBReq build() {
+      HBReq result = new HBReq();
+      result.setRole(this.role);
+      result.setHost(this.host);
+      if (__optional_isset.get(__CLUSTER_ID_ISSET_ID)) {
+        result.setCluster_id(this.cluster_id);
+      }
+      result.setLeader_partIds(this.leader_partIds);
+      result.setGit_info_sha(this.git_info_sha);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -120,7 +167,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public HBReq(HBReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.role = TBaseHelper.deepCopy(other.role);
+    if (other.isSetRole()) {
+      this.role = TBaseHelper.deepCopy(other.role);
+    }
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
     }
@@ -137,16 +186,11 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     return new HBReq(this);
   }
 
-  @Deprecated
-  public HBReq clone() {
-    return new HBReq(this);
-  }
-
   /**
    * 
    * @see HostRole
    */
-  public int  getRole() {
+  public HostRole getRole() {
     return this.role;
   }
 
@@ -154,26 +198,27 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
    * 
    * @see HostRole
    */
-  public HBReq setRole(int role) {
+  public HBReq setRole(HostRole role) {
     this.role = role;
-    setRoleIsSet(true);
     return this;
   }
 
   public void unsetRole() {
-    __isset_bit_vector.clear(__ROLE_ISSET_ID);
+    this.role = null;
   }
 
   // Returns true if field role is set (has been assigned a value) and false otherwise
   public boolean isSetRole() {
-    return __isset_bit_vector.get(__ROLE_ISSET_ID);
+    return this.role != null;
   }
 
-  public void setRoleIsSet(boolean value) {
-    __isset_bit_vector.set(__ROLE_ISSET_ID, value);
+  public void setRoleIsSet(boolean __value) {
+    if (!__value) {
+      this.role = null;
+    }
   }
 
-  public com.vesoft.nebula.HostAddr  getHost() {
+  public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
@@ -191,13 +236,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     return this.host != null;
   }
 
-  public void setHostIsSet(boolean value) {
-    if (!value) {
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
       this.host = null;
     }
   }
 
-  public long  getCluster_id() {
+  public long getCluster_id() {
     return this.cluster_id;
   }
 
@@ -216,11 +261,11 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     return __isset_bit_vector.get(__CLUSTER_ID_ISSET_ID);
   }
 
-  public void setCluster_idIsSet(boolean value) {
-    __isset_bit_vector.set(__CLUSTER_ID_ISSET_ID, value);
+  public void setCluster_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__CLUSTER_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<Integer>>  getLeader_partIds() {
+  public Map<Integer,List<Integer>> getLeader_partIds() {
     return this.leader_partIds;
   }
 
@@ -238,13 +283,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     return this.leader_partIds != null;
   }
 
-  public void setLeader_partIdsIsSet(boolean value) {
-    if (!value) {
+  public void setLeader_partIdsIsSet(boolean __value) {
+    if (!__value) {
       this.leader_partIds = null;
     }
   }
 
-  public byte[]  getGit_info_sha() {
+  public byte[] getGit_info_sha() {
     return this.git_info_sha;
   }
 
@@ -262,52 +307,52 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     return this.git_info_sha != null;
   }
 
-  public void setGit_info_shaIsSet(boolean value) {
-    if (!value) {
+  public void setGit_info_shaIsSet(boolean __value) {
+    if (!__value) {
       this.git_info_sha = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ROLE:
-      if (value == null) {
+      if (__value == null) {
         unsetRole();
       } else {
-        setRole((Integer)value);
+        setRole((HostRole)__value);
       }
       break;
 
     case HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetHost();
       } else {
-        setHost((com.vesoft.nebula.HostAddr)value);
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case CLUSTER_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetCluster_id();
       } else {
-        setCluster_id((Long)value);
+        setCluster_id((Long)__value);
       }
       break;
 
     case LEADER_PARTIDS:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_partIds();
       } else {
-        setLeader_partIds((Map<Integer,List<Integer>>)value);
+        setLeader_partIds((Map<Integer,List<Integer>>)__value);
       }
       break;
 
     case GIT_INFO_SHA:
-      if (value == null) {
+      if (__value == null) {
         unsetGit_info_sha();
       } else {
-        setGit_info_sha((byte[])value);
+        setGit_info_sha((byte[])__value);
       }
       break;
 
@@ -338,117 +383,32 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ROLE:
-      return isSetRole();
-    case HOST:
-      return isSetHost();
-    case CLUSTER_ID:
-      return isSetCluster_id();
-    case LEADER_PARTIDS:
-      return isSetLeader_partIds();
-    case GIT_INFO_SHA:
-      return isSetGit_info_sha();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof HBReq)
-      return this.equals((HBReq)that);
-    return false;
-  }
-
-  public boolean equals(HBReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof HBReq))
+      return false;
+    HBReq that = (HBReq)_that;
 
-    boolean this_present_role = true;
-    boolean that_present_role = true;
-    if (this_present_role || that_present_role) {
-      if (!(this_present_role && that_present_role))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.role, that.role))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRole(), that.isSetRole(), this.role, that.role)) { return false; }
 
-    boolean this_present_host = true && this.isSetHost();
-    boolean that_present_host = true && that.isSetHost();
-    if (this_present_host || that_present_host) {
-      if (!(this_present_host && that_present_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.host, that.host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
-    boolean this_present_cluster_id = true;
-    boolean that_present_cluster_id = true;
-    if (this_present_cluster_id || that_present_cluster_id) {
-      if (!(this_present_cluster_id && that_present_cluster_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.cluster_id, that.cluster_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.cluster_id, that.cluster_id)) { return false; }
 
-    boolean this_present_leader_partIds = true && this.isSetLeader_partIds();
-    boolean that_present_leader_partIds = true && that.isSetLeader_partIds();
-    if (this_present_leader_partIds || that_present_leader_partIds) {
-      if (!(this_present_leader_partIds && that_present_leader_partIds))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_partIds, that.leader_partIds))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLeader_partIds(), that.isSetLeader_partIds(), this.leader_partIds, that.leader_partIds)) { return false; }
 
-    boolean this_present_git_info_sha = true && this.isSetGit_info_sha();
-    boolean that_present_git_info_sha = true && that.isSetGit_info_sha();
-    if (this_present_git_info_sha || that_present_git_info_sha) {
-      if (!(this_present_git_info_sha && that_present_git_info_sha))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.git_info_sha, that.git_info_sha))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetGit_info_sha(), that.isSetGit_info_sha(), this.git_info_sha, that.git_info_sha)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_role = true;
-    builder.append(present_role);
-    if (present_role)
-      builder.append(role);
-
-    boolean present_host = true && (isSetHost());
-    builder.append(present_host);
-    if (present_host)
-      builder.append(host);
-
-    boolean present_cluster_id = true;
-    builder.append(present_cluster_id);
-    if (present_cluster_id)
-      builder.append(cluster_id);
-
-    boolean present_leader_partIds = true && (isSetLeader_partIds());
-    builder.append(present_leader_partIds);
-    if (present_leader_partIds)
-      builder.append(leader_partIds);
-
-    boolean present_git_info_sha = true && (isSetGit_info_sha());
-    builder.append(present_git_info_sha);
-    if (present_git_info_sha)
-      builder.append(git_info_sha);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha});
   }
 
   @Override
@@ -468,7 +428,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(role, other.role);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
@@ -476,7 +436,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host, other.host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCluster_id()).compareTo(other.isSetCluster_id());
@@ -484,7 +444,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(cluster_id, other.cluster_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_partIds()).compareTo(other.isSetLeader_partIds());
@@ -492,7 +452,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_partIds, other.leader_partIds);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetGit_info_sha()).compareTo(other.isSetGit_info_sha());
@@ -500,89 +460,88 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(git_info_sha, other.git_info_sha);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ROLE:
-          if (field.type == TType.I32) {
-            this.role = iprot.readI32();
-            setRoleIsSet(true);
+          if (__field.type == TType.I32) {
+            this.role = HostRole.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CLUSTER_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.cluster_id = iprot.readI64();
             setCluster_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_PARTIDS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
-              TMap _map126 = iprot.readMapBegin();
-              this.leader_partIds = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map126.size));
-              for (int _i127 = 0; 
-                   (_map126.size < 0) ? iprot.peekMap() : (_i127 < _map126.size); 
-                   ++_i127)
+              TMap _map135 = iprot.readMapBegin();
+              this.leader_partIds = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map135.size));
+              for (int _i136 = 0; 
+                   (_map135.size < 0) ? iprot.peekMap() : (_i136 < _map135.size); 
+                   ++_i136)
               {
-                int _key128;
-                List<Integer> _val129;
-                _key128 = iprot.readI32();
+                int _key137;
+                List<Integer> _val138;
+                _key137 = iprot.readI32();
                 {
-                  TList _list130 = iprot.readListBegin();
-                  _val129 = new ArrayList<Integer>(Math.max(0, _list130.size));
-                  for (int _i131 = 0; 
-                       (_list130.size < 0) ? iprot.peekList() : (_i131 < _list130.size); 
-                       ++_i131)
+                  TList _list139 = iprot.readListBegin();
+                  _val138 = new ArrayList<Integer>(Math.max(0, _list139.size));
+                  for (int _i140 = 0; 
+                       (_list139.size < 0) ? iprot.peekList() : (_i140 < _list139.size); 
+                       ++_i140)
                   {
-                    int _elem132;
-                    _elem132 = iprot.readI32();
-                    _val129.add(_elem132);
+                    int _elem141;
+                    _elem141 = iprot.readI32();
+                    _val138.add(_elem141);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_partIds.put(_key128, _val129);
+                this.leader_partIds.put(_key137, _val138);
               }
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case GIT_INFO_SHA:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.git_info_sha = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -598,9 +557,11 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(ROLE_FIELD_DESC);
-    oprot.writeI32(this.role);
-    oprot.writeFieldEnd();
+    if (this.role != null) {
+      oprot.writeFieldBegin(ROLE_FIELD_DESC);
+      oprot.writeI32(this.role == null ? 0 : this.role.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.host != null) {
       oprot.writeFieldBegin(HOST_FIELD_DESC);
       this.host.write(oprot);
@@ -614,12 +575,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         oprot.writeFieldBegin(LEADER_PART_IDS_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_partIds.size()));
-          for (Map.Entry<Integer, List<Integer>> _iter133 : this.leader_partIds.entrySet())          {
-            oprot.writeI32(_iter133.getKey());
+          for (Map.Entry<Integer, List<Integer>> _iter142 : this.leader_partIds.entrySet())          {
+            oprot.writeI32(_iter142.getKey());
             {
-              oprot.writeListBegin(new TList(TType.I32, _iter133.getValue().size()));
-              for (int _iter134 : _iter133.getValue())              {
-                oprot.writeI32(_iter134);
+              oprot.writeListBegin(new TList(TType.I32, _iter142.getValue().size()));
+              for (int _iter143 : _iter142.getValue())              {
+                oprot.writeI32(_iter143);
               }
               oprot.writeListEnd();
             }
@@ -640,19 +601,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("HBReq");
     sb.append(space);
     sb.append("(");
@@ -663,14 +619,18 @@ String space = prettyPrint ? " " : "";
     sb.append("role");
     sb.append(space);
     sb.append(":").append(space);
-    String role_name = HostRole.VALUES_TO_NAMES.get(this. getRole());
-    if (role_name != null) {
-      sb.append(role_name);
-      sb.append(" (");
-    }
-    sb.append(this. getRole());
-    if (role_name != null) {
-      sb.append(")");
+    if (this.getRole() == null) {
+      sb.append("null");
+    } else {
+      String role_name = this.getRole() == null ? "null" : this.getRole().name();
+      if (role_name != null) {
+        sb.append(role_name);
+        sb.append(" (");
+      }
+      sb.append(this.getRole());
+      if (role_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -678,10 +638,10 @@ String space = prettyPrint ? " " : "";
     sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHost() == null) {
+    if (this.getHost() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHost(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -689,7 +649,7 @@ String space = prettyPrint ? " " : "";
     sb.append("cluster_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCluster_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCluster_id(), indent + 1, prettyPrint));
     first = false;
     if (isSetLeader_partIds())
     {
@@ -698,10 +658,10 @@ String space = prettyPrint ? " " : "";
       sb.append("leader_partIds");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getLeader_partIds() == null) {
+      if (this.getLeader_partIds() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getLeader_partIds(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getLeader_partIds(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -710,15 +670,15 @@ String space = prettyPrint ? " " : "";
     sb.append("git_info_sha");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGit_info_sha() == null) {
+    if (this.getGit_info_sha() == null) {
       sb.append("null");
     } else {
-        int __git_info_sha_size = Math.min(this. getGit_info_sha().length, 128);
+        int __git_info_sha_size = Math.min(this.getGit_info_sha().length, 128);
         for (int i = 0; i < __git_info_sha_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getGit_info_sha()[i]).length() > 1 ? Integer.toHexString(this. getGit_info_sha()[i]).substring(Integer.toHexString(this. getGit_info_sha()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getGit_info_sha()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getGit_info_sha()[i]).length() > 1 ? Integer.toHexString(this.getGit_info_sha()[i]).substring(Integer.toHexString(this.getGit_info_sha()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getGit_info_sha()[i]).toUpperCase());
         }
-        if (this. getGit_info_sha().length > 128) sb.append(" ...");
+        if (this.getGit_info_sha().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -728,10 +688,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetRole() && !HostRole.VALID_VALUES.contains(role)){
-      throw new TProtocolException("The field 'role' has been assigned the invalid value " + role);
-    }
   }
 
 }

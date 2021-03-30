@@ -169,7 +169,7 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                 freshLeader(spaceName, partInfo.getPart(), partResult.getLeader());
                 partInfo.setLeader(getLeader(partResult.getLeader()));
             } else {
-                int code = partResult.getCode();
+                ErrorCode code = partResult.getCode();
                 LOGGER.error(String.format("part scan failed, error code=%d", code));
                 partScanQueue.dropPart(partInfo);
                 exceptions.add(new Exception(String.format("part scan, error code=%d", code)));

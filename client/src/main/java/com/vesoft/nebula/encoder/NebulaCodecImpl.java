@@ -209,7 +209,7 @@ public class NebulaCodecImpl implements NebulaCodec {
             boolean hasDefault = col.isSetDefault_value();
             int len = type.isSetType_length() ? type.getType_length() : 0;
             schemaProvider.addField(new String(col.getName()),
-                type.type,
+                type.type.getValue(),
                 len,
                 nullable,
                 hasDefault ? col.getDefault_value() : null);

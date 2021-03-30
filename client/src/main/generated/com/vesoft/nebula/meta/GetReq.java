@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
   public byte[] key;
   public static final int SEGMENT = 1;
   public static final int KEY = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SEGMENT, new FieldMetaData("segment", TFieldRequirementType.DEFAULT, 
@@ -58,12 +55,40 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
   }
 
   public GetReq(
-    byte[] segment,
-    byte[] key)
-  {
+      byte[] segment,
+      byte[] key) {
     this();
     this.segment = segment;
     this.key = key;
+  }
+
+  public static class Builder {
+    private byte[] segment;
+    private byte[] key;
+
+    public Builder() {
+    }
+
+    public Builder setSegment(final byte[] segment) {
+      this.segment = segment;
+      return this;
+    }
+
+    public Builder setKey(final byte[] key) {
+      this.key = key;
+      return this;
+    }
+
+    public GetReq build() {
+      GetReq result = new GetReq();
+      result.setSegment(this.segment);
+      result.setKey(this.key);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
     return new GetReq(this);
   }
 
-  @Deprecated
-  public GetReq clone() {
-    return new GetReq(this);
-  }
-
-  public byte[]  getSegment() {
+  public byte[] getSegment() {
     return this.segment;
   }
 
@@ -105,13 +125,13 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
     return this.segment != null;
   }
 
-  public void setSegmentIsSet(boolean value) {
-    if (!value) {
+  public void setSegmentIsSet(boolean __value) {
+    if (!__value) {
       this.segment = null;
     }
   }
 
-  public byte[]  getKey() {
+  public byte[] getKey() {
     return this.key;
   }
 
@@ -129,27 +149,27 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
     return this.key != null;
   }
 
-  public void setKeyIsSet(boolean value) {
-    if (!value) {
+  public void setKeyIsSet(boolean __value) {
+    if (!__value) {
       this.key = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SEGMENT:
-      if (value == null) {
+      if (__value == null) {
         unsetSegment();
       } else {
-        setSegment((byte[])value);
+        setSegment((byte[])__value);
       }
       break;
 
     case KEY:
-      if (value == null) {
+      if (__value == null) {
         unsetKey();
       } else {
-        setKey((byte[])value);
+        setKey((byte[])__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SEGMENT:
-      return isSetSegment();
-    case KEY:
-      return isSetKey();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetReq)
-      return this.equals((GetReq)that);
-    return false;
-  }
-
-  public boolean equals(GetReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetReq))
+      return false;
+    GetReq that = (GetReq)_that;
 
-    boolean this_present_segment = true && this.isSetSegment();
-    boolean that_present_segment = true && that.isSetSegment();
-    if (this_present_segment || that_present_segment) {
-      if (!(this_present_segment && that_present_segment))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.segment, that.segment))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSegment(), that.isSetSegment(), this.segment, that.segment)) { return false; }
 
-    boolean this_present_key = true && this.isSetKey();
-    boolean that_present_key = true && that.isSetKey();
-    if (this_present_key || that_present_key) {
-      if (!(this_present_key && that_present_key))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.key, that.key))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetKey(), that.isSetKey(), this.key, that.key)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_segment = true && (isSetSegment());
-    builder.append(present_segment);
-    if (present_segment)
-      builder.append(segment);
-
-    boolean present_key = true && (isSetKey());
-    builder.append(present_key);
-    if (present_key)
-      builder.append(key);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {segment, key});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(segment, other.segment);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetKey()).compareTo(other.isSetKey());
@@ -261,39 +238,39 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(key, other.key);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SEGMENT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.segment = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case KEY:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.key = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -325,19 +302,14 @@ public class GetReq implements TBase, java.io.Serializable, Cloneable, Comparabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetReq");
     sb.append(space);
     sb.append("(");
@@ -348,15 +320,15 @@ String space = prettyPrint ? " " : "";
     sb.append("segment");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSegment() == null) {
+    if (this.getSegment() == null) {
       sb.append("null");
     } else {
-        int __segment_size = Math.min(this. getSegment().length, 128);
+        int __segment_size = Math.min(this.getSegment().length, 128);
         for (int i = 0; i < __segment_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSegment()[i]).length() > 1 ? Integer.toHexString(this. getSegment()[i]).substring(Integer.toHexString(this. getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSegment()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSegment()[i]).length() > 1 ? Integer.toHexString(this.getSegment()[i]).substring(Integer.toHexString(this.getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSegment()[i]).toUpperCase());
         }
-        if (this. getSegment().length > 128) sb.append(" ...");
+        if (this.getSegment().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -364,15 +336,15 @@ String space = prettyPrint ? " " : "";
     sb.append("key");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getKey() == null) {
+    if (this.getKey() == null) {
       sb.append("null");
     } else {
-        int __key_size = Math.min(this. getKey().length, 128);
+        int __key_size = Math.min(this.getKey().length, 128);
         for (int i = 0; i < __key_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getKey()[i]).length() > 1 ? Integer.toHexString(this. getKey()[i]).substring(Integer.toHexString(this. getKey()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getKey()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getKey()[i]).length() > 1 ? Integer.toHexString(this.getKey()[i]).substring(Integer.toHexString(this.getKey()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getKey()[i]).toUpperCase());
         }
-        if (this. getKey().length > 128) sb.append(" ...");
+        if (this.getKey().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -382,7 +354,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

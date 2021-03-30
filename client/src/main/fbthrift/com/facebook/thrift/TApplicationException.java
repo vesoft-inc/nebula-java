@@ -1,45 +1,38 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
-
+import com.facebook.thrift.meta_data.FieldMetaData;
+import com.facebook.thrift.meta_data.FieldValueMetaData;
 import com.facebook.thrift.protocol.TField;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.protocol.TProtocolUtil;
 import com.facebook.thrift.protocol.TStruct;
 import com.facebook.thrift.protocol.TType;
-import com.facebook.thrift.meta_data.FieldMetaData;
-import com.facebook.thrift.meta_data.FieldValueMetaData;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Application level exception
- *
- */
+/** Application level exception */
 public class TApplicationException extends TException {
 
   private static final TStruct TAPPLICATION_EXCEPTION_STRUCT = new TStruct("TApplicationException");
-  private static final TField MESSAGE_FIELD = new TField("message", TType.STRING, (short)1);
-  private static final TField TYPE_FIELD = new TField("type", TType.I32, (short)2);
+  private static final TField MESSAGE_FIELD = new TField("message", TType.STRING, (short) 1);
+  private static final TField TYPE_FIELD = new TField("type", TType.I32, (short) 2);
 
   private static final long serialVersionUID = 1L;
 
@@ -54,6 +47,11 @@ public class TApplicationException extends TException {
   public static final int INVALID_TRANSFORM = 8;
   public static final int INVALID_PROTOCOL = 9;
   public static final int UNSUPPORTED_CLIENT_TYPE = 10;
+  public static final int LOADSHEDDING = 11;
+  public static final int TIMEOUT = 12;
+  public static final int INJECTED_FAILURE = 13;
+  public static final int CHECKSUM_MISMATCH = 14;
+  public static final int INTERRUPTION = 15;
 
   public static final int MESSAGE = 1;
 
@@ -61,12 +59,17 @@ public class TApplicationException extends TException {
   public static final int TYPE = 2;
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(MESSAGE, new FieldMetaData("message", TFieldRequirementType.DEFAULT,
-        new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT,
-        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(
+        MESSAGE,
+        new FieldMetaData(
+            "message", TFieldRequirementType.DEFAULT, new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(
+        TYPE,
+        new FieldMetaData(
+            "type", TFieldRequirementType.DEFAULT, new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -105,23 +108,23 @@ public class TApplicationException extends TException {
         break;
       }
       switch (field.id) {
-      case 1:
-        if (field.type == TType.STRING) {
-          message = iprot.readString();
-        } else {
+        case 1:
+          if (field.type == TType.STRING) {
+            message = iprot.readString();
+          } else {
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case 2:
+          if (field.type == TType.I32) {
+            type = iprot.readI32();
+          } else {
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        default:
           TProtocolUtil.skip(iprot, field.type);
-        }
-        break;
-      case 2:
-        if (field.type == TType.I32) {
-          type = iprot.readI32();
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-        }
-        break;
-      default:
-        TProtocolUtil.skip(iprot, field.type);
-        break;
+          break;
       }
       iprot.readFieldEnd();
     }

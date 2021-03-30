@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -1677,11 +1677,11 @@ public class StorageAdminService {
 
     public TransLeaderReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -1697,8 +1697,7 @@ public class StorageAdminService {
     }
 
     public transLeader_args(
-      TransLeaderReq req)
-    {
+        TransLeaderReq req) {
       this();
       this.req = req;
     }
@@ -1716,12 +1715,7 @@ public class StorageAdminService {
       return new transLeader_args(this);
     }
 
-    @Deprecated
-    public transLeader_args clone() {
-      return new transLeader_args(this);
-    }
-
-    public TransLeaderReq  getReq() {
+    public TransLeaderReq getReq() {
       return this.req;
     }
 
@@ -1739,19 +1733,19 @@ public class StorageAdminService {
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((TransLeaderReq)value);
+          setReq((TransLeaderReq)__value);
         }
         break;
 
@@ -1770,53 +1764,24 @@ public class StorageAdminService {
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof transLeader_args)
-        return this.equals((transLeader_args)that);
-      return false;
-    }
-
-    public boolean equals(transLeader_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof transLeader_args))
+        return false;
+      transLeader_args that = (transLeader_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -1836,33 +1801,33 @@ public class StorageAdminService {
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new TransLeaderReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -1889,19 +1854,14 @@ public class StorageAdminService {
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("transLeader_args");
       sb.append(space);
       sb.append("(");
@@ -1912,10 +1872,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -1925,7 +1885,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -1936,11 +1895,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -1956,8 +1915,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public transLeader_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -1975,12 +1933,7 @@ String space = prettyPrint ? " " : "";
       return new transLeader_result(this);
     }
 
-    @Deprecated
-    public transLeader_result clone() {
-      return new transLeader_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -1998,19 +1951,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -2029,53 +1982,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof transLeader_result)
-        return this.equals((transLeader_result)that);
-      return false;
-    }
-
-    public boolean equals(transLeader_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof transLeader_result))
+        return false;
+      transLeader_result that = (transLeader_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -2095,33 +2019,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -2147,19 +2071,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("transLeader_result");
       sb.append(space);
       sb.append("(");
@@ -2170,10 +2089,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -2183,7 +2102,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -2194,11 +2112,11 @@ String space = prettyPrint ? " " : "";
 
     public AddPartReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -2214,8 +2132,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public addPart_args(
-      AddPartReq req)
-    {
+        AddPartReq req) {
       this();
       this.req = req;
     }
@@ -2233,12 +2150,7 @@ String space = prettyPrint ? " " : "";
       return new addPart_args(this);
     }
 
-    @Deprecated
-    public addPart_args clone() {
-      return new addPart_args(this);
-    }
-
-    public AddPartReq  getReq() {
+    public AddPartReq getReq() {
       return this.req;
     }
 
@@ -2256,19 +2168,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((AddPartReq)value);
+          setReq((AddPartReq)__value);
         }
         break;
 
@@ -2287,53 +2199,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof addPart_args)
-        return this.equals((addPart_args)that);
-      return false;
-    }
-
-    public boolean equals(addPart_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof addPart_args))
+        return false;
+      addPart_args that = (addPart_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -2353,33 +2236,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new AddPartReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -2406,19 +2289,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("addPart_args");
       sb.append(space);
       sb.append("(");
@@ -2429,10 +2307,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -2442,7 +2320,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -2453,11 +2330,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -2473,8 +2350,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public addPart_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -2492,12 +2368,7 @@ String space = prettyPrint ? " " : "";
       return new addPart_result(this);
     }
 
-    @Deprecated
-    public addPart_result clone() {
-      return new addPart_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -2515,19 +2386,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -2546,53 +2417,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof addPart_result)
-        return this.equals((addPart_result)that);
-      return false;
-    }
-
-    public boolean equals(addPart_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof addPart_result))
+        return false;
+      addPart_result that = (addPart_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -2612,33 +2454,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -2664,19 +2506,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("addPart_result");
       sb.append(space);
       sb.append("(");
@@ -2687,10 +2524,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -2700,7 +2537,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -2711,11 +2547,11 @@ String space = prettyPrint ? " " : "";
 
     public AddLearnerReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -2731,8 +2567,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public addLearner_args(
-      AddLearnerReq req)
-    {
+        AddLearnerReq req) {
       this();
       this.req = req;
     }
@@ -2750,12 +2585,7 @@ String space = prettyPrint ? " " : "";
       return new addLearner_args(this);
     }
 
-    @Deprecated
-    public addLearner_args clone() {
-      return new addLearner_args(this);
-    }
-
-    public AddLearnerReq  getReq() {
+    public AddLearnerReq getReq() {
       return this.req;
     }
 
@@ -2773,19 +2603,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((AddLearnerReq)value);
+          setReq((AddLearnerReq)__value);
         }
         break;
 
@@ -2804,53 +2634,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof addLearner_args)
-        return this.equals((addLearner_args)that);
-      return false;
-    }
-
-    public boolean equals(addLearner_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof addLearner_args))
+        return false;
+      addLearner_args that = (addLearner_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -2870,33 +2671,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new AddLearnerReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -2923,19 +2724,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("addLearner_args");
       sb.append(space);
       sb.append("(");
@@ -2946,10 +2742,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -2959,7 +2755,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -2970,11 +2765,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -2990,8 +2785,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public addLearner_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -3009,12 +2803,7 @@ String space = prettyPrint ? " " : "";
       return new addLearner_result(this);
     }
 
-    @Deprecated
-    public addLearner_result clone() {
-      return new addLearner_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -3032,19 +2821,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -3063,53 +2852,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof addLearner_result)
-        return this.equals((addLearner_result)that);
-      return false;
-    }
-
-    public boolean equals(addLearner_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof addLearner_result))
+        return false;
+      addLearner_result that = (addLearner_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -3129,33 +2889,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -3181,19 +2941,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("addLearner_result");
       sb.append(space);
       sb.append("(");
@@ -3204,10 +2959,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -3217,7 +2972,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -3228,11 +2982,11 @@ String space = prettyPrint ? " " : "";
 
     public RemovePartReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -3248,8 +3002,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public removePart_args(
-      RemovePartReq req)
-    {
+        RemovePartReq req) {
       this();
       this.req = req;
     }
@@ -3267,12 +3020,7 @@ String space = prettyPrint ? " " : "";
       return new removePart_args(this);
     }
 
-    @Deprecated
-    public removePart_args clone() {
-      return new removePart_args(this);
-    }
-
-    public RemovePartReq  getReq() {
+    public RemovePartReq getReq() {
       return this.req;
     }
 
@@ -3290,19 +3038,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((RemovePartReq)value);
+          setReq((RemovePartReq)__value);
         }
         break;
 
@@ -3321,53 +3069,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof removePart_args)
-        return this.equals((removePart_args)that);
-      return false;
-    }
-
-    public boolean equals(removePart_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof removePart_args))
+        return false;
+      removePart_args that = (removePart_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -3387,33 +3106,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new RemovePartReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -3440,19 +3159,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("removePart_args");
       sb.append(space);
       sb.append("(");
@@ -3463,10 +3177,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -3476,7 +3190,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -3487,11 +3200,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -3507,8 +3220,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public removePart_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -3526,12 +3238,7 @@ String space = prettyPrint ? " " : "";
       return new removePart_result(this);
     }
 
-    @Deprecated
-    public removePart_result clone() {
-      return new removePart_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -3549,19 +3256,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -3580,53 +3287,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof removePart_result)
-        return this.equals((removePart_result)that);
-      return false;
-    }
-
-    public boolean equals(removePart_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof removePart_result))
+        return false;
+      removePart_result that = (removePart_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -3646,33 +3324,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -3698,19 +3376,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("removePart_result");
       sb.append(space);
       sb.append("(");
@@ -3721,10 +3394,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -3734,7 +3407,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -3745,11 +3417,11 @@ String space = prettyPrint ? " " : "";
 
     public MemberChangeReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -3765,8 +3437,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public memberChange_args(
-      MemberChangeReq req)
-    {
+        MemberChangeReq req) {
       this();
       this.req = req;
     }
@@ -3784,12 +3455,7 @@ String space = prettyPrint ? " " : "";
       return new memberChange_args(this);
     }
 
-    @Deprecated
-    public memberChange_args clone() {
-      return new memberChange_args(this);
-    }
-
-    public MemberChangeReq  getReq() {
+    public MemberChangeReq getReq() {
       return this.req;
     }
 
@@ -3807,19 +3473,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((MemberChangeReq)value);
+          setReq((MemberChangeReq)__value);
         }
         break;
 
@@ -3838,53 +3504,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof memberChange_args)
-        return this.equals((memberChange_args)that);
-      return false;
-    }
-
-    public boolean equals(memberChange_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof memberChange_args))
+        return false;
+      memberChange_args that = (memberChange_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -3904,33 +3541,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new MemberChangeReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -3957,19 +3594,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("memberChange_args");
       sb.append(space);
       sb.append("(");
@@ -3980,10 +3612,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -3993,7 +3625,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -4004,11 +3635,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -4024,8 +3655,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public memberChange_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -4043,12 +3673,7 @@ String space = prettyPrint ? " " : "";
       return new memberChange_result(this);
     }
 
-    @Deprecated
-    public memberChange_result clone() {
-      return new memberChange_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -4066,19 +3691,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -4097,53 +3722,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof memberChange_result)
-        return this.equals((memberChange_result)that);
-      return false;
-    }
-
-    public boolean equals(memberChange_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof memberChange_result))
+        return false;
+      memberChange_result that = (memberChange_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -4163,33 +3759,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -4215,19 +3811,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("memberChange_result");
       sb.append(space);
       sb.append("(");
@@ -4238,10 +3829,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -4251,7 +3842,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -4262,11 +3852,11 @@ String space = prettyPrint ? " " : "";
 
     public CatchUpDataReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -4282,8 +3872,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public waitingForCatchUpData_args(
-      CatchUpDataReq req)
-    {
+        CatchUpDataReq req) {
       this();
       this.req = req;
     }
@@ -4301,12 +3890,7 @@ String space = prettyPrint ? " " : "";
       return new waitingForCatchUpData_args(this);
     }
 
-    @Deprecated
-    public waitingForCatchUpData_args clone() {
-      return new waitingForCatchUpData_args(this);
-    }
-
-    public CatchUpDataReq  getReq() {
+    public CatchUpDataReq getReq() {
       return this.req;
     }
 
@@ -4324,19 +3908,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((CatchUpDataReq)value);
+          setReq((CatchUpDataReq)__value);
         }
         break;
 
@@ -4355,53 +3939,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof waitingForCatchUpData_args)
-        return this.equals((waitingForCatchUpData_args)that);
-      return false;
-    }
-
-    public boolean equals(waitingForCatchUpData_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof waitingForCatchUpData_args))
+        return false;
+      waitingForCatchUpData_args that = (waitingForCatchUpData_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -4421,33 +3976,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new CatchUpDataReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -4474,19 +4029,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("waitingForCatchUpData_args");
       sb.append(space);
       sb.append("(");
@@ -4497,10 +4047,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -4510,7 +4060,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -4521,11 +4070,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -4541,8 +4090,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public waitingForCatchUpData_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -4560,12 +4108,7 @@ String space = prettyPrint ? " " : "";
       return new waitingForCatchUpData_result(this);
     }
 
-    @Deprecated
-    public waitingForCatchUpData_result clone() {
-      return new waitingForCatchUpData_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -4583,19 +4126,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -4614,53 +4157,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof waitingForCatchUpData_result)
-        return this.equals((waitingForCatchUpData_result)that);
-      return false;
-    }
-
-    public boolean equals(waitingForCatchUpData_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof waitingForCatchUpData_result))
+        return false;
+      waitingForCatchUpData_result that = (waitingForCatchUpData_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -4680,33 +4194,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -4732,19 +4246,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("waitingForCatchUpData_result");
       sb.append(space);
       sb.append("(");
@@ -4755,10 +4264,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -4768,7 +4277,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -4779,11 +4287,11 @@ String space = prettyPrint ? " " : "";
 
     public CreateCPRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -4799,8 +4307,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public createCheckpoint_args(
-      CreateCPRequest req)
-    {
+        CreateCPRequest req) {
       this();
       this.req = req;
     }
@@ -4818,12 +4325,7 @@ String space = prettyPrint ? " " : "";
       return new createCheckpoint_args(this);
     }
 
-    @Deprecated
-    public createCheckpoint_args clone() {
-      return new createCheckpoint_args(this);
-    }
-
-    public CreateCPRequest  getReq() {
+    public CreateCPRequest getReq() {
       return this.req;
     }
 
@@ -4841,19 +4343,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((CreateCPRequest)value);
+          setReq((CreateCPRequest)__value);
         }
         break;
 
@@ -4872,53 +4374,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof createCheckpoint_args)
-        return this.equals((createCheckpoint_args)that);
-      return false;
-    }
-
-    public boolean equals(createCheckpoint_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof createCheckpoint_args))
+        return false;
+      createCheckpoint_args that = (createCheckpoint_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -4938,33 +4411,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new CreateCPRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -4991,19 +4464,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("createCheckpoint_args");
       sb.append(space);
       sb.append("(");
@@ -5014,10 +4482,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -5027,7 +4495,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -5038,11 +4505,11 @@ String space = prettyPrint ? " " : "";
 
     public CreateCPResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -5058,8 +4525,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public createCheckpoint_result(
-      CreateCPResp success)
-    {
+        CreateCPResp success) {
       this();
       this.success = success;
     }
@@ -5077,12 +4543,7 @@ String space = prettyPrint ? " " : "";
       return new createCheckpoint_result(this);
     }
 
-    @Deprecated
-    public createCheckpoint_result clone() {
-      return new createCheckpoint_result(this);
-    }
-
-    public CreateCPResp  getSuccess() {
+    public CreateCPResp getSuccess() {
       return this.success;
     }
 
@@ -5100,19 +4561,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((CreateCPResp)value);
+          setSuccess((CreateCPResp)__value);
         }
         break;
 
@@ -5131,53 +4592,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof createCheckpoint_result)
-        return this.equals((createCheckpoint_result)that);
-      return false;
-    }
-
-    public boolean equals(createCheckpoint_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof createCheckpoint_result))
+        return false;
+      createCheckpoint_result that = (createCheckpoint_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -5197,33 +4629,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new CreateCPResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -5249,19 +4681,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("createCheckpoint_result");
       sb.append(space);
       sb.append("(");
@@ -5272,10 +4699,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -5285,7 +4712,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -5296,11 +4722,11 @@ String space = prettyPrint ? " " : "";
 
     public DropCPRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -5316,8 +4742,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public dropCheckpoint_args(
-      DropCPRequest req)
-    {
+        DropCPRequest req) {
       this();
       this.req = req;
     }
@@ -5335,12 +4760,7 @@ String space = prettyPrint ? " " : "";
       return new dropCheckpoint_args(this);
     }
 
-    @Deprecated
-    public dropCheckpoint_args clone() {
-      return new dropCheckpoint_args(this);
-    }
-
-    public DropCPRequest  getReq() {
+    public DropCPRequest getReq() {
       return this.req;
     }
 
@@ -5358,19 +4778,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((DropCPRequest)value);
+          setReq((DropCPRequest)__value);
         }
         break;
 
@@ -5389,53 +4809,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof dropCheckpoint_args)
-        return this.equals((dropCheckpoint_args)that);
-      return false;
-    }
-
-    public boolean equals(dropCheckpoint_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof dropCheckpoint_args))
+        return false;
+      dropCheckpoint_args that = (dropCheckpoint_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -5455,33 +4846,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new DropCPRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -5508,19 +4899,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("dropCheckpoint_args");
       sb.append(space);
       sb.append("(");
@@ -5531,10 +4917,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -5544,7 +4930,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -5555,11 +4940,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -5575,8 +4960,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public dropCheckpoint_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -5594,12 +4978,7 @@ String space = prettyPrint ? " " : "";
       return new dropCheckpoint_result(this);
     }
 
-    @Deprecated
-    public dropCheckpoint_result clone() {
-      return new dropCheckpoint_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -5617,19 +4996,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -5648,53 +5027,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof dropCheckpoint_result)
-        return this.equals((dropCheckpoint_result)that);
-      return false;
-    }
-
-    public boolean equals(dropCheckpoint_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof dropCheckpoint_result))
+        return false;
+      dropCheckpoint_result that = (dropCheckpoint_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -5714,33 +5064,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -5766,19 +5116,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("dropCheckpoint_result");
       sb.append(space);
       sb.append("(");
@@ -5789,10 +5134,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -5802,7 +5147,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -5813,11 +5157,11 @@ String space = prettyPrint ? " " : "";
 
     public BlockingSignRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -5833,8 +5177,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public blockingWrites_args(
-      BlockingSignRequest req)
-    {
+        BlockingSignRequest req) {
       this();
       this.req = req;
     }
@@ -5852,12 +5195,7 @@ String space = prettyPrint ? " " : "";
       return new blockingWrites_args(this);
     }
 
-    @Deprecated
-    public blockingWrites_args clone() {
-      return new blockingWrites_args(this);
-    }
-
-    public BlockingSignRequest  getReq() {
+    public BlockingSignRequest getReq() {
       return this.req;
     }
 
@@ -5875,19 +5213,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((BlockingSignRequest)value);
+          setReq((BlockingSignRequest)__value);
         }
         break;
 
@@ -5906,53 +5244,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof blockingWrites_args)
-        return this.equals((blockingWrites_args)that);
-      return false;
-    }
-
-    public boolean equals(blockingWrites_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof blockingWrites_args))
+        return false;
+      blockingWrites_args that = (blockingWrites_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -5972,33 +5281,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new BlockingSignRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -6025,19 +5334,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("blockingWrites_args");
       sb.append(space);
       sb.append("(");
@@ -6048,10 +5352,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -6061,7 +5365,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -6072,11 +5375,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -6092,8 +5395,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public blockingWrites_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -6111,12 +5413,7 @@ String space = prettyPrint ? " " : "";
       return new blockingWrites_result(this);
     }
 
-    @Deprecated
-    public blockingWrites_result clone() {
-      return new blockingWrites_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -6134,19 +5431,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -6165,53 +5462,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof blockingWrites_result)
-        return this.equals((blockingWrites_result)that);
-      return false;
-    }
-
-    public boolean equals(blockingWrites_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof blockingWrites_result))
+        return false;
+      blockingWrites_result that = (blockingWrites_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -6231,33 +5499,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -6283,19 +5551,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("blockingWrites_result");
       sb.append(space);
       sb.append("(");
@@ -6306,10 +5569,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -6319,7 +5582,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -6330,11 +5592,11 @@ String space = prettyPrint ? " " : "";
 
     public RebuildIndexRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -6350,8 +5612,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public rebuildTagIndex_args(
-      RebuildIndexRequest req)
-    {
+        RebuildIndexRequest req) {
       this();
       this.req = req;
     }
@@ -6369,12 +5630,7 @@ String space = prettyPrint ? " " : "";
       return new rebuildTagIndex_args(this);
     }
 
-    @Deprecated
-    public rebuildTagIndex_args clone() {
-      return new rebuildTagIndex_args(this);
-    }
-
-    public RebuildIndexRequest  getReq() {
+    public RebuildIndexRequest getReq() {
       return this.req;
     }
 
@@ -6392,19 +5648,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((RebuildIndexRequest)value);
+          setReq((RebuildIndexRequest)__value);
         }
         break;
 
@@ -6423,53 +5679,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof rebuildTagIndex_args)
-        return this.equals((rebuildTagIndex_args)that);
-      return false;
-    }
-
-    public boolean equals(rebuildTagIndex_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof rebuildTagIndex_args))
+        return false;
+      rebuildTagIndex_args that = (rebuildTagIndex_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -6489,33 +5716,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new RebuildIndexRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -6542,19 +5769,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("rebuildTagIndex_args");
       sb.append(space);
       sb.append("(");
@@ -6565,10 +5787,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -6578,7 +5800,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -6589,11 +5810,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -6609,8 +5830,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public rebuildTagIndex_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -6628,12 +5848,7 @@ String space = prettyPrint ? " " : "";
       return new rebuildTagIndex_result(this);
     }
 
-    @Deprecated
-    public rebuildTagIndex_result clone() {
-      return new rebuildTagIndex_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -6651,19 +5866,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -6682,53 +5897,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof rebuildTagIndex_result)
-        return this.equals((rebuildTagIndex_result)that);
-      return false;
-    }
-
-    public boolean equals(rebuildTagIndex_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof rebuildTagIndex_result))
+        return false;
+      rebuildTagIndex_result that = (rebuildTagIndex_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -6748,33 +5934,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -6800,19 +5986,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("rebuildTagIndex_result");
       sb.append(space);
       sb.append("(");
@@ -6823,10 +6004,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -6836,7 +6017,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -6847,11 +6027,11 @@ String space = prettyPrint ? " " : "";
 
     public RebuildIndexRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -6867,8 +6047,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public rebuildEdgeIndex_args(
-      RebuildIndexRequest req)
-    {
+        RebuildIndexRequest req) {
       this();
       this.req = req;
     }
@@ -6886,12 +6065,7 @@ String space = prettyPrint ? " " : "";
       return new rebuildEdgeIndex_args(this);
     }
 
-    @Deprecated
-    public rebuildEdgeIndex_args clone() {
-      return new rebuildEdgeIndex_args(this);
-    }
-
-    public RebuildIndexRequest  getReq() {
+    public RebuildIndexRequest getReq() {
       return this.req;
     }
 
@@ -6909,19 +6083,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((RebuildIndexRequest)value);
+          setReq((RebuildIndexRequest)__value);
         }
         break;
 
@@ -6940,53 +6114,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof rebuildEdgeIndex_args)
-        return this.equals((rebuildEdgeIndex_args)that);
-      return false;
-    }
-
-    public boolean equals(rebuildEdgeIndex_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof rebuildEdgeIndex_args))
+        return false;
+      rebuildEdgeIndex_args that = (rebuildEdgeIndex_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -7006,33 +6151,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new RebuildIndexRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -7059,19 +6204,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("rebuildEdgeIndex_args");
       sb.append(space);
       sb.append("(");
@@ -7082,10 +6222,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -7095,7 +6235,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -7106,11 +6245,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -7126,8 +6265,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public rebuildEdgeIndex_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -7145,12 +6283,7 @@ String space = prettyPrint ? " " : "";
       return new rebuildEdgeIndex_result(this);
     }
 
-    @Deprecated
-    public rebuildEdgeIndex_result clone() {
-      return new rebuildEdgeIndex_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -7168,19 +6301,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -7199,53 +6332,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof rebuildEdgeIndex_result)
-        return this.equals((rebuildEdgeIndex_result)that);
-      return false;
-    }
-
-    public boolean equals(rebuildEdgeIndex_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof rebuildEdgeIndex_result))
+        return false;
+      rebuildEdgeIndex_result that = (rebuildEdgeIndex_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -7265,33 +6369,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -7317,19 +6421,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("rebuildEdgeIndex_result");
       sb.append(space);
       sb.append("(");
@@ -7340,10 +6439,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -7353,7 +6452,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -7364,11 +6462,11 @@ String space = prettyPrint ? " " : "";
 
     public GetLeaderReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -7384,8 +6482,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public getLeaderParts_args(
-      GetLeaderReq req)
-    {
+        GetLeaderReq req) {
       this();
       this.req = req;
     }
@@ -7403,12 +6500,7 @@ String space = prettyPrint ? " " : "";
       return new getLeaderParts_args(this);
     }
 
-    @Deprecated
-    public getLeaderParts_args clone() {
-      return new getLeaderParts_args(this);
-    }
-
-    public GetLeaderReq  getReq() {
+    public GetLeaderReq getReq() {
       return this.req;
     }
 
@@ -7426,19 +6518,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((GetLeaderReq)value);
+          setReq((GetLeaderReq)__value);
         }
         break;
 
@@ -7457,53 +6549,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof getLeaderParts_args)
-        return this.equals((getLeaderParts_args)that);
-      return false;
-    }
-
-    public boolean equals(getLeaderParts_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof getLeaderParts_args))
+        return false;
+      getLeaderParts_args that = (getLeaderParts_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -7523,33 +6586,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new GetLeaderReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -7576,19 +6639,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("getLeaderParts_args");
       sb.append(space);
       sb.append("(");
@@ -7599,10 +6657,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -7612,7 +6670,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -7623,11 +6680,11 @@ String space = prettyPrint ? " " : "";
 
     public GetLeaderPartsResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -7643,8 +6700,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public getLeaderParts_result(
-      GetLeaderPartsResp success)
-    {
+        GetLeaderPartsResp success) {
       this();
       this.success = success;
     }
@@ -7662,12 +6718,7 @@ String space = prettyPrint ? " " : "";
       return new getLeaderParts_result(this);
     }
 
-    @Deprecated
-    public getLeaderParts_result clone() {
-      return new getLeaderParts_result(this);
-    }
-
-    public GetLeaderPartsResp  getSuccess() {
+    public GetLeaderPartsResp getSuccess() {
       return this.success;
     }
 
@@ -7685,19 +6736,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((GetLeaderPartsResp)value);
+          setSuccess((GetLeaderPartsResp)__value);
         }
         break;
 
@@ -7716,53 +6767,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof getLeaderParts_result)
-        return this.equals((getLeaderParts_result)that);
-      return false;
-    }
-
-    public boolean equals(getLeaderParts_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof getLeaderParts_result))
+        return false;
+      getLeaderParts_result that = (getLeaderParts_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -7782,33 +6804,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new GetLeaderPartsResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -7834,19 +6856,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("getLeaderParts_result");
       sb.append(space);
       sb.append("(");
@@ -7857,10 +6874,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -7870,7 +6887,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -7881,11 +6897,11 @@ String space = prettyPrint ? " " : "";
 
     public CheckPeersReq req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -7901,8 +6917,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public checkPeers_args(
-      CheckPeersReq req)
-    {
+        CheckPeersReq req) {
       this();
       this.req = req;
     }
@@ -7920,12 +6935,7 @@ String space = prettyPrint ? " " : "";
       return new checkPeers_args(this);
     }
 
-    @Deprecated
-    public checkPeers_args clone() {
-      return new checkPeers_args(this);
-    }
-
-    public CheckPeersReq  getReq() {
+    public CheckPeersReq getReq() {
       return this.req;
     }
 
@@ -7943,19 +6953,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((CheckPeersReq)value);
+          setReq((CheckPeersReq)__value);
         }
         break;
 
@@ -7974,53 +6984,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof checkPeers_args)
-        return this.equals((checkPeers_args)that);
-      return false;
-    }
-
-    public boolean equals(checkPeers_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof checkPeers_args))
+        return false;
+      checkPeers_args that = (checkPeers_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -8040,33 +7021,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new CheckPeersReq();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -8093,19 +7074,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("checkPeers_args");
       sb.append(space);
       sb.append("(");
@@ -8116,10 +7092,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -8129,7 +7105,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -8140,11 +7115,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -8160,8 +7135,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public checkPeers_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -8179,12 +7153,7 @@ String space = prettyPrint ? " " : "";
       return new checkPeers_result(this);
     }
 
-    @Deprecated
-    public checkPeers_result clone() {
-      return new checkPeers_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -8202,19 +7171,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -8233,53 +7202,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof checkPeers_result)
-        return this.equals((checkPeers_result)that);
-      return false;
-    }
-
-    public boolean equals(checkPeers_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof checkPeers_result))
+        return false;
+      checkPeers_result that = (checkPeers_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -8299,33 +7239,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -8351,19 +7291,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("checkPeers_result");
       sb.append(space);
       sb.append("(");
@@ -8374,10 +7309,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -8387,7 +7322,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -8398,11 +7332,11 @@ String space = prettyPrint ? " " : "";
 
     public AddAdminTaskRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -8418,8 +7352,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public addAdminTask_args(
-      AddAdminTaskRequest req)
-    {
+        AddAdminTaskRequest req) {
       this();
       this.req = req;
     }
@@ -8437,12 +7370,7 @@ String space = prettyPrint ? " " : "";
       return new addAdminTask_args(this);
     }
 
-    @Deprecated
-    public addAdminTask_args clone() {
-      return new addAdminTask_args(this);
-    }
-
-    public AddAdminTaskRequest  getReq() {
+    public AddAdminTaskRequest getReq() {
       return this.req;
     }
 
@@ -8460,19 +7388,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((AddAdminTaskRequest)value);
+          setReq((AddAdminTaskRequest)__value);
         }
         break;
 
@@ -8491,53 +7419,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof addAdminTask_args)
-        return this.equals((addAdminTask_args)that);
-      return false;
-    }
-
-    public boolean equals(addAdminTask_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof addAdminTask_args))
+        return false;
+      addAdminTask_args that = (addAdminTask_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -8557,33 +7456,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new AddAdminTaskRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -8610,19 +7509,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("addAdminTask_args");
       sb.append(space);
       sb.append("(");
@@ -8633,10 +7527,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -8646,7 +7540,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -8657,11 +7550,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -8677,8 +7570,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public addAdminTask_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -8696,12 +7588,7 @@ String space = prettyPrint ? " " : "";
       return new addAdminTask_result(this);
     }
 
-    @Deprecated
-    public addAdminTask_result clone() {
-      return new addAdminTask_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -8719,19 +7606,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -8750,53 +7637,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof addAdminTask_result)
-        return this.equals((addAdminTask_result)that);
-      return false;
-    }
-
-    public boolean equals(addAdminTask_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof addAdminTask_result))
+        return false;
+      addAdminTask_result that = (addAdminTask_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -8816,33 +7674,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -8868,19 +7726,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("addAdminTask_result");
       sb.append(space);
       sb.append("(");
@@ -8891,10 +7744,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -8904,7 +7757,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -8915,11 +7767,11 @@ String space = prettyPrint ? " " : "";
 
     public StopAdminTaskRequest req;
     public static final int REQ = 1;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
@@ -8935,8 +7787,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public stopAdminTask_args(
-      StopAdminTaskRequest req)
-    {
+        StopAdminTaskRequest req) {
       this();
       this.req = req;
     }
@@ -8954,12 +7805,7 @@ String space = prettyPrint ? " " : "";
       return new stopAdminTask_args(this);
     }
 
-    @Deprecated
-    public stopAdminTask_args clone() {
-      return new stopAdminTask_args(this);
-    }
-
-    public StopAdminTaskRequest  getReq() {
+    public StopAdminTaskRequest getReq() {
       return this.req;
     }
 
@@ -8977,19 +7823,19 @@ String space = prettyPrint ? " " : "";
       return this.req != null;
     }
 
-    public void setReqIsSet(boolean value) {
-      if (!value) {
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
         this.req = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case REQ:
-        if (value == null) {
+        if (__value == null) {
           unsetReq();
         } else {
-          setReq((StopAdminTaskRequest)value);
+          setReq((StopAdminTaskRequest)__value);
         }
         break;
 
@@ -9008,53 +7854,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return isSetReq();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof stopAdminTask_args)
-        return this.equals((stopAdminTask_args)that);
-      return false;
-    }
-
-    public boolean equals(stopAdminTask_args that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof stopAdminTask_args))
+        return false;
+      stopAdminTask_args that = (stopAdminTask_args)_that;
 
-      boolean this_present_req = true && this.isSetReq();
-      boolean that_present_req = true && that.isSetReq();
-      if (this_present_req || that_present_req) {
-        if (!(this_present_req && that_present_req))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.req, that.req))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_req = true && (isSetReq());
-      builder.append(present_req);
-      if (present_req)
-        builder.append(req);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {req});
     }
 
     @Override
@@ -9074,33 +7891,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case REQ:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.req = new StopAdminTaskRequest();
               this.req.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -9127,19 +7944,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("stopAdminTask_args");
       sb.append(space);
       sb.append("(");
@@ -9150,10 +7962,10 @@ String space = prettyPrint ? " " : "";
       sb.append("req");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReq() == null) {
+      if (this.getReq() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReq(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -9163,7 +7975,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
@@ -9174,11 +7985,11 @@ String space = prettyPrint ? " " : "";
 
     public AdminExecResp success;
     public static final int SUCCESS = 0;
-    public static boolean DEFAULT_PRETTY_PRINT = true;
 
     // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap;
+
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -9194,8 +8005,7 @@ String space = prettyPrint ? " " : "";
     }
 
     public stopAdminTask_result(
-      AdminExecResp success)
-    {
+        AdminExecResp success) {
       this();
       this.success = success;
     }
@@ -9213,12 +8023,7 @@ String space = prettyPrint ? " " : "";
       return new stopAdminTask_result(this);
     }
 
-    @Deprecated
-    public stopAdminTask_result clone() {
-      return new stopAdminTask_result(this);
-    }
-
-    public AdminExecResp  getSuccess() {
+    public AdminExecResp getSuccess() {
       return this.success;
     }
 
@@ -9236,19 +8041,19 @@ String space = prettyPrint ? " " : "";
       return this.success != null;
     }
 
-    public void setSuccessIsSet(boolean value) {
-      if (!value) {
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
         this.success = null;
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
+    public void setFieldValue(int fieldID, Object __value) {
       switch (fieldID) {
       case SUCCESS:
-        if (value == null) {
+        if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)value);
+          setSuccess((AdminExecResp)__value);
         }
         break;
 
@@ -9267,53 +8072,24 @@ String space = prettyPrint ? " " : "";
       }
     }
 
-    // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return isSetSuccess();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
     @Override
-    public boolean equals(Object that) {
-      if (that == null)
+    public boolean equals(Object _that) {
+      if (_that == null)
         return false;
-      if (that instanceof stopAdminTask_result)
-        return this.equals((stopAdminTask_result)that);
-      return false;
-    }
-
-    public boolean equals(stopAdminTask_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
+      if (this == _that)
         return true;
+      if (!(_that instanceof stopAdminTask_result))
+        return false;
+      stopAdminTask_result that = (stopAdminTask_result)_that;
 
-      boolean this_present_success = true && this.isSetSuccess();
-      boolean that_present_success = true && that.isSetSuccess();
-      if (this_present_success || that_present_success) {
-        if (!(this_present_success && that_present_success))
-          return false;
-        if (!TBaseHelper.equalsNobinary(this.success, that.success))
-          return false;
-      }
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
       return true;
     }
 
     @Override
     public int hashCode() {
-      HashCodeBuilder builder = new HashCodeBuilder();
-
-      boolean present_success = true && (isSetSuccess());
-      builder.append(present_success);
-      if (present_success)
-        builder.append(success);
-
-      return builder.toHashCode();
+      return Arrays.deepHashCode(new Object[] {success});
     }
 
     @Override
@@ -9333,33 +8109,33 @@ String space = prettyPrint ? " " : "";
         return lastComparison;
       }
       lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) {
+      if (lastComparison != 0) { 
         return lastComparison;
       }
       return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
-      TField field;
+      TField __field;
       iprot.readStructBegin(metaDataMap);
       while (true)
       {
-        field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
+        switch (__field.id)
         {
           case SUCCESS:
-            if (field.type == TType.STRUCT) {
+            if (__field.type == TType.STRUCT) {
               this.success = new AdminExecResp();
               this.success.read(iprot);
             } else { 
-              TProtocolUtil.skip(iprot, field.type);
+              TProtocolUtil.skip(iprot, __field.type);
             }
             break;
           default:
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
             break;
         }
         iprot.readFieldEnd();
@@ -9385,19 +8161,14 @@ String space = prettyPrint ? " " : "";
 
     @Override
     public String toString() {
-      return toString(DEFAULT_PRETTY_PRINT);
-    }
-
-    @Override
-    public String toString(boolean prettyPrint) {
-      return toString(1, prettyPrint);
+      return toString(1, true);
     }
 
     @Override
     public String toString(int indent, boolean prettyPrint) {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+      String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("stopAdminTask_result");
       sb.append(space);
       sb.append("(");
@@ -9408,10 +8179,10 @@ String space = prettyPrint ? " " : "";
       sb.append("success");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSuccess() == null) {
+      if (this.getSuccess() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSuccess(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -9421,7 +8192,6 @@ String space = prettyPrint ? " " : "";
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }

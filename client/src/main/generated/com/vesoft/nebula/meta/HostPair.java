@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
   public com.vesoft.nebula.HostAddr to_host;
   public static final int FROM_HOST = 1;
   public static final int TO_HOST = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(FROM_HOST, new FieldMetaData("from_host", TFieldRequirementType.DEFAULT, 
@@ -58,12 +55,40 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public HostPair(
-    com.vesoft.nebula.HostAddr from_host,
-    com.vesoft.nebula.HostAddr to_host)
-  {
+      com.vesoft.nebula.HostAddr from_host,
+      com.vesoft.nebula.HostAddr to_host) {
     this();
     this.from_host = from_host;
     this.to_host = to_host;
+  }
+
+  public static class Builder {
+    private com.vesoft.nebula.HostAddr from_host;
+    private com.vesoft.nebula.HostAddr to_host;
+
+    public Builder() {
+    }
+
+    public Builder setFrom_host(final com.vesoft.nebula.HostAddr from_host) {
+      this.from_host = from_host;
+      return this;
+    }
+
+    public Builder setTo_host(final com.vesoft.nebula.HostAddr to_host) {
+      this.to_host = to_host;
+      return this;
+    }
+
+    public HostPair build() {
+      HostPair result = new HostPair();
+      result.setFrom_host(this.from_host);
+      result.setTo_host(this.to_host);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
     return new HostPair(this);
   }
 
-  @Deprecated
-  public HostPair clone() {
-    return new HostPair(this);
-  }
-
-  public com.vesoft.nebula.HostAddr  getFrom_host() {
+  public com.vesoft.nebula.HostAddr getFrom_host() {
     return this.from_host;
   }
 
@@ -105,13 +125,13 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
     return this.from_host != null;
   }
 
-  public void setFrom_hostIsSet(boolean value) {
-    if (!value) {
+  public void setFrom_hostIsSet(boolean __value) {
+    if (!__value) {
       this.from_host = null;
     }
   }
 
-  public com.vesoft.nebula.HostAddr  getTo_host() {
+  public com.vesoft.nebula.HostAddr getTo_host() {
     return this.to_host;
   }
 
@@ -129,27 +149,27 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
     return this.to_host != null;
   }
 
-  public void setTo_hostIsSet(boolean value) {
-    if (!value) {
+  public void setTo_hostIsSet(boolean __value) {
+    if (!__value) {
       this.to_host = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case FROM_HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetFrom_host();
       } else {
-        setFrom_host((com.vesoft.nebula.HostAddr)value);
+        setFrom_host((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case TO_HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetTo_host();
       } else {
-        setTo_host((com.vesoft.nebula.HostAddr)value);
+        setTo_host((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case FROM_HOST:
-      return isSetFrom_host();
-    case TO_HOST:
-      return isSetTo_host();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof HostPair)
-      return this.equals((HostPair)that);
-    return false;
-  }
-
-  public boolean equals(HostPair that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof HostPair))
+      return false;
+    HostPair that = (HostPair)_that;
 
-    boolean this_present_from_host = true && this.isSetFrom_host();
-    boolean that_present_from_host = true && that.isSetFrom_host();
-    if (this_present_from_host || that_present_from_host) {
-      if (!(this_present_from_host && that_present_from_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.from_host, that.from_host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetFrom_host(), that.isSetFrom_host(), this.from_host, that.from_host)) { return false; }
 
-    boolean this_present_to_host = true && this.isSetTo_host();
-    boolean that_present_to_host = true && that.isSetTo_host();
-    if (this_present_to_host || that_present_to_host) {
-      if (!(this_present_to_host && that_present_to_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.to_host, that.to_host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetTo_host(), that.isSetTo_host(), this.to_host, that.to_host)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_from_host = true && (isSetFrom_host());
-    builder.append(present_from_host);
-    if (present_from_host)
-      builder.append(from_host);
-
-    boolean present_to_host = true && (isSetTo_host());
-    builder.append(present_to_host);
-    if (present_to_host)
-      builder.append(to_host);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {from_host, to_host});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(from_host, other.from_host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTo_host()).compareTo(other.isSetTo_host());
@@ -261,41 +238,41 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(to_host, other.to_host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case FROM_HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.from_host = new com.vesoft.nebula.HostAddr();
             this.from_host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TO_HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.to_host = new com.vesoft.nebula.HostAddr();
             this.to_host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -327,19 +304,14 @@ public class HostPair implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("HostPair");
     sb.append(space);
     sb.append("(");
@@ -350,10 +322,10 @@ String space = prettyPrint ? " " : "";
     sb.append("from_host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFrom_host() == null) {
+    if (this.getFrom_host() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getFrom_host(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getFrom_host(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -361,10 +333,10 @@ String space = prettyPrint ? " " : "";
     sb.append("to_host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTo_host() == null) {
+    if (this.getTo_host() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTo_host(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getTo_host(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -374,7 +346,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

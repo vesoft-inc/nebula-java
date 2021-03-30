@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,17 +33,15 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
    * 
    * @see FTServiceType
    */
-  public int type;
+  public FTServiceType type;
   public List<FTClient> clients;
   public static final int TYPE = 1;
   public static final int CLIENTS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __TYPE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
@@ -65,22 +60,49 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
   }
 
   public SignInFTServiceReq(
-    int type,
-    List<FTClient> clients)
-  {
+      FTServiceType type,
+      List<FTClient> clients) {
     this();
     this.type = type;
-    setTypeIsSet(true);
     this.clients = clients;
+  }
+
+  public static class Builder {
+    private FTServiceType type;
+    private List<FTClient> clients;
+
+    public Builder() {
+    }
+
+    public Builder setType(final FTServiceType type) {
+      this.type = type;
+      return this;
+    }
+
+    public Builder setClients(final List<FTClient> clients) {
+      this.clients = clients;
+      return this;
+    }
+
+    public SignInFTServiceReq build() {
+      SignInFTServiceReq result = new SignInFTServiceReq();
+      result.setType(this.type);
+      result.setClients(this.clients);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public SignInFTServiceReq(SignInFTServiceReq other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.type = TBaseHelper.deepCopy(other.type);
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
+    }
     if (other.isSetClients()) {
       this.clients = TBaseHelper.deepCopy(other.clients);
     }
@@ -90,16 +112,11 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     return new SignInFTServiceReq(this);
   }
 
-  @Deprecated
-  public SignInFTServiceReq clone() {
-    return new SignInFTServiceReq(this);
-  }
-
   /**
    * 
    * @see FTServiceType
    */
-  public int  getType() {
+  public FTServiceType getType() {
     return this.type;
   }
 
@@ -107,26 +124,27 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
    * 
    * @see FTServiceType
    */
-  public SignInFTServiceReq setType(int type) {
+  public SignInFTServiceReq setType(FTServiceType type) {
     this.type = type;
-    setTypeIsSet(true);
     return this;
   }
 
   public void unsetType() {
-    __isset_bit_vector.clear(__TYPE_ISSET_ID);
+    this.type = null;
   }
 
   // Returns true if field type is set (has been assigned a value) and false otherwise
   public boolean isSetType() {
-    return __isset_bit_vector.get(__TYPE_ISSET_ID);
+    return this.type != null;
   }
 
-  public void setTypeIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  public void setTypeIsSet(boolean __value) {
+    if (!__value) {
+      this.type = null;
+    }
   }
 
-  public List<FTClient>  getClients() {
+  public List<FTClient> getClients() {
     return this.clients;
   }
 
@@ -144,28 +162,28 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     return this.clients != null;
   }
 
-  public void setClientsIsSet(boolean value) {
-    if (!value) {
+  public void setClientsIsSet(boolean __value) {
+    if (!__value) {
       this.clients = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetType();
       } else {
-        setType((Integer)value);
+        setType((FTServiceType)__value);
       }
       break;
 
     case CLIENTS:
-      if (value == null) {
+      if (__value == null) {
         unsetClients();
       } else {
-        setClients((List<FTClient>)value);
+        setClients((List<FTClient>)__value);
       }
       break;
 
@@ -187,69 +205,26 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TYPE:
-      return isSetType();
-    case CLIENTS:
-      return isSetClients();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof SignInFTServiceReq)
-      return this.equals((SignInFTServiceReq)that);
-    return false;
-  }
-
-  public boolean equals(SignInFTServiceReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof SignInFTServiceReq))
+      return false;
+    SignInFTServiceReq that = (SignInFTServiceReq)_that;
 
-    boolean this_present_type = true;
-    boolean that_present_type = true;
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
-    boolean this_present_clients = true && this.isSetClients();
-    boolean that_present_clients = true && that.isSetClients();
-    if (this_present_clients || that_present_clients) {
-      if (!(this_present_clients && that_present_clients))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.clients, that.clients))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetClients(), that.isSetClients(), this.clients, that.clients)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_type = true;
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
-    boolean present_clients = true && (isSetClients());
-    builder.append(present_clients);
-    if (present_clients)
-      builder.append(clients);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {type, clients});
   }
 
   @Override
@@ -269,7 +244,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type, other.type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetClients()).compareTo(other.isSetClients());
@@ -277,53 +252,52 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(clients, other.clients);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TYPE:
-          if (field.type == TType.I32) {
-            this.type = iprot.readI32();
-            setTypeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.type = FTServiceType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CLIENTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list253 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list253.size));
-              for (int _i254 = 0; 
-                   (_list253.size < 0) ? iprot.peekList() : (_i254 < _list253.size); 
-                   ++_i254)
+              TList _list262 = iprot.readListBegin();
+              this.clients = new ArrayList<FTClient>(Math.max(0, _list262.size));
+              for (int _i263 = 0; 
+                   (_list262.size < 0) ? iprot.peekList() : (_i263 < _list262.size); 
+                   ++_i263)
               {
-                FTClient _elem255;
-                _elem255 = new FTClient();
-                _elem255.read(iprot);
-                this.clients.add(_elem255);
+                FTClient _elem264;
+                _elem264 = new FTClient();
+                _elem264.read(iprot);
+                this.clients.add(_elem264);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -339,15 +313,17 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(TYPE_FIELD_DESC);
-    oprot.writeI32(this.type);
-    oprot.writeFieldEnd();
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.clients != null) {
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter256 : this.clients)        {
-          _iter256.write(oprot);
+        for (FTClient _iter265 : this.clients)        {
+          _iter265.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -359,19 +335,14 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("SignInFTServiceReq");
     sb.append(space);
     sb.append("(");
@@ -382,14 +353,18 @@ String space = prettyPrint ? " " : "";
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    String type_name = FTServiceType.VALUES_TO_NAMES.get(this. getType());
-    if (type_name != null) {
-      sb.append(type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getType());
-    if (type_name != null) {
-      sb.append(")");
+    if (this.getType() == null) {
+      sb.append("null");
+    } else {
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getType());
+      if (type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -397,10 +372,10 @@ String space = prettyPrint ? " " : "";
     sb.append("clients");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getClients() == null) {
+    if (this.getClients() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getClients(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getClients(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -410,10 +385,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetType() && !FTServiceType.VALID_VALUES.contains(type)){
-      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
-    }
   }
 
 }

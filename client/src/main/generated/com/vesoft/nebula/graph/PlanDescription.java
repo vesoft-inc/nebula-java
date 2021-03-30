@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.graph;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,13 +39,13 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
   public static final int NODE_INDEX_MAP = 2;
   public static final int FORMAT = 3;
   public static final int OPTIMIZE_TIME_IN_US = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __OPTIMIZE_TIME_IN_US_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(PLAN_NODE_DESCS, new FieldMetaData("plan_node_descs", TFieldRequirementType.REQUIRED, 
@@ -73,17 +70,64 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public PlanDescription(
-    List<PlanNodeDescription> plan_node_descs,
-    Map<Long,Long> node_index_map,
-    byte[] format,
-    int optimize_time_in_us)
-  {
+      List<PlanNodeDescription> plan_node_descs,
+      Map<Long,Long> node_index_map,
+      byte[] format,
+      int optimize_time_in_us) {
     this();
     this.plan_node_descs = plan_node_descs;
     this.node_index_map = node_index_map;
     this.format = format;
     this.optimize_time_in_us = optimize_time_in_us;
     setOptimize_time_in_usIsSet(true);
+  }
+
+  public static class Builder {
+    private List<PlanNodeDescription> plan_node_descs;
+    private Map<Long,Long> node_index_map;
+    private byte[] format;
+    private int optimize_time_in_us;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setPlan_node_descs(final List<PlanNodeDescription> plan_node_descs) {
+      this.plan_node_descs = plan_node_descs;
+      return this;
+    }
+
+    public Builder setNode_index_map(final Map<Long,Long> node_index_map) {
+      this.node_index_map = node_index_map;
+      return this;
+    }
+
+    public Builder setFormat(final byte[] format) {
+      this.format = format;
+      return this;
+    }
+
+    public Builder setOptimize_time_in_us(final int optimize_time_in_us) {
+      this.optimize_time_in_us = optimize_time_in_us;
+      __optional_isset.set(__OPTIMIZE_TIME_IN_US_ISSET_ID, true);
+      return this;
+    }
+
+    public PlanDescription build() {
+      PlanDescription result = new PlanDescription();
+      result.setPlan_node_descs(this.plan_node_descs);
+      result.setNode_index_map(this.node_index_map);
+      result.setFormat(this.format);
+      if (__optional_isset.get(__OPTIMIZE_TIME_IN_US_ISSET_ID)) {
+        result.setOptimize_time_in_us(this.optimize_time_in_us);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -108,12 +152,7 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     return new PlanDescription(this);
   }
 
-  @Deprecated
-  public PlanDescription clone() {
-    return new PlanDescription(this);
-  }
-
-  public List<PlanNodeDescription>  getPlan_node_descs() {
+  public List<PlanNodeDescription> getPlan_node_descs() {
     return this.plan_node_descs;
   }
 
@@ -131,13 +170,13 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     return this.plan_node_descs != null;
   }
 
-  public void setPlan_node_descsIsSet(boolean value) {
-    if (!value) {
+  public void setPlan_node_descsIsSet(boolean __value) {
+    if (!__value) {
       this.plan_node_descs = null;
     }
   }
 
-  public Map<Long,Long>  getNode_index_map() {
+  public Map<Long,Long> getNode_index_map() {
     return this.node_index_map;
   }
 
@@ -155,13 +194,13 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     return this.node_index_map != null;
   }
 
-  public void setNode_index_mapIsSet(boolean value) {
-    if (!value) {
+  public void setNode_index_mapIsSet(boolean __value) {
+    if (!__value) {
       this.node_index_map = null;
     }
   }
 
-  public byte[]  getFormat() {
+  public byte[] getFormat() {
     return this.format;
   }
 
@@ -179,13 +218,13 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     return this.format != null;
   }
 
-  public void setFormatIsSet(boolean value) {
-    if (!value) {
+  public void setFormatIsSet(boolean __value) {
+    if (!__value) {
       this.format = null;
     }
   }
 
-  public int  getOptimize_time_in_us() {
+  public int getOptimize_time_in_us() {
     return this.optimize_time_in_us;
   }
 
@@ -204,42 +243,42 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__OPTIMIZE_TIME_IN_US_ISSET_ID);
   }
 
-  public void setOptimize_time_in_usIsSet(boolean value) {
-    __isset_bit_vector.set(__OPTIMIZE_TIME_IN_US_ISSET_ID, value);
+  public void setOptimize_time_in_usIsSet(boolean __value) {
+    __isset_bit_vector.set(__OPTIMIZE_TIME_IN_US_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case PLAN_NODE_DESCS:
-      if (value == null) {
+      if (__value == null) {
         unsetPlan_node_descs();
       } else {
-        setPlan_node_descs((List<PlanNodeDescription>)value);
+        setPlan_node_descs((List<PlanNodeDescription>)__value);
       }
       break;
 
     case NODE_INDEX_MAP:
-      if (value == null) {
+      if (__value == null) {
         unsetNode_index_map();
       } else {
-        setNode_index_map((Map<Long,Long>)value);
+        setNode_index_map((Map<Long,Long>)__value);
       }
       break;
 
     case FORMAT:
-      if (value == null) {
+      if (__value == null) {
         unsetFormat();
       } else {
-        setFormat((byte[])value);
+        setFormat((byte[])__value);
       }
       break;
 
     case OPTIMIZE_TIME_IN_US:
-      if (value == null) {
+      if (__value == null) {
         unsetOptimize_time_in_us();
       } else {
-        setOptimize_time_in_us((Integer)value);
+        setOptimize_time_in_us((Integer)__value);
       }
       break;
 
@@ -267,101 +306,30 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case PLAN_NODE_DESCS:
-      return isSetPlan_node_descs();
-    case NODE_INDEX_MAP:
-      return isSetNode_index_map();
-    case FORMAT:
-      return isSetFormat();
-    case OPTIMIZE_TIME_IN_US:
-      return isSetOptimize_time_in_us();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof PlanDescription)
-      return this.equals((PlanDescription)that);
-    return false;
-  }
-
-  public boolean equals(PlanDescription that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof PlanDescription))
+      return false;
+    PlanDescription that = (PlanDescription)_that;
 
-    boolean this_present_plan_node_descs = true && this.isSetPlan_node_descs();
-    boolean that_present_plan_node_descs = true && that.isSetPlan_node_descs();
-    if (this_present_plan_node_descs || that_present_plan_node_descs) {
-      if (!(this_present_plan_node_descs && that_present_plan_node_descs))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.plan_node_descs, that.plan_node_descs))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPlan_node_descs(), that.isSetPlan_node_descs(), this.plan_node_descs, that.plan_node_descs)) { return false; }
 
-    boolean this_present_node_index_map = true && this.isSetNode_index_map();
-    boolean that_present_node_index_map = true && that.isSetNode_index_map();
-    if (this_present_node_index_map || that_present_node_index_map) {
-      if (!(this_present_node_index_map && that_present_node_index_map))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.node_index_map, that.node_index_map))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetNode_index_map(), that.isSetNode_index_map(), this.node_index_map, that.node_index_map)) { return false; }
 
-    boolean this_present_format = true && this.isSetFormat();
-    boolean that_present_format = true && that.isSetFormat();
-    if (this_present_format || that_present_format) {
-      if (!(this_present_format && that_present_format))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.format, that.format))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetFormat(), that.isSetFormat(), this.format, that.format)) { return false; }
 
-    boolean this_present_optimize_time_in_us = true;
-    boolean that_present_optimize_time_in_us = true;
-    if (this_present_optimize_time_in_us || that_present_optimize_time_in_us) {
-      if (!(this_present_optimize_time_in_us && that_present_optimize_time_in_us))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.optimize_time_in_us, that.optimize_time_in_us))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.optimize_time_in_us, that.optimize_time_in_us)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_plan_node_descs = true && (isSetPlan_node_descs());
-    builder.append(present_plan_node_descs);
-    if (present_plan_node_descs)
-      builder.append(plan_node_descs);
-
-    boolean present_node_index_map = true && (isSetNode_index_map());
-    builder.append(present_node_index_map);
-    if (present_node_index_map)
-      builder.append(node_index_map);
-
-    boolean present_format = true && (isSetFormat());
-    builder.append(present_format);
-    if (present_format)
-      builder.append(format);
-
-    boolean present_optimize_time_in_us = true;
-    builder.append(present_optimize_time_in_us);
-    if (present_optimize_time_in_us)
-      builder.append(optimize_time_in_us);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {plan_node_descs, node_index_map, format, optimize_time_in_us});
   }
 
   @Override
@@ -381,7 +349,7 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(plan_node_descs, other.plan_node_descs);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetNode_index_map()).compareTo(other.isSetNode_index_map());
@@ -389,7 +357,7 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(node_index_map, other.node_index_map);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetFormat()).compareTo(other.isSetFormat());
@@ -397,7 +365,7 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(format, other.format);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetOptimize_time_in_us()).compareTo(other.isSetOptimize_time_in_us());
@@ -405,25 +373,25 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(optimize_time_in_us, other.optimize_time_in_us);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case PLAN_NODE_DESCS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list17 = iprot.readListBegin();
               this.plan_node_descs = new ArrayList<PlanNodeDescription>(Math.max(0, _list17.size));
@@ -439,11 +407,11 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NODE_INDEX_MAP:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map20 = iprot.readMapBegin();
               this.node_index_map = new HashMap<Long,Long>(Math.max(0, 2*_map20.size));
@@ -460,26 +428,26 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case FORMAT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.format = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case OPTIMIZE_TIME_IN_US:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.optimize_time_in_us = iprot.readI32();
             setOptimize_time_in_usIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -535,19 +503,14 @@ public class PlanDescription implements TBase, java.io.Serializable, Cloneable, 
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("PlanDescription");
     sb.append(space);
     sb.append("(");
@@ -558,10 +521,10 @@ String space = prettyPrint ? " " : "";
     sb.append("plan_node_descs");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPlan_node_descs() == null) {
+    if (this.getPlan_node_descs() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPlan_node_descs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPlan_node_descs(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -569,10 +532,10 @@ String space = prettyPrint ? " " : "";
     sb.append("node_index_map");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getNode_index_map() == null) {
+    if (this.getNode_index_map() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getNode_index_map(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getNode_index_map(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -580,15 +543,15 @@ String space = prettyPrint ? " " : "";
     sb.append("format");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFormat() == null) {
+    if (this.getFormat() == null) {
       sb.append("null");
     } else {
-        int __format_size = Math.min(this. getFormat().length, 128);
+        int __format_size = Math.min(this.getFormat().length, 128);
         for (int i = 0; i < __format_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getFormat()[i]).length() > 1 ? Integer.toHexString(this. getFormat()[i]).substring(Integer.toHexString(this. getFormat()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFormat()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getFormat()[i]).length() > 1 ? Integer.toHexString(this.getFormat()[i]).substring(Integer.toHexString(this.getFormat()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFormat()[i]).toUpperCase());
         }
-        if (this. getFormat().length > 128) sb.append(" ...");
+        if (this.getFormat().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -596,7 +559,7 @@ String space = prettyPrint ? " " : "";
     sb.append("optimize_time_in_us");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getOptimize_time_in_us(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getOptimize_time_in_us(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -615,7 +578,6 @@ String space = prettyPrint ? " " : "";
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'format' was not present! Struct: " + toString());
     }
     // alas, we cannot check 'optimize_time_in_us' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
   }
 
 }

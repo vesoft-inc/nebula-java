@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -49,7 +46,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
    * 
    * @see IsolationLevel
    */
-  public int isolation_level;
+  public IsolationLevel isolation_level;
   public static final int SPACE_NAME = 1;
   public static final int PARTITION_NUM = 2;
   public static final int REPLICA_FACTOR = 3;
@@ -58,15 +55,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   public static final int VID_TYPE = 6;
   public static final int GROUP_NAME = 7;
   public static final int ISOLATION_LEVEL = 8;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __PARTITION_NUM_ISSET_ID = 0;
   private static final int __REPLICA_FACTOR_ISSET_ID = 1;
-  private static final int __ISOLATION_LEVEL_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.DEFAULT, 
@@ -98,19 +94,18 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.replica_factor = 0;
 
     this.vid_type = new ColumnTypeDef();
-    this.vid_type.setType(7);
+    this.vid_type.setType(com.vesoft.nebula.meta.PropertyType.FIXED_STRING);
     this.vid_type.setType_length((short)8);
 
   }
 
   public SpaceDesc(
-    byte[] space_name,
-    int partition_num,
-    int replica_factor,
-    byte[] charset_name,
-    byte[] collate_name,
-    ColumnTypeDef vid_type)
-  {
+      byte[] space_name,
+      int partition_num,
+      int replica_factor,
+      byte[] charset_name,
+      byte[] collate_name,
+      ColumnTypeDef vid_type) {
     this();
     this.space_name = space_name;
     this.partition_num = partition_num;
@@ -123,15 +118,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   }
 
   public SpaceDesc(
-    byte[] space_name,
-    int partition_num,
-    int replica_factor,
-    byte[] charset_name,
-    byte[] collate_name,
-    ColumnTypeDef vid_type,
-    byte[] group_name,
-    int isolation_level)
-  {
+      byte[] space_name,
+      int partition_num,
+      int replica_factor,
+      byte[] charset_name,
+      byte[] collate_name,
+      ColumnTypeDef vid_type,
+      byte[] group_name,
+      IsolationLevel isolation_level) {
     this();
     this.space_name = space_name;
     this.partition_num = partition_num;
@@ -143,7 +137,85 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.vid_type = vid_type;
     this.group_name = group_name;
     this.isolation_level = isolation_level;
-    setIsolation_levelIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] space_name;
+    private int partition_num;
+    private int replica_factor;
+    private byte[] charset_name;
+    private byte[] collate_name;
+    private ColumnTypeDef vid_type;
+    private byte[] group_name;
+    private IsolationLevel isolation_level;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_name(final byte[] space_name) {
+      this.space_name = space_name;
+      return this;
+    }
+
+    public Builder setPartition_num(final int partition_num) {
+      this.partition_num = partition_num;
+      __optional_isset.set(__PARTITION_NUM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setReplica_factor(final int replica_factor) {
+      this.replica_factor = replica_factor;
+      __optional_isset.set(__REPLICA_FACTOR_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCharset_name(final byte[] charset_name) {
+      this.charset_name = charset_name;
+      return this;
+    }
+
+    public Builder setCollate_name(final byte[] collate_name) {
+      this.collate_name = collate_name;
+      return this;
+    }
+
+    public Builder setVid_type(final ColumnTypeDef vid_type) {
+      this.vid_type = vid_type;
+      return this;
+    }
+
+    public Builder setGroup_name(final byte[] group_name) {
+      this.group_name = group_name;
+      return this;
+    }
+
+    public Builder setIsolation_level(final IsolationLevel isolation_level) {
+      this.isolation_level = isolation_level;
+      return this;
+    }
+
+    public SpaceDesc build() {
+      SpaceDesc result = new SpaceDesc();
+      result.setSpace_name(this.space_name);
+      if (__optional_isset.get(__PARTITION_NUM_ISSET_ID)) {
+        result.setPartition_num(this.partition_num);
+      }
+      if (__optional_isset.get(__REPLICA_FACTOR_ISSET_ID)) {
+        result.setReplica_factor(this.replica_factor);
+      }
+      result.setCharset_name(this.charset_name);
+      result.setCollate_name(this.collate_name);
+      result.setVid_type(this.vid_type);
+      result.setGroup_name(this.group_name);
+      result.setIsolation_level(this.isolation_level);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -169,19 +241,16 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     if (other.isSetGroup_name()) {
       this.group_name = TBaseHelper.deepCopy(other.group_name);
     }
-    this.isolation_level = TBaseHelper.deepCopy(other.isolation_level);
+    if (other.isSetIsolation_level()) {
+      this.isolation_level = TBaseHelper.deepCopy(other.isolation_level);
+    }
   }
 
   public SpaceDesc deepCopy() {
     return new SpaceDesc(this);
   }
 
-  @Deprecated
-  public SpaceDesc clone() {
-    return new SpaceDesc(this);
-  }
-
-  public byte[]  getSpace_name() {
+  public byte[] getSpace_name() {
     return this.space_name;
   }
 
@@ -199,13 +268,13 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return this.space_name != null;
   }
 
-  public void setSpace_nameIsSet(boolean value) {
-    if (!value) {
+  public void setSpace_nameIsSet(boolean __value) {
+    if (!__value) {
       this.space_name = null;
     }
   }
 
-  public int  getPartition_num() {
+  public int getPartition_num() {
     return this.partition_num;
   }
 
@@ -224,11 +293,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return __isset_bit_vector.get(__PARTITION_NUM_ISSET_ID);
   }
 
-  public void setPartition_numIsSet(boolean value) {
-    __isset_bit_vector.set(__PARTITION_NUM_ISSET_ID, value);
+  public void setPartition_numIsSet(boolean __value) {
+    __isset_bit_vector.set(__PARTITION_NUM_ISSET_ID, __value);
   }
 
-  public int  getReplica_factor() {
+  public int getReplica_factor() {
     return this.replica_factor;
   }
 
@@ -247,11 +316,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return __isset_bit_vector.get(__REPLICA_FACTOR_ISSET_ID);
   }
 
-  public void setReplica_factorIsSet(boolean value) {
-    __isset_bit_vector.set(__REPLICA_FACTOR_ISSET_ID, value);
+  public void setReplica_factorIsSet(boolean __value) {
+    __isset_bit_vector.set(__REPLICA_FACTOR_ISSET_ID, __value);
   }
 
-  public byte[]  getCharset_name() {
+  public byte[] getCharset_name() {
     return this.charset_name;
   }
 
@@ -269,13 +338,13 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return this.charset_name != null;
   }
 
-  public void setCharset_nameIsSet(boolean value) {
-    if (!value) {
+  public void setCharset_nameIsSet(boolean __value) {
+    if (!__value) {
       this.charset_name = null;
     }
   }
 
-  public byte[]  getCollate_name() {
+  public byte[] getCollate_name() {
     return this.collate_name;
   }
 
@@ -293,13 +362,13 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return this.collate_name != null;
   }
 
-  public void setCollate_nameIsSet(boolean value) {
-    if (!value) {
+  public void setCollate_nameIsSet(boolean __value) {
+    if (!__value) {
       this.collate_name = null;
     }
   }
 
-  public ColumnTypeDef  getVid_type() {
+  public ColumnTypeDef getVid_type() {
     return this.vid_type;
   }
 
@@ -317,13 +386,13 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return this.vid_type != null;
   }
 
-  public void setVid_typeIsSet(boolean value) {
-    if (!value) {
+  public void setVid_typeIsSet(boolean __value) {
+    if (!__value) {
       this.vid_type = null;
     }
   }
 
-  public byte[]  getGroup_name() {
+  public byte[] getGroup_name() {
     return this.group_name;
   }
 
@@ -341,8 +410,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     return this.group_name != null;
   }
 
-  public void setGroup_nameIsSet(boolean value) {
-    if (!value) {
+  public void setGroup_nameIsSet(boolean __value) {
+    if (!__value) {
       this.group_name = null;
     }
   }
@@ -351,7 +420,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
    * 
    * @see IsolationLevel
    */
-  public int  getIsolation_level() {
+  public IsolationLevel getIsolation_level() {
     return this.isolation_level;
   }
 
@@ -359,88 +428,89 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
    * 
    * @see IsolationLevel
    */
-  public SpaceDesc setIsolation_level(int isolation_level) {
+  public SpaceDesc setIsolation_level(IsolationLevel isolation_level) {
     this.isolation_level = isolation_level;
-    setIsolation_levelIsSet(true);
     return this;
   }
 
   public void unsetIsolation_level() {
-    __isset_bit_vector.clear(__ISOLATION_LEVEL_ISSET_ID);
+    this.isolation_level = null;
   }
 
   // Returns true if field isolation_level is set (has been assigned a value) and false otherwise
   public boolean isSetIsolation_level() {
-    return __isset_bit_vector.get(__ISOLATION_LEVEL_ISSET_ID);
+    return this.isolation_level != null;
   }
 
-  public void setIsolation_levelIsSet(boolean value) {
-    __isset_bit_vector.set(__ISOLATION_LEVEL_ISSET_ID, value);
+  public void setIsolation_levelIsSet(boolean __value) {
+    if (!__value) {
+      this.isolation_level = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_name();
       } else {
-        setSpace_name((byte[])value);
+        setSpace_name((byte[])__value);
       }
       break;
 
     case PARTITION_NUM:
-      if (value == null) {
+      if (__value == null) {
         unsetPartition_num();
       } else {
-        setPartition_num((Integer)value);
+        setPartition_num((Integer)__value);
       }
       break;
 
     case REPLICA_FACTOR:
-      if (value == null) {
+      if (__value == null) {
         unsetReplica_factor();
       } else {
-        setReplica_factor((Integer)value);
+        setReplica_factor((Integer)__value);
       }
       break;
 
     case CHARSET_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetCharset_name();
       } else {
-        setCharset_name((byte[])value);
+        setCharset_name((byte[])__value);
       }
       break;
 
     case COLLATE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetCollate_name();
       } else {
-        setCollate_name((byte[])value);
+        setCollate_name((byte[])__value);
       }
       break;
 
     case VID_TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetVid_type();
       } else {
-        setVid_type((ColumnTypeDef)value);
+        setVid_type((ColumnTypeDef)__value);
       }
       break;
 
     case GROUP_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetGroup_name();
       } else {
-        setGroup_name((byte[])value);
+        setGroup_name((byte[])__value);
       }
       break;
 
     case ISOLATION_LEVEL:
-      if (value == null) {
+      if (__value == null) {
         unsetIsolation_level();
       } else {
-        setIsolation_level((Integer)value);
+        setIsolation_level((IsolationLevel)__value);
       }
       break;
 
@@ -480,165 +550,38 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_NAME:
-      return isSetSpace_name();
-    case PARTITION_NUM:
-      return isSetPartition_num();
-    case REPLICA_FACTOR:
-      return isSetReplica_factor();
-    case CHARSET_NAME:
-      return isSetCharset_name();
-    case COLLATE_NAME:
-      return isSetCollate_name();
-    case VID_TYPE:
-      return isSetVid_type();
-    case GROUP_NAME:
-      return isSetGroup_name();
-    case ISOLATION_LEVEL:
-      return isSetIsolation_level();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof SpaceDesc)
-      return this.equals((SpaceDesc)that);
-    return false;
-  }
-
-  public boolean equals(SpaceDesc that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof SpaceDesc))
+      return false;
+    SpaceDesc that = (SpaceDesc)_that;
 
-    boolean this_present_space_name = true && this.isSetSpace_name();
-    boolean that_present_space_name = true && that.isSetSpace_name();
-    if (this_present_space_name || that_present_space_name) {
-      if (!(this_present_space_name && that_present_space_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.space_name, that.space_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSpace_name(), that.isSetSpace_name(), this.space_name, that.space_name)) { return false; }
 
-    boolean this_present_partition_num = true;
-    boolean that_present_partition_num = true;
-    if (this_present_partition_num || that_present_partition_num) {
-      if (!(this_present_partition_num && that_present_partition_num))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.partition_num, that.partition_num))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.partition_num, that.partition_num)) { return false; }
 
-    boolean this_present_replica_factor = true;
-    boolean that_present_replica_factor = true;
-    if (this_present_replica_factor || that_present_replica_factor) {
-      if (!(this_present_replica_factor && that_present_replica_factor))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.replica_factor, that.replica_factor))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.replica_factor, that.replica_factor)) { return false; }
 
-    boolean this_present_charset_name = true && this.isSetCharset_name();
-    boolean that_present_charset_name = true && that.isSetCharset_name();
-    if (this_present_charset_name || that_present_charset_name) {
-      if (!(this_present_charset_name && that_present_charset_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.charset_name, that.charset_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetCharset_name(), that.isSetCharset_name(), this.charset_name, that.charset_name)) { return false; }
 
-    boolean this_present_collate_name = true && this.isSetCollate_name();
-    boolean that_present_collate_name = true && that.isSetCollate_name();
-    if (this_present_collate_name || that_present_collate_name) {
-      if (!(this_present_collate_name && that_present_collate_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.collate_name, that.collate_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetCollate_name(), that.isSetCollate_name(), this.collate_name, that.collate_name)) { return false; }
 
-    boolean this_present_vid_type = true && this.isSetVid_type();
-    boolean that_present_vid_type = true && that.isSetVid_type();
-    if (this_present_vid_type || that_present_vid_type) {
-      if (!(this_present_vid_type && that_present_vid_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vid_type, that.vid_type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetVid_type(), that.isSetVid_type(), this.vid_type, that.vid_type)) { return false; }
 
-    boolean this_present_group_name = true && this.isSetGroup_name();
-    boolean that_present_group_name = true && that.isSetGroup_name();
-    if (this_present_group_name || that_present_group_name) {
-      if (!(this_present_group_name && that_present_group_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.group_name, that.group_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetGroup_name(), that.isSetGroup_name(), this.group_name, that.group_name)) { return false; }
 
-    boolean this_present_isolation_level = true && this.isSetIsolation_level();
-    boolean that_present_isolation_level = true && that.isSetIsolation_level();
-    if (this_present_isolation_level || that_present_isolation_level) {
-      if (!(this_present_isolation_level && that_present_isolation_level))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.isolation_level, that.isolation_level))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetIsolation_level(), that.isSetIsolation_level(), this.isolation_level, that.isolation_level)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_name = true && (isSetSpace_name());
-    builder.append(present_space_name);
-    if (present_space_name)
-      builder.append(space_name);
-
-    boolean present_partition_num = true;
-    builder.append(present_partition_num);
-    if (present_partition_num)
-      builder.append(partition_num);
-
-    boolean present_replica_factor = true;
-    builder.append(present_replica_factor);
-    if (present_replica_factor)
-      builder.append(replica_factor);
-
-    boolean present_charset_name = true && (isSetCharset_name());
-    builder.append(present_charset_name);
-    if (present_charset_name)
-      builder.append(charset_name);
-
-    boolean present_collate_name = true && (isSetCollate_name());
-    builder.append(present_collate_name);
-    if (present_collate_name)
-      builder.append(collate_name);
-
-    boolean present_vid_type = true && (isSetVid_type());
-    builder.append(present_vid_type);
-    if (present_vid_type)
-      builder.append(vid_type);
-
-    boolean present_group_name = true && (isSetGroup_name());
-    builder.append(present_group_name);
-    if (present_group_name)
-      builder.append(group_name);
-
-    boolean present_isolation_level = true && (isSetIsolation_level());
-    builder.append(present_isolation_level);
-    if (present_isolation_level)
-      builder.append(isolation_level);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_name, partition_num, replica_factor, charset_name, collate_name, vid_type, group_name, isolation_level});
   }
 
   @Override
@@ -658,7 +601,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_name, other.space_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPartition_num()).compareTo(other.isSetPartition_num());
@@ -666,7 +609,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(partition_num, other.partition_num);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetReplica_factor()).compareTo(other.isSetReplica_factor());
@@ -674,7 +617,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(replica_factor, other.replica_factor);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCharset_name()).compareTo(other.isSetCharset_name());
@@ -682,7 +625,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(charset_name, other.charset_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCollate_name()).compareTo(other.isSetCollate_name());
@@ -690,7 +633,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(collate_name, other.collate_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetVid_type()).compareTo(other.isSetVid_type());
@@ -698,7 +641,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(vid_type, other.vid_type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetGroup_name()).compareTo(other.isSetGroup_name());
@@ -706,7 +649,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(group_name, other.group_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIsolation_level()).compareTo(other.isSetIsolation_level());
@@ -714,85 +657,84 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(isolation_level, other.isolation_level);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.space_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTITION_NUM:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.partition_num = iprot.readI32();
             setPartition_numIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case REPLICA_FACTOR:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.replica_factor = iprot.readI32();
             setReplica_factorIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CHARSET_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.charset_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case COLLATE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.collate_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VID_TYPE:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.vid_type = new ColumnTypeDef();
             this.vid_type.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case GROUP_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.group_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ISOLATION_LEVEL:
-          if (field.type == TType.I32) {
-            this.isolation_level = iprot.readI32();
-            setIsolation_levelIsSet(true);
+          if (__field.type == TType.I32) {
+            this.isolation_level = IsolationLevel.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -841,10 +783,12 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         oprot.writeFieldEnd();
       }
     }
-    if (isSetIsolation_level()) {
-      oprot.writeFieldBegin(ISOLATION_LEVEL_FIELD_DESC);
-      oprot.writeI32(this.isolation_level);
-      oprot.writeFieldEnd();
+    if (this.isolation_level != null) {
+      if (isSetIsolation_level()) {
+        oprot.writeFieldBegin(ISOLATION_LEVEL_FIELD_DESC);
+        oprot.writeI32(this.isolation_level == null ? 0 : this.isolation_level.getValue());
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -852,19 +796,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("SpaceDesc");
     sb.append(space);
     sb.append("(");
@@ -875,15 +814,15 @@ String space = prettyPrint ? " " : "";
     sb.append("space_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSpace_name() == null) {
+    if (this.getSpace_name() == null) {
       sb.append("null");
     } else {
-        int __space_name_size = Math.min(this. getSpace_name().length, 128);
+        int __space_name_size = Math.min(this.getSpace_name().length, 128);
         for (int i = 0; i < __space_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSpace_name()[i]).length() > 1 ? Integer.toHexString(this. getSpace_name()[i]).substring(Integer.toHexString(this. getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSpace_name()[i]).length() > 1 ? Integer.toHexString(this.getSpace_name()[i]).substring(Integer.toHexString(this.getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSpace_name()[i]).toUpperCase());
         }
-        if (this. getSpace_name().length > 128) sb.append(" ...");
+        if (this.getSpace_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -891,29 +830,29 @@ String space = prettyPrint ? " " : "";
     sb.append("partition_num");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPartition_num(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPartition_num(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("replica_factor");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getReplica_factor(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getReplica_factor(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("charset_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getCharset_name() == null) {
+    if (this.getCharset_name() == null) {
       sb.append("null");
     } else {
-        int __charset_name_size = Math.min(this. getCharset_name().length, 128);
+        int __charset_name_size = Math.min(this.getCharset_name().length, 128);
         for (int i = 0; i < __charset_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getCharset_name()[i]).length() > 1 ? Integer.toHexString(this. getCharset_name()[i]).substring(Integer.toHexString(this. getCharset_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCharset_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getCharset_name()[i]).length() > 1 ? Integer.toHexString(this.getCharset_name()[i]).substring(Integer.toHexString(this.getCharset_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCharset_name()[i]).toUpperCase());
         }
-        if (this. getCharset_name().length > 128) sb.append(" ...");
+        if (this.getCharset_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -921,15 +860,15 @@ String space = prettyPrint ? " " : "";
     sb.append("collate_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getCollate_name() == null) {
+    if (this.getCollate_name() == null) {
       sb.append("null");
     } else {
-        int __collate_name_size = Math.min(this. getCollate_name().length, 128);
+        int __collate_name_size = Math.min(this.getCollate_name().length, 128);
         for (int i = 0; i < __collate_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getCollate_name()[i]).length() > 1 ? Integer.toHexString(this. getCollate_name()[i]).substring(Integer.toHexString(this. getCollate_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCollate_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getCollate_name()[i]).length() > 1 ? Integer.toHexString(this.getCollate_name()[i]).substring(Integer.toHexString(this.getCollate_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCollate_name()[i]).toUpperCase());
         }
-        if (this. getCollate_name().length > 128) sb.append(" ...");
+        if (this.getCollate_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -937,10 +876,10 @@ String space = prettyPrint ? " " : "";
     sb.append("vid_type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getVid_type() == null) {
+    if (this.getVid_type() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getVid_type(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getVid_type(), indent + 1, prettyPrint));
     }
     first = false;
     if (isSetGroup_name())
@@ -950,15 +889,15 @@ String space = prettyPrint ? " " : "";
       sb.append("group_name");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getGroup_name() == null) {
+      if (this.getGroup_name() == null) {
         sb.append("null");
       } else {
-          int __group_name_size = Math.min(this. getGroup_name().length, 128);
+          int __group_name_size = Math.min(this.getGroup_name().length, 128);
           for (int i = 0; i < __group_name_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getGroup_name()[i]).length() > 1 ? Integer.toHexString(this. getGroup_name()[i]).substring(Integer.toHexString(this. getGroup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getGroup_name()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getGroup_name()[i]).length() > 1 ? Integer.toHexString(this.getGroup_name()[i]).substring(Integer.toHexString(this.getGroup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getGroup_name()[i]).toUpperCase());
           }
-          if (this. getGroup_name().length > 128) sb.append(" ...");
+          if (this.getGroup_name().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -969,14 +908,18 @@ String space = prettyPrint ? " " : "";
       sb.append("isolation_level");
       sb.append(space);
       sb.append(":").append(space);
-      String isolation_level_name = IsolationLevel.VALUES_TO_NAMES.get(this. getIsolation_level());
-      if (isolation_level_name != null) {
-        sb.append(isolation_level_name);
-        sb.append(" (");
-      }
-      sb.append(this. getIsolation_level());
-      if (isolation_level_name != null) {
-        sb.append(")");
+      if (this.getIsolation_level() == null) {
+        sb.append("null");
+      } else {
+        String isolation_level_name = this.getIsolation_level() == null ? "null" : this.getIsolation_level().name();
+        if (isolation_level_name != null) {
+          sb.append(isolation_level_name);
+          sb.append(" (");
+        }
+        sb.append(this.getIsolation_level());
+        if (isolation_level_name != null) {
+          sb.append(")");
+        }
       }
       first = false;
     }
@@ -987,10 +930,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetIsolation_level() && !IsolationLevel.VALID_VALUES.contains(isolation_level)){
-      throw new TProtocolException("The field 'isolation_level' has been assigned the invalid value " + isolation_level);
-    }
   }
 
 }

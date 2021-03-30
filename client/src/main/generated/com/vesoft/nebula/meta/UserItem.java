@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -48,7 +45,6 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int MAX_UPDATES_PER_HOUR = 4;
   public static final int MAX_CONNECTIONS_PER_HOUR = 5;
   public static final int MAX_USER_CONNECTIONS = 6;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __IS_LOCK_ISSET_ID = 0;
@@ -59,6 +55,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
   private BitSet __isset_bit_vector = new BitSet(5);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
@@ -84,13 +81,12 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public UserItem(
-    byte[] account,
-    boolean is_lock,
-    int max_queries_per_hour,
-    int max_updates_per_hour,
-    int max_connections_per_hour,
-    int max_user_connections)
-  {
+      byte[] account,
+      boolean is_lock,
+      int max_queries_per_hour,
+      int max_updates_per_hour,
+      int max_connections_per_hour,
+      int max_user_connections) {
     this();
     this.account = account;
     this.is_lock = is_lock;
@@ -103,6 +99,80 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     setMax_connections_per_hourIsSet(true);
     this.max_user_connections = max_user_connections;
     setMax_user_connectionsIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] account;
+    private boolean is_lock;
+    private int max_queries_per_hour;
+    private int max_updates_per_hour;
+    private int max_connections_per_hour;
+    private int max_user_connections;
+
+    BitSet __optional_isset = new BitSet(5);
+
+    public Builder() {
+    }
+
+    public Builder setAccount(final byte[] account) {
+      this.account = account;
+      return this;
+    }
+
+    public Builder setIs_lock(final boolean is_lock) {
+      this.is_lock = is_lock;
+      __optional_isset.set(__IS_LOCK_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMax_queries_per_hour(final int max_queries_per_hour) {
+      this.max_queries_per_hour = max_queries_per_hour;
+      __optional_isset.set(__MAX_QUERIES_PER_HOUR_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMax_updates_per_hour(final int max_updates_per_hour) {
+      this.max_updates_per_hour = max_updates_per_hour;
+      __optional_isset.set(__MAX_UPDATES_PER_HOUR_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMax_connections_per_hour(final int max_connections_per_hour) {
+      this.max_connections_per_hour = max_connections_per_hour;
+      __optional_isset.set(__MAX_CONNECTIONS_PER_HOUR_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMax_user_connections(final int max_user_connections) {
+      this.max_user_connections = max_user_connections;
+      __optional_isset.set(__MAX_USER_CONNECTIONS_ISSET_ID, true);
+      return this;
+    }
+
+    public UserItem build() {
+      UserItem result = new UserItem();
+      result.setAccount(this.account);
+      if (__optional_isset.get(__IS_LOCK_ISSET_ID)) {
+        result.setIs_lock(this.is_lock);
+      }
+      if (__optional_isset.get(__MAX_QUERIES_PER_HOUR_ISSET_ID)) {
+        result.setMax_queries_per_hour(this.max_queries_per_hour);
+      }
+      if (__optional_isset.get(__MAX_UPDATES_PER_HOUR_ISSET_ID)) {
+        result.setMax_updates_per_hour(this.max_updates_per_hour);
+      }
+      if (__optional_isset.get(__MAX_CONNECTIONS_PER_HOUR_ISSET_ID)) {
+        result.setMax_connections_per_hour(this.max_connections_per_hour);
+      }
+      if (__optional_isset.get(__MAX_USER_CONNECTIONS_ISSET_ID)) {
+        result.setMax_user_connections(this.max_user_connections);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -125,12 +195,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return new UserItem(this);
   }
 
-  @Deprecated
-  public UserItem clone() {
-    return new UserItem(this);
-  }
-
-  public byte[]  getAccount() {
+  public byte[] getAccount() {
     return this.account;
   }
 
@@ -148,13 +213,13 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.account != null;
   }
 
-  public void setAccountIsSet(boolean value) {
-    if (!value) {
+  public void setAccountIsSet(boolean __value) {
+    if (!__value) {
       this.account = null;
     }
   }
 
-  public boolean  isIs_lock() {
+  public boolean isIs_lock() {
     return this.is_lock;
   }
 
@@ -173,11 +238,11 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__IS_LOCK_ISSET_ID);
   }
 
-  public void setIs_lockIsSet(boolean value) {
-    __isset_bit_vector.set(__IS_LOCK_ISSET_ID, value);
+  public void setIs_lockIsSet(boolean __value) {
+    __isset_bit_vector.set(__IS_LOCK_ISSET_ID, __value);
   }
 
-  public int  getMax_queries_per_hour() {
+  public int getMax_queries_per_hour() {
     return this.max_queries_per_hour;
   }
 
@@ -196,11 +261,11 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__MAX_QUERIES_PER_HOUR_ISSET_ID);
   }
 
-  public void setMax_queries_per_hourIsSet(boolean value) {
-    __isset_bit_vector.set(__MAX_QUERIES_PER_HOUR_ISSET_ID, value);
+  public void setMax_queries_per_hourIsSet(boolean __value) {
+    __isset_bit_vector.set(__MAX_QUERIES_PER_HOUR_ISSET_ID, __value);
   }
 
-  public int  getMax_updates_per_hour() {
+  public int getMax_updates_per_hour() {
     return this.max_updates_per_hour;
   }
 
@@ -219,11 +284,11 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__MAX_UPDATES_PER_HOUR_ISSET_ID);
   }
 
-  public void setMax_updates_per_hourIsSet(boolean value) {
-    __isset_bit_vector.set(__MAX_UPDATES_PER_HOUR_ISSET_ID, value);
+  public void setMax_updates_per_hourIsSet(boolean __value) {
+    __isset_bit_vector.set(__MAX_UPDATES_PER_HOUR_ISSET_ID, __value);
   }
 
-  public int  getMax_connections_per_hour() {
+  public int getMax_connections_per_hour() {
     return this.max_connections_per_hour;
   }
 
@@ -242,11 +307,11 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__MAX_CONNECTIONS_PER_HOUR_ISSET_ID);
   }
 
-  public void setMax_connections_per_hourIsSet(boolean value) {
-    __isset_bit_vector.set(__MAX_CONNECTIONS_PER_HOUR_ISSET_ID, value);
+  public void setMax_connections_per_hourIsSet(boolean __value) {
+    __isset_bit_vector.set(__MAX_CONNECTIONS_PER_HOUR_ISSET_ID, __value);
   }
 
-  public int  getMax_user_connections() {
+  public int getMax_user_connections() {
     return this.max_user_connections;
   }
 
@@ -265,57 +330,57 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__MAX_USER_CONNECTIONS_ISSET_ID);
   }
 
-  public void setMax_user_connectionsIsSet(boolean value) {
-    __isset_bit_vector.set(__MAX_USER_CONNECTIONS_ISSET_ID, value);
+  public void setMax_user_connectionsIsSet(boolean __value) {
+    __isset_bit_vector.set(__MAX_USER_CONNECTIONS_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ACCOUNT:
-      if (value == null) {
+      if (__value == null) {
         unsetAccount();
       } else {
-        setAccount((byte[])value);
+        setAccount((byte[])__value);
       }
       break;
 
     case IS_LOCK:
-      if (value == null) {
+      if (__value == null) {
         unsetIs_lock();
       } else {
-        setIs_lock((Boolean)value);
+        setIs_lock((Boolean)__value);
       }
       break;
 
     case MAX_QUERIES_PER_HOUR:
-      if (value == null) {
+      if (__value == null) {
         unsetMax_queries_per_hour();
       } else {
-        setMax_queries_per_hour((Integer)value);
+        setMax_queries_per_hour((Integer)__value);
       }
       break;
 
     case MAX_UPDATES_PER_HOUR:
-      if (value == null) {
+      if (__value == null) {
         unsetMax_updates_per_hour();
       } else {
-        setMax_updates_per_hour((Integer)value);
+        setMax_updates_per_hour((Integer)__value);
       }
       break;
 
     case MAX_CONNECTIONS_PER_HOUR:
-      if (value == null) {
+      if (__value == null) {
         unsetMax_connections_per_hour();
       } else {
-        setMax_connections_per_hour((Integer)value);
+        setMax_connections_per_hour((Integer)__value);
       }
       break;
 
     case MAX_USER_CONNECTIONS:
-      if (value == null) {
+      if (__value == null) {
         unsetMax_user_connections();
       } else {
-        setMax_user_connections((Integer)value);
+        setMax_user_connections((Integer)__value);
       }
       break;
 
@@ -349,133 +414,34 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ACCOUNT:
-      return isSetAccount();
-    case IS_LOCK:
-      return isSetIs_lock();
-    case MAX_QUERIES_PER_HOUR:
-      return isSetMax_queries_per_hour();
-    case MAX_UPDATES_PER_HOUR:
-      return isSetMax_updates_per_hour();
-    case MAX_CONNECTIONS_PER_HOUR:
-      return isSetMax_connections_per_hour();
-    case MAX_USER_CONNECTIONS:
-      return isSetMax_user_connections();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof UserItem)
-      return this.equals((UserItem)that);
-    return false;
-  }
-
-  public boolean equals(UserItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof UserItem))
+      return false;
+    UserItem that = (UserItem)_that;
 
-    boolean this_present_account = true && this.isSetAccount();
-    boolean that_present_account = true && that.isSetAccount();
-    if (this_present_account || that_present_account) {
-      if (!(this_present_account && that_present_account))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.account, that.account))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetAccount(), that.isSetAccount(), this.account, that.account)) { return false; }
 
-    boolean this_present_is_lock = true;
-    boolean that_present_is_lock = true;
-    if (this_present_is_lock || that_present_is_lock) {
-      if (!(this_present_is_lock && that_present_is_lock))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.is_lock, that.is_lock))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.is_lock, that.is_lock)) { return false; }
 
-    boolean this_present_max_queries_per_hour = true;
-    boolean that_present_max_queries_per_hour = true;
-    if (this_present_max_queries_per_hour || that_present_max_queries_per_hour) {
-      if (!(this_present_max_queries_per_hour && that_present_max_queries_per_hour))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.max_queries_per_hour, that.max_queries_per_hour))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.max_queries_per_hour, that.max_queries_per_hour)) { return false; }
 
-    boolean this_present_max_updates_per_hour = true;
-    boolean that_present_max_updates_per_hour = true;
-    if (this_present_max_updates_per_hour || that_present_max_updates_per_hour) {
-      if (!(this_present_max_updates_per_hour && that_present_max_updates_per_hour))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.max_updates_per_hour, that.max_updates_per_hour))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.max_updates_per_hour, that.max_updates_per_hour)) { return false; }
 
-    boolean this_present_max_connections_per_hour = true;
-    boolean that_present_max_connections_per_hour = true;
-    if (this_present_max_connections_per_hour || that_present_max_connections_per_hour) {
-      if (!(this_present_max_connections_per_hour && that_present_max_connections_per_hour))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.max_connections_per_hour, that.max_connections_per_hour))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.max_connections_per_hour, that.max_connections_per_hour)) { return false; }
 
-    boolean this_present_max_user_connections = true;
-    boolean that_present_max_user_connections = true;
-    if (this_present_max_user_connections || that_present_max_user_connections) {
-      if (!(this_present_max_user_connections && that_present_max_user_connections))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.max_user_connections, that.max_user_connections))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.max_user_connections, that.max_user_connections)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_account = true && (isSetAccount());
-    builder.append(present_account);
-    if (present_account)
-      builder.append(account);
-
-    boolean present_is_lock = true;
-    builder.append(present_is_lock);
-    if (present_is_lock)
-      builder.append(is_lock);
-
-    boolean present_max_queries_per_hour = true;
-    builder.append(present_max_queries_per_hour);
-    if (present_max_queries_per_hour)
-      builder.append(max_queries_per_hour);
-
-    boolean present_max_updates_per_hour = true;
-    builder.append(present_max_updates_per_hour);
-    if (present_max_updates_per_hour)
-      builder.append(max_updates_per_hour);
-
-    boolean present_max_connections_per_hour = true;
-    builder.append(present_max_connections_per_hour);
-    if (present_max_connections_per_hour)
-      builder.append(max_connections_per_hour);
-
-    boolean present_max_user_connections = true;
-    builder.append(present_max_user_connections);
-    if (present_max_user_connections)
-      builder.append(max_user_connections);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {account, is_lock, max_queries_per_hour, max_updates_per_hour, max_connections_per_hour, max_user_connections});
   }
 
   @Override
@@ -495,7 +461,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(account, other.account);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIs_lock()).compareTo(other.isSetIs_lock());
@@ -503,7 +469,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(is_lock, other.is_lock);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMax_queries_per_hour()).compareTo(other.isSetMax_queries_per_hour());
@@ -511,7 +477,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(max_queries_per_hour, other.max_queries_per_hour);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMax_updates_per_hour()).compareTo(other.isSetMax_updates_per_hour());
@@ -519,7 +485,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(max_updates_per_hour, other.max_updates_per_hour);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMax_connections_per_hour()).compareTo(other.isSetMax_connections_per_hour());
@@ -527,7 +493,7 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(max_connections_per_hour, other.max_connections_per_hour);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMax_user_connections()).compareTo(other.isSetMax_user_connections());
@@ -535,72 +501,72 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(max_user_connections, other.max_user_connections);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ACCOUNT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.account = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IS_LOCK:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.is_lock = iprot.readBool();
             setIs_lockIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MAX_QUERIES_PER_HOUR:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.max_queries_per_hour = iprot.readI32();
             setMax_queries_per_hourIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MAX_UPDATES_PER_HOUR:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.max_updates_per_hour = iprot.readI32();
             setMax_updates_per_hourIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MAX_CONNECTIONS_PER_HOUR:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.max_connections_per_hour = iprot.readI32();
             setMax_connections_per_hourIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MAX_USER_CONNECTIONS:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.max_user_connections = iprot.readI32();
             setMax_user_connectionsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -642,19 +608,14 @@ public class UserItem implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("UserItem");
     sb.append(space);
     sb.append("(");
@@ -665,15 +626,15 @@ String space = prettyPrint ? " " : "";
     sb.append("account");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getAccount() == null) {
+    if (this.getAccount() == null) {
       sb.append("null");
     } else {
-        int __account_size = Math.min(this. getAccount().length, 128);
+        int __account_size = Math.min(this.getAccount().length, 128);
         for (int i = 0; i < __account_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getAccount()[i]).length() > 1 ? Integer.toHexString(this.getAccount()[i]).substring(Integer.toHexString(this.getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getAccount()[i]).toUpperCase());
         }
-        if (this. getAccount().length > 128) sb.append(" ...");
+        if (this.getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -681,35 +642,35 @@ String space = prettyPrint ? " " : "";
     sb.append("is_lock");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIs_lock(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIs_lock(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("max_queries_per_hour");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMax_queries_per_hour(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMax_queries_per_hour(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("max_updates_per_hour");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMax_updates_per_hour(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMax_updates_per_hour(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("max_connections_per_hour");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMax_connections_per_hour(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMax_connections_per_hour(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("max_user_connections");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMax_user_connections(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMax_user_connections(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -718,7 +679,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

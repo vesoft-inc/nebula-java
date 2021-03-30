@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -37,19 +34,17 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see ErrorCode
    */
-  public int code;
+  public ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public List<HostItem> hosts;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int HOSTS = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __CODE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
@@ -70,24 +65,58 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ListHostsResp(
-    int code,
-    com.vesoft.nebula.HostAddr leader,
-    List<HostItem> hosts)
-  {
+      ErrorCode code,
+      com.vesoft.nebula.HostAddr leader,
+      List<HostItem> hosts) {
     this();
     this.code = code;
-    setCodeIsSet(true);
     this.leader = leader;
     this.hosts = hosts;
+  }
+
+  public static class Builder {
+    private ErrorCode code;
+    private com.vesoft.nebula.HostAddr leader;
+    private List<HostItem> hosts;
+
+    public Builder() {
+    }
+
+    public Builder setCode(final ErrorCode code) {
+      this.code = code;
+      return this;
+    }
+
+    public Builder setLeader(final com.vesoft.nebula.HostAddr leader) {
+      this.leader = leader;
+      return this;
+    }
+
+    public Builder setHosts(final List<HostItem> hosts) {
+      this.hosts = hosts;
+      return this;
+    }
+
+    public ListHostsResp build() {
+      ListHostsResp result = new ListHostsResp();
+      result.setCode(this.code);
+      result.setLeader(this.leader);
+      result.setHosts(this.hosts);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public ListHostsResp(ListHostsResp other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.code = TBaseHelper.deepCopy(other.code);
+    if (other.isSetCode()) {
+      this.code = TBaseHelper.deepCopy(other.code);
+    }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
@@ -100,16 +129,11 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
     return new ListHostsResp(this);
   }
 
-  @Deprecated
-  public ListHostsResp clone() {
-    return new ListHostsResp(this);
-  }
-
   /**
    * 
    * @see ErrorCode
    */
-  public int  getCode() {
+  public ErrorCode getCode() {
     return this.code;
   }
 
@@ -117,26 +141,27 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see ErrorCode
    */
-  public ListHostsResp setCode(int code) {
+  public ListHostsResp setCode(ErrorCode code) {
     this.code = code;
-    setCodeIsSet(true);
     return this;
   }
 
   public void unsetCode() {
-    __isset_bit_vector.clear(__CODE_ISSET_ID);
+    this.code = null;
   }
 
   // Returns true if field code is set (has been assigned a value) and false otherwise
   public boolean isSetCode() {
-    return __isset_bit_vector.get(__CODE_ISSET_ID);
+    return this.code != null;
   }
 
-  public void setCodeIsSet(boolean value) {
-    __isset_bit_vector.set(__CODE_ISSET_ID, value);
+  public void setCodeIsSet(boolean __value) {
+    if (!__value) {
+      this.code = null;
+    }
   }
 
-  public com.vesoft.nebula.HostAddr  getLeader() {
+  public com.vesoft.nebula.HostAddr getLeader() {
     return this.leader;
   }
 
@@ -154,13 +179,13 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
     return this.leader != null;
   }
 
-  public void setLeaderIsSet(boolean value) {
-    if (!value) {
+  public void setLeaderIsSet(boolean __value) {
+    if (!__value) {
       this.leader = null;
     }
   }
 
-  public List<HostItem>  getHosts() {
+  public List<HostItem> getHosts() {
     return this.hosts;
   }
 
@@ -178,36 +203,36 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
     return this.hosts != null;
   }
 
-  public void setHostsIsSet(boolean value) {
-    if (!value) {
+  public void setHostsIsSet(boolean __value) {
+    if (!__value) {
       this.hosts = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
-      if (value == null) {
+      if (__value == null) {
         unsetCode();
       } else {
-        setCode((Integer)value);
+        setCode((ErrorCode)__value);
       }
       break;
 
     case LEADER:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader();
       } else {
-        setLeader((com.vesoft.nebula.HostAddr)value);
+        setLeader((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case HOSTS:
-      if (value == null) {
+      if (__value == null) {
         unsetHosts();
       } else {
-        setHosts((List<HostItem>)value);
+        setHosts((List<HostItem>)__value);
       }
       break;
 
@@ -232,85 +257,28 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case CODE:
-      return isSetCode();
-    case LEADER:
-      return isSetLeader();
-    case HOSTS:
-      return isSetHosts();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ListHostsResp)
-      return this.equals((ListHostsResp)that);
-    return false;
-  }
-
-  public boolean equals(ListHostsResp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ListHostsResp))
+      return false;
+    ListHostsResp that = (ListHostsResp)_that;
 
-    boolean this_present_code = true;
-    boolean that_present_code = true;
-    if (this_present_code || that_present_code) {
-      if (!(this_present_code && that_present_code))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.code, that.code))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
-    boolean this_present_leader = true && this.isSetLeader();
-    boolean that_present_leader = true && that.isSetLeader();
-    if (this_present_leader || that_present_leader) {
-      if (!(this_present_leader && that_present_leader))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader, that.leader))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    boolean this_present_hosts = true && this.isSetHosts();
-    boolean that_present_hosts = true && that.isSetHosts();
-    if (this_present_hosts || that_present_hosts) {
-      if (!(this_present_hosts && that_present_hosts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.hosts, that.hosts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHosts(), that.isSetHosts(), this.hosts, that.hosts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_code = true;
-    builder.append(present_code);
-    if (present_code)
-      builder.append(code);
-
-    boolean present_leader = true && (isSetLeader());
-    builder.append(present_leader);
-    if (present_leader)
-      builder.append(leader);
-
-    boolean present_hosts = true && (isSetHosts());
-    builder.append(present_hosts);
-    if (present_hosts)
-      builder.append(hosts);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {code, leader, hosts});
   }
 
   @Override
@@ -330,7 +298,7 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(code, other.code);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
@@ -338,7 +306,7 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader, other.leader);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
@@ -346,61 +314,60 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case CODE:
-          if (field.type == TType.I32) {
-            this.code = iprot.readI32();
-            setCodeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.code = ErrorCode.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.leader = new com.vesoft.nebula.HostAddr();
             this.leader.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOSTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list81 = iprot.readListBegin();
-              this.hosts = new ArrayList<HostItem>(Math.max(0, _list81.size));
-              for (int _i82 = 0; 
-                   (_list81.size < 0) ? iprot.peekList() : (_i82 < _list81.size); 
-                   ++_i82)
+              TList _list90 = iprot.readListBegin();
+              this.hosts = new ArrayList<HostItem>(Math.max(0, _list90.size));
+              for (int _i91 = 0; 
+                   (_list90.size < 0) ? iprot.peekList() : (_i91 < _list90.size); 
+                   ++_i91)
               {
-                HostItem _elem83;
-                _elem83 = new HostItem();
-                _elem83.read(iprot);
-                this.hosts.add(_elem83);
+                HostItem _elem92;
+                _elem92 = new HostItem();
+                _elem92.read(iprot);
+                this.hosts.add(_elem92);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -416,9 +383,11 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(CODE_FIELD_DESC);
-    oprot.writeI32(this.code);
-    oprot.writeFieldEnd();
+    if (this.code != null) {
+      oprot.writeFieldBegin(CODE_FIELD_DESC);
+      oprot.writeI32(this.code == null ? 0 : this.code.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.leader != null) {
       oprot.writeFieldBegin(LEADER_FIELD_DESC);
       this.leader.write(oprot);
@@ -428,8 +397,8 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (HostItem _iter84 : this.hosts)        {
-          _iter84.write(oprot);
+        for (HostItem _iter93 : this.hosts)        {
+          _iter93.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -441,19 +410,14 @@ public class ListHostsResp implements TBase, java.io.Serializable, Cloneable, Co
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ListHostsResp");
     sb.append(space);
     sb.append("(");
@@ -464,14 +428,18 @@ String space = prettyPrint ? " " : "";
     sb.append("code");
     sb.append(space);
     sb.append(":").append(space);
-    String code_name = ErrorCode.VALUES_TO_NAMES.get(this. getCode());
-    if (code_name != null) {
-      sb.append(code_name);
-      sb.append(" (");
-    }
-    sb.append(this. getCode());
-    if (code_name != null) {
-      sb.append(")");
+    if (this.getCode() == null) {
+      sb.append("null");
+    } else {
+      String code_name = this.getCode() == null ? "null" : this.getCode().name();
+      if (code_name != null) {
+        sb.append(code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getCode());
+      if (code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -479,10 +447,10 @@ String space = prettyPrint ? " " : "";
     sb.append("leader");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLeader() == null) {
+    if (this.getLeader() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLeader(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLeader(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -490,10 +458,10 @@ String space = prettyPrint ? " " : "";
     sb.append("hosts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHosts() == null) {
+    if (this.getHosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHosts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHosts(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -503,10 +471,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetCode() && !ErrorCode.VALID_VALUES.contains(code)){
-      throw new TProtocolException("The field 'code' has been assigned the invalid value " + code);
-    }
   }
 
 }

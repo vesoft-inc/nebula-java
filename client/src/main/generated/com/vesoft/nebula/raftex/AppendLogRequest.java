@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.raftex;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -66,7 +63,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   public static final int LOG_TERM = 10;
   public static final int LOG_STR_LIST = 11;
   public static final int SENDING_SNAPSHOT = 12;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ISSET_ID = 0;
@@ -82,6 +78,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   private BitSet __isset_bit_vector = new BitSet(10);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
@@ -120,19 +117,18 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   }
 
   public AppendLogRequest(
-    int space,
-    int part,
-    long current_term,
-    long last_log_id,
-    long committed_log_id,
-    String leader_addr,
-    int leader_port,
-    long last_log_term_sent,
-    long last_log_id_sent,
-    long log_term,
-    List<LogEntry> log_str_list,
-    boolean sending_snapshot)
-  {
+      int space,
+      int part,
+      long current_term,
+      long last_log_id,
+      long committed_log_id,
+      String leader_addr,
+      int leader_port,
+      long last_log_term_sent,
+      long last_log_id_sent,
+      long log_term,
+      List<LogEntry> log_str_list,
+      boolean sending_snapshot) {
     this();
     this.space = space;
     setSpaceIsSet(true);
@@ -156,6 +152,137 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     this.log_str_list = log_str_list;
     this.sending_snapshot = sending_snapshot;
     setSending_snapshotIsSet(true);
+  }
+
+  public static class Builder {
+    private int space;
+    private int part;
+    private long current_term;
+    private long last_log_id;
+    private long committed_log_id;
+    private String leader_addr;
+    private int leader_port;
+    private long last_log_term_sent;
+    private long last_log_id_sent;
+    private long log_term;
+    private List<LogEntry> log_str_list;
+    private boolean sending_snapshot;
+
+    BitSet __optional_isset = new BitSet(10);
+
+    public Builder() {
+    }
+
+    public Builder setSpace(final int space) {
+      this.space = space;
+      __optional_isset.set(__SPACE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart(final int part) {
+      this.part = part;
+      __optional_isset.set(__PART_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCurrent_term(final long current_term) {
+      this.current_term = current_term;
+      __optional_isset.set(__CURRENT_TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLast_log_id(final long last_log_id) {
+      this.last_log_id = last_log_id;
+      __optional_isset.set(__LAST_LOG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCommitted_log_id(final long committed_log_id) {
+      this.committed_log_id = committed_log_id;
+      __optional_isset.set(__COMMITTED_LOG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLeader_addr(final String leader_addr) {
+      this.leader_addr = leader_addr;
+      return this;
+    }
+
+    public Builder setLeader_port(final int leader_port) {
+      this.leader_port = leader_port;
+      __optional_isset.set(__LEADER_PORT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLast_log_term_sent(final long last_log_term_sent) {
+      this.last_log_term_sent = last_log_term_sent;
+      __optional_isset.set(__LAST_LOG_TERM_SENT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLast_log_id_sent(final long last_log_id_sent) {
+      this.last_log_id_sent = last_log_id_sent;
+      __optional_isset.set(__LAST_LOG_ID_SENT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLog_term(final long log_term) {
+      this.log_term = log_term;
+      __optional_isset.set(__LOG_TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLog_str_list(final List<LogEntry> log_str_list) {
+      this.log_str_list = log_str_list;
+      return this;
+    }
+
+    public Builder setSending_snapshot(final boolean sending_snapshot) {
+      this.sending_snapshot = sending_snapshot;
+      __optional_isset.set(__SENDING_SNAPSHOT_ISSET_ID, true);
+      return this;
+    }
+
+    public AppendLogRequest build() {
+      AppendLogRequest result = new AppendLogRequest();
+      if (__optional_isset.get(__SPACE_ISSET_ID)) {
+        result.setSpace(this.space);
+      }
+      if (__optional_isset.get(__PART_ISSET_ID)) {
+        result.setPart(this.part);
+      }
+      if (__optional_isset.get(__CURRENT_TERM_ISSET_ID)) {
+        result.setCurrent_term(this.current_term);
+      }
+      if (__optional_isset.get(__LAST_LOG_ID_ISSET_ID)) {
+        result.setLast_log_id(this.last_log_id);
+      }
+      if (__optional_isset.get(__COMMITTED_LOG_ID_ISSET_ID)) {
+        result.setCommitted_log_id(this.committed_log_id);
+      }
+      result.setLeader_addr(this.leader_addr);
+      if (__optional_isset.get(__LEADER_PORT_ISSET_ID)) {
+        result.setLeader_port(this.leader_port);
+      }
+      if (__optional_isset.get(__LAST_LOG_TERM_SENT_ISSET_ID)) {
+        result.setLast_log_term_sent(this.last_log_term_sent);
+      }
+      if (__optional_isset.get(__LAST_LOG_ID_SENT_ISSET_ID)) {
+        result.setLast_log_id_sent(this.last_log_id_sent);
+      }
+      if (__optional_isset.get(__LOG_TERM_ISSET_ID)) {
+        result.setLog_term(this.log_term);
+      }
+      result.setLog_str_list(this.log_str_list);
+      if (__optional_isset.get(__SENDING_SNAPSHOT_ISSET_ID)) {
+        result.setSending_snapshot(this.sending_snapshot);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -186,12 +313,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return new AppendLogRequest(this);
   }
 
-  @Deprecated
-  public AppendLogRequest clone() {
-    return new AppendLogRequest(this);
-  }
-
-  public int  getSpace() {
+  public int getSpace() {
     return this.space;
   }
 
@@ -210,11 +332,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__SPACE_ISSET_ID);
   }
 
-  public void setSpaceIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ISSET_ID, value);
+  public void setSpaceIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ISSET_ID, __value);
   }
 
-  public int  getPart() {
+  public int getPart() {
     return this.part;
   }
 
@@ -233,11 +355,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__PART_ISSET_ID);
   }
 
-  public void setPartIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ISSET_ID, value);
+  public void setPartIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ISSET_ID, __value);
   }
 
-  public long  getCurrent_term() {
+  public long getCurrent_term() {
     return this.current_term;
   }
 
@@ -256,11 +378,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__CURRENT_TERM_ISSET_ID);
   }
 
-  public void setCurrent_termIsSet(boolean value) {
-    __isset_bit_vector.set(__CURRENT_TERM_ISSET_ID, value);
+  public void setCurrent_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__CURRENT_TERM_ISSET_ID, __value);
   }
 
-  public long  getLast_log_id() {
+  public long getLast_log_id() {
     return this.last_log_id;
   }
 
@@ -279,11 +401,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__LAST_LOG_ID_ISSET_ID);
   }
 
-  public void setLast_log_idIsSet(boolean value) {
-    __isset_bit_vector.set(__LAST_LOG_ID_ISSET_ID, value);
+  public void setLast_log_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_LOG_ID_ISSET_ID, __value);
   }
 
-  public long  getCommitted_log_id() {
+  public long getCommitted_log_id() {
     return this.committed_log_id;
   }
 
@@ -302,11 +424,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__COMMITTED_LOG_ID_ISSET_ID);
   }
 
-  public void setCommitted_log_idIsSet(boolean value) {
-    __isset_bit_vector.set(__COMMITTED_LOG_ID_ISSET_ID, value);
+  public void setCommitted_log_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__COMMITTED_LOG_ID_ISSET_ID, __value);
   }
 
-  public String  getLeader_addr() {
+  public String getLeader_addr() {
     return this.leader_addr;
   }
 
@@ -324,13 +446,13 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return this.leader_addr != null;
   }
 
-  public void setLeader_addrIsSet(boolean value) {
-    if (!value) {
+  public void setLeader_addrIsSet(boolean __value) {
+    if (!__value) {
       this.leader_addr = null;
     }
   }
 
-  public int  getLeader_port() {
+  public int getLeader_port() {
     return this.leader_port;
   }
 
@@ -349,11 +471,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__LEADER_PORT_ISSET_ID);
   }
 
-  public void setLeader_portIsSet(boolean value) {
-    __isset_bit_vector.set(__LEADER_PORT_ISSET_ID, value);
+  public void setLeader_portIsSet(boolean __value) {
+    __isset_bit_vector.set(__LEADER_PORT_ISSET_ID, __value);
   }
 
-  public long  getLast_log_term_sent() {
+  public long getLast_log_term_sent() {
     return this.last_log_term_sent;
   }
 
@@ -372,11 +494,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__LAST_LOG_TERM_SENT_ISSET_ID);
   }
 
-  public void setLast_log_term_sentIsSet(boolean value) {
-    __isset_bit_vector.set(__LAST_LOG_TERM_SENT_ISSET_ID, value);
+  public void setLast_log_term_sentIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_LOG_TERM_SENT_ISSET_ID, __value);
   }
 
-  public long  getLast_log_id_sent() {
+  public long getLast_log_id_sent() {
     return this.last_log_id_sent;
   }
 
@@ -395,11 +517,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__LAST_LOG_ID_SENT_ISSET_ID);
   }
 
-  public void setLast_log_id_sentIsSet(boolean value) {
-    __isset_bit_vector.set(__LAST_LOG_ID_SENT_ISSET_ID, value);
+  public void setLast_log_id_sentIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_LOG_ID_SENT_ISSET_ID, __value);
   }
 
-  public long  getLog_term() {
+  public long getLog_term() {
     return this.log_term;
   }
 
@@ -418,11 +540,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__LOG_TERM_ISSET_ID);
   }
 
-  public void setLog_termIsSet(boolean value) {
-    __isset_bit_vector.set(__LOG_TERM_ISSET_ID, value);
+  public void setLog_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__LOG_TERM_ISSET_ID, __value);
   }
 
-  public List<LogEntry>  getLog_str_list() {
+  public List<LogEntry> getLog_str_list() {
     return this.log_str_list;
   }
 
@@ -440,13 +562,13 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return this.log_str_list != null;
   }
 
-  public void setLog_str_listIsSet(boolean value) {
-    if (!value) {
+  public void setLog_str_listIsSet(boolean __value) {
+    if (!__value) {
       this.log_str_list = null;
     }
   }
 
-  public boolean  isSending_snapshot() {
+  public boolean isSending_snapshot() {
     return this.sending_snapshot;
   }
 
@@ -465,106 +587,106 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     return __isset_bit_vector.get(__SENDING_SNAPSHOT_ISSET_ID);
   }
 
-  public void setSending_snapshotIsSet(boolean value) {
-    __isset_bit_vector.set(__SENDING_SNAPSHOT_ISSET_ID, value);
+  public void setSending_snapshotIsSet(boolean __value) {
+    __isset_bit_vector.set(__SENDING_SNAPSHOT_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace();
       } else {
-        setSpace((Integer)value);
+        setSpace((Integer)__value);
       }
       break;
 
     case PART:
-      if (value == null) {
+      if (__value == null) {
         unsetPart();
       } else {
-        setPart((Integer)value);
+        setPart((Integer)__value);
       }
       break;
 
     case CURRENT_TERM:
-      if (value == null) {
+      if (__value == null) {
         unsetCurrent_term();
       } else {
-        setCurrent_term((Long)value);
+        setCurrent_term((Long)__value);
       }
       break;
 
     case LAST_LOG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetLast_log_id();
       } else {
-        setLast_log_id((Long)value);
+        setLast_log_id((Long)__value);
       }
       break;
 
     case COMMITTED_LOG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetCommitted_log_id();
       } else {
-        setCommitted_log_id((Long)value);
+        setCommitted_log_id((Long)__value);
       }
       break;
 
     case LEADER_ADDR:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_addr();
       } else {
-        setLeader_addr((String)value);
+        setLeader_addr((String)__value);
       }
       break;
 
     case LEADER_PORT:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_port();
       } else {
-        setLeader_port((Integer)value);
+        setLeader_port((Integer)__value);
       }
       break;
 
     case LAST_LOG_TERM_SENT:
-      if (value == null) {
+      if (__value == null) {
         unsetLast_log_term_sent();
       } else {
-        setLast_log_term_sent((Long)value);
+        setLast_log_term_sent((Long)__value);
       }
       break;
 
     case LAST_LOG_ID_SENT:
-      if (value == null) {
+      if (__value == null) {
         unsetLast_log_id_sent();
       } else {
-        setLast_log_id_sent((Long)value);
+        setLast_log_id_sent((Long)__value);
       }
       break;
 
     case LOG_TERM:
-      if (value == null) {
+      if (__value == null) {
         unsetLog_term();
       } else {
-        setLog_term((Long)value);
+        setLog_term((Long)__value);
       }
       break;
 
     case LOG_STR_LIST:
-      if (value == null) {
+      if (__value == null) {
         unsetLog_str_list();
       } else {
-        setLog_str_list((List<LogEntry>)value);
+        setLog_str_list((List<LogEntry>)__value);
       }
       break;
 
     case SENDING_SNAPSHOT:
-      if (value == null) {
+      if (__value == null) {
         unsetSending_snapshot();
       } else {
-        setSending_snapshot((Boolean)value);
+        setSending_snapshot((Boolean)__value);
       }
       break;
 
@@ -616,229 +738,46 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE:
-      return isSetSpace();
-    case PART:
-      return isSetPart();
-    case CURRENT_TERM:
-      return isSetCurrent_term();
-    case LAST_LOG_ID:
-      return isSetLast_log_id();
-    case COMMITTED_LOG_ID:
-      return isSetCommitted_log_id();
-    case LEADER_ADDR:
-      return isSetLeader_addr();
-    case LEADER_PORT:
-      return isSetLeader_port();
-    case LAST_LOG_TERM_SENT:
-      return isSetLast_log_term_sent();
-    case LAST_LOG_ID_SENT:
-      return isSetLast_log_id_sent();
-    case LOG_TERM:
-      return isSetLog_term();
-    case LOG_STR_LIST:
-      return isSetLog_str_list();
-    case SENDING_SNAPSHOT:
-      return isSetSending_snapshot();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AppendLogRequest)
-      return this.equals((AppendLogRequest)that);
-    return false;
-  }
-
-  public boolean equals(AppendLogRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AppendLogRequest))
+      return false;
+    AppendLogRequest that = (AppendLogRequest)_that;
 
-    boolean this_present_space = true;
-    boolean that_present_space = true;
-    if (this_present_space || that_present_space) {
-      if (!(this_present_space && that_present_space))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space, that.space))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space, that.space)) { return false; }
 
-    boolean this_present_part = true;
-    boolean that_present_part = true;
-    if (this_present_part || that_present_part) {
-      if (!(this_present_part && that_present_part))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part, that.part))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part, that.part)) { return false; }
 
-    boolean this_present_current_term = true;
-    boolean that_present_current_term = true;
-    if (this_present_current_term || that_present_current_term) {
-      if (!(this_present_current_term && that_present_current_term))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.current_term, that.current_term))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.current_term, that.current_term)) { return false; }
 
-    boolean this_present_last_log_id = true;
-    boolean that_present_last_log_id = true;
-    if (this_present_last_log_id || that_present_last_log_id) {
-      if (!(this_present_last_log_id && that_present_last_log_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.last_log_id, that.last_log_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.last_log_id, that.last_log_id)) { return false; }
 
-    boolean this_present_committed_log_id = true;
-    boolean that_present_committed_log_id = true;
-    if (this_present_committed_log_id || that_present_committed_log_id) {
-      if (!(this_present_committed_log_id && that_present_committed_log_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id)) { return false; }
 
-    boolean this_present_leader_addr = true && this.isSetLeader_addr();
-    boolean that_present_leader_addr = true && that.isSetLeader_addr();
-    if (this_present_leader_addr || that_present_leader_addr) {
-      if (!(this_present_leader_addr && that_present_leader_addr))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_addr, that.leader_addr))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLeader_addr(), that.isSetLeader_addr(), this.leader_addr, that.leader_addr)) { return false; }
 
-    boolean this_present_leader_port = true;
-    boolean that_present_leader_port = true;
-    if (this_present_leader_port || that_present_leader_port) {
-      if (!(this_present_leader_port && that_present_leader_port))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_port, that.leader_port))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.leader_port, that.leader_port)) { return false; }
 
-    boolean this_present_last_log_term_sent = true;
-    boolean that_present_last_log_term_sent = true;
-    if (this_present_last_log_term_sent || that_present_last_log_term_sent) {
-      if (!(this_present_last_log_term_sent && that_present_last_log_term_sent))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.last_log_term_sent, that.last_log_term_sent))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.last_log_term_sent, that.last_log_term_sent)) { return false; }
 
-    boolean this_present_last_log_id_sent = true;
-    boolean that_present_last_log_id_sent = true;
-    if (this_present_last_log_id_sent || that_present_last_log_id_sent) {
-      if (!(this_present_last_log_id_sent && that_present_last_log_id_sent))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.last_log_id_sent, that.last_log_id_sent))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.last_log_id_sent, that.last_log_id_sent)) { return false; }
 
-    boolean this_present_log_term = true;
-    boolean that_present_log_term = true;
-    if (this_present_log_term || that_present_log_term) {
-      if (!(this_present_log_term && that_present_log_term))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.log_term, that.log_term))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.log_term, that.log_term)) { return false; }
 
-    boolean this_present_log_str_list = true && this.isSetLog_str_list();
-    boolean that_present_log_str_list = true && that.isSetLog_str_list();
-    if (this_present_log_str_list || that_present_log_str_list) {
-      if (!(this_present_log_str_list && that_present_log_str_list))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.log_str_list, that.log_str_list))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLog_str_list(), that.isSetLog_str_list(), this.log_str_list, that.log_str_list)) { return false; }
 
-    boolean this_present_sending_snapshot = true;
-    boolean that_present_sending_snapshot = true;
-    if (this_present_sending_snapshot || that_present_sending_snapshot) {
-      if (!(this_present_sending_snapshot && that_present_sending_snapshot))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.sending_snapshot, that.sending_snapshot))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.sending_snapshot, that.sending_snapshot)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space = true;
-    builder.append(present_space);
-    if (present_space)
-      builder.append(space);
-
-    boolean present_part = true;
-    builder.append(present_part);
-    if (present_part)
-      builder.append(part);
-
-    boolean present_current_term = true;
-    builder.append(present_current_term);
-    if (present_current_term)
-      builder.append(current_term);
-
-    boolean present_last_log_id = true;
-    builder.append(present_last_log_id);
-    if (present_last_log_id)
-      builder.append(last_log_id);
-
-    boolean present_committed_log_id = true;
-    builder.append(present_committed_log_id);
-    if (present_committed_log_id)
-      builder.append(committed_log_id);
-
-    boolean present_leader_addr = true && (isSetLeader_addr());
-    builder.append(present_leader_addr);
-    if (present_leader_addr)
-      builder.append(leader_addr);
-
-    boolean present_leader_port = true;
-    builder.append(present_leader_port);
-    if (present_leader_port)
-      builder.append(leader_port);
-
-    boolean present_last_log_term_sent = true;
-    builder.append(present_last_log_term_sent);
-    if (present_last_log_term_sent)
-      builder.append(last_log_term_sent);
-
-    boolean present_last_log_id_sent = true;
-    builder.append(present_last_log_id_sent);
-    if (present_last_log_id_sent)
-      builder.append(last_log_id_sent);
-
-    boolean present_log_term = true;
-    builder.append(present_log_term);
-    if (present_log_term)
-      builder.append(log_term);
-
-    boolean present_log_str_list = true && (isSetLog_str_list());
-    builder.append(present_log_str_list);
-    if (present_log_str_list)
-      builder.append(log_str_list);
-
-    boolean present_sending_snapshot = true;
-    builder.append(present_sending_snapshot);
-    if (present_sending_snapshot)
-      builder.append(sending_snapshot);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space, part, current_term, last_log_id, committed_log_id, leader_addr, leader_port, last_log_term_sent, last_log_id_sent, log_term, log_str_list, sending_snapshot});
   }
 
   @Override
@@ -858,7 +797,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space, other.space);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart()).compareTo(other.isSetPart());
@@ -866,7 +805,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part, other.part);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCurrent_term()).compareTo(other.isSetCurrent_term());
@@ -874,7 +813,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(current_term, other.current_term);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLast_log_id()).compareTo(other.isSetLast_log_id());
@@ -882,7 +821,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_log_id, other.last_log_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCommitted_log_id()).compareTo(other.isSetCommitted_log_id());
@@ -890,7 +829,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(committed_log_id, other.committed_log_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_addr()).compareTo(other.isSetLeader_addr());
@@ -898,7 +837,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_addr, other.leader_addr);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_port()).compareTo(other.isSetLeader_port());
@@ -906,7 +845,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_port, other.leader_port);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLast_log_term_sent()).compareTo(other.isSetLast_log_term_sent());
@@ -914,7 +853,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_log_term_sent, other.last_log_term_sent);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLast_log_id_sent()).compareTo(other.isSetLast_log_id_sent());
@@ -922,7 +861,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_log_id_sent, other.last_log_id_sent);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLog_term()).compareTo(other.isSetLog_term());
@@ -930,7 +869,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(log_term, other.log_term);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLog_str_list()).compareTo(other.isSetLog_str_list());
@@ -938,7 +877,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(log_str_list, other.log_str_list);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSending_snapshot()).compareTo(other.isSetSending_snapshot());
@@ -946,104 +885,104 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(sending_snapshot, other.sending_snapshot);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space = iprot.readI32();
             setSpaceIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part = iprot.readI32();
             setPartIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CURRENT_TERM:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.current_term = iprot.readI64();
             setCurrent_termIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LAST_LOG_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.last_log_id = iprot.readI64();
             setLast_log_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case COMMITTED_LOG_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.committed_log_id = iprot.readI64();
             setCommitted_log_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_ADDR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.leader_addr = iprot.readString();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_PORT:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.leader_port = iprot.readI32();
             setLeader_portIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LAST_LOG_TERM_SENT:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.last_log_term_sent = iprot.readI64();
             setLast_log_term_sentIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LAST_LOG_ID_SENT:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.last_log_id_sent = iprot.readI64();
             setLast_log_id_sentIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LOG_TERM:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.log_term = iprot.readI64();
             setLog_termIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LOG_STR_LIST:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list0 = iprot.readListBegin();
               this.log_str_list = new ArrayList<LogEntry>(Math.max(0, _list0.size));
@@ -1059,19 +998,19 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SENDING_SNAPSHOT:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.sending_snapshot = iprot.readBool();
             setSending_snapshotIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -1139,19 +1078,14 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AppendLogRequest");
     sb.append(space);
     sb.append("(");
@@ -1162,45 +1096,45 @@ String space = prettyPrint ? " " : "";
     sb.append("space");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("current_term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCurrent_term(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCurrent_term(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("last_log_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLast_log_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_log_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("committed_log_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCommitted_log_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCommitted_log_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("leader_addr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLeader_addr() == null) {
+    if (this.getLeader_addr() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLeader_addr(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLeader_addr(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1208,38 +1142,38 @@ String space = prettyPrint ? " " : "";
     sb.append("leader_port");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLeader_port(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLeader_port(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("last_log_term_sent");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLast_log_term_sent(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_log_term_sent(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("last_log_id_sent");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLast_log_id_sent(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_log_id_sent(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("log_term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLog_term(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLog_term(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("log_str_list");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLog_str_list() == null) {
+    if (this.getLog_str_list() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLog_str_list(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLog_str_list(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1247,7 +1181,7 @@ String space = prettyPrint ? " " : "";
     sb.append("sending_snapshot");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isSending_snapshot(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isSending_snapshot(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -1256,7 +1190,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

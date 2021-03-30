@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
   public byte[] value;
   public static final int RESULT = 1;
   public static final int VALUE = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -58,19 +55,46 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
   }
 
   public GetValueResponse(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
   }
 
   public GetValueResponse(
-    ResponseCommon result,
-    byte[] value)
-  {
+      ResponseCommon result,
+      byte[] value) {
     this();
     this.result = result;
     this.value = value;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+    private byte[] value;
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder setValue(final byte[] value) {
+      this.value = value;
+      return this;
+    }
+
+    public GetValueResponse build() {
+      GetValueResponse result = new GetValueResponse();
+      result.setResult(this.result);
+      result.setValue(this.value);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -89,12 +113,7 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
     return new GetValueResponse(this);
   }
 
-  @Deprecated
-  public GetValueResponse clone() {
-    return new GetValueResponse(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -112,13 +131,13 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public byte[]  getValue() {
+  public byte[] getValue() {
     return this.value;
   }
 
@@ -136,27 +155,27 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
     return this.value != null;
   }
 
-  public void setValueIsSet(boolean value) {
-    if (!value) {
+  public void setValueIsSet(boolean __value) {
+    if (!__value) {
       this.value = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
     case VALUE:
-      if (value == null) {
+      if (__value == null) {
         unsetValue();
       } else {
-        setValue((byte[])value);
+        setValue((byte[])__value);
       }
       break;
 
@@ -178,69 +197,26 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    case VALUE:
-      return isSetValue();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetValueResponse)
-      return this.equals((GetValueResponse)that);
-    return false;
-  }
-
-  public boolean equals(GetValueResponse that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetValueResponse))
+      return false;
+    GetValueResponse that = (GetValueResponse)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    boolean this_present_value = true && this.isSetValue();
-    boolean that_present_value = true && that.isSetValue();
-    if (this_present_value || that_present_value) {
-      if (!(this_present_value && that_present_value))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.value, that.value))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetValue(), that.isSetValue(), this.value, that.value)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    boolean present_value = true && (isSetValue());
-    builder.append(present_value);
-    if (present_value)
-      builder.append(value);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result, value});
   }
 
   @Override
@@ -260,7 +236,7 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetValue()).compareTo(other.isSetValue());
@@ -268,40 +244,40 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(value, other.value);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VALUE:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.value = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -333,19 +309,14 @@ public class GetValueResponse implements TBase, java.io.Serializable, Cloneable,
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetValueResponse");
     sb.append(space);
     sb.append("(");
@@ -356,10 +327,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -367,15 +338,15 @@ String space = prettyPrint ? " " : "";
     sb.append("value");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getValue() == null) {
+    if (this.getValue() == null) {
       sb.append("null");
     } else {
-        int __value_size = Math.min(this. getValue().length, 128);
+        int __value_size = Math.min(this.getValue().length, 128);
         for (int i = 0; i < __value_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getValue()[i]).length() > 1 ? Integer.toHexString(this. getValue()[i]).substring(Integer.toHexString(this. getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getValue()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getValue()[i]).length() > 1 ? Integer.toHexString(this.getValue()[i]).substring(Integer.toHexString(this.getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getValue()[i]).toUpperCase());
         }
-        if (this. getValue().length > 128) sb.append(" ...");
+        if (this.getValue().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -388,7 +359,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

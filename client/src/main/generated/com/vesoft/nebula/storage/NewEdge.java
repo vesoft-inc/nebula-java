@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
   public List<com.vesoft.nebula.Value> props;
   public static final int KEY = 1;
   public static final int PROPS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
   }
 
   public NewEdge(
-    EdgeKey key,
-    List<com.vesoft.nebula.Value> props)
-  {
+      EdgeKey key,
+      List<com.vesoft.nebula.Value> props) {
     this();
     this.key = key;
     this.props = props;
+  }
+
+  public static class Builder {
+    private EdgeKey key;
+    private List<com.vesoft.nebula.Value> props;
+
+    public Builder() {
+    }
+
+    public Builder setKey(final EdgeKey key) {
+      this.key = key;
+      return this;
+    }
+
+    public Builder setProps(final List<com.vesoft.nebula.Value> props) {
+      this.props = props;
+      return this;
+    }
+
+    public NewEdge build() {
+      NewEdge result = new NewEdge();
+      result.setKey(this.key);
+      result.setProps(this.props);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
     return new NewEdge(this);
   }
 
-  @Deprecated
-  public NewEdge clone() {
-    return new NewEdge(this);
-  }
-
-  public EdgeKey  getKey() {
+  public EdgeKey getKey() {
     return this.key;
   }
 
@@ -106,13 +126,13 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
     return this.key != null;
   }
 
-  public void setKeyIsSet(boolean value) {
-    if (!value) {
+  public void setKeyIsSet(boolean __value) {
+    if (!__value) {
       this.key = null;
     }
   }
 
-  public List<com.vesoft.nebula.Value>  getProps() {
+  public List<com.vesoft.nebula.Value> getProps() {
     return this.props;
   }
 
@@ -130,28 +150,28 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
     return this.props != null;
   }
 
-  public void setPropsIsSet(boolean value) {
-    if (!value) {
+  public void setPropsIsSet(boolean __value) {
+    if (!__value) {
       this.props = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case KEY:
-      if (value == null) {
+      if (__value == null) {
         unsetKey();
       } else {
-        setKey((EdgeKey)value);
+        setKey((EdgeKey)__value);
       }
       break;
 
     case PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetProps();
       } else {
-        setProps((List<com.vesoft.nebula.Value>)value);
+        setProps((List<com.vesoft.nebula.Value>)__value);
       }
       break;
 
@@ -173,92 +193,49 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case KEY:
-      return isSetKey();
-    case PROPS:
-      return isSetProps();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof NewEdge)
-      return this.equals((NewEdge)that);
-    return false;
-  }
-
-  public boolean equals(NewEdge that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof NewEdge))
+      return false;
+    NewEdge that = (NewEdge)_that;
 
-    boolean this_present_key = true && this.isSetKey();
-    boolean that_present_key = true && that.isSetKey();
-    if (this_present_key || that_present_key) {
-      if (!(this_present_key && that_present_key))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.key, that.key))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetKey(), that.isSetKey(), this.key, that.key)) { return false; }
 
-    boolean this_present_props = true && this.isSetProps();
-    boolean that_present_props = true && that.isSetProps();
-    if (this_present_props || that_present_props) {
-      if (!(this_present_props && that_present_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.props, that.props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetProps(), that.isSetProps(), this.props, that.props)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_key = true && (isSetKey());
-    builder.append(present_key);
-    if (present_key)
-      builder.append(key);
-
-    boolean present_props = true && (isSetProps());
-    builder.append(present_props);
-    if (present_props)
-      builder.append(props);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {key, props});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case KEY:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.key = new EdgeKey();
             this.key.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list82 = iprot.readListBegin();
               this.props = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list82.size));
@@ -274,11 +251,11 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -316,19 +293,14 @@ public class NewEdge implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("NewEdge");
     sb.append(space);
     sb.append("(");
@@ -339,10 +311,10 @@ String space = prettyPrint ? " " : "";
     sb.append("key");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getKey() == null) {
+    if (this.getKey() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getKey(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getKey(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -350,10 +322,10 @@ String space = prettyPrint ? " " : "";
     sb.append("props");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProps() == null) {
+    if (this.getProps() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProps(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProps(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -363,7 +335,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
   public static final int TAG_NAME = 2;
   public static final int SCHEMA = 3;
   public static final int IF_NOT_EXISTS = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -50,6 +46,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -71,11 +68,10 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public CreateTagReq(
-    int space_id,
-    byte[] tag_name,
-    Schema schema,
-    boolean if_not_exists)
-  {
+      int space_id,
+      byte[] tag_name,
+      Schema schema,
+      boolean if_not_exists) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -83,6 +79,57 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     this.schema = schema;
     this.if_not_exists = if_not_exists;
     setIf_not_existsIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private byte[] tag_name;
+    private Schema schema;
+    private boolean if_not_exists;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTag_name(final byte[] tag_name) {
+      this.tag_name = tag_name;
+      return this;
+    }
+
+    public Builder setSchema(final Schema schema) {
+      this.schema = schema;
+      return this;
+    }
+
+    public Builder setIf_not_exists(final boolean if_not_exists) {
+      this.if_not_exists = if_not_exists;
+      __optional_isset.set(__IF_NOT_EXISTS_ISSET_ID, true);
+      return this;
+    }
+
+    public CreateTagReq build() {
+      CreateTagReq result = new CreateTagReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setTag_name(this.tag_name);
+      result.setSchema(this.schema);
+      if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
+        result.setIf_not_exists(this.if_not_exists);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -105,12 +152,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     return new CreateTagReq(this);
   }
 
-  @Deprecated
-  public CreateTagReq clone() {
-    return new CreateTagReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -129,11 +171,11 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public byte[]  getTag_name() {
+  public byte[] getTag_name() {
     return this.tag_name;
   }
 
@@ -151,13 +193,13 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     return this.tag_name != null;
   }
 
-  public void setTag_nameIsSet(boolean value) {
-    if (!value) {
+  public void setTag_nameIsSet(boolean __value) {
+    if (!__value) {
       this.tag_name = null;
     }
   }
 
-  public Schema  getSchema() {
+  public Schema getSchema() {
     return this.schema;
   }
 
@@ -175,13 +217,13 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     return this.schema != null;
   }
 
-  public void setSchemaIsSet(boolean value) {
-    if (!value) {
+  public void setSchemaIsSet(boolean __value) {
+    if (!__value) {
       this.schema = null;
     }
   }
 
-  public boolean  isIf_not_exists() {
+  public boolean isIf_not_exists() {
     return this.if_not_exists;
   }
 
@@ -200,41 +242,41 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  public void setIf_not_existsIsSet(boolean value) {
-    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, value);
+  public void setIf_not_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case TAG_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetTag_name();
       } else {
-        setTag_name((byte[])value);
+        setTag_name((byte[])__value);
       }
       break;
 
     case SCHEMA:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema();
       } else {
-        setSchema((Schema)value);
+        setSchema((Schema)__value);
       }
       break;
 
     case IF_NOT_EXISTS:
-      if (value == null) {
+      if (__value == null) {
         unsetIf_not_exists();
       } else {
-        setIf_not_exists((Boolean)value);
+        setIf_not_exists((Boolean)__value);
       }
       break;
 
@@ -262,101 +304,30 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case TAG_NAME:
-      return isSetTag_name();
-    case SCHEMA:
-      return isSetSchema();
-    case IF_NOT_EXISTS:
-      return isSetIf_not_exists();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CreateTagReq)
-      return this.equals((CreateTagReq)that);
-    return false;
-  }
-
-  public boolean equals(CreateTagReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CreateTagReq))
+      return false;
+    CreateTagReq that = (CreateTagReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_tag_name = true && this.isSetTag_name();
-    boolean that_present_tag_name = true && that.isSetTag_name();
-    if (this_present_tag_name || that_present_tag_name) {
-      if (!(this_present_tag_name && that_present_tag_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.tag_name, that.tag_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetTag_name(), that.isSetTag_name(), this.tag_name, that.tag_name)) { return false; }
 
-    boolean this_present_schema = true && this.isSetSchema();
-    boolean that_present_schema = true && that.isSetSchema();
-    if (this_present_schema || that_present_schema) {
-      if (!(this_present_schema && that_present_schema))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.schema, that.schema))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema(), that.isSetSchema(), this.schema, that.schema)) { return false; }
 
-    boolean this_present_if_not_exists = true;
-    boolean that_present_if_not_exists = true;
-    if (this_present_if_not_exists || that_present_if_not_exists) {
-      if (!(this_present_if_not_exists && that_present_if_not_exists))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_tag_name = true && (isSetTag_name());
-    builder.append(present_tag_name);
-    if (present_tag_name)
-      builder.append(tag_name);
-
-    boolean present_schema = true && (isSetSchema());
-    builder.append(present_schema);
-    if (present_schema)
-      builder.append(schema);
-
-    boolean present_if_not_exists = true;
-    builder.append(present_if_not_exists);
-    if (present_if_not_exists)
-      builder.append(if_not_exists);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, tag_name, schema, if_not_exists});
   }
 
   @Override
@@ -376,7 +347,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTag_name()).compareTo(other.isSetTag_name());
@@ -384,7 +355,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(tag_name, other.tag_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema()).compareTo(other.isSetSchema());
@@ -392,7 +363,7 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema, other.schema);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIf_not_exists()).compareTo(other.isSetIf_not_exists());
@@ -400,56 +371,56 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TAG_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.tag_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IF_NOT_EXISTS:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.if_not_exists = iprot.readBool();
             setIf_not_existsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -487,19 +458,14 @@ public class CreateTagReq implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CreateTagReq");
     sb.append(space);
     sb.append("(");
@@ -510,22 +476,22 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("tag_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTag_name() == null) {
+    if (this.getTag_name() == null) {
       sb.append("null");
     } else {
-        int __tag_name_size = Math.min(this. getTag_name().length, 128);
+        int __tag_name_size = Math.min(this.getTag_name().length, 128);
         for (int i = 0; i < __tag_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getTag_name()[i]).length() > 1 ? Integer.toHexString(this. getTag_name()[i]).substring(Integer.toHexString(this. getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTag_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getTag_name()[i]).length() > 1 ? Integer.toHexString(this.getTag_name()[i]).substring(Integer.toHexString(this.getTag_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getTag_name()[i]).toUpperCase());
         }
-        if (this. getTag_name().length > 128) sb.append(" ...");
+        if (this.getTag_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -533,10 +499,10 @@ String space = prettyPrint ? " " : "";
     sb.append("schema");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema() == null) {
+    if (this.getSchema() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSchema(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -544,7 +510,7 @@ String space = prettyPrint ? " " : "";
     sb.append("if_not_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIf_not_exists(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -553,7 +519,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

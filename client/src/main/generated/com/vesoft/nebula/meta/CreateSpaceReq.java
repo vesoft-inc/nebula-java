@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
   public boolean if_not_exists;
   public static final int PROPERTIES = 1;
   public static final int IF_NOT_EXISTS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __IF_NOT_EXISTS_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(PROPERTIES, new FieldMetaData("properties", TFieldRequirementType.DEFAULT, 
@@ -60,13 +57,46 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public CreateSpaceReq(
-    SpaceDesc properties,
-    boolean if_not_exists)
-  {
+      SpaceDesc properties,
+      boolean if_not_exists) {
     this();
     this.properties = properties;
     this.if_not_exists = if_not_exists;
     setIf_not_existsIsSet(true);
+  }
+
+  public static class Builder {
+    private SpaceDesc properties;
+    private boolean if_not_exists;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setProperties(final SpaceDesc properties) {
+      this.properties = properties;
+      return this;
+    }
+
+    public Builder setIf_not_exists(final boolean if_not_exists) {
+      this.if_not_exists = if_not_exists;
+      __optional_isset.set(__IF_NOT_EXISTS_ISSET_ID, true);
+      return this;
+    }
+
+    public CreateSpaceReq build() {
+      CreateSpaceReq result = new CreateSpaceReq();
+      result.setProperties(this.properties);
+      if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
+        result.setIf_not_exists(this.if_not_exists);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -85,12 +115,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
     return new CreateSpaceReq(this);
   }
 
-  @Deprecated
-  public CreateSpaceReq clone() {
-    return new CreateSpaceReq(this);
-  }
-
-  public SpaceDesc  getProperties() {
+  public SpaceDesc getProperties() {
     return this.properties;
   }
 
@@ -108,13 +133,13 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
     return this.properties != null;
   }
 
-  public void setPropertiesIsSet(boolean value) {
-    if (!value) {
+  public void setPropertiesIsSet(boolean __value) {
+    if (!__value) {
       this.properties = null;
     }
   }
 
-  public boolean  isIf_not_exists() {
+  public boolean isIf_not_exists() {
     return this.if_not_exists;
   }
 
@@ -133,25 +158,25 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  public void setIf_not_existsIsSet(boolean value) {
-    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, value);
+  public void setIf_not_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case PROPERTIES:
-      if (value == null) {
+      if (__value == null) {
         unsetProperties();
       } else {
-        setProperties((SpaceDesc)value);
+        setProperties((SpaceDesc)__value);
       }
       break;
 
     case IF_NOT_EXISTS:
-      if (value == null) {
+      if (__value == null) {
         unsetIf_not_exists();
       } else {
-        setIf_not_exists((Boolean)value);
+        setIf_not_exists((Boolean)__value);
       }
       break;
 
@@ -173,69 +198,26 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case PROPERTIES:
-      return isSetProperties();
-    case IF_NOT_EXISTS:
-      return isSetIf_not_exists();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CreateSpaceReq)
-      return this.equals((CreateSpaceReq)that);
-    return false;
-  }
-
-  public boolean equals(CreateSpaceReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CreateSpaceReq))
+      return false;
+    CreateSpaceReq that = (CreateSpaceReq)_that;
 
-    boolean this_present_properties = true && this.isSetProperties();
-    boolean that_present_properties = true && that.isSetProperties();
-    if (this_present_properties || that_present_properties) {
-      if (!(this_present_properties && that_present_properties))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.properties, that.properties))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetProperties(), that.isSetProperties(), this.properties, that.properties)) { return false; }
 
-    boolean this_present_if_not_exists = true;
-    boolean that_present_if_not_exists = true;
-    if (this_present_if_not_exists || that_present_if_not_exists) {
-      if (!(this_present_if_not_exists && that_present_if_not_exists))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_properties = true && (isSetProperties());
-    builder.append(present_properties);
-    if (present_properties)
-      builder.append(properties);
-
-    boolean present_if_not_exists = true;
-    builder.append(present_if_not_exists);
-    if (present_if_not_exists)
-      builder.append(if_not_exists);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {properties, if_not_exists});
   }
 
   @Override
@@ -255,7 +237,7 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(properties, other.properties);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIf_not_exists()).compareTo(other.isSetIf_not_exists());
@@ -263,41 +245,41 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case PROPERTIES:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.properties = new SpaceDesc();
             this.properties.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IF_NOT_EXISTS:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.if_not_exists = iprot.readBool();
             setIf_not_existsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -327,19 +309,14 @@ public class CreateSpaceReq implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CreateSpaceReq");
     sb.append(space);
     sb.append("(");
@@ -350,10 +327,10 @@ String space = prettyPrint ? " " : "";
     sb.append("properties");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProperties() == null) {
+    if (this.getProperties() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProperties(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProperties(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -361,7 +338,7 @@ String space = prettyPrint ? " " : "";
     sb.append("if_not_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIf_not_exists(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -370,7 +347,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

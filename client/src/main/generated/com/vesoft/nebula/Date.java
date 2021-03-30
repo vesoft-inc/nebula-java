@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,7 +36,6 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
   public static final int YEAR = 1;
   public static final int MONTH = 2;
   public static final int DAY = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __YEAR_ISSET_ID = 0;
@@ -48,6 +44,7 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
   private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(YEAR, new FieldMetaData("year", TFieldRequirementType.DEFAULT, 
@@ -67,10 +64,9 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
   }
 
   public Date(
-    short year,
-    byte month,
-    byte day)
-  {
+      short year,
+      byte month,
+      byte day) {
     this();
     this.year = year;
     setYearIsSet(true);
@@ -78,6 +74,53 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
     setMonthIsSet(true);
     this.day = day;
     setDayIsSet(true);
+  }
+
+  public static class Builder {
+    private short year;
+    private byte month;
+    private byte day;
+
+    BitSet __optional_isset = new BitSet(3);
+
+    public Builder() {
+    }
+
+    public Builder setYear(final short year) {
+      this.year = year;
+      __optional_isset.set(__YEAR_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMonth(final byte month) {
+      this.month = month;
+      __optional_isset.set(__MONTH_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setDay(final byte day) {
+      this.day = day;
+      __optional_isset.set(__DAY_ISSET_ID, true);
+      return this;
+    }
+
+    public Date build() {
+      Date result = new Date();
+      if (__optional_isset.get(__YEAR_ISSET_ID)) {
+        result.setYear(this.year);
+      }
+      if (__optional_isset.get(__MONTH_ISSET_ID)) {
+        result.setMonth(this.month);
+      }
+      if (__optional_isset.get(__DAY_ISSET_ID)) {
+        result.setDay(this.day);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -95,12 +138,7 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
     return new Date(this);
   }
 
-  @Deprecated
-  public Date clone() {
-    return new Date(this);
-  }
-
-  public short  getYear() {
+  public short getYear() {
     return this.year;
   }
 
@@ -119,11 +157,11 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__YEAR_ISSET_ID);
   }
 
-  public void setYearIsSet(boolean value) {
-    __isset_bit_vector.set(__YEAR_ISSET_ID, value);
+  public void setYearIsSet(boolean __value) {
+    __isset_bit_vector.set(__YEAR_ISSET_ID, __value);
   }
 
-  public byte  getMonth() {
+  public byte getMonth() {
     return this.month;
   }
 
@@ -142,11 +180,11 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__MONTH_ISSET_ID);
   }
 
-  public void setMonthIsSet(boolean value) {
-    __isset_bit_vector.set(__MONTH_ISSET_ID, value);
+  public void setMonthIsSet(boolean __value) {
+    __isset_bit_vector.set(__MONTH_ISSET_ID, __value);
   }
 
-  public byte  getDay() {
+  public byte getDay() {
     return this.day;
   }
 
@@ -165,33 +203,33 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__DAY_ISSET_ID);
   }
 
-  public void setDayIsSet(boolean value) {
-    __isset_bit_vector.set(__DAY_ISSET_ID, value);
+  public void setDayIsSet(boolean __value) {
+    __isset_bit_vector.set(__DAY_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case YEAR:
-      if (value == null) {
+      if (__value == null) {
         unsetYear();
       } else {
-        setYear((Short)value);
+        setYear((Short)__value);
       }
       break;
 
     case MONTH:
-      if (value == null) {
+      if (__value == null) {
         unsetMonth();
       } else {
-        setMonth((Byte)value);
+        setMonth((Byte)__value);
       }
       break;
 
     case DAY:
-      if (value == null) {
+      if (__value == null) {
         unsetDay();
       } else {
-        setDay((Byte)value);
+        setDay((Byte)__value);
       }
       break;
 
@@ -216,85 +254,28 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case YEAR:
-      return isSetYear();
-    case MONTH:
-      return isSetMonth();
-    case DAY:
-      return isSetDay();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Date)
-      return this.equals((Date)that);
-    return false;
-  }
-
-  public boolean equals(Date that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Date))
+      return false;
+    Date that = (Date)_that;
 
-    boolean this_present_year = true;
-    boolean that_present_year = true;
-    if (this_present_year || that_present_year) {
-      if (!(this_present_year && that_present_year))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.year, that.year))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.year, that.year)) { return false; }
 
-    boolean this_present_month = true;
-    boolean that_present_month = true;
-    if (this_present_month || that_present_month) {
-      if (!(this_present_month && that_present_month))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.month, that.month))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.month, that.month)) { return false; }
 
-    boolean this_present_day = true;
-    boolean that_present_day = true;
-    if (this_present_day || that_present_day) {
-      if (!(this_present_day && that_present_day))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.day, that.day))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.day, that.day)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_year = true;
-    builder.append(present_year);
-    if (present_year)
-      builder.append(year);
-
-    boolean present_month = true;
-    builder.append(present_month);
-    if (present_month)
-      builder.append(month);
-
-    boolean present_day = true;
-    builder.append(present_day);
-    if (present_day)
-      builder.append(day);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {year, month, day});
   }
 
   @Override
@@ -314,7 +295,7 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(year, other.year);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMonth()).compareTo(other.isSetMonth());
@@ -322,7 +303,7 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(month, other.month);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDay()).compareTo(other.isSetDay());
@@ -330,49 +311,49 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(day, other.day);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case YEAR:
-          if (field.type == TType.I16) {
+          if (__field.type == TType.I16) {
             this.year = iprot.readI16();
             setYearIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MONTH:
-          if (field.type == TType.BYTE) {
+          if (__field.type == TType.BYTE) {
             this.month = iprot.readByte();
             setMonthIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DAY:
-          if (field.type == TType.BYTE) {
+          if (__field.type == TType.BYTE) {
             this.day = iprot.readByte();
             setDayIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -403,19 +384,14 @@ public class Date implements TBase, java.io.Serializable, Cloneable, Comparable<
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Date");
     sb.append(space);
     sb.append("(");
@@ -426,21 +402,21 @@ String space = prettyPrint ? " " : "";
     sb.append("year");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getYear(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getYear(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("month");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMonth(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMonth(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("day");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getDay(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getDay(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -449,7 +425,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

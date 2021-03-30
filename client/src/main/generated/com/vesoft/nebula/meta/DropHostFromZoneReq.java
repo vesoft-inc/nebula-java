@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
   public byte[] zone_name;
   public static final int NODE = 1;
   public static final int ZONE_NAME = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NODE, new FieldMetaData("node", TFieldRequirementType.DEFAULT, 
@@ -58,12 +55,40 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
   }
 
   public DropHostFromZoneReq(
-    com.vesoft.nebula.HostAddr node,
-    byte[] zone_name)
-  {
+      com.vesoft.nebula.HostAddr node,
+      byte[] zone_name) {
     this();
     this.node = node;
     this.zone_name = zone_name;
+  }
+
+  public static class Builder {
+    private com.vesoft.nebula.HostAddr node;
+    private byte[] zone_name;
+
+    public Builder() {
+    }
+
+    public Builder setNode(final com.vesoft.nebula.HostAddr node) {
+      this.node = node;
+      return this;
+    }
+
+    public Builder setZone_name(final byte[] zone_name) {
+      this.zone_name = zone_name;
+      return this;
+    }
+
+    public DropHostFromZoneReq build() {
+      DropHostFromZoneReq result = new DropHostFromZoneReq();
+      result.setNode(this.node);
+      result.setZone_name(this.zone_name);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
     return new DropHostFromZoneReq(this);
   }
 
-  @Deprecated
-  public DropHostFromZoneReq clone() {
-    return new DropHostFromZoneReq(this);
-  }
-
-  public com.vesoft.nebula.HostAddr  getNode() {
+  public com.vesoft.nebula.HostAddr getNode() {
     return this.node;
   }
 
@@ -105,13 +125,13 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
     return this.node != null;
   }
 
-  public void setNodeIsSet(boolean value) {
-    if (!value) {
+  public void setNodeIsSet(boolean __value) {
+    if (!__value) {
       this.node = null;
     }
   }
 
-  public byte[]  getZone_name() {
+  public byte[] getZone_name() {
     return this.zone_name;
   }
 
@@ -129,27 +149,27 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
     return this.zone_name != null;
   }
 
-  public void setZone_nameIsSet(boolean value) {
-    if (!value) {
+  public void setZone_nameIsSet(boolean __value) {
+    if (!__value) {
       this.zone_name = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NODE:
-      if (value == null) {
+      if (__value == null) {
         unsetNode();
       } else {
-        setNode((com.vesoft.nebula.HostAddr)value);
+        setNode((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case ZONE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetZone_name();
       } else {
-        setZone_name((byte[])value);
+        setZone_name((byte[])__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case NODE:
-      return isSetNode();
-    case ZONE_NAME:
-      return isSetZone_name();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof DropHostFromZoneReq)
-      return this.equals((DropHostFromZoneReq)that);
-    return false;
-  }
-
-  public boolean equals(DropHostFromZoneReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof DropHostFromZoneReq))
+      return false;
+    DropHostFromZoneReq that = (DropHostFromZoneReq)_that;
 
-    boolean this_present_node = true && this.isSetNode();
-    boolean that_present_node = true && that.isSetNode();
-    if (this_present_node || that_present_node) {
-      if (!(this_present_node && that_present_node))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.node, that.node))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetNode(), that.isSetNode(), this.node, that.node)) { return false; }
 
-    boolean this_present_zone_name = true && this.isSetZone_name();
-    boolean that_present_zone_name = true && that.isSetZone_name();
-    if (this_present_zone_name || that_present_zone_name) {
-      if (!(this_present_zone_name && that_present_zone_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.zone_name, that.zone_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetZone_name(), that.isSetZone_name(), this.zone_name, that.zone_name)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_node = true && (isSetNode());
-    builder.append(present_node);
-    if (present_node)
-      builder.append(node);
-
-    boolean present_zone_name = true && (isSetZone_name());
-    builder.append(present_zone_name);
-    if (present_zone_name)
-      builder.append(zone_name);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {node, zone_name});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(node, other.node);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetZone_name()).compareTo(other.isSetZone_name());
@@ -261,40 +238,40 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(zone_name, other.zone_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case NODE:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.node = new com.vesoft.nebula.HostAddr();
             this.node.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ZONE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.zone_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -326,19 +303,14 @@ public class DropHostFromZoneReq implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("DropHostFromZoneReq");
     sb.append(space);
     sb.append("(");
@@ -349,10 +321,10 @@ String space = prettyPrint ? " " : "";
     sb.append("node");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getNode() == null) {
+    if (this.getNode() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getNode(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getNode(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -360,15 +332,15 @@ String space = prettyPrint ? " " : "";
     sb.append("zone_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getZone_name() == null) {
+    if (this.getZone_name() == null) {
       sb.append("null");
     } else {
-        int __zone_name_size = Math.min(this. getZone_name().length, 128);
+        int __zone_name_size = Math.min(this.getZone_name().length, 128);
         for (int i = 0; i < __zone_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getZone_name()[i]).length() > 1 ? Integer.toHexString(this. getZone_name()[i]).substring(Integer.toHexString(this. getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getZone_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getZone_name()[i]).length() > 1 ? Integer.toHexString(this.getZone_name()[i]).substring(Integer.toHexString(this.getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getZone_name()[i]).toUpperCase());
         }
-        if (this. getZone_name().length > 128) sb.append(" ...");
+        if (this.getZone_name().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -378,7 +350,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

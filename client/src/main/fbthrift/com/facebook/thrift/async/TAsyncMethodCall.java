@@ -1,28 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package com.facebook.thrift.async;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.util.concurrent.atomic.AtomicLong;
+package com.facebook.thrift.async;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TProtocol;
@@ -31,12 +23,15 @@ import com.facebook.thrift.transport.TFramedTransport;
 import com.facebook.thrift.transport.TMemoryBuffer;
 import com.facebook.thrift.transport.TNonblockingTransport;
 import com.facebook.thrift.transport.TTransportException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Encapsulates an async method call
- * Need to generate:
- *   - private void write_args(TProtocol protocol)
- *   - public TAsyncMethodCall getResult() throws <Exception_1>, <Exception_2>, ...
+ * Encapsulates an async method call Need to generate: - private void write_args(TProtocol protocol)
+ * - public TAsyncMethodCall getResult() throws <Exception_1>, <Exception_2>, ...
  */
 public abstract class TAsyncMethodCall {
 
@@ -53,9 +48,7 @@ public abstract class TAsyncMethodCall {
     ERROR;
   }
 
-  /**
-   * Next step in the call, initialized by start()
-   */
+  /** Next step in the call, initialized by start() */
   private State state = null;
 
   protected final TNonblockingTransport transport;
@@ -71,7 +64,12 @@ public abstract class TAsyncMethodCall {
 
   private long startTime = System.currentTimeMillis();
 
-  protected TAsyncMethodCall(TAsyncClient client, TProtocolFactory protocolFactory, TNonblockingTransport transport, AsyncMethodCallback callback, boolean isOneway) {
+  protected TAsyncMethodCall(
+      TAsyncClient client,
+      TProtocolFactory protocolFactory,
+      TNonblockingTransport transport,
+      AsyncMethodCallback callback,
+      boolean isOneway) {
     this.transport = transport;
     this.callback = callback;
     this.protocolFactory = protocolFactory;
@@ -112,6 +110,7 @@ public abstract class TAsyncMethodCall {
 
   /**
    * Initialize buffers.
+   *
    * @throws TException if buffer initialization fails
    */
   protected void prepareMethodCall() throws TException {
@@ -128,6 +127,7 @@ public abstract class TAsyncMethodCall {
 
   /**
    * Register with selector and start first state, which could be either connecting or writing.
+   *
    * @throws IOException if register or starting fails
    */
   void start(Selector sel) throws IOException {
@@ -159,10 +159,9 @@ public abstract class TAsyncMethodCall {
   }
 
   /**
-   * Transition to next state, doing whatever work is required. Since this
-   * method is only called by the selector thread, we can make changes to our
-   * select interests without worrying about concurrency.
-   * @param key
+   * Transition to next state, doing whatever work is required. Since this method is only called by
+   * the selector thread, we can make changes to our select interests without worrying about
+   * concurrency.
    */
   protected void transition(SelectionKey key) {
     // Ensure key is valid
@@ -192,8 +191,10 @@ public abstract class TAsyncMethodCall {
           doReadingResponseBody(key);
           break;
         default: // RESPONSE_READ, ERROR, or bug
-          throw new IllegalStateException("Method call in state " + state
-              + " but selector called transition method. Seems like a bug...");
+          throw new IllegalStateException(
+              "Method call in state "
+                  + state
+                  + " but selector called transition method. Seems like a bug...");
       }
     } catch (Exception e) {
       key.cancel();
@@ -223,7 +224,7 @@ public abstract class TAsyncMethodCall {
     // this ensures that the TAsyncMethod instance doesn't hang around
     key.attach(null);
     client.onComplete();
-    callback.onComplete((TAsyncMethodCall)this);
+    callback.onComplete((TAsyncMethodCall) this);
   }
 
   private void doReadingResponseSize() throws IOException {
@@ -245,7 +246,7 @@ public abstract class TAsyncMethodCall {
         cleanUpAndFireCallback(key);
       } else {
         state = State.READING_RESPONSE_SIZE;
-        sizeBuffer.rewind();  // Prepare to read incoming frame size
+        sizeBuffer.rewind(); // Prepare to read incoming frame size
         key.interestOps(SelectionKey.OP_READ);
       }
     }
@@ -262,7 +263,8 @@ public abstract class TAsyncMethodCall {
 
   private void doConnecting(SelectionKey key) throws IOException {
     if (!key.isConnectable() || !transport.finishConnect()) {
-      throw new IOException("not connectable or finishConnect returned false after we got an OP_CONNECT");
+      throw new IOException(
+          "not connectable or finishConnect returned false after we got an OP_CONNECT");
     }
     registerForFirstWrite(key);
   }

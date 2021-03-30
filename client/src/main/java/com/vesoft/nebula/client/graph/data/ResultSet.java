@@ -160,7 +160,7 @@ public class ResultSet {
      * @return int
      */
     public int getErrorCode() {
-        return response.error_code;
+        return response.error_code.getValue();
     }
 
     /**

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
   public byte[] value;
   public static final int NAME = 1;
   public static final int VALUE = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.REQUIRED, 
@@ -58,12 +55,40 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public UpdatedProp(
-    byte[] name,
-    byte[] value)
-  {
+      byte[] name,
+      byte[] value) {
     this();
     this.name = name;
     this.value = value;
+  }
+
+  public static class Builder {
+    private byte[] name;
+    private byte[] value;
+
+    public Builder() {
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder setValue(final byte[] value) {
+      this.value = value;
+      return this;
+    }
+
+    public UpdatedProp build() {
+      UpdatedProp result = new UpdatedProp();
+      result.setName(this.name);
+      result.setValue(this.value);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
     return new UpdatedProp(this);
   }
 
-  @Deprecated
-  public UpdatedProp clone() {
-    return new UpdatedProp(this);
-  }
-
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -105,13 +125,13 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
 
-  public byte[]  getValue() {
+  public byte[] getValue() {
     return this.value;
   }
 
@@ -129,27 +149,27 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
     return this.value != null;
   }
 
-  public void setValueIsSet(boolean value) {
-    if (!value) {
+  public void setValueIsSet(boolean __value) {
+    if (!__value) {
       this.value = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
     case VALUE:
-      if (value == null) {
+      if (__value == null) {
         unsetValue();
       } else {
-        setValue((byte[])value);
+        setValue((byte[])__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case NAME:
-      return isSetName();
-    case VALUE:
-      return isSetValue();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof UpdatedProp)
-      return this.equals((UpdatedProp)that);
-    return false;
-  }
-
-  public boolean equals(UpdatedProp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof UpdatedProp))
+      return false;
+    UpdatedProp that = (UpdatedProp)_that;
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
-    boolean this_present_value = true && this.isSetValue();
-    boolean that_present_value = true && that.isSetValue();
-    if (this_present_value || that_present_value) {
-      if (!(this_present_value && that_present_value))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.value, that.value))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetValue(), that.isSetValue(), this.value, that.value)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    boolean present_value = true && (isSetValue());
-    builder.append(present_value);
-    if (present_value)
-      builder.append(value);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {name, value});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetValue()).compareTo(other.isSetValue());
@@ -261,39 +238,39 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(value, other.value);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VALUE:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.value = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -325,19 +302,14 @@ public class UpdatedProp implements TBase, java.io.Serializable, Cloneable, Comp
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("UpdatedProp");
     sb.append(space);
     sb.append("(");
@@ -348,15 +320,15 @@ String space = prettyPrint ? " " : "";
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -364,15 +336,15 @@ String space = prettyPrint ? " " : "";
     sb.append("value");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getValue() == null) {
+    if (this.getValue() == null) {
       sb.append("null");
     } else {
-        int __value_size = Math.min(this. getValue().length, 128);
+        int __value_size = Math.min(this.getValue().length, 128);
         for (int i = 0; i < __value_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getValue()[i]).length() > 1 ? Integer.toHexString(this. getValue()[i]).substring(Integer.toHexString(this. getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getValue()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getValue()[i]).length() > 1 ? Integer.toHexString(this.getValue()[i]).substring(Integer.toHexString(this.getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getValue()[i]).toUpperCase());
         }
-        if (this. getValue().length > 128) sb.append(" ...");
+        if (this.getValue().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -388,7 +360,6 @@ String space = prettyPrint ? " " : "";
     if (value == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'value' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

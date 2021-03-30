@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -54,7 +51,6 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   public static final int INSERTABLE = 6;
   public static final int RETURN_PROPS = 7;
   public static final int CONDITION = 8;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -64,6 +60,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -97,20 +94,18 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   }
 
   public UpdateVertexRequest(
-    int tag_id)
-  {
+      int tag_id) {
     this();
     this.tag_id = tag_id;
     setTag_idIsSet(true);
   }
 
   public UpdateVertexRequest(
-    int space_id,
-    int part_id,
-    com.vesoft.nebula.Value vertex_id,
-    int tag_id,
-    List<UpdatedProp> updated_props)
-  {
+      int space_id,
+      int part_id,
+      com.vesoft.nebula.Value vertex_id,
+      int tag_id,
+      List<UpdatedProp> updated_props) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -123,15 +118,14 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   }
 
   public UpdateVertexRequest(
-    int space_id,
-    int part_id,
-    com.vesoft.nebula.Value vertex_id,
-    int tag_id,
-    List<UpdatedProp> updated_props,
-    boolean insertable,
-    List<byte[]> return_props,
-    byte[] condition)
-  {
+      int space_id,
+      int part_id,
+      com.vesoft.nebula.Value vertex_id,
+      int tag_id,
+      List<UpdatedProp> updated_props,
+      boolean insertable,
+      List<byte[]> return_props,
+      byte[] condition) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -145,6 +139,91 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     setInsertableIsSet(true);
     this.return_props = return_props;
     this.condition = condition;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private int part_id;
+    private com.vesoft.nebula.Value vertex_id;
+    private int tag_id;
+    private List<UpdatedProp> updated_props;
+    private boolean insertable;
+    private List<byte[]> return_props;
+    private byte[] condition;
+
+    BitSet __optional_isset = new BitSet(4);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setVertex_id(final com.vesoft.nebula.Value vertex_id) {
+      this.vertex_id = vertex_id;
+      return this;
+    }
+
+    public Builder setTag_id(final int tag_id) {
+      this.tag_id = tag_id;
+      __optional_isset.set(__TAG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setUpdated_props(final List<UpdatedProp> updated_props) {
+      this.updated_props = updated_props;
+      return this;
+    }
+
+    public Builder setInsertable(final boolean insertable) {
+      this.insertable = insertable;
+      __optional_isset.set(__INSERTABLE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setReturn_props(final List<byte[]> return_props) {
+      this.return_props = return_props;
+      return this;
+    }
+
+    public Builder setCondition(final byte[] condition) {
+      this.condition = condition;
+      return this;
+    }
+
+    public UpdateVertexRequest build() {
+      UpdateVertexRequest result = new UpdateVertexRequest();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      result.setVertex_id(this.vertex_id);
+      if (__optional_isset.get(__TAG_ID_ISSET_ID)) {
+        result.setTag_id(this.tag_id);
+      }
+      result.setUpdated_props(this.updated_props);
+      if (__optional_isset.get(__INSERTABLE_ISSET_ID)) {
+        result.setInsertable(this.insertable);
+      }
+      result.setReturn_props(this.return_props);
+      result.setCondition(this.condition);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -175,12 +254,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return new UpdateVertexRequest(this);
   }
 
-  @Deprecated
-  public UpdateVertexRequest clone() {
-    return new UpdateVertexRequest(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -199,11 +273,11 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -222,11 +296,11 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public com.vesoft.nebula.Value  getVertex_id() {
+  public com.vesoft.nebula.Value getVertex_id() {
     return this.vertex_id;
   }
 
@@ -244,13 +318,13 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return this.vertex_id != null;
   }
 
-  public void setVertex_idIsSet(boolean value) {
-    if (!value) {
+  public void setVertex_idIsSet(boolean __value) {
+    if (!__value) {
       this.vertex_id = null;
     }
   }
 
-  public int  getTag_id() {
+  public int getTag_id() {
     return this.tag_id;
   }
 
@@ -269,11 +343,11 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__TAG_ID_ISSET_ID);
   }
 
-  public void setTag_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TAG_ID_ISSET_ID, value);
+  public void setTag_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TAG_ID_ISSET_ID, __value);
   }
 
-  public List<UpdatedProp>  getUpdated_props() {
+  public List<UpdatedProp> getUpdated_props() {
     return this.updated_props;
   }
 
@@ -291,13 +365,13 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return this.updated_props != null;
   }
 
-  public void setUpdated_propsIsSet(boolean value) {
-    if (!value) {
+  public void setUpdated_propsIsSet(boolean __value) {
+    if (!__value) {
       this.updated_props = null;
     }
   }
 
-  public boolean  isInsertable() {
+  public boolean isInsertable() {
     return this.insertable;
   }
 
@@ -316,11 +390,11 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__INSERTABLE_ISSET_ID);
   }
 
-  public void setInsertableIsSet(boolean value) {
-    __isset_bit_vector.set(__INSERTABLE_ISSET_ID, value);
+  public void setInsertableIsSet(boolean __value) {
+    __isset_bit_vector.set(__INSERTABLE_ISSET_ID, __value);
   }
 
-  public List<byte[]>  getReturn_props() {
+  public List<byte[]> getReturn_props() {
     return this.return_props;
   }
 
@@ -338,13 +412,13 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return this.return_props != null;
   }
 
-  public void setReturn_propsIsSet(boolean value) {
-    if (!value) {
+  public void setReturn_propsIsSet(boolean __value) {
+    if (!__value) {
       this.return_props = null;
     }
   }
 
-  public byte[]  getCondition() {
+  public byte[] getCondition() {
     return this.condition;
   }
 
@@ -362,76 +436,76 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     return this.condition != null;
   }
 
-  public void setConditionIsSet(boolean value) {
-    if (!value) {
+  public void setConditionIsSet(boolean __value) {
+    if (!__value) {
       this.condition = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case VERTEX_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetVertex_id();
       } else {
-        setVertex_id((com.vesoft.nebula.Value)value);
+        setVertex_id((com.vesoft.nebula.Value)__value);
       }
       break;
 
     case TAG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTag_id();
       } else {
-        setTag_id((Integer)value);
+        setTag_id((Integer)__value);
       }
       break;
 
     case UPDATED_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetUpdated_props();
       } else {
-        setUpdated_props((List<UpdatedProp>)value);
+        setUpdated_props((List<UpdatedProp>)__value);
       }
       break;
 
     case INSERTABLE:
-      if (value == null) {
+      if (__value == null) {
         unsetInsertable();
       } else {
-        setInsertable((Boolean)value);
+        setInsertable((Boolean)__value);
       }
       break;
 
     case RETURN_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetReturn_props();
       } else {
-        setReturn_props((List<byte[]>)value);
+        setReturn_props((List<byte[]>)__value);
       }
       break;
 
     case CONDITION:
-      if (value == null) {
+      if (__value == null) {
         unsetCondition();
       } else {
-        setCondition((byte[])value);
+        setCondition((byte[])__value);
       }
       break;
 
@@ -471,212 +545,85 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PART_ID:
-      return isSetPart_id();
-    case VERTEX_ID:
-      return isSetVertex_id();
-    case TAG_ID:
-      return isSetTag_id();
-    case UPDATED_PROPS:
-      return isSetUpdated_props();
-    case INSERTABLE:
-      return isSetInsertable();
-    case RETURN_PROPS:
-      return isSetReturn_props();
-    case CONDITION:
-      return isSetCondition();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof UpdateVertexRequest)
-      return this.equals((UpdateVertexRequest)that);
-    return false;
-  }
-
-  public boolean equals(UpdateVertexRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof UpdateVertexRequest))
+      return false;
+    UpdateVertexRequest that = (UpdateVertexRequest)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_vertex_id = true && this.isSetVertex_id();
-    boolean that_present_vertex_id = true && that.isSetVertex_id();
-    if (this_present_vertex_id || that_present_vertex_id) {
-      if (!(this_present_vertex_id && that_present_vertex_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vertex_id, that.vertex_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetVertex_id(), that.isSetVertex_id(), this.vertex_id, that.vertex_id)) { return false; }
 
-    boolean this_present_tag_id = true;
-    boolean that_present_tag_id = true;
-    if (this_present_tag_id || that_present_tag_id) {
-      if (!(this_present_tag_id && that_present_tag_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_id, that.tag_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.tag_id, that.tag_id)) { return false; }
 
-    boolean this_present_updated_props = true && this.isSetUpdated_props();
-    boolean that_present_updated_props = true && that.isSetUpdated_props();
-    if (this_present_updated_props || that_present_updated_props) {
-      if (!(this_present_updated_props && that_present_updated_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.updated_props, that.updated_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetUpdated_props(), that.isSetUpdated_props(), this.updated_props, that.updated_props)) { return false; }
 
-    boolean this_present_insertable = true && this.isSetInsertable();
-    boolean that_present_insertable = true && that.isSetInsertable();
-    if (this_present_insertable || that_present_insertable) {
-      if (!(this_present_insertable && that_present_insertable))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.insertable, that.insertable))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetInsertable(), that.isSetInsertable(), this.insertable, that.insertable)) { return false; }
 
-    boolean this_present_return_props = true && this.isSetReturn_props();
-    boolean that_present_return_props = true && that.isSetReturn_props();
-    if (this_present_return_props || that_present_return_props) {
-      if (!(this_present_return_props && that_present_return_props))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.return_props, that.return_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetReturn_props(), that.isSetReturn_props(), this.return_props, that.return_props)) { return false; }
 
-    boolean this_present_condition = true && this.isSetCondition();
-    boolean that_present_condition = true && that.isSetCondition();
-    if (this_present_condition || that_present_condition) {
-      if (!(this_present_condition && that_present_condition))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.condition, that.condition))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetCondition(), that.isSetCondition(), this.condition, that.condition)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_vertex_id = true && (isSetVertex_id());
-    builder.append(present_vertex_id);
-    if (present_vertex_id)
-      builder.append(vertex_id);
-
-    boolean present_tag_id = true;
-    builder.append(present_tag_id);
-    if (present_tag_id)
-      builder.append(tag_id);
-
-    boolean present_updated_props = true && (isSetUpdated_props());
-    builder.append(present_updated_props);
-    if (present_updated_props)
-      builder.append(updated_props);
-
-    boolean present_insertable = true && (isSetInsertable());
-    builder.append(present_insertable);
-    if (present_insertable)
-      builder.append(insertable);
-
-    boolean present_return_props = true && (isSetReturn_props());
-    builder.append(present_return_props);
-    if (present_return_props)
-      builder.append(return_props);
-
-    boolean present_condition = true && (isSetCondition());
-    builder.append(present_condition);
-    if (present_condition)
-      builder.append(condition);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, vertex_id, tag_id, updated_props, insertable, return_props, condition});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VERTEX_ID:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.vertex_id = new com.vesoft.nebula.Value();
             this.vertex_id.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TAG_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.tag_id = iprot.readI32();
             setTag_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case UPDATED_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list135 = iprot.readListBegin();
               this.updated_props = new ArrayList<UpdatedProp>(Math.max(0, _list135.size));
@@ -692,19 +639,19 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case INSERTABLE:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.insertable = iprot.readBool();
             setInsertableIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RETURN_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list138 = iprot.readListBegin();
               this.return_props = new ArrayList<byte[]>(Math.max(0, _list138.size));
@@ -719,18 +666,18 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CONDITION:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.condition = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -805,19 +752,14 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("UpdateVertexRequest");
     sb.append(space);
     sb.append("(");
@@ -828,24 +770,24 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("vertex_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getVertex_id() == null) {
+    if (this.getVertex_id() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getVertex_id(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getVertex_id(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -853,17 +795,17 @@ String space = prettyPrint ? " " : "";
     sb.append("tag_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTag_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTag_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("updated_props");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getUpdated_props() == null) {
+    if (this.getUpdated_props() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getUpdated_props(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getUpdated_props(), indent + 1, prettyPrint));
     }
     first = false;
     if (isSetInsertable())
@@ -873,7 +815,7 @@ String space = prettyPrint ? " " : "";
       sb.append("insertable");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isInsertable(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.isInsertable(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetReturn_props())
@@ -883,10 +825,10 @@ String space = prettyPrint ? " " : "";
       sb.append("return_props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getReturn_props() == null) {
+      if (this.getReturn_props() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getReturn_props(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getReturn_props(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -897,15 +839,15 @@ String space = prettyPrint ? " " : "";
       sb.append("condition");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getCondition() == null) {
+      if (this.getCondition() == null) {
         sb.append("null");
       } else {
-          int __condition_size = Math.min(this. getCondition().length, 128);
+          int __condition_size = Math.min(this.getCondition().length, 128);
           for (int i = 0; i < __condition_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getCondition()[i]).length() > 1 ? Integer.toHexString(this. getCondition()[i]).substring(Integer.toHexString(this. getCondition()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCondition()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getCondition()[i]).length() > 1 ? Integer.toHexString(this.getCondition()[i]).substring(Integer.toHexString(this.getCondition()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCondition()[i]).toUpperCase());
           }
-          if (this. getCondition().length > 128) sb.append(" ...");
+          if (this.getCondition().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -917,7 +859,6 @@ String space = prettyPrint ? " " : "";
   public void validate() throws TException {
     // check for required fields
     // alas, we cannot check 'tag_id' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
   }
 
 }

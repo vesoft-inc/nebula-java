@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,13 +39,13 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
   public static final int VERTEX_DATA = 2;
   public static final int HAS_NEXT = 3;
   public static final int NEXT_CURSOR = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __HAS_NEXT_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -70,17 +67,15 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
   }
 
   public ScanVertexResponse(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
   }
 
   public ScanVertexResponse(
-    ResponseCommon result,
-    com.vesoft.nebula.DataSet vertex_data,
-    boolean has_next)
-  {
+      ResponseCommon result,
+      com.vesoft.nebula.DataSet vertex_data,
+      boolean has_next) {
     this();
     this.result = result;
     this.vertex_data = vertex_data;
@@ -89,17 +84,64 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
   }
 
   public ScanVertexResponse(
-    ResponseCommon result,
-    com.vesoft.nebula.DataSet vertex_data,
-    boolean has_next,
-    byte[] next_cursor)
-  {
+      ResponseCommon result,
+      com.vesoft.nebula.DataSet vertex_data,
+      boolean has_next,
+      byte[] next_cursor) {
     this();
     this.result = result;
     this.vertex_data = vertex_data;
     this.has_next = has_next;
     setHas_nextIsSet(true);
     this.next_cursor = next_cursor;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+    private com.vesoft.nebula.DataSet vertex_data;
+    private boolean has_next;
+    private byte[] next_cursor;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder setVertex_data(final com.vesoft.nebula.DataSet vertex_data) {
+      this.vertex_data = vertex_data;
+      return this;
+    }
+
+    public Builder setHas_next(final boolean has_next) {
+      this.has_next = has_next;
+      __optional_isset.set(__HAS_NEXT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setNext_cursor(final byte[] next_cursor) {
+      this.next_cursor = next_cursor;
+      return this;
+    }
+
+    public ScanVertexResponse build() {
+      ScanVertexResponse result = new ScanVertexResponse();
+      result.setResult(this.result);
+      result.setVertex_data(this.vertex_data);
+      if (__optional_isset.get(__HAS_NEXT_ISSET_ID)) {
+        result.setHas_next(this.has_next);
+      }
+      result.setNext_cursor(this.next_cursor);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -124,12 +166,7 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     return new ScanVertexResponse(this);
   }
 
-  @Deprecated
-  public ScanVertexResponse clone() {
-    return new ScanVertexResponse(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -147,13 +184,13 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public com.vesoft.nebula.DataSet  getVertex_data() {
+  public com.vesoft.nebula.DataSet getVertex_data() {
     return this.vertex_data;
   }
 
@@ -171,13 +208,13 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     return this.vertex_data != null;
   }
 
-  public void setVertex_dataIsSet(boolean value) {
-    if (!value) {
+  public void setVertex_dataIsSet(boolean __value) {
+    if (!__value) {
       this.vertex_data = null;
     }
   }
 
-  public boolean  isHas_next() {
+  public boolean isHas_next() {
     return this.has_next;
   }
 
@@ -196,11 +233,11 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__HAS_NEXT_ISSET_ID);
   }
 
-  public void setHas_nextIsSet(boolean value) {
-    __isset_bit_vector.set(__HAS_NEXT_ISSET_ID, value);
+  public void setHas_nextIsSet(boolean __value) {
+    __isset_bit_vector.set(__HAS_NEXT_ISSET_ID, __value);
   }
 
-  public byte[]  getNext_cursor() {
+  public byte[] getNext_cursor() {
     return this.next_cursor;
   }
 
@@ -218,43 +255,43 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     return this.next_cursor != null;
   }
 
-  public void setNext_cursorIsSet(boolean value) {
-    if (!value) {
+  public void setNext_cursorIsSet(boolean __value) {
+    if (!__value) {
       this.next_cursor = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
     case VERTEX_DATA:
-      if (value == null) {
+      if (__value == null) {
         unsetVertex_data();
       } else {
-        setVertex_data((com.vesoft.nebula.DataSet)value);
+        setVertex_data((com.vesoft.nebula.DataSet)__value);
       }
       break;
 
     case HAS_NEXT:
-      if (value == null) {
+      if (__value == null) {
         unsetHas_next();
       } else {
-        setHas_next((Boolean)value);
+        setHas_next((Boolean)__value);
       }
       break;
 
     case NEXT_CURSOR:
-      if (value == null) {
+      if (__value == null) {
         unsetNext_cursor();
       } else {
-        setNext_cursor((byte[])value);
+        setNext_cursor((byte[])__value);
       }
       break;
 
@@ -282,147 +319,76 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    case VERTEX_DATA:
-      return isSetVertex_data();
-    case HAS_NEXT:
-      return isSetHas_next();
-    case NEXT_CURSOR:
-      return isSetNext_cursor();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ScanVertexResponse)
-      return this.equals((ScanVertexResponse)that);
-    return false;
-  }
-
-  public boolean equals(ScanVertexResponse that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ScanVertexResponse))
+      return false;
+    ScanVertexResponse that = (ScanVertexResponse)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    boolean this_present_vertex_data = true && this.isSetVertex_data();
-    boolean that_present_vertex_data = true && that.isSetVertex_data();
-    if (this_present_vertex_data || that_present_vertex_data) {
-      if (!(this_present_vertex_data && that_present_vertex_data))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vertex_data, that.vertex_data))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetVertex_data(), that.isSetVertex_data(), this.vertex_data, that.vertex_data)) { return false; }
 
-    boolean this_present_has_next = true;
-    boolean that_present_has_next = true;
-    if (this_present_has_next || that_present_has_next) {
-      if (!(this_present_has_next && that_present_has_next))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.has_next, that.has_next))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.has_next, that.has_next)) { return false; }
 
-    boolean this_present_next_cursor = true && this.isSetNext_cursor();
-    boolean that_present_next_cursor = true && that.isSetNext_cursor();
-    if (this_present_next_cursor || that_present_next_cursor) {
-      if (!(this_present_next_cursor && that_present_next_cursor))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.next_cursor, that.next_cursor))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetNext_cursor(), that.isSetNext_cursor(), this.next_cursor, that.next_cursor)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    boolean present_vertex_data = true && (isSetVertex_data());
-    builder.append(present_vertex_data);
-    if (present_vertex_data)
-      builder.append(vertex_data);
-
-    boolean present_has_next = true;
-    builder.append(present_has_next);
-    if (present_has_next)
-      builder.append(has_next);
-
-    boolean present_next_cursor = true && (isSetNext_cursor());
-    builder.append(present_next_cursor);
-    if (present_next_cursor)
-      builder.append(next_cursor);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result, vertex_data, has_next, next_cursor});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VERTEX_DATA:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.vertex_data = new com.vesoft.nebula.DataSet();
             this.vertex_data.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HAS_NEXT:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.has_next = iprot.readBool();
             setHas_nextIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NEXT_CURSOR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.next_cursor = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -464,19 +430,14 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ScanVertexResponse");
     sb.append(space);
     sb.append("(");
@@ -487,10 +448,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -498,10 +459,10 @@ String space = prettyPrint ? " " : "";
     sb.append("vertex_data");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getVertex_data() == null) {
+    if (this.getVertex_data() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getVertex_data(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getVertex_data(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -509,7 +470,7 @@ String space = prettyPrint ? " " : "";
     sb.append("has_next");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isHas_next(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isHas_next(), indent + 1, prettyPrint));
     first = false;
     if (isSetNext_cursor())
     {
@@ -518,15 +479,15 @@ String space = prettyPrint ? " " : "";
       sb.append("next_cursor");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getNext_cursor() == null) {
+      if (this.getNext_cursor() == null) {
         sb.append("null");
       } else {
-          int __next_cursor_size = Math.min(this. getNext_cursor().length, 128);
+          int __next_cursor_size = Math.min(this.getNext_cursor().length, 128);
           for (int i = 0; i < __next_cursor_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getNext_cursor()[i]).length() > 1 ? Integer.toHexString(this. getNext_cursor()[i]).substring(Integer.toHexString(this. getNext_cursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getNext_cursor()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getNext_cursor()[i]).length() > 1 ? Integer.toHexString(this.getNext_cursor()[i]).substring(Integer.toHexString(this.getNext_cursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getNext_cursor()[i]).toUpperCase());
           }
-          if (this. getNext_cursor().length > 128) sb.append(" ...");
+          if (this.getNext_cursor().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -540,7 +501,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

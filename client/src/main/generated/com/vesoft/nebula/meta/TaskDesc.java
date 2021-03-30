@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see JobStatus
    */
-  public int status;
+  public JobStatus status;
   public long start_time;
   public long stop_time;
   public int job_id;
@@ -52,17 +49,16 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int START_TIME = 4;
   public static final int STOP_TIME = 5;
   public static final int JOB_ID = 6;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __TASK_ID_ISSET_ID = 0;
-  private static final int __STATUS_ISSET_ID = 1;
-  private static final int __START_TIME_ISSET_ID = 2;
-  private static final int __STOP_TIME_ISSET_ID = 3;
-  private static final int __JOB_ID_ISSET_ID = 4;
-  private BitSet __isset_bit_vector = new BitSet(5);
+  private static final int __START_TIME_ISSET_ID = 1;
+  private static final int __STOP_TIME_ISSET_ID = 2;
+  private static final int __JOB_ID_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TASK_ID, new FieldMetaData("task_id", TFieldRequirementType.DEFAULT, 
@@ -88,25 +84,94 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public TaskDesc(
-    int task_id,
-    com.vesoft.nebula.HostAddr host,
-    int status,
-    long start_time,
-    long stop_time,
-    int job_id)
-  {
+      int task_id,
+      com.vesoft.nebula.HostAddr host,
+      JobStatus status,
+      long start_time,
+      long stop_time,
+      int job_id) {
     this();
     this.task_id = task_id;
     setTask_idIsSet(true);
     this.host = host;
     this.status = status;
-    setStatusIsSet(true);
     this.start_time = start_time;
     setStart_timeIsSet(true);
     this.stop_time = stop_time;
     setStop_timeIsSet(true);
     this.job_id = job_id;
     setJob_idIsSet(true);
+  }
+
+  public static class Builder {
+    private int task_id;
+    private com.vesoft.nebula.HostAddr host;
+    private JobStatus status;
+    private long start_time;
+    private long stop_time;
+    private int job_id;
+
+    BitSet __optional_isset = new BitSet(4);
+
+    public Builder() {
+    }
+
+    public Builder setTask_id(final int task_id) {
+      this.task_id = task_id;
+      __optional_isset.set(__TASK_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
+    public Builder setStatus(final JobStatus status) {
+      this.status = status;
+      return this;
+    }
+
+    public Builder setStart_time(final long start_time) {
+      this.start_time = start_time;
+      __optional_isset.set(__START_TIME_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setStop_time(final long stop_time) {
+      this.stop_time = stop_time;
+      __optional_isset.set(__STOP_TIME_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setJob_id(final int job_id) {
+      this.job_id = job_id;
+      __optional_isset.set(__JOB_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public TaskDesc build() {
+      TaskDesc result = new TaskDesc();
+      if (__optional_isset.get(__TASK_ID_ISSET_ID)) {
+        result.setTask_id(this.task_id);
+      }
+      result.setHost(this.host);
+      result.setStatus(this.status);
+      if (__optional_isset.get(__START_TIME_ISSET_ID)) {
+        result.setStart_time(this.start_time);
+      }
+      if (__optional_isset.get(__STOP_TIME_ISSET_ID)) {
+        result.setStop_time(this.stop_time);
+      }
+      if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
+        result.setJob_id(this.job_id);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -119,7 +184,9 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
     }
-    this.status = TBaseHelper.deepCopy(other.status);
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
+    }
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.stop_time = TBaseHelper.deepCopy(other.stop_time);
     this.job_id = TBaseHelper.deepCopy(other.job_id);
@@ -129,12 +196,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     return new TaskDesc(this);
   }
 
-  @Deprecated
-  public TaskDesc clone() {
-    return new TaskDesc(this);
-  }
-
-  public int  getTask_id() {
+  public int getTask_id() {
     return this.task_id;
   }
 
@@ -153,11 +215,11 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__TASK_ID_ISSET_ID);
   }
 
-  public void setTask_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TASK_ID_ISSET_ID, value);
+  public void setTask_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TASK_ID_ISSET_ID, __value);
   }
 
-  public com.vesoft.nebula.HostAddr  getHost() {
+  public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
@@ -175,8 +237,8 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     return this.host != null;
   }
 
-  public void setHostIsSet(boolean value) {
-    if (!value) {
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
       this.host = null;
     }
   }
@@ -185,7 +247,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see JobStatus
    */
-  public int  getStatus() {
+  public JobStatus getStatus() {
     return this.status;
   }
 
@@ -193,26 +255,27 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see JobStatus
    */
-  public TaskDesc setStatus(int status) {
+  public TaskDesc setStatus(JobStatus status) {
     this.status = status;
-    setStatusIsSet(true);
     return this;
   }
 
   public void unsetStatus() {
-    __isset_bit_vector.clear(__STATUS_ISSET_ID);
+    this.status = null;
   }
 
   // Returns true if field status is set (has been assigned a value) and false otherwise
   public boolean isSetStatus() {
-    return __isset_bit_vector.get(__STATUS_ISSET_ID);
+    return this.status != null;
   }
 
-  public void setStatusIsSet(boolean value) {
-    __isset_bit_vector.set(__STATUS_ISSET_ID, value);
+  public void setStatusIsSet(boolean __value) {
+    if (!__value) {
+      this.status = null;
+    }
   }
 
-  public long  getStart_time() {
+  public long getStart_time() {
     return this.start_time;
   }
 
@@ -231,11 +294,11 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__START_TIME_ISSET_ID);
   }
 
-  public void setStart_timeIsSet(boolean value) {
-    __isset_bit_vector.set(__START_TIME_ISSET_ID, value);
+  public void setStart_timeIsSet(boolean __value) {
+    __isset_bit_vector.set(__START_TIME_ISSET_ID, __value);
   }
 
-  public long  getStop_time() {
+  public long getStop_time() {
     return this.stop_time;
   }
 
@@ -254,11 +317,11 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__STOP_TIME_ISSET_ID);
   }
 
-  public void setStop_timeIsSet(boolean value) {
-    __isset_bit_vector.set(__STOP_TIME_ISSET_ID, value);
+  public void setStop_timeIsSet(boolean __value) {
+    __isset_bit_vector.set(__STOP_TIME_ISSET_ID, __value);
   }
 
-  public int  getJob_id() {
+  public int getJob_id() {
     return this.job_id;
   }
 
@@ -277,57 +340,57 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__JOB_ID_ISSET_ID);
   }
 
-  public void setJob_idIsSet(boolean value) {
-    __isset_bit_vector.set(__JOB_ID_ISSET_ID, value);
+  public void setJob_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__JOB_ID_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TASK_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTask_id();
       } else {
-        setTask_id((Integer)value);
+        setTask_id((Integer)__value);
       }
       break;
 
     case HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetHost();
       } else {
-        setHost((com.vesoft.nebula.HostAddr)value);
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case STATUS:
-      if (value == null) {
+      if (__value == null) {
         unsetStatus();
       } else {
-        setStatus((Integer)value);
+        setStatus((JobStatus)__value);
       }
       break;
 
     case START_TIME:
-      if (value == null) {
+      if (__value == null) {
         unsetStart_time();
       } else {
-        setStart_time((Long)value);
+        setStart_time((Long)__value);
       }
       break;
 
     case STOP_TIME:
-      if (value == null) {
+      if (__value == null) {
         unsetStop_time();
       } else {
-        setStop_time((Long)value);
+        setStop_time((Long)__value);
       }
       break;
 
     case JOB_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetJob_id();
       } else {
-        setJob_id((Integer)value);
+        setJob_id((Integer)__value);
       }
       break;
 
@@ -361,133 +424,34 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TASK_ID:
-      return isSetTask_id();
-    case HOST:
-      return isSetHost();
-    case STATUS:
-      return isSetStatus();
-    case START_TIME:
-      return isSetStart_time();
-    case STOP_TIME:
-      return isSetStop_time();
-    case JOB_ID:
-      return isSetJob_id();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof TaskDesc)
-      return this.equals((TaskDesc)that);
-    return false;
-  }
-
-  public boolean equals(TaskDesc that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof TaskDesc))
+      return false;
+    TaskDesc that = (TaskDesc)_that;
 
-    boolean this_present_task_id = true;
-    boolean that_present_task_id = true;
-    if (this_present_task_id || that_present_task_id) {
-      if (!(this_present_task_id && that_present_task_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id)) { return false; }
 
-    boolean this_present_host = true && this.isSetHost();
-    boolean that_present_host = true && that.isSetHost();
-    if (this_present_host || that_present_host) {
-      if (!(this_present_host && that_present_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.host, that.host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
-    boolean this_present_status = true;
-    boolean that_present_status = true;
-    if (this_present_status || that_present_status) {
-      if (!(this_present_status && that_present_status))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.status, that.status))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
 
-    boolean this_present_start_time = true;
-    boolean that_present_start_time = true;
-    if (this_present_start_time || that_present_start_time) {
-      if (!(this_present_start_time && that_present_start_time))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.start_time, that.start_time))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.start_time, that.start_time)) { return false; }
 
-    boolean this_present_stop_time = true;
-    boolean that_present_stop_time = true;
-    if (this_present_stop_time || that_present_stop_time) {
-      if (!(this_present_stop_time && that_present_stop_time))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.stop_time, that.stop_time))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.stop_time, that.stop_time)) { return false; }
 
-    boolean this_present_job_id = true;
-    boolean that_present_job_id = true;
-    if (this_present_job_id || that_present_job_id) {
-      if (!(this_present_job_id && that_present_job_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_task_id = true;
-    builder.append(present_task_id);
-    if (present_task_id)
-      builder.append(task_id);
-
-    boolean present_host = true && (isSetHost());
-    builder.append(present_host);
-    if (present_host)
-      builder.append(host);
-
-    boolean present_status = true;
-    builder.append(present_status);
-    if (present_status)
-      builder.append(status);
-
-    boolean present_start_time = true;
-    builder.append(present_start_time);
-    if (present_start_time)
-      builder.append(start_time);
-
-    boolean present_stop_time = true;
-    builder.append(present_stop_time);
-    if (present_stop_time)
-      builder.append(stop_time);
-
-    boolean present_job_id = true;
-    builder.append(present_job_id);
-    if (present_job_id)
-      builder.append(job_id);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {task_id, host, status, start_time, stop_time, job_id});
   }
 
   @Override
@@ -507,7 +471,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(task_id, other.task_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
@@ -515,7 +479,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host, other.host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
@@ -523,7 +487,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(status, other.status);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStart_time()).compareTo(other.isSetStart_time());
@@ -531,7 +495,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(start_time, other.start_time);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStop_time()).compareTo(other.isSetStop_time());
@@ -539,7 +503,7 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(stop_time, other.stop_time);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetJob_id()).compareTo(other.isSetJob_id());
@@ -547,73 +511,72 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(job_id, other.job_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TASK_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.task_id = iprot.readI32();
             setTask_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STATUS:
-          if (field.type == TType.I32) {
-            this.status = iprot.readI32();
-            setStatusIsSet(true);
+          if (__field.type == TType.I32) {
+            this.status = JobStatus.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case START_TIME:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.start_time = iprot.readI64();
             setStart_timeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STOP_TIME:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.stop_time = iprot.readI64();
             setStop_timeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case JOB_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.job_id = iprot.readI32();
             setJob_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -637,9 +600,11 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
       this.host.write(oprot);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(STATUS_FIELD_DESC);
-    oprot.writeI32(this.status);
-    oprot.writeFieldEnd();
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeI32(this.status == null ? 0 : this.status.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(START_TIME_FIELD_DESC);
     oprot.writeI64(this.start_time);
     oprot.writeFieldEnd();
@@ -655,19 +620,14 @@ public class TaskDesc implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("TaskDesc");
     sb.append(space);
     sb.append("(");
@@ -678,17 +638,17 @@ String space = prettyPrint ? " " : "";
     sb.append("task_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTask_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTask_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHost() == null) {
+    if (this.getHost() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHost(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -696,14 +656,18 @@ String space = prettyPrint ? " " : "";
     sb.append("status");
     sb.append(space);
     sb.append(":").append(space);
-    String status_name = JobStatus.VALUES_TO_NAMES.get(this. getStatus());
-    if (status_name != null) {
-      sb.append(status_name);
-      sb.append(" (");
-    }
-    sb.append(this. getStatus());
-    if (status_name != null) {
-      sb.append(")");
+    if (this.getStatus() == null) {
+      sb.append("null");
+    } else {
+      String status_name = this.getStatus() == null ? "null" : this.getStatus().name();
+      if (status_name != null) {
+        sb.append(status_name);
+        sb.append(" (");
+      }
+      sb.append(this.getStatus());
+      if (status_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -711,21 +675,21 @@ String space = prettyPrint ? " " : "";
     sb.append("start_time");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getStart_time(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getStart_time(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("stop_time");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getStop_time(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getStop_time(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("job_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getJob_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getJob_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -734,10 +698,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetStatus() && !JobStatus.VALID_VALUES.contains(status)){
-      throw new TProtocolException("The field 'status' has been assigned the invalid value " + status);
-    }
   }
 
 }

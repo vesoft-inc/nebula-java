@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -45,7 +42,6 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
   public static final int PART_ID = 3;
   public static final int POSITION = 4;
   public static final int DATA = 5;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __TXN_ID_ISSET_ID = 0;
@@ -55,6 +51,7 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
   private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TXN_ID, new FieldMetaData("txn_id", TFieldRequirementType.DEFAULT, 
@@ -80,12 +77,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
   }
 
   public InternalTxnRequest(
-    long txn_id,
-    int space_id,
-    int part_id,
-    int position,
-    List<List<byte[]>> data)
-  {
+      long txn_id,
+      int space_id,
+      int part_id,
+      int position,
+      List<List<byte[]>> data) {
     this();
     this.txn_id = txn_id;
     setTxn_idIsSet(true);
@@ -96,6 +92,70 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     this.position = position;
     setPositionIsSet(true);
     this.data = data;
+  }
+
+  public static class Builder {
+    private long txn_id;
+    private int space_id;
+    private int part_id;
+    private int position;
+    private List<List<byte[]>> data;
+
+    BitSet __optional_isset = new BitSet(4);
+
+    public Builder() {
+    }
+
+    public Builder setTxn_id(final long txn_id) {
+      this.txn_id = txn_id;
+      __optional_isset.set(__TXN_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPosition(final int position) {
+      this.position = position;
+      __optional_isset.set(__POSITION_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setData(final List<List<byte[]>> data) {
+      this.data = data;
+      return this;
+    }
+
+    public InternalTxnRequest build() {
+      InternalTxnRequest result = new InternalTxnRequest();
+      if (__optional_isset.get(__TXN_ID_ISSET_ID)) {
+        result.setTxn_id(this.txn_id);
+      }
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      if (__optional_isset.get(__POSITION_ISSET_ID)) {
+        result.setPosition(this.position);
+      }
+      result.setData(this.data);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -117,12 +177,7 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     return new InternalTxnRequest(this);
   }
 
-  @Deprecated
-  public InternalTxnRequest clone() {
-    return new InternalTxnRequest(this);
-  }
-
-  public long  getTxn_id() {
+  public long getTxn_id() {
     return this.txn_id;
   }
 
@@ -141,11 +196,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__TXN_ID_ISSET_ID);
   }
 
-  public void setTxn_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TXN_ID_ISSET_ID, value);
+  public void setTxn_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TXN_ID_ISSET_ID, __value);
   }
 
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -164,11 +219,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -187,11 +242,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public int  getPosition() {
+  public int getPosition() {
     return this.position;
   }
 
@@ -210,11 +265,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__POSITION_ISSET_ID);
   }
 
-  public void setPositionIsSet(boolean value) {
-    __isset_bit_vector.set(__POSITION_ISSET_ID, value);
+  public void setPositionIsSet(boolean __value) {
+    __isset_bit_vector.set(__POSITION_ISSET_ID, __value);
   }
 
-  public List<List<byte[]>>  getData() {
+  public List<List<byte[]>> getData() {
     return this.data;
   }
 
@@ -232,52 +287,52 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     return this.data != null;
   }
 
-  public void setDataIsSet(boolean value) {
-    if (!value) {
+  public void setDataIsSet(boolean __value) {
+    if (!__value) {
       this.data = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TXN_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTxn_id();
       } else {
-        setTxn_id((Long)value);
+        setTxn_id((Long)__value);
       }
       break;
 
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case POSITION:
-      if (value == null) {
+      if (__value == null) {
         unsetPosition();
       } else {
-        setPosition((Integer)value);
+        setPosition((Integer)__value);
       }
       break;
 
     case DATA:
-      if (value == null) {
+      if (__value == null) {
         unsetData();
       } else {
-        setData((List<List<byte[]>>)value);
+        setData((List<List<byte[]>>)__value);
       }
       break;
 
@@ -308,117 +363,32 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TXN_ID:
-      return isSetTxn_id();
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PART_ID:
-      return isSetPart_id();
-    case POSITION:
-      return isSetPosition();
-    case DATA:
-      return isSetData();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof InternalTxnRequest)
-      return this.equals((InternalTxnRequest)that);
-    return false;
-  }
-
-  public boolean equals(InternalTxnRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof InternalTxnRequest))
+      return false;
+    InternalTxnRequest that = (InternalTxnRequest)_that;
 
-    boolean this_present_txn_id = true;
-    boolean that_present_txn_id = true;
-    if (this_present_txn_id || that_present_txn_id) {
-      if (!(this_present_txn_id && that_present_txn_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.txn_id, that.txn_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.txn_id, that.txn_id)) { return false; }
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_position = true;
-    boolean that_present_position = true;
-    if (this_present_position || that_present_position) {
-      if (!(this_present_position && that_present_position))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.position, that.position))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.position, that.position)) { return false; }
 
-    boolean this_present_data = true && this.isSetData();
-    boolean that_present_data = true && that.isSetData();
-    if (this_present_data || that_present_data) {
-      if (!(this_present_data && that_present_data))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.data, that.data))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetData(), that.isSetData(), this.data, that.data)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_txn_id = true;
-    builder.append(present_txn_id);
-    if (present_txn_id)
-      builder.append(txn_id);
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_position = true;
-    builder.append(present_position);
-    if (present_position)
-      builder.append(position);
-
-    boolean present_data = true && (isSetData());
-    builder.append(present_data);
-    if (present_data)
-      builder.append(data);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {txn_id, space_id, part_id, position, data});
   }
 
   @Override
@@ -438,7 +408,7 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(txn_id, other.txn_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
@@ -446,7 +416,7 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
@@ -454,7 +424,7 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPosition()).compareTo(other.isSetPosition());
@@ -462,7 +432,7 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(position, other.position);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetData()).compareTo(other.isSetData());
@@ -470,57 +440,57 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(data, other.data);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TXN_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.txn_id = iprot.readI64();
             setTxn_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case POSITION:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.position = iprot.readI32();
             setPositionIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DATA:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list232 = iprot.readListBegin();
               this.data = new ArrayList<List<byte[]>>(Math.max(0, _list232.size));
@@ -547,11 +517,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -602,19 +572,14 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("InternalTxnRequest");
     sb.append(space);
     sb.append("(");
@@ -625,38 +590,38 @@ String space = prettyPrint ? " " : "";
     sb.append("txn_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTxn_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTxn_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("position");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPosition(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPosition(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("data");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getData() == null) {
+    if (this.getData() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getData(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getData(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -666,7 +631,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

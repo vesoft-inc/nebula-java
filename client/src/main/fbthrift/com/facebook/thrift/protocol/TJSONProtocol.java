@@ -1,55 +1,44 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift.protocol;
 
-import java.util.Map;
-
 import com.facebook.thrift.TException;
 import com.facebook.thrift.transport.TTransport;
+import java.util.Map;
 
 /**
  * JSON protocol implementation for thrift.
  *
- * This is a full-featured protocol supporting write and read.
+ * <p>This is a full-featured protocol supporting write and read.
  *
- * Please see the C++ class header for a detailed description of the
- * protocol's wire format.
- *
+ * <p>Please see the C++ class header for a detailed description of the protocol's wire format.
  */
 public class TJSONProtocol extends TJSONProtocolBase {
 
-  /**
-   * Factory for JSON protocol objects
-   */
+  /** Factory for JSON protocol objects */
   @SuppressWarnings("serial")
   public static class Factory implements TProtocolFactory {
 
     public TProtocol getProtocol(TTransport trans) {
       return new TJSONProtocol(trans);
     }
-
   }
 
-  /**
-   * Constructor
-   */
+  /** Constructor */
   public TJSONProtocol(TTransport trans) {
     super(trans);
   }
@@ -123,10 +112,7 @@ public class TJSONProtocol extends TJSONProtocolBase {
     writeJSONArrayEnd();
   }
 
-  /**
-   * Reading methods.
-   */
-
+  /** Reading methods. */
   @Override
   public TStruct readStructBegin(
       Map<Integer, com.facebook.thrift.meta_data.FieldMetaData> metaDataMap) throws TException {
@@ -146,8 +132,7 @@ public class TJSONProtocol extends TJSONProtocolBase {
     short id = 0;
     if (ch == RBRACE[0]) {
       type = TType.STOP;
-    }
-    else {
+    } else {
       id = (short) readJSONInteger();
       readJSONObjectStart();
       type = getTypeIDForTypeName(readJSONString(false).get());
@@ -165,7 +150,7 @@ public class TJSONProtocol extends TJSONProtocolBase {
     readJSONArrayStart();
     byte keyType = getTypeIDForTypeName(readJSONString(false).get());
     byte valueType = getTypeIDForTypeName(readJSONString(false).get());
-    int size = (int)readJSONInteger();
+    int size = (int) readJSONInteger();
     readJSONObjectStart();
     return new TMap(keyType, valueType, size);
   }
@@ -180,7 +165,7 @@ public class TJSONProtocol extends TJSONProtocolBase {
   public TList readListBegin() throws TException {
     readJSONArrayStart();
     byte elemType = getTypeIDForTypeName(readJSONString(false).get());
-    int size = (int)readJSONInteger();
+    int size = (int) readJSONInteger();
     return new TList(elemType, size);
   }
 
@@ -193,7 +178,7 @@ public class TJSONProtocol extends TJSONProtocolBase {
   public TSet readSetBegin() throws TException {
     readJSONArrayStart();
     byte elemType = getTypeIDForTypeName(readJSONString(false).get());
-    int size = (int)readJSONInteger();
+    int size = (int) readJSONInteger();
     return new TSet(elemType, size);
   }
 

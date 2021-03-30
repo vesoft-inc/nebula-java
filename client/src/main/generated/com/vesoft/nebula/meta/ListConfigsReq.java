@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -37,16 +34,14 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
    * 
    * @see ConfigModule
    */
-  public int module;
+  public ConfigModule module;
   public static final int SPACE = 1;
   public static final int MODULE = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __MODULE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
@@ -64,37 +59,59 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public ListConfigsReq(
-    byte[] space,
-    int module)
-  {
+      byte[] space,
+      ConfigModule module) {
     this();
     this.space = space;
     this.module = module;
-    setModuleIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] space;
+    private ConfigModule module;
+
+    public Builder() {
+    }
+
+    public Builder setSpace(final byte[] space) {
+      this.space = space;
+      return this;
+    }
+
+    public Builder setModule(final ConfigModule module) {
+      this.module = module;
+      return this;
+    }
+
+    public ListConfigsReq build() {
+      ListConfigsReq result = new ListConfigsReq();
+      result.setSpace(this.space);
+      result.setModule(this.module);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public ListConfigsReq(ListConfigsReq other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetSpace()) {
       this.space = TBaseHelper.deepCopy(other.space);
     }
-    this.module = TBaseHelper.deepCopy(other.module);
+    if (other.isSetModule()) {
+      this.module = TBaseHelper.deepCopy(other.module);
+    }
   }
 
   public ListConfigsReq deepCopy() {
     return new ListConfigsReq(this);
   }
 
-  @Deprecated
-  public ListConfigsReq clone() {
-    return new ListConfigsReq(this);
-  }
-
-  public byte[]  getSpace() {
+  public byte[] getSpace() {
     return this.space;
   }
 
@@ -112,8 +129,8 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
     return this.space != null;
   }
 
-  public void setSpaceIsSet(boolean value) {
-    if (!value) {
+  public void setSpaceIsSet(boolean __value) {
+    if (!__value) {
       this.space = null;
     }
   }
@@ -122,7 +139,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
    * 
    * @see ConfigModule
    */
-  public int  getModule() {
+  public ConfigModule getModule() {
     return this.module;
   }
 
@@ -130,40 +147,41 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
    * 
    * @see ConfigModule
    */
-  public ListConfigsReq setModule(int module) {
+  public ListConfigsReq setModule(ConfigModule module) {
     this.module = module;
-    setModuleIsSet(true);
     return this;
   }
 
   public void unsetModule() {
-    __isset_bit_vector.clear(__MODULE_ISSET_ID);
+    this.module = null;
   }
 
   // Returns true if field module is set (has been assigned a value) and false otherwise
   public boolean isSetModule() {
-    return __isset_bit_vector.get(__MODULE_ISSET_ID);
+    return this.module != null;
   }
 
-  public void setModuleIsSet(boolean value) {
-    __isset_bit_vector.set(__MODULE_ISSET_ID, value);
+  public void setModuleIsSet(boolean __value) {
+    if (!__value) {
+      this.module = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace();
       } else {
-        setSpace((byte[])value);
+        setSpace((byte[])__value);
       }
       break;
 
     case MODULE:
-      if (value == null) {
+      if (__value == null) {
         unsetModule();
       } else {
-        setModule((Integer)value);
+        setModule((ConfigModule)__value);
       }
       break;
 
@@ -185,69 +203,26 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE:
-      return isSetSpace();
-    case MODULE:
-      return isSetModule();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ListConfigsReq)
-      return this.equals((ListConfigsReq)that);
-    return false;
-  }
-
-  public boolean equals(ListConfigsReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ListConfigsReq))
+      return false;
+    ListConfigsReq that = (ListConfigsReq)_that;
 
-    boolean this_present_space = true && this.isSetSpace();
-    boolean that_present_space = true && that.isSetSpace();
-    if (this_present_space || that_present_space) {
-      if (!(this_present_space && that_present_space))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.space, that.space))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSpace(), that.isSetSpace(), this.space, that.space)) { return false; }
 
-    boolean this_present_module = true;
-    boolean that_present_module = true;
-    if (this_present_module || that_present_module) {
-      if (!(this_present_module && that_present_module))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.module, that.module))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetModule(), that.isSetModule(), this.module, that.module)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space = true && (isSetSpace());
-    builder.append(present_space);
-    if (present_space)
-      builder.append(space);
-
-    boolean present_module = true;
-    builder.append(present_module);
-    if (present_module)
-      builder.append(module);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space, module});
   }
 
   @Override
@@ -267,7 +242,7 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space, other.space);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetModule()).compareTo(other.isSetModule());
@@ -275,40 +250,39 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(module, other.module);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.space = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MODULE:
-          if (field.type == TType.I32) {
-            this.module = iprot.readI32();
-            setModuleIsSet(true);
+          if (__field.type == TType.I32) {
+            this.module = ConfigModule.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -329,28 +303,25 @@ public class ListConfigsReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeBinary(this.space);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(MODULE_FIELD_DESC);
-    oprot.writeI32(this.module);
-    oprot.writeFieldEnd();
+    if (this.module != null) {
+      oprot.writeFieldBegin(MODULE_FIELD_DESC);
+      oprot.writeI32(this.module == null ? 0 : this.module.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ListConfigsReq");
     sb.append(space);
     sb.append("(");
@@ -361,15 +332,15 @@ String space = prettyPrint ? " " : "";
     sb.append("space");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSpace() == null) {
+    if (this.getSpace() == null) {
       sb.append("null");
     } else {
-        int __space_size = Math.min(this. getSpace().length, 128);
+        int __space_size = Math.min(this.getSpace().length, 128);
         for (int i = 0; i < __space_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSpace()[i]).length() > 1 ? Integer.toHexString(this. getSpace()[i]).substring(Integer.toHexString(this. getSpace()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSpace()[i]).length() > 1 ? Integer.toHexString(this.getSpace()[i]).substring(Integer.toHexString(this.getSpace()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSpace()[i]).toUpperCase());
         }
-        if (this. getSpace().length > 128) sb.append(" ...");
+        if (this.getSpace().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -377,14 +348,18 @@ String space = prettyPrint ? " " : "";
     sb.append("module");
     sb.append(space);
     sb.append(":").append(space);
-    String module_name = ConfigModule.VALUES_TO_NAMES.get(this. getModule());
-    if (module_name != null) {
-      sb.append(module_name);
-      sb.append(" (");
-    }
-    sb.append(this. getModule());
-    if (module_name != null) {
-      sb.append(")");
+    if (this.getModule() == null) {
+      sb.append("null");
+    } else {
+      String module_name = this.getModule() == null ? "null" : this.getModule().name();
+      if (module_name != null) {
+        sb.append(module_name);
+        sb.append(" (");
+      }
+      sb.append(this.getModule());
+      if (module_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -394,10 +369,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetModule() && !ConfigModule.VALID_VALUES.contains(module)){
-      throw new TProtocolException("The field 'module' has been assigned the invalid value " + module);
-    }
   }
 
 }

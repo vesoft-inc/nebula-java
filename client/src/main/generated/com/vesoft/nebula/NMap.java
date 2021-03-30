@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
 
   public Map<byte[],Value> kvs;
   public static final int KVS = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(KVS, new FieldMetaData("kvs", TFieldRequirementType.DEFAULT, 
@@ -55,10 +52,31 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
   }
 
   public NMap(
-    Map<byte[],Value> kvs)
-  {
+      Map<byte[],Value> kvs) {
     this();
     this.kvs = kvs;
+  }
+
+  public static class Builder {
+    private Map<byte[],Value> kvs;
+
+    public Builder() {
+    }
+
+    public Builder setKvs(final Map<byte[],Value> kvs) {
+      this.kvs = kvs;
+      return this;
+    }
+
+    public NMap build() {
+      NMap result = new NMap();
+      result.setKvs(this.kvs);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -74,12 +92,7 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
     return new NMap(this);
   }
 
-  @Deprecated
-  public NMap clone() {
-    return new NMap(this);
-  }
-
-  public Map<byte[],Value>  getKvs() {
+  public Map<byte[],Value> getKvs() {
     return this.kvs;
   }
 
@@ -97,20 +110,20 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
     return this.kvs != null;
   }
 
-  public void setKvsIsSet(boolean value) {
-    if (!value) {
+  public void setKvsIsSet(boolean __value) {
+    if (!__value) {
       this.kvs = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case KVS:
-      if (value == null) {
+      if (__value == null) {
         unsetKvs();
       } else {
-        setKvs((Map<byte[],Value>)value);
+        setKvs((Map<byte[],Value>)__value);
       }
       break;
 
@@ -129,68 +142,39 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case KVS:
-      return isSetKvs();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof NMap)
-      return this.equals((NMap)that);
-    return false;
-  }
-
-  public boolean equals(NMap that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof NMap))
+      return false;
+    NMap that = (NMap)_that;
 
-    boolean this_present_kvs = true && this.isSetKvs();
-    boolean that_present_kvs = true && that.isSetKvs();
-    if (this_present_kvs || that_present_kvs) {
-      if (!(this_present_kvs && that_present_kvs))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.kvs, that.kvs))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetKvs(), that.isSetKvs(), this.kvs, that.kvs)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_kvs = true && (isSetKvs());
-    builder.append(present_kvs);
-    if (present_kvs)
-      builder.append(kvs);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {kvs});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case KVS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map4 = iprot.readMapBegin();
               this.kvs = new HashMap<byte[],Value>(Math.max(0, 2*_map4.size));
@@ -208,11 +192,11 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -246,19 +230,14 @@ public class NMap implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("NMap");
     sb.append(space);
     sb.append("(");
@@ -269,10 +248,10 @@ String space = prettyPrint ? " " : "";
     sb.append("kvs");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getKvs() == null) {
+    if (this.getKvs() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getKvs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getKvs(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -282,7 +261,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

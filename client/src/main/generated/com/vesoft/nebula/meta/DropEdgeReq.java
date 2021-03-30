@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,7 +36,6 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
   public static final int SPACE_ID = 1;
   public static final int EDGE_NAME = 2;
   public static final int IF_EXISTS = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -47,6 +43,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -66,16 +63,59 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public DropEdgeReq(
-    int space_id,
-    byte[] edge_name,
-    boolean if_exists)
-  {
+      int space_id,
+      byte[] edge_name,
+      boolean if_exists) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.edge_name = edge_name;
     this.if_exists = if_exists;
     setIf_existsIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private byte[] edge_name;
+    private boolean if_exists;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setEdge_name(final byte[] edge_name) {
+      this.edge_name = edge_name;
+      return this;
+    }
+
+    public Builder setIf_exists(final boolean if_exists) {
+      this.if_exists = if_exists;
+      __optional_isset.set(__IF_EXISTS_ISSET_ID, true);
+      return this;
+    }
+
+    public DropEdgeReq build() {
+      DropEdgeReq result = new DropEdgeReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setEdge_name(this.edge_name);
+      if (__optional_isset.get(__IF_EXISTS_ISSET_ID)) {
+        result.setIf_exists(this.if_exists);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -95,12 +135,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new DropEdgeReq(this);
   }
 
-  @Deprecated
-  public DropEdgeReq clone() {
-    return new DropEdgeReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -119,11 +154,11 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public byte[]  getEdge_name() {
+  public byte[] getEdge_name() {
     return this.edge_name;
   }
 
@@ -141,13 +176,13 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     return this.edge_name != null;
   }
 
-  public void setEdge_nameIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_nameIsSet(boolean __value) {
+    if (!__value) {
       this.edge_name = null;
     }
   }
 
-  public boolean  isIf_exists() {
+  public boolean isIf_exists() {
     return this.if_exists;
   }
 
@@ -166,33 +201,33 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     return __isset_bit_vector.get(__IF_EXISTS_ISSET_ID);
   }
 
-  public void setIf_existsIsSet(boolean value) {
-    __isset_bit_vector.set(__IF_EXISTS_ISSET_ID, value);
+  public void setIf_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_EXISTS_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case EDGE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((byte[])value);
+        setEdge_name((byte[])__value);
       }
       break;
 
     case IF_EXISTS:
-      if (value == null) {
+      if (__value == null) {
         unsetIf_exists();
       } else {
-        setIf_exists((Boolean)value);
+        setIf_exists((Boolean)__value);
       }
       break;
 
@@ -217,85 +252,28 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case EDGE_NAME:
-      return isSetEdge_name();
-    case IF_EXISTS:
-      return isSetIf_exists();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof DropEdgeReq)
-      return this.equals((DropEdgeReq)that);
-    return false;
-  }
-
-  public boolean equals(DropEdgeReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof DropEdgeReq))
+      return false;
+    DropEdgeReq that = (DropEdgeReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_edge_name = true && this.isSetEdge_name();
-    boolean that_present_edge_name = true && that.isSetEdge_name();
-    if (this_present_edge_name || that_present_edge_name) {
-      if (!(this_present_edge_name && that_present_edge_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetEdge_name(), that.isSetEdge_name(), this.edge_name, that.edge_name)) { return false; }
 
-    boolean this_present_if_exists = true;
-    boolean that_present_if_exists = true;
-    if (this_present_if_exists || that_present_if_exists) {
-      if (!(this_present_if_exists && that_present_if_exists))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.if_exists, that.if_exists))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.if_exists, that.if_exists)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_edge_name = true && (isSetEdge_name());
-    builder.append(present_edge_name);
-    if (present_edge_name)
-      builder.append(edge_name);
-
-    boolean present_if_exists = true;
-    builder.append(present_if_exists);
-    if (present_if_exists)
-      builder.append(if_exists);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, edge_name, if_exists});
   }
 
   @Override
@@ -315,7 +293,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_name()).compareTo(other.isSetEdge_name());
@@ -323,7 +301,7 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_name, other.edge_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIf_exists()).compareTo(other.isSetIf_exists());
@@ -331,48 +309,48 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_exists, other.if_exists);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.edge_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IF_EXISTS:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.if_exists = iprot.readBool();
             setIf_existsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -405,19 +383,14 @@ public class DropEdgeReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("DropEdgeReq");
     sb.append(space);
     sb.append("(");
@@ -428,22 +401,22 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("edge_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_name() == null) {
+    if (this.getEdge_name() == null) {
       sb.append("null");
     } else {
-        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        int __edge_name_size = Math.min(this.getEdge_name().length, 128);
         for (int i = 0; i < __edge_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getEdge_name()[i]).length() > 1 ? Integer.toHexString(this.getEdge_name()[i]).substring(Integer.toHexString(this.getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getEdge_name()[i]).toUpperCase());
         }
-        if (this. getEdge_name().length > 128) sb.append(" ...");
+        if (this.getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -451,7 +424,7 @@ String space = prettyPrint ? " " : "";
     sb.append("if_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIf_exists(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIf_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -460,7 +433,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

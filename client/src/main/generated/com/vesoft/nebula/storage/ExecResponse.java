@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
 
   public ResponseCommon result;
   public static final int RESULT = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -53,10 +50,31 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public ExecResponse(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public ExecResponse build() {
+      ExecResponse result = new ExecResponse();
+      result.setResult(this.result);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -72,12 +90,7 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
     return new ExecResponse(this);
   }
 
-  @Deprecated
-  public ExecResponse clone() {
-    return new ExecResponse(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -95,19 +108,19 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
@@ -126,53 +139,24 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ExecResponse)
-      return this.equals((ExecResponse)that);
-    return false;
-  }
-
-  public boolean equals(ExecResponse that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ExecResponse))
+      return false;
+    ExecResponse that = (ExecResponse)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result});
   }
 
   @Override
@@ -192,33 +176,33 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -245,19 +229,14 @@ public class ExecResponse implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ExecResponse");
     sb.append(space);
     sb.append("(");
@@ -268,10 +247,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -284,7 +263,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

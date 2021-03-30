@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -37,16 +34,14 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
    * 
    * @see OrderDirection
    */
-  public int direction;
+  public OrderDirection direction;
   public static final int PROP = 1;
   public static final int DIRECTION = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __DIRECTION_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(PROP, new FieldMetaData("prop", TFieldRequirementType.DEFAULT, 
@@ -64,37 +59,59 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
   }
 
   public OrderBy(
-    byte[] prop,
-    int direction)
-  {
+      byte[] prop,
+      OrderDirection direction) {
     this();
     this.prop = prop;
     this.direction = direction;
-    setDirectionIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] prop;
+    private OrderDirection direction;
+
+    public Builder() {
+    }
+
+    public Builder setProp(final byte[] prop) {
+      this.prop = prop;
+      return this;
+    }
+
+    public Builder setDirection(final OrderDirection direction) {
+      this.direction = direction;
+      return this;
+    }
+
+    public OrderBy build() {
+      OrderBy result = new OrderBy();
+      result.setProp(this.prop);
+      result.setDirection(this.direction);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public OrderBy(OrderBy other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetProp()) {
       this.prop = TBaseHelper.deepCopy(other.prop);
     }
-    this.direction = TBaseHelper.deepCopy(other.direction);
+    if (other.isSetDirection()) {
+      this.direction = TBaseHelper.deepCopy(other.direction);
+    }
   }
 
   public OrderBy deepCopy() {
     return new OrderBy(this);
   }
 
-  @Deprecated
-  public OrderBy clone() {
-    return new OrderBy(this);
-  }
-
-  public byte[]  getProp() {
+  public byte[] getProp() {
     return this.prop;
   }
 
@@ -112,8 +129,8 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
     return this.prop != null;
   }
 
-  public void setPropIsSet(boolean value) {
-    if (!value) {
+  public void setPropIsSet(boolean __value) {
+    if (!__value) {
       this.prop = null;
     }
   }
@@ -122,7 +139,7 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
    * 
    * @see OrderDirection
    */
-  public int  getDirection() {
+  public OrderDirection getDirection() {
     return this.direction;
   }
 
@@ -130,40 +147,41 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
    * 
    * @see OrderDirection
    */
-  public OrderBy setDirection(int direction) {
+  public OrderBy setDirection(OrderDirection direction) {
     this.direction = direction;
-    setDirectionIsSet(true);
     return this;
   }
 
   public void unsetDirection() {
-    __isset_bit_vector.clear(__DIRECTION_ISSET_ID);
+    this.direction = null;
   }
 
   // Returns true if field direction is set (has been assigned a value) and false otherwise
   public boolean isSetDirection() {
-    return __isset_bit_vector.get(__DIRECTION_ISSET_ID);
+    return this.direction != null;
   }
 
-  public void setDirectionIsSet(boolean value) {
-    __isset_bit_vector.set(__DIRECTION_ISSET_ID, value);
+  public void setDirectionIsSet(boolean __value) {
+    if (!__value) {
+      this.direction = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case PROP:
-      if (value == null) {
+      if (__value == null) {
         unsetProp();
       } else {
-        setProp((byte[])value);
+        setProp((byte[])__value);
       }
       break;
 
     case DIRECTION:
-      if (value == null) {
+      if (__value == null) {
         unsetDirection();
       } else {
-        setDirection((Integer)value);
+        setDirection((OrderDirection)__value);
       }
       break;
 
@@ -185,69 +203,26 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case PROP:
-      return isSetProp();
-    case DIRECTION:
-      return isSetDirection();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof OrderBy)
-      return this.equals((OrderBy)that);
-    return false;
-  }
-
-  public boolean equals(OrderBy that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof OrderBy))
+      return false;
+    OrderBy that = (OrderBy)_that;
 
-    boolean this_present_prop = true && this.isSetProp();
-    boolean that_present_prop = true && that.isSetProp();
-    if (this_present_prop || that_present_prop) {
-      if (!(this_present_prop && that_present_prop))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.prop, that.prop))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetProp(), that.isSetProp(), this.prop, that.prop)) { return false; }
 
-    boolean this_present_direction = true;
-    boolean that_present_direction = true;
-    if (this_present_direction || that_present_direction) {
-      if (!(this_present_direction && that_present_direction))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.direction, that.direction))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetDirection(), that.isSetDirection(), this.direction, that.direction)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_prop = true && (isSetProp());
-    builder.append(present_prop);
-    if (present_prop)
-      builder.append(prop);
-
-    boolean present_direction = true;
-    builder.append(present_direction);
-    if (present_direction)
-      builder.append(direction);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {prop, direction});
   }
 
   @Override
@@ -267,7 +242,7 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(prop, other.prop);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDirection()).compareTo(other.isSetDirection());
@@ -275,40 +250,39 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(direction, other.direction);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case PROP:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.prop = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DIRECTION:
-          if (field.type == TType.I32) {
-            this.direction = iprot.readI32();
-            setDirectionIsSet(true);
+          if (__field.type == TType.I32) {
+            this.direction = OrderDirection.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -329,28 +303,25 @@ public class OrderBy implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeBinary(this.prop);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(DIRECTION_FIELD_DESC);
-    oprot.writeI32(this.direction);
-    oprot.writeFieldEnd();
+    if (this.direction != null) {
+      oprot.writeFieldBegin(DIRECTION_FIELD_DESC);
+      oprot.writeI32(this.direction == null ? 0 : this.direction.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("OrderBy");
     sb.append(space);
     sb.append("(");
@@ -361,15 +332,15 @@ String space = prettyPrint ? " " : "";
     sb.append("prop");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProp() == null) {
+    if (this.getProp() == null) {
       sb.append("null");
     } else {
-        int __prop_size = Math.min(this. getProp().length, 128);
+        int __prop_size = Math.min(this.getProp().length, 128);
         for (int i = 0; i < __prop_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getProp()[i]).length() > 1 ? Integer.toHexString(this. getProp()[i]).substring(Integer.toHexString(this. getProp()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getProp()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getProp()[i]).length() > 1 ? Integer.toHexString(this.getProp()[i]).substring(Integer.toHexString(this.getProp()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getProp()[i]).toUpperCase());
         }
-        if (this. getProp().length > 128) sb.append(" ...");
+        if (this.getProp().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -377,14 +348,18 @@ String space = prettyPrint ? " " : "";
     sb.append("direction");
     sb.append(space);
     sb.append(":").append(space);
-    String direction_name = OrderDirection.VALUES_TO_NAMES.get(this. getDirection());
-    if (direction_name != null) {
-      sb.append(direction_name);
-      sb.append(" (");
-    }
-    sb.append(this. getDirection());
-    if (direction_name != null) {
-      sb.append(")");
+    if (this.getDirection() == null) {
+      sb.append("null");
+    } else {
+      String direction_name = this.getDirection() == null ? "null" : this.getDirection().name();
+      if (direction_name != null) {
+        sb.append(direction_name);
+        sb.append(" (");
+      }
+      sb.append(this.getDirection());
+      if (direction_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -394,10 +369,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetDirection() && !OrderDirection.VALID_VALUES.contains(direction)){
-      throw new TProtocolException("The field 'direction' has been assigned the invalid value " + direction);
-    }
   }
 
 }

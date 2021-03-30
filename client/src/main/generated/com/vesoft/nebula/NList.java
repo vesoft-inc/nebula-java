@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
 
   public List<Value> values;
   public static final int VALUES = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(VALUES, new FieldMetaData("values", TFieldRequirementType.DEFAULT, 
@@ -54,10 +51,31 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
   }
 
   public NList(
-    List<Value> values)
-  {
+      List<Value> values) {
     this();
     this.values = values;
+  }
+
+  public static class Builder {
+    private List<Value> values;
+
+    public Builder() {
+    }
+
+    public Builder setValues(final List<Value> values) {
+      this.values = values;
+      return this;
+    }
+
+    public NList build() {
+      NList result = new NList();
+      result.setValues(this.values);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -73,12 +91,7 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
     return new NList(this);
   }
 
-  @Deprecated
-  public NList clone() {
-    return new NList(this);
-  }
-
-  public List<Value>  getValues() {
+  public List<Value> getValues() {
     return this.values;
   }
 
@@ -96,20 +109,20 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
     return this.values != null;
   }
 
-  public void setValuesIsSet(boolean value) {
-    if (!value) {
+  public void setValuesIsSet(boolean __value) {
+    if (!__value) {
       this.values = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case VALUES:
-      if (value == null) {
+      if (__value == null) {
         unsetValues();
       } else {
-        setValues((List<Value>)value);
+        setValues((List<Value>)__value);
       }
       break;
 
@@ -128,68 +141,39 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case VALUES:
-      return isSetValues();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof NList)
-      return this.equals((NList)that);
-    return false;
-  }
-
-  public boolean equals(NList that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof NList))
+      return false;
+    NList that = (NList)_that;
 
-    boolean this_present_values = true && this.isSetValues();
-    boolean that_present_values = true && that.isSetValues();
-    if (this_present_values || that_present_values) {
-      if (!(this_present_values && that_present_values))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.values, that.values))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetValues(), that.isSetValues(), this.values, that.values)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_values = true && (isSetValues());
-    builder.append(present_values);
-    if (present_values)
-      builder.append(values);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {values});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case VALUES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list0 = iprot.readListBegin();
               this.values = new ArrayList<Value>(Math.max(0, _list0.size));
@@ -205,11 +189,11 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -242,19 +226,14 @@ public class NList implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("NList");
     sb.append(space);
     sb.append("(");
@@ -265,10 +244,10 @@ String space = prettyPrint ? " " : "";
     sb.append("values");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getValues() == null) {
+    if (this.getValues() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getValues(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getValues(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -278,7 +257,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

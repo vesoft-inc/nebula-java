@@ -7,42 +7,46 @@
 package com.vesoft.nebula.meta;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class ConfigMode {
-  public static final int IMMUTABLE = 0;
-  public static final int REBOOT = 1;
-  public static final int MUTABLE = 2;
-  public static final int IGNORED = 3;
+public enum ConfigMode implements com.facebook.thrift.TEnum {
+  IMMUTABLE(0),
+  REBOOT(1),
+  MUTABLE(2),
+  IGNORED(3);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = ConfigMode.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private ConfigMode(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static ConfigMode findByValue(int value) { 
+    switch (value) {
+      case 0:
+        return IMMUTABLE;
+      case 1:
+        return REBOOT;
+      case 2:
+        return MUTABLE;
+      case 3:
+        return IGNORED;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

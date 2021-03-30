@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int HOST = 1;
   public static final int USER = 2;
   public static final int PWD = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.REQUIRED, 
@@ -63,21 +60,55 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public FTClient(
-    com.vesoft.nebula.HostAddr host)
-  {
+      com.vesoft.nebula.HostAddr host) {
     this();
     this.host = host;
   }
 
   public FTClient(
-    com.vesoft.nebula.HostAddr host,
-    byte[] user,
-    byte[] pwd)
-  {
+      com.vesoft.nebula.HostAddr host,
+      byte[] user,
+      byte[] pwd) {
     this();
     this.host = host;
     this.user = user;
     this.pwd = pwd;
+  }
+
+  public static class Builder {
+    private com.vesoft.nebula.HostAddr host;
+    private byte[] user;
+    private byte[] pwd;
+
+    public Builder() {
+    }
+
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
+    public Builder setUser(final byte[] user) {
+      this.user = user;
+      return this;
+    }
+
+    public Builder setPwd(final byte[] pwd) {
+      this.pwd = pwd;
+      return this;
+    }
+
+    public FTClient build() {
+      FTClient result = new FTClient();
+      result.setHost(this.host);
+      result.setUser(this.user);
+      result.setPwd(this.pwd);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -99,12 +130,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return new FTClient(this);
   }
 
-  @Deprecated
-  public FTClient clone() {
-    return new FTClient(this);
-  }
-
-  public com.vesoft.nebula.HostAddr  getHost() {
+  public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
@@ -122,13 +148,13 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return this.host != null;
   }
 
-  public void setHostIsSet(boolean value) {
-    if (!value) {
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
       this.host = null;
     }
   }
 
-  public byte[]  getUser() {
+  public byte[] getUser() {
     return this.user;
   }
 
@@ -146,13 +172,13 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return this.user != null;
   }
 
-  public void setUserIsSet(boolean value) {
-    if (!value) {
+  public void setUserIsSet(boolean __value) {
+    if (!__value) {
       this.user = null;
     }
   }
 
-  public byte[]  getPwd() {
+  public byte[] getPwd() {
     return this.pwd;
   }
 
@@ -170,35 +196,35 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return this.pwd != null;
   }
 
-  public void setPwdIsSet(boolean value) {
-    if (!value) {
+  public void setPwdIsSet(boolean __value) {
+    if (!__value) {
       this.pwd = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetHost();
       } else {
-        setHost((com.vesoft.nebula.HostAddr)value);
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case USER:
-      if (value == null) {
+      if (__value == null) {
         unsetUser();
       } else {
-        setUser((byte[])value);
+        setUser((byte[])__value);
       }
       break;
 
     case PWD:
-      if (value == null) {
+      if (__value == null) {
         unsetPwd();
       } else {
-        setPwd((byte[])value);
+        setPwd((byte[])__value);
       }
       break;
 
@@ -223,85 +249,28 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case HOST:
-      return isSetHost();
-    case USER:
-      return isSetUser();
-    case PWD:
-      return isSetPwd();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof FTClient)
-      return this.equals((FTClient)that);
-    return false;
-  }
-
-  public boolean equals(FTClient that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof FTClient))
+      return false;
+    FTClient that = (FTClient)_that;
 
-    boolean this_present_host = true && this.isSetHost();
-    boolean that_present_host = true && that.isSetHost();
-    if (this_present_host || that_present_host) {
-      if (!(this_present_host && that_present_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.host, that.host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
-    boolean this_present_user = true && this.isSetUser();
-    boolean that_present_user = true && that.isSetUser();
-    if (this_present_user || that_present_user) {
-      if (!(this_present_user && that_present_user))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.user, that.user))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetUser(), that.isSetUser(), this.user, that.user)) { return false; }
 
-    boolean this_present_pwd = true && this.isSetPwd();
-    boolean that_present_pwd = true && that.isSetPwd();
-    if (this_present_pwd || that_present_pwd) {
-      if (!(this_present_pwd && that_present_pwd))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.pwd, that.pwd))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetPwd(), that.isSetPwd(), this.pwd, that.pwd)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_host = true && (isSetHost());
-    builder.append(present_host);
-    if (present_host)
-      builder.append(host);
-
-    boolean present_user = true && (isSetUser());
-    builder.append(present_user);
-    if (present_user)
-      builder.append(user);
-
-    boolean present_pwd = true && (isSetPwd());
-    builder.append(present_pwd);
-    if (present_pwd)
-      builder.append(pwd);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {host, user, pwd});
   }
 
   @Override
@@ -321,7 +290,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host, other.host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetUser()).compareTo(other.isSetUser());
@@ -329,7 +298,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(user, other.user);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPwd()).compareTo(other.isSetPwd());
@@ -337,47 +306,47 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(pwd, other.pwd);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case USER:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.user = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PWD:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.pwd = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -418,19 +387,14 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("FTClient");
     sb.append(space);
     sb.append("(");
@@ -441,10 +405,10 @@ String space = prettyPrint ? " " : "";
     sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHost() == null) {
+    if (this.getHost() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHost(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
     if (isSetUser())
@@ -454,15 +418,15 @@ String space = prettyPrint ? " " : "";
       sb.append("user");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getUser() == null) {
+      if (this.getUser() == null) {
         sb.append("null");
       } else {
-          int __user_size = Math.min(this. getUser().length, 128);
+          int __user_size = Math.min(this.getUser().length, 128);
           for (int i = 0; i < __user_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getUser()[i]).length() > 1 ? Integer.toHexString(this. getUser()[i]).substring(Integer.toHexString(this. getUser()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getUser()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getUser()[i]).length() > 1 ? Integer.toHexString(this.getUser()[i]).substring(Integer.toHexString(this.getUser()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getUser()[i]).toUpperCase());
           }
-          if (this. getUser().length > 128) sb.append(" ...");
+          if (this.getUser().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -473,15 +437,15 @@ String space = prettyPrint ? " " : "";
       sb.append("pwd");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getPwd() == null) {
+      if (this.getPwd() == null) {
         sb.append("null");
       } else {
-          int __pwd_size = Math.min(this. getPwd().length, 128);
+          int __pwd_size = Math.min(this.getPwd().length, 128);
           for (int i = 0; i < __pwd_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getPwd()[i]).length() > 1 ? Integer.toHexString(this. getPwd()[i]).substring(Integer.toHexString(this. getPwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getPwd()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getPwd()[i]).length() > 1 ? Integer.toHexString(this.getPwd()[i]).substring(Integer.toHexString(this.getPwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPwd()[i]).toUpperCase());
           }
-          if (this. getPwd().length > 128) sb.append(" ...");
+          if (this.getPwd().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -495,7 +459,6 @@ String space = prettyPrint ? " " : "";
     if (host == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'host' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

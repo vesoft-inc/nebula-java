@@ -7,43 +7,49 @@
 package com.vesoft.nebula.meta;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class RoleType {
-  public static final int GOD = 1;
-  public static final int ADMIN = 2;
-  public static final int DBA = 3;
-  public static final int USER = 4;
-  public static final int GUEST = 5;
+public enum RoleType implements com.facebook.thrift.TEnum {
+  GOD(1),
+  ADMIN(2),
+  DBA(3),
+  USER(4),
+  GUEST(5);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = RoleType.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private RoleType(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static RoleType findByValue(int value) { 
+    switch (value) {
+      case 1:
+        return GOD;
+      case 2:
+        return ADMIN;
+      case 3:
+        return DBA;
+      case 4:
+        return USER;
+      case 5:
+        return GUEST;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

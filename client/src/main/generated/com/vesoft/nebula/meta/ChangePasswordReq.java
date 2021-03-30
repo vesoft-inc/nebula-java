@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
   public static final int ACCOUNT = 1;
   public static final int NEW_ENCODED_PWD = 2;
   public static final int OLD_ENCODED_PWD = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
@@ -63,14 +60,49 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
   }
 
   public ChangePasswordReq(
-    byte[] account,
-    byte[] new_encoded_pwd,
-    byte[] old_encoded_pwd)
-  {
+      byte[] account,
+      byte[] new_encoded_pwd,
+      byte[] old_encoded_pwd) {
     this();
     this.account = account;
     this.new_encoded_pwd = new_encoded_pwd;
     this.old_encoded_pwd = old_encoded_pwd;
+  }
+
+  public static class Builder {
+    private byte[] account;
+    private byte[] new_encoded_pwd;
+    private byte[] old_encoded_pwd;
+
+    public Builder() {
+    }
+
+    public Builder setAccount(final byte[] account) {
+      this.account = account;
+      return this;
+    }
+
+    public Builder setNew_encoded_pwd(final byte[] new_encoded_pwd) {
+      this.new_encoded_pwd = new_encoded_pwd;
+      return this;
+    }
+
+    public Builder setOld_encoded_pwd(final byte[] old_encoded_pwd) {
+      this.old_encoded_pwd = old_encoded_pwd;
+      return this;
+    }
+
+    public ChangePasswordReq build() {
+      ChangePasswordReq result = new ChangePasswordReq();
+      result.setAccount(this.account);
+      result.setNew_encoded_pwd(this.new_encoded_pwd);
+      result.setOld_encoded_pwd(this.old_encoded_pwd);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -92,12 +124,7 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
     return new ChangePasswordReq(this);
   }
 
-  @Deprecated
-  public ChangePasswordReq clone() {
-    return new ChangePasswordReq(this);
-  }
-
-  public byte[]  getAccount() {
+  public byte[] getAccount() {
     return this.account;
   }
 
@@ -115,13 +142,13 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
     return this.account != null;
   }
 
-  public void setAccountIsSet(boolean value) {
-    if (!value) {
+  public void setAccountIsSet(boolean __value) {
+    if (!__value) {
       this.account = null;
     }
   }
 
-  public byte[]  getNew_encoded_pwd() {
+  public byte[] getNew_encoded_pwd() {
     return this.new_encoded_pwd;
   }
 
@@ -139,13 +166,13 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
     return this.new_encoded_pwd != null;
   }
 
-  public void setNew_encoded_pwdIsSet(boolean value) {
-    if (!value) {
+  public void setNew_encoded_pwdIsSet(boolean __value) {
+    if (!__value) {
       this.new_encoded_pwd = null;
     }
   }
 
-  public byte[]  getOld_encoded_pwd() {
+  public byte[] getOld_encoded_pwd() {
     return this.old_encoded_pwd;
   }
 
@@ -163,35 +190,35 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
     return this.old_encoded_pwd != null;
   }
 
-  public void setOld_encoded_pwdIsSet(boolean value) {
-    if (!value) {
+  public void setOld_encoded_pwdIsSet(boolean __value) {
+    if (!__value) {
       this.old_encoded_pwd = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ACCOUNT:
-      if (value == null) {
+      if (__value == null) {
         unsetAccount();
       } else {
-        setAccount((byte[])value);
+        setAccount((byte[])__value);
       }
       break;
 
     case NEW_ENCODED_PWD:
-      if (value == null) {
+      if (__value == null) {
         unsetNew_encoded_pwd();
       } else {
-        setNew_encoded_pwd((byte[])value);
+        setNew_encoded_pwd((byte[])__value);
       }
       break;
 
     case OLD_ENCODED_PWD:
-      if (value == null) {
+      if (__value == null) {
         unsetOld_encoded_pwd();
       } else {
-        setOld_encoded_pwd((byte[])value);
+        setOld_encoded_pwd((byte[])__value);
       }
       break;
 
@@ -216,85 +243,28 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ACCOUNT:
-      return isSetAccount();
-    case NEW_ENCODED_PWD:
-      return isSetNew_encoded_pwd();
-    case OLD_ENCODED_PWD:
-      return isSetOld_encoded_pwd();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ChangePasswordReq)
-      return this.equals((ChangePasswordReq)that);
-    return false;
-  }
-
-  public boolean equals(ChangePasswordReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ChangePasswordReq))
+      return false;
+    ChangePasswordReq that = (ChangePasswordReq)_that;
 
-    boolean this_present_account = true && this.isSetAccount();
-    boolean that_present_account = true && that.isSetAccount();
-    if (this_present_account || that_present_account) {
-      if (!(this_present_account && that_present_account))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.account, that.account))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetAccount(), that.isSetAccount(), this.account, that.account)) { return false; }
 
-    boolean this_present_new_encoded_pwd = true && this.isSetNew_encoded_pwd();
-    boolean that_present_new_encoded_pwd = true && that.isSetNew_encoded_pwd();
-    if (this_present_new_encoded_pwd || that_present_new_encoded_pwd) {
-      if (!(this_present_new_encoded_pwd && that_present_new_encoded_pwd))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.new_encoded_pwd, that.new_encoded_pwd))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetNew_encoded_pwd(), that.isSetNew_encoded_pwd(), this.new_encoded_pwd, that.new_encoded_pwd)) { return false; }
 
-    boolean this_present_old_encoded_pwd = true && this.isSetOld_encoded_pwd();
-    boolean that_present_old_encoded_pwd = true && that.isSetOld_encoded_pwd();
-    if (this_present_old_encoded_pwd || that_present_old_encoded_pwd) {
-      if (!(this_present_old_encoded_pwd && that_present_old_encoded_pwd))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.old_encoded_pwd, that.old_encoded_pwd))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetOld_encoded_pwd(), that.isSetOld_encoded_pwd(), this.old_encoded_pwd, that.old_encoded_pwd)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_account = true && (isSetAccount());
-    builder.append(present_account);
-    if (present_account)
-      builder.append(account);
-
-    boolean present_new_encoded_pwd = true && (isSetNew_encoded_pwd());
-    builder.append(present_new_encoded_pwd);
-    if (present_new_encoded_pwd)
-      builder.append(new_encoded_pwd);
-
-    boolean present_old_encoded_pwd = true && (isSetOld_encoded_pwd());
-    builder.append(present_old_encoded_pwd);
-    if (present_old_encoded_pwd)
-      builder.append(old_encoded_pwd);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {account, new_encoded_pwd, old_encoded_pwd});
   }
 
   @Override
@@ -314,7 +284,7 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(account, other.account);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetNew_encoded_pwd()).compareTo(other.isSetNew_encoded_pwd());
@@ -322,7 +292,7 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(new_encoded_pwd, other.new_encoded_pwd);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetOld_encoded_pwd()).compareTo(other.isSetOld_encoded_pwd());
@@ -330,46 +300,46 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(old_encoded_pwd, other.old_encoded_pwd);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ACCOUNT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.account = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NEW_ENCODED_PWD:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.new_encoded_pwd = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case OLD_ENCODED_PWD:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.old_encoded_pwd = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -406,19 +376,14 @@ public class ChangePasswordReq implements TBase, java.io.Serializable, Cloneable
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ChangePasswordReq");
     sb.append(space);
     sb.append("(");
@@ -429,15 +394,15 @@ String space = prettyPrint ? " " : "";
     sb.append("account");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getAccount() == null) {
+    if (this.getAccount() == null) {
       sb.append("null");
     } else {
-        int __account_size = Math.min(this. getAccount().length, 128);
+        int __account_size = Math.min(this.getAccount().length, 128);
         for (int i = 0; i < __account_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getAccount()[i]).length() > 1 ? Integer.toHexString(this.getAccount()[i]).substring(Integer.toHexString(this.getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getAccount()[i]).toUpperCase());
         }
-        if (this. getAccount().length > 128) sb.append(" ...");
+        if (this.getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -445,15 +410,15 @@ String space = prettyPrint ? " " : "";
     sb.append("new_encoded_pwd");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getNew_encoded_pwd() == null) {
+    if (this.getNew_encoded_pwd() == null) {
       sb.append("null");
     } else {
-        int __new_encoded_pwd_size = Math.min(this. getNew_encoded_pwd().length, 128);
+        int __new_encoded_pwd_size = Math.min(this.getNew_encoded_pwd().length, 128);
         for (int i = 0; i < __new_encoded_pwd_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getNew_encoded_pwd()[i]).length() > 1 ? Integer.toHexString(this. getNew_encoded_pwd()[i]).substring(Integer.toHexString(this. getNew_encoded_pwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getNew_encoded_pwd()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getNew_encoded_pwd()[i]).length() > 1 ? Integer.toHexString(this.getNew_encoded_pwd()[i]).substring(Integer.toHexString(this.getNew_encoded_pwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getNew_encoded_pwd()[i]).toUpperCase());
         }
-        if (this. getNew_encoded_pwd().length > 128) sb.append(" ...");
+        if (this.getNew_encoded_pwd().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -461,15 +426,15 @@ String space = prettyPrint ? " " : "";
     sb.append("old_encoded_pwd");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getOld_encoded_pwd() == null) {
+    if (this.getOld_encoded_pwd() == null) {
       sb.append("null");
     } else {
-        int __old_encoded_pwd_size = Math.min(this. getOld_encoded_pwd().length, 128);
+        int __old_encoded_pwd_size = Math.min(this.getOld_encoded_pwd().length, 128);
         for (int i = 0; i < __old_encoded_pwd_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getOld_encoded_pwd()[i]).length() > 1 ? Integer.toHexString(this. getOld_encoded_pwd()[i]).substring(Integer.toHexString(this. getOld_encoded_pwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getOld_encoded_pwd()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getOld_encoded_pwd()[i]).length() > 1 ? Integer.toHexString(this.getOld_encoded_pwd()[i]).substring(Integer.toHexString(this.getOld_encoded_pwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getOld_encoded_pwd()[i]).toUpperCase());
         }
-        if (this. getOld_encoded_pwd().length > 128) sb.append(" ...");
+        if (this.getOld_encoded_pwd().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -479,7 +444,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }
