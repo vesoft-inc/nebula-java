@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
-    private int retry = 1;
 
     // Use a lock to protect the cache
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -146,7 +145,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      * @return
      */
     public List<SpaceNameID> listSpaces() {
-
+        int retry = 1;
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response = null;
         try {
@@ -205,6 +204,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      */
     @Override
     public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
+        int retry = 1;
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -306,6 +306,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      */
     @Override
     public List<TagItem> getTags(String spaceName) {
+        int retry = 1;
         ListTagsReq request = new ListTagsReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -338,6 +339,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Schema getTag(String spaceName, String tagName) {
+        int retry = 1;
         GetTagReq request = new GetTagReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -372,6 +374,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Map<String, Class> getTagSchema(String spaceName, String tagName, long version) {
+        int retry = 1;
         Map<String, Class> result = Maps.newHashMap();
         if (!spaceNameMap.containsKey(spaceName)) {
             return result;
@@ -455,6 +458,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      */
     @Override
     public List<EdgeItem> getEdges(String spaceName) {
+        int retry = 1;
         ListEdgesReq request = new ListEdgesReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -488,6 +492,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Schema getEdge(String spaceName, String edgeName) {
+        int retry = 1;
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -521,6 +526,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName, long version) {
+        int retry = 1;
         Map<String, Class> result = Maps.newHashMap();
         if (!spaceNameMap.containsKey(spaceName)) {
             return result;
@@ -546,10 +552,6 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
             return result;
         }
 
-        if (response == null) {
-            LOGGER.error("response of getEdge is null.");
-            return result;
-        }
         for (ColumnDef column : response.getSchema().columns) {
             result.put(column.name, NebulaTypeUtil.supportedTypeToClass(column.type.type));
         }
