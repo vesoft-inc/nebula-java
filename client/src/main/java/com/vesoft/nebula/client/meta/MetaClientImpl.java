@@ -51,6 +51,8 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaClientImpl.class);
 
+    private static final int RETRY_TIME = 1;
+
     // Use a lock to protect the cache
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Map<String, Integer> spaceNameMap = Maps.newHashMap();
@@ -145,7 +147,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      * @return
      */
     public List<SpaceNameID> listSpaces() {
-        int retry = 1;
+        int retry = RETRY_TIME;
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response = null;
         try {
@@ -204,7 +206,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      */
     @Override
     public Map<Integer, List<HostAndPort>> getPartsAlloc(String spaceName) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -306,7 +308,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      */
     @Override
     public List<TagItem> getTags(String spaceName) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         ListTagsReq request = new ListTagsReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -339,7 +341,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Schema getTag(String spaceName, String tagName) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         GetTagReq request = new GetTagReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -374,7 +376,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Map<String, Class> getTagSchema(String spaceName, String tagName, long version) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         Map<String, Class> result = Maps.newHashMap();
         if (!spaceNameMap.containsKey(spaceName)) {
             return result;
@@ -458,7 +460,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
      */
     @Override
     public List<EdgeItem> getEdges(String spaceName) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         ListEdgesReq request = new ListEdgesReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -492,7 +494,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Schema getEdge(String spaceName, String edgeName) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpaceIdFromCache(spaceName);
         request.setSpace_id(spaceID);
@@ -526,7 +528,7 @@ public class MetaClientImpl extends AbstractClient implements MetaClient {
 
     @Override
     public Map<String, Class> getEdgeSchema(String spaceName, String edgeName, long version) {
-        int retry = 1;
+        int retry = RETRY_TIME;
         Map<String, Class> result = Maps.newHashMap();
         if (!spaceNameMap.containsKey(spaceName)) {
             return result;
