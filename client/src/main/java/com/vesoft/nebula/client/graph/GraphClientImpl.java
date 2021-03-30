@@ -134,19 +134,17 @@ public class GraphClientImpl extends AbstractClient implements GraphClient {
         ExecutionResponse executionResponse = client.get().execute(sessionID, statement);
         int code = executionResponse.getError_code();
         if (code == ErrorCode.SUCCEEDED) {
-            return new ResultSet(executionResponse.getColumn_names(), executionResponse.getRows(),
-                    code, executionResponse.getError_msg(), executionResponse.getWarning_msg());
+            return new ResultSet(executionResponse);
         } else {
             String errorMsg = executionResponse.getError_msg();
             String warnMsg = executionResponse.getWarning_msg();
             if (errorMsg != null || !errorMsg.isEmpty()) {
-                LOGGER.error("Execute error: " + executionResponse.getError_msg());
+                LOGGER.error("Execute error: " + errorMsg);
             }
             if (warnMsg != null && !warnMsg.isEmpty()) {
-                LOGGER.warn("Execute warn: " + executionResponse.getWarning_msg());
+                LOGGER.warn("Execute warn: " + warnMsg);
             }
-            return new ResultSet(Lists.newArrayList(), Lists.newArrayList(), code, errorMsg,
-                    warnMsg);
+            return new ResultSet(executionResponse);
         }
     }
 
