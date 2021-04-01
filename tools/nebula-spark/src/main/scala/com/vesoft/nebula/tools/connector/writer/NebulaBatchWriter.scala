@@ -11,7 +11,12 @@ import java.util.concurrent.TimeUnit
 
 import com.vesoft.nebula.shaded.google.common.base.Optional
 import com.vesoft.nebula.shaded.google.common.net.HostAndPort
-import com.vesoft.nebula.shaded.google.common.util.concurrent.{FutureCallback, Futures, ListenableFuture, RateLimiter}
+import com.vesoft.nebula.shaded.google.common.util.concurrent.{
+  FutureCallback,
+  Futures,
+  ListenableFuture,
+  RateLimiter
+}
 import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.tools.connector.DataTypeEnum.{EDGE, VERTEX}
 import com.vesoft.nebula.tools.connector.exception.{GraphExecuteException, IllegalOptionException}
@@ -51,7 +56,7 @@ class NebulaBatchWriter(address: List[HostAndPort], nebulaOptions: NebulaOptions
     val vertices = data
       .map { row =>
         var vertexID =
-          NebulaUtils.resolveDataAndType(row, types(vertexIndex), vertexIndex).toString
+          NebulaUtils.resolveDataAndType(row, types(vertexIndex), vertexIndex, true).toString
         if (nebulaOptions.policy != null) {
           KeyPolicy.withName(nebulaOptions.policy) match {
             case KeyPolicy.UUID =>
@@ -112,8 +117,8 @@ class NebulaBatchWriter(address: List[HostAndPort], nebulaOptions: NebulaOptions
         val rank =
           if (rankField == null || "".equals(rankField.trim)) Option.empty
           else Option(row.getAs[Long](rankField))
-        var srcId = NebulaUtils.resolveDataAndType(row, types(srcIndex), srcIndex).toString
-        var dstId = NebulaUtils.resolveDataAndType(row, types(dstIndex), dstIndex).toString
+        var srcId = NebulaUtils.resolveDataAndType(row, types(srcIndex), srcIndex, true).toString
+        var dstId = NebulaUtils.resolveDataAndType(row, types(dstIndex), dstIndex, true).toString
         if (nebulaOptions.policy != null) {
           KeyPolicy.withName(nebulaOptions.policy) match {
             case KeyPolicy.UUID =>
@@ -215,7 +220,7 @@ class NebulaBatchWriter(address: List[HostAndPort], nebulaOptions: NebulaOptions
       index <- types.indices
       if index != vertexIndex
     } yield {
-      NebulaUtils.resolveDataAndType(record, types(index), index).toString
+      NebulaUtils.resolveDataAndType(record, types(index), index, false).toString
     }
     values.toList
   }
@@ -228,7 +233,7 @@ class NebulaBatchWriter(address: List[HostAndPort], nebulaOptions: NebulaOptions
       index <- types.indices
       if index != srcIndex && index != dstIndex
     } yield {
-      NebulaUtils.resolveDataAndType(record, types(index), index).toString
+      NebulaUtils.resolveDataAndType(record, types(index), index, false).toString
     }
     values.toList
   }

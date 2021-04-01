@@ -103,13 +103,13 @@ class NebulaVertexWriter(address: List[HostAndPort],
       index <- types.indices
       if index != vertexIndex
     } yield {
-      NebulaUtils.getRowColData(record, types(index), index).toString
+      NebulaUtils.getRowColData(record, types(index), index, false).toString
     }
     values.mkString(", ")
   }
 
   def extraValue(dataType: DataType, record: InternalRow, index: Int): String = {
-    NebulaUtils.getRowColData(record, dataType, index).toString
+    NebulaUtils.getRowColData(record, dataType, index, true).toString
   }
 
   def assignProps(schema: StructType): String = {
@@ -200,7 +200,7 @@ class NebulaEdgeWriter(address: List[HostAndPort],
       index <- types.indices
       if index != srcIndex && index != dstIndex
     } yield {
-      NebulaUtils.getRowColData(record, types(index), index).toString
+      NebulaUtils.getRowColData(record, types(index), index, false).toString
     }
     values.mkString(", ")
   }
@@ -210,8 +210,8 @@ class NebulaEdgeWriter(address: List[HostAndPort],
                   record: InternalRow,
                   srcIndex: Int,
                   dstIndex: Int): (String, String) = {
-    val srcValue = NebulaUtils.getRowColData(record, srcDataType, srcIndex)
-    val dstValue = NebulaUtils.getRowColData(record, dstDataType, dstIndex)
+    val srcValue = NebulaUtils.getRowColData(record, srcDataType, srcIndex, true)
+    val dstValue = NebulaUtils.getRowColData(record, dstDataType, dstIndex, true)
     (srcValue.toString, dstValue.toString)
   }
 
