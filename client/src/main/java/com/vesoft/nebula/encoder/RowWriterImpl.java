@@ -82,7 +82,7 @@ public class RowWriterImpl implements RowWriter {
         if (numNullables > 0) {
             numNullBytes = ((numNullables - 1) >> 3) + 1;
         }
-        buf = ByteBuffer.allocate(headerLen + numNullBytes + schema.size());
+        buf = ByteBuffer.allocate(headerLen + numNullBytes + schema.size() + Long.BYTES);
         buf.order(this.byteOrder);
         buf.put(header);
         if (ver > 0) {
@@ -767,9 +767,9 @@ public class RowWriterImpl implements RowWriter {
 
         // Reserve enough space to avoid memory re-allocation
         // Copy the data except the strings
-        temp = temp.put(buf.array());
+        temp = temp.put(buf.array(), 0, buf.array().length - Long.BYTES);
 
-        int strOffset = buf.array().length;
+        int strOffset = buf.array().length - Long.BYTES;
 
         // Now let's process all strings
         int strNum = 0;
@@ -812,7 +812,7 @@ public class RowWriterImpl implements RowWriter {
             buf = processOutOfSpace();
         }
         // Save the timestamp to the tail of buf
-        buf.putLong(getTimestamp());
+        buf.putLong(buf.array().length - Long.BYTES, getTimestamp());
     }
 
     private long getTimestamp() {
