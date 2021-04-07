@@ -137,27 +137,30 @@ object NebulaUtils {
     }
   }
 
-  def resolveDataAndType(row: Row, dataType: DataType, i: Int): Any = {
+  def resolveDataAndType(row: Row, dataType: DataType, i: Int, keepOriginalValue: Boolean): Any = {
     dataType match {
       case LongType    => row.getLong(i)
       case IntegerType => row.getInt(i)
       case DoubleType  => row.getDouble(i)
       case FloatType   => row.getFloat(i)
       case BooleanType => row.getBoolean(i)
-      case StringType  => row.getString(i)
-      case _           => row.getString(i)
+      case StringType  => if (keepOriginalValue) row.getString(i) else "\"" + row.getString(i) + "\""
+      case _           => throw new UnsupportedOperationException(s"${row} data type is not supported")
     }
   }
 
-  def getRowColData(row: InternalRow, dataType: DataType, i: Int): Any = {
+  def getRowColData(row: InternalRow,
+                    dataType: DataType,
+                    i: Int,
+                    keepOriginalValue: Boolean): Any = {
     dataType match {
       case LongType    => row.getLong(i)
       case IntegerType => row.getInt(i)
       case DoubleType  => row.getDouble(i)
       case FloatType   => row.getFloat(i)
       case BooleanType => row.getBoolean(i)
-      case StringType  => row.getString(i)
-      case _           => row.getString(i)
+      case StringType  => if (keepOriginalValue) row.getString(i) else "\"" + row.getString(i) + "\""
+      case _           => throw new UnsupportedOperationException(s"${row} data type is not supported")
     }
   }
 
