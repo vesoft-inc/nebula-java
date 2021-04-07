@@ -186,7 +186,7 @@
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>nebula-spark</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.thrift</groupId>
@@ -196,7 +196,7 @@
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>nebula-flink</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
 </project>
