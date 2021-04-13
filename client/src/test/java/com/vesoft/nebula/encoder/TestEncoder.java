@@ -210,6 +210,7 @@ public class TestEncoder {
         TagItem tagItem1 = cacheImplTest.getTag("test", "tag_no_default");
         TagItem tagItem2 = cacheImplTest.getTag("test", "tag_with_empty_string");
         TagItem tagItem3 = cacheImplTest.getTag("test", "tag_with_default");
+        TagItem tagItem4 = cacheImplTest.getTag("test", "tag_without_string");
         try {
             codec.encodeTag(tagItem1, colNames, colVals);
             Assert.fail();
