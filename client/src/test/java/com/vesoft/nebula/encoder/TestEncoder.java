@@ -210,6 +210,7 @@ public class TestEncoder {
         TagItem tagItem1 = cacheImplTest.getTag("test", "tag_no_default");
         TagItem tagItem2 = cacheImplTest.getTag("test", "tag_with_empty_string");
         TagItem tagItem3 = cacheImplTest.getTag("test", "tag_with_default");
+        TagItem tagItem4 = cacheImplTest.getTag("test", "tag_without_string");
         try {
             codec.encodeTag(tagItem1, colNames, colVals);
             Assert.fail();
@@ -252,6 +253,19 @@ public class TestEncoder {
             Assert.assertArrayEquals(e.getMessage().getBytes(),
                 "Unsupported default value yet".getBytes());
             assert (true);
+        }
+
+        // test without string type
+        try {
+            byte[] encodeStr = codec.encodeTag(
+                tagItem4, Arrays.asList("Col01"), Arrays.asList(1024));
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "09070004000000000000";
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
         }
     }
 
