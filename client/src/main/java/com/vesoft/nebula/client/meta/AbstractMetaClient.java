@@ -30,7 +30,7 @@ public class AbstractMetaClient {
         for (HostAddress address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
-            if (!InetAddresses.isInetAddress(host) || (port <= 0 || port >= 65535)) {
+            if ((!InetAddresses.isInetAddress(host) && !InetAddresses.isUriInetAddress(host)) || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                         host, port));
             }
