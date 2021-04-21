@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tools</artifactId>
         <groupId>com.vesoft</groupId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,7 +13,7 @@
 
     <properties>
         <flink.version>1.11-SNAPSHOT</flink.version>
-        <nebula.version>1.1.0</nebula.version>
+        <nebula.version>1.2.0</nebula.version>
         <scala.binary.version>2.11</scala.binary.version>
         <compiler.source.version>1.8</compiler.source.version>
         <compiler.target.version>1.8</compiler.target.version>
