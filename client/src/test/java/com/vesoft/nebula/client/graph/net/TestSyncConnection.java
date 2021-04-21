@@ -25,14 +25,14 @@ public class TestSyncConnection {
             Assert.assertNotEquals(0, sessionId);
 
             // Test execute
-            ExecutionResponse resp = connection.execute(sessionId, "SHOW SPACES;");
+            ExecutionResponse resp = connection.execute(sessionId, "SHOW SPACES;".getBytes());
             Assert.assertEquals(ErrorCode.SUCCEEDED, resp.error_code);
 
             // Test signout
             connection.signout(sessionId);
 
             try {
-                connection.execute(sessionId, "SHOW SPACES;");
+                connection.execute(sessionId, "SHOW SPACES;".getBytes());
             } catch (Exception e) {
                 assert (true);
             }

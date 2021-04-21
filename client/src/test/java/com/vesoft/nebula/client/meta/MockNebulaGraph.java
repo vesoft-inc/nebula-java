@@ -41,8 +41,7 @@ public class MockNebulaGraph {
                 System.exit(1);
             }
         } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException
-                | UnsupportedEncodingException e) {
+                | IOErrorException | AuthFailedException e) {
             e.printStackTrace();
         } finally {
             pool.close();

@@ -37,6 +37,12 @@ public class SyncConnection extends Connection {
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
         } catch (TException e) {
+            if (e instanceof TTransportException) {
+                TTransportException te = (TTransportException) e;
+                if (te.getType() == TTransportException.END_OF_FILE) {
+                    throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
+                }
+            }
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
     }
@@ -60,10 +66,10 @@ public class SyncConnection extends Connection {
         }
     }
 
-    public ExecutionResponse execute(long sessionID, String stmt)
+    public ExecutionResponse execute(long sessionID, byte[] stmt)
             throws IOErrorException {
         try {
-            return client.execute(sessionID, stmt.getBytes());
+            return client.execute(sessionID, stmt);
         } catch (TException e) {
             if (e instanceof TTransportException) {
                 TTransportException te = (TTransportException) e;

@@ -16,14 +16,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.pool2.impl.AbandonedConfig;
-import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.apache.commons.pool2.impl.DefaultPooledObjectInfo;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NebulaPool {
-    private GenericObjectPool<SyncConnection> objectPool = null;
+    private GenericKeyedObjectPool<HostAddress, SyncConnection> objectPool = null;
     private LoadBalancer loadBalancer;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     // the wait time to get idle connection, unit ms
@@ -66,19 +66,13 @@ public class NebulaPool {
         checkConfig(config);
         List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
-        ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
-        this.objectPool = new GenericObjectPool<>(objectPool);
-        GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
-        objConfig.setMinIdle(config.getMinConnSize());
+        GenericKeyedObjectPoolConfig objConfig = new GenericKeyedObjectPoolConfig();
         objConfig.setMaxTotal(config.getMaxConnSize());
-        objConfig.setMinEvictableIdleTimeMillis(
-                config.getIdleTime() <= 0 ? Long.MAX_VALUE : config.getIdleTime());
-        this.objectPool.setConfig(objConfig);
-
-        AbandonedConfig abandonedConfig = new AbandonedConfig();
-        abandonedConfig.setRemoveAbandonedOnBorrow(true);
-        this.objectPool.setAbandonedConfig(abandonedConfig);
-        return objectPool.init();
+        // objConfig.setTestOnBorrow(true);
+        ConnObjectPool connObjPool = new ConnObjectPool(config);
+        this.objectPool = new GenericKeyedObjectPool<>(connObjPool, objConfig);
+        this.objectPool.setMaxWaitMillis(waitTime);
+        return loadBalancer.isServersOK();
     }
 
     public void close() {
@@ -88,31 +82,57 @@ public class NebulaPool {
 
     public Session getSession(String userName, String password, boolean reconnect)
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
+        SyncConnection connection = getConnection();
+        log.info(String.format("Get connection to %s:%d",
+            connection.getServerAddress().getHost(),
+            connection.getServerAddress().getPort()));
+        long sessionID = connection.authenticate(userName, password);
+        HostAddress address = connection.getServerAddress();
+        returnConnection(connection);
+        return new Session(sessionID,address, this, reconnect);
+    }
+
+    public SyncConnection getConnection()
+        throws NotValidConnectionException, IOErrorException {
+        return getConnectionByKey(null);
+    }
+
+    public SyncConnection getConnectionByKey(HostAddress key)
+        throws NotValidConnectionException, IOErrorException {
+        HostAddress addr = key;
+        if (addr == null) {
+            addr = loadBalancer.getAddress();
+        }
+        SyncConnection connection;
         try {
-            // If no idle connection, try once
-            int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
-            SyncConnection connection = null;
-            while (retry-- > 0) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null || !connection.ping()) {
-                    continue;
-                }
-                break;
-            }
-            if (connection == null) {
-                throw new NotValidConnectionException("Get connection object failed.");
-            }
-            log.info(String.format("Get connection to %s:%d",
-                     connection.getServerAddress().getHost(),
-                     connection.getServerAddress().getPort()));
-            long sessionID = connection.authenticate(userName, password);
-            return new Session(connection, sessionID, this.objectPool, reconnect);
-        } catch (NotValidConnectionException | AuthFailedException | IOErrorException e) {
-            throw e;
-        } catch (IllegalStateException e) {
-            throw new NotValidConnectionException(e.getMessage());
+            connection = objectPool.borrowObject(addr);
         } catch (Exception e) {
-            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+            printPoolStatus();
+            if (e instanceof IOErrorException) {
+                throw (IOErrorException)e;
+            }
+            throw new NotValidConnectionException(e.getMessage());
+        }
+        if (connection == null) {
+            throw new NotValidConnectionException("Get connection object failed.");
+        }
+        return connection;
+    }
+
+    public void setInvalidateConn(SyncConnection connection) {
+        try {
+            objectPool.invalidateObject(connection.getServerAddress(), connection);
+            loadBalancer.updateServersStatus();
+        } catch (Exception e) {
+            log.warn("Set connection invalidate failed");
+        }
+    }
+
+    public void returnConnection(SyncConnection connection) {
+        try {
+            objectPool.returnObject(connection.getServerAddress(), connection);
+        } catch (Exception e) {
+            log.warn("Return object to pool failed.");
         }
     }
 
@@ -124,13 +144,30 @@ public class NebulaPool {
         return objectPool.getNumIdle();
     }
 
+    public int getCanUseNum() {
+        if (objectPool.getMaxTotal() - objectPool.getCreatedCount() > 0) {
+            return (int) (objectPool.getMaxTotal()
+                - objectPool.getCreatedCount() + objectPool.getNumIdle());
+        }
+        return objectPool.getNumIdle();
+    }
+
     public int getWaitersNum() {
         return objectPool.getNumWaiters();
     }
 
-    public void updateServerStatus() {
-        if (objectPool.getFactory() instanceof ConnObjectPool) {
-            ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();
+    private void printPoolStatus() {
+        String errorStr = new String();
+        for (String keyStr : objectPool.listAllObjects().keySet()) {
+            List<String> objStrs = new ArrayList<>();
+            for (DefaultPooledObjectInfo obj : objectPool.listAllObjects().get(keyStr)) {
+                objStrs.add(obj.toString());
+            }
+            errorStr += "{ Key: " + keyStr + ", { Object: " + objStrs + "}, ";
         }
+        log.error(errorStr);
+        log.info("objectPool.getMaxTotal(): " + objectPool.getMaxTotal());
+        log.info("objectPool.getCreatedCount(): " + objectPool.getCreatedCount());
+        log.info("objectPool.getNumIdle(): " + objectPool.getNumIdle());
     }
 }
