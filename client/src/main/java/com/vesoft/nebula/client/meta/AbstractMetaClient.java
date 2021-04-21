@@ -31,7 +31,8 @@ public class AbstractMetaClient {
             String host = address.getHost();
             int port = address.getPort();
             // check if the address is a valid ip address or uri address, and chechk if the port is a valid port
-            if ((!InetAddresses.isInetAddress(host) || !InetAddresses.isUriInetAddress(host)) || (port <= 0 || port >= 65535)) {
+            if ((!InetAddresses.isInetAddress(host) || !InetAddresses.isUriInetAddress(host))
+                || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                         host, port));
             }
