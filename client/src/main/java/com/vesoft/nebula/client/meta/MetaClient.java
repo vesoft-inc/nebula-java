@@ -372,7 +372,7 @@ public class MetaClient extends AbstractMetaClient {
     }
 
     /**
-     * get all servers
+     * get all Storaged servers
      */
     public synchronized Set<HostAddr> listHosts() {
         int retry = RETRY_TIMES;
