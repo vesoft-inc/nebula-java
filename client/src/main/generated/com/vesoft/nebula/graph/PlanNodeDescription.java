@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.graph;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -51,13 +48,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
   public static final int PROFILES = 5;
   public static final int BRANCH_INFO = 6;
   public static final int DEPENDENCIES = 7;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.REQUIRED, 
@@ -88,10 +85,9 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
   }
 
   public PlanNodeDescription(
-    byte[] name,
-    long id,
-    byte[] output_var)
-  {
+      byte[] name,
+      long id,
+      byte[] output_var) {
     this();
     this.name = name;
     this.id = id;
@@ -100,14 +96,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
   }
 
   public PlanNodeDescription(
-    byte[] name,
-    long id,
-    byte[] output_var,
-    List<Pair> description,
-    List<ProfilingStats> profiles,
-    PlanNodeBranchInfo branch_info,
-    List<Long> dependencies)
-  {
+      byte[] name,
+      long id,
+      byte[] output_var,
+      List<Pair> description,
+      List<ProfilingStats> profiles,
+      PlanNodeBranchInfo branch_info,
+      List<Long> dependencies) {
     this();
     this.name = name;
     this.id = id;
@@ -117,6 +112,75 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     this.profiles = profiles;
     this.branch_info = branch_info;
     this.dependencies = dependencies;
+  }
+
+  public static class Builder {
+    private byte[] name;
+    private long id;
+    private byte[] output_var;
+    private List<Pair> description;
+    private List<ProfilingStats> profiles;
+    private PlanNodeBranchInfo branch_info;
+    private List<Long> dependencies;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder setId(final long id) {
+      this.id = id;
+      __optional_isset.set(__ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setOutput_var(final byte[] output_var) {
+      this.output_var = output_var;
+      return this;
+    }
+
+    public Builder setDescription(final List<Pair> description) {
+      this.description = description;
+      return this;
+    }
+
+    public Builder setProfiles(final List<ProfilingStats> profiles) {
+      this.profiles = profiles;
+      return this;
+    }
+
+    public Builder setBranch_info(final PlanNodeBranchInfo branch_info) {
+      this.branch_info = branch_info;
+      return this;
+    }
+
+    public Builder setDependencies(final List<Long> dependencies) {
+      this.dependencies = dependencies;
+      return this;
+    }
+
+    public PlanNodeDescription build() {
+      PlanNodeDescription result = new PlanNodeDescription();
+      result.setName(this.name);
+      if (__optional_isset.get(__ID_ISSET_ID)) {
+        result.setId(this.id);
+      }
+      result.setOutput_var(this.output_var);
+      result.setDescription(this.description);
+      result.setProfiles(this.profiles);
+      result.setBranch_info(this.branch_info);
+      result.setDependencies(this.dependencies);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -150,12 +214,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return new PlanNodeDescription(this);
   }
 
-  @Deprecated
-  public PlanNodeDescription clone() {
-    return new PlanNodeDescription(this);
-  }
-
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -173,13 +232,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
 
-  public long  getId() {
+  public long getId() {
     return this.id;
   }
 
@@ -198,11 +257,11 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__ID_ISSET_ID);
   }
 
-  public void setIdIsSet(boolean value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, value);
+  public void setIdIsSet(boolean __value) {
+    __isset_bit_vector.set(__ID_ISSET_ID, __value);
   }
 
-  public byte[]  getOutput_var() {
+  public byte[] getOutput_var() {
     return this.output_var;
   }
 
@@ -220,13 +279,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return this.output_var != null;
   }
 
-  public void setOutput_varIsSet(boolean value) {
-    if (!value) {
+  public void setOutput_varIsSet(boolean __value) {
+    if (!__value) {
       this.output_var = null;
     }
   }
 
-  public List<Pair>  getDescription() {
+  public List<Pair> getDescription() {
     return this.description;
   }
 
@@ -244,13 +303,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return this.description != null;
   }
 
-  public void setDescriptionIsSet(boolean value) {
-    if (!value) {
+  public void setDescriptionIsSet(boolean __value) {
+    if (!__value) {
       this.description = null;
     }
   }
 
-  public List<ProfilingStats>  getProfiles() {
+  public List<ProfilingStats> getProfiles() {
     return this.profiles;
   }
 
@@ -268,13 +327,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return this.profiles != null;
   }
 
-  public void setProfilesIsSet(boolean value) {
-    if (!value) {
+  public void setProfilesIsSet(boolean __value) {
+    if (!__value) {
       this.profiles = null;
     }
   }
 
-  public PlanNodeBranchInfo  getBranch_info() {
+  public PlanNodeBranchInfo getBranch_info() {
     return this.branch_info;
   }
 
@@ -292,13 +351,13 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return this.branch_info != null;
   }
 
-  public void setBranch_infoIsSet(boolean value) {
-    if (!value) {
+  public void setBranch_infoIsSet(boolean __value) {
+    if (!__value) {
       this.branch_info = null;
     }
   }
 
-  public List<Long>  getDependencies() {
+  public List<Long> getDependencies() {
     return this.dependencies;
   }
 
@@ -316,68 +375,68 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     return this.dependencies != null;
   }
 
-  public void setDependenciesIsSet(boolean value) {
-    if (!value) {
+  public void setDependenciesIsSet(boolean __value) {
+    if (!__value) {
       this.dependencies = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
     case ID:
-      if (value == null) {
+      if (__value == null) {
         unsetId();
       } else {
-        setId((Long)value);
+        setId((Long)__value);
       }
       break;
 
     case OUTPUT_VAR:
-      if (value == null) {
+      if (__value == null) {
         unsetOutput_var();
       } else {
-        setOutput_var((byte[])value);
+        setOutput_var((byte[])__value);
       }
       break;
 
     case DESCRIPTION:
-      if (value == null) {
+      if (__value == null) {
         unsetDescription();
       } else {
-        setDescription((List<Pair>)value);
+        setDescription((List<Pair>)__value);
       }
       break;
 
     case PROFILES:
-      if (value == null) {
+      if (__value == null) {
         unsetProfiles();
       } else {
-        setProfiles((List<ProfilingStats>)value);
+        setProfiles((List<ProfilingStats>)__value);
       }
       break;
 
     case BRANCH_INFO:
-      if (value == null) {
+      if (__value == null) {
         unsetBranch_info();
       } else {
-        setBranch_info((PlanNodeBranchInfo)value);
+        setBranch_info((PlanNodeBranchInfo)__value);
       }
       break;
 
     case DEPENDENCIES:
-      if (value == null) {
+      if (__value == null) {
         unsetDependencies();
       } else {
-        setDependencies((List<Long>)value);
+        setDependencies((List<Long>)__value);
       }
       break;
 
@@ -414,149 +473,36 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case NAME:
-      return isSetName();
-    case ID:
-      return isSetId();
-    case OUTPUT_VAR:
-      return isSetOutput_var();
-    case DESCRIPTION:
-      return isSetDescription();
-    case PROFILES:
-      return isSetProfiles();
-    case BRANCH_INFO:
-      return isSetBranch_info();
-    case DEPENDENCIES:
-      return isSetDependencies();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof PlanNodeDescription)
-      return this.equals((PlanNodeDescription)that);
-    return false;
-  }
-
-  public boolean equals(PlanNodeDescription that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof PlanNodeDescription))
+      return false;
+    PlanNodeDescription that = (PlanNodeDescription)_that;
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
-    boolean this_present_id = true;
-    boolean that_present_id = true;
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.id, that.id)) { return false; }
 
-    boolean this_present_output_var = true && this.isSetOutput_var();
-    boolean that_present_output_var = true && that.isSetOutput_var();
-    if (this_present_output_var || that_present_output_var) {
-      if (!(this_present_output_var && that_present_output_var))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.output_var, that.output_var))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetOutput_var(), that.isSetOutput_var(), this.output_var, that.output_var)) { return false; }
 
-    boolean this_present_description = true && this.isSetDescription();
-    boolean that_present_description = true && that.isSetDescription();
-    if (this_present_description || that_present_description) {
-      if (!(this_present_description && that_present_description))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.description, that.description))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetDescription(), that.isSetDescription(), this.description, that.description)) { return false; }
 
-    boolean this_present_profiles = true && this.isSetProfiles();
-    boolean that_present_profiles = true && that.isSetProfiles();
-    if (this_present_profiles || that_present_profiles) {
-      if (!(this_present_profiles && that_present_profiles))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.profiles, that.profiles))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetProfiles(), that.isSetProfiles(), this.profiles, that.profiles)) { return false; }
 
-    boolean this_present_branch_info = true && this.isSetBranch_info();
-    boolean that_present_branch_info = true && that.isSetBranch_info();
-    if (this_present_branch_info || that_present_branch_info) {
-      if (!(this_present_branch_info && that_present_branch_info))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.branch_info, that.branch_info))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetBranch_info(), that.isSetBranch_info(), this.branch_info, that.branch_info)) { return false; }
 
-    boolean this_present_dependencies = true && this.isSetDependencies();
-    boolean that_present_dependencies = true && that.isSetDependencies();
-    if (this_present_dependencies || that_present_dependencies) {
-      if (!(this_present_dependencies && that_present_dependencies))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.dependencies, that.dependencies))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetDependencies(), that.isSetDependencies(), this.dependencies, that.dependencies)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    boolean present_id = true;
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
-
-    boolean present_output_var = true && (isSetOutput_var());
-    builder.append(present_output_var);
-    if (present_output_var)
-      builder.append(output_var);
-
-    boolean present_description = true && (isSetDescription());
-    builder.append(present_description);
-    if (present_description)
-      builder.append(description);
-
-    boolean present_profiles = true && (isSetProfiles());
-    builder.append(present_profiles);
-    if (present_profiles)
-      builder.append(profiles);
-
-    boolean present_branch_info = true && (isSetBranch_info());
-    builder.append(present_branch_info);
-    if (present_branch_info)
-      builder.append(branch_info);
-
-    boolean present_dependencies = true && (isSetDependencies());
-    builder.append(present_dependencies);
-    if (present_dependencies)
-      builder.append(dependencies);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {name, id, output_var, description, profiles, branch_info, dependencies});
   }
 
   @Override
@@ -576,7 +522,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
@@ -584,7 +530,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(id, other.id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetOutput_var()).compareTo(other.isSetOutput_var());
@@ -592,7 +538,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(output_var, other.output_var);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDescription()).compareTo(other.isSetDescription());
@@ -600,7 +546,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(description, other.description);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetProfiles()).compareTo(other.isSetProfiles());
@@ -608,7 +554,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(profiles, other.profiles);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetBranch_info()).compareTo(other.isSetBranch_info());
@@ -616,7 +562,7 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(branch_info, other.branch_info);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDependencies()).compareTo(other.isSetDependencies());
@@ -624,47 +570,47 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(dependencies, other.dependencies);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.id = iprot.readI64();
             setIdIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case OUTPUT_VAR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.output_var = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DESCRIPTION:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list5 = iprot.readListBegin();
               this.description = new ArrayList<Pair>(Math.max(0, _list5.size));
@@ -680,11 +626,11 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROFILES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list8 = iprot.readListBegin();
               this.profiles = new ArrayList<ProfilingStats>(Math.max(0, _list8.size));
@@ -700,19 +646,19 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case BRANCH_INFO:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.branch_info = new PlanNodeBranchInfo();
             this.branch_info.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DEPENDENCIES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list11 = iprot.readListBegin();
               this.dependencies = new ArrayList<Long>(Math.max(0, _list11.size));
@@ -727,11 +673,11 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -815,19 +761,14 @@ public class PlanNodeDescription implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("PlanNodeDescription");
     sb.append(space);
     sb.append("(");
@@ -838,15 +779,15 @@ String space = prettyPrint ? " " : "";
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -854,22 +795,22 @@ String space = prettyPrint ? " " : "";
     sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("output_var");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getOutput_var() == null) {
+    if (this.getOutput_var() == null) {
       sb.append("null");
     } else {
-        int __output_var_size = Math.min(this. getOutput_var().length, 128);
+        int __output_var_size = Math.min(this.getOutput_var().length, 128);
         for (int i = 0; i < __output_var_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getOutput_var()[i]).length() > 1 ? Integer.toHexString(this. getOutput_var()[i]).substring(Integer.toHexString(this. getOutput_var()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getOutput_var()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getOutput_var()[i]).length() > 1 ? Integer.toHexString(this.getOutput_var()[i]).substring(Integer.toHexString(this.getOutput_var()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getOutput_var()[i]).toUpperCase());
         }
-        if (this. getOutput_var().length > 128) sb.append(" ...");
+        if (this.getOutput_var().length > 128) sb.append(" ...");
     }
     first = false;
     if (isSetDescription())
@@ -879,10 +820,10 @@ String space = prettyPrint ? " " : "";
       sb.append("description");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getDescription() == null) {
+      if (this.getDescription() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getDescription(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getDescription(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -893,10 +834,10 @@ String space = prettyPrint ? " " : "";
       sb.append("profiles");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getProfiles() == null) {
+      if (this.getProfiles() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getProfiles(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getProfiles(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -907,10 +848,10 @@ String space = prettyPrint ? " " : "";
       sb.append("branch_info");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getBranch_info() == null) {
+      if (this.getBranch_info() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getBranch_info(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getBranch_info(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -921,10 +862,10 @@ String space = prettyPrint ? " " : "";
       sb.append("dependencies");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getDependencies() == null) {
+      if (this.getDependencies() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getDependencies(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getDependencies(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -942,7 +883,6 @@ String space = prettyPrint ? " " : "";
     if (output_var == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'output_var' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

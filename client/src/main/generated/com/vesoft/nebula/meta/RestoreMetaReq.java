@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
   public List<HostPair> hosts;
   public static final int FILES = 1;
   public static final int HOSTS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(FILES, new FieldMetaData("files", TFieldRequirementType.DEFAULT, 
@@ -60,12 +57,40 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public RestoreMetaReq(
-    List<byte[]> files,
-    List<HostPair> hosts)
-  {
+      List<byte[]> files,
+      List<HostPair> hosts) {
     this();
     this.files = files;
     this.hosts = hosts;
+  }
+
+  public static class Builder {
+    private List<byte[]> files;
+    private List<HostPair> hosts;
+
+    public Builder() {
+    }
+
+    public Builder setFiles(final List<byte[]> files) {
+      this.files = files;
+      return this;
+    }
+
+    public Builder setHosts(final List<HostPair> hosts) {
+      this.hosts = hosts;
+      return this;
+    }
+
+    public RestoreMetaReq build() {
+      RestoreMetaReq result = new RestoreMetaReq();
+      result.setFiles(this.files);
+      result.setHosts(this.hosts);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -84,12 +109,7 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
     return new RestoreMetaReq(this);
   }
 
-  @Deprecated
-  public RestoreMetaReq clone() {
-    return new RestoreMetaReq(this);
-  }
-
-  public List<byte[]>  getFiles() {
+  public List<byte[]> getFiles() {
     return this.files;
   }
 
@@ -107,13 +127,13 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
     return this.files != null;
   }
 
-  public void setFilesIsSet(boolean value) {
-    if (!value) {
+  public void setFilesIsSet(boolean __value) {
+    if (!__value) {
       this.files = null;
     }
   }
 
-  public List<HostPair>  getHosts() {
+  public List<HostPair> getHosts() {
     return this.hosts;
   }
 
@@ -131,28 +151,28 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
     return this.hosts != null;
   }
 
-  public void setHostsIsSet(boolean value) {
-    if (!value) {
+  public void setHostsIsSet(boolean __value) {
+    if (!__value) {
       this.hosts = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case FILES:
-      if (value == null) {
+      if (__value == null) {
         unsetFiles();
       } else {
-        setFiles((List<byte[]>)value);
+        setFiles((List<byte[]>)__value);
       }
       break;
 
     case HOSTS:
-      if (value == null) {
+      if (__value == null) {
         unsetHosts();
       } else {
-        setHosts((List<HostPair>)value);
+        setHosts((List<HostPair>)__value);
       }
       break;
 
@@ -174,69 +194,26 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case FILES:
-      return isSetFiles();
-    case HOSTS:
-      return isSetHosts();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof RestoreMetaReq)
-      return this.equals((RestoreMetaReq)that);
-    return false;
-  }
-
-  public boolean equals(RestoreMetaReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof RestoreMetaReq))
+      return false;
+    RestoreMetaReq that = (RestoreMetaReq)_that;
 
-    boolean this_present_files = true && this.isSetFiles();
-    boolean that_present_files = true && that.isSetFiles();
-    if (this_present_files || that_present_files) {
-      if (!(this_present_files && that_present_files))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.files, that.files))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetFiles(), that.isSetFiles(), this.files, that.files)) { return false; }
 
-    boolean this_present_hosts = true && this.isSetHosts();
-    boolean that_present_hosts = true && that.isSetHosts();
-    if (this_present_hosts || that_present_hosts) {
-      if (!(this_present_hosts && that_present_hosts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.hosts, that.hosts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHosts(), that.isSetHosts(), this.hosts, that.hosts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_files = true && (isSetFiles());
-    builder.append(present_files);
-    if (present_files)
-      builder.append(files);
-
-    boolean present_hosts = true && (isSetHosts());
-    builder.append(present_hosts);
-    if (present_hosts)
-      builder.append(hosts);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {files, hosts});
   }
 
   @Override
@@ -256,7 +233,7 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(files, other.files);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
@@ -264,64 +241,64 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case FILES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list245 = iprot.readListBegin();
-              this.files = new ArrayList<byte[]>(Math.max(0, _list245.size));
-              for (int _i246 = 0; 
-                   (_list245.size < 0) ? iprot.peekList() : (_i246 < _list245.size); 
-                   ++_i246)
+              TList _list254 = iprot.readListBegin();
+              this.files = new ArrayList<byte[]>(Math.max(0, _list254.size));
+              for (int _i255 = 0; 
+                   (_list254.size < 0) ? iprot.peekList() : (_i255 < _list254.size); 
+                   ++_i255)
               {
-                byte[] _elem247;
-                _elem247 = iprot.readBinary();
-                this.files.add(_elem247);
+                byte[] _elem256;
+                _elem256 = iprot.readBinary();
+                this.files.add(_elem256);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOSTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list248 = iprot.readListBegin();
-              this.hosts = new ArrayList<HostPair>(Math.max(0, _list248.size));
-              for (int _i249 = 0; 
-                   (_list248.size < 0) ? iprot.peekList() : (_i249 < _list248.size); 
-                   ++_i249)
+              TList _list257 = iprot.readListBegin();
+              this.hosts = new ArrayList<HostPair>(Math.max(0, _list257.size));
+              for (int _i258 = 0; 
+                   (_list257.size < 0) ? iprot.peekList() : (_i258 < _list257.size); 
+                   ++_i258)
               {
-                HostPair _elem250;
-                _elem250 = new HostPair();
-                _elem250.read(iprot);
-                this.hosts.add(_elem250);
+                HostPair _elem259;
+                _elem259 = new HostPair();
+                _elem259.read(iprot);
+                this.hosts.add(_elem259);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -341,8 +318,8 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.files.size()));
-        for (byte[] _iter251 : this.files)        {
-          oprot.writeBinary(_iter251);
+        for (byte[] _iter260 : this.files)        {
+          oprot.writeBinary(_iter260);
         }
         oprot.writeListEnd();
       }
@@ -352,8 +329,8 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (HostPair _iter252 : this.hosts)        {
-          _iter252.write(oprot);
+        for (HostPair _iter261 : this.hosts)        {
+          _iter261.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -365,19 +342,14 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("RestoreMetaReq");
     sb.append(space);
     sb.append("(");
@@ -388,10 +360,10 @@ String space = prettyPrint ? " " : "";
     sb.append("files");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFiles() == null) {
+    if (this.getFiles() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getFiles(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getFiles(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -399,10 +371,10 @@ String space = prettyPrint ? " " : "";
     sb.append("hosts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHosts() == null) {
+    if (this.getHosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHosts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHosts(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -412,7 +384,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

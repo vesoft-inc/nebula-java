@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -38,27 +35,25 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see ListenerType
    */
-  public int type;
+  public ListenerType type;
   public com.vesoft.nebula.HostAddr host;
   public int part_id;
   /**
    * 
    * @see HostStatus
    */
-  public int status;
+  public HostStatus status;
   public static final int TYPE = 1;
   public static final int HOST = 2;
   public static final int PART_ID = 3;
   public static final int STATUS = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __TYPE_ISSET_ID = 0;
-  private static final int __PART_ID_ISSET_ID = 1;
-  private static final int __STATUS_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __PART_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
@@ -80,19 +75,64 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public ListenerInfo(
-    int type,
-    com.vesoft.nebula.HostAddr host,
-    int part_id,
-    int status)
-  {
+      ListenerType type,
+      com.vesoft.nebula.HostAddr host,
+      int part_id,
+      HostStatus status) {
     this();
     this.type = type;
-    setTypeIsSet(true);
     this.host = host;
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.status = status;
-    setStatusIsSet(true);
+  }
+
+  public static class Builder {
+    private ListenerType type;
+    private com.vesoft.nebula.HostAddr host;
+    private int part_id;
+    private HostStatus status;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setType(final ListenerType type) {
+      this.type = type;
+      return this;
+    }
+
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setStatus(final HostStatus status) {
+      this.status = status;
+      return this;
+    }
+
+    public ListenerInfo build() {
+      ListenerInfo result = new ListenerInfo();
+      result.setType(this.type);
+      result.setHost(this.host);
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      result.setStatus(this.status);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -101,20 +141,19 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
   public ListenerInfo(ListenerInfo other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.type = TBaseHelper.deepCopy(other.type);
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
+    }
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
     }
     this.part_id = TBaseHelper.deepCopy(other.part_id);
-    this.status = TBaseHelper.deepCopy(other.status);
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
+    }
   }
 
   public ListenerInfo deepCopy() {
-    return new ListenerInfo(this);
-  }
-
-  @Deprecated
-  public ListenerInfo clone() {
     return new ListenerInfo(this);
   }
 
@@ -122,7 +161,7 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see ListenerType
    */
-  public int  getType() {
+  public ListenerType getType() {
     return this.type;
   }
 
@@ -130,26 +169,27 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see ListenerType
    */
-  public ListenerInfo setType(int type) {
+  public ListenerInfo setType(ListenerType type) {
     this.type = type;
-    setTypeIsSet(true);
     return this;
   }
 
   public void unsetType() {
-    __isset_bit_vector.clear(__TYPE_ISSET_ID);
+    this.type = null;
   }
 
   // Returns true if field type is set (has been assigned a value) and false otherwise
   public boolean isSetType() {
-    return __isset_bit_vector.get(__TYPE_ISSET_ID);
+    return this.type != null;
   }
 
-  public void setTypeIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  public void setTypeIsSet(boolean __value) {
+    if (!__value) {
+      this.type = null;
+    }
   }
 
-  public com.vesoft.nebula.HostAddr  getHost() {
+  public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
@@ -167,13 +207,13 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
     return this.host != null;
   }
 
-  public void setHostIsSet(boolean value) {
-    if (!value) {
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
       this.host = null;
     }
   }
 
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -192,15 +232,15 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
   /**
    * 
    * @see HostStatus
    */
-  public int  getStatus() {
+  public HostStatus getStatus() {
     return this.status;
   }
 
@@ -208,56 +248,57 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see HostStatus
    */
-  public ListenerInfo setStatus(int status) {
+  public ListenerInfo setStatus(HostStatus status) {
     this.status = status;
-    setStatusIsSet(true);
     return this;
   }
 
   public void unsetStatus() {
-    __isset_bit_vector.clear(__STATUS_ISSET_ID);
+    this.status = null;
   }
 
   // Returns true if field status is set (has been assigned a value) and false otherwise
   public boolean isSetStatus() {
-    return __isset_bit_vector.get(__STATUS_ISSET_ID);
+    return this.status != null;
   }
 
-  public void setStatusIsSet(boolean value) {
-    __isset_bit_vector.set(__STATUS_ISSET_ID, value);
+  public void setStatusIsSet(boolean __value) {
+    if (!__value) {
+      this.status = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetType();
       } else {
-        setType((Integer)value);
+        setType((ListenerType)__value);
       }
       break;
 
     case HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetHost();
       } else {
-        setHost((com.vesoft.nebula.HostAddr)value);
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case STATUS:
-      if (value == null) {
+      if (__value == null) {
         unsetStatus();
       } else {
-        setStatus((Integer)value);
+        setStatus((HostStatus)__value);
       }
       break;
 
@@ -285,101 +326,30 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TYPE:
-      return isSetType();
-    case HOST:
-      return isSetHost();
-    case PART_ID:
-      return isSetPart_id();
-    case STATUS:
-      return isSetStatus();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ListenerInfo)
-      return this.equals((ListenerInfo)that);
-    return false;
-  }
-
-  public boolean equals(ListenerInfo that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ListenerInfo))
+      return false;
+    ListenerInfo that = (ListenerInfo)_that;
 
-    boolean this_present_type = true;
-    boolean that_present_type = true;
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
-    boolean this_present_host = true && this.isSetHost();
-    boolean that_present_host = true && that.isSetHost();
-    if (this_present_host || that_present_host) {
-      if (!(this_present_host && that_present_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.host, that.host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_status = true;
-    boolean that_present_status = true;
-    if (this_present_status || that_present_status) {
-      if (!(this_present_status && that_present_status))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.status, that.status))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_type = true;
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
-    boolean present_host = true && (isSetHost());
-    builder.append(present_host);
-    if (present_host)
-      builder.append(host);
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_status = true;
-    builder.append(present_status);
-    if (present_status)
-      builder.append(status);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {type, host, part_id, status});
   }
 
   @Override
@@ -399,7 +369,7 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type, other.type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
@@ -407,7 +377,7 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host, other.host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
@@ -415,7 +385,7 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
@@ -423,57 +393,55 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(status, other.status);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TYPE:
-          if (field.type == TType.I32) {
-            this.type = iprot.readI32();
-            setTypeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.type = ListenerType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STATUS:
-          if (field.type == TType.I32) {
-            this.status = iprot.readI32();
-            setStatusIsSet(true);
+          if (__field.type == TType.I32) {
+            this.status = HostStatus.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -489,9 +457,11 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(TYPE_FIELD_DESC);
-    oprot.writeI32(this.type);
-    oprot.writeFieldEnd();
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.host != null) {
       oprot.writeFieldBegin(HOST_FIELD_DESC);
       this.host.write(oprot);
@@ -500,28 +470,25 @@ public class ListenerInfo implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeFieldBegin(PART_ID_FIELD_DESC);
     oprot.writeI32(this.part_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(STATUS_FIELD_DESC);
-    oprot.writeI32(this.status);
-    oprot.writeFieldEnd();
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeI32(this.status == null ? 0 : this.status.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ListenerInfo");
     sb.append(space);
     sb.append("(");
@@ -532,14 +499,18 @@ String space = prettyPrint ? " " : "";
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    String type_name = ListenerType.VALUES_TO_NAMES.get(this. getType());
-    if (type_name != null) {
-      sb.append(type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getType());
-    if (type_name != null) {
-      sb.append(")");
+    if (this.getType() == null) {
+      sb.append("null");
+    } else {
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getType());
+      if (type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -547,10 +518,10 @@ String space = prettyPrint ? " " : "";
     sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHost() == null) {
+    if (this.getHost() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHost(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -558,21 +529,25 @@ String space = prettyPrint ? " " : "";
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("status");
     sb.append(space);
     sb.append(":").append(space);
-    String status_name = HostStatus.VALUES_TO_NAMES.get(this. getStatus());
-    if (status_name != null) {
-      sb.append(status_name);
-      sb.append(" (");
-    }
-    sb.append(this. getStatus());
-    if (status_name != null) {
-      sb.append(")");
+    if (this.getStatus() == null) {
+      sb.append("null");
+    } else {
+      String status_name = this.getStatus() == null ? "null" : this.getStatus().name();
+      if (status_name != null) {
+        sb.append(status_name);
+        sb.append(" (");
+      }
+      sb.append(this.getStatus());
+      if (status_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -582,13 +557,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetType() && !ListenerType.VALID_VALUES.contains(type)){
-      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
-    }
-    if (isSetStatus() && !HostStatus.VALID_VALUES.contains(status)){
-      throw new TProtocolException("The field 'status' has been assigned the invalid value " + status);
-    }
   }
 
 }

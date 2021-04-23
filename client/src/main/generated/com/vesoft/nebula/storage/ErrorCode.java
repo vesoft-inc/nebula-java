@@ -7,85 +7,86 @@
 package com.vesoft.nebula.storage;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class ErrorCode {
-  public static final int SUCCEEDED = 0;
-  public static final int E_DISCONNECTED = -1;
-  public static final int E_FAILED_TO_CONNECT = -2;
-  public static final int E_RPC_FAILURE = -3;
-  public static final int E_LEADER_CHANGED = -11;
-  public static final int E_KEY_HAS_EXISTS = -12;
-  public static final int E_SPACE_NOT_FOUND = -13;
-  public static final int E_PART_NOT_FOUND = -14;
-  public static final int E_KEY_NOT_FOUND = -15;
-  public static final int E_CONSENSUS_ERROR = -16;
-  public static final int E_DATA_TYPE_MISMATCH = -17;
-  public static final int E_INVALID_FIELD_VALUE = -18;
-  public static final int E_REBUILD_INDEX_FAILED = -19;
-  public static final int E_INVALID_OPERATION = -20;
-  public static final int E_NOT_NULLABLE = -21;
-  public static final int E_FIELD_UNSET = -22;
-  public static final int E_OUT_OF_RANGE = -23;
-  public static final int E_ATOMIC_OP_FAILED = -24;
-  public static final int E_DATA_CONFLICT_ERROR = -25;
-  public static final int E_EDGE_PROP_NOT_FOUND = -31;
-  public static final int E_TAG_PROP_NOT_FOUND = -32;
-  public static final int E_IMPROPER_DATA_TYPE = -33;
-  public static final int E_EDGE_NOT_FOUND = -34;
-  public static final int E_TAG_NOT_FOUND = -35;
-  public static final int E_INVALID_SPACEVIDLEN = -36;
-  public static final int E_INDEX_NOT_FOUND = -37;
-  public static final int E_INVALID_FILTER = -41;
-  public static final int E_INVALID_UPDATER = -42;
-  public static final int E_INVALID_STORE = -43;
-  public static final int E_INVALID_PEER = -44;
-  public static final int E_RETRY_EXHAUSTED = -45;
-  public static final int E_TRANSFER_LEADER_FAILED = -46;
-  public static final int E_INVALID_STAT_TYPE = -47;
-  public static final int E_INVALID_VID = -48;
-  public static final int E_NO_TRANSFORMED = -49;
-  public static final int E_LOAD_META_FAILED = -51;
-  public static final int E_FAILED_TO_CHECKPOINT = -60;
-  public static final int E_CHECKPOINT_BLOCKED = -61;
-  public static final int E_BACKUP_FAILED = -65;
-  public static final int E_PARTIAL_RESULT = -71;
-  public static final int E_FILTER_OUT = -81;
-  public static final int E_INVALID_DATA = -82;
-  public static final int E_MUTATE_EDGE_CONFLICT = -85;
-  public static final int E_OUTDATED_LOCK = -86;
-  public static final int E_INVALID_TASK_PARA = -90;
-  public static final int E_USER_CANCEL = -99;
-  public static final int E_UNKNOWN = -100;
+public enum ErrorCode implements com.facebook.thrift.TEnum {
+  SUCCEEDED(0),
+  E_DISCONNECTED(-1),
+  E_FAILED_TO_CONNECT(-2),
+  E_RPC_FAILURE(-3),
+  E_LEADER_CHANGED(-11),
+  E_KEY_HAS_EXISTS(-12),
+  E_SPACE_NOT_FOUND(-13),
+  E_PART_NOT_FOUND(-14),
+  E_KEY_NOT_FOUND(-15),
+  E_CONSENSUS_ERROR(-16),
+  E_DATA_TYPE_MISMATCH(-17),
+  E_INVALID_FIELD_VALUE(-18),
+  E_REBUILD_INDEX_FAILED(-19),
+  E_INVALID_OPERATION(-20),
+  E_NOT_NULLABLE(-21),
+  E_FIELD_UNSET(-22),
+  E_OUT_OF_RANGE(-23),
+  E_ATOMIC_OP_FAILED(-24),
+  E_DATA_CONFLICT_ERROR(-25),
+  E_EDGE_PROP_NOT_FOUND(-31),
+  E_TAG_PROP_NOT_FOUND(-32),
+  E_IMPROPER_DATA_TYPE(-33),
+  E_EDGE_NOT_FOUND(-34),
+  E_TAG_NOT_FOUND(-35),
+  E_INVALID_SPACEVIDLEN(-36),
+  E_INDEX_NOT_FOUND(-37),
+  E_INVALID_FILTER(-41),
+  E_INVALID_UPDATER(-42),
+  E_INVALID_STORE(-43),
+  E_INVALID_PEER(-44),
+  E_RETRY_EXHAUSTED(-45),
+  E_TRANSFER_LEADER_FAILED(-46),
+  E_INVALID_STAT_TYPE(-47),
+  E_INVALID_VID(-48),
+  E_NO_TRANSFORMED(-49),
+  E_LOAD_META_FAILED(-51),
+  E_FAILED_TO_CHECKPOINT(-60),
+  E_CHECKPOINT_BLOCKED(-61),
+  E_BACKUP_FAILED(-65),
+  E_PARTIAL_RESULT(-71),
+  E_FILTER_OUT(-81),
+  E_INVALID_DATA(-82),
+  E_MUTATE_EDGE_CONFLICT(-85),
+  E_OUTDATED_LOCK(-86),
+  E_INVALID_TASK_PARA(-90),
+  E_USER_CANCEL(-99),
+  E_UNKNOWN(-100);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private static final Map<Integer, ErrorCode> INDEXED_VALUES = new HashMap<Integer, ErrorCode>();
 
   static {
-    try {
-      Class<?> klass = ErrorCode.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+    for (ErrorCode e: values()) {
+      INDEXED_VALUES.put(e.getValue(), e);
     }
+  }
 
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
+  private final int value;
 
-    VALID_VALUES = new IntRangeSet(values);
+  private ErrorCode(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static ErrorCode findByValue(int value) { 
+    return INDEXED_VALUES.get(value);
   }
 }

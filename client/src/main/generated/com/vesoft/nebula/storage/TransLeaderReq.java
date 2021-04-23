@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,7 +36,6 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int NEW_LEADER = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -47,6 +43,7 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -66,16 +63,59 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public TransLeaderReq(
-    int space_id,
-    int part_id,
-    com.vesoft.nebula.HostAddr new_leader)
-  {
+      int space_id,
+      int part_id,
+      com.vesoft.nebula.HostAddr new_leader) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.new_leader = new_leader;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private int part_id;
+    private com.vesoft.nebula.HostAddr new_leader;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setNew_leader(final com.vesoft.nebula.HostAddr new_leader) {
+      this.new_leader = new_leader;
+      return this;
+    }
+
+    public TransLeaderReq build() {
+      TransLeaderReq result = new TransLeaderReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      result.setNew_leader(this.new_leader);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -95,12 +135,7 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
     return new TransLeaderReq(this);
   }
 
-  @Deprecated
-  public TransLeaderReq clone() {
-    return new TransLeaderReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -119,11 +154,11 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -142,11 +177,11 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public com.vesoft.nebula.HostAddr  getNew_leader() {
+  public com.vesoft.nebula.HostAddr getNew_leader() {
     return this.new_leader;
   }
 
@@ -164,35 +199,35 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
     return this.new_leader != null;
   }
 
-  public void setNew_leaderIsSet(boolean value) {
-    if (!value) {
+  public void setNew_leaderIsSet(boolean __value) {
+    if (!__value) {
       this.new_leader = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case NEW_LEADER:
-      if (value == null) {
+      if (__value == null) {
         unsetNew_leader();
       } else {
-        setNew_leader((com.vesoft.nebula.HostAddr)value);
+        setNew_leader((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
@@ -217,85 +252,28 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PART_ID:
-      return isSetPart_id();
-    case NEW_LEADER:
-      return isSetNew_leader();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof TransLeaderReq)
-      return this.equals((TransLeaderReq)that);
-    return false;
-  }
-
-  public boolean equals(TransLeaderReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof TransLeaderReq))
+      return false;
+    TransLeaderReq that = (TransLeaderReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_new_leader = true && this.isSetNew_leader();
-    boolean that_present_new_leader = true && that.isSetNew_leader();
-    if (this_present_new_leader || that_present_new_leader) {
-      if (!(this_present_new_leader && that_present_new_leader))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.new_leader, that.new_leader))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetNew_leader(), that.isSetNew_leader(), this.new_leader, that.new_leader)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_new_leader = true && (isSetNew_leader());
-    builder.append(present_new_leader);
-    if (present_new_leader)
-      builder.append(new_leader);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, new_leader});
   }
 
   @Override
@@ -315,7 +293,7 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
@@ -323,7 +301,7 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetNew_leader()).compareTo(other.isSetNew_leader());
@@ -331,49 +309,49 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(new_leader, other.new_leader);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NEW_LEADER:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.new_leader = new com.vesoft.nebula.HostAddr();
             this.new_leader.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -406,19 +384,14 @@ public class TransLeaderReq implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("TransLeaderReq");
     sb.append(space);
     sb.append("(");
@@ -429,24 +402,24 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("new_leader");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getNew_leader() == null) {
+    if (this.getNew_leader() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getNew_leader(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getNew_leader(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -456,7 +429,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,34 +30,36 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TField EDGES_FIELD_DESC = new TField("edges", TType.MAP, (short)2);
   private static final TField SPACE_VERTICES_FIELD_DESC = new TField("space_vertices", TType.I64, (short)3);
   private static final TField SPACE_EDGES_FIELD_DESC = new TField("space_edges", TType.I64, (short)4);
-  private static final TField PART_CORELATIVITY_FIELD_DESC = new TField("part_corelativity", TType.MAP, (short)5);
-  private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)6);
+  private static final TField POSITIVE_PART_CORRELATIVITY_FIELD_DESC = new TField("positive_part_correlativity", TType.MAP, (short)5);
+  private static final TField NEGATIVE_PART_CORRELATIVITY_FIELD_DESC = new TField("negative_part_correlativity", TType.MAP, (short)6);
+  private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)7);
 
   public Map<byte[],Long> tag_vertices;
   public Map<byte[],Long> edges;
   public long space_vertices;
   public long space_edges;
-  public Map<Integer,List<Correlativity>> part_corelativity;
+  public Map<Integer,List<Correlativity>> positive_part_correlativity;
+  public Map<Integer,List<Correlativity>> negative_part_correlativity;
   /**
    * 
    * @see JobStatus
    */
-  public int status;
+  public JobStatus status;
   public static final int TAG_VERTICES = 1;
   public static final int EDGES = 2;
   public static final int SPACE_VERTICES = 3;
   public static final int SPACE_EDGES = 4;
-  public static final int PART_CORELATIVITY = 5;
-  public static final int STATUS = 6;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
+  public static final int POSITIVE_PART_CORRELATIVITY = 5;
+  public static final int NEGATIVE_PART_CORRELATIVITY = 6;
+  public static final int STATUS = 7;
 
   // isset id assignments
   private static final int __SPACE_VERTICES_ISSET_ID = 0;
   private static final int __SPACE_EDGES_ISSET_ID = 1;
-  private static final int __STATUS_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TAG_VERTICES, new FieldMetaData("tag_vertices", TFieldRequirementType.DEFAULT, 
@@ -75,7 +74,12 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(SPACE_EDGES, new FieldMetaData("space_edges", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(PART_CORELATIVITY, new FieldMetaData("part_corelativity", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(POSITIVE_PART_CORRELATIVITY, new FieldMetaData("positive_part_correlativity", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new StructMetaData(TType.STRUCT, Correlativity.class)))));
+    tmpMetaDataMap.put(NEGATIVE_PART_CORRELATIVITY, new FieldMetaData("negative_part_correlativity", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
@@ -93,13 +97,13 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public StatisItem(
-    Map<byte[],Long> tag_vertices,
-    Map<byte[],Long> edges,
-    long space_vertices,
-    long space_edges,
-    Map<Integer,List<Correlativity>> part_corelativity,
-    int status)
-  {
+      Map<byte[],Long> tag_vertices,
+      Map<byte[],Long> edges,
+      long space_vertices,
+      long space_edges,
+      Map<Integer,List<Correlativity>> positive_part_correlativity,
+      Map<Integer,List<Correlativity>> negative_part_correlativity,
+      JobStatus status) {
     this();
     this.tag_vertices = tag_vertices;
     this.edges = edges;
@@ -107,9 +111,81 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     setSpace_verticesIsSet(true);
     this.space_edges = space_edges;
     setSpace_edgesIsSet(true);
-    this.part_corelativity = part_corelativity;
+    this.positive_part_correlativity = positive_part_correlativity;
+    this.negative_part_correlativity = negative_part_correlativity;
     this.status = status;
-    setStatusIsSet(true);
+  }
+
+  public static class Builder {
+    private Map<byte[],Long> tag_vertices;
+    private Map<byte[],Long> edges;
+    private long space_vertices;
+    private long space_edges;
+    private Map<Integer,List<Correlativity>> positive_part_correlativity;
+    private Map<Integer,List<Correlativity>> negative_part_correlativity;
+    private JobStatus status;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setTag_vertices(final Map<byte[],Long> tag_vertices) {
+      this.tag_vertices = tag_vertices;
+      return this;
+    }
+
+    public Builder setEdges(final Map<byte[],Long> edges) {
+      this.edges = edges;
+      return this;
+    }
+
+    public Builder setSpace_vertices(final long space_vertices) {
+      this.space_vertices = space_vertices;
+      __optional_isset.set(__SPACE_VERTICES_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setSpace_edges(final long space_edges) {
+      this.space_edges = space_edges;
+      __optional_isset.set(__SPACE_EDGES_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPositive_part_correlativity(final Map<Integer,List<Correlativity>> positive_part_correlativity) {
+      this.positive_part_correlativity = positive_part_correlativity;
+      return this;
+    }
+
+    public Builder setNegative_part_correlativity(final Map<Integer,List<Correlativity>> negative_part_correlativity) {
+      this.negative_part_correlativity = negative_part_correlativity;
+      return this;
+    }
+
+    public Builder setStatus(final JobStatus status) {
+      this.status = status;
+      return this;
+    }
+
+    public StatisItem build() {
+      StatisItem result = new StatisItem();
+      result.setTag_vertices(this.tag_vertices);
+      result.setEdges(this.edges);
+      if (__optional_isset.get(__SPACE_VERTICES_ISSET_ID)) {
+        result.setSpace_vertices(this.space_vertices);
+      }
+      if (__optional_isset.get(__SPACE_EDGES_ISSET_ID)) {
+        result.setSpace_edges(this.space_edges);
+      }
+      result.setPositive_part_correlativity(this.positive_part_correlativity);
+      result.setNegative_part_correlativity(this.negative_part_correlativity);
+      result.setStatus(this.status);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -126,22 +202,22 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     }
     this.space_vertices = TBaseHelper.deepCopy(other.space_vertices);
     this.space_edges = TBaseHelper.deepCopy(other.space_edges);
-    if (other.isSetPart_corelativity()) {
-      this.part_corelativity = TBaseHelper.deepCopy(other.part_corelativity);
+    if (other.isSetPositive_part_correlativity()) {
+      this.positive_part_correlativity = TBaseHelper.deepCopy(other.positive_part_correlativity);
     }
-    this.status = TBaseHelper.deepCopy(other.status);
+    if (other.isSetNegative_part_correlativity()) {
+      this.negative_part_correlativity = TBaseHelper.deepCopy(other.negative_part_correlativity);
+    }
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
+    }
   }
 
   public StatisItem deepCopy() {
     return new StatisItem(this);
   }
 
-  @Deprecated
-  public StatisItem clone() {
-    return new StatisItem(this);
-  }
-
-  public Map<byte[],Long>  getTag_vertices() {
+  public Map<byte[],Long> getTag_vertices() {
     return this.tag_vertices;
   }
 
@@ -159,13 +235,13 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.tag_vertices != null;
   }
 
-  public void setTag_verticesIsSet(boolean value) {
-    if (!value) {
+  public void setTag_verticesIsSet(boolean __value) {
+    if (!__value) {
       this.tag_vertices = null;
     }
   }
 
-  public Map<byte[],Long>  getEdges() {
+  public Map<byte[],Long> getEdges() {
     return this.edges;
   }
 
@@ -183,13 +259,13 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.edges != null;
   }
 
-  public void setEdgesIsSet(boolean value) {
-    if (!value) {
+  public void setEdgesIsSet(boolean __value) {
+    if (!__value) {
       this.edges = null;
     }
   }
 
-  public long  getSpace_vertices() {
+  public long getSpace_vertices() {
     return this.space_vertices;
   }
 
@@ -208,11 +284,11 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__SPACE_VERTICES_ISSET_ID);
   }
 
-  public void setSpace_verticesIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_VERTICES_ISSET_ID, value);
+  public void setSpace_verticesIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_VERTICES_ISSET_ID, __value);
   }
 
-  public long  getSpace_edges() {
+  public long getSpace_edges() {
     return this.space_edges;
   }
 
@@ -231,31 +307,55 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__SPACE_EDGES_ISSET_ID);
   }
 
-  public void setSpace_edgesIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_EDGES_ISSET_ID, value);
+  public void setSpace_edgesIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_EDGES_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<Correlativity>>  getPart_corelativity() {
-    return this.part_corelativity;
+  public Map<Integer,List<Correlativity>> getPositive_part_correlativity() {
+    return this.positive_part_correlativity;
   }
 
-  public StatisItem setPart_corelativity(Map<Integer,List<Correlativity>> part_corelativity) {
-    this.part_corelativity = part_corelativity;
+  public StatisItem setPositive_part_correlativity(Map<Integer,List<Correlativity>> positive_part_correlativity) {
+    this.positive_part_correlativity = positive_part_correlativity;
     return this;
   }
 
-  public void unsetPart_corelativity() {
-    this.part_corelativity = null;
+  public void unsetPositive_part_correlativity() {
+    this.positive_part_correlativity = null;
   }
 
-  // Returns true if field part_corelativity is set (has been assigned a value) and false otherwise
-  public boolean isSetPart_corelativity() {
-    return this.part_corelativity != null;
+  // Returns true if field positive_part_correlativity is set (has been assigned a value) and false otherwise
+  public boolean isSetPositive_part_correlativity() {
+    return this.positive_part_correlativity != null;
   }
 
-  public void setPart_corelativityIsSet(boolean value) {
-    if (!value) {
-      this.part_corelativity = null;
+  public void setPositive_part_correlativityIsSet(boolean __value) {
+    if (!__value) {
+      this.positive_part_correlativity = null;
+    }
+  }
+
+  public Map<Integer,List<Correlativity>> getNegative_part_correlativity() {
+    return this.negative_part_correlativity;
+  }
+
+  public StatisItem setNegative_part_correlativity(Map<Integer,List<Correlativity>> negative_part_correlativity) {
+    this.negative_part_correlativity = negative_part_correlativity;
+    return this;
+  }
+
+  public void unsetNegative_part_correlativity() {
+    this.negative_part_correlativity = null;
+  }
+
+  // Returns true if field negative_part_correlativity is set (has been assigned a value) and false otherwise
+  public boolean isSetNegative_part_correlativity() {
+    return this.negative_part_correlativity != null;
+  }
+
+  public void setNegative_part_correlativityIsSet(boolean __value) {
+    if (!__value) {
+      this.negative_part_correlativity = null;
     }
   }
 
@@ -263,7 +363,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
    * 
    * @see JobStatus
    */
-  public int  getStatus() {
+  public JobStatus getStatus() {
     return this.status;
   }
 
@@ -271,73 +371,82 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
    * 
    * @see JobStatus
    */
-  public StatisItem setStatus(int status) {
+  public StatisItem setStatus(JobStatus status) {
     this.status = status;
-    setStatusIsSet(true);
     return this;
   }
 
   public void unsetStatus() {
-    __isset_bit_vector.clear(__STATUS_ISSET_ID);
+    this.status = null;
   }
 
   // Returns true if field status is set (has been assigned a value) and false otherwise
   public boolean isSetStatus() {
-    return __isset_bit_vector.get(__STATUS_ISSET_ID);
+    return this.status != null;
   }
 
-  public void setStatusIsSet(boolean value) {
-    __isset_bit_vector.set(__STATUS_ISSET_ID, value);
+  public void setStatusIsSet(boolean __value) {
+    if (!__value) {
+      this.status = null;
+    }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TAG_VERTICES:
-      if (value == null) {
+      if (__value == null) {
         unsetTag_vertices();
       } else {
-        setTag_vertices((Map<byte[],Long>)value);
+        setTag_vertices((Map<byte[],Long>)__value);
       }
       break;
 
     case EDGES:
-      if (value == null) {
+      if (__value == null) {
         unsetEdges();
       } else {
-        setEdges((Map<byte[],Long>)value);
+        setEdges((Map<byte[],Long>)__value);
       }
       break;
 
     case SPACE_VERTICES:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_vertices();
       } else {
-        setSpace_vertices((Long)value);
+        setSpace_vertices((Long)__value);
       }
       break;
 
     case SPACE_EDGES:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_edges();
       } else {
-        setSpace_edges((Long)value);
+        setSpace_edges((Long)__value);
       }
       break;
 
-    case PART_CORELATIVITY:
-      if (value == null) {
-        unsetPart_corelativity();
+    case POSITIVE_PART_CORRELATIVITY:
+      if (__value == null) {
+        unsetPositive_part_correlativity();
       } else {
-        setPart_corelativity((Map<Integer,List<Correlativity>>)value);
+        setPositive_part_correlativity((Map<Integer,List<Correlativity>>)__value);
+      }
+      break;
+
+    case NEGATIVE_PART_CORRELATIVITY:
+      if (__value == null) {
+        unsetNegative_part_correlativity();
+      } else {
+        setNegative_part_correlativity((Map<Integer,List<Correlativity>>)__value);
       }
       break;
 
     case STATUS:
-      if (value == null) {
+      if (__value == null) {
         unsetStatus();
       } else {
-        setStatus((Integer)value);
+        setStatus((JobStatus)__value);
       }
       break;
 
@@ -360,8 +469,11 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     case SPACE_EDGES:
       return new Long(getSpace_edges());
 
-    case PART_CORELATIVITY:
-      return getPart_corelativity();
+    case POSITIVE_PART_CORRELATIVITY:
+      return getPositive_part_correlativity();
+
+    case NEGATIVE_PART_CORRELATIVITY:
+      return getNegative_part_correlativity();
 
     case STATUS:
       return getStatus();
@@ -371,133 +483,36 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TAG_VERTICES:
-      return isSetTag_vertices();
-    case EDGES:
-      return isSetEdges();
-    case SPACE_VERTICES:
-      return isSetSpace_vertices();
-    case SPACE_EDGES:
-      return isSetSpace_edges();
-    case PART_CORELATIVITY:
-      return isSetPart_corelativity();
-    case STATUS:
-      return isSetStatus();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof StatisItem)
-      return this.equals((StatisItem)that);
-    return false;
-  }
-
-  public boolean equals(StatisItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof StatisItem))
+      return false;
+    StatisItem that = (StatisItem)_that;
 
-    boolean this_present_tag_vertices = true && this.isSetTag_vertices();
-    boolean that_present_tag_vertices = true && that.isSetTag_vertices();
-    if (this_present_tag_vertices || that_present_tag_vertices) {
-      if (!(this_present_tag_vertices && that_present_tag_vertices))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.tag_vertices, that.tag_vertices))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetTag_vertices(), that.isSetTag_vertices(), this.tag_vertices, that.tag_vertices)) { return false; }
 
-    boolean this_present_edges = true && this.isSetEdges();
-    boolean that_present_edges = true && that.isSetEdges();
-    if (this_present_edges || that_present_edges) {
-      if (!(this_present_edges && that_present_edges))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.edges, that.edges))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetEdges(), that.isSetEdges(), this.edges, that.edges)) { return false; }
 
-    boolean this_present_space_vertices = true;
-    boolean that_present_space_vertices = true;
-    if (this_present_space_vertices || that_present_space_vertices) {
-      if (!(this_present_space_vertices && that_present_space_vertices))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_vertices, that.space_vertices))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_vertices, that.space_vertices)) { return false; }
 
-    boolean this_present_space_edges = true;
-    boolean that_present_space_edges = true;
-    if (this_present_space_edges || that_present_space_edges) {
-      if (!(this_present_space_edges && that_present_space_edges))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_edges, that.space_edges))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_edges, that.space_edges)) { return false; }
 
-    boolean this_present_part_corelativity = true && this.isSetPart_corelativity();
-    boolean that_present_part_corelativity = true && that.isSetPart_corelativity();
-    if (this_present_part_corelativity || that_present_part_corelativity) {
-      if (!(this_present_part_corelativity && that_present_part_corelativity))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_corelativity, that.part_corelativity))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPositive_part_correlativity(), that.isSetPositive_part_correlativity(), this.positive_part_correlativity, that.positive_part_correlativity)) { return false; }
 
-    boolean this_present_status = true;
-    boolean that_present_status = true;
-    if (this_present_status || that_present_status) {
-      if (!(this_present_status && that_present_status))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.status, that.status))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetNegative_part_correlativity(), that.isSetNegative_part_correlativity(), this.negative_part_correlativity, that.negative_part_correlativity)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_tag_vertices = true && (isSetTag_vertices());
-    builder.append(present_tag_vertices);
-    if (present_tag_vertices)
-      builder.append(tag_vertices);
-
-    boolean present_edges = true && (isSetEdges());
-    builder.append(present_edges);
-    if (present_edges)
-      builder.append(edges);
-
-    boolean present_space_vertices = true;
-    builder.append(present_space_vertices);
-    if (present_space_vertices)
-      builder.append(space_vertices);
-
-    boolean present_space_edges = true;
-    builder.append(present_space_edges);
-    if (present_space_edges)
-      builder.append(space_edges);
-
-    boolean present_part_corelativity = true && (isSetPart_corelativity());
-    builder.append(present_part_corelativity);
-    if (present_part_corelativity)
-      builder.append(part_corelativity);
-
-    boolean present_status = true;
-    builder.append(present_status);
-    if (present_status)
-      builder.append(status);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {tag_vertices, edges, space_vertices, space_edges, positive_part_correlativity, negative_part_correlativity, status});
   }
 
   @Override
@@ -517,7 +532,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(tag_vertices, other.tag_vertices);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdges()).compareTo(other.isSetEdges());
@@ -525,7 +540,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edges, other.edges);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSpace_vertices()).compareTo(other.isSetSpace_vertices());
@@ -533,7 +548,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_vertices, other.space_vertices);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSpace_edges()).compareTo(other.isSetSpace_edges());
@@ -541,15 +556,23 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_edges, other.space_edges);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPositive_part_correlativity()).compareTo(other.isSetPositive_part_correlativity());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetPart_corelativity()).compareTo(other.isSetPart_corelativity());
+    lastComparison = TBaseHelper.compareTo(positive_part_correlativity, other.positive_part_correlativity);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetNegative_part_correlativity()).compareTo(other.isSetNegative_part_correlativity());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(part_corelativity, other.part_corelativity);
-    if (lastComparison != 0) {
+    lastComparison = TBaseHelper.compareTo(negative_part_correlativity, other.negative_part_correlativity);
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
@@ -557,25 +580,25 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(status, other.status);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TAG_VERTICES:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map42 = iprot.readMapBegin();
               this.tag_vertices = new HashMap<byte[],Long>(Math.max(0, 2*_map42.size));
@@ -592,11 +615,11 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGES:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map46 = iprot.readMapBegin();
               this.edges = new HashMap<byte[],Long>(Math.max(0, 2*_map46.size));
@@ -613,30 +636,30 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SPACE_VERTICES:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.space_vertices = iprot.readI64();
             setSpace_verticesIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SPACE_EDGES:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.space_edges = iprot.readI64();
             setSpace_edgesIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PART_CORELATIVITY:
-          if (field.type == TType.MAP) {
+        case POSITIVE_PART_CORRELATIVITY:
+          if (__field.type == TType.MAP) {
             {
               TMap _map50 = iprot.readMapBegin();
-              this.part_corelativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map50.size));
+              this.positive_part_correlativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map50.size));
               for (int _i51 = 0; 
                    (_map50.size < 0) ? iprot.peekMap() : (_i51 < _map50.size); 
                    ++_i51)
@@ -658,24 +681,57 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
                   }
                   iprot.readListEnd();
                 }
-                this.part_corelativity.put(_key52, _val53);
+                this.positive_part_correlativity.put(_key52, _val53);
               }
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case NEGATIVE_PART_CORRELATIVITY:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map57 = iprot.readMapBegin();
+              this.negative_part_correlativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map57.size));
+              for (int _i58 = 0; 
+                   (_map57.size < 0) ? iprot.peekMap() : (_i58 < _map57.size); 
+                   ++_i58)
+              {
+                int _key59;
+                List<Correlativity> _val60;
+                _key59 = iprot.readI32();
+                {
+                  TList _list61 = iprot.readListBegin();
+                  _val60 = new ArrayList<Correlativity>(Math.max(0, _list61.size));
+                  for (int _i62 = 0; 
+                       (_list61.size < 0) ? iprot.peekList() : (_i62 < _list61.size); 
+                       ++_i62)
+                  {
+                    Correlativity _elem63;
+                    _elem63 = new Correlativity();
+                    _elem63.read(iprot);
+                    _val60.add(_elem63);
+                  }
+                  iprot.readListEnd();
+                }
+                this.negative_part_correlativity.put(_key59, _val60);
+              }
+              iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STATUS:
-          if (field.type == TType.I32) {
-            this.status = iprot.readI32();
-            setStatusIsSet(true);
+          if (__field.type == TType.I32) {
+            this.status = JobStatus.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -695,9 +751,9 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(TAG_VERTICES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.I64, this.tag_vertices.size()));
-        for (Map.Entry<byte[], Long> _iter57 : this.tag_vertices.entrySet())        {
-          oprot.writeBinary(_iter57.getKey());
-          oprot.writeI64(_iter57.getValue());
+        for (Map.Entry<byte[], Long> _iter64 : this.tag_vertices.entrySet())        {
+          oprot.writeBinary(_iter64.getKey());
+          oprot.writeI64(_iter64.getValue());
         }
         oprot.writeMapEnd();
       }
@@ -707,9 +763,9 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(EDGES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.I64, this.edges.size()));
-        for (Map.Entry<byte[], Long> _iter58 : this.edges.entrySet())        {
-          oprot.writeBinary(_iter58.getKey());
-          oprot.writeI64(_iter58.getValue());
+        for (Map.Entry<byte[], Long> _iter65 : this.edges.entrySet())        {
+          oprot.writeBinary(_iter65.getKey());
+          oprot.writeI64(_iter65.getValue());
         }
         oprot.writeMapEnd();
       }
@@ -721,16 +777,16 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     oprot.writeFieldBegin(SPACE_EDGES_FIELD_DESC);
     oprot.writeI64(this.space_edges);
     oprot.writeFieldEnd();
-    if (this.part_corelativity != null) {
-      oprot.writeFieldBegin(PART_CORELATIVITY_FIELD_DESC);
+    if (this.positive_part_correlativity != null) {
+      oprot.writeFieldBegin(POSITIVE_PART_CORRELATIVITY_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.part_corelativity.size()));
-        for (Map.Entry<Integer, List<Correlativity>> _iter59 : this.part_corelativity.entrySet())        {
-          oprot.writeI32(_iter59.getKey());
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.positive_part_correlativity.size()));
+        for (Map.Entry<Integer, List<Correlativity>> _iter66 : this.positive_part_correlativity.entrySet())        {
+          oprot.writeI32(_iter66.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter59.getValue().size()));
-            for (Correlativity _iter60 : _iter59.getValue())            {
-              _iter60.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter66.getValue().size()));
+            for (Correlativity _iter67 : _iter66.getValue())            {
+              _iter67.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -739,28 +795,43 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(STATUS_FIELD_DESC);
-    oprot.writeI32(this.status);
-    oprot.writeFieldEnd();
+    if (this.negative_part_correlativity != null) {
+      oprot.writeFieldBegin(NEGATIVE_PART_CORRELATIVITY_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.negative_part_correlativity.size()));
+        for (Map.Entry<Integer, List<Correlativity>> _iter68 : this.negative_part_correlativity.entrySet())        {
+          oprot.writeI32(_iter68.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter68.getValue().size()));
+            for (Correlativity _iter69 : _iter68.getValue())            {
+              _iter69.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+        }
+        oprot.writeMapEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeI32(this.status == null ? 0 : this.status.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("StatisItem");
     sb.append(space);
     sb.append("(");
@@ -771,10 +842,10 @@ String space = prettyPrint ? " " : "";
     sb.append("tag_vertices");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTag_vertices() == null) {
+    if (this.getTag_vertices() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTag_vertices(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getTag_vertices(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -782,10 +853,10 @@ String space = prettyPrint ? " " : "";
     sb.append("edges");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdges() == null) {
+    if (this.getEdges() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdges(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getEdges(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -793,24 +864,35 @@ String space = prettyPrint ? " " : "";
     sb.append("space_vertices");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_vertices(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_vertices(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("space_edges");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_edges(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_edges(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("part_corelativity");
+    sb.append("positive_part_correlativity");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPart_corelativity() == null) {
+    if (this.getPositive_part_correlativity() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPart_corelativity(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPositive_part_correlativity(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("negative_part_correlativity");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getNegative_part_correlativity() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getNegative_part_correlativity(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -818,14 +900,18 @@ String space = prettyPrint ? " " : "";
     sb.append("status");
     sb.append(space);
     sb.append(":").append(space);
-    String status_name = JobStatus.VALUES_TO_NAMES.get(this. getStatus());
-    if (status_name != null) {
-      sb.append(status_name);
-      sb.append(" (");
-    }
-    sb.append(this. getStatus());
-    if (status_name != null) {
-      sb.append(")");
+    if (this.getStatus() == null) {
+      sb.append("null");
+    } else {
+      String status_name = this.getStatus() == null ? "null" : this.getStatus().name();
+      if (status_name != null) {
+        sb.append(status_name);
+        sb.append(" (");
+      }
+      sb.append(this.getStatus());
+      if (status_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -835,10 +921,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetStatus() && !JobStatus.VALID_VALUES.contains(status)){
-      throw new TProtocolException("The field 'status' has been assigned the invalid value " + status);
-    }
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -28,7 +25,6 @@ import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial", "unchecked" })
 public class Value extends TUnion<Value> {
-  public static boolean DEFAULT_PRETTY_PRINT = true;
   private static final TStruct STRUCT_DESC = new TStruct("Value");
   private static final TField N_VAL_FIELD_DESC = new TField("nVal", TType.I32, (short)1);
   private static final TField B_VAL_FIELD_DESC = new TField("bVal", TType.BOOL, (short)2);
@@ -63,6 +59,7 @@ public class Value extends TUnion<Value> {
   public static final int GVAL = 15;
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NVAL, new FieldMetaData("nVal", TFieldRequirementType.DEFAULT, 
@@ -102,186 +99,187 @@ public class Value extends TUnion<Value> {
     super();
   }
 
-  public Value(int setField, Object value) {
-    super(setField, value);
+  public Value(int setField, Object __value) {
+    super(setField, __value);
   }
 
   public Value(Value other) {
     super(other);
   }
+
   public Value deepCopy() {
     return new Value(this);
   }
 
-  public static Value nVal(int value) {
+  public static Value nVal(NullType __value) {
     Value x = new Value();
-    x.setNVal(value);
+    x.setNVal(__value);
     return x;
   }
 
-  public static Value bVal(boolean value) {
+  public static Value bVal(boolean __value) {
     Value x = new Value();
-    x.setBVal(value);
+    x.setBVal(__value);
     return x;
   }
 
-  public static Value iVal(long value) {
+  public static Value iVal(long __value) {
     Value x = new Value();
-    x.setIVal(value);
+    x.setIVal(__value);
     return x;
   }
 
-  public static Value fVal(double value) {
+  public static Value fVal(double __value) {
     Value x = new Value();
-    x.setFVal(value);
+    x.setFVal(__value);
     return x;
   }
 
-  public static Value sVal(byte[] value) {
+  public static Value sVal(byte[] __value) {
     Value x = new Value();
-    x.setSVal(value);
+    x.setSVal(__value);
     return x;
   }
 
-  public static Value dVal(Date value) {
+  public static Value dVal(Date __value) {
     Value x = new Value();
-    x.setDVal(value);
+    x.setDVal(__value);
     return x;
   }
 
-  public static Value tVal(Time value) {
+  public static Value tVal(Time __value) {
     Value x = new Value();
-    x.setTVal(value);
+    x.setTVal(__value);
     return x;
   }
 
-  public static Value dtVal(DateTime value) {
+  public static Value dtVal(DateTime __value) {
     Value x = new Value();
-    x.setDtVal(value);
+    x.setDtVal(__value);
     return x;
   }
 
-  public static Value vVal(Vertex value) {
+  public static Value vVal(Vertex __value) {
     Value x = new Value();
-    x.setVVal(value);
+    x.setVVal(__value);
     return x;
   }
 
-  public static Value eVal(Edge value) {
+  public static Value eVal(Edge __value) {
     Value x = new Value();
-    x.setEVal(value);
+    x.setEVal(__value);
     return x;
   }
 
-  public static Value pVal(Path value) {
+  public static Value pVal(Path __value) {
     Value x = new Value();
-    x.setPVal(value);
+    x.setPVal(__value);
     return x;
   }
 
-  public static Value lVal(NList value) {
+  public static Value lVal(NList __value) {
     Value x = new Value();
-    x.setLVal(value);
+    x.setLVal(__value);
     return x;
   }
 
-  public static Value mVal(NMap value) {
+  public static Value mVal(NMap __value) {
     Value x = new Value();
-    x.setMVal(value);
+    x.setMVal(__value);
     return x;
   }
 
-  public static Value uVal(NSet value) {
+  public static Value uVal(NSet __value) {
     Value x = new Value();
-    x.setUVal(value);
+    x.setUVal(__value);
     return x;
   }
 
-  public static Value gVal(DataSet value) {
+  public static Value gVal(DataSet __value) {
     Value x = new Value();
-    x.setGVal(value);
+    x.setGVal(__value);
     return x;
   }
 
 
   @Override
-  protected void checkType(short setField, Object value) throws ClassCastException {
+  protected void checkType(short setField, Object __value) throws ClassCastException {
     switch (setField) {
       case NVAL:
-        if (value instanceof Integer) {
+        if (__value instanceof NullType) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Integer for field 'nVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NullType for field 'nVal', but got " + __value.getClass().getSimpleName());
       case BVAL:
-        if (value instanceof Boolean) {
+        if (__value instanceof Boolean) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Boolean for field 'bVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Boolean for field 'bVal', but got " + __value.getClass().getSimpleName());
       case IVAL:
-        if (value instanceof Long) {
+        if (__value instanceof Long) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Long for field 'iVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Long for field 'iVal', but got " + __value.getClass().getSimpleName());
       case FVAL:
-        if (value instanceof Double) {
+        if (__value instanceof Double) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Double for field 'fVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Double for field 'fVal', but got " + __value.getClass().getSimpleName());
       case SVAL:
-        if (value instanceof byte[]) {
+        if (__value instanceof byte[]) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type byte[] for field 'sVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type byte[] for field 'sVal', but got " + __value.getClass().getSimpleName());
       case DVAL:
-        if (value instanceof Date) {
+        if (__value instanceof Date) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Date for field 'dVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Date for field 'dVal', but got " + __value.getClass().getSimpleName());
       case TVAL:
-        if (value instanceof Time) {
+        if (__value instanceof Time) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Time for field 'tVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Time for field 'tVal', but got " + __value.getClass().getSimpleName());
       case DTVAL:
-        if (value instanceof DateTime) {
+        if (__value instanceof DateTime) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type DateTime for field 'dtVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type DateTime for field 'dtVal', but got " + __value.getClass().getSimpleName());
       case VVAL:
-        if (value instanceof Vertex) {
+        if (__value instanceof Vertex) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Vertex for field 'vVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Vertex for field 'vVal', but got " + __value.getClass().getSimpleName());
       case EVAL:
-        if (value instanceof Edge) {
+        if (__value instanceof Edge) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Edge for field 'eVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Edge for field 'eVal', but got " + __value.getClass().getSimpleName());
       case PVAL:
-        if (value instanceof Path) {
+        if (__value instanceof Path) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type Path for field 'pVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type Path for field 'pVal', but got " + __value.getClass().getSimpleName());
       case LVAL:
-        if (value instanceof NList) {
+        if (__value instanceof NList) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type NList for field 'lVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NList for field 'lVal', but got " + __value.getClass().getSimpleName());
       case MVAL:
-        if (value instanceof NMap) {
+        if (__value instanceof NMap) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type NMap for field 'mVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NMap for field 'mVal', but got " + __value.getClass().getSimpleName());
       case UVAL:
-        if (value instanceof NSet) {
+        if (__value instanceof NSet) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type NSet for field 'uVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type NSet for field 'uVal', but got " + __value.getClass().getSimpleName());
       case GVAL:
-        if (value instanceof DataSet) {
+        if (__value instanceof DataSet) {
           break;
         }
-        throw new ClassCastException("Was expecting value of type DataSet for field 'gVal', but got " + value.getClass().getSimpleName());
+        throw new ClassCastException("Was expecting value of type DataSet for field 'gVal', but got " + __value.getClass().getSimpleName());
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -292,257 +290,228 @@ public class Value extends TUnion<Value> {
     setField_ = 0;
     value_ = null;
     iprot.readStructBegin(metaDataMap);
-    TField field = iprot.readFieldBegin();
-    if (field.type != TType.STOP)
+    TField __field = iprot.readFieldBegin();
+    if (__field.type != TType.STOP)
     {
-      value_ = readValue(iprot, field);
+      value_ = readValue(iprot, __field);
       if (value_ != null)
       {
-        switch (field.id) {
+        switch (__field.id) {
           case NVAL:
-            if (field.type == N_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == N_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case BVAL:
-            if (field.type == B_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == B_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case IVAL:
-            if (field.type == I_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == I_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case FVAL:
-            if (field.type == F_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == F_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case SVAL:
-            if (field.type == S_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == S_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case DVAL:
-            if (field.type == D_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == D_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case TVAL:
-            if (field.type == T_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == T_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case DTVAL:
-            if (field.type == DT_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == DT_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case VVAL:
-            if (field.type == V_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == V_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case EVAL:
-            if (field.type == E_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == E_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case PVAL:
-            if (field.type == P_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == P_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case LVAL:
-            if (field.type == L_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == L_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case MVAL:
-            if (field.type == M_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == M_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case UVAL:
-            if (field.type == U_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == U_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
           case GVAL:
-            if (field.type == G_VAL_FIELD_DESC.type) {
-              setField_ = field.id;
+            if (__field.type == G_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
             }
             break;
         }
       }
       iprot.readFieldEnd();
-      iprot.readFieldBegin();
-      iprot.readFieldEnd();
+      TField __stopField = iprot.readFieldBegin();
+      if (__stopField.type != TType.STOP) {
+        throw new TProtocolException(TProtocolException.INVALID_DATA, "Union 'Value' is missing a STOP byte");
+      }
     }
     iprot.readStructEnd();
   }
 
   @Override
-  protected Object readValue(TProtocol iprot, TField field) throws TException {
-    switch (field.id) {
+  protected Object readValue(TProtocol iprot, TField __field) throws TException {
+    switch (__field.id) {
       case NVAL:
-        if (field.type == N_VAL_FIELD_DESC.type) {
-          Integer nVal;
-          nVal = iprot.readI32();
+        if (__field.type == N_VAL_FIELD_DESC.type) {
+          NullType nVal;
+          nVal = NullType.findByValue(iprot.readI32());
           return nVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case BVAL:
-        if (field.type == B_VAL_FIELD_DESC.type) {
+        if (__field.type == B_VAL_FIELD_DESC.type) {
           Boolean bVal;
           bVal = iprot.readBool();
           return bVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case IVAL:
-        if (field.type == I_VAL_FIELD_DESC.type) {
+        if (__field.type == I_VAL_FIELD_DESC.type) {
           Long iVal;
           iVal = iprot.readI64();
           return iVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case FVAL:
-        if (field.type == F_VAL_FIELD_DESC.type) {
+        if (__field.type == F_VAL_FIELD_DESC.type) {
           Double fVal;
           fVal = iprot.readDouble();
           return fVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case SVAL:
-        if (field.type == S_VAL_FIELD_DESC.type) {
+        if (__field.type == S_VAL_FIELD_DESC.type) {
           byte[] sVal;
           sVal = iprot.readBinary();
           return sVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case DVAL:
-        if (field.type == D_VAL_FIELD_DESC.type) {
+        if (__field.type == D_VAL_FIELD_DESC.type) {
           Date dVal;
           dVal = new Date();
           dVal.read(iprot);
           return dVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case TVAL:
-        if (field.type == T_VAL_FIELD_DESC.type) {
+        if (__field.type == T_VAL_FIELD_DESC.type) {
           Time tVal;
           tVal = new Time();
           tVal.read(iprot);
           return tVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case DTVAL:
-        if (field.type == DT_VAL_FIELD_DESC.type) {
+        if (__field.type == DT_VAL_FIELD_DESC.type) {
           DateTime dtVal;
           dtVal = new DateTime();
           dtVal.read(iprot);
           return dtVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case VVAL:
-        if (field.type == V_VAL_FIELD_DESC.type) {
+        if (__field.type == V_VAL_FIELD_DESC.type) {
           Vertex vVal;
           vVal = new Vertex();
           vVal.read(iprot);
           return vVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case EVAL:
-        if (field.type == E_VAL_FIELD_DESC.type) {
+        if (__field.type == E_VAL_FIELD_DESC.type) {
           Edge eVal;
           eVal = new Edge();
           eVal.read(iprot);
           return eVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case PVAL:
-        if (field.type == P_VAL_FIELD_DESC.type) {
+        if (__field.type == P_VAL_FIELD_DESC.type) {
           Path pVal;
           pVal = new Path();
           pVal.read(iprot);
           return pVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case LVAL:
-        if (field.type == L_VAL_FIELD_DESC.type) {
+        if (__field.type == L_VAL_FIELD_DESC.type) {
           NList lVal;
           lVal = new NList();
           lVal.read(iprot);
           return lVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case MVAL:
-        if (field.type == M_VAL_FIELD_DESC.type) {
+        if (__field.type == M_VAL_FIELD_DESC.type) {
           NMap mVal;
           mVal = new NMap();
           mVal.read(iprot);
           return mVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case UVAL:
-        if (field.type == U_VAL_FIELD_DESC.type) {
+        if (__field.type == U_VAL_FIELD_DESC.type) {
           NSet uVal;
           uVal = new NSet();
           uVal.read(iprot);
           return uVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
+        break;
       case GVAL:
-        if (field.type == G_VAL_FIELD_DESC.type) {
+        if (__field.type == G_VAL_FIELD_DESC.type) {
           DataSet gVal;
           gVal = new DataSet();
           gVal.read(iprot);
           return gVal;
-        } else {
-          TProtocolUtil.skip(iprot, field.type);
-          return null;
         }
-      default:
-        TProtocolUtil.skip(iprot, field.type);
-        return null;
+        break;
     }
+    TProtocolUtil.skip(iprot, __field.type);
+    return null;
   }
 
   @Override
-  protected void writeValue(TProtocol oprot, short setField, Object value) throws TException {
+  protected void writeValue(TProtocol oprot, short setField, Object __value) throws TException {
     switch (setField) {
       case NVAL:
-        Integer nVal = (Integer)getFieldValue();
-        oprot.writeI32(nVal);
+        NullType nVal = (NullType)getFieldValue();
+        oprot.writeI32(nVal == null ? 0 : nVal.getValue());
         return;
       case BVAL:
         Boolean bVal = (Boolean)getFieldValue();
@@ -648,218 +617,152 @@ public class Value extends TUnion<Value> {
     return STRUCT_DESC;
   }
 
+  @Override
+  protected Map<Integer, FieldMetaData> getMetaDataMap() { return metaDataMap; }
+
+  private Object __getValue(int expectedFieldId) {
+    if (getSetField() == expectedFieldId) {
+      return getFieldValue();
+    } else {
+      throw new RuntimeException("Cannot get field '" + getFieldDesc(expectedFieldId).name + "' because union is currently set to " + getFieldDesc(getSetField()).name);
+    }
+  }
+
+  private void __setValue(int fieldId, Object __value) {
+    if (__value == null) throw new NullPointerException();
+    setField_ = fieldId;
+    value_ = __value;
+  }
+
   /**
    * 
    * @see NullType
    */
-  public int  getNVal() {
-    if (getSetField() == NVAL) {
-      return (Integer)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'nVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public NullType getNVal() {
+    return (NullType) __getValue(NVAL);
   }
 
   /**
    * 
    * @see NullType
    */
-  public void setNVal(int value) {
-    setField_ = NVAL;
-    value_ = value;
+  public void setNVal(NullType __value) {
+    __setValue(NVAL, __value);
   }
 
-  public boolean  isBVal() {
-    if (getSetField() == BVAL) {
-      return (Boolean)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'bVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public boolean isBVal() {
+    return (Boolean) __getValue(BVAL);
   }
 
-  public void setBVal(boolean value) {
+  public void setBVal(boolean __value) {
     setField_ = BVAL;
-    value_ = value;
+    value_ = __value;
   }
 
-  public long  getIVal() {
-    if (getSetField() == IVAL) {
-      return (Long)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'iVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public long getIVal() {
+    return (Long) __getValue(IVAL);
   }
 
-  public void setIVal(long value) {
+  public void setIVal(long __value) {
     setField_ = IVAL;
-    value_ = value;
+    value_ = __value;
   }
 
-  public double  getFVal() {
-    if (getSetField() == FVAL) {
-      return (Double)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'fVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public double getFVal() {
+    return (Double) __getValue(FVAL);
   }
 
-  public void setFVal(double value) {
+  public void setFVal(double __value) {
     setField_ = FVAL;
-    value_ = value;
+    value_ = __value;
   }
 
-  public byte[]  getSVal() {
-    if (getSetField() == SVAL) {
-      return (byte[])getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'sVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public byte[] getSVal() {
+    return (byte[]) __getValue(SVAL);
   }
 
-  public void setSVal(byte[] value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = SVAL;
-    value_ = value;
+  public void setSVal(byte[] __value) {
+    __setValue(SVAL, __value);
   }
 
-  public Date  getDVal() {
-    if (getSetField() == DVAL) {
-      return (Date)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'dVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public Date getDVal() {
+    return (Date) __getValue(DVAL);
   }
 
-  public void setDVal(Date value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = DVAL;
-    value_ = value;
+  public void setDVal(Date __value) {
+    __setValue(DVAL, __value);
   }
 
-  public Time  getTVal() {
-    if (getSetField() == TVAL) {
-      return (Time)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'tVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public Time getTVal() {
+    return (Time) __getValue(TVAL);
   }
 
-  public void setTVal(Time value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = TVAL;
-    value_ = value;
+  public void setTVal(Time __value) {
+    __setValue(TVAL, __value);
   }
 
-  public DateTime  getDtVal() {
-    if (getSetField() == DTVAL) {
-      return (DateTime)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'dtVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public DateTime getDtVal() {
+    return (DateTime) __getValue(DTVAL);
   }
 
-  public void setDtVal(DateTime value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = DTVAL;
-    value_ = value;
+  public void setDtVal(DateTime __value) {
+    __setValue(DTVAL, __value);
   }
 
-  public Vertex  getVVal() {
-    if (getSetField() == VVAL) {
-      return (Vertex)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'vVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public Vertex getVVal() {
+    return (Vertex) __getValue(VVAL);
   }
 
-  public void setVVal(Vertex value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = VVAL;
-    value_ = value;
+  public void setVVal(Vertex __value) {
+    __setValue(VVAL, __value);
   }
 
-  public Edge  getEVal() {
-    if (getSetField() == EVAL) {
-      return (Edge)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'eVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public Edge getEVal() {
+    return (Edge) __getValue(EVAL);
   }
 
-  public void setEVal(Edge value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = EVAL;
-    value_ = value;
+  public void setEVal(Edge __value) {
+    __setValue(EVAL, __value);
   }
 
-  public Path  getPVal() {
-    if (getSetField() == PVAL) {
-      return (Path)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'pVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public Path getPVal() {
+    return (Path) __getValue(PVAL);
   }
 
-  public void setPVal(Path value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = PVAL;
-    value_ = value;
+  public void setPVal(Path __value) {
+    __setValue(PVAL, __value);
   }
 
-  public NList  getLVal() {
-    if (getSetField() == LVAL) {
-      return (NList)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'lVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public NList getLVal() {
+    return (NList) __getValue(LVAL);
   }
 
-  public void setLVal(NList value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = LVAL;
-    value_ = value;
+  public void setLVal(NList __value) {
+    __setValue(LVAL, __value);
   }
 
-  public NMap  getMVal() {
-    if (getSetField() == MVAL) {
-      return (NMap)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'mVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public NMap getMVal() {
+    return (NMap) __getValue(MVAL);
   }
 
-  public void setMVal(NMap value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = MVAL;
-    value_ = value;
+  public void setMVal(NMap __value) {
+    __setValue(MVAL, __value);
   }
 
-  public NSet  getUVal() {
-    if (getSetField() == UVAL) {
-      return (NSet)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'uVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public NSet getUVal() {
+    return (NSet) __getValue(UVAL);
   }
 
-  public void setUVal(NSet value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = UVAL;
-    value_ = value;
+  public void setUVal(NSet __value) {
+    __setValue(UVAL, __value);
   }
 
-  public DataSet  getGVal() {
-    if (getSetField() == GVAL) {
-      return (DataSet)getFieldValue();
-    } else {
-      throw new RuntimeException("Cannot get field 'gVal' because union is currently set to " + getFieldDesc(getSetField()).name);
-    }
+  public DataSet getGVal() {
+    return (DataSet) __getValue(GVAL);
   }
 
-  public void setGVal(DataSet value) {
-    if (value == null) throw new NullPointerException();
-    setField_ = GVAL;
-    value_ = value;
+  public void setGVal(DataSet __value) {
+    __setValue(GVAL, __value);
   }
 
   public boolean equals(Object other) {
@@ -877,254 +780,7 @@ public class Value extends TUnion<Value> {
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder().append(getSetField()).append(getFieldValue()).toHashCode();
+    return Arrays.deepHashCode(new Object[] {getSetField(), getFieldValue()});
   }
-  @Override
-  public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
-  }
-
-  @Override
-  public String toString(int indent, boolean prettyPrint) {
-    String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-    String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("Value");
-    sb.append(space);
-    sb.append("(");
-    sb.append(newLine);
-    boolean first = true;
-
-    // Only print this field if it is the set field
-    if (getSetField() == NVAL)
-    {
-      sb.append(indentStr);
-      sb.append("nVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      String nVal_name = NullType.VALUES_TO_NAMES.get(this. getNVal());
-      if (nVal_name != null) {
-        sb.append(nVal_name);
-        sb.append(" (");
-      }
-      sb.append(this. getNVal());
-      if (nVal_name != null) {
-        sb.append(")");
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == BVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("bVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isBVal(), indent + 1, prettyPrint));
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == IVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("iVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getIVal(), indent + 1, prettyPrint));
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == FVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("fVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getFVal(), indent + 1, prettyPrint));
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == SVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("sVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getSVal() == null) {
-        sb.append("null");
-      } else {
-          int __sVal_size = Math.min(this. getSVal().length, 128);
-          for (int i = 0; i < __sVal_size; i++) {
-            if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getSVal()[i]).length() > 1 ? Integer.toHexString(this. getSVal()[i]).substring(Integer.toHexString(this. getSVal()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSVal()[i]).toUpperCase());
-          }
-          if (this. getSVal().length > 128) sb.append(" ...");
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == DVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("dVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getDVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getDVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == TVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("tVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getTVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getTVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == DTVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("dtVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getDtVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getDtVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == VVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("vVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getVVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getVVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == EVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("eVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getEVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getEVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == PVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("pVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getPVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getPVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == LVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("lVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getLVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getLVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == MVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("mVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getMVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getMVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == UVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("uVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getUVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getUVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    // Only print this field if it is the set field
-    if (getSetField() == GVAL)
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("gVal");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this. getGVal() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this. getGVal(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-    sb.append(")");
-    return sb.toString();
-  }
-
 
 }

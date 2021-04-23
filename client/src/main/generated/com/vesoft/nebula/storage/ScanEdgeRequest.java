@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -60,7 +57,6 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public static final int FILTER = 8;
   public static final int ONLY_LATEST_VERSION = 9;
   public static final int ENABLE_READ_FROM_FOLLOWER = 10;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -73,6 +69,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   private BitSet __isset_bit_vector = new BitSet(7);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -110,13 +107,12 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public ScanEdgeRequest(
-    int space_id,
-    int part_id,
-    EdgeProp return_columns,
-    long limit,
-    boolean only_latest_version,
-    boolean enable_read_from_follower)
-  {
+      int space_id,
+      int part_id,
+      EdgeProp return_columns,
+      long limit,
+      boolean only_latest_version,
+      boolean enable_read_from_follower) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -132,17 +128,16 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public ScanEdgeRequest(
-    int space_id,
-    int part_id,
-    byte[] cursor,
-    EdgeProp return_columns,
-    long limit,
-    long start_time,
-    long end_time,
-    byte[] filter,
-    boolean only_latest_version,
-    boolean enable_read_from_follower)
-  {
+      int space_id,
+      int part_id,
+      byte[] cursor,
+      EdgeProp return_columns,
+      long limit,
+      long start_time,
+      long end_time,
+      byte[] filter,
+      boolean only_latest_version,
+      boolean enable_read_from_follower) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -161,6 +156,114 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     setOnly_latest_versionIsSet(true);
     this.enable_read_from_follower = enable_read_from_follower;
     setEnable_read_from_followerIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private int part_id;
+    private byte[] cursor;
+    private EdgeProp return_columns;
+    private long limit;
+    private long start_time;
+    private long end_time;
+    private byte[] filter;
+    private boolean only_latest_version;
+    private boolean enable_read_from_follower;
+
+    BitSet __optional_isset = new BitSet(7);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCursor(final byte[] cursor) {
+      this.cursor = cursor;
+      return this;
+    }
+
+    public Builder setReturn_columns(final EdgeProp return_columns) {
+      this.return_columns = return_columns;
+      return this;
+    }
+
+    public Builder setLimit(final long limit) {
+      this.limit = limit;
+      __optional_isset.set(__LIMIT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setStart_time(final long start_time) {
+      this.start_time = start_time;
+      __optional_isset.set(__START_TIME_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setEnd_time(final long end_time) {
+      this.end_time = end_time;
+      __optional_isset.set(__END_TIME_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setFilter(final byte[] filter) {
+      this.filter = filter;
+      return this;
+    }
+
+    public Builder setOnly_latest_version(final boolean only_latest_version) {
+      this.only_latest_version = only_latest_version;
+      __optional_isset.set(__ONLY_LATEST_VERSION_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setEnable_read_from_follower(final boolean enable_read_from_follower) {
+      this.enable_read_from_follower = enable_read_from_follower;
+      __optional_isset.set(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID, true);
+      return this;
+    }
+
+    public ScanEdgeRequest build() {
+      ScanEdgeRequest result = new ScanEdgeRequest();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      result.setCursor(this.cursor);
+      result.setReturn_columns(this.return_columns);
+      if (__optional_isset.get(__LIMIT_ISSET_ID)) {
+        result.setLimit(this.limit);
+      }
+      if (__optional_isset.get(__START_TIME_ISSET_ID)) {
+        result.setStart_time(this.start_time);
+      }
+      if (__optional_isset.get(__END_TIME_ISSET_ID)) {
+        result.setEnd_time(this.end_time);
+      }
+      result.setFilter(this.filter);
+      if (__optional_isset.get(__ONLY_LATEST_VERSION_ISSET_ID)) {
+        result.setOnly_latest_version(this.only_latest_version);
+      }
+      if (__optional_isset.get(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID)) {
+        result.setEnable_read_from_follower(this.enable_read_from_follower);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -191,12 +294,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return new ScanEdgeRequest(this);
   }
 
-  @Deprecated
-  public ScanEdgeRequest clone() {
-    return new ScanEdgeRequest(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -215,11 +313,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -238,11 +336,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public byte[]  getCursor() {
+  public byte[] getCursor() {
     return this.cursor;
   }
 
@@ -260,13 +358,13 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return this.cursor != null;
   }
 
-  public void setCursorIsSet(boolean value) {
-    if (!value) {
+  public void setCursorIsSet(boolean __value) {
+    if (!__value) {
       this.cursor = null;
     }
   }
 
-  public EdgeProp  getReturn_columns() {
+  public EdgeProp getReturn_columns() {
     return this.return_columns;
   }
 
@@ -284,13 +382,13 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return this.return_columns != null;
   }
 
-  public void setReturn_columnsIsSet(boolean value) {
-    if (!value) {
+  public void setReturn_columnsIsSet(boolean __value) {
+    if (!__value) {
       this.return_columns = null;
     }
   }
 
-  public long  getLimit() {
+  public long getLimit() {
     return this.limit;
   }
 
@@ -309,11 +407,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__LIMIT_ISSET_ID);
   }
 
-  public void setLimitIsSet(boolean value) {
-    __isset_bit_vector.set(__LIMIT_ISSET_ID, value);
+  public void setLimitIsSet(boolean __value) {
+    __isset_bit_vector.set(__LIMIT_ISSET_ID, __value);
   }
 
-  public long  getStart_time() {
+  public long getStart_time() {
     return this.start_time;
   }
 
@@ -332,11 +430,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__START_TIME_ISSET_ID);
   }
 
-  public void setStart_timeIsSet(boolean value) {
-    __isset_bit_vector.set(__START_TIME_ISSET_ID, value);
+  public void setStart_timeIsSet(boolean __value) {
+    __isset_bit_vector.set(__START_TIME_ISSET_ID, __value);
   }
 
-  public long  getEnd_time() {
+  public long getEnd_time() {
     return this.end_time;
   }
 
@@ -355,11 +453,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__END_TIME_ISSET_ID);
   }
 
-  public void setEnd_timeIsSet(boolean value) {
-    __isset_bit_vector.set(__END_TIME_ISSET_ID, value);
+  public void setEnd_timeIsSet(boolean __value) {
+    __isset_bit_vector.set(__END_TIME_ISSET_ID, __value);
   }
 
-  public byte[]  getFilter() {
+  public byte[] getFilter() {
     return this.filter;
   }
 
@@ -377,13 +475,13 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return this.filter != null;
   }
 
-  public void setFilterIsSet(boolean value) {
-    if (!value) {
+  public void setFilterIsSet(boolean __value) {
+    if (!__value) {
       this.filter = null;
     }
   }
 
-  public boolean  isOnly_latest_version() {
+  public boolean isOnly_latest_version() {
     return this.only_latest_version;
   }
 
@@ -402,11 +500,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__ONLY_LATEST_VERSION_ISSET_ID);
   }
 
-  public void setOnly_latest_versionIsSet(boolean value) {
-    __isset_bit_vector.set(__ONLY_LATEST_VERSION_ISSET_ID, value);
+  public void setOnly_latest_versionIsSet(boolean __value) {
+    __isset_bit_vector.set(__ONLY_LATEST_VERSION_ISSET_ID, __value);
   }
 
-  public boolean  isEnable_read_from_follower() {
+  public boolean isEnable_read_from_follower() {
     return this.enable_read_from_follower;
   }
 
@@ -425,89 +523,89 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     return __isset_bit_vector.get(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID);
   }
 
-  public void setEnable_read_from_followerIsSet(boolean value) {
-    __isset_bit_vector.set(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID, value);
+  public void setEnable_read_from_followerIsSet(boolean __value) {
+    __isset_bit_vector.set(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case CURSOR:
-      if (value == null) {
+      if (__value == null) {
         unsetCursor();
       } else {
-        setCursor((byte[])value);
+        setCursor((byte[])__value);
       }
       break;
 
     case RETURN_COLUMNS:
-      if (value == null) {
+      if (__value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((EdgeProp)value);
+        setReturn_columns((EdgeProp)__value);
       }
       break;
 
     case LIMIT:
-      if (value == null) {
+      if (__value == null) {
         unsetLimit();
       } else {
-        setLimit((Long)value);
+        setLimit((Long)__value);
       }
       break;
 
     case START_TIME:
-      if (value == null) {
+      if (__value == null) {
         unsetStart_time();
       } else {
-        setStart_time((Long)value);
+        setStart_time((Long)__value);
       }
       break;
 
     case END_TIME:
-      if (value == null) {
+      if (__value == null) {
         unsetEnd_time();
       } else {
-        setEnd_time((Long)value);
+        setEnd_time((Long)__value);
       }
       break;
 
     case FILTER:
-      if (value == null) {
+      if (__value == null) {
         unsetFilter();
       } else {
-        setFilter((byte[])value);
+        setFilter((byte[])__value);
       }
       break;
 
     case ONLY_LATEST_VERSION:
-      if (value == null) {
+      if (__value == null) {
         unsetOnly_latest_version();
       } else {
-        setOnly_latest_version((Boolean)value);
+        setOnly_latest_version((Boolean)__value);
       }
       break;
 
     case ENABLE_READ_FROM_FOLLOWER:
-      if (value == null) {
+      if (__value == null) {
         unsetEnable_read_from_follower();
       } else {
-        setEnable_read_from_follower((Boolean)value);
+        setEnable_read_from_follower((Boolean)__value);
       }
       break;
 
@@ -553,197 +651,42 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PART_ID:
-      return isSetPart_id();
-    case CURSOR:
-      return isSetCursor();
-    case RETURN_COLUMNS:
-      return isSetReturn_columns();
-    case LIMIT:
-      return isSetLimit();
-    case START_TIME:
-      return isSetStart_time();
-    case END_TIME:
-      return isSetEnd_time();
-    case FILTER:
-      return isSetFilter();
-    case ONLY_LATEST_VERSION:
-      return isSetOnly_latest_version();
-    case ENABLE_READ_FROM_FOLLOWER:
-      return isSetEnable_read_from_follower();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ScanEdgeRequest)
-      return this.equals((ScanEdgeRequest)that);
-    return false;
-  }
-
-  public boolean equals(ScanEdgeRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ScanEdgeRequest))
+      return false;
+    ScanEdgeRequest that = (ScanEdgeRequest)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_cursor = true && this.isSetCursor();
-    boolean that_present_cursor = true && that.isSetCursor();
-    if (this_present_cursor || that_present_cursor) {
-      if (!(this_present_cursor && that_present_cursor))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.cursor, that.cursor))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetCursor(), that.isSetCursor(), this.cursor, that.cursor)) { return false; }
 
-    boolean this_present_return_columns = true && this.isSetReturn_columns();
-    boolean that_present_return_columns = true && that.isSetReturn_columns();
-    if (this_present_return_columns || that_present_return_columns) {
-      if (!(this_present_return_columns && that_present_return_columns))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.return_columns, that.return_columns))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetReturn_columns(), that.isSetReturn_columns(), this.return_columns, that.return_columns)) { return false; }
 
-    boolean this_present_limit = true;
-    boolean that_present_limit = true;
-    if (this_present_limit || that_present_limit) {
-      if (!(this_present_limit && that_present_limit))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.limit, that.limit))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.limit, that.limit)) { return false; }
 
-    boolean this_present_start_time = true && this.isSetStart_time();
-    boolean that_present_start_time = true && that.isSetStart_time();
-    if (this_present_start_time || that_present_start_time) {
-      if (!(this_present_start_time && that_present_start_time))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.start_time, that.start_time))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStart_time(), that.isSetStart_time(), this.start_time, that.start_time)) { return false; }
 
-    boolean this_present_end_time = true && this.isSetEnd_time();
-    boolean that_present_end_time = true && that.isSetEnd_time();
-    if (this_present_end_time || that_present_end_time) {
-      if (!(this_present_end_time && that_present_end_time))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.end_time, that.end_time))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEnd_time(), that.isSetEnd_time(), this.end_time, that.end_time)) { return false; }
 
-    boolean this_present_filter = true && this.isSetFilter();
-    boolean that_present_filter = true && that.isSetFilter();
-    if (this_present_filter || that_present_filter) {
-      if (!(this_present_filter && that_present_filter))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetFilter(), that.isSetFilter(), this.filter, that.filter)) { return false; }
 
-    boolean this_present_only_latest_version = true;
-    boolean that_present_only_latest_version = true;
-    if (this_present_only_latest_version || that_present_only_latest_version) {
-      if (!(this_present_only_latest_version && that_present_only_latest_version))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.only_latest_version, that.only_latest_version))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.only_latest_version, that.only_latest_version)) { return false; }
 
-    boolean this_present_enable_read_from_follower = true;
-    boolean that_present_enable_read_from_follower = true;
-    if (this_present_enable_read_from_follower || that_present_enable_read_from_follower) {
-      if (!(this_present_enable_read_from_follower && that_present_enable_read_from_follower))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.enable_read_from_follower, that.enable_read_from_follower))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.enable_read_from_follower, that.enable_read_from_follower)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_cursor = true && (isSetCursor());
-    builder.append(present_cursor);
-    if (present_cursor)
-      builder.append(cursor);
-
-    boolean present_return_columns = true && (isSetReturn_columns());
-    builder.append(present_return_columns);
-    if (present_return_columns)
-      builder.append(return_columns);
-
-    boolean present_limit = true;
-    builder.append(present_limit);
-    if (present_limit)
-      builder.append(limit);
-
-    boolean present_start_time = true && (isSetStart_time());
-    builder.append(present_start_time);
-    if (present_start_time)
-      builder.append(start_time);
-
-    boolean present_end_time = true && (isSetEnd_time());
-    builder.append(present_end_time);
-    if (present_end_time)
-      builder.append(end_time);
-
-    boolean present_filter = true && (isSetFilter());
-    builder.append(present_filter);
-    if (present_filter)
-      builder.append(filter);
-
-    boolean present_only_latest_version = true;
-    builder.append(present_only_latest_version);
-    if (present_only_latest_version)
-      builder.append(only_latest_version);
-
-    boolean present_enable_read_from_follower = true;
-    builder.append(present_enable_read_from_follower);
-    if (present_enable_read_from_follower)
-      builder.append(enable_read_from_follower);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, cursor, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower});
   }
 
   @Override
@@ -763,7 +706,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
@@ -771,7 +714,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCursor()).compareTo(other.isSetCursor());
@@ -779,7 +722,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(cursor, other.cursor);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetReturn_columns()).compareTo(other.isSetReturn_columns());
@@ -787,7 +730,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(return_columns, other.return_columns);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLimit()).compareTo(other.isSetLimit());
@@ -795,7 +738,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(limit, other.limit);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStart_time()).compareTo(other.isSetStart_time());
@@ -803,7 +746,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(start_time, other.start_time);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEnd_time()).compareTo(other.isSetEnd_time());
@@ -811,7 +754,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(end_time, other.end_time);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetFilter()).compareTo(other.isSetFilter());
@@ -819,7 +762,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(filter, other.filter);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetOnly_latest_version()).compareTo(other.isSetOnly_latest_version());
@@ -827,7 +770,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(only_latest_version, other.only_latest_version);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEnable_read_from_follower()).compareTo(other.isSetEnable_read_from_follower());
@@ -835,103 +778,103 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(enable_read_from_follower, other.enable_read_from_follower);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CURSOR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.cursor = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RETURN_COLUMNS:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.return_columns = new EdgeProp();
             this.return_columns.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LIMIT:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.limit = iprot.readI64();
             setLimitIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case START_TIME:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.start_time = iprot.readI64();
             setStart_timeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case END_TIME:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.end_time = iprot.readI64();
             setEnd_timeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case FILTER:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.filter = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ONLY_LATEST_VERSION:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.only_latest_version = iprot.readBool();
             setOnly_latest_versionIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ENABLE_READ_FROM_FOLLOWER:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.enable_read_from_follower = iprot.readBool();
             setEnable_read_from_followerIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -997,19 +940,14 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ScanEdgeRequest");
     sb.append(space);
     sb.append("(");
@@ -1020,14 +958,14 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (isSetCursor())
     {
@@ -1036,15 +974,15 @@ String space = prettyPrint ? " " : "";
       sb.append("cursor");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getCursor() == null) {
+      if (this.getCursor() == null) {
         sb.append("null");
       } else {
-          int __cursor_size = Math.min(this. getCursor().length, 128);
+          int __cursor_size = Math.min(this.getCursor().length, 128);
           for (int i = 0; i < __cursor_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getCursor()[i]).length() > 1 ? Integer.toHexString(this. getCursor()[i]).substring(Integer.toHexString(this. getCursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCursor()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getCursor()[i]).length() > 1 ? Integer.toHexString(this.getCursor()[i]).substring(Integer.toHexString(this.getCursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCursor()[i]).toUpperCase());
           }
-          if (this. getCursor().length > 128) sb.append(" ...");
+          if (this.getCursor().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -1053,10 +991,10 @@ String space = prettyPrint ? " " : "";
     sb.append("return_columns");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getReturn_columns() == null) {
+    if (this.getReturn_columns() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getReturn_columns(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getReturn_columns(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1064,7 +1002,7 @@ String space = prettyPrint ? " " : "";
     sb.append("limit");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLimit(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLimit(), indent + 1, prettyPrint));
     first = false;
     if (isSetStart_time())
     {
@@ -1073,7 +1011,7 @@ String space = prettyPrint ? " " : "";
       sb.append("start_time");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getStart_time(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getStart_time(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetEnd_time())
@@ -1083,7 +1021,7 @@ String space = prettyPrint ? " " : "";
       sb.append("end_time");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getEnd_time(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getEnd_time(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetFilter())
@@ -1093,15 +1031,15 @@ String space = prettyPrint ? " " : "";
       sb.append("filter");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getFilter() == null) {
+      if (this.getFilter() == null) {
         sb.append("null");
       } else {
-          int __filter_size = Math.min(this. getFilter().length, 128);
+          int __filter_size = Math.min(this.getFilter().length, 128);
           for (int i = 0; i < __filter_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getFilter()[i]).length() > 1 ? Integer.toHexString(this.getFilter()[i]).substring(Integer.toHexString(this.getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFilter()[i]).toUpperCase());
           }
-          if (this. getFilter().length > 128) sb.append(" ...");
+          if (this.getFilter().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -1110,14 +1048,14 @@ String space = prettyPrint ? " " : "";
     sb.append("only_latest_version");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isOnly_latest_version(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isOnly_latest_version(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("enable_read_from_follower");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isEnable_read_from_follower(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isEnable_read_from_follower(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -1126,7 +1064,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,18 +33,17 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see PropertyType
    */
-  public int type;
+  public PropertyType type;
   public short type_length;
   public static final int TYPE = 1;
   public static final int TYPE_LENGTH = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __TYPE_ISSET_ID = 0;
-  private static final int __TYPE_LENGTH_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __TYPE_LENGTH_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.REQUIRED, 
@@ -67,22 +63,52 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ColumnTypeDef(
-    int type)
-  {
+      PropertyType type) {
     this();
     this.type = type;
-    setTypeIsSet(true);
   }
 
   public ColumnTypeDef(
-    int type,
-    short type_length)
-  {
+      PropertyType type,
+      short type_length) {
     this();
     this.type = type;
-    setTypeIsSet(true);
     this.type_length = type_length;
     setType_lengthIsSet(true);
+  }
+
+  public static class Builder {
+    private PropertyType type;
+    private short type_length;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setType(final PropertyType type) {
+      this.type = type;
+      return this;
+    }
+
+    public Builder setType_length(final short type_length) {
+      this.type_length = type_length;
+      __optional_isset.set(__TYPE_LENGTH_ISSET_ID, true);
+      return this;
+    }
+
+    public ColumnTypeDef build() {
+      ColumnTypeDef result = new ColumnTypeDef();
+      result.setType(this.type);
+      if (__optional_isset.get(__TYPE_LENGTH_ISSET_ID)) {
+        result.setType_length(this.type_length);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -91,7 +117,9 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
   public ColumnTypeDef(ColumnTypeDef other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.type = TBaseHelper.deepCopy(other.type);
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
+    }
     this.type_length = TBaseHelper.deepCopy(other.type_length);
   }
 
@@ -99,16 +127,11 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
     return new ColumnTypeDef(this);
   }
 
-  @Deprecated
-  public ColumnTypeDef clone() {
-    return new ColumnTypeDef(this);
-  }
-
   /**
    * 
    * @see PropertyType
    */
-  public int  getType() {
+  public PropertyType getType() {
     return this.type;
   }
 
@@ -116,26 +139,27 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see PropertyType
    */
-  public ColumnTypeDef setType(int type) {
+  public ColumnTypeDef setType(PropertyType type) {
     this.type = type;
-    setTypeIsSet(true);
     return this;
   }
 
   public void unsetType() {
-    __isset_bit_vector.clear(__TYPE_ISSET_ID);
+    this.type = null;
   }
 
   // Returns true if field type is set (has been assigned a value) and false otherwise
   public boolean isSetType() {
-    return __isset_bit_vector.get(__TYPE_ISSET_ID);
+    return this.type != null;
   }
 
-  public void setTypeIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  public void setTypeIsSet(boolean __value) {
+    if (!__value) {
+      this.type = null;
+    }
   }
 
-  public short  getType_length() {
+  public short getType_length() {
     return this.type_length;
   }
 
@@ -154,25 +178,25 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
     return __isset_bit_vector.get(__TYPE_LENGTH_ISSET_ID);
   }
 
-  public void setType_lengthIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_LENGTH_ISSET_ID, value);
+  public void setType_lengthIsSet(boolean __value) {
+    __isset_bit_vector.set(__TYPE_LENGTH_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetType();
       } else {
-        setType((Integer)value);
+        setType((PropertyType)__value);
       }
       break;
 
     case TYPE_LENGTH:
-      if (value == null) {
+      if (__value == null) {
         unsetType_length();
       } else {
-        setType_length((Short)value);
+        setType_length((Short)__value);
       }
       break;
 
@@ -194,69 +218,26 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TYPE:
-      return isSetType();
-    case TYPE_LENGTH:
-      return isSetType_length();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ColumnTypeDef)
-      return this.equals((ColumnTypeDef)that);
-    return false;
-  }
-
-  public boolean equals(ColumnTypeDef that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ColumnTypeDef))
+      return false;
+    ColumnTypeDef that = (ColumnTypeDef)_that;
 
-    boolean this_present_type = true;
-    boolean that_present_type = true;
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
-    boolean this_present_type_length = true && this.isSetType_length();
-    boolean that_present_type_length = true && that.isSetType_length();
-    if (this_present_type_length || that_present_type_length) {
-      if (!(this_present_type_length && that_present_type_length))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type_length, that.type_length))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetType_length(), that.isSetType_length(), this.type_length, that.type_length)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_type = true;
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
-    boolean present_type_length = true && (isSetType_length());
-    builder.append(present_type_length);
-    if (present_type_length)
-      builder.append(type_length);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {type, type_length});
   }
 
   @Override
@@ -276,7 +257,7 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type, other.type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetType_length()).compareTo(other.isSetType_length());
@@ -284,41 +265,40 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type_length, other.type_length);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TYPE:
-          if (field.type == TType.I32) {
-            this.type = iprot.readI32();
-            setTypeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.type = PropertyType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TYPE_LENGTH:
-          if (field.type == TType.I16) {
+          if (__field.type == TType.I16) {
             this.type_length = iprot.readI16();
             setType_lengthIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -327,9 +307,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
-    if (!isSetType()) {
-      throw new TProtocolException("Required field 'type' was not found in serialized data! Struct: " + toString());
-    }
     validate();
   }
 
@@ -337,9 +314,11 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(TYPE_FIELD_DESC);
-    oprot.writeI32(this.type);
-    oprot.writeFieldEnd();
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
+      oprot.writeFieldEnd();
+    }
     if (isSetType_length()) {
       oprot.writeFieldBegin(TYPE_LENGTH_FIELD_DESC);
       oprot.writeI16(this.type_length);
@@ -351,19 +330,14 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ColumnTypeDef");
     sb.append(space);
     sb.append("(");
@@ -374,14 +348,18 @@ String space = prettyPrint ? " " : "";
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    String type_name = PropertyType.VALUES_TO_NAMES.get(this. getType());
-    if (type_name != null) {
-      sb.append(type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getType());
-    if (type_name != null) {
-      sb.append(")");
+    if (this.getType() == null) {
+      sb.append("null");
+    } else {
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getType());
+      if (type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (isSetType_length())
@@ -391,7 +369,7 @@ String space = prettyPrint ? " " : "";
       sb.append("type_length");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getType_length(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getType_length(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -401,10 +379,8 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // alas, we cannot check 'type' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
-    if (isSetType() && !PropertyType.VALID_VALUES.contains(type)){
-      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
+    if (type == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'type' was not present! Struct: " + toString());
     }
   }
 

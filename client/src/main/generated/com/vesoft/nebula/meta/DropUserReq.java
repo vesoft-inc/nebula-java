@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
   public boolean if_exists;
   public static final int ACCOUNT = 1;
   public static final int IF_EXISTS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __IF_EXISTS_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ACCOUNT, new FieldMetaData("account", TFieldRequirementType.DEFAULT, 
@@ -60,13 +57,46 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public DropUserReq(
-    byte[] account,
-    boolean if_exists)
-  {
+      byte[] account,
+      boolean if_exists) {
     this();
     this.account = account;
     this.if_exists = if_exists;
     setIf_existsIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] account;
+    private boolean if_exists;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setAccount(final byte[] account) {
+      this.account = account;
+      return this;
+    }
+
+    public Builder setIf_exists(final boolean if_exists) {
+      this.if_exists = if_exists;
+      __optional_isset.set(__IF_EXISTS_ISSET_ID, true);
+      return this;
+    }
+
+    public DropUserReq build() {
+      DropUserReq result = new DropUserReq();
+      result.setAccount(this.account);
+      if (__optional_isset.get(__IF_EXISTS_ISSET_ID)) {
+        result.setIf_exists(this.if_exists);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -85,12 +115,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new DropUserReq(this);
   }
 
-  @Deprecated
-  public DropUserReq clone() {
-    return new DropUserReq(this);
-  }
-
-  public byte[]  getAccount() {
+  public byte[] getAccount() {
     return this.account;
   }
 
@@ -108,13 +133,13 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     return this.account != null;
   }
 
-  public void setAccountIsSet(boolean value) {
-    if (!value) {
+  public void setAccountIsSet(boolean __value) {
+    if (!__value) {
       this.account = null;
     }
   }
 
-  public boolean  isIf_exists() {
+  public boolean isIf_exists() {
     return this.if_exists;
   }
 
@@ -133,25 +158,25 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     return __isset_bit_vector.get(__IF_EXISTS_ISSET_ID);
   }
 
-  public void setIf_existsIsSet(boolean value) {
-    __isset_bit_vector.set(__IF_EXISTS_ISSET_ID, value);
+  public void setIf_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_EXISTS_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ACCOUNT:
-      if (value == null) {
+      if (__value == null) {
         unsetAccount();
       } else {
-        setAccount((byte[])value);
+        setAccount((byte[])__value);
       }
       break;
 
     case IF_EXISTS:
-      if (value == null) {
+      if (__value == null) {
         unsetIf_exists();
       } else {
-        setIf_exists((Boolean)value);
+        setIf_exists((Boolean)__value);
       }
       break;
 
@@ -173,69 +198,26 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ACCOUNT:
-      return isSetAccount();
-    case IF_EXISTS:
-      return isSetIf_exists();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof DropUserReq)
-      return this.equals((DropUserReq)that);
-    return false;
-  }
-
-  public boolean equals(DropUserReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof DropUserReq))
+      return false;
+    DropUserReq that = (DropUserReq)_that;
 
-    boolean this_present_account = true && this.isSetAccount();
-    boolean that_present_account = true && that.isSetAccount();
-    if (this_present_account || that_present_account) {
-      if (!(this_present_account && that_present_account))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.account, that.account))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetAccount(), that.isSetAccount(), this.account, that.account)) { return false; }
 
-    boolean this_present_if_exists = true;
-    boolean that_present_if_exists = true;
-    if (this_present_if_exists || that_present_if_exists) {
-      if (!(this_present_if_exists && that_present_if_exists))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.if_exists, that.if_exists))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.if_exists, that.if_exists)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_account = true && (isSetAccount());
-    builder.append(present_account);
-    if (present_account)
-      builder.append(account);
-
-    boolean present_if_exists = true;
-    builder.append(present_if_exists);
-    if (present_if_exists)
-      builder.append(if_exists);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {account, if_exists});
   }
 
   @Override
@@ -255,7 +237,7 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(account, other.account);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIf_exists()).compareTo(other.isSetIf_exists());
@@ -263,40 +245,40 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_exists, other.if_exists);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ACCOUNT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.account = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IF_EXISTS:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.if_exists = iprot.readBool();
             setIf_existsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -326,19 +308,14 @@ public class DropUserReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("DropUserReq");
     sb.append(space);
     sb.append("(");
@@ -349,15 +326,15 @@ String space = prettyPrint ? " " : "";
     sb.append("account");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getAccount() == null) {
+    if (this.getAccount() == null) {
       sb.append("null");
     } else {
-        int __account_size = Math.min(this. getAccount().length, 128);
+        int __account_size = Math.min(this.getAccount().length, 128);
         for (int i = 0; i < __account_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getAccount()[i]).length() > 1 ? Integer.toHexString(this. getAccount()[i]).substring(Integer.toHexString(this. getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAccount()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getAccount()[i]).length() > 1 ? Integer.toHexString(this.getAccount()[i]).substring(Integer.toHexString(this.getAccount()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getAccount()[i]).toUpperCase());
         }
-        if (this. getAccount().length > 128) sb.append(" ...");
+        if (this.getAccount().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -365,7 +342,7 @@ String space = prettyPrint ? " " : "";
     sb.append("if_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIf_exists(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIf_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -374,7 +351,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

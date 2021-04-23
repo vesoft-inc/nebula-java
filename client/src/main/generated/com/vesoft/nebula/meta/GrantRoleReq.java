@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public RoleItem role_item;
   public static final int ROLE_ITEM = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ROLE_ITEM, new FieldMetaData("role_item", TFieldRequirementType.DEFAULT, 
@@ -53,10 +50,31 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public GrantRoleReq(
-    RoleItem role_item)
-  {
+      RoleItem role_item) {
     this();
     this.role_item = role_item;
+  }
+
+  public static class Builder {
+    private RoleItem role_item;
+
+    public Builder() {
+    }
+
+    public Builder setRole_item(final RoleItem role_item) {
+      this.role_item = role_item;
+      return this;
+    }
+
+    public GrantRoleReq build() {
+      GrantRoleReq result = new GrantRoleReq();
+      result.setRole_item(this.role_item);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -72,12 +90,7 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
     return new GrantRoleReq(this);
   }
 
-  @Deprecated
-  public GrantRoleReq clone() {
-    return new GrantRoleReq(this);
-  }
-
-  public RoleItem  getRole_item() {
+  public RoleItem getRole_item() {
     return this.role_item;
   }
 
@@ -95,19 +108,19 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
     return this.role_item != null;
   }
 
-  public void setRole_itemIsSet(boolean value) {
-    if (!value) {
+  public void setRole_itemIsSet(boolean __value) {
+    if (!__value) {
       this.role_item = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ROLE_ITEM:
-      if (value == null) {
+      if (__value == null) {
         unsetRole_item();
       } else {
-        setRole_item((RoleItem)value);
+        setRole_item((RoleItem)__value);
       }
       break;
 
@@ -126,53 +139,24 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ROLE_ITEM:
-      return isSetRole_item();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GrantRoleReq)
-      return this.equals((GrantRoleReq)that);
-    return false;
-  }
-
-  public boolean equals(GrantRoleReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GrantRoleReq))
+      return false;
+    GrantRoleReq that = (GrantRoleReq)_that;
 
-    boolean this_present_role_item = true && this.isSetRole_item();
-    boolean that_present_role_item = true && that.isSetRole_item();
-    if (this_present_role_item || that_present_role_item) {
-      if (!(this_present_role_item && that_present_role_item))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.role_item, that.role_item))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRole_item(), that.isSetRole_item(), this.role_item, that.role_item)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_role_item = true && (isSetRole_item());
-    builder.append(present_role_item);
-    if (present_role_item)
-      builder.append(role_item);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {role_item});
   }
 
   @Override
@@ -192,33 +176,33 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(role_item, other.role_item);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ROLE_ITEM:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.role_item = new RoleItem();
             this.role_item.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -245,19 +229,14 @@ public class GrantRoleReq implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GrantRoleReq");
     sb.append(space);
     sb.append("(");
@@ -268,10 +247,10 @@ String space = prettyPrint ? " " : "";
     sb.append("role_item");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getRole_item() == null) {
+    if (this.getRole_item() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getRole_item(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getRole_item(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -281,7 +260,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -37,17 +34,16 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
    * 
    * @see ListenerType
    */
-  public int type;
+  public ListenerType type;
   public static final int SPACE_ID = 1;
   public static final int TYPE = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private static final int __TYPE_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -65,14 +61,46 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
   }
 
   public RemoveListenerReq(
-    int space_id,
-    int type)
-  {
+      int space_id,
+      ListenerType type) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.type = type;
-    setTypeIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private ListenerType type;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setType(final ListenerType type) {
+      this.type = type;
+      return this;
+    }
+
+    public RemoveListenerReq build() {
+      RemoveListenerReq result = new RemoveListenerReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setType(this.type);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,19 +110,16 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    this.type = TBaseHelper.deepCopy(other.type);
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
+    }
   }
 
   public RemoveListenerReq deepCopy() {
     return new RemoveListenerReq(this);
   }
 
-  @Deprecated
-  public RemoveListenerReq clone() {
-    return new RemoveListenerReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -113,15 +138,15 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
   /**
    * 
    * @see ListenerType
    */
-  public int  getType() {
+  public ListenerType getType() {
     return this.type;
   }
 
@@ -129,40 +154,41 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
    * 
    * @see ListenerType
    */
-  public RemoveListenerReq setType(int type) {
+  public RemoveListenerReq setType(ListenerType type) {
     this.type = type;
-    setTypeIsSet(true);
     return this;
   }
 
   public void unsetType() {
-    __isset_bit_vector.clear(__TYPE_ISSET_ID);
+    this.type = null;
   }
 
   // Returns true if field type is set (has been assigned a value) and false otherwise
   public boolean isSetType() {
-    return __isset_bit_vector.get(__TYPE_ISSET_ID);
+    return this.type != null;
   }
 
-  public void setTypeIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  public void setTypeIsSet(boolean __value) {
+    if (!__value) {
+      this.type = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetType();
       } else {
-        setType((Integer)value);
+        setType((ListenerType)__value);
       }
       break;
 
@@ -184,69 +210,26 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case TYPE:
-      return isSetType();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof RemoveListenerReq)
-      return this.equals((RemoveListenerReq)that);
-    return false;
-  }
-
-  public boolean equals(RemoveListenerReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof RemoveListenerReq))
+      return false;
+    RemoveListenerReq that = (RemoveListenerReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_type = true;
-    boolean that_present_type = true;
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_type = true;
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, type});
   }
 
   @Override
@@ -266,7 +249,7 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
@@ -274,41 +257,40 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type, other.type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TYPE:
-          if (field.type == TType.I32) {
-            this.type = iprot.readI32();
-            setTypeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.type = ListenerType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -327,28 +309,25 @@ public class RemoveListenerReq implements TBase, java.io.Serializable, Cloneable
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(TYPE_FIELD_DESC);
-    oprot.writeI32(this.type);
-    oprot.writeFieldEnd();
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("RemoveListenerReq");
     sb.append(space);
     sb.append("(");
@@ -359,21 +338,25 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    String type_name = ListenerType.VALUES_TO_NAMES.get(this. getType());
-    if (type_name != null) {
-      sb.append(type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getType());
-    if (type_name != null) {
-      sb.append(")");
+    if (this.getType() == null) {
+      sb.append("null");
+    } else {
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getType());
+      if (type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -383,10 +366,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetType() && !ListenerType.VALID_VALUES.contains(type)){
-      throw new TProtocolException("The field 'type' has been assigned the invalid value " + type);
-    }
   }
 
 }

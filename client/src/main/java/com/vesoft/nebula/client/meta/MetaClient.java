@@ -156,8 +156,7 @@ public class MetaClient extends AbstractMetaClient {
         } else {
             // TODO: Processing leader change error
             LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-            throw new ExecuteFailedException("Get Tags Error:"
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            throw new ExecuteFailedException("Get Tags failed, errorCode: " + response.getCode());
         }
     }
 
@@ -189,11 +188,9 @@ public class MetaClient extends AbstractMetaClient {
             return response.getSchema();
         } else {
             // todo process leader change error
-            LOGGER.error(String.format(
-                    "Get tag execute Error: %s",
-                    ErrorCode.VALUES_TO_NAMES.get(response.getCode())));
-            throw new ExecuteFailedException("Get tag execute Error: "
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error("Get tag execute failed, errorCode: ", response.getCode());
+            throw new ExecuteFailedException(
+                "Get tag execute failed, errorCode: " + response.getCode());
         }
     }
 
@@ -220,9 +217,8 @@ public class MetaClient extends AbstractMetaClient {
             return response.getEdges();
         } else {
             // todo process leader change error
-            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-            throw new ExecuteFailedException("Get Edges Error:"
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error(String.format("Get tags failed: errorCode: " + response.getCode()));
+            throw new ExecuteFailedException("Get Edges failed, errorCode: " + response.getCode());
         }
     }
 
@@ -253,12 +249,9 @@ public class MetaClient extends AbstractMetaClient {
             return response.getSchema();
         } else {
             // todo process leader change error
-            LOGGER.error(String.format(
-                    "Get Edge execute Error: %s",
-                    ErrorCode.VALUES_TO_NAMES.get(response.getCode())));
+            LOGGER.error("Get Edge execute failed, errorCode: " + response.getCode());
             throw new ExecuteFailedException(
-                    "Get Edge execute Error: "
-                            + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+                "Get Edge execute failed, errorCode: " + response.getCode());
         }
     }
 
@@ -288,9 +281,8 @@ public class MetaClient extends AbstractMetaClient {
             return response.getParts();
         } else {
             // todo process leader change error
-            LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
-            throw new ExecuteFailedException("Get Parts allocation failed: "
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error("Get Parts failed, errorCode" + response.getCode());
+            throw new ExecuteFailedException("Get Parts failed, errorCode" + response.getCode());
         }
     }
 

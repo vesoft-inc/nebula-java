@@ -7,53 +7,79 @@
 package com.vesoft.nebula.meta;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class PropertyType {
-  public static final int UNKNOWN = 0;
-  public static final int BOOL = 1;
-  public static final int INT64 = 2;
-  public static final int VID = 3;
-  public static final int FLOAT = 4;
-  public static final int DOUBLE = 5;
-  public static final int STRING = 6;
-  public static final int FIXED_STRING = 7;
-  public static final int INT8 = 8;
-  public static final int INT16 = 9;
-  public static final int INT32 = 10;
-  public static final int TIMESTAMP = 21;
-  public static final int DATE = 24;
-  public static final int DATETIME = 25;
-  public static final int TIME = 26;
+public enum PropertyType implements com.facebook.thrift.TEnum {
+  UNKNOWN(0),
+  BOOL(1),
+  INT64(2),
+  VID(3),
+  FLOAT(4),
+  DOUBLE(5),
+  STRING(6),
+  FIXED_STRING(7),
+  INT8(8),
+  INT16(9),
+  INT32(10),
+  TIMESTAMP(21),
+  DATE(24),
+  DATETIME(25),
+  TIME(26);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = PropertyType.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private PropertyType(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static PropertyType findByValue(int value) { 
+    switch (value) {
+      case 0:
+        return UNKNOWN;
+      case 1:
+        return BOOL;
+      case 2:
+        return INT64;
+      case 3:
+        return VID;
+      case 4:
+        return FLOAT;
+      case 5:
+        return DOUBLE;
+      case 6:
+        return STRING;
+      case 7:
+        return FIXED_STRING;
+      case 8:
+        return INT8;
+      case 9:
+        return INT16;
+      case 10:
+        return INT32;
+      case 21:
+        return TIMESTAMP;
+      case 24:
+        return DATE;
+      case 25:
+        return DATETIME;
+      case 26:
+        return TIME;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
   public static final int JOB_DESC = 2;
   public static final int TASK_DESC = 3;
   public static final int RECOVERED_JOB_NUM = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __JOB_ID_ISSET_ID = 0;
@@ -50,6 +46,7 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(JOB_ID, new FieldMetaData("job_id", TFieldRequirementType.OPTIONAL, 
@@ -73,11 +70,10 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public AdminJobResult(
-    int job_id,
-    List<JobDesc> job_desc,
-    List<TaskDesc> task_desc,
-    int recovered_job_num)
-  {
+      int job_id,
+      List<JobDesc> job_desc,
+      List<TaskDesc> task_desc,
+      int recovered_job_num) {
     this();
     this.job_id = job_id;
     setJob_idIsSet(true);
@@ -85,6 +81,57 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     this.task_desc = task_desc;
     this.recovered_job_num = recovered_job_num;
     setRecovered_job_numIsSet(true);
+  }
+
+  public static class Builder {
+    private int job_id;
+    private List<JobDesc> job_desc;
+    private List<TaskDesc> task_desc;
+    private int recovered_job_num;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setJob_id(final int job_id) {
+      this.job_id = job_id;
+      __optional_isset.set(__JOB_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setJob_desc(final List<JobDesc> job_desc) {
+      this.job_desc = job_desc;
+      return this;
+    }
+
+    public Builder setTask_desc(final List<TaskDesc> task_desc) {
+      this.task_desc = task_desc;
+      return this;
+    }
+
+    public Builder setRecovered_job_num(final int recovered_job_num) {
+      this.recovered_job_num = recovered_job_num;
+      __optional_isset.set(__RECOVERED_JOB_NUM_ISSET_ID, true);
+      return this;
+    }
+
+    public AdminJobResult build() {
+      AdminJobResult result = new AdminJobResult();
+      if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
+        result.setJob_id(this.job_id);
+      }
+      result.setJob_desc(this.job_desc);
+      result.setTask_desc(this.task_desc);
+      if (__optional_isset.get(__RECOVERED_JOB_NUM_ISSET_ID)) {
+        result.setRecovered_job_num(this.recovered_job_num);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -107,12 +154,7 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     return new AdminJobResult(this);
   }
 
-  @Deprecated
-  public AdminJobResult clone() {
-    return new AdminJobResult(this);
-  }
-
-  public int  getJob_id() {
+  public int getJob_id() {
     return this.job_id;
   }
 
@@ -131,11 +173,11 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__JOB_ID_ISSET_ID);
   }
 
-  public void setJob_idIsSet(boolean value) {
-    __isset_bit_vector.set(__JOB_ID_ISSET_ID, value);
+  public void setJob_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__JOB_ID_ISSET_ID, __value);
   }
 
-  public List<JobDesc>  getJob_desc() {
+  public List<JobDesc> getJob_desc() {
     return this.job_desc;
   }
 
@@ -153,13 +195,13 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     return this.job_desc != null;
   }
 
-  public void setJob_descIsSet(boolean value) {
-    if (!value) {
+  public void setJob_descIsSet(boolean __value) {
+    if (!__value) {
       this.job_desc = null;
     }
   }
 
-  public List<TaskDesc>  getTask_desc() {
+  public List<TaskDesc> getTask_desc() {
     return this.task_desc;
   }
 
@@ -177,13 +219,13 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     return this.task_desc != null;
   }
 
-  public void setTask_descIsSet(boolean value) {
-    if (!value) {
+  public void setTask_descIsSet(boolean __value) {
+    if (!__value) {
       this.task_desc = null;
     }
   }
 
-  public int  getRecovered_job_num() {
+  public int getRecovered_job_num() {
     return this.recovered_job_num;
   }
 
@@ -202,42 +244,42 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__RECOVERED_JOB_NUM_ISSET_ID);
   }
 
-  public void setRecovered_job_numIsSet(boolean value) {
-    __isset_bit_vector.set(__RECOVERED_JOB_NUM_ISSET_ID, value);
+  public void setRecovered_job_numIsSet(boolean __value) {
+    __isset_bit_vector.set(__RECOVERED_JOB_NUM_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case JOB_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetJob_id();
       } else {
-        setJob_id((Integer)value);
+        setJob_id((Integer)__value);
       }
       break;
 
     case JOB_DESC:
-      if (value == null) {
+      if (__value == null) {
         unsetJob_desc();
       } else {
-        setJob_desc((List<JobDesc>)value);
+        setJob_desc((List<JobDesc>)__value);
       }
       break;
 
     case TASK_DESC:
-      if (value == null) {
+      if (__value == null) {
         unsetTask_desc();
       } else {
-        setTask_desc((List<TaskDesc>)value);
+        setTask_desc((List<TaskDesc>)__value);
       }
       break;
 
     case RECOVERED_JOB_NUM:
-      if (value == null) {
+      if (__value == null) {
         unsetRecovered_job_num();
       } else {
-        setRecovered_job_num((Integer)value);
+        setRecovered_job_num((Integer)__value);
       }
       break;
 
@@ -265,101 +307,30 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case JOB_ID:
-      return isSetJob_id();
-    case JOB_DESC:
-      return isSetJob_desc();
-    case TASK_DESC:
-      return isSetTask_desc();
-    case RECOVERED_JOB_NUM:
-      return isSetRecovered_job_num();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AdminJobResult)
-      return this.equals((AdminJobResult)that);
-    return false;
-  }
-
-  public boolean equals(AdminJobResult that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AdminJobResult))
+      return false;
+    AdminJobResult that = (AdminJobResult)_that;
 
-    boolean this_present_job_id = true && this.isSetJob_id();
-    boolean that_present_job_id = true && that.isSetJob_id();
-    if (this_present_job_id || that_present_job_id) {
-      if (!(this_present_job_id && that_present_job_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetJob_id(), that.isSetJob_id(), this.job_id, that.job_id)) { return false; }
 
-    boolean this_present_job_desc = true && this.isSetJob_desc();
-    boolean that_present_job_desc = true && that.isSetJob_desc();
-    if (this_present_job_desc || that_present_job_desc) {
-      if (!(this_present_job_desc && that_present_job_desc))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.job_desc, that.job_desc))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetJob_desc(), that.isSetJob_desc(), this.job_desc, that.job_desc)) { return false; }
 
-    boolean this_present_task_desc = true && this.isSetTask_desc();
-    boolean that_present_task_desc = true && that.isSetTask_desc();
-    if (this_present_task_desc || that_present_task_desc) {
-      if (!(this_present_task_desc && that_present_task_desc))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.task_desc, that.task_desc))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetTask_desc(), that.isSetTask_desc(), this.task_desc, that.task_desc)) { return false; }
 
-    boolean this_present_recovered_job_num = true && this.isSetRecovered_job_num();
-    boolean that_present_recovered_job_num = true && that.isSetRecovered_job_num();
-    if (this_present_recovered_job_num || that_present_recovered_job_num) {
-      if (!(this_present_recovered_job_num && that_present_recovered_job_num))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.recovered_job_num, that.recovered_job_num))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRecovered_job_num(), that.isSetRecovered_job_num(), this.recovered_job_num, that.recovered_job_num)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_job_id = true && (isSetJob_id());
-    builder.append(present_job_id);
-    if (present_job_id)
-      builder.append(job_id);
-
-    boolean present_job_desc = true && (isSetJob_desc());
-    builder.append(present_job_desc);
-    if (present_job_desc)
-      builder.append(job_desc);
-
-    boolean present_task_desc = true && (isSetTask_desc());
-    builder.append(present_task_desc);
-    if (present_task_desc)
-      builder.append(task_desc);
-
-    boolean present_recovered_job_num = true && (isSetRecovered_job_num());
-    builder.append(present_recovered_job_num);
-    if (present_recovered_job_num)
-      builder.append(recovered_job_num);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {job_id, job_desc, task_desc, recovered_job_num});
   }
 
   @Override
@@ -379,7 +350,7 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(job_id, other.job_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetJob_desc()).compareTo(other.isSetJob_desc());
@@ -387,7 +358,7 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(job_desc, other.job_desc);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTask_desc()).compareTo(other.isSetTask_desc());
@@ -395,7 +366,7 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(task_desc, other.task_desc);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetRecovered_job_num()).compareTo(other.isSetRecovered_job_num());
@@ -403,33 +374,33 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(recovered_job_num, other.recovered_job_num);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case JOB_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.job_id = iprot.readI32();
             setJob_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case JOB_DESC:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list34 = iprot.readListBegin();
               this.job_desc = new ArrayList<JobDesc>(Math.max(0, _list34.size));
@@ -445,11 +416,11 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TASK_DESC:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list37 = iprot.readListBegin();
               this.task_desc = new ArrayList<TaskDesc>(Math.max(0, _list37.size));
@@ -465,19 +436,19 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RECOVERED_JOB_NUM:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.recovered_job_num = iprot.readI32();
             setRecovered_job_numIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -535,19 +506,14 @@ public class AdminJobResult implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AdminJobResult");
     sb.append(space);
     sb.append("(");
@@ -560,7 +526,7 @@ String space = prettyPrint ? " " : "";
       sb.append("job_id");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getJob_id(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getJob_id(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetJob_desc())
@@ -570,10 +536,10 @@ String space = prettyPrint ? " " : "";
       sb.append("job_desc");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getJob_desc() == null) {
+      if (this.getJob_desc() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getJob_desc(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getJob_desc(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -584,10 +550,10 @@ String space = prettyPrint ? " " : "";
       sb.append("task_desc");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getTask_desc() == null) {
+      if (this.getTask_desc() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getTask_desc(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getTask_desc(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -598,7 +564,7 @@ String space = prettyPrint ? " " : "";
       sb.append("recovered_job_num");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getRecovered_job_num(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getRecovered_job_num(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -608,7 +574,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

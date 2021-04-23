@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.graph;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -41,7 +38,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
    * 
    * @see ErrorCode
    */
-  public int error_code;
+  public ErrorCode error_code;
   public int latency_in_us;
   public com.vesoft.nebula.DataSet data;
   public byte[] space_name;
@@ -55,14 +52,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   public static final int ERROR_MSG = 5;
   public static final int PLAN_DESC = 6;
   public static final int COMMENT = 7;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __ERROR_CODE_ISSET_ID = 0;
-  private static final int __LATENCY_IN_US_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __LATENCY_IN_US_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.REQUIRED, 
@@ -90,28 +86,24 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public ExecutionResponse(
-    int error_code,
-    int latency_in_us)
-  {
+      ErrorCode error_code,
+      int latency_in_us) {
     this();
     this.error_code = error_code;
-    setError_codeIsSet(true);
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
   }
 
   public ExecutionResponse(
-    int error_code,
-    int latency_in_us,
-    com.vesoft.nebula.DataSet data,
-    byte[] space_name,
-    byte[] error_msg,
-    PlanDescription plan_desc,
-    byte[] comment)
-  {
+      ErrorCode error_code,
+      int latency_in_us,
+      com.vesoft.nebula.DataSet data,
+      byte[] space_name,
+      byte[] error_msg,
+      PlanDescription plan_desc,
+      byte[] comment) {
     this();
     this.error_code = error_code;
-    setError_codeIsSet(true);
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
     this.data = data;
@@ -121,13 +113,84 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     this.comment = comment;
   }
 
+  public static class Builder {
+    private ErrorCode error_code;
+    private int latency_in_us;
+    private com.vesoft.nebula.DataSet data;
+    private byte[] space_name;
+    private byte[] error_msg;
+    private PlanDescription plan_desc;
+    private byte[] comment;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setError_code(final ErrorCode error_code) {
+      this.error_code = error_code;
+      return this;
+    }
+
+    public Builder setLatency_in_us(final int latency_in_us) {
+      this.latency_in_us = latency_in_us;
+      __optional_isset.set(__LATENCY_IN_US_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setData(final com.vesoft.nebula.DataSet data) {
+      this.data = data;
+      return this;
+    }
+
+    public Builder setSpace_name(final byte[] space_name) {
+      this.space_name = space_name;
+      return this;
+    }
+
+    public Builder setError_msg(final byte[] error_msg) {
+      this.error_msg = error_msg;
+      return this;
+    }
+
+    public Builder setPlan_desc(final PlanDescription plan_desc) {
+      this.plan_desc = plan_desc;
+      return this;
+    }
+
+    public Builder setComment(final byte[] comment) {
+      this.comment = comment;
+      return this;
+    }
+
+    public ExecutionResponse build() {
+      ExecutionResponse result = new ExecutionResponse();
+      result.setError_code(this.error_code);
+      if (__optional_isset.get(__LATENCY_IN_US_ISSET_ID)) {
+        result.setLatency_in_us(this.latency_in_us);
+      }
+      result.setData(this.data);
+      result.setSpace_name(this.space_name);
+      result.setError_msg(this.error_msg);
+      result.setPlan_desc(this.plan_desc);
+      result.setComment(this.comment);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public ExecutionResponse(ExecutionResponse other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.error_code = TBaseHelper.deepCopy(other.error_code);
+    if (other.isSetError_code()) {
+      this.error_code = TBaseHelper.deepCopy(other.error_code);
+    }
     this.latency_in_us = TBaseHelper.deepCopy(other.latency_in_us);
     if (other.isSetData()) {
       this.data = TBaseHelper.deepCopy(other.data);
@@ -150,16 +213,11 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return new ExecutionResponse(this);
   }
 
-  @Deprecated
-  public ExecutionResponse clone() {
-    return new ExecutionResponse(this);
-  }
-
   /**
    * 
    * @see ErrorCode
    */
-  public int  getError_code() {
+  public ErrorCode getError_code() {
     return this.error_code;
   }
 
@@ -167,26 +225,27 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
    * 
    * @see ErrorCode
    */
-  public ExecutionResponse setError_code(int error_code) {
+  public ExecutionResponse setError_code(ErrorCode error_code) {
     this.error_code = error_code;
-    setError_codeIsSet(true);
     return this;
   }
 
   public void unsetError_code() {
-    __isset_bit_vector.clear(__ERROR_CODE_ISSET_ID);
+    this.error_code = null;
   }
 
   // Returns true if field error_code is set (has been assigned a value) and false otherwise
   public boolean isSetError_code() {
-    return __isset_bit_vector.get(__ERROR_CODE_ISSET_ID);
+    return this.error_code != null;
   }
 
-  public void setError_codeIsSet(boolean value) {
-    __isset_bit_vector.set(__ERROR_CODE_ISSET_ID, value);
+  public void setError_codeIsSet(boolean __value) {
+    if (!__value) {
+      this.error_code = null;
+    }
   }
 
-  public int  getLatency_in_us() {
+  public int getLatency_in_us() {
     return this.latency_in_us;
   }
 
@@ -205,11 +264,11 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__LATENCY_IN_US_ISSET_ID);
   }
 
-  public void setLatency_in_usIsSet(boolean value) {
-    __isset_bit_vector.set(__LATENCY_IN_US_ISSET_ID, value);
+  public void setLatency_in_usIsSet(boolean __value) {
+    __isset_bit_vector.set(__LATENCY_IN_US_ISSET_ID, __value);
   }
 
-  public com.vesoft.nebula.DataSet  getData() {
+  public com.vesoft.nebula.DataSet getData() {
     return this.data;
   }
 
@@ -227,13 +286,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return this.data != null;
   }
 
-  public void setDataIsSet(boolean value) {
-    if (!value) {
+  public void setDataIsSet(boolean __value) {
+    if (!__value) {
       this.data = null;
     }
   }
 
-  public byte[]  getSpace_name() {
+  public byte[] getSpace_name() {
     return this.space_name;
   }
 
@@ -251,13 +310,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return this.space_name != null;
   }
 
-  public void setSpace_nameIsSet(boolean value) {
-    if (!value) {
+  public void setSpace_nameIsSet(boolean __value) {
+    if (!__value) {
       this.space_name = null;
     }
   }
 
-  public byte[]  getError_msg() {
+  public byte[] getError_msg() {
     return this.error_msg;
   }
 
@@ -275,13 +334,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return this.error_msg != null;
   }
 
-  public void setError_msgIsSet(boolean value) {
-    if (!value) {
+  public void setError_msgIsSet(boolean __value) {
+    if (!__value) {
       this.error_msg = null;
     }
   }
 
-  public PlanDescription  getPlan_desc() {
+  public PlanDescription getPlan_desc() {
     return this.plan_desc;
   }
 
@@ -299,13 +358,13 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return this.plan_desc != null;
   }
 
-  public void setPlan_descIsSet(boolean value) {
-    if (!value) {
+  public void setPlan_descIsSet(boolean __value) {
+    if (!__value) {
       this.plan_desc = null;
     }
   }
 
-  public byte[]  getComment() {
+  public byte[] getComment() {
     return this.comment;
   }
 
@@ -323,67 +382,67 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     return this.comment != null;
   }
 
-  public void setCommentIsSet(boolean value) {
-    if (!value) {
+  public void setCommentIsSet(boolean __value) {
+    if (!__value) {
       this.comment = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ERROR_CODE:
-      if (value == null) {
+      if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((Integer)value);
+        setError_code((ErrorCode)__value);
       }
       break;
 
     case LATENCY_IN_US:
-      if (value == null) {
+      if (__value == null) {
         unsetLatency_in_us();
       } else {
-        setLatency_in_us((Integer)value);
+        setLatency_in_us((Integer)__value);
       }
       break;
 
     case DATA:
-      if (value == null) {
+      if (__value == null) {
         unsetData();
       } else {
-        setData((com.vesoft.nebula.DataSet)value);
+        setData((com.vesoft.nebula.DataSet)__value);
       }
       break;
 
     case SPACE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_name();
       } else {
-        setSpace_name((byte[])value);
+        setSpace_name((byte[])__value);
       }
       break;
 
     case ERROR_MSG:
-      if (value == null) {
+      if (__value == null) {
         unsetError_msg();
       } else {
-        setError_msg((byte[])value);
+        setError_msg((byte[])__value);
       }
       break;
 
     case PLAN_DESC:
-      if (value == null) {
+      if (__value == null) {
         unsetPlan_desc();
       } else {
-        setPlan_desc((PlanDescription)value);
+        setPlan_desc((PlanDescription)__value);
       }
       break;
 
     case COMMENT:
-      if (value == null) {
+      if (__value == null) {
         unsetComment();
       } else {
-        setComment((byte[])value);
+        setComment((byte[])__value);
       }
       break;
 
@@ -420,217 +479,103 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ERROR_CODE:
-      return isSetError_code();
-    case LATENCY_IN_US:
-      return isSetLatency_in_us();
-    case DATA:
-      return isSetData();
-    case SPACE_NAME:
-      return isSetSpace_name();
-    case ERROR_MSG:
-      return isSetError_msg();
-    case PLAN_DESC:
-      return isSetPlan_desc();
-    case COMMENT:
-      return isSetComment();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ExecutionResponse)
-      return this.equals((ExecutionResponse)that);
-    return false;
-  }
-
-  public boolean equals(ExecutionResponse that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ExecutionResponse))
+      return false;
+    ExecutionResponse that = (ExecutionResponse)_that;
 
-    boolean this_present_error_code = true;
-    boolean that_present_error_code = true;
-    if (this_present_error_code || that_present_error_code) {
-      if (!(this_present_error_code && that_present_error_code))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.error_code, that.error_code))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetError_code(), that.isSetError_code(), this.error_code, that.error_code)) { return false; }
 
-    boolean this_present_latency_in_us = true;
-    boolean that_present_latency_in_us = true;
-    if (this_present_latency_in_us || that_present_latency_in_us) {
-      if (!(this_present_latency_in_us && that_present_latency_in_us))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.latency_in_us, that.latency_in_us))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.latency_in_us, that.latency_in_us)) { return false; }
 
-    boolean this_present_data = true && this.isSetData();
-    boolean that_present_data = true && that.isSetData();
-    if (this_present_data || that_present_data) {
-      if (!(this_present_data && that_present_data))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.data, that.data))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetData(), that.isSetData(), this.data, that.data)) { return false; }
 
-    boolean this_present_space_name = true && this.isSetSpace_name();
-    boolean that_present_space_name = true && that.isSetSpace_name();
-    if (this_present_space_name || that_present_space_name) {
-      if (!(this_present_space_name && that_present_space_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.space_name, that.space_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSpace_name(), that.isSetSpace_name(), this.space_name, that.space_name)) { return false; }
 
-    boolean this_present_error_msg = true && this.isSetError_msg();
-    boolean that_present_error_msg = true && that.isSetError_msg();
-    if (this_present_error_msg || that_present_error_msg) {
-      if (!(this_present_error_msg && that_present_error_msg))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.error_msg, that.error_msg))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetError_msg(), that.isSetError_msg(), this.error_msg, that.error_msg)) { return false; }
 
-    boolean this_present_plan_desc = true && this.isSetPlan_desc();
-    boolean that_present_plan_desc = true && that.isSetPlan_desc();
-    if (this_present_plan_desc || that_present_plan_desc) {
-      if (!(this_present_plan_desc && that_present_plan_desc))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.plan_desc, that.plan_desc))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPlan_desc(), that.isSetPlan_desc(), this.plan_desc, that.plan_desc)) { return false; }
 
-    boolean this_present_comment = true && this.isSetComment();
-    boolean that_present_comment = true && that.isSetComment();
-    if (this_present_comment || that_present_comment) {
-      if (!(this_present_comment && that_present_comment))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.comment, that.comment))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_error_code = true;
-    builder.append(present_error_code);
-    if (present_error_code)
-      builder.append(error_code);
-
-    boolean present_latency_in_us = true;
-    builder.append(present_latency_in_us);
-    if (present_latency_in_us)
-      builder.append(latency_in_us);
-
-    boolean present_data = true && (isSetData());
-    builder.append(present_data);
-    if (present_data)
-      builder.append(data);
-
-    boolean present_space_name = true && (isSetSpace_name());
-    builder.append(present_space_name);
-    if (present_space_name)
-      builder.append(space_name);
-
-    boolean present_error_msg = true && (isSetError_msg());
-    builder.append(present_error_msg);
-    if (present_error_msg)
-      builder.append(error_msg);
-
-    boolean present_plan_desc = true && (isSetPlan_desc());
-    builder.append(present_plan_desc);
-    if (present_plan_desc)
-      builder.append(plan_desc);
-
-    boolean present_comment = true && (isSetComment());
-    builder.append(present_comment);
-    if (present_comment)
-      builder.append(comment);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {error_code, latency_in_us, data, space_name, error_msg, plan_desc, comment});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ERROR_CODE:
-          if (field.type == TType.I32) {
-            this.error_code = iprot.readI32();
-            setError_codeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.error_code = ErrorCode.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LATENCY_IN_US:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.latency_in_us = iprot.readI32();
             setLatency_in_usIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DATA:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.data = new com.vesoft.nebula.DataSet();
             this.data.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SPACE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.space_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ERROR_MSG:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.error_msg = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PLAN_DESC:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.plan_desc = new PlanDescription();
             this.plan_desc.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case COMMENT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.comment = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -639,9 +584,6 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
-    if (!isSetError_code()) {
-      throw new TProtocolException("Required field 'error_code' was not found in serialized data! Struct: " + toString());
-    }
     if (!isSetLatency_in_us()) {
       throw new TProtocolException("Required field 'latency_in_us' was not found in serialized data! Struct: " + toString());
     }
@@ -652,9 +594,11 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
-    oprot.writeI32(this.error_code);
-    oprot.writeFieldEnd();
+    if (this.error_code != null) {
+      oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
+      oprot.writeI32(this.error_code == null ? 0 : this.error_code.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(LATENCY_IN_US_FIELD_DESC);
     oprot.writeI32(this.latency_in_us);
     oprot.writeFieldEnd();
@@ -699,19 +643,14 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ExecutionResponse");
     sb.append(space);
     sb.append("(");
@@ -722,14 +661,18 @@ String space = prettyPrint ? " " : "";
     sb.append("error_code");
     sb.append(space);
     sb.append(":").append(space);
-    String error_code_name = ErrorCode.VALUES_TO_NAMES.get(this. getError_code());
-    if (error_code_name != null) {
-      sb.append(error_code_name);
-      sb.append(" (");
-    }
-    sb.append(this. getError_code());
-    if (error_code_name != null) {
-      sb.append(")");
+    if (this.getError_code() == null) {
+      sb.append("null");
+    } else {
+      String error_code_name = this.getError_code() == null ? "null" : this.getError_code().name();
+      if (error_code_name != null) {
+        sb.append(error_code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getError_code());
+      if (error_code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -737,7 +680,7 @@ String space = prettyPrint ? " " : "";
     sb.append("latency_in_us");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLatency_in_us(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLatency_in_us(), indent + 1, prettyPrint));
     first = false;
     if (isSetData())
     {
@@ -746,10 +689,10 @@ String space = prettyPrint ? " " : "";
       sb.append("data");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getData() == null) {
+      if (this.getData() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getData(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getData(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -760,15 +703,15 @@ String space = prettyPrint ? " " : "";
       sb.append("space_name");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSpace_name() == null) {
+      if (this.getSpace_name() == null) {
         sb.append("null");
       } else {
-          int __space_name_size = Math.min(this. getSpace_name().length, 128);
+          int __space_name_size = Math.min(this.getSpace_name().length, 128);
           for (int i = 0; i < __space_name_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getSpace_name()[i]).length() > 1 ? Integer.toHexString(this. getSpace_name()[i]).substring(Integer.toHexString(this. getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace_name()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getSpace_name()[i]).length() > 1 ? Integer.toHexString(this.getSpace_name()[i]).substring(Integer.toHexString(this.getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSpace_name()[i]).toUpperCase());
           }
-          if (this. getSpace_name().length > 128) sb.append(" ...");
+          if (this.getSpace_name().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -779,15 +722,15 @@ String space = prettyPrint ? " " : "";
       sb.append("error_msg");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getError_msg() == null) {
+      if (this.getError_msg() == null) {
         sb.append("null");
       } else {
-          int __error_msg_size = Math.min(this. getError_msg().length, 128);
+          int __error_msg_size = Math.min(this.getError_msg().length, 128);
           for (int i = 0; i < __error_msg_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getError_msg()[i]).length() > 1 ? Integer.toHexString(this. getError_msg()[i]).substring(Integer.toHexString(this. getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getError_msg()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getError_msg()[i]).length() > 1 ? Integer.toHexString(this.getError_msg()[i]).substring(Integer.toHexString(this.getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getError_msg()[i]).toUpperCase());
           }
-          if (this. getError_msg().length > 128) sb.append(" ...");
+          if (this.getError_msg().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -798,10 +741,10 @@ String space = prettyPrint ? " " : "";
       sb.append("plan_desc");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getPlan_desc() == null) {
+      if (this.getPlan_desc() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getPlan_desc(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getPlan_desc(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -812,15 +755,15 @@ String space = prettyPrint ? " " : "";
       sb.append("comment");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getComment() == null) {
+      if (this.getComment() == null) {
         sb.append("null");
       } else {
-          int __comment_size = Math.min(this. getComment().length, 128);
+          int __comment_size = Math.min(this.getComment().length, 128);
           for (int i = 0; i < __comment_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getComment()[i]).length() > 1 ? Integer.toHexString(this. getComment()[i]).substring(Integer.toHexString(this. getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getComment()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
           }
-          if (this. getComment().length > 128) sb.append(" ...");
+          if (this.getComment().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -831,12 +774,10 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // alas, we cannot check 'error_code' because it's a primitive and you chose the non-beans generator.
-    // alas, we cannot check 'latency_in_us' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
-    if (isSetError_code() && !ErrorCode.VALID_VALUES.contains(error_code)){
-      throw new TProtocolException("The field 'error_code' has been assigned the invalid value " + error_code);
+    if (error_code == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'error_code' was not present! Struct: " + toString());
     }
+    // alas, we cannot check 'latency_in_us' because it's a primitive and you chose the non-beans generator.
   }
 
 }

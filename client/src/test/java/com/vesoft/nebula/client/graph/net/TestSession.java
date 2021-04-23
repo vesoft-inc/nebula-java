@@ -45,9 +45,10 @@ public class TestSession {
                 try {
                     ResultSet resp = session.execute("SHOW SPACES");
                     if (i >= 3) {
-                        Assert.assertEquals(ErrorCode.E_SESSION_INVALID, resp.getErrorCode());
+                        Assert.assertEquals(
+                            ErrorCode.E_SESSION_INVALID.getValue(), resp.getErrorCode());
                     } else {
-                        Assert.assertEquals(ErrorCode.SUCCEEDED, resp.getErrorCode());
+                        Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), resp.getErrorCode());
                     }
                 } catch (IOErrorException ie) {
                     Assert.fail();

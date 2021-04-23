@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
   public byte[] checkpoint_dir;
   public static final int HOST = 1;
   public static final int CHECKPOINT_DIR = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
@@ -58,12 +55,40 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public CheckpointInfo(
-    com.vesoft.nebula.HostAddr host,
-    byte[] checkpoint_dir)
-  {
+      com.vesoft.nebula.HostAddr host,
+      byte[] checkpoint_dir) {
     this();
     this.host = host;
     this.checkpoint_dir = checkpoint_dir;
+  }
+
+  public static class Builder {
+    private com.vesoft.nebula.HostAddr host;
+    private byte[] checkpoint_dir;
+
+    public Builder() {
+    }
+
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
+    public Builder setCheckpoint_dir(final byte[] checkpoint_dir) {
+      this.checkpoint_dir = checkpoint_dir;
+      return this;
+    }
+
+    public CheckpointInfo build() {
+      CheckpointInfo result = new CheckpointInfo();
+      result.setHost(this.host);
+      result.setCheckpoint_dir(this.checkpoint_dir);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     return new CheckpointInfo(this);
   }
 
-  @Deprecated
-  public CheckpointInfo clone() {
-    return new CheckpointInfo(this);
-  }
-
-  public com.vesoft.nebula.HostAddr  getHost() {
+  public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
@@ -105,13 +125,13 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     return this.host != null;
   }
 
-  public void setHostIsSet(boolean value) {
-    if (!value) {
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
       this.host = null;
     }
   }
 
-  public byte[]  getCheckpoint_dir() {
+  public byte[] getCheckpoint_dir() {
     return this.checkpoint_dir;
   }
 
@@ -129,27 +149,27 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     return this.checkpoint_dir != null;
   }
 
-  public void setCheckpoint_dirIsSet(boolean value) {
-    if (!value) {
+  public void setCheckpoint_dirIsSet(boolean __value) {
+    if (!__value) {
       this.checkpoint_dir = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case HOST:
-      if (value == null) {
+      if (__value == null) {
         unsetHost();
       } else {
-        setHost((com.vesoft.nebula.HostAddr)value);
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case CHECKPOINT_DIR:
-      if (value == null) {
+      if (__value == null) {
         unsetCheckpoint_dir();
       } else {
-        setCheckpoint_dir((byte[])value);
+        setCheckpoint_dir((byte[])__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case HOST:
-      return isSetHost();
-    case CHECKPOINT_DIR:
-      return isSetCheckpoint_dir();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CheckpointInfo)
-      return this.equals((CheckpointInfo)that);
-    return false;
-  }
-
-  public boolean equals(CheckpointInfo that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CheckpointInfo))
+      return false;
+    CheckpointInfo that = (CheckpointInfo)_that;
 
-    boolean this_present_host = true && this.isSetHost();
-    boolean that_present_host = true && that.isSetHost();
-    if (this_present_host || that_present_host) {
-      if (!(this_present_host && that_present_host))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.host, that.host))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
-    boolean this_present_checkpoint_dir = true && this.isSetCheckpoint_dir();
-    boolean that_present_checkpoint_dir = true && that.isSetCheckpoint_dir();
-    if (this_present_checkpoint_dir || that_present_checkpoint_dir) {
-      if (!(this_present_checkpoint_dir && that_present_checkpoint_dir))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.checkpoint_dir, that.checkpoint_dir))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetCheckpoint_dir(), that.isSetCheckpoint_dir(), this.checkpoint_dir, that.checkpoint_dir)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_host = true && (isSetHost());
-    builder.append(present_host);
-    if (present_host)
-      builder.append(host);
-
-    boolean present_checkpoint_dir = true && (isSetCheckpoint_dir());
-    builder.append(present_checkpoint_dir);
-    if (present_checkpoint_dir)
-      builder.append(checkpoint_dir);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {host, checkpoint_dir});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host, other.host);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCheckpoint_dir()).compareTo(other.isSetCheckpoint_dir());
@@ -261,40 +238,40 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(checkpoint_dir, other.checkpoint_dir);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case HOST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CHECKPOINT_DIR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.checkpoint_dir = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -326,19 +303,14 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CheckpointInfo");
     sb.append(space);
     sb.append("(");
@@ -349,10 +321,10 @@ String space = prettyPrint ? " " : "";
     sb.append("host");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHost() == null) {
+    if (this.getHost() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHost(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -360,15 +332,15 @@ String space = prettyPrint ? " " : "";
     sb.append("checkpoint_dir");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getCheckpoint_dir() == null) {
+    if (this.getCheckpoint_dir() == null) {
       sb.append("null");
     } else {
-        int __checkpoint_dir_size = Math.min(this. getCheckpoint_dir().length, 128);
+        int __checkpoint_dir_size = Math.min(this.getCheckpoint_dir().length, 128);
         for (int i = 0; i < __checkpoint_dir_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getCheckpoint_dir()[i]).length() > 1 ? Integer.toHexString(this. getCheckpoint_dir()[i]).substring(Integer.toHexString(this. getCheckpoint_dir()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getCheckpoint_dir()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getCheckpoint_dir()[i]).length() > 1 ? Integer.toHexString(this.getCheckpoint_dir()[i]).substring(Integer.toHexString(this.getCheckpoint_dir()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCheckpoint_dir()[i]).toUpperCase());
         }
-        if (this. getCheckpoint_dir().length > 128) sb.append(" ...");
+        if (this.getCheckpoint_dir().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -378,7 +350,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,7 +33,6 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
   public long term_id;
   public static final int LOG_ID = 1;
   public static final int TERM_ID = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __LOG_ID_ISSET_ID = 0;
@@ -44,6 +40,7 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(LOG_ID, new FieldMetaData("log_id", TFieldRequirementType.DEFAULT, 
@@ -61,14 +58,50 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
   }
 
   public LogInfo(
-    long log_id,
-    long term_id)
-  {
+      long log_id,
+      long term_id) {
     this();
     this.log_id = log_id;
     setLog_idIsSet(true);
     this.term_id = term_id;
     setTerm_idIsSet(true);
+  }
+
+  public static class Builder {
+    private long log_id;
+    private long term_id;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setLog_id(final long log_id) {
+      this.log_id = log_id;
+      __optional_isset.set(__LOG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTerm_id(final long term_id) {
+      this.term_id = term_id;
+      __optional_isset.set(__TERM_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public LogInfo build() {
+      LogInfo result = new LogInfo();
+      if (__optional_isset.get(__LOG_ID_ISSET_ID)) {
+        result.setLog_id(this.log_id);
+      }
+      if (__optional_isset.get(__TERM_ID_ISSET_ID)) {
+        result.setTerm_id(this.term_id);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -85,12 +118,7 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
     return new LogInfo(this);
   }
 
-  @Deprecated
-  public LogInfo clone() {
-    return new LogInfo(this);
-  }
-
-  public long  getLog_id() {
+  public long getLog_id() {
     return this.log_id;
   }
 
@@ -109,11 +137,11 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
     return __isset_bit_vector.get(__LOG_ID_ISSET_ID);
   }
 
-  public void setLog_idIsSet(boolean value) {
-    __isset_bit_vector.set(__LOG_ID_ISSET_ID, value);
+  public void setLog_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__LOG_ID_ISSET_ID, __value);
   }
 
-  public long  getTerm_id() {
+  public long getTerm_id() {
     return this.term_id;
   }
 
@@ -132,25 +160,25 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
     return __isset_bit_vector.get(__TERM_ID_ISSET_ID);
   }
 
-  public void setTerm_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TERM_ID_ISSET_ID, value);
+  public void setTerm_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TERM_ID_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case LOG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetLog_id();
       } else {
-        setLog_id((Long)value);
+        setLog_id((Long)__value);
       }
       break;
 
     case TERM_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTerm_id();
       } else {
-        setTerm_id((Long)value);
+        setTerm_id((Long)__value);
       }
       break;
 
@@ -172,69 +200,26 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case LOG_ID:
-      return isSetLog_id();
-    case TERM_ID:
-      return isSetTerm_id();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof LogInfo)
-      return this.equals((LogInfo)that);
-    return false;
-  }
-
-  public boolean equals(LogInfo that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof LogInfo))
+      return false;
+    LogInfo that = (LogInfo)_that;
 
-    boolean this_present_log_id = true;
-    boolean that_present_log_id = true;
-    if (this_present_log_id || that_present_log_id) {
-      if (!(this_present_log_id && that_present_log_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.log_id, that.log_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.log_id, that.log_id)) { return false; }
 
-    boolean this_present_term_id = true;
-    boolean that_present_term_id = true;
-    if (this_present_term_id || that_present_term_id) {
-      if (!(this_present_term_id && that_present_term_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.term_id, that.term_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.term_id, that.term_id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_log_id = true;
-    builder.append(present_log_id);
-    if (present_log_id)
-      builder.append(log_id);
-
-    boolean present_term_id = true;
-    builder.append(present_term_id);
-    if (present_term_id)
-      builder.append(term_id);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {log_id, term_id});
   }
 
   @Override
@@ -254,7 +239,7 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(log_id, other.log_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTerm_id()).compareTo(other.isSetTerm_id());
@@ -262,41 +247,41 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(term_id, other.term_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case LOG_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.log_id = iprot.readI64();
             setLog_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TERM_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.term_id = iprot.readI64();
             setTerm_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -324,19 +309,14 @@ public class LogInfo implements TBase, java.io.Serializable, Cloneable, Comparab
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("LogInfo");
     sb.append(space);
     sb.append("(");
@@ -347,14 +327,14 @@ String space = prettyPrint ? " " : "";
     sb.append("log_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLog_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLog_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("term_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTerm_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTerm_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -363,7 +343,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

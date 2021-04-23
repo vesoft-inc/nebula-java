@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
   public static final int USER = 1;
   public static final int GRAPH_ADDR = 2;
   public static final int CLIENT_IP = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(USER, new FieldMetaData("user", TFieldRequirementType.DEFAULT, 
@@ -63,14 +60,49 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
   }
 
   public CreateSessionReq(
-    byte[] user,
-    com.vesoft.nebula.HostAddr graph_addr,
-    byte[] client_ip)
-  {
+      byte[] user,
+      com.vesoft.nebula.HostAddr graph_addr,
+      byte[] client_ip) {
     this();
     this.user = user;
     this.graph_addr = graph_addr;
     this.client_ip = client_ip;
+  }
+
+  public static class Builder {
+    private byte[] user;
+    private com.vesoft.nebula.HostAddr graph_addr;
+    private byte[] client_ip;
+
+    public Builder() {
+    }
+
+    public Builder setUser(final byte[] user) {
+      this.user = user;
+      return this;
+    }
+
+    public Builder setGraph_addr(final com.vesoft.nebula.HostAddr graph_addr) {
+      this.graph_addr = graph_addr;
+      return this;
+    }
+
+    public Builder setClient_ip(final byte[] client_ip) {
+      this.client_ip = client_ip;
+      return this;
+    }
+
+    public CreateSessionReq build() {
+      CreateSessionReq result = new CreateSessionReq();
+      result.setUser(this.user);
+      result.setGraph_addr(this.graph_addr);
+      result.setClient_ip(this.client_ip);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -92,12 +124,7 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
     return new CreateSessionReq(this);
   }
 
-  @Deprecated
-  public CreateSessionReq clone() {
-    return new CreateSessionReq(this);
-  }
-
-  public byte[]  getUser() {
+  public byte[] getUser() {
     return this.user;
   }
 
@@ -115,13 +142,13 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
     return this.user != null;
   }
 
-  public void setUserIsSet(boolean value) {
-    if (!value) {
+  public void setUserIsSet(boolean __value) {
+    if (!__value) {
       this.user = null;
     }
   }
 
-  public com.vesoft.nebula.HostAddr  getGraph_addr() {
+  public com.vesoft.nebula.HostAddr getGraph_addr() {
     return this.graph_addr;
   }
 
@@ -139,13 +166,13 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
     return this.graph_addr != null;
   }
 
-  public void setGraph_addrIsSet(boolean value) {
-    if (!value) {
+  public void setGraph_addrIsSet(boolean __value) {
+    if (!__value) {
       this.graph_addr = null;
     }
   }
 
-  public byte[]  getClient_ip() {
+  public byte[] getClient_ip() {
     return this.client_ip;
   }
 
@@ -163,35 +190,35 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
     return this.client_ip != null;
   }
 
-  public void setClient_ipIsSet(boolean value) {
-    if (!value) {
+  public void setClient_ipIsSet(boolean __value) {
+    if (!__value) {
       this.client_ip = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case USER:
-      if (value == null) {
+      if (__value == null) {
         unsetUser();
       } else {
-        setUser((byte[])value);
+        setUser((byte[])__value);
       }
       break;
 
     case GRAPH_ADDR:
-      if (value == null) {
+      if (__value == null) {
         unsetGraph_addr();
       } else {
-        setGraph_addr((com.vesoft.nebula.HostAddr)value);
+        setGraph_addr((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case CLIENT_IP:
-      if (value == null) {
+      if (__value == null) {
         unsetClient_ip();
       } else {
-        setClient_ip((byte[])value);
+        setClient_ip((byte[])__value);
       }
       break;
 
@@ -216,85 +243,28 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case USER:
-      return isSetUser();
-    case GRAPH_ADDR:
-      return isSetGraph_addr();
-    case CLIENT_IP:
-      return isSetClient_ip();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CreateSessionReq)
-      return this.equals((CreateSessionReq)that);
-    return false;
-  }
-
-  public boolean equals(CreateSessionReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CreateSessionReq))
+      return false;
+    CreateSessionReq that = (CreateSessionReq)_that;
 
-    boolean this_present_user = true && this.isSetUser();
-    boolean that_present_user = true && that.isSetUser();
-    if (this_present_user || that_present_user) {
-      if (!(this_present_user && that_present_user))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.user, that.user))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetUser(), that.isSetUser(), this.user, that.user)) { return false; }
 
-    boolean this_present_graph_addr = true && this.isSetGraph_addr();
-    boolean that_present_graph_addr = true && that.isSetGraph_addr();
-    if (this_present_graph_addr || that_present_graph_addr) {
-      if (!(this_present_graph_addr && that_present_graph_addr))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.graph_addr, that.graph_addr))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetGraph_addr(), that.isSetGraph_addr(), this.graph_addr, that.graph_addr)) { return false; }
 
-    boolean this_present_client_ip = true && this.isSetClient_ip();
-    boolean that_present_client_ip = true && that.isSetClient_ip();
-    if (this_present_client_ip || that_present_client_ip) {
-      if (!(this_present_client_ip && that_present_client_ip))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.client_ip, that.client_ip))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetClient_ip(), that.isSetClient_ip(), this.client_ip, that.client_ip)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_user = true && (isSetUser());
-    builder.append(present_user);
-    if (present_user)
-      builder.append(user);
-
-    boolean present_graph_addr = true && (isSetGraph_addr());
-    builder.append(present_graph_addr);
-    if (present_graph_addr)
-      builder.append(graph_addr);
-
-    boolean present_client_ip = true && (isSetClient_ip());
-    builder.append(present_client_ip);
-    if (present_client_ip)
-      builder.append(client_ip);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {user, graph_addr, client_ip});
   }
 
   @Override
@@ -314,7 +284,7 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(user, other.user);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetGraph_addr()).compareTo(other.isSetGraph_addr());
@@ -322,7 +292,7 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(graph_addr, other.graph_addr);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetClient_ip()).compareTo(other.isSetClient_ip());
@@ -330,47 +300,47 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(client_ip, other.client_ip);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case USER:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.user = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case GRAPH_ADDR:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.graph_addr = new com.vesoft.nebula.HostAddr();
             this.graph_addr.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CLIENT_IP:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.client_ip = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -407,19 +377,14 @@ public class CreateSessionReq implements TBase, java.io.Serializable, Cloneable,
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CreateSessionReq");
     sb.append(space);
     sb.append("(");
@@ -430,15 +395,15 @@ String space = prettyPrint ? " " : "";
     sb.append("user");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getUser() == null) {
+    if (this.getUser() == null) {
       sb.append("null");
     } else {
-        int __user_size = Math.min(this. getUser().length, 128);
+        int __user_size = Math.min(this.getUser().length, 128);
         for (int i = 0; i < __user_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getUser()[i]).length() > 1 ? Integer.toHexString(this. getUser()[i]).substring(Integer.toHexString(this. getUser()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getUser()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getUser()[i]).length() > 1 ? Integer.toHexString(this.getUser()[i]).substring(Integer.toHexString(this.getUser()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getUser()[i]).toUpperCase());
         }
-        if (this. getUser().length > 128) sb.append(" ...");
+        if (this.getUser().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -446,10 +411,10 @@ String space = prettyPrint ? " " : "";
     sb.append("graph_addr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGraph_addr() == null) {
+    if (this.getGraph_addr() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getGraph_addr(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getGraph_addr(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -457,15 +422,15 @@ String space = prettyPrint ? " " : "";
     sb.append("client_ip");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getClient_ip() == null) {
+    if (this.getClient_ip() == null) {
       sb.append("null");
     } else {
-        int __client_ip_size = Math.min(this. getClient_ip().length, 128);
+        int __client_ip_size = Math.min(this.getClient_ip().length, 128);
         for (int i = 0; i < __client_ip_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getClient_ip()[i]).length() > 1 ? Integer.toHexString(this. getClient_ip()[i]).substring(Integer.toHexString(this. getClient_ip()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getClient_ip()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getClient_ip()[i]).length() > 1 ? Integer.toHexString(this.getClient_ip()[i]).substring(Integer.toHexString(this.getClient_ip()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getClient_ip()[i]).toUpperCase());
         }
-        if (this. getClient_ip().length > 128) sb.append(" ...");
+        if (this.getClient_ip().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -475,7 +440,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

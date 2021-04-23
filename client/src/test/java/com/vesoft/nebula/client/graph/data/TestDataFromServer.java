@@ -125,7 +125,7 @@ public class TestDataFromServer {
             Assert.assertEquals("", result.getErrorMessage());
             Assert.assertFalse(result.getLatency() <= 0);
             Assert.assertEquals("", result.getComment());
-            Assert.assertEquals(ErrorCode.SUCCEEDED, result.getErrorCode());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
             Assert.assertEquals("test_data", result.getSpaceName());
             Assert.assertFalse(result.isEmpty());
             Assert.assertEquals(1, result.rowsSize());
@@ -210,7 +210,7 @@ public class TestDataFromServer {
 
             Assert.assertEquals(result.toString(),
                 "ColumnName: [{\"name\",\"name\",\"age\",\"birthday\"}], "
-                + "Rows: [[\"birthday\", \"name\", \"age\"]]");
+                + "Rows: [[\"name\", \"birthday\", \"age\"]]");
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
             assert false;

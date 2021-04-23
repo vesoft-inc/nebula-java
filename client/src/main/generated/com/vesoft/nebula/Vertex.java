@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
   public List<Tag> tags;
   public static final int VID = 1;
   public static final int TAGS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(VID, new FieldMetaData("vid", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Vertex(
-    Value vid,
-    List<Tag> tags)
-  {
+      Value vid,
+      List<Tag> tags) {
     this();
     this.vid = vid;
     this.tags = tags;
+  }
+
+  public static class Builder {
+    private Value vid;
+    private List<Tag> tags;
+
+    public Builder() {
+    }
+
+    public Builder setVid(final Value vid) {
+      this.vid = vid;
+      return this;
+    }
+
+    public Builder setTags(final List<Tag> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Vertex build() {
+      Vertex result = new Vertex();
+      result.setVid(this.vid);
+      result.setTags(this.tags);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     return new Vertex(this);
   }
 
-  @Deprecated
-  public Vertex clone() {
-    return new Vertex(this);
-  }
-
-  public Value  getVid() {
+  public Value getVid() {
     return this.vid;
   }
 
@@ -106,13 +126,13 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     return this.vid != null;
   }
 
-  public void setVidIsSet(boolean value) {
-    if (!value) {
+  public void setVidIsSet(boolean __value) {
+    if (!__value) {
       this.vid = null;
     }
   }
 
-  public List<Tag>  getTags() {
+  public List<Tag> getTags() {
     return this.tags;
   }
 
@@ -130,28 +150,28 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     return this.tags != null;
   }
 
-  public void setTagsIsSet(boolean value) {
-    if (!value) {
+  public void setTagsIsSet(boolean __value) {
+    if (!__value) {
       this.tags = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case VID:
-      if (value == null) {
+      if (__value == null) {
         unsetVid();
       } else {
-        setVid((Value)value);
+        setVid((Value)__value);
       }
       break;
 
     case TAGS:
-      if (value == null) {
+      if (__value == null) {
         unsetTags();
       } else {
-        setTags((List<Tag>)value);
+        setTags((List<Tag>)__value);
       }
       break;
 
@@ -173,92 +193,49 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case VID:
-      return isSetVid();
-    case TAGS:
-      return isSetTags();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Vertex)
-      return this.equals((Vertex)that);
-    return false;
-  }
-
-  public boolean equals(Vertex that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Vertex))
+      return false;
+    Vertex that = (Vertex)_that;
 
-    boolean this_present_vid = true && this.isSetVid();
-    boolean that_present_vid = true && that.isSetVid();
-    if (this_present_vid || that_present_vid) {
-      if (!(this_present_vid && that_present_vid))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vid, that.vid))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetVid(), that.isSetVid(), this.vid, that.vid)) { return false; }
 
-    boolean this_present_tags = true && this.isSetTags();
-    boolean that_present_tags = true && that.isSetTags();
-    if (this_present_tags || that_present_tags) {
-      if (!(this_present_tags && that_present_tags))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.tags, that.tags))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetTags(), that.isSetTags(), this.tags, that.tags)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_vid = true && (isSetVid());
-    builder.append(present_vid);
-    if (present_vid)
-      builder.append(vid);
-
-    boolean present_tags = true && (isSetTags());
-    builder.append(present_tags);
-    if (present_tags)
-      builder.append(tags);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {vid, tags});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case VID:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.vid = new Value();
             this.vid.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TAGS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list30 = iprot.readListBegin();
               this.tags = new ArrayList<Tag>(Math.max(0, _list30.size));
@@ -274,11 +251,11 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -316,19 +293,14 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Vertex");
     sb.append(space);
     sb.append("(");
@@ -339,10 +311,10 @@ String space = prettyPrint ? " " : "";
     sb.append("vid");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getVid() == null) {
+    if (this.getVid() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getVid(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getVid(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -350,10 +322,10 @@ String space = prettyPrint ? " " : "";
     sb.append("tags");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTags() == null) {
+    if (this.getTags() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTags(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getTags(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -363,7 +335,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

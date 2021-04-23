@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
   public SchemaProp schema_prop;
   public static final int COLUMNS = 1;
   public static final int SCHEMA_PROP = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(COLUMNS, new FieldMetaData("columns", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
   }
 
   public Schema(
-    List<ColumnDef> columns,
-    SchemaProp schema_prop)
-  {
+      List<ColumnDef> columns,
+      SchemaProp schema_prop) {
     this();
     this.columns = columns;
     this.schema_prop = schema_prop;
+  }
+
+  public static class Builder {
+    private List<ColumnDef> columns;
+    private SchemaProp schema_prop;
+
+    public Builder() {
+    }
+
+    public Builder setColumns(final List<ColumnDef> columns) {
+      this.columns = columns;
+      return this;
+    }
+
+    public Builder setSchema_prop(final SchemaProp schema_prop) {
+      this.schema_prop = schema_prop;
+      return this;
+    }
+
+    public Schema build() {
+      Schema result = new Schema();
+      result.setColumns(this.columns);
+      result.setSchema_prop(this.schema_prop);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
     return new Schema(this);
   }
 
-  @Deprecated
-  public Schema clone() {
-    return new Schema(this);
-  }
-
-  public List<ColumnDef>  getColumns() {
+  public List<ColumnDef> getColumns() {
     return this.columns;
   }
 
@@ -106,13 +126,13 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
     return this.columns != null;
   }
 
-  public void setColumnsIsSet(boolean value) {
-    if (!value) {
+  public void setColumnsIsSet(boolean __value) {
+    if (!__value) {
       this.columns = null;
     }
   }
 
-  public SchemaProp  getSchema_prop() {
+  public SchemaProp getSchema_prop() {
     return this.schema_prop;
   }
 
@@ -130,28 +150,28 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
     return this.schema_prop != null;
   }
 
-  public void setSchema_propIsSet(boolean value) {
-    if (!value) {
+  public void setSchema_propIsSet(boolean __value) {
+    if (!__value) {
       this.schema_prop = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case COLUMNS:
-      if (value == null) {
+      if (__value == null) {
         unsetColumns();
       } else {
-        setColumns((List<ColumnDef>)value);
+        setColumns((List<ColumnDef>)__value);
       }
       break;
 
     case SCHEMA_PROP:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema_prop();
       } else {
-        setSchema_prop((SchemaProp)value);
+        setSchema_prop((SchemaProp)__value);
       }
       break;
 
@@ -173,69 +193,26 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case COLUMNS:
-      return isSetColumns();
-    case SCHEMA_PROP:
-      return isSetSchema_prop();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Schema)
-      return this.equals((Schema)that);
-    return false;
-  }
-
-  public boolean equals(Schema that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Schema))
+      return false;
+    Schema that = (Schema)_that;
 
-    boolean this_present_columns = true && this.isSetColumns();
-    boolean that_present_columns = true && that.isSetColumns();
-    if (this_present_columns || that_present_columns) {
-      if (!(this_present_columns && that_present_columns))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.columns, that.columns))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetColumns(), that.isSetColumns(), this.columns, that.columns)) { return false; }
 
-    boolean this_present_schema_prop = true && this.isSetSchema_prop();
-    boolean that_present_schema_prop = true && that.isSetSchema_prop();
-    if (this_present_schema_prop || that_present_schema_prop) {
-      if (!(this_present_schema_prop && that_present_schema_prop))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.schema_prop, that.schema_prop))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema_prop(), that.isSetSchema_prop(), this.schema_prop, that.schema_prop)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_columns = true && (isSetColumns());
-    builder.append(present_columns);
-    if (present_columns)
-      builder.append(columns);
-
-    boolean present_schema_prop = true && (isSetSchema_prop());
-    builder.append(present_schema_prop);
-    if (present_schema_prop)
-      builder.append(schema_prop);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {columns, schema_prop});
   }
 
   @Override
@@ -255,7 +232,7 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(columns, other.columns);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema_prop()).compareTo(other.isSetSchema_prop());
@@ -263,25 +240,25 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema_prop, other.schema_prop);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case COLUMNS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list0 = iprot.readListBegin();
               this.columns = new ArrayList<ColumnDef>(Math.max(0, _list0.size));
@@ -297,19 +274,19 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA_PROP:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.schema_prop = new SchemaProp();
             this.schema_prop.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -347,19 +324,14 @@ public class Schema implements TBase, java.io.Serializable, Cloneable, Comparabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Schema");
     sb.append(space);
     sb.append("(");
@@ -370,10 +342,10 @@ String space = prettyPrint ? " " : "";
     sb.append("columns");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getColumns() == null) {
+    if (this.getColumns() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getColumns(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getColumns(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -381,10 +353,10 @@ String space = prettyPrint ? " " : "";
     sb.append("schema_prop");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema_prop() == null) {
+    if (this.getSchema_prop() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSchema_prop(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSchema_prop(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -394,7 +366,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

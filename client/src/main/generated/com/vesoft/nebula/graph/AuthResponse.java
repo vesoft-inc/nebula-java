@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.graph;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -37,20 +34,19 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see ErrorCode
    */
-  public int error_code;
+  public ErrorCode error_code;
   public byte[] error_msg;
   public long session_id;
   public static final int ERROR_CODE = 1;
   public static final int ERROR_MSG = 2;
   public static final int SESSION_ID = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __ERROR_CODE_ISSET_ID = 0;
-  private static final int __SESSION_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __SESSION_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.REQUIRED, 
@@ -70,24 +66,61 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public AuthResponse(
-    int error_code)
-  {
+      ErrorCode error_code) {
     this();
     this.error_code = error_code;
-    setError_codeIsSet(true);
   }
 
   public AuthResponse(
-    int error_code,
-    byte[] error_msg,
-    long session_id)
-  {
+      ErrorCode error_code,
+      byte[] error_msg,
+      long session_id) {
     this();
     this.error_code = error_code;
-    setError_codeIsSet(true);
     this.error_msg = error_msg;
     this.session_id = session_id;
     setSession_idIsSet(true);
+  }
+
+  public static class Builder {
+    private ErrorCode error_code;
+    private byte[] error_msg;
+    private long session_id;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setError_code(final ErrorCode error_code) {
+      this.error_code = error_code;
+      return this;
+    }
+
+    public Builder setError_msg(final byte[] error_msg) {
+      this.error_msg = error_msg;
+      return this;
+    }
+
+    public Builder setSession_id(final long session_id) {
+      this.session_id = session_id;
+      __optional_isset.set(__SESSION_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public AuthResponse build() {
+      AuthResponse result = new AuthResponse();
+      result.setError_code(this.error_code);
+      result.setError_msg(this.error_msg);
+      if (__optional_isset.get(__SESSION_ID_ISSET_ID)) {
+        result.setSession_id(this.session_id);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -96,7 +129,9 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   public AuthResponse(AuthResponse other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.error_code = TBaseHelper.deepCopy(other.error_code);
+    if (other.isSetError_code()) {
+      this.error_code = TBaseHelper.deepCopy(other.error_code);
+    }
     if (other.isSetError_msg()) {
       this.error_msg = TBaseHelper.deepCopy(other.error_msg);
     }
@@ -107,16 +142,11 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     return new AuthResponse(this);
   }
 
-  @Deprecated
-  public AuthResponse clone() {
-    return new AuthResponse(this);
-  }
-
   /**
    * 
    * @see ErrorCode
    */
-  public int  getError_code() {
+  public ErrorCode getError_code() {
     return this.error_code;
   }
 
@@ -124,26 +154,27 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see ErrorCode
    */
-  public AuthResponse setError_code(int error_code) {
+  public AuthResponse setError_code(ErrorCode error_code) {
     this.error_code = error_code;
-    setError_codeIsSet(true);
     return this;
   }
 
   public void unsetError_code() {
-    __isset_bit_vector.clear(__ERROR_CODE_ISSET_ID);
+    this.error_code = null;
   }
 
   // Returns true if field error_code is set (has been assigned a value) and false otherwise
   public boolean isSetError_code() {
-    return __isset_bit_vector.get(__ERROR_CODE_ISSET_ID);
+    return this.error_code != null;
   }
 
-  public void setError_codeIsSet(boolean value) {
-    __isset_bit_vector.set(__ERROR_CODE_ISSET_ID, value);
+  public void setError_codeIsSet(boolean __value) {
+    if (!__value) {
+      this.error_code = null;
+    }
   }
 
-  public byte[]  getError_msg() {
+  public byte[] getError_msg() {
     return this.error_msg;
   }
 
@@ -161,13 +192,13 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     return this.error_msg != null;
   }
 
-  public void setError_msgIsSet(boolean value) {
-    if (!value) {
+  public void setError_msgIsSet(boolean __value) {
+    if (!__value) {
       this.error_msg = null;
     }
   }
 
-  public long  getSession_id() {
+  public long getSession_id() {
     return this.session_id;
   }
 
@@ -186,33 +217,33 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__SESSION_ID_ISSET_ID);
   }
 
-  public void setSession_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SESSION_ID_ISSET_ID, value);
+  public void setSession_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SESSION_ID_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ERROR_CODE:
-      if (value == null) {
+      if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((Integer)value);
+        setError_code((ErrorCode)__value);
       }
       break;
 
     case ERROR_MSG:
-      if (value == null) {
+      if (__value == null) {
         unsetError_msg();
       } else {
-        setError_msg((byte[])value);
+        setError_msg((byte[])__value);
       }
       break;
 
     case SESSION_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSession_id();
       } else {
-        setSession_id((Long)value);
+        setSession_id((Long)__value);
       }
       break;
 
@@ -237,85 +268,28 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ERROR_CODE:
-      return isSetError_code();
-    case ERROR_MSG:
-      return isSetError_msg();
-    case SESSION_ID:
-      return isSetSession_id();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AuthResponse)
-      return this.equals((AuthResponse)that);
-    return false;
-  }
-
-  public boolean equals(AuthResponse that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AuthResponse))
+      return false;
+    AuthResponse that = (AuthResponse)_that;
 
-    boolean this_present_error_code = true;
-    boolean that_present_error_code = true;
-    if (this_present_error_code || that_present_error_code) {
-      if (!(this_present_error_code && that_present_error_code))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.error_code, that.error_code))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetError_code(), that.isSetError_code(), this.error_code, that.error_code)) { return false; }
 
-    boolean this_present_error_msg = true && this.isSetError_msg();
-    boolean that_present_error_msg = true && that.isSetError_msg();
-    if (this_present_error_msg || that_present_error_msg) {
-      if (!(this_present_error_msg && that_present_error_msg))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.error_msg, that.error_msg))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetError_msg(), that.isSetError_msg(), this.error_msg, that.error_msg)) { return false; }
 
-    boolean this_present_session_id = true && this.isSetSession_id();
-    boolean that_present_session_id = true && that.isSetSession_id();
-    if (this_present_session_id || that_present_session_id) {
-      if (!(this_present_session_id && that_present_session_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.session_id, that.session_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSession_id(), that.isSetSession_id(), this.session_id, that.session_id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_error_code = true;
-    builder.append(present_error_code);
-    if (present_error_code)
-      builder.append(error_code);
-
-    boolean present_error_msg = true && (isSetError_msg());
-    builder.append(present_error_msg);
-    if (present_error_msg)
-      builder.append(error_msg);
-
-    boolean present_session_id = true && (isSetSession_id());
-    builder.append(present_session_id);
-    if (present_session_id)
-      builder.append(session_id);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {error_code, error_msg, session_id});
   }
 
   @Override
@@ -335,7 +309,7 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(error_code, other.error_code);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetError_msg()).compareTo(other.isSetError_msg());
@@ -343,7 +317,7 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(error_msg, other.error_msg);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSession_id()).compareTo(other.isSetSession_id());
@@ -351,48 +325,47 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(session_id, other.session_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ERROR_CODE:
-          if (field.type == TType.I32) {
-            this.error_code = iprot.readI32();
-            setError_codeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.error_code = ErrorCode.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ERROR_MSG:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.error_msg = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SESSION_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.session_id = iprot.readI64();
             setSession_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -401,9 +374,6 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
-    if (!isSetError_code()) {
-      throw new TProtocolException("Required field 'error_code' was not found in serialized data! Struct: " + toString());
-    }
     validate();
   }
 
@@ -411,9 +381,11 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
-    oprot.writeI32(this.error_code);
-    oprot.writeFieldEnd();
+    if (this.error_code != null) {
+      oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
+      oprot.writeI32(this.error_code == null ? 0 : this.error_code.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.error_msg != null) {
       if (isSetError_msg()) {
         oprot.writeFieldBegin(ERROR_MSG_FIELD_DESC);
@@ -432,19 +404,14 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AuthResponse");
     sb.append(space);
     sb.append("(");
@@ -455,14 +422,18 @@ String space = prettyPrint ? " " : "";
     sb.append("error_code");
     sb.append(space);
     sb.append(":").append(space);
-    String error_code_name = ErrorCode.VALUES_TO_NAMES.get(this. getError_code());
-    if (error_code_name != null) {
-      sb.append(error_code_name);
-      sb.append(" (");
-    }
-    sb.append(this. getError_code());
-    if (error_code_name != null) {
-      sb.append(")");
+    if (this.getError_code() == null) {
+      sb.append("null");
+    } else {
+      String error_code_name = this.getError_code() == null ? "null" : this.getError_code().name();
+      if (error_code_name != null) {
+        sb.append(error_code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getError_code());
+      if (error_code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (isSetError_msg())
@@ -472,15 +443,15 @@ String space = prettyPrint ? " " : "";
       sb.append("error_msg");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getError_msg() == null) {
+      if (this.getError_msg() == null) {
         sb.append("null");
       } else {
-          int __error_msg_size = Math.min(this. getError_msg().length, 128);
+          int __error_msg_size = Math.min(this.getError_msg().length, 128);
           for (int i = 0; i < __error_msg_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getError_msg()[i]).length() > 1 ? Integer.toHexString(this. getError_msg()[i]).substring(Integer.toHexString(this. getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getError_msg()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getError_msg()[i]).length() > 1 ? Integer.toHexString(this.getError_msg()[i]).substring(Integer.toHexString(this.getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getError_msg()[i]).toUpperCase());
           }
-          if (this. getError_msg().length > 128) sb.append(" ...");
+          if (this.getError_msg().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -491,7 +462,7 @@ String space = prettyPrint ? " " : "";
       sb.append("session_id");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getSession_id(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSession_id(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -501,10 +472,8 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // alas, we cannot check 'error_code' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
-    if (isSetError_code() && !ErrorCode.VALID_VALUES.contains(error_code)){
-      throw new TProtocolException("The field 'error_code' has been assigned the invalid value " + error_code);
+    if (error_code == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'error_code' was not present! Struct: " + toString());
     }
   }
 

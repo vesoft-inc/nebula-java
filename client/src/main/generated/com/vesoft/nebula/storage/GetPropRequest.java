@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -57,7 +54,6 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   public static final int ORDER_BY = 7;
   public static final int LIMIT = 8;
   public static final int FILTER = 9;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -66,6 +62,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -106,10 +103,9 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   }
 
   public GetPropRequest(
-    int space_id,
-    Map<Integer,List<com.vesoft.nebula.Row>> parts,
-    boolean dedup)
-  {
+      int space_id,
+      Map<Integer,List<com.vesoft.nebula.Row>> parts,
+      boolean dedup) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -119,16 +115,15 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   }
 
   public GetPropRequest(
-    int space_id,
-    Map<Integer,List<com.vesoft.nebula.Row>> parts,
-    List<VertexProp> vertex_props,
-    List<EdgeProp> edge_props,
-    List<Expr> expressions,
-    boolean dedup,
-    List<OrderBy> order_by,
-    long limit,
-    byte[] filter)
-  {
+      int space_id,
+      Map<Integer,List<com.vesoft.nebula.Row>> parts,
+      List<VertexProp> vertex_props,
+      List<EdgeProp> edge_props,
+      List<Expr> expressions,
+      boolean dedup,
+      List<OrderBy> order_by,
+      long limit,
+      byte[] filter) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -142,6 +137,95 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     this.limit = limit;
     setLimitIsSet(true);
     this.filter = filter;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private Map<Integer,List<com.vesoft.nebula.Row>> parts;
+    private List<VertexProp> vertex_props;
+    private List<EdgeProp> edge_props;
+    private List<Expr> expressions;
+    private boolean dedup;
+    private List<OrderBy> order_by;
+    private long limit;
+    private byte[] filter;
+
+    BitSet __optional_isset = new BitSet(3);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setParts(final Map<Integer,List<com.vesoft.nebula.Row>> parts) {
+      this.parts = parts;
+      return this;
+    }
+
+    public Builder setVertex_props(final List<VertexProp> vertex_props) {
+      this.vertex_props = vertex_props;
+      return this;
+    }
+
+    public Builder setEdge_props(final List<EdgeProp> edge_props) {
+      this.edge_props = edge_props;
+      return this;
+    }
+
+    public Builder setExpressions(final List<Expr> expressions) {
+      this.expressions = expressions;
+      return this;
+    }
+
+    public Builder setDedup(final boolean dedup) {
+      this.dedup = dedup;
+      __optional_isset.set(__DEDUP_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setOrder_by(final List<OrderBy> order_by) {
+      this.order_by = order_by;
+      return this;
+    }
+
+    public Builder setLimit(final long limit) {
+      this.limit = limit;
+      __optional_isset.set(__LIMIT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setFilter(final byte[] filter) {
+      this.filter = filter;
+      return this;
+    }
+
+    public GetPropRequest build() {
+      GetPropRequest result = new GetPropRequest();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setParts(this.parts);
+      result.setVertex_props(this.vertex_props);
+      result.setEdge_props(this.edge_props);
+      result.setExpressions(this.expressions);
+      if (__optional_isset.get(__DEDUP_ISSET_ID)) {
+        result.setDedup(this.dedup);
+      }
+      result.setOrder_by(this.order_by);
+      if (__optional_isset.get(__LIMIT_ISSET_ID)) {
+        result.setLimit(this.limit);
+      }
+      result.setFilter(this.filter);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -177,12 +261,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return new GetPropRequest(this);
   }
 
-  @Deprecated
-  public GetPropRequest clone() {
-    return new GetPropRequest(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -201,11 +280,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<com.vesoft.nebula.Row>>  getParts() {
+  public Map<Integer,List<com.vesoft.nebula.Row>> getParts() {
     return this.parts;
   }
 
@@ -223,13 +302,13 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return this.parts != null;
   }
 
-  public void setPartsIsSet(boolean value) {
-    if (!value) {
+  public void setPartsIsSet(boolean __value) {
+    if (!__value) {
       this.parts = null;
     }
   }
 
-  public List<VertexProp>  getVertex_props() {
+  public List<VertexProp> getVertex_props() {
     return this.vertex_props;
   }
 
@@ -247,13 +326,13 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return this.vertex_props != null;
   }
 
-  public void setVertex_propsIsSet(boolean value) {
-    if (!value) {
+  public void setVertex_propsIsSet(boolean __value) {
+    if (!__value) {
       this.vertex_props = null;
     }
   }
 
-  public List<EdgeProp>  getEdge_props() {
+  public List<EdgeProp> getEdge_props() {
     return this.edge_props;
   }
 
@@ -271,13 +350,13 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return this.edge_props != null;
   }
 
-  public void setEdge_propsIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_propsIsSet(boolean __value) {
+    if (!__value) {
       this.edge_props = null;
     }
   }
 
-  public List<Expr>  getExpressions() {
+  public List<Expr> getExpressions() {
     return this.expressions;
   }
 
@@ -295,13 +374,13 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return this.expressions != null;
   }
 
-  public void setExpressionsIsSet(boolean value) {
-    if (!value) {
+  public void setExpressionsIsSet(boolean __value) {
+    if (!__value) {
       this.expressions = null;
     }
   }
 
-  public boolean  isDedup() {
+  public boolean isDedup() {
     return this.dedup;
   }
 
@@ -320,11 +399,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__DEDUP_ISSET_ID);
   }
 
-  public void setDedupIsSet(boolean value) {
-    __isset_bit_vector.set(__DEDUP_ISSET_ID, value);
+  public void setDedupIsSet(boolean __value) {
+    __isset_bit_vector.set(__DEDUP_ISSET_ID, __value);
   }
 
-  public List<OrderBy>  getOrder_by() {
+  public List<OrderBy> getOrder_by() {
     return this.order_by;
   }
 
@@ -342,13 +421,13 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return this.order_by != null;
   }
 
-  public void setOrder_byIsSet(boolean value) {
-    if (!value) {
+  public void setOrder_byIsSet(boolean __value) {
+    if (!__value) {
       this.order_by = null;
     }
   }
 
-  public long  getLimit() {
+  public long getLimit() {
     return this.limit;
   }
 
@@ -367,11 +446,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__LIMIT_ISSET_ID);
   }
 
-  public void setLimitIsSet(boolean value) {
-    __isset_bit_vector.set(__LIMIT_ISSET_ID, value);
+  public void setLimitIsSet(boolean __value) {
+    __isset_bit_vector.set(__LIMIT_ISSET_ID, __value);
   }
 
-  public byte[]  getFilter() {
+  public byte[] getFilter() {
     return this.filter;
   }
 
@@ -389,84 +468,84 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     return this.filter != null;
   }
 
-  public void setFilterIsSet(boolean value) {
-    if (!value) {
+  public void setFilterIsSet(boolean __value) {
+    if (!__value) {
       this.filter = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<com.vesoft.nebula.Row>>)value);
+        setParts((Map<Integer,List<com.vesoft.nebula.Row>>)__value);
       }
       break;
 
     case VERTEX_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetVertex_props();
       } else {
-        setVertex_props((List<VertexProp>)value);
+        setVertex_props((List<VertexProp>)__value);
       }
       break;
 
     case EDGE_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_props();
       } else {
-        setEdge_props((List<EdgeProp>)value);
+        setEdge_props((List<EdgeProp>)__value);
       }
       break;
 
     case EXPRESSIONS:
-      if (value == null) {
+      if (__value == null) {
         unsetExpressions();
       } else {
-        setExpressions((List<Expr>)value);
+        setExpressions((List<Expr>)__value);
       }
       break;
 
     case DEDUP:
-      if (value == null) {
+      if (__value == null) {
         unsetDedup();
       } else {
-        setDedup((Boolean)value);
+        setDedup((Boolean)__value);
       }
       break;
 
     case ORDER_BY:
-      if (value == null) {
+      if (__value == null) {
         unsetOrder_by();
       } else {
-        setOrder_by((List<OrderBy>)value);
+        setOrder_by((List<OrderBy>)__value);
       }
       break;
 
     case LIMIT:
-      if (value == null) {
+      if (__value == null) {
         unsetLimit();
       } else {
-        setLimit((Long)value);
+        setLimit((Long)__value);
       }
       break;
 
     case FILTER:
-      if (value == null) {
+      if (__value == null) {
         unsetFilter();
       } else {
-        setFilter((byte[])value);
+        setFilter((byte[])__value);
       }
       break;
 
@@ -509,204 +588,63 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PARTS:
-      return isSetParts();
-    case VERTEX_PROPS:
-      return isSetVertex_props();
-    case EDGE_PROPS:
-      return isSetEdge_props();
-    case EXPRESSIONS:
-      return isSetExpressions();
-    case DEDUP:
-      return isSetDedup();
-    case ORDER_BY:
-      return isSetOrder_by();
-    case LIMIT:
-      return isSetLimit();
-    case FILTER:
-      return isSetFilter();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetPropRequest)
-      return this.equals((GetPropRequest)that);
-    return false;
-  }
-
-  public boolean equals(GetPropRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetPropRequest))
+      return false;
+    GetPropRequest that = (GetPropRequest)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
-    boolean this_present_vertex_props = true && this.isSetVertex_props();
-    boolean that_present_vertex_props = true && that.isSetVertex_props();
-    if (this_present_vertex_props || that_present_vertex_props) {
-      if (!(this_present_vertex_props && that_present_vertex_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vertex_props, that.vertex_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetVertex_props(), that.isSetVertex_props(), this.vertex_props, that.vertex_props)) { return false; }
 
-    boolean this_present_edge_props = true && this.isSetEdge_props();
-    boolean that_present_edge_props = true && that.isSetEdge_props();
-    if (this_present_edge_props || that_present_edge_props) {
-      if (!(this_present_edge_props && that_present_edge_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_props, that.edge_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEdge_props(), that.isSetEdge_props(), this.edge_props, that.edge_props)) { return false; }
 
-    boolean this_present_expressions = true && this.isSetExpressions();
-    boolean that_present_expressions = true && that.isSetExpressions();
-    if (this_present_expressions || that_present_expressions) {
-      if (!(this_present_expressions && that_present_expressions))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.expressions, that.expressions))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetExpressions(), that.isSetExpressions(), this.expressions, that.expressions)) { return false; }
 
-    boolean this_present_dedup = true;
-    boolean that_present_dedup = true;
-    if (this_present_dedup || that_present_dedup) {
-      if (!(this_present_dedup && that_present_dedup))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.dedup, that.dedup))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.dedup, that.dedup)) { return false; }
 
-    boolean this_present_order_by = true && this.isSetOrder_by();
-    boolean that_present_order_by = true && that.isSetOrder_by();
-    if (this_present_order_by || that_present_order_by) {
-      if (!(this_present_order_by && that_present_order_by))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.order_by, that.order_by))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetOrder_by(), that.isSetOrder_by(), this.order_by, that.order_by)) { return false; }
 
-    boolean this_present_limit = true && this.isSetLimit();
-    boolean that_present_limit = true && that.isSetLimit();
-    if (this_present_limit || that_present_limit) {
-      if (!(this_present_limit && that_present_limit))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.limit, that.limit))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLimit(), that.isSetLimit(), this.limit, that.limit)) { return false; }
 
-    boolean this_present_filter = true && this.isSetFilter();
-    boolean that_present_filter = true && that.isSetFilter();
-    if (this_present_filter || that_present_filter) {
-      if (!(this_present_filter && that_present_filter))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetFilter(), that.isSetFilter(), this.filter, that.filter)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
-
-    boolean present_vertex_props = true && (isSetVertex_props());
-    builder.append(present_vertex_props);
-    if (present_vertex_props)
-      builder.append(vertex_props);
-
-    boolean present_edge_props = true && (isSetEdge_props());
-    builder.append(present_edge_props);
-    if (present_edge_props)
-      builder.append(edge_props);
-
-    boolean present_expressions = true && (isSetExpressions());
-    builder.append(present_expressions);
-    if (present_expressions)
-      builder.append(expressions);
-
-    boolean present_dedup = true;
-    builder.append(present_dedup);
-    if (present_dedup)
-      builder.append(dedup);
-
-    boolean present_order_by = true && (isSetOrder_by());
-    builder.append(present_order_by);
-    if (present_order_by)
-      builder.append(order_by);
-
-    boolean present_limit = true && (isSetLimit());
-    builder.append(present_limit);
-    if (present_limit)
-      builder.append(limit);
-
-    boolean present_filter = true && (isSetFilter());
-    builder.append(present_filter);
-    if (present_filter)
-      builder.append(filter);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, parts, vertex_props, edge_props, expressions, dedup, order_by, limit, filter});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map49 = iprot.readMapBegin();
               this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map49.size));
@@ -736,11 +674,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VERTEX_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list56 = iprot.readListBegin();
               this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list56.size));
@@ -756,11 +694,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list59 = iprot.readListBegin();
               this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list59.size));
@@ -776,11 +714,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EXPRESSIONS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list62 = iprot.readListBegin();
               this.expressions = new ArrayList<Expr>(Math.max(0, _list62.size));
@@ -796,19 +734,19 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DEDUP:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.dedup = iprot.readBool();
             setDedupIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ORDER_BY:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list65 = iprot.readListBegin();
               this.order_by = new ArrayList<OrderBy>(Math.max(0, _list65.size));
@@ -824,26 +762,26 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LIMIT:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.limit = iprot.readI64();
             setLimitIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case FILTER:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.filter = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -953,19 +891,14 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetPropRequest");
     sb.append(space);
     sb.append("(");
@@ -976,17 +909,17 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getParts() == null) {
+    if (this.getParts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
     if (isSetVertex_props())
@@ -996,10 +929,10 @@ String space = prettyPrint ? " " : "";
       sb.append("vertex_props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getVertex_props() == null) {
+      if (this.getVertex_props() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getVertex_props(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getVertex_props(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1010,10 +943,10 @@ String space = prettyPrint ? " " : "";
       sb.append("edge_props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getEdge_props() == null) {
+      if (this.getEdge_props() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getEdge_props(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getEdge_props(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1024,10 +957,10 @@ String space = prettyPrint ? " " : "";
       sb.append("expressions");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getExpressions() == null) {
+      if (this.getExpressions() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getExpressions(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getExpressions(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1036,7 +969,7 @@ String space = prettyPrint ? " " : "";
     sb.append("dedup");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isDedup(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isDedup(), indent + 1, prettyPrint));
     first = false;
     if (isSetOrder_by())
     {
@@ -1045,10 +978,10 @@ String space = prettyPrint ? " " : "";
       sb.append("order_by");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getOrder_by() == null) {
+      if (this.getOrder_by() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getOrder_by(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getOrder_by(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1059,7 +992,7 @@ String space = prettyPrint ? " " : "";
       sb.append("limit");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getLimit(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLimit(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetFilter())
@@ -1069,15 +1002,15 @@ String space = prettyPrint ? " " : "";
       sb.append("filter");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getFilter() == null) {
+      if (this.getFilter() == null) {
         sb.append("null");
       } else {
-          int __filter_size = Math.min(this. getFilter().length, 128);
+          int __filter_size = Math.min(this.getFilter().length, 128);
           for (int i = 0; i < __filter_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getFilter()[i]).length() > 1 ? Integer.toHexString(this.getFilter()[i]).substring(Integer.toHexString(this.getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFilter()[i]).toUpperCase());
           }
-          if (this. getFilter().length > 128) sb.append(" ...");
+          if (this.getFilter().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -1088,7 +1021,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

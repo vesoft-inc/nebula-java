@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
   public List<Row> rows;
   public static final int COLUMN_NAMES = 1;
   public static final int ROWS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(COLUMN_NAMES, new FieldMetaData("column_names", TFieldRequirementType.DEFAULT, 
@@ -60,12 +57,40 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
   }
 
   public DataSet(
-    List<byte[]> column_names,
-    List<Row> rows)
-  {
+      List<byte[]> column_names,
+      List<Row> rows) {
     this();
     this.column_names = column_names;
     this.rows = rows;
+  }
+
+  public static class Builder {
+    private List<byte[]> column_names;
+    private List<Row> rows;
+
+    public Builder() {
+    }
+
+    public Builder setColumn_names(final List<byte[]> column_names) {
+      this.column_names = column_names;
+      return this;
+    }
+
+    public Builder setRows(final List<Row> rows) {
+      this.rows = rows;
+      return this;
+    }
+
+    public DataSet build() {
+      DataSet result = new DataSet();
+      result.setColumn_names(this.column_names);
+      result.setRows(this.rows);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -84,12 +109,7 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
     return new DataSet(this);
   }
 
-  @Deprecated
-  public DataSet clone() {
-    return new DataSet(this);
-  }
-
-  public List<byte[]>  getColumn_names() {
+  public List<byte[]> getColumn_names() {
     return this.column_names;
   }
 
@@ -107,13 +127,13 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
     return this.column_names != null;
   }
 
-  public void setColumn_namesIsSet(boolean value) {
-    if (!value) {
+  public void setColumn_namesIsSet(boolean __value) {
+    if (!__value) {
       this.column_names = null;
     }
   }
 
-  public List<Row>  getRows() {
+  public List<Row> getRows() {
     return this.rows;
   }
 
@@ -131,28 +151,28 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
     return this.rows != null;
   }
 
-  public void setRowsIsSet(boolean value) {
-    if (!value) {
+  public void setRowsIsSet(boolean __value) {
+    if (!__value) {
       this.rows = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case COLUMN_NAMES:
-      if (value == null) {
+      if (__value == null) {
         unsetColumn_names();
       } else {
-        setColumn_names((List<byte[]>)value);
+        setColumn_names((List<byte[]>)__value);
       }
       break;
 
     case ROWS:
-      if (value == null) {
+      if (__value == null) {
         unsetRows();
       } else {
-        setRows((List<Row>)value);
+        setRows((List<Row>)__value);
       }
       break;
 
@@ -174,84 +194,41 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case COLUMN_NAMES:
-      return isSetColumn_names();
-    case ROWS:
-      return isSetRows();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof DataSet)
-      return this.equals((DataSet)that);
-    return false;
-  }
-
-  public boolean equals(DataSet that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof DataSet))
+      return false;
+    DataSet that = (DataSet)_that;
 
-    boolean this_present_column_names = true && this.isSetColumn_names();
-    boolean that_present_column_names = true && that.isSetColumn_names();
-    if (this_present_column_names || that_present_column_names) {
-      if (!(this_present_column_names && that_present_column_names))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.column_names, that.column_names))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetColumn_names(), that.isSetColumn_names(), this.column_names, that.column_names)) { return false; }
 
-    boolean this_present_rows = true && this.isSetRows();
-    boolean that_present_rows = true && that.isSetRows();
-    if (this_present_rows || that_present_rows) {
-      if (!(this_present_rows && that_present_rows))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.rows, that.rows))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRows(), that.isSetRows(), this.rows, that.rows)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_column_names = true && (isSetColumn_names());
-    builder.append(present_column_names);
-    if (present_column_names)
-      builder.append(column_names);
-
-    boolean present_rows = true && (isSetRows());
-    builder.append(present_rows);
-    if (present_rows)
-      builder.append(rows);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {column_names, rows});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case COLUMN_NAMES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list17 = iprot.readListBegin();
               this.column_names = new ArrayList<byte[]>(Math.max(0, _list17.size));
@@ -266,11 +243,11 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ROWS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list20 = iprot.readListBegin();
               this.rows = new ArrayList<Row>(Math.max(0, _list20.size));
@@ -286,11 +263,11 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -334,19 +311,14 @@ public class DataSet implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("DataSet");
     sb.append(space);
     sb.append("(");
@@ -357,10 +329,10 @@ String space = prettyPrint ? " " : "";
     sb.append("column_names");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getColumn_names() == null) {
+    if (this.getColumn_names() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getColumn_names(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getColumn_names(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -368,10 +340,10 @@ String space = prettyPrint ? " " : "";
     sb.append("rows");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getRows() == null) {
+    if (this.getRows() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getRows(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getRows(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -381,7 +353,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

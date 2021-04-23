@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
   public Map<byte[],Value> props;
   public static final int NAME = 1;
   public static final int PROPS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
@@ -60,12 +57,40 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Tag(
-    byte[] name,
-    Map<byte[],Value> props)
-  {
+      byte[] name,
+      Map<byte[],Value> props) {
     this();
     this.name = name;
     this.props = props;
+  }
+
+  public static class Builder {
+    private byte[] name;
+    private Map<byte[],Value> props;
+
+    public Builder() {
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder setProps(final Map<byte[],Value> props) {
+      this.props = props;
+      return this;
+    }
+
+    public Tag build() {
+      Tag result = new Tag();
+      result.setName(this.name);
+      result.setProps(this.props);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -84,12 +109,7 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
     return new Tag(this);
   }
 
-  @Deprecated
-  public Tag clone() {
-    return new Tag(this);
-  }
-
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -107,13 +127,13 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
 
-  public Map<byte[],Value>  getProps() {
+  public Map<byte[],Value> getProps() {
     return this.props;
   }
 
@@ -131,28 +151,28 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
     return this.props != null;
   }
 
-  public void setPropsIsSet(boolean value) {
-    if (!value) {
+  public void setPropsIsSet(boolean __value) {
+    if (!__value) {
       this.props = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
     case PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetProps();
       } else {
-        setProps((Map<byte[],Value>)value);
+        setProps((Map<byte[],Value>)__value);
       }
       break;
 
@@ -174,91 +194,48 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case NAME:
-      return isSetName();
-    case PROPS:
-      return isSetProps();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Tag)
-      return this.equals((Tag)that);
-    return false;
-  }
-
-  public boolean equals(Tag that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Tag))
+      return false;
+    Tag that = (Tag)_that;
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
-    boolean this_present_props = true && this.isSetProps();
-    boolean that_present_props = true && that.isSetProps();
-    if (this_present_props || that_present_props) {
-      if (!(this_present_props && that_present_props))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.props, that.props))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetProps(), that.isSetProps(), this.props, that.props)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    boolean present_props = true && (isSetProps());
-    builder.append(present_props);
-    if (present_props)
-      builder.append(props);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {name, props});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROPS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map25 = iprot.readMapBegin();
               this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map25.size));
@@ -276,11 +253,11 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -319,19 +296,14 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Tag");
     sb.append(space);
     sb.append("(");
@@ -342,15 +314,15 @@ String space = prettyPrint ? " " : "";
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -358,10 +330,10 @@ String space = prettyPrint ? " " : "";
     sb.append("props");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProps() == null) {
+    if (this.getProps() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProps(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProps(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -371,7 +343,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

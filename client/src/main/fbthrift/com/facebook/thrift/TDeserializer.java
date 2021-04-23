@@ -1,49 +1,39 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-
 import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TProtocolFactory;
 import com.facebook.thrift.transport.TIOStreamTransport;
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
-/**
- * Generic utility for easily deserializing objects from a byte array or Java
- * String.
- *
- */
+/** Generic utility for easily deserializing objects from a byte array or Java String. */
 public class TDeserializer {
   private final TProtocolFactory protocolFactory_;
 
-  /**
-   * Create a new TDeserializer that uses the TBinaryProtocol by default.
-   */
+  /** Create a new TDeserializer that uses the TBinaryProtocol by default. */
   public TDeserializer() {
     this(new TBinaryProtocol.Factory());
   }
 
   /**
-   * Create a new TDeserializer. It will use the TProtocol specified by the
-   * factory that is passed in.
+   * Create a new TDeserializer. It will use the TProtocol specified by the factory that is passed
+   * in.
    *
    * @param protocolFactory Factory to create a protocol
    */
@@ -59,14 +49,11 @@ public class TDeserializer {
    */
   public void deserialize(TBase base, byte[] bytes) throws TException {
     base.read(
-        protocolFactory_.getProtocol(
-          new TIOStreamTransport(
-            new ByteArrayInputStream(bytes))));
+        protocolFactory_.getProtocol(new TIOStreamTransport(new ByteArrayInputStream(bytes))));
   }
 
   /**
-   * Deserialize the Thrift object from a Java string, using a specified
-   * character set for decoding.
+   * Deserialize the Thrift object from a Java string, using a specified character set for decoding.
    *
    * @param base The object to read into
    * @param data The string to read from
@@ -81,8 +68,7 @@ public class TDeserializer {
   }
 
   /**
-   * Deserialize the Thrift object from a Java string, using the default JVM
-   * charset encoding.
+   * Deserialize the Thrift object from a Java string, using the default JVM charset encoding.
    *
    * @param base The object to read into
    * @param data The string to read from
@@ -91,4 +77,3 @@ public class TDeserializer {
     deserialize(base, data.getBytes());
   }
 }
-

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -37,16 +34,14 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
    * 
    * @see TaskResult
    */
-  public int result;
+  public TaskResult result;
   public static final int ID = 1;
   public static final int RESULT = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __RESULT_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
@@ -64,37 +59,59 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public BalanceTask(
-    byte[] id,
-    int result)
-  {
+      byte[] id,
+      TaskResult result) {
     this();
     this.id = id;
     this.result = result;
-    setResultIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] id;
+    private TaskResult result;
+
+    public Builder() {
+    }
+
+    public Builder setId(final byte[] id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder setResult(final TaskResult result) {
+      this.result = result;
+      return this;
+    }
+
+    public BalanceTask build() {
+      BalanceTask result = new BalanceTask();
+      result.setId(this.id);
+      result.setResult(this.result);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public BalanceTask(BalanceTask other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetId()) {
       this.id = TBaseHelper.deepCopy(other.id);
     }
-    this.result = TBaseHelper.deepCopy(other.result);
+    if (other.isSetResult()) {
+      this.result = TBaseHelper.deepCopy(other.result);
+    }
   }
 
   public BalanceTask deepCopy() {
     return new BalanceTask(this);
   }
 
-  @Deprecated
-  public BalanceTask clone() {
-    return new BalanceTask(this);
-  }
-
-  public byte[]  getId() {
+  public byte[] getId() {
     return this.id;
   }
 
@@ -112,8 +129,8 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     return this.id != null;
   }
 
-  public void setIdIsSet(boolean value) {
-    if (!value) {
+  public void setIdIsSet(boolean __value) {
+    if (!__value) {
       this.id = null;
     }
   }
@@ -122,7 +139,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
    * 
    * @see TaskResult
    */
-  public int  getResult() {
+  public TaskResult getResult() {
     return this.result;
   }
 
@@ -130,40 +147,41 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
    * 
    * @see TaskResult
    */
-  public BalanceTask setResult(int result) {
+  public BalanceTask setResult(TaskResult result) {
     this.result = result;
-    setResultIsSet(true);
     return this;
   }
 
   public void unsetResult() {
-    __isset_bit_vector.clear(__RESULT_ISSET_ID);
+    this.result = null;
   }
 
   // Returns true if field result is set (has been assigned a value) and false otherwise
   public boolean isSetResult() {
-    return __isset_bit_vector.get(__RESULT_ISSET_ID);
+    return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    __isset_bit_vector.set(__RESULT_ISSET_ID, value);
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
+      this.result = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ID:
-      if (value == null) {
+      if (__value == null) {
         unsetId();
       } else {
-        setId((byte[])value);
+        setId((byte[])__value);
       }
       break;
 
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((Integer)value);
+        setResult((TaskResult)__value);
       }
       break;
 
@@ -185,69 +203,26 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ID:
-      return isSetId();
-    case RESULT:
-      return isSetResult();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof BalanceTask)
-      return this.equals((BalanceTask)that);
-    return false;
-  }
-
-  public boolean equals(BalanceTask that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof BalanceTask))
+      return false;
+    BalanceTask that = (BalanceTask)_that;
 
-    boolean this_present_id = true && this.isSetId();
-    boolean that_present_id = true && that.isSetId();
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.id, that.id))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetId(), that.isSetId(), this.id, that.id)) { return false; }
 
-    boolean this_present_result = true;
-    boolean that_present_result = true;
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_id = true && (isSetId());
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
-
-    boolean present_result = true;
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {id, result});
   }
 
   @Override
@@ -267,7 +242,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(id, other.id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetResult()).compareTo(other.isSetResult());
@@ -275,40 +250,39 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ID:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.id = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RESULT:
-          if (field.type == TType.I32) {
-            this.result = iprot.readI32();
-            setResultIsSet(true);
+          if (__field.type == TType.I32) {
+            this.result = TaskResult.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -329,28 +303,25 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeBinary(this.id);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(RESULT_FIELD_DESC);
-    oprot.writeI32(this.result);
-    oprot.writeFieldEnd();
+    if (this.result != null) {
+      oprot.writeFieldBegin(RESULT_FIELD_DESC);
+      oprot.writeI32(this.result == null ? 0 : this.result.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("BalanceTask");
     sb.append(space);
     sb.append("(");
@@ -361,15 +332,15 @@ String space = prettyPrint ? " " : "";
     sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getId() == null) {
+    if (this.getId() == null) {
       sb.append("null");
     } else {
-        int __id_size = Math.min(this. getId().length, 128);
+        int __id_size = Math.min(this.getId().length, 128);
         for (int i = 0; i < __id_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getId()[i]).length() > 1 ? Integer.toHexString(this. getId()[i]).substring(Integer.toHexString(this. getId()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getId()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getId()[i]).length() > 1 ? Integer.toHexString(this.getId()[i]).substring(Integer.toHexString(this.getId()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getId()[i]).toUpperCase());
         }
-        if (this. getId().length > 128) sb.append(" ...");
+        if (this.getId().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -377,14 +348,18 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    String result_name = TaskResult.VALUES_TO_NAMES.get(this. getResult());
-    if (result_name != null) {
-      sb.append(result_name);
-      sb.append(" (");
-    }
-    sb.append(this. getResult());
-    if (result_name != null) {
-      sb.append(")");
+    if (this.getResult() == null) {
+      sb.append("null");
+    } else {
+      String result_name = this.getResult() == null ? "null" : this.getResult().name();
+      if (result_name != null) {
+        sb.append(result_name);
+        sb.append(" (");
+      }
+      sb.append(this.getResult());
+      if (result_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -394,10 +369,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetResult() && !TaskResult.VALID_VALUES.contains(result)){
-      throw new TProtocolException("The field 'result' has been assigned the invalid value " + result);
-    }
   }
 
 }

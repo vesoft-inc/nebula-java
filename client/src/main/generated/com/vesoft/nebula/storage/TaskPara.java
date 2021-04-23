@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,13 +36,13 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int TASK_SPECFIC_PARAS = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -67,23 +64,62 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public TaskPara(
-    int space_id)
-  {
+      int space_id) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
   }
 
   public TaskPara(
-    int space_id,
-    List<Integer> parts,
-    List<byte[]> task_specfic_paras)
-  {
+      int space_id,
+      List<Integer> parts,
+      List<byte[]> task_specfic_paras) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
     this.task_specfic_paras = task_specfic_paras;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private List<Integer> parts;
+    private List<byte[]> task_specfic_paras;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setParts(final List<Integer> parts) {
+      this.parts = parts;
+      return this;
+    }
+
+    public Builder setTask_specfic_paras(final List<byte[]> task_specfic_paras) {
+      this.task_specfic_paras = task_specfic_paras;
+      return this;
+    }
+
+    public TaskPara build() {
+      TaskPara result = new TaskPara();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setParts(this.parts);
+      result.setTask_specfic_paras(this.task_specfic_paras);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -105,12 +141,7 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     return new TaskPara(this);
   }
 
-  @Deprecated
-  public TaskPara clone() {
-    return new TaskPara(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -129,11 +160,11 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public List<Integer>  getParts() {
+  public List<Integer> getParts() {
     return this.parts;
   }
 
@@ -151,13 +182,13 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     return this.parts != null;
   }
 
-  public void setPartsIsSet(boolean value) {
-    if (!value) {
+  public void setPartsIsSet(boolean __value) {
+    if (!__value) {
       this.parts = null;
     }
   }
 
-  public List<byte[]>  getTask_specfic_paras() {
+  public List<byte[]> getTask_specfic_paras() {
     return this.task_specfic_paras;
   }
 
@@ -175,36 +206,36 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     return this.task_specfic_paras != null;
   }
 
-  public void setTask_specfic_parasIsSet(boolean value) {
-    if (!value) {
+  public void setTask_specfic_parasIsSet(boolean __value) {
+    if (!__value) {
       this.task_specfic_paras = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetParts();
       } else {
-        setParts((List<Integer>)value);
+        setParts((List<Integer>)__value);
       }
       break;
 
     case TASK_SPECFIC_PARAS:
-      if (value == null) {
+      if (__value == null) {
         unsetTask_specfic_paras();
       } else {
-        setTask_specfic_paras((List<byte[]>)value);
+        setTask_specfic_paras((List<byte[]>)__value);
       }
       break;
 
@@ -229,85 +260,28 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PARTS:
-      return isSetParts();
-    case TASK_SPECFIC_PARAS:
-      return isSetTask_specfic_paras();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof TaskPara)
-      return this.equals((TaskPara)that);
-    return false;
-  }
-
-  public boolean equals(TaskPara that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof TaskPara))
+      return false;
+    TaskPara that = (TaskPara)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
-    boolean this_present_task_specfic_paras = true && this.isSetTask_specfic_paras();
-    boolean that_present_task_specfic_paras = true && that.isSetTask_specfic_paras();
-    if (this_present_task_specfic_paras || that_present_task_specfic_paras) {
-      if (!(this_present_task_specfic_paras && that_present_task_specfic_paras))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.task_specfic_paras, that.task_specfic_paras))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetTask_specfic_paras(), that.isSetTask_specfic_paras(), this.task_specfic_paras, that.task_specfic_paras)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
-
-    boolean present_task_specfic_paras = true && (isSetTask_specfic_paras());
-    builder.append(present_task_specfic_paras);
-    if (present_task_specfic_paras)
-      builder.append(task_specfic_paras);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, parts, task_specfic_paras});
   }
 
   @Override
@@ -327,7 +301,7 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
@@ -335,7 +309,7 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTask_specfic_paras()).compareTo(other.isSetTask_specfic_paras());
@@ -343,33 +317,33 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(task_specfic_paras, other.task_specfic_paras);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list171 = iprot.readListBegin();
               this.parts = new ArrayList<Integer>(Math.max(0, _list171.size));
@@ -384,11 +358,11 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TASK_SPECFIC_PARAS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list174 = iprot.readListBegin();
               this.task_specfic_paras = new ArrayList<byte[]>(Math.max(0, _list174.size));
@@ -403,11 +377,11 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -458,19 +432,14 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("TaskPara");
     sb.append(space);
     sb.append("(");
@@ -481,7 +450,7 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (isSetParts())
     {
@@ -490,10 +459,10 @@ String space = prettyPrint ? " " : "";
       sb.append("parts");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getParts() == null) {
+      if (this.getParts() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -504,10 +473,10 @@ String space = prettyPrint ? " " : "";
       sb.append("task_specfic_paras");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getTask_specfic_paras() == null) {
+      if (this.getTask_specfic_paras() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getTask_specfic_paras(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getTask_specfic_paras(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -518,7 +487,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

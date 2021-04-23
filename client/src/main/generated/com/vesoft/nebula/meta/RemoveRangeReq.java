@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
   public static final int SEGMENT = 1;
   public static final int START = 2;
   public static final int END = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SEGMENT, new FieldMetaData("segment", TFieldRequirementType.DEFAULT, 
@@ -63,14 +60,49 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public RemoveRangeReq(
-    byte[] segment,
-    byte[] start,
-    byte[] end)
-  {
+      byte[] segment,
+      byte[] start,
+      byte[] end) {
     this();
     this.segment = segment;
     this.start = start;
     this.end = end;
+  }
+
+  public static class Builder {
+    private byte[] segment;
+    private byte[] start;
+    private byte[] end;
+
+    public Builder() {
+    }
+
+    public Builder setSegment(final byte[] segment) {
+      this.segment = segment;
+      return this;
+    }
+
+    public Builder setStart(final byte[] start) {
+      this.start = start;
+      return this;
+    }
+
+    public Builder setEnd(final byte[] end) {
+      this.end = end;
+      return this;
+    }
+
+    public RemoveRangeReq build() {
+      RemoveRangeReq result = new RemoveRangeReq();
+      result.setSegment(this.segment);
+      result.setStart(this.start);
+      result.setEnd(this.end);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -92,12 +124,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     return new RemoveRangeReq(this);
   }
 
-  @Deprecated
-  public RemoveRangeReq clone() {
-    return new RemoveRangeReq(this);
-  }
-
-  public byte[]  getSegment() {
+  public byte[] getSegment() {
     return this.segment;
   }
 
@@ -115,13 +142,13 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     return this.segment != null;
   }
 
-  public void setSegmentIsSet(boolean value) {
-    if (!value) {
+  public void setSegmentIsSet(boolean __value) {
+    if (!__value) {
       this.segment = null;
     }
   }
 
-  public byte[]  getStart() {
+  public byte[] getStart() {
     return this.start;
   }
 
@@ -139,13 +166,13 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     return this.start != null;
   }
 
-  public void setStartIsSet(boolean value) {
-    if (!value) {
+  public void setStartIsSet(boolean __value) {
+    if (!__value) {
       this.start = null;
     }
   }
 
-  public byte[]  getEnd() {
+  public byte[] getEnd() {
     return this.end;
   }
 
@@ -163,35 +190,35 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     return this.end != null;
   }
 
-  public void setEndIsSet(boolean value) {
-    if (!value) {
+  public void setEndIsSet(boolean __value) {
+    if (!__value) {
       this.end = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SEGMENT:
-      if (value == null) {
+      if (__value == null) {
         unsetSegment();
       } else {
-        setSegment((byte[])value);
+        setSegment((byte[])__value);
       }
       break;
 
     case START:
-      if (value == null) {
+      if (__value == null) {
         unsetStart();
       } else {
-        setStart((byte[])value);
+        setStart((byte[])__value);
       }
       break;
 
     case END:
-      if (value == null) {
+      if (__value == null) {
         unsetEnd();
       } else {
-        setEnd((byte[])value);
+        setEnd((byte[])__value);
       }
       break;
 
@@ -216,85 +243,28 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SEGMENT:
-      return isSetSegment();
-    case START:
-      return isSetStart();
-    case END:
-      return isSetEnd();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof RemoveRangeReq)
-      return this.equals((RemoveRangeReq)that);
-    return false;
-  }
-
-  public boolean equals(RemoveRangeReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof RemoveRangeReq))
+      return false;
+    RemoveRangeReq that = (RemoveRangeReq)_that;
 
-    boolean this_present_segment = true && this.isSetSegment();
-    boolean that_present_segment = true && that.isSetSegment();
-    if (this_present_segment || that_present_segment) {
-      if (!(this_present_segment && that_present_segment))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.segment, that.segment))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSegment(), that.isSetSegment(), this.segment, that.segment)) { return false; }
 
-    boolean this_present_start = true && this.isSetStart();
-    boolean that_present_start = true && that.isSetStart();
-    if (this_present_start || that_present_start) {
-      if (!(this_present_start && that_present_start))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.start, that.start))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetStart(), that.isSetStart(), this.start, that.start)) { return false; }
 
-    boolean this_present_end = true && this.isSetEnd();
-    boolean that_present_end = true && that.isSetEnd();
-    if (this_present_end || that_present_end) {
-      if (!(this_present_end && that_present_end))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.end, that.end))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetEnd(), that.isSetEnd(), this.end, that.end)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_segment = true && (isSetSegment());
-    builder.append(present_segment);
-    if (present_segment)
-      builder.append(segment);
-
-    boolean present_start = true && (isSetStart());
-    builder.append(present_start);
-    if (present_start)
-      builder.append(start);
-
-    boolean present_end = true && (isSetEnd());
-    builder.append(present_end);
-    if (present_end)
-      builder.append(end);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {segment, start, end});
   }
 
   @Override
@@ -314,7 +284,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(segment, other.segment);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStart()).compareTo(other.isSetStart());
@@ -322,7 +292,7 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(start, other.start);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEnd()).compareTo(other.isSetEnd());
@@ -330,46 +300,46 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(end, other.end);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SEGMENT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.segment = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case START:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.start = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case END:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.end = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -406,19 +376,14 @@ public class RemoveRangeReq implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("RemoveRangeReq");
     sb.append(space);
     sb.append("(");
@@ -429,15 +394,15 @@ String space = prettyPrint ? " " : "";
     sb.append("segment");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSegment() == null) {
+    if (this.getSegment() == null) {
       sb.append("null");
     } else {
-        int __segment_size = Math.min(this. getSegment().length, 128);
+        int __segment_size = Math.min(this.getSegment().length, 128);
         for (int i = 0; i < __segment_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSegment()[i]).length() > 1 ? Integer.toHexString(this. getSegment()[i]).substring(Integer.toHexString(this. getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSegment()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSegment()[i]).length() > 1 ? Integer.toHexString(this.getSegment()[i]).substring(Integer.toHexString(this.getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSegment()[i]).toUpperCase());
         }
-        if (this. getSegment().length > 128) sb.append(" ...");
+        if (this.getSegment().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -445,15 +410,15 @@ String space = prettyPrint ? " " : "";
     sb.append("start");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getStart() == null) {
+    if (this.getStart() == null) {
       sb.append("null");
     } else {
-        int __start_size = Math.min(this. getStart().length, 128);
+        int __start_size = Math.min(this.getStart().length, 128);
         for (int i = 0; i < __start_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getStart()[i]).length() > 1 ? Integer.toHexString(this. getStart()[i]).substring(Integer.toHexString(this. getStart()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getStart()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getStart()[i]).length() > 1 ? Integer.toHexString(this.getStart()[i]).substring(Integer.toHexString(this.getStart()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getStart()[i]).toUpperCase());
         }
-        if (this. getStart().length > 128) sb.append(" ...");
+        if (this.getStart().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -461,15 +426,15 @@ String space = prettyPrint ? " " : "";
     sb.append("end");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEnd() == null) {
+    if (this.getEnd() == null) {
       sb.append("null");
     } else {
-        int __end_size = Math.min(this. getEnd().length, 128);
+        int __end_size = Math.min(this.getEnd().length, 128);
         for (int i = 0; i < __end_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getEnd()[i]).length() > 1 ? Integer.toHexString(this. getEnd()[i]).substring(Integer.toHexString(this. getEnd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEnd()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getEnd()[i]).length() > 1 ? Integer.toHexString(this.getEnd()[i]).substring(Integer.toHexString(this.getEnd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getEnd()[i]).toUpperCase());
         }
-        if (this. getEnd().length > 128) sb.append(" ...");
+        if (this.getEnd().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -479,7 +444,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

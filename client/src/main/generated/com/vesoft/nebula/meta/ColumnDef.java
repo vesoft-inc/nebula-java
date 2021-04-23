@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,13 +39,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
   public static final int TYPE = 2;
   public static final int DEFAULT_VALUE = 3;
   public static final int NULLABLE = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __NULLABLE_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.REQUIRED, 
@@ -72,26 +69,72 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
   }
 
   public ColumnDef(
-    byte[] name,
-    ColumnTypeDef type)
-  {
+      byte[] name,
+      ColumnTypeDef type) {
     this();
     this.name = name;
     this.type = type;
   }
 
   public ColumnDef(
-    byte[] name,
-    ColumnTypeDef type,
-    byte[] default_value,
-    boolean nullable)
-  {
+      byte[] name,
+      ColumnTypeDef type,
+      byte[] default_value,
+      boolean nullable) {
     this();
     this.name = name;
     this.type = type;
     this.default_value = default_value;
     this.nullable = nullable;
     setNullableIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] name;
+    private ColumnTypeDef type;
+    private byte[] default_value;
+    private boolean nullable;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder setType(final ColumnTypeDef type) {
+      this.type = type;
+      return this;
+    }
+
+    public Builder setDefault_value(final byte[] default_value) {
+      this.default_value = default_value;
+      return this;
+    }
+
+    public Builder setNullable(final boolean nullable) {
+      this.nullable = nullable;
+      __optional_isset.set(__NULLABLE_ISSET_ID, true);
+      return this;
+    }
+
+    public ColumnDef build() {
+      ColumnDef result = new ColumnDef();
+      result.setName(this.name);
+      result.setType(this.type);
+      result.setDefault_value(this.default_value);
+      if (__optional_isset.get(__NULLABLE_ISSET_ID)) {
+        result.setNullable(this.nullable);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -116,12 +159,7 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     return new ColumnDef(this);
   }
 
-  @Deprecated
-  public ColumnDef clone() {
-    return new ColumnDef(this);
-  }
-
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -139,13 +177,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
 
-  public ColumnTypeDef  getType() {
+  public ColumnTypeDef getType() {
     return this.type;
   }
 
@@ -163,13 +201,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     return this.type != null;
   }
 
-  public void setTypeIsSet(boolean value) {
-    if (!value) {
+  public void setTypeIsSet(boolean __value) {
+    if (!__value) {
       this.type = null;
     }
   }
 
-  public byte[]  getDefault_value() {
+  public byte[] getDefault_value() {
     return this.default_value;
   }
 
@@ -187,13 +225,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     return this.default_value != null;
   }
 
-  public void setDefault_valueIsSet(boolean value) {
-    if (!value) {
+  public void setDefault_valueIsSet(boolean __value) {
+    if (!__value) {
       this.default_value = null;
     }
   }
 
-  public boolean  isNullable() {
+  public boolean isNullable() {
     return this.nullable;
   }
 
@@ -212,41 +250,41 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     return __isset_bit_vector.get(__NULLABLE_ISSET_ID);
   }
 
-  public void setNullableIsSet(boolean value) {
-    __isset_bit_vector.set(__NULLABLE_ISSET_ID, value);
+  public void setNullableIsSet(boolean __value) {
+    __isset_bit_vector.set(__NULLABLE_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
     case TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetType();
       } else {
-        setType((ColumnTypeDef)value);
+        setType((ColumnTypeDef)__value);
       }
       break;
 
     case DEFAULT_VALUE:
-      if (value == null) {
+      if (__value == null) {
         unsetDefault_value();
       } else {
-        setDefault_value((byte[])value);
+        setDefault_value((byte[])__value);
       }
       break;
 
     case NULLABLE:
-      if (value == null) {
+      if (__value == null) {
         unsetNullable();
       } else {
-        setNullable((Boolean)value);
+        setNullable((Boolean)__value);
       }
       break;
 
@@ -274,101 +312,30 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case NAME:
-      return isSetName();
-    case TYPE:
-      return isSetType();
-    case DEFAULT_VALUE:
-      return isSetDefault_value();
-    case NULLABLE:
-      return isSetNullable();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ColumnDef)
-      return this.equals((ColumnDef)that);
-    return false;
-  }
-
-  public boolean equals(ColumnDef that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ColumnDef))
+      return false;
+    ColumnDef that = (ColumnDef)_that;
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
-    boolean this_present_type = true && this.isSetType();
-    boolean that_present_type = true && that.isSetType();
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
-    boolean this_present_default_value = true && this.isSetDefault_value();
-    boolean that_present_default_value = true && that.isSetDefault_value();
-    if (this_present_default_value || that_present_default_value) {
-      if (!(this_present_default_value && that_present_default_value))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.default_value, that.default_value))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetDefault_value(), that.isSetDefault_value(), this.default_value, that.default_value)) { return false; }
 
-    boolean this_present_nullable = true && this.isSetNullable();
-    boolean that_present_nullable = true && that.isSetNullable();
-    if (this_present_nullable || that_present_nullable) {
-      if (!(this_present_nullable && that_present_nullable))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.nullable, that.nullable))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetNullable(), that.isSetNullable(), this.nullable, that.nullable)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    boolean present_type = true && (isSetType());
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
-    boolean present_default_value = true && (isSetDefault_value());
-    builder.append(present_default_value);
-    if (present_default_value)
-      builder.append(default_value);
-
-    boolean present_nullable = true && (isSetNullable());
-    builder.append(present_nullable);
-    if (present_nullable)
-      builder.append(nullable);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {name, type, default_value, nullable});
   }
 
   @Override
@@ -388,7 +355,7 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
@@ -396,7 +363,7 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type, other.type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDefault_value()).compareTo(other.isSetDefault_value());
@@ -404,7 +371,7 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(default_value, other.default_value);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetNullable()).compareTo(other.isSetNullable());
@@ -412,55 +379,55 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(nullable, other.nullable);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TYPE:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.type = new ColumnTypeDef();
             this.type.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DEFAULT_VALUE:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.default_value = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NULLABLE:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.nullable = iprot.readBool();
             setNullableIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -504,19 +471,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ColumnDef");
     sb.append(space);
     sb.append("(");
@@ -527,15 +489,15 @@ String space = prettyPrint ? " " : "";
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -543,10 +505,10 @@ String space = prettyPrint ? " " : "";
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getType() == null) {
+    if (this.getType() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getType(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getType(), indent + 1, prettyPrint));
     }
     first = false;
     if (isSetDefault_value())
@@ -556,15 +518,15 @@ String space = prettyPrint ? " " : "";
       sb.append("default_value");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getDefault_value() == null) {
+      if (this.getDefault_value() == null) {
         sb.append("null");
       } else {
-          int __default_value_size = Math.min(this. getDefault_value().length, 128);
+          int __default_value_size = Math.min(this.getDefault_value().length, 128);
           for (int i = 0; i < __default_value_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getDefault_value()[i]).length() > 1 ? Integer.toHexString(this. getDefault_value()[i]).substring(Integer.toHexString(this. getDefault_value()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getDefault_value()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getDefault_value()[i]).length() > 1 ? Integer.toHexString(this.getDefault_value()[i]).substring(Integer.toHexString(this.getDefault_value()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getDefault_value()[i]).toUpperCase());
           }
-          if (this. getDefault_value().length > 128) sb.append(" ...");
+          if (this.getDefault_value().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -575,7 +537,7 @@ String space = prettyPrint ? " " : "";
       sb.append("nullable");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isNullable(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.isNullable(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -591,7 +553,6 @@ String space = prettyPrint ? " " : "";
     if (type == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'type' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

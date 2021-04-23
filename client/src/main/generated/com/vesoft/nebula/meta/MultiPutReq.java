@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
   public List<com.vesoft.nebula.KeyValue> pairs;
   public static final int SEGMENT = 1;
   public static final int PAIRS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SEGMENT, new FieldMetaData("segment", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public MultiPutReq(
-    byte[] segment,
-    List<com.vesoft.nebula.KeyValue> pairs)
-  {
+      byte[] segment,
+      List<com.vesoft.nebula.KeyValue> pairs) {
     this();
     this.segment = segment;
     this.pairs = pairs;
+  }
+
+  public static class Builder {
+    private byte[] segment;
+    private List<com.vesoft.nebula.KeyValue> pairs;
+
+    public Builder() {
+    }
+
+    public Builder setSegment(final byte[] segment) {
+      this.segment = segment;
+      return this;
+    }
+
+    public Builder setPairs(final List<com.vesoft.nebula.KeyValue> pairs) {
+      this.pairs = pairs;
+      return this;
+    }
+
+    public MultiPutReq build() {
+      MultiPutReq result = new MultiPutReq();
+      result.setSegment(this.segment);
+      result.setPairs(this.pairs);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new MultiPutReq(this);
   }
 
-  @Deprecated
-  public MultiPutReq clone() {
-    return new MultiPutReq(this);
-  }
-
-  public byte[]  getSegment() {
+  public byte[] getSegment() {
     return this.segment;
   }
 
@@ -106,13 +126,13 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     return this.segment != null;
   }
 
-  public void setSegmentIsSet(boolean value) {
-    if (!value) {
+  public void setSegmentIsSet(boolean __value) {
+    if (!__value) {
       this.segment = null;
     }
   }
 
-  public List<com.vesoft.nebula.KeyValue>  getPairs() {
+  public List<com.vesoft.nebula.KeyValue> getPairs() {
     return this.pairs;
   }
 
@@ -130,28 +150,28 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     return this.pairs != null;
   }
 
-  public void setPairsIsSet(boolean value) {
-    if (!value) {
+  public void setPairsIsSet(boolean __value) {
+    if (!__value) {
       this.pairs = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SEGMENT:
-      if (value == null) {
+      if (__value == null) {
         unsetSegment();
       } else {
-        setSegment((byte[])value);
+        setSegment((byte[])__value);
       }
       break;
 
     case PAIRS:
-      if (value == null) {
+      if (__value == null) {
         unsetPairs();
       } else {
-        setPairs((List<com.vesoft.nebula.KeyValue>)value);
+        setPairs((List<com.vesoft.nebula.KeyValue>)__value);
       }
       break;
 
@@ -173,69 +193,26 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SEGMENT:
-      return isSetSegment();
-    case PAIRS:
-      return isSetPairs();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof MultiPutReq)
-      return this.equals((MultiPutReq)that);
-    return false;
-  }
-
-  public boolean equals(MultiPutReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof MultiPutReq))
+      return false;
+    MultiPutReq that = (MultiPutReq)_that;
 
-    boolean this_present_segment = true && this.isSetSegment();
-    boolean that_present_segment = true && that.isSetSegment();
-    if (this_present_segment || that_present_segment) {
-      if (!(this_present_segment && that_present_segment))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.segment, that.segment))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSegment(), that.isSetSegment(), this.segment, that.segment)) { return false; }
 
-    boolean this_present_pairs = true && this.isSetPairs();
-    boolean that_present_pairs = true && that.isSetPairs();
-    if (this_present_pairs || that_present_pairs) {
-      if (!(this_present_pairs && that_present_pairs))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.pairs, that.pairs))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPairs(), that.isSetPairs(), this.pairs, that.pairs)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_segment = true && (isSetSegment());
-    builder.append(present_segment);
-    if (present_segment)
-      builder.append(segment);
-
-    boolean present_pairs = true && (isSetPairs());
-    builder.append(present_pairs);
-    if (present_pairs)
-      builder.append(pairs);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {segment, pairs});
   }
 
   @Override
@@ -255,7 +232,7 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(segment, other.segment);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPairs()).compareTo(other.isSetPairs());
@@ -263,52 +240,52 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(pairs, other.pairs);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SEGMENT:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.segment = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PAIRS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list110 = iprot.readListBegin();
-              this.pairs = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list110.size));
-              for (int _i111 = 0; 
-                   (_list110.size < 0) ? iprot.peekList() : (_i111 < _list110.size); 
-                   ++_i111)
+              TList _list119 = iprot.readListBegin();
+              this.pairs = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list119.size));
+              for (int _i120 = 0; 
+                   (_list119.size < 0) ? iprot.peekList() : (_i120 < _list119.size); 
+                   ++_i120)
               {
-                com.vesoft.nebula.KeyValue _elem112;
-                _elem112 = new com.vesoft.nebula.KeyValue();
-                _elem112.read(iprot);
-                this.pairs.add(_elem112);
+                com.vesoft.nebula.KeyValue _elem121;
+                _elem121 = new com.vesoft.nebula.KeyValue();
+                _elem121.read(iprot);
+                this.pairs.add(_elem121);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -333,8 +310,8 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(PAIRS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.pairs.size()));
-        for (com.vesoft.nebula.KeyValue _iter113 : this.pairs)        {
-          _iter113.write(oprot);
+        for (com.vesoft.nebula.KeyValue _iter122 : this.pairs)        {
+          _iter122.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -346,19 +323,14 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("MultiPutReq");
     sb.append(space);
     sb.append("(");
@@ -369,15 +341,15 @@ String space = prettyPrint ? " " : "";
     sb.append("segment");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSegment() == null) {
+    if (this.getSegment() == null) {
       sb.append("null");
     } else {
-        int __segment_size = Math.min(this. getSegment().length, 128);
+        int __segment_size = Math.min(this.getSegment().length, 128);
         for (int i = 0; i < __segment_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSegment()[i]).length() > 1 ? Integer.toHexString(this. getSegment()[i]).substring(Integer.toHexString(this. getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSegment()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSegment()[i]).length() > 1 ? Integer.toHexString(this.getSegment()[i]).substring(Integer.toHexString(this.getSegment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSegment()[i]).toUpperCase());
         }
-        if (this. getSegment().length > 128) sb.append(" ...");
+        if (this.getSegment().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -385,10 +357,10 @@ String space = prettyPrint ? " " : "";
     sb.append("pairs");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPairs() == null) {
+    if (this.getPairs() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPairs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPairs(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -398,7 +370,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

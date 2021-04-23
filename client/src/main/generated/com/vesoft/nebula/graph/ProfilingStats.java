@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.graph;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
   public static final int EXEC_DURATION_IN_US = 2;
   public static final int TOTAL_DURATION_IN_US = 3;
   public static final int OTHER_STATS = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __ROWS_ISSET_ID = 0;
@@ -51,6 +47,7 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
   private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ROWS, new FieldMetaData("rows", TFieldRequirementType.REQUIRED, 
@@ -74,10 +71,9 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public ProfilingStats(
-    long rows,
-    long exec_duration_in_us,
-    long total_duration_in_us)
-  {
+      long rows,
+      long exec_duration_in_us,
+      long total_duration_in_us) {
     this();
     this.rows = rows;
     setRowsIsSet(true);
@@ -88,11 +84,10 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public ProfilingStats(
-    long rows,
-    long exec_duration_in_us,
-    long total_duration_in_us,
-    Map<byte[],byte[]> other_stats)
-  {
+      long rows,
+      long exec_duration_in_us,
+      long total_duration_in_us,
+      Map<byte[],byte[]> other_stats) {
     this();
     this.rows = rows;
     setRowsIsSet(true);
@@ -101,6 +96,60 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     this.total_duration_in_us = total_duration_in_us;
     setTotal_duration_in_usIsSet(true);
     this.other_stats = other_stats;
+  }
+
+  public static class Builder {
+    private long rows;
+    private long exec_duration_in_us;
+    private long total_duration_in_us;
+    private Map<byte[],byte[]> other_stats;
+
+    BitSet __optional_isset = new BitSet(3);
+
+    public Builder() {
+    }
+
+    public Builder setRows(final long rows) {
+      this.rows = rows;
+      __optional_isset.set(__ROWS_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setExec_duration_in_us(final long exec_duration_in_us) {
+      this.exec_duration_in_us = exec_duration_in_us;
+      __optional_isset.set(__EXEC_DURATION_IN_US_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTotal_duration_in_us(final long total_duration_in_us) {
+      this.total_duration_in_us = total_duration_in_us;
+      __optional_isset.set(__TOTAL_DURATION_IN_US_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setOther_stats(final Map<byte[],byte[]> other_stats) {
+      this.other_stats = other_stats;
+      return this;
+    }
+
+    public ProfilingStats build() {
+      ProfilingStats result = new ProfilingStats();
+      if (__optional_isset.get(__ROWS_ISSET_ID)) {
+        result.setRows(this.rows);
+      }
+      if (__optional_isset.get(__EXEC_DURATION_IN_US_ISSET_ID)) {
+        result.setExec_duration_in_us(this.exec_duration_in_us);
+      }
+      if (__optional_isset.get(__TOTAL_DURATION_IN_US_ISSET_ID)) {
+        result.setTotal_duration_in_us(this.total_duration_in_us);
+      }
+      result.setOther_stats(this.other_stats);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -121,12 +170,7 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     return new ProfilingStats(this);
   }
 
-  @Deprecated
-  public ProfilingStats clone() {
-    return new ProfilingStats(this);
-  }
-
-  public long  getRows() {
+  public long getRows() {
     return this.rows;
   }
 
@@ -145,11 +189,11 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__ROWS_ISSET_ID);
   }
 
-  public void setRowsIsSet(boolean value) {
-    __isset_bit_vector.set(__ROWS_ISSET_ID, value);
+  public void setRowsIsSet(boolean __value) {
+    __isset_bit_vector.set(__ROWS_ISSET_ID, __value);
   }
 
-  public long  getExec_duration_in_us() {
+  public long getExec_duration_in_us() {
     return this.exec_duration_in_us;
   }
 
@@ -168,11 +212,11 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__EXEC_DURATION_IN_US_ISSET_ID);
   }
 
-  public void setExec_duration_in_usIsSet(boolean value) {
-    __isset_bit_vector.set(__EXEC_DURATION_IN_US_ISSET_ID, value);
+  public void setExec_duration_in_usIsSet(boolean __value) {
+    __isset_bit_vector.set(__EXEC_DURATION_IN_US_ISSET_ID, __value);
   }
 
-  public long  getTotal_duration_in_us() {
+  public long getTotal_duration_in_us() {
     return this.total_duration_in_us;
   }
 
@@ -191,11 +235,11 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__TOTAL_DURATION_IN_US_ISSET_ID);
   }
 
-  public void setTotal_duration_in_usIsSet(boolean value) {
-    __isset_bit_vector.set(__TOTAL_DURATION_IN_US_ISSET_ID, value);
+  public void setTotal_duration_in_usIsSet(boolean __value) {
+    __isset_bit_vector.set(__TOTAL_DURATION_IN_US_ISSET_ID, __value);
   }
 
-  public Map<byte[],byte[]>  getOther_stats() {
+  public Map<byte[],byte[]> getOther_stats() {
     return this.other_stats;
   }
 
@@ -213,44 +257,44 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     return this.other_stats != null;
   }
 
-  public void setOther_statsIsSet(boolean value) {
-    if (!value) {
+  public void setOther_statsIsSet(boolean __value) {
+    if (!__value) {
       this.other_stats = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ROWS:
-      if (value == null) {
+      if (__value == null) {
         unsetRows();
       } else {
-        setRows((Long)value);
+        setRows((Long)__value);
       }
       break;
 
     case EXEC_DURATION_IN_US:
-      if (value == null) {
+      if (__value == null) {
         unsetExec_duration_in_us();
       } else {
-        setExec_duration_in_us((Long)value);
+        setExec_duration_in_us((Long)__value);
       }
       break;
 
     case TOTAL_DURATION_IN_US:
-      if (value == null) {
+      if (__value == null) {
         unsetTotal_duration_in_us();
       } else {
-        setTotal_duration_in_us((Long)value);
+        setTotal_duration_in_us((Long)__value);
       }
       break;
 
     case OTHER_STATS:
-      if (value == null) {
+      if (__value == null) {
         unsetOther_stats();
       } else {
-        setOther_stats((Map<byte[],byte[]>)value);
+        setOther_stats((Map<byte[],byte[]>)__value);
       }
       break;
 
@@ -278,101 +322,30 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ROWS:
-      return isSetRows();
-    case EXEC_DURATION_IN_US:
-      return isSetExec_duration_in_us();
-    case TOTAL_DURATION_IN_US:
-      return isSetTotal_duration_in_us();
-    case OTHER_STATS:
-      return isSetOther_stats();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ProfilingStats)
-      return this.equals((ProfilingStats)that);
-    return false;
-  }
-
-  public boolean equals(ProfilingStats that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ProfilingStats))
+      return false;
+    ProfilingStats that = (ProfilingStats)_that;
 
-    boolean this_present_rows = true;
-    boolean that_present_rows = true;
-    if (this_present_rows || that_present_rows) {
-      if (!(this_present_rows && that_present_rows))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.rows, that.rows))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.rows, that.rows)) { return false; }
 
-    boolean this_present_exec_duration_in_us = true;
-    boolean that_present_exec_duration_in_us = true;
-    if (this_present_exec_duration_in_us || that_present_exec_duration_in_us) {
-      if (!(this_present_exec_duration_in_us && that_present_exec_duration_in_us))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.exec_duration_in_us, that.exec_duration_in_us))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.exec_duration_in_us, that.exec_duration_in_us)) { return false; }
 
-    boolean this_present_total_duration_in_us = true;
-    boolean that_present_total_duration_in_us = true;
-    if (this_present_total_duration_in_us || that_present_total_duration_in_us) {
-      if (!(this_present_total_duration_in_us && that_present_total_duration_in_us))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.total_duration_in_us, that.total_duration_in_us))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.total_duration_in_us, that.total_duration_in_us)) { return false; }
 
-    boolean this_present_other_stats = true && this.isSetOther_stats();
-    boolean that_present_other_stats = true && that.isSetOther_stats();
-    if (this_present_other_stats || that_present_other_stats) {
-      if (!(this_present_other_stats && that_present_other_stats))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.other_stats, that.other_stats))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetOther_stats(), that.isSetOther_stats(), this.other_stats, that.other_stats)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_rows = true;
-    builder.append(present_rows);
-    if (present_rows)
-      builder.append(rows);
-
-    boolean present_exec_duration_in_us = true;
-    builder.append(present_exec_duration_in_us);
-    if (present_exec_duration_in_us)
-      builder.append(exec_duration_in_us);
-
-    boolean present_total_duration_in_us = true;
-    builder.append(present_total_duration_in_us);
-    if (present_total_duration_in_us)
-      builder.append(total_duration_in_us);
-
-    boolean present_other_stats = true && (isSetOther_stats());
-    builder.append(present_other_stats);
-    if (present_other_stats)
-      builder.append(other_stats);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {rows, exec_duration_in_us, total_duration_in_us, other_stats});
   }
 
   @Override
@@ -392,7 +365,7 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(rows, other.rows);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetExec_duration_in_us()).compareTo(other.isSetExec_duration_in_us());
@@ -400,7 +373,7 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(exec_duration_in_us, other.exec_duration_in_us);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTotal_duration_in_us()).compareTo(other.isSetTotal_duration_in_us());
@@ -408,7 +381,7 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(total_duration_in_us, other.total_duration_in_us);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetOther_stats()).compareTo(other.isSetOther_stats());
@@ -416,49 +389,49 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(other_stats, other.other_stats);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ROWS:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.rows = iprot.readI64();
             setRowsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EXEC_DURATION_IN_US:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.exec_duration_in_us = iprot.readI64();
             setExec_duration_in_usIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TOTAL_DURATION_IN_US:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.total_duration_in_us = iprot.readI64();
             setTotal_duration_in_usIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case OTHER_STATS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map0 = iprot.readMapBegin();
               this.other_stats = new HashMap<byte[],byte[]>(Math.max(0, 2*_map0.size));
@@ -475,11 +448,11 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -533,19 +506,14 @@ public class ProfilingStats implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ProfilingStats");
     sb.append(space);
     sb.append("(");
@@ -556,21 +524,21 @@ String space = prettyPrint ? " " : "";
     sb.append("rows");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getRows(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getRows(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("exec_duration_in_us");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getExec_duration_in_us(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getExec_duration_in_us(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("total_duration_in_us");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTotal_duration_in_us(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTotal_duration_in_us(), indent + 1, prettyPrint));
     first = false;
     if (isSetOther_stats())
     {
@@ -579,10 +547,10 @@ String space = prettyPrint ? " " : "";
       sb.append("other_stats");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getOther_stats() == null) {
+      if (this.getOther_stats() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getOther_stats(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getOther_stats(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -596,7 +564,6 @@ String space = prettyPrint ? " " : "";
     // alas, we cannot check 'rows' because it's a primitive and you chose the non-beans generator.
     // alas, we cannot check 'exec_duration_in_us' because it's a primitive and you chose the non-beans generator.
     // alas, we cannot check 'total_duration_in_us' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
   }
 
 }

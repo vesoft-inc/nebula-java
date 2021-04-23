@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -46,7 +43,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see EdgeDirection
    */
-  public int edge_direction;
+  public EdgeDirection edge_direction;
   public boolean dedup;
   public List<StatProp> stat_props;
   public List<VertexProp> vertex_props;
@@ -67,16 +64,15 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
   public static final int RANDOM = 9;
   public static final int LIMIT = 10;
   public static final int FILTER = 11;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __EDGE_DIRECTION_ISSET_ID = 0;
-  private static final int __DEDUP_ISSET_ID = 1;
-  private static final int __RANDOM_ISSET_ID = 2;
-  private static final int __LIMIT_ISSET_ID = 3;
-  private BitSet __isset_bit_vector = new BitSet(4);
+  private static final int __DEDUP_ISSET_ID = 0;
+  private static final int __RANDOM_ISSET_ID = 1;
+  private static final int __LIMIT_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(EDGE_TYPES, new FieldMetaData("edge_types", TFieldRequirementType.DEFAULT, 
@@ -115,42 +111,38 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public TraverseSpec() {
-    this.edge_direction = 1;
+    this.edge_direction = com.vesoft.nebula.storage.EdgeDirection.BOTH;
 
     this.dedup = false;
 
   }
 
   public TraverseSpec(
-    List<Integer> edge_types,
-    int edge_direction,
-    boolean dedup)
-  {
+      List<Integer> edge_types,
+      EdgeDirection edge_direction,
+      boolean dedup) {
     this();
     this.edge_types = edge_types;
     this.edge_direction = edge_direction;
-    setEdge_directionIsSet(true);
     this.dedup = dedup;
     setDedupIsSet(true);
   }
 
   public TraverseSpec(
-    List<Integer> edge_types,
-    int edge_direction,
-    boolean dedup,
-    List<StatProp> stat_props,
-    List<VertexProp> vertex_props,
-    List<EdgeProp> edge_props,
-    List<Expr> expressions,
-    List<OrderBy> order_by,
-    boolean random,
-    long limit,
-    byte[] filter)
-  {
+      List<Integer> edge_types,
+      EdgeDirection edge_direction,
+      boolean dedup,
+      List<StatProp> stat_props,
+      List<VertexProp> vertex_props,
+      List<EdgeProp> edge_props,
+      List<Expr> expressions,
+      List<OrderBy> order_by,
+      boolean random,
+      long limit,
+      byte[] filter) {
     this();
     this.edge_types = edge_types;
     this.edge_direction = edge_direction;
-    setEdge_directionIsSet(true);
     this.dedup = dedup;
     setDedupIsSet(true);
     this.stat_props = stat_props;
@@ -165,6 +157,109 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     this.filter = filter;
   }
 
+  public static class Builder {
+    private List<Integer> edge_types;
+    private EdgeDirection edge_direction;
+    private boolean dedup;
+    private List<StatProp> stat_props;
+    private List<VertexProp> vertex_props;
+    private List<EdgeProp> edge_props;
+    private List<Expr> expressions;
+    private List<OrderBy> order_by;
+    private boolean random;
+    private long limit;
+    private byte[] filter;
+
+    BitSet __optional_isset = new BitSet(3);
+
+    public Builder() {
+    }
+
+    public Builder setEdge_types(final List<Integer> edge_types) {
+      this.edge_types = edge_types;
+      return this;
+    }
+
+    public Builder setEdge_direction(final EdgeDirection edge_direction) {
+      this.edge_direction = edge_direction;
+      return this;
+    }
+
+    public Builder setDedup(final boolean dedup) {
+      this.dedup = dedup;
+      __optional_isset.set(__DEDUP_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setStat_props(final List<StatProp> stat_props) {
+      this.stat_props = stat_props;
+      return this;
+    }
+
+    public Builder setVertex_props(final List<VertexProp> vertex_props) {
+      this.vertex_props = vertex_props;
+      return this;
+    }
+
+    public Builder setEdge_props(final List<EdgeProp> edge_props) {
+      this.edge_props = edge_props;
+      return this;
+    }
+
+    public Builder setExpressions(final List<Expr> expressions) {
+      this.expressions = expressions;
+      return this;
+    }
+
+    public Builder setOrder_by(final List<OrderBy> order_by) {
+      this.order_by = order_by;
+      return this;
+    }
+
+    public Builder setRandom(final boolean random) {
+      this.random = random;
+      __optional_isset.set(__RANDOM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLimit(final long limit) {
+      this.limit = limit;
+      __optional_isset.set(__LIMIT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setFilter(final byte[] filter) {
+      this.filter = filter;
+      return this;
+    }
+
+    public TraverseSpec build() {
+      TraverseSpec result = new TraverseSpec();
+      result.setEdge_types(this.edge_types);
+      result.setEdge_direction(this.edge_direction);
+      if (__optional_isset.get(__DEDUP_ISSET_ID)) {
+        result.setDedup(this.dedup);
+      }
+      result.setStat_props(this.stat_props);
+      result.setVertex_props(this.vertex_props);
+      result.setEdge_props(this.edge_props);
+      result.setExpressions(this.expressions);
+      result.setOrder_by(this.order_by);
+      if (__optional_isset.get(__RANDOM_ISSET_ID)) {
+        result.setRandom(this.random);
+      }
+      if (__optional_isset.get(__LIMIT_ISSET_ID)) {
+        result.setLimit(this.limit);
+      }
+      result.setFilter(this.filter);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
   /**
    * Performs a deep copy on <i>other</i>.
    */
@@ -174,7 +269,9 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     if (other.isSetEdge_types()) {
       this.edge_types = TBaseHelper.deepCopy(other.edge_types);
     }
-    this.edge_direction = TBaseHelper.deepCopy(other.edge_direction);
+    if (other.isSetEdge_direction()) {
+      this.edge_direction = TBaseHelper.deepCopy(other.edge_direction);
+    }
     this.dedup = TBaseHelper.deepCopy(other.dedup);
     if (other.isSetStat_props()) {
       this.stat_props = TBaseHelper.deepCopy(other.stat_props);
@@ -202,12 +299,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return new TraverseSpec(this);
   }
 
-  @Deprecated
-  public TraverseSpec clone() {
-    return new TraverseSpec(this);
-  }
-
-  public List<Integer>  getEdge_types() {
+  public List<Integer> getEdge_types() {
     return this.edge_types;
   }
 
@@ -225,8 +317,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.edge_types != null;
   }
 
-  public void setEdge_typesIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_typesIsSet(boolean __value) {
+    if (!__value) {
       this.edge_types = null;
     }
   }
@@ -235,7 +327,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see EdgeDirection
    */
-  public int  getEdge_direction() {
+  public EdgeDirection getEdge_direction() {
     return this.edge_direction;
   }
 
@@ -243,26 +335,27 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see EdgeDirection
    */
-  public TraverseSpec setEdge_direction(int edge_direction) {
+  public TraverseSpec setEdge_direction(EdgeDirection edge_direction) {
     this.edge_direction = edge_direction;
-    setEdge_directionIsSet(true);
     return this;
   }
 
   public void unsetEdge_direction() {
-    __isset_bit_vector.clear(__EDGE_DIRECTION_ISSET_ID);
+    this.edge_direction = null;
   }
 
   // Returns true if field edge_direction is set (has been assigned a value) and false otherwise
   public boolean isSetEdge_direction() {
-    return __isset_bit_vector.get(__EDGE_DIRECTION_ISSET_ID);
+    return this.edge_direction != null;
   }
 
-  public void setEdge_directionIsSet(boolean value) {
-    __isset_bit_vector.set(__EDGE_DIRECTION_ISSET_ID, value);
+  public void setEdge_directionIsSet(boolean __value) {
+    if (!__value) {
+      this.edge_direction = null;
+    }
   }
 
-  public boolean  isDedup() {
+  public boolean isDedup() {
     return this.dedup;
   }
 
@@ -281,11 +374,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__DEDUP_ISSET_ID);
   }
 
-  public void setDedupIsSet(boolean value) {
-    __isset_bit_vector.set(__DEDUP_ISSET_ID, value);
+  public void setDedupIsSet(boolean __value) {
+    __isset_bit_vector.set(__DEDUP_ISSET_ID, __value);
   }
 
-  public List<StatProp>  getStat_props() {
+  public List<StatProp> getStat_props() {
     return this.stat_props;
   }
 
@@ -303,13 +396,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.stat_props != null;
   }
 
-  public void setStat_propsIsSet(boolean value) {
-    if (!value) {
+  public void setStat_propsIsSet(boolean __value) {
+    if (!__value) {
       this.stat_props = null;
     }
   }
 
-  public List<VertexProp>  getVertex_props() {
+  public List<VertexProp> getVertex_props() {
     return this.vertex_props;
   }
 
@@ -327,13 +420,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.vertex_props != null;
   }
 
-  public void setVertex_propsIsSet(boolean value) {
-    if (!value) {
+  public void setVertex_propsIsSet(boolean __value) {
+    if (!__value) {
       this.vertex_props = null;
     }
   }
 
-  public List<EdgeProp>  getEdge_props() {
+  public List<EdgeProp> getEdge_props() {
     return this.edge_props;
   }
 
@@ -351,13 +444,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.edge_props != null;
   }
 
-  public void setEdge_propsIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_propsIsSet(boolean __value) {
+    if (!__value) {
       this.edge_props = null;
     }
   }
 
-  public List<Expr>  getExpressions() {
+  public List<Expr> getExpressions() {
     return this.expressions;
   }
 
@@ -375,13 +468,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.expressions != null;
   }
 
-  public void setExpressionsIsSet(boolean value) {
-    if (!value) {
+  public void setExpressionsIsSet(boolean __value) {
+    if (!__value) {
       this.expressions = null;
     }
   }
 
-  public List<OrderBy>  getOrder_by() {
+  public List<OrderBy> getOrder_by() {
     return this.order_by;
   }
 
@@ -399,13 +492,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.order_by != null;
   }
 
-  public void setOrder_byIsSet(boolean value) {
-    if (!value) {
+  public void setOrder_byIsSet(boolean __value) {
+    if (!__value) {
       this.order_by = null;
     }
   }
 
-  public boolean  isRandom() {
+  public boolean isRandom() {
     return this.random;
   }
 
@@ -424,11 +517,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__RANDOM_ISSET_ID);
   }
 
-  public void setRandomIsSet(boolean value) {
-    __isset_bit_vector.set(__RANDOM_ISSET_ID, value);
+  public void setRandomIsSet(boolean __value) {
+    __isset_bit_vector.set(__RANDOM_ISSET_ID, __value);
   }
 
-  public long  getLimit() {
+  public long getLimit() {
     return this.limit;
   }
 
@@ -447,11 +540,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__LIMIT_ISSET_ID);
   }
 
-  public void setLimitIsSet(boolean value) {
-    __isset_bit_vector.set(__LIMIT_ISSET_ID, value);
+  public void setLimitIsSet(boolean __value) {
+    __isset_bit_vector.set(__LIMIT_ISSET_ID, __value);
   }
 
-  public byte[]  getFilter() {
+  public byte[] getFilter() {
     return this.filter;
   }
 
@@ -469,100 +562,100 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     return this.filter != null;
   }
 
-  public void setFilterIsSet(boolean value) {
-    if (!value) {
+  public void setFilterIsSet(boolean __value) {
+    if (!__value) {
       this.filter = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case EDGE_TYPES:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_types();
       } else {
-        setEdge_types((List<Integer>)value);
+        setEdge_types((List<Integer>)__value);
       }
       break;
 
     case EDGE_DIRECTION:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_direction();
       } else {
-        setEdge_direction((Integer)value);
+        setEdge_direction((EdgeDirection)__value);
       }
       break;
 
     case DEDUP:
-      if (value == null) {
+      if (__value == null) {
         unsetDedup();
       } else {
-        setDedup((Boolean)value);
+        setDedup((Boolean)__value);
       }
       break;
 
     case STAT_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetStat_props();
       } else {
-        setStat_props((List<StatProp>)value);
+        setStat_props((List<StatProp>)__value);
       }
       break;
 
     case VERTEX_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetVertex_props();
       } else {
-        setVertex_props((List<VertexProp>)value);
+        setVertex_props((List<VertexProp>)__value);
       }
       break;
 
     case EDGE_PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_props();
       } else {
-        setEdge_props((List<EdgeProp>)value);
+        setEdge_props((List<EdgeProp>)__value);
       }
       break;
 
     case EXPRESSIONS:
-      if (value == null) {
+      if (__value == null) {
         unsetExpressions();
       } else {
-        setExpressions((List<Expr>)value);
+        setExpressions((List<Expr>)__value);
       }
       break;
 
     case ORDER_BY:
-      if (value == null) {
+      if (__value == null) {
         unsetOrder_by();
       } else {
-        setOrder_by((List<OrderBy>)value);
+        setOrder_by((List<OrderBy>)__value);
       }
       break;
 
     case RANDOM:
-      if (value == null) {
+      if (__value == null) {
         unsetRandom();
       } else {
-        setRandom((Boolean)value);
+        setRandom((Boolean)__value);
       }
       break;
 
     case LIMIT:
-      if (value == null) {
+      if (__value == null) {
         unsetLimit();
       } else {
-        setLimit((Long)value);
+        setLimit((Long)__value);
       }
       break;
 
     case FILTER:
-      if (value == null) {
+      if (__value == null) {
         unsetFilter();
       } else {
-        setFilter((byte[])value);
+        setFilter((byte[])__value);
       }
       break;
 
@@ -611,213 +704,44 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case EDGE_TYPES:
-      return isSetEdge_types();
-    case EDGE_DIRECTION:
-      return isSetEdge_direction();
-    case DEDUP:
-      return isSetDedup();
-    case STAT_PROPS:
-      return isSetStat_props();
-    case VERTEX_PROPS:
-      return isSetVertex_props();
-    case EDGE_PROPS:
-      return isSetEdge_props();
-    case EXPRESSIONS:
-      return isSetExpressions();
-    case ORDER_BY:
-      return isSetOrder_by();
-    case RANDOM:
-      return isSetRandom();
-    case LIMIT:
-      return isSetLimit();
-    case FILTER:
-      return isSetFilter();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof TraverseSpec)
-      return this.equals((TraverseSpec)that);
-    return false;
-  }
-
-  public boolean equals(TraverseSpec that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof TraverseSpec))
+      return false;
+    TraverseSpec that = (TraverseSpec)_that;
 
-    boolean this_present_edge_types = true && this.isSetEdge_types();
-    boolean that_present_edge_types = true && that.isSetEdge_types();
-    if (this_present_edge_types || that_present_edge_types) {
-      if (!(this_present_edge_types && that_present_edge_types))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_types, that.edge_types))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEdge_types(), that.isSetEdge_types(), this.edge_types, that.edge_types)) { return false; }
 
-    boolean this_present_edge_direction = true;
-    boolean that_present_edge_direction = true;
-    if (this_present_edge_direction || that_present_edge_direction) {
-      if (!(this_present_edge_direction && that_present_edge_direction))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_direction, that.edge_direction))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEdge_direction(), that.isSetEdge_direction(), this.edge_direction, that.edge_direction)) { return false; }
 
-    boolean this_present_dedup = true;
-    boolean that_present_dedup = true;
-    if (this_present_dedup || that_present_dedup) {
-      if (!(this_present_dedup && that_present_dedup))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.dedup, that.dedup))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.dedup, that.dedup)) { return false; }
 
-    boolean this_present_stat_props = true && this.isSetStat_props();
-    boolean that_present_stat_props = true && that.isSetStat_props();
-    if (this_present_stat_props || that_present_stat_props) {
-      if (!(this_present_stat_props && that_present_stat_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.stat_props, that.stat_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStat_props(), that.isSetStat_props(), this.stat_props, that.stat_props)) { return false; }
 
-    boolean this_present_vertex_props = true && this.isSetVertex_props();
-    boolean that_present_vertex_props = true && that.isSetVertex_props();
-    if (this_present_vertex_props || that_present_vertex_props) {
-      if (!(this_present_vertex_props && that_present_vertex_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.vertex_props, that.vertex_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetVertex_props(), that.isSetVertex_props(), this.vertex_props, that.vertex_props)) { return false; }
 
-    boolean this_present_edge_props = true && this.isSetEdge_props();
-    boolean that_present_edge_props = true && that.isSetEdge_props();
-    if (this_present_edge_props || that_present_edge_props) {
-      if (!(this_present_edge_props && that_present_edge_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_props, that.edge_props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEdge_props(), that.isSetEdge_props(), this.edge_props, that.edge_props)) { return false; }
 
-    boolean this_present_expressions = true && this.isSetExpressions();
-    boolean that_present_expressions = true && that.isSetExpressions();
-    if (this_present_expressions || that_present_expressions) {
-      if (!(this_present_expressions && that_present_expressions))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.expressions, that.expressions))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetExpressions(), that.isSetExpressions(), this.expressions, that.expressions)) { return false; }
 
-    boolean this_present_order_by = true && this.isSetOrder_by();
-    boolean that_present_order_by = true && that.isSetOrder_by();
-    if (this_present_order_by || that_present_order_by) {
-      if (!(this_present_order_by && that_present_order_by))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.order_by, that.order_by))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetOrder_by(), that.isSetOrder_by(), this.order_by, that.order_by)) { return false; }
 
-    boolean this_present_random = true && this.isSetRandom();
-    boolean that_present_random = true && that.isSetRandom();
-    if (this_present_random || that_present_random) {
-      if (!(this_present_random && that_present_random))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.random, that.random))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRandom(), that.isSetRandom(), this.random, that.random)) { return false; }
 
-    boolean this_present_limit = true && this.isSetLimit();
-    boolean that_present_limit = true && that.isSetLimit();
-    if (this_present_limit || that_present_limit) {
-      if (!(this_present_limit && that_present_limit))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.limit, that.limit))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLimit(), that.isSetLimit(), this.limit, that.limit)) { return false; }
 
-    boolean this_present_filter = true && this.isSetFilter();
-    boolean that_present_filter = true && that.isSetFilter();
-    if (this_present_filter || that_present_filter) {
-      if (!(this_present_filter && that_present_filter))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.filter, that.filter))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetFilter(), that.isSetFilter(), this.filter, that.filter)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_edge_types = true && (isSetEdge_types());
-    builder.append(present_edge_types);
-    if (present_edge_types)
-      builder.append(edge_types);
-
-    boolean present_edge_direction = true;
-    builder.append(present_edge_direction);
-    if (present_edge_direction)
-      builder.append(edge_direction);
-
-    boolean present_dedup = true;
-    builder.append(present_dedup);
-    if (present_dedup)
-      builder.append(dedup);
-
-    boolean present_stat_props = true && (isSetStat_props());
-    builder.append(present_stat_props);
-    if (present_stat_props)
-      builder.append(stat_props);
-
-    boolean present_vertex_props = true && (isSetVertex_props());
-    builder.append(present_vertex_props);
-    if (present_vertex_props)
-      builder.append(vertex_props);
-
-    boolean present_edge_props = true && (isSetEdge_props());
-    builder.append(present_edge_props);
-    if (present_edge_props)
-      builder.append(edge_props);
-
-    boolean present_expressions = true && (isSetExpressions());
-    builder.append(present_expressions);
-    if (present_expressions)
-      builder.append(expressions);
-
-    boolean present_order_by = true && (isSetOrder_by());
-    builder.append(present_order_by);
-    if (present_order_by)
-      builder.append(order_by);
-
-    boolean present_random = true && (isSetRandom());
-    builder.append(present_random);
-    if (present_random)
-      builder.append(random);
-
-    boolean present_limit = true && (isSetLimit());
-    builder.append(present_limit);
-    if (present_limit)
-      builder.append(limit);
-
-    boolean present_filter = true && (isSetFilter());
-    builder.append(present_filter);
-    if (present_filter)
-      builder.append(filter);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {edge_types, edge_direction, dedup, stat_props, vertex_props, edge_props, expressions, order_by, random, limit, filter});
   }
 
   @Override
@@ -837,7 +761,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_types, other.edge_types);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_direction()).compareTo(other.isSetEdge_direction());
@@ -845,7 +769,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_direction, other.edge_direction);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDedup()).compareTo(other.isSetDedup());
@@ -853,7 +777,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(dedup, other.dedup);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStat_props()).compareTo(other.isSetStat_props());
@@ -861,7 +785,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(stat_props, other.stat_props);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetVertex_props()).compareTo(other.isSetVertex_props());
@@ -869,7 +793,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(vertex_props, other.vertex_props);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_props()).compareTo(other.isSetEdge_props());
@@ -877,7 +801,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_props, other.edge_props);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetExpressions()).compareTo(other.isSetExpressions());
@@ -885,7 +809,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(expressions, other.expressions);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetOrder_by()).compareTo(other.isSetOrder_by());
@@ -893,7 +817,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(order_by, other.order_by);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetRandom()).compareTo(other.isSetRandom());
@@ -901,7 +825,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(random, other.random);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLimit()).compareTo(other.isSetLimit());
@@ -909,7 +833,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(limit, other.limit);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetFilter()).compareTo(other.isSetFilter());
@@ -917,25 +841,25 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(filter, other.filter);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case EDGE_TYPES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list12 = iprot.readListBegin();
               this.edge_types = new ArrayList<Integer>(Math.max(0, _list12.size));
@@ -950,27 +874,26 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_DIRECTION:
-          if (field.type == TType.I32) {
-            this.edge_direction = iprot.readI32();
-            setEdge_directionIsSet(true);
+          if (__field.type == TType.I32) {
+            this.edge_direction = EdgeDirection.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DEDUP:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.dedup = iprot.readBool();
             setDedupIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STAT_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list15 = iprot.readListBegin();
               this.stat_props = new ArrayList<StatProp>(Math.max(0, _list15.size));
@@ -986,11 +909,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VERTEX_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list18 = iprot.readListBegin();
               this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list18.size));
@@ -1006,11 +929,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list21 = iprot.readListBegin();
               this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list21.size));
@@ -1026,11 +949,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EXPRESSIONS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list24 = iprot.readListBegin();
               this.expressions = new ArrayList<Expr>(Math.max(0, _list24.size));
@@ -1046,11 +969,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ORDER_BY:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list27 = iprot.readListBegin();
               this.order_by = new ArrayList<OrderBy>(Math.max(0, _list27.size));
@@ -1066,34 +989,34 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RANDOM:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.random = iprot.readBool();
             setRandomIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LIMIT:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.limit = iprot.readI64();
             setLimitIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case FILTER:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.filter = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -1120,9 +1043,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(EDGE_DIRECTION_FIELD_DESC);
-    oprot.writeI32(this.edge_direction);
-    oprot.writeFieldEnd();
+    if (this.edge_direction != null) {
+      oprot.writeFieldBegin(EDGE_DIRECTION_FIELD_DESC);
+      oprot.writeI32(this.edge_direction == null ? 0 : this.edge_direction.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(DEDUP_FIELD_DESC);
     oprot.writeBool(this.dedup);
     oprot.writeFieldEnd();
@@ -1214,19 +1139,14 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("TraverseSpec");
     sb.append(space);
     sb.append("(");
@@ -1237,10 +1157,10 @@ String space = prettyPrint ? " " : "";
     sb.append("edge_types");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_types() == null) {
+    if (this.getEdge_types() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdge_types(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getEdge_types(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1248,14 +1168,18 @@ String space = prettyPrint ? " " : "";
     sb.append("edge_direction");
     sb.append(space);
     sb.append(":").append(space);
-    String edge_direction_name = EdgeDirection.VALUES_TO_NAMES.get(this. getEdge_direction());
-    if (edge_direction_name != null) {
-      sb.append(edge_direction_name);
-      sb.append(" (");
-    }
-    sb.append(this. getEdge_direction());
-    if (edge_direction_name != null) {
-      sb.append(")");
+    if (this.getEdge_direction() == null) {
+      sb.append("null");
+    } else {
+      String edge_direction_name = this.getEdge_direction() == null ? "null" : this.getEdge_direction().name();
+      if (edge_direction_name != null) {
+        sb.append(edge_direction_name);
+        sb.append(" (");
+      }
+      sb.append(this.getEdge_direction());
+      if (edge_direction_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1263,7 +1187,7 @@ String space = prettyPrint ? " " : "";
     sb.append("dedup");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isDedup(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isDedup(), indent + 1, prettyPrint));
     first = false;
     if (isSetStat_props())
     {
@@ -1272,10 +1196,10 @@ String space = prettyPrint ? " " : "";
       sb.append("stat_props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getStat_props() == null) {
+      if (this.getStat_props() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getStat_props(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getStat_props(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1286,10 +1210,10 @@ String space = prettyPrint ? " " : "";
       sb.append("vertex_props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getVertex_props() == null) {
+      if (this.getVertex_props() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getVertex_props(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getVertex_props(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1300,10 +1224,10 @@ String space = prettyPrint ? " " : "";
       sb.append("edge_props");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getEdge_props() == null) {
+      if (this.getEdge_props() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getEdge_props(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getEdge_props(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1314,10 +1238,10 @@ String space = prettyPrint ? " " : "";
       sb.append("expressions");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getExpressions() == null) {
+      if (this.getExpressions() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getExpressions(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getExpressions(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1328,10 +1252,10 @@ String space = prettyPrint ? " " : "";
       sb.append("order_by");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getOrder_by() == null) {
+      if (this.getOrder_by() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getOrder_by(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getOrder_by(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -1342,7 +1266,7 @@ String space = prettyPrint ? " " : "";
       sb.append("random");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. isRandom(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.isRandom(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetLimit())
@@ -1352,7 +1276,7 @@ String space = prettyPrint ? " " : "";
       sb.append("limit");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getLimit(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLimit(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetFilter())
@@ -1362,15 +1286,15 @@ String space = prettyPrint ? " " : "";
       sb.append("filter");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getFilter() == null) {
+      if (this.getFilter() == null) {
         sb.append("null");
       } else {
-          int __filter_size = Math.min(this. getFilter().length, 128);
+          int __filter_size = Math.min(this.getFilter().length, 128);
           for (int i = 0; i < __filter_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getFilter()[i]).length() > 1 ? Integer.toHexString(this. getFilter()[i]).substring(Integer.toHexString(this. getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getFilter()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getFilter()[i]).length() > 1 ? Integer.toHexString(this.getFilter()[i]).substring(Integer.toHexString(this.getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFilter()[i]).toUpperCase());
           }
-          if (this. getFilter().length > 128) sb.append(" ...");
+          if (this.getFilter().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -1381,10 +1305,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetEdge_direction() && !EdgeDirection.VALID_VALUES.contains(edge_direction)){
-      throw new TProtocolException("The field 'edge_direction' has been assigned the invalid value " + edge_direction);
-    }
   }
 
 }

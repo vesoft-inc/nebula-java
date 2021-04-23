@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,10 +39,10 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see HostStatus
    */
-  public int status;
+  public HostStatus status;
   public Map<byte[],List<Integer>> leader_parts;
   public Map<byte[],List<Integer>> all_parts;
-  public int role;
+  public HostRole role;
   public byte[] git_info_sha;
   public byte[] zone_name;
   public static final int HOSTADDR = 1;
@@ -55,14 +52,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int ROLE = 5;
   public static final int GIT_INFO_SHA = 6;
   public static final int ZONE_NAME = 7;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __STATUS_ISSET_ID = 0;
-  private static final int __ROLE_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(HOSTADDR, new FieldMetaData("hostAddr", TFieldRequirementType.DEFAULT, 
@@ -96,62 +90,122 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public HostItem(
-    com.vesoft.nebula.HostAddr hostAddr,
-    int status,
-    Map<byte[],List<Integer>> leader_parts,
-    Map<byte[],List<Integer>> all_parts,
-    int role,
-    byte[] git_info_sha)
-  {
+      com.vesoft.nebula.HostAddr hostAddr,
+      HostStatus status,
+      Map<byte[],List<Integer>> leader_parts,
+      Map<byte[],List<Integer>> all_parts,
+      HostRole role,
+      byte[] git_info_sha) {
     this();
     this.hostAddr = hostAddr;
     this.status = status;
-    setStatusIsSet(true);
     this.leader_parts = leader_parts;
     this.all_parts = all_parts;
     this.role = role;
-    setRoleIsSet(true);
     this.git_info_sha = git_info_sha;
   }
 
   public HostItem(
-    com.vesoft.nebula.HostAddr hostAddr,
-    int status,
-    Map<byte[],List<Integer>> leader_parts,
-    Map<byte[],List<Integer>> all_parts,
-    int role,
-    byte[] git_info_sha,
-    byte[] zone_name)
-  {
+      com.vesoft.nebula.HostAddr hostAddr,
+      HostStatus status,
+      Map<byte[],List<Integer>> leader_parts,
+      Map<byte[],List<Integer>> all_parts,
+      HostRole role,
+      byte[] git_info_sha,
+      byte[] zone_name) {
     this();
     this.hostAddr = hostAddr;
     this.status = status;
-    setStatusIsSet(true);
     this.leader_parts = leader_parts;
     this.all_parts = all_parts;
     this.role = role;
-    setRoleIsSet(true);
     this.git_info_sha = git_info_sha;
     this.zone_name = zone_name;
+  }
+
+  public static class Builder {
+    private com.vesoft.nebula.HostAddr hostAddr;
+    private HostStatus status;
+    private Map<byte[],List<Integer>> leader_parts;
+    private Map<byte[],List<Integer>> all_parts;
+    private HostRole role;
+    private byte[] git_info_sha;
+    private byte[] zone_name;
+
+    public Builder() {
+    }
+
+    public Builder setHostAddr(final com.vesoft.nebula.HostAddr hostAddr) {
+      this.hostAddr = hostAddr;
+      return this;
+    }
+
+    public Builder setStatus(final HostStatus status) {
+      this.status = status;
+      return this;
+    }
+
+    public Builder setLeader_parts(final Map<byte[],List<Integer>> leader_parts) {
+      this.leader_parts = leader_parts;
+      return this;
+    }
+
+    public Builder setAll_parts(final Map<byte[],List<Integer>> all_parts) {
+      this.all_parts = all_parts;
+      return this;
+    }
+
+    public Builder setRole(final HostRole role) {
+      this.role = role;
+      return this;
+    }
+
+    public Builder setGit_info_sha(final byte[] git_info_sha) {
+      this.git_info_sha = git_info_sha;
+      return this;
+    }
+
+    public Builder setZone_name(final byte[] zone_name) {
+      this.zone_name = zone_name;
+      return this;
+    }
+
+    public HostItem build() {
+      HostItem result = new HostItem();
+      result.setHostAddr(this.hostAddr);
+      result.setStatus(this.status);
+      result.setLeader_parts(this.leader_parts);
+      result.setAll_parts(this.all_parts);
+      result.setRole(this.role);
+      result.setGit_info_sha(this.git_info_sha);
+      result.setZone_name(this.zone_name);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public HostItem(HostItem other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetHostAddr()) {
       this.hostAddr = TBaseHelper.deepCopy(other.hostAddr);
     }
-    this.status = TBaseHelper.deepCopy(other.status);
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
+    }
     if (other.isSetLeader_parts()) {
       this.leader_parts = TBaseHelper.deepCopy(other.leader_parts);
     }
     if (other.isSetAll_parts()) {
       this.all_parts = TBaseHelper.deepCopy(other.all_parts);
     }
-    this.role = TBaseHelper.deepCopy(other.role);
+    if (other.isSetRole()) {
+      this.role = TBaseHelper.deepCopy(other.role);
+    }
     if (other.isSetGit_info_sha()) {
       this.git_info_sha = TBaseHelper.deepCopy(other.git_info_sha);
     }
@@ -164,12 +218,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     return new HostItem(this);
   }
 
-  @Deprecated
-  public HostItem clone() {
-    return new HostItem(this);
-  }
-
-  public com.vesoft.nebula.HostAddr  getHostAddr() {
+  public com.vesoft.nebula.HostAddr getHostAddr() {
     return this.hostAddr;
   }
 
@@ -187,8 +236,8 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.hostAddr != null;
   }
 
-  public void setHostAddrIsSet(boolean value) {
-    if (!value) {
+  public void setHostAddrIsSet(boolean __value) {
+    if (!__value) {
       this.hostAddr = null;
     }
   }
@@ -197,7 +246,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see HostStatus
    */
-  public int  getStatus() {
+  public HostStatus getStatus() {
     return this.status;
   }
 
@@ -205,26 +254,27 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see HostStatus
    */
-  public HostItem setStatus(int status) {
+  public HostItem setStatus(HostStatus status) {
     this.status = status;
-    setStatusIsSet(true);
     return this;
   }
 
   public void unsetStatus() {
-    __isset_bit_vector.clear(__STATUS_ISSET_ID);
+    this.status = null;
   }
 
   // Returns true if field status is set (has been assigned a value) and false otherwise
   public boolean isSetStatus() {
-    return __isset_bit_vector.get(__STATUS_ISSET_ID);
+    return this.status != null;
   }
 
-  public void setStatusIsSet(boolean value) {
-    __isset_bit_vector.set(__STATUS_ISSET_ID, value);
+  public void setStatusIsSet(boolean __value) {
+    if (!__value) {
+      this.status = null;
+    }
   }
 
-  public Map<byte[],List<Integer>>  getLeader_parts() {
+  public Map<byte[],List<Integer>> getLeader_parts() {
     return this.leader_parts;
   }
 
@@ -242,13 +292,13 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.leader_parts != null;
   }
 
-  public void setLeader_partsIsSet(boolean value) {
-    if (!value) {
+  public void setLeader_partsIsSet(boolean __value) {
+    if (!__value) {
       this.leader_parts = null;
     }
   }
 
-  public Map<byte[],List<Integer>>  getAll_parts() {
+  public Map<byte[],List<Integer>> getAll_parts() {
     return this.all_parts;
   }
 
@@ -266,36 +316,37 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.all_parts != null;
   }
 
-  public void setAll_partsIsSet(boolean value) {
-    if (!value) {
+  public void setAll_partsIsSet(boolean __value) {
+    if (!__value) {
       this.all_parts = null;
     }
   }
 
-  public int  getRole() {
+  public HostRole getRole() {
     return this.role;
   }
 
-  public HostItem setRole(int role) {
+  public HostItem setRole(HostRole role) {
     this.role = role;
-    setRoleIsSet(true);
     return this;
   }
 
   public void unsetRole() {
-    __isset_bit_vector.clear(__ROLE_ISSET_ID);
+    this.role = null;
   }
 
   // Returns true if field role is set (has been assigned a value) and false otherwise
   public boolean isSetRole() {
-    return __isset_bit_vector.get(__ROLE_ISSET_ID);
+    return this.role != null;
   }
 
-  public void setRoleIsSet(boolean value) {
-    __isset_bit_vector.set(__ROLE_ISSET_ID, value);
+  public void setRoleIsSet(boolean __value) {
+    if (!__value) {
+      this.role = null;
+    }
   }
 
-  public byte[]  getGit_info_sha() {
+  public byte[] getGit_info_sha() {
     return this.git_info_sha;
   }
 
@@ -313,13 +364,13 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.git_info_sha != null;
   }
 
-  public void setGit_info_shaIsSet(boolean value) {
-    if (!value) {
+  public void setGit_info_shaIsSet(boolean __value) {
+    if (!__value) {
       this.git_info_sha = null;
     }
   }
 
-  public byte[]  getZone_name() {
+  public byte[] getZone_name() {
     return this.zone_name;
   }
 
@@ -337,68 +388,68 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.zone_name != null;
   }
 
-  public void setZone_nameIsSet(boolean value) {
-    if (!value) {
+  public void setZone_nameIsSet(boolean __value) {
+    if (!__value) {
       this.zone_name = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case HOSTADDR:
-      if (value == null) {
+      if (__value == null) {
         unsetHostAddr();
       } else {
-        setHostAddr((com.vesoft.nebula.HostAddr)value);
+        setHostAddr((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case STATUS:
-      if (value == null) {
+      if (__value == null) {
         unsetStatus();
       } else {
-        setStatus((Integer)value);
+        setStatus((HostStatus)__value);
       }
       break;
 
     case LEADER_PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_parts();
       } else {
-        setLeader_parts((Map<byte[],List<Integer>>)value);
+        setLeader_parts((Map<byte[],List<Integer>>)__value);
       }
       break;
 
     case ALL_PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetAll_parts();
       } else {
-        setAll_parts((Map<byte[],List<Integer>>)value);
+        setAll_parts((Map<byte[],List<Integer>>)__value);
       }
       break;
 
     case ROLE:
-      if (value == null) {
+      if (__value == null) {
         unsetRole();
       } else {
-        setRole((Integer)value);
+        setRole((HostRole)__value);
       }
       break;
 
     case GIT_INFO_SHA:
-      if (value == null) {
+      if (__value == null) {
         unsetGit_info_sha();
       } else {
-        setGit_info_sha((byte[])value);
+        setGit_info_sha((byte[])__value);
       }
       break;
 
     case ZONE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetZone_name();
       } else {
-        setZone_name((byte[])value);
+        setZone_name((byte[])__value);
       }
       break;
 
@@ -435,149 +486,36 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case HOSTADDR:
-      return isSetHostAddr();
-    case STATUS:
-      return isSetStatus();
-    case LEADER_PARTS:
-      return isSetLeader_parts();
-    case ALL_PARTS:
-      return isSetAll_parts();
-    case ROLE:
-      return isSetRole();
-    case GIT_INFO_SHA:
-      return isSetGit_info_sha();
-    case ZONE_NAME:
-      return isSetZone_name();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof HostItem)
-      return this.equals((HostItem)that);
-    return false;
-  }
-
-  public boolean equals(HostItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof HostItem))
+      return false;
+    HostItem that = (HostItem)_that;
 
-    boolean this_present_hostAddr = true && this.isSetHostAddr();
-    boolean that_present_hostAddr = true && that.isSetHostAddr();
-    if (this_present_hostAddr || that_present_hostAddr) {
-      if (!(this_present_hostAddr && that_present_hostAddr))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.hostAddr, that.hostAddr))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetHostAddr(), that.isSetHostAddr(), this.hostAddr, that.hostAddr)) { return false; }
 
-    boolean this_present_status = true;
-    boolean that_present_status = true;
-    if (this_present_status || that_present_status) {
-      if (!(this_present_status && that_present_status))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.status, that.status))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
 
-    boolean this_present_leader_parts = true && this.isSetLeader_parts();
-    boolean that_present_leader_parts = true && that.isSetLeader_parts();
-    if (this_present_leader_parts || that_present_leader_parts) {
-      if (!(this_present_leader_parts && that_present_leader_parts))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.leader_parts, that.leader_parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetLeader_parts(), that.isSetLeader_parts(), this.leader_parts, that.leader_parts)) { return false; }
 
-    boolean this_present_all_parts = true && this.isSetAll_parts();
-    boolean that_present_all_parts = true && that.isSetAll_parts();
-    if (this_present_all_parts || that_present_all_parts) {
-      if (!(this_present_all_parts && that_present_all_parts))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.all_parts, that.all_parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetAll_parts(), that.isSetAll_parts(), this.all_parts, that.all_parts)) { return false; }
 
-    boolean this_present_role = true;
-    boolean that_present_role = true;
-    if (this_present_role || that_present_role) {
-      if (!(this_present_role && that_present_role))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.role, that.role))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetRole(), that.isSetRole(), this.role, that.role)) { return false; }
 
-    boolean this_present_git_info_sha = true && this.isSetGit_info_sha();
-    boolean that_present_git_info_sha = true && that.isSetGit_info_sha();
-    if (this_present_git_info_sha || that_present_git_info_sha) {
-      if (!(this_present_git_info_sha && that_present_git_info_sha))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.git_info_sha, that.git_info_sha))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetGit_info_sha(), that.isSetGit_info_sha(), this.git_info_sha, that.git_info_sha)) { return false; }
 
-    boolean this_present_zone_name = true && this.isSetZone_name();
-    boolean that_present_zone_name = true && that.isSetZone_name();
-    if (this_present_zone_name || that_present_zone_name) {
-      if (!(this_present_zone_name && that_present_zone_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.zone_name, that.zone_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetZone_name(), that.isSetZone_name(), this.zone_name, that.zone_name)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_hostAddr = true && (isSetHostAddr());
-    builder.append(present_hostAddr);
-    if (present_hostAddr)
-      builder.append(hostAddr);
-
-    boolean present_status = true;
-    builder.append(present_status);
-    if (present_status)
-      builder.append(status);
-
-    boolean present_leader_parts = true && (isSetLeader_parts());
-    builder.append(present_leader_parts);
-    if (present_leader_parts)
-      builder.append(leader_parts);
-
-    boolean present_all_parts = true && (isSetAll_parts());
-    builder.append(present_all_parts);
-    if (present_all_parts)
-      builder.append(all_parts);
-
-    boolean present_role = true;
-    builder.append(present_role);
-    if (present_role)
-      builder.append(role);
-
-    boolean present_git_info_sha = true && (isSetGit_info_sha());
-    builder.append(present_git_info_sha);
-    if (present_git_info_sha)
-      builder.append(git_info_sha);
-
-    boolean present_zone_name = true && (isSetZone_name());
-    builder.append(present_zone_name);
-    if (present_zone_name)
-      builder.append(zone_name);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {hostAddr, status, leader_parts, all_parts, role, git_info_sha, zone_name});
   }
 
   @Override
@@ -597,7 +535,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(hostAddr, other.hostAddr);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
@@ -605,7 +543,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(status, other.status);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_parts()).compareTo(other.isSetLeader_parts());
@@ -613,7 +551,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_parts, other.leader_parts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetAll_parts()).compareTo(other.isSetAll_parts());
@@ -621,7 +559,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(all_parts, other.all_parts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetRole()).compareTo(other.isSetRole());
@@ -629,7 +567,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(role, other.role);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetGit_info_sha()).compareTo(other.isSetGit_info_sha());
@@ -637,7 +575,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(git_info_sha, other.git_info_sha);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetZone_name()).compareTo(other.isSetZone_name());
@@ -645,41 +583,40 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(zone_name, other.zone_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case HOSTADDR:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.hostAddr = new com.vesoft.nebula.HostAddr();
             this.hostAddr.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STATUS:
-          if (field.type == TType.I32) {
-            this.status = iprot.readI32();
-            setStatusIsSet(true);
+          if (__field.type == TType.I32) {
+            this.status = HostStatus.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_PARTS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map8 = iprot.readMapBegin();
               this.leader_parts = new HashMap<byte[],List<Integer>>(Math.max(0, 2*_map8.size));
@@ -708,11 +645,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ALL_PARTS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map15 = iprot.readMapBegin();
               this.all_parts = new HashMap<byte[],List<Integer>>(Math.max(0, 2*_map15.size));
@@ -741,33 +678,32 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ROLE:
-          if (field.type == TType.I32) {
-            this.role = iprot.readI32();
-            setRoleIsSet(true);
+          if (__field.type == TType.I32) {
+            this.role = HostRole.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case GIT_INFO_SHA:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.git_info_sha = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ZONE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.zone_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -788,9 +724,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       this.hostAddr.write(oprot);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(STATUS_FIELD_DESC);
-    oprot.writeI32(this.status);
-    oprot.writeFieldEnd();
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeI32(this.status == null ? 0 : this.status.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.leader_parts != null) {
       oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
       {
@@ -827,9 +765,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(ROLE_FIELD_DESC);
-    oprot.writeI32(this.role);
-    oprot.writeFieldEnd();
+    if (this.role != null) {
+      oprot.writeFieldBegin(ROLE_FIELD_DESC);
+      oprot.writeI32(this.role == null ? 0 : this.role.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.git_info_sha != null) {
       oprot.writeFieldBegin(GIT_INFO_SHA_FIELD_DESC);
       oprot.writeBinary(this.git_info_sha);
@@ -848,19 +788,14 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("HostItem");
     sb.append(space);
     sb.append("(");
@@ -871,10 +806,10 @@ String space = prettyPrint ? " " : "";
     sb.append("hostAddr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHostAddr() == null) {
+    if (this.getHostAddr() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getHostAddr(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHostAddr(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -882,14 +817,18 @@ String space = prettyPrint ? " " : "";
     sb.append("status");
     sb.append(space);
     sb.append(":").append(space);
-    String status_name = HostStatus.VALUES_TO_NAMES.get(this. getStatus());
-    if (status_name != null) {
-      sb.append(status_name);
-      sb.append(" (");
-    }
-    sb.append(this. getStatus());
-    if (status_name != null) {
-      sb.append(")");
+    if (this.getStatus() == null) {
+      sb.append("null");
+    } else {
+      String status_name = this.getStatus() == null ? "null" : this.getStatus().name();
+      if (status_name != null) {
+        sb.append(status_name);
+        sb.append(" (");
+      }
+      sb.append(this.getStatus());
+      if (status_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -897,10 +836,10 @@ String space = prettyPrint ? " " : "";
     sb.append("leader_parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLeader_parts() == null) {
+    if (this.getLeader_parts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLeader_parts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLeader_parts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -908,10 +847,10 @@ String space = prettyPrint ? " " : "";
     sb.append("all_parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getAll_parts() == null) {
+    if (this.getAll_parts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getAll_parts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getAll_parts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -919,14 +858,18 @@ String space = prettyPrint ? " " : "";
     sb.append("role");
     sb.append(space);
     sb.append(":").append(space);
-    String role_name = HostRole.VALUES_TO_NAMES.get(this. getRole());
-    if (role_name != null) {
-      sb.append(role_name);
-      sb.append(" (");
-    }
-    sb.append(this. getRole());
-    if (role_name != null) {
-      sb.append(")");
+    if (this.getRole() == null) {
+      sb.append("null");
+    } else {
+      String role_name = this.getRole() == null ? "null" : this.getRole().name();
+      if (role_name != null) {
+        sb.append(role_name);
+        sb.append(" (");
+      }
+      sb.append(this.getRole());
+      if (role_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -934,15 +877,15 @@ String space = prettyPrint ? " " : "";
     sb.append("git_info_sha");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGit_info_sha() == null) {
+    if (this.getGit_info_sha() == null) {
       sb.append("null");
     } else {
-        int __git_info_sha_size = Math.min(this. getGit_info_sha().length, 128);
+        int __git_info_sha_size = Math.min(this.getGit_info_sha().length, 128);
         for (int i = 0; i < __git_info_sha_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getGit_info_sha()[i]).length() > 1 ? Integer.toHexString(this. getGit_info_sha()[i]).substring(Integer.toHexString(this. getGit_info_sha()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getGit_info_sha()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getGit_info_sha()[i]).length() > 1 ? Integer.toHexString(this.getGit_info_sha()[i]).substring(Integer.toHexString(this.getGit_info_sha()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getGit_info_sha()[i]).toUpperCase());
         }
-        if (this. getGit_info_sha().length > 128) sb.append(" ...");
+        if (this.getGit_info_sha().length > 128) sb.append(" ...");
     }
     first = false;
     if (isSetZone_name())
@@ -952,15 +895,15 @@ String space = prettyPrint ? " " : "";
       sb.append("zone_name");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getZone_name() == null) {
+      if (this.getZone_name() == null) {
         sb.append("null");
       } else {
-          int __zone_name_size = Math.min(this. getZone_name().length, 128);
+          int __zone_name_size = Math.min(this.getZone_name().length, 128);
           for (int i = 0; i < __zone_name_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getZone_name()[i]).length() > 1 ? Integer.toHexString(this. getZone_name()[i]).substring(Integer.toHexString(this. getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getZone_name()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getZone_name()[i]).length() > 1 ? Integer.toHexString(this.getZone_name()[i]).substring(Integer.toHexString(this.getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getZone_name()[i]).toUpperCase());
           }
-          if (this. getZone_name().length > 128) sb.append(" ...");
+          if (this.getZone_name().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -971,10 +914,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetStatus() && !HostStatus.VALID_VALUES.contains(status)){
-      throw new TProtocolException("The field 'status' has been assigned the invalid value " + status);
-    }
   }
 
 }

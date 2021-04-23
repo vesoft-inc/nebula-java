@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   public int latency_in_us;
   public static final int FAILED_PARTS = 1;
   public static final int LATENCY_IN_US = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __LATENCY_IN_US_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(FAILED_PARTS, new FieldMetaData("failed_parts", TFieldRequirementType.REQUIRED, 
@@ -61,13 +58,46 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public ResponseCommon(
-    List<PartitionResult> failed_parts,
-    int latency_in_us)
-  {
+      List<PartitionResult> failed_parts,
+      int latency_in_us) {
     this();
     this.failed_parts = failed_parts;
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
+  }
+
+  public static class Builder {
+    private List<PartitionResult> failed_parts;
+    private int latency_in_us;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setFailed_parts(final List<PartitionResult> failed_parts) {
+      this.failed_parts = failed_parts;
+      return this;
+    }
+
+    public Builder setLatency_in_us(final int latency_in_us) {
+      this.latency_in_us = latency_in_us;
+      __optional_isset.set(__LATENCY_IN_US_ISSET_ID, true);
+      return this;
+    }
+
+    public ResponseCommon build() {
+      ResponseCommon result = new ResponseCommon();
+      result.setFailed_parts(this.failed_parts);
+      if (__optional_isset.get(__LATENCY_IN_US_ISSET_ID)) {
+        result.setLatency_in_us(this.latency_in_us);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -86,12 +116,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     return new ResponseCommon(this);
   }
 
-  @Deprecated
-  public ResponseCommon clone() {
-    return new ResponseCommon(this);
-  }
-
-  public List<PartitionResult>  getFailed_parts() {
+  public List<PartitionResult> getFailed_parts() {
     return this.failed_parts;
   }
 
@@ -109,13 +134,13 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     return this.failed_parts != null;
   }
 
-  public void setFailed_partsIsSet(boolean value) {
-    if (!value) {
+  public void setFailed_partsIsSet(boolean __value) {
+    if (!__value) {
       this.failed_parts = null;
     }
   }
 
-  public int  getLatency_in_us() {
+  public int getLatency_in_us() {
     return this.latency_in_us;
   }
 
@@ -134,26 +159,26 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     return __isset_bit_vector.get(__LATENCY_IN_US_ISSET_ID);
   }
 
-  public void setLatency_in_usIsSet(boolean value) {
-    __isset_bit_vector.set(__LATENCY_IN_US_ISSET_ID, value);
+  public void setLatency_in_usIsSet(boolean __value) {
+    __isset_bit_vector.set(__LATENCY_IN_US_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case FAILED_PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetFailed_parts();
       } else {
-        setFailed_parts((List<PartitionResult>)value);
+        setFailed_parts((List<PartitionResult>)__value);
       }
       break;
 
     case LATENCY_IN_US:
-      if (value == null) {
+      if (__value == null) {
         unsetLatency_in_us();
       } else {
-        setLatency_in_us((Integer)value);
+        setLatency_in_us((Integer)__value);
       }
       break;
 
@@ -175,69 +200,26 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case FAILED_PARTS:
-      return isSetFailed_parts();
-    case LATENCY_IN_US:
-      return isSetLatency_in_us();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ResponseCommon)
-      return this.equals((ResponseCommon)that);
-    return false;
-  }
-
-  public boolean equals(ResponseCommon that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ResponseCommon))
+      return false;
+    ResponseCommon that = (ResponseCommon)_that;
 
-    boolean this_present_failed_parts = true && this.isSetFailed_parts();
-    boolean that_present_failed_parts = true && that.isSetFailed_parts();
-    if (this_present_failed_parts || that_present_failed_parts) {
-      if (!(this_present_failed_parts && that_present_failed_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.failed_parts, that.failed_parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetFailed_parts(), that.isSetFailed_parts(), this.failed_parts, that.failed_parts)) { return false; }
 
-    boolean this_present_latency_in_us = true;
-    boolean that_present_latency_in_us = true;
-    if (this_present_latency_in_us || that_present_latency_in_us) {
-      if (!(this_present_latency_in_us && that_present_latency_in_us))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.latency_in_us, that.latency_in_us))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.latency_in_us, that.latency_in_us)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_failed_parts = true && (isSetFailed_parts());
-    builder.append(present_failed_parts);
-    if (present_failed_parts)
-      builder.append(failed_parts);
-
-    boolean present_latency_in_us = true;
-    builder.append(present_latency_in_us);
-    if (present_latency_in_us)
-      builder.append(latency_in_us);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {failed_parts, latency_in_us});
   }
 
   @Override
@@ -257,7 +239,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(failed_parts, other.failed_parts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLatency_in_us()).compareTo(other.isSetLatency_in_us());
@@ -265,25 +247,25 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(latency_in_us, other.latency_in_us);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case FAILED_PARTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list0 = iprot.readListBegin();
               this.failed_parts = new ArrayList<PartitionResult>(Math.max(0, _list0.size));
@@ -299,19 +281,19 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LATENCY_IN_US:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.latency_in_us = iprot.readI32();
             setLatency_in_usIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -350,19 +332,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ResponseCommon");
     sb.append(space);
     sb.append("(");
@@ -373,10 +350,10 @@ String space = prettyPrint ? " " : "";
     sb.append("failed_parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFailed_parts() == null) {
+    if (this.getFailed_parts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getFailed_parts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getFailed_parts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -384,7 +361,7 @@ String space = prettyPrint ? " " : "";
     sb.append("latency_in_us");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLatency_in_us(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLatency_in_us(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -397,7 +374,6 @@ String space = prettyPrint ? " " : "";
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'failed_parts' was not present! Struct: " + toString());
     }
     // alas, we cannot check 'latency_in_us' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
   }
 
 }

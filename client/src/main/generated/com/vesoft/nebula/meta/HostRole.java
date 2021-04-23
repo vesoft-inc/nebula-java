@@ -7,43 +7,49 @@
 package com.vesoft.nebula.meta;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class HostRole {
-  public static final int GRAPH = 0;
-  public static final int META = 1;
-  public static final int STORAGE = 2;
-  public static final int LISTENER = 3;
-  public static final int UNKNOWN = 4;
+public enum HostRole implements com.facebook.thrift.TEnum {
+  GRAPH(0),
+  META(1),
+  STORAGE(2),
+  LISTENER(3),
+  UNKNOWN(4);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = HostRole.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private HostRole(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static HostRole findByValue(int value) { 
+    switch (value) {
+      case 0:
+        return GRAPH;
+      case 1:
+        return META;
+      case 2:
+        return STORAGE;
+      case 3:
+        return LISTENER;
+      case 4:
+        return UNKNOWN;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

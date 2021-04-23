@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift.transport;
@@ -22,8 +19,8 @@ package com.facebook.thrift.transport;
 import com.facebook.thrift.TByteArrayOutputStream;
 
 /**
- * TFramedTransport is a buffered TTransport that ensures a fully read message
- * every time by prefixing messages with a 4-byte frame size.
+ * TFramedTransport is a buffered TTransport that ensures a fully read message every time by
+ * prefixing messages with a 4-byte frame size.
  */
 public class TFramedTransport extends TTransport {
 
@@ -31,22 +28,14 @@ public class TFramedTransport extends TTransport {
 
   private int maxLength_;
 
-  /**
-   * Underlying transport
-   */
+  /** Underlying transport */
   protected TTransport transport_ = null;
 
-  /**
-   * Buffer for output
-   */
-  protected final TByteArrayOutputStream writeBuffer_ =
-    new TByteArrayOutputStream(1024);
+  /** Buffer for output */
+  protected final TByteArrayOutputStream writeBuffer_ = new TByteArrayOutputStream(1024);
 
-  /**
-   * Buffer for input
-   */
-  protected TMemoryInputTransport readBuffer_ =
-    new TMemoryInputTransport(new byte[0]);
+  /** Buffer for input */
+  protected TMemoryInputTransport readBuffer_ = new TMemoryInputTransport(new byte[0]);
 
   public static class Factory extends TTransportFactory {
     private int maxLength_;
@@ -65,9 +54,7 @@ public class TFramedTransport extends TTransport {
     }
   }
 
-  /**
-   * Constructor wraps around another tranpsort
-   */
+  /** Constructor wraps around another tranpsort */
   public TFramedTransport(TTransport transport, int maxLength) {
     transport_ = transport;
     maxLength_ = maxLength;
@@ -133,18 +120,12 @@ public class TFramedTransport extends TTransport {
     int size = decodeWord(i32buf);
 
     if (size < 0) {
-      throw new TTransportException(
-        String.format("Read a negative frame size (%d)!",
-                      size)
-      );
+      throw new TTransportException(String.format("Read a negative frame size (%d)!", size));
     }
 
     if (size > maxLength_) {
       throw new TTransportException(
-        String.format("Frame size (%d) larger than max length (%d)!",
-                      size,
-                      maxLength_)
-      );
+          String.format("Frame size (%d) larger than max length (%d)!", size, maxLength_));
     }
 
     byte[] buff = new byte[size];
@@ -169,16 +150,12 @@ public class TFramedTransport extends TTransport {
     transport_.flush();
   }
 
-
-  /**
-   * Functions to encode/decode int32 and int16 to/from network byte order
-   */
-  public static final void encodeWord(final int frameSize,
-                                      final byte[] buf) {
-    buf[0] = (byte)(0xff & (frameSize >> 24));
-    buf[1] = (byte)(0xff & (frameSize >> 16));
-    buf[2] = (byte)(0xff & (frameSize >> 8));
-    buf[3] = (byte)(0xff & (frameSize));
+  /** Functions to encode/decode int32 and int16 to/from network byte order */
+  public static final void encodeWord(final int frameSize, final byte[] buf) {
+    buf[0] = (byte) (0xff & (frameSize >> 24));
+    buf[1] = (byte) (0xff & (frameSize >> 16));
+    buf[2] = (byte) (0xff & (frameSize >> 8));
+    buf[3] = (byte) (0xff & (frameSize));
   }
 
   public static final int decodeWord(final byte[] buf) {
@@ -186,11 +163,10 @@ public class TFramedTransport extends TTransport {
   }
 
   public static final int decodeWord(final byte[] buf, int off) {
-    return
-      ((buf[0 + off] & 0xff) << 24) |
-      ((buf[1 + off] & 0xff) << 16) |
-      ((buf[2 + off] & 0xff) <<  8) |
-      ((buf[3 + off] & 0xff));
+    return ((buf[0 + off] & 0xff) << 24)
+        | ((buf[1 + off] & 0xff) << 16)
+        | ((buf[2 + off] & 0xff) << 8)
+        | ((buf[3 + off] & 0xff));
   }
 
   public static final short decodeShort(final byte[] buf) {
@@ -198,15 +174,11 @@ public class TFramedTransport extends TTransport {
   }
 
   public static final short decodeShort(final byte[] buf, int off) {
-    return (short)(
-      ((buf[0 + off] & 0xff) << 8) |
-      ((buf[1 + off] & 0xff))
-    );
+    return (short) (((buf[0 + off] & 0xff) << 8) | ((buf[1 + off] & 0xff)));
   }
 
-  public static final void encodeShort(final int value,
-                                       final byte[] buf) {
-    buf[0] = (byte)(0xff & (value >> 8));
-    buf[1] = (byte)(0xff & (value));
+  public static final void encodeShort(final int value, final byte[] buf) {
+    buf[0] = (byte) (0xff & (value >> 8));
+    buf[1] = (byte) (0xff & (value));
   }
 }

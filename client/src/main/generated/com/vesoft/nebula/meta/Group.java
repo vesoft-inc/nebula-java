@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
   public List<byte[]> zone_names;
   public static final int GROUP_NAME = 1;
   public static final int ZONE_NAMES = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(GROUP_NAME, new FieldMetaData("group_name", TFieldRequirementType.DEFAULT, 
@@ -59,12 +56,40 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
   }
 
   public Group(
-    byte[] group_name,
-    List<byte[]> zone_names)
-  {
+      byte[] group_name,
+      List<byte[]> zone_names) {
     this();
     this.group_name = group_name;
     this.zone_names = zone_names;
+  }
+
+  public static class Builder {
+    private byte[] group_name;
+    private List<byte[]> zone_names;
+
+    public Builder() {
+    }
+
+    public Builder setGroup_name(final byte[] group_name) {
+      this.group_name = group_name;
+      return this;
+    }
+
+    public Builder setZone_names(final List<byte[]> zone_names) {
+      this.zone_names = zone_names;
+      return this;
+    }
+
+    public Group build() {
+      Group result = new Group();
+      result.setGroup_name(this.group_name);
+      result.setZone_names(this.zone_names);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -83,12 +108,7 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
     return new Group(this);
   }
 
-  @Deprecated
-  public Group clone() {
-    return new Group(this);
-  }
-
-  public byte[]  getGroup_name() {
+  public byte[] getGroup_name() {
     return this.group_name;
   }
 
@@ -106,13 +126,13 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
     return this.group_name != null;
   }
 
-  public void setGroup_nameIsSet(boolean value) {
-    if (!value) {
+  public void setGroup_nameIsSet(boolean __value) {
+    if (!__value) {
       this.group_name = null;
     }
   }
 
-  public List<byte[]>  getZone_names() {
+  public List<byte[]> getZone_names() {
     return this.zone_names;
   }
 
@@ -130,28 +150,28 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
     return this.zone_names != null;
   }
 
-  public void setZone_namesIsSet(boolean value) {
-    if (!value) {
+  public void setZone_namesIsSet(boolean __value) {
+    if (!__value) {
       this.zone_names = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case GROUP_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetGroup_name();
       } else {
-        setGroup_name((byte[])value);
+        setGroup_name((byte[])__value);
       }
       break;
 
     case ZONE_NAMES:
-      if (value == null) {
+      if (__value == null) {
         unsetZone_names();
       } else {
-        setZone_names((List<byte[]>)value);
+        setZone_names((List<byte[]>)__value);
       }
       break;
 
@@ -173,69 +193,26 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case GROUP_NAME:
-      return isSetGroup_name();
-    case ZONE_NAMES:
-      return isSetZone_names();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Group)
-      return this.equals((Group)that);
-    return false;
-  }
-
-  public boolean equals(Group that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Group))
+      return false;
+    Group that = (Group)_that;
 
-    boolean this_present_group_name = true && this.isSetGroup_name();
-    boolean that_present_group_name = true && that.isSetGroup_name();
-    if (this_present_group_name || that_present_group_name) {
-      if (!(this_present_group_name && that_present_group_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.group_name, that.group_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetGroup_name(), that.isSetGroup_name(), this.group_name, that.group_name)) { return false; }
 
-    boolean this_present_zone_names = true && this.isSetZone_names();
-    boolean that_present_zone_names = true && that.isSetZone_names();
-    if (this_present_zone_names || that_present_zone_names) {
-      if (!(this_present_zone_names && that_present_zone_names))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.zone_names, that.zone_names))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetZone_names(), that.isSetZone_names(), this.zone_names, that.zone_names)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_group_name = true && (isSetGroup_name());
-    builder.append(present_group_name);
-    if (present_group_name)
-      builder.append(group_name);
-
-    boolean present_zone_names = true && (isSetZone_names());
-    builder.append(present_zone_names);
-    if (present_zone_names)
-      builder.append(zone_names);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {group_name, zone_names});
   }
 
   @Override
@@ -255,7 +232,7 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(group_name, other.group_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetZone_names()).compareTo(other.isSetZone_names());
@@ -263,51 +240,51 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(zone_names, other.zone_names);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case GROUP_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.group_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ZONE_NAMES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list212 = iprot.readListBegin();
-              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list212.size));
-              for (int _i213 = 0; 
-                   (_list212.size < 0) ? iprot.peekList() : (_i213 < _list212.size); 
-                   ++_i213)
+              TList _list221 = iprot.readListBegin();
+              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list221.size));
+              for (int _i222 = 0; 
+                   (_list221.size < 0) ? iprot.peekList() : (_i222 < _list221.size); 
+                   ++_i222)
               {
-                byte[] _elem214;
-                _elem214 = iprot.readBinary();
-                this.zone_names.add(_elem214);
+                byte[] _elem223;
+                _elem223 = iprot.readBinary();
+                this.zone_names.add(_elem223);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -332,8 +309,8 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
       oprot.writeFieldBegin(ZONE_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.zone_names.size()));
-        for (byte[] _iter215 : this.zone_names)        {
-          oprot.writeBinary(_iter215);
+        for (byte[] _iter224 : this.zone_names)        {
+          oprot.writeBinary(_iter224);
         }
         oprot.writeListEnd();
       }
@@ -345,19 +322,14 @@ public class Group implements TBase, java.io.Serializable, Cloneable, Comparable
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Group");
     sb.append(space);
     sb.append("(");
@@ -368,15 +340,15 @@ String space = prettyPrint ? " " : "";
     sb.append("group_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGroup_name() == null) {
+    if (this.getGroup_name() == null) {
       sb.append("null");
     } else {
-        int __group_name_size = Math.min(this. getGroup_name().length, 128);
+        int __group_name_size = Math.min(this.getGroup_name().length, 128);
         for (int i = 0; i < __group_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getGroup_name()[i]).length() > 1 ? Integer.toHexString(this. getGroup_name()[i]).substring(Integer.toHexString(this. getGroup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getGroup_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getGroup_name()[i]).length() > 1 ? Integer.toHexString(this.getGroup_name()[i]).substring(Integer.toHexString(this.getGroup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getGroup_name()[i]).toUpperCase());
         }
-        if (this. getGroup_name().length > 128) sb.append(" ...");
+        if (this.getGroup_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -384,10 +356,10 @@ String space = prettyPrint ? " " : "";
     sb.append("zone_names");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getZone_names() == null) {
+    if (this.getZone_names() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getZone_names(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getZone_names(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -397,7 +369,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

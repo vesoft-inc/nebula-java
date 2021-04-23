@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
   public com.vesoft.nebula.Value id;
   public static final int RESULT = 1;
   public static final int ID = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -58,19 +55,46 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
   }
 
   public GetUUIDResp(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
   }
 
   public GetUUIDResp(
-    ResponseCommon result,
-    com.vesoft.nebula.Value id)
-  {
+      ResponseCommon result,
+      com.vesoft.nebula.Value id) {
     this();
     this.result = result;
     this.id = id;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+    private com.vesoft.nebula.Value id;
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder setId(final com.vesoft.nebula.Value id) {
+      this.id = id;
+      return this;
+    }
+
+    public GetUUIDResp build() {
+      GetUUIDResp result = new GetUUIDResp();
+      result.setResult(this.result);
+      result.setId(this.id);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -89,12 +113,7 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
     return new GetUUIDResp(this);
   }
 
-  @Deprecated
-  public GetUUIDResp clone() {
-    return new GetUUIDResp(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -112,13 +131,13 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public com.vesoft.nebula.Value  getId() {
+  public com.vesoft.nebula.Value getId() {
     return this.id;
   }
 
@@ -136,27 +155,27 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
     return this.id != null;
   }
 
-  public void setIdIsSet(boolean value) {
-    if (!value) {
+  public void setIdIsSet(boolean __value) {
+    if (!__value) {
       this.id = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
     case ID:
-      if (value == null) {
+      if (__value == null) {
         unsetId();
       } else {
-        setId((com.vesoft.nebula.Value)value);
+        setId((com.vesoft.nebula.Value)__value);
       }
       break;
 
@@ -178,100 +197,57 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    case ID:
-      return isSetId();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetUUIDResp)
-      return this.equals((GetUUIDResp)that);
-    return false;
-  }
-
-  public boolean equals(GetUUIDResp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetUUIDResp))
+      return false;
+    GetUUIDResp that = (GetUUIDResp)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    boolean this_present_id = true && this.isSetId();
-    boolean that_present_id = true && that.isSetId();
-    if (this_present_id || that_present_id) {
-      if (!(this_present_id && that_present_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.id, that.id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetId(), that.isSetId(), this.id, that.id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    boolean present_id = true && (isSetId());
-    builder.append(present_id);
-    if (present_id)
-      builder.append(id);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result, id});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ID:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.id = new com.vesoft.nebula.Value();
             this.id.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -303,19 +279,14 @@ public class GetUUIDResp implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetUUIDResp");
     sb.append(space);
     sb.append("(");
@@ -326,10 +297,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -337,10 +308,10 @@ String space = prettyPrint ? " " : "";
     sb.append("id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getId() == null) {
+    if (this.getId() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getId(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -353,7 +324,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }
