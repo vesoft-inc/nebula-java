@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,7 +36,6 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
   public static final int CONTEXTS = 1;
   public static final int IS_EDGE = 2;
   public static final int TAG_OR_EDGE_ID = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __IS_EDGE_ISSET_ID = 0;
@@ -47,6 +43,7 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CONTEXTS, new FieldMetaData("contexts", TFieldRequirementType.REQUIRED, 
@@ -67,16 +64,59 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
   }
 
   public IndexSpec(
-    List<IndexQueryContext> contexts,
-    boolean is_edge,
-    int tag_or_edge_id)
-  {
+      List<IndexQueryContext> contexts,
+      boolean is_edge,
+      int tag_or_edge_id) {
     this();
     this.contexts = contexts;
     this.is_edge = is_edge;
     setIs_edgeIsSet(true);
     this.tag_or_edge_id = tag_or_edge_id;
     setTag_or_edge_idIsSet(true);
+  }
+
+  public static class Builder {
+    private List<IndexQueryContext> contexts;
+    private boolean is_edge;
+    private int tag_or_edge_id;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setContexts(final List<IndexQueryContext> contexts) {
+      this.contexts = contexts;
+      return this;
+    }
+
+    public Builder setIs_edge(final boolean is_edge) {
+      this.is_edge = is_edge;
+      __optional_isset.set(__IS_EDGE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTag_or_edge_id(final int tag_or_edge_id) {
+      this.tag_or_edge_id = tag_or_edge_id;
+      __optional_isset.set(__TAG_OR_EDGE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public IndexSpec build() {
+      IndexSpec result = new IndexSpec();
+      result.setContexts(this.contexts);
+      if (__optional_isset.get(__IS_EDGE_ISSET_ID)) {
+        result.setIs_edge(this.is_edge);
+      }
+      if (__optional_isset.get(__TAG_OR_EDGE_ID_ISSET_ID)) {
+        result.setTag_or_edge_id(this.tag_or_edge_id);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -96,12 +136,7 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     return new IndexSpec(this);
   }
 
-  @Deprecated
-  public IndexSpec clone() {
-    return new IndexSpec(this);
-  }
-
-  public List<IndexQueryContext>  getContexts() {
+  public List<IndexQueryContext> getContexts() {
     return this.contexts;
   }
 
@@ -119,13 +154,13 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     return this.contexts != null;
   }
 
-  public void setContextsIsSet(boolean value) {
-    if (!value) {
+  public void setContextsIsSet(boolean __value) {
+    if (!__value) {
       this.contexts = null;
     }
   }
 
-  public boolean  isIs_edge() {
+  public boolean isIs_edge() {
     return this.is_edge;
   }
 
@@ -144,11 +179,11 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__IS_EDGE_ISSET_ID);
   }
 
-  public void setIs_edgeIsSet(boolean value) {
-    __isset_bit_vector.set(__IS_EDGE_ISSET_ID, value);
+  public void setIs_edgeIsSet(boolean __value) {
+    __isset_bit_vector.set(__IS_EDGE_ISSET_ID, __value);
   }
 
-  public int  getTag_or_edge_id() {
+  public int getTag_or_edge_id() {
     return this.tag_or_edge_id;
   }
 
@@ -167,34 +202,34 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__TAG_OR_EDGE_ID_ISSET_ID);
   }
 
-  public void setTag_or_edge_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TAG_OR_EDGE_ID_ISSET_ID, value);
+  public void setTag_or_edge_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TAG_OR_EDGE_ID_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CONTEXTS:
-      if (value == null) {
+      if (__value == null) {
         unsetContexts();
       } else {
-        setContexts((List<IndexQueryContext>)value);
+        setContexts((List<IndexQueryContext>)__value);
       }
       break;
 
     case IS_EDGE:
-      if (value == null) {
+      if (__value == null) {
         unsetIs_edge();
       } else {
-        setIs_edge((Boolean)value);
+        setIs_edge((Boolean)__value);
       }
       break;
 
     case TAG_OR_EDGE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTag_or_edge_id();
       } else {
-        setTag_or_edge_id((Integer)value);
+        setTag_or_edge_id((Integer)__value);
       }
       break;
 
@@ -219,100 +254,43 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case CONTEXTS:
-      return isSetContexts();
-    case IS_EDGE:
-      return isSetIs_edge();
-    case TAG_OR_EDGE_ID:
-      return isSetTag_or_edge_id();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof IndexSpec)
-      return this.equals((IndexSpec)that);
-    return false;
-  }
-
-  public boolean equals(IndexSpec that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof IndexSpec))
+      return false;
+    IndexSpec that = (IndexSpec)_that;
 
-    boolean this_present_contexts = true && this.isSetContexts();
-    boolean that_present_contexts = true && that.isSetContexts();
-    if (this_present_contexts || that_present_contexts) {
-      if (!(this_present_contexts && that_present_contexts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.contexts, that.contexts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetContexts(), that.isSetContexts(), this.contexts, that.contexts)) { return false; }
 
-    boolean this_present_is_edge = true;
-    boolean that_present_is_edge = true;
-    if (this_present_is_edge || that_present_is_edge) {
-      if (!(this_present_is_edge && that_present_is_edge))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.is_edge, that.is_edge))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.is_edge, that.is_edge)) { return false; }
 
-    boolean this_present_tag_or_edge_id = true;
-    boolean that_present_tag_or_edge_id = true;
-    if (this_present_tag_or_edge_id || that_present_tag_or_edge_id) {
-      if (!(this_present_tag_or_edge_id && that_present_tag_or_edge_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_or_edge_id, that.tag_or_edge_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.tag_or_edge_id, that.tag_or_edge_id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_contexts = true && (isSetContexts());
-    builder.append(present_contexts);
-    if (present_contexts)
-      builder.append(contexts);
-
-    boolean present_is_edge = true;
-    builder.append(present_is_edge);
-    if (present_is_edge)
-      builder.append(is_edge);
-
-    boolean present_tag_or_edge_id = true;
-    builder.append(present_tag_or_edge_id);
-    if (present_tag_or_edge_id)
-      builder.append(tag_or_edge_id);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {contexts, is_edge, tag_or_edge_id});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case CONTEXTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list155 = iprot.readListBegin();
               this.contexts = new ArrayList<IndexQueryContext>(Math.max(0, _list155.size));
@@ -328,27 +306,27 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IS_EDGE:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.is_edge = iprot.readBool();
             setIs_edgeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TAG_OR_EDGE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.tag_or_edge_id = iprot.readI32();
             setTag_or_edge_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -393,19 +371,14 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("IndexSpec");
     sb.append(space);
     sb.append("(");
@@ -416,10 +389,10 @@ String space = prettyPrint ? " " : "";
     sb.append("contexts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getContexts() == null) {
+    if (this.getContexts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getContexts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getContexts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -427,14 +400,14 @@ String space = prettyPrint ? " " : "";
     sb.append("is_edge");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIs_edge(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIs_edge(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("tag_or_edge_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTag_or_edge_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTag_or_edge_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -448,7 +421,6 @@ String space = prettyPrint ? " " : "";
     }
     // alas, we cannot check 'is_edge' because it's a primitive and you chose the non-beans generator.
     // alas, we cannot check 'tag_or_edge_id' because it's a primitive and you chose the non-beans generator.
-    // check that fields of type enum have valid values
   }
 
 }

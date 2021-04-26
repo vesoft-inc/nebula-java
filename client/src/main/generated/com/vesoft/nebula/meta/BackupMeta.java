@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   public static final int BACKUP_INFO = 1;
   public static final int META_FILES = 2;
   public static final int BACKUP_NAME = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(BACKUP_INFO, new FieldMetaData("backup_info", TFieldRequirementType.DEFAULT, 
@@ -66,14 +63,49 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public BackupMeta(
-    Map<Integer,SpaceBackupInfo> backup_info,
-    List<byte[]> meta_files,
-    byte[] backup_name)
-  {
+      Map<Integer,SpaceBackupInfo> backup_info,
+      List<byte[]> meta_files,
+      byte[] backup_name) {
     this();
     this.backup_info = backup_info;
     this.meta_files = meta_files;
     this.backup_name = backup_name;
+  }
+
+  public static class Builder {
+    private Map<Integer,SpaceBackupInfo> backup_info;
+    private List<byte[]> meta_files;
+    private byte[] backup_name;
+
+    public Builder() {
+    }
+
+    public Builder setBackup_info(final Map<Integer,SpaceBackupInfo> backup_info) {
+      this.backup_info = backup_info;
+      return this;
+    }
+
+    public Builder setMeta_files(final List<byte[]> meta_files) {
+      this.meta_files = meta_files;
+      return this;
+    }
+
+    public Builder setBackup_name(final byte[] backup_name) {
+      this.backup_name = backup_name;
+      return this;
+    }
+
+    public BackupMeta build() {
+      BackupMeta result = new BackupMeta();
+      result.setBackup_info(this.backup_info);
+      result.setMeta_files(this.meta_files);
+      result.setBackup_name(this.backup_name);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -95,12 +127,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     return new BackupMeta(this);
   }
 
-  @Deprecated
-  public BackupMeta clone() {
-    return new BackupMeta(this);
-  }
-
-  public Map<Integer,SpaceBackupInfo>  getBackup_info() {
+  public Map<Integer,SpaceBackupInfo> getBackup_info() {
     return this.backup_info;
   }
 
@@ -118,13 +145,13 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     return this.backup_info != null;
   }
 
-  public void setBackup_infoIsSet(boolean value) {
-    if (!value) {
+  public void setBackup_infoIsSet(boolean __value) {
+    if (!__value) {
       this.backup_info = null;
     }
   }
 
-  public List<byte[]>  getMeta_files() {
+  public List<byte[]> getMeta_files() {
     return this.meta_files;
   }
 
@@ -142,13 +169,13 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     return this.meta_files != null;
   }
 
-  public void setMeta_filesIsSet(boolean value) {
-    if (!value) {
+  public void setMeta_filesIsSet(boolean __value) {
+    if (!__value) {
       this.meta_files = null;
     }
   }
 
-  public byte[]  getBackup_name() {
+  public byte[] getBackup_name() {
     return this.backup_name;
   }
 
@@ -166,36 +193,36 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     return this.backup_name != null;
   }
 
-  public void setBackup_nameIsSet(boolean value) {
-    if (!value) {
+  public void setBackup_nameIsSet(boolean __value) {
+    if (!__value) {
       this.backup_name = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case BACKUP_INFO:
-      if (value == null) {
+      if (__value == null) {
         unsetBackup_info();
       } else {
-        setBackup_info((Map<Integer,SpaceBackupInfo>)value);
+        setBackup_info((Map<Integer,SpaceBackupInfo>)__value);
       }
       break;
 
     case META_FILES:
-      if (value == null) {
+      if (__value == null) {
         unsetMeta_files();
       } else {
-        setMeta_files((List<byte[]>)value);
+        setMeta_files((List<byte[]>)__value);
       }
       break;
 
     case BACKUP_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetBackup_name();
       } else {
-        setBackup_name((byte[])value);
+        setBackup_name((byte[])__value);
       }
       break;
 
@@ -220,85 +247,28 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case BACKUP_INFO:
-      return isSetBackup_info();
-    case META_FILES:
-      return isSetMeta_files();
-    case BACKUP_NAME:
-      return isSetBackup_name();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof BackupMeta)
-      return this.equals((BackupMeta)that);
-    return false;
-  }
-
-  public boolean equals(BackupMeta that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof BackupMeta))
+      return false;
+    BackupMeta that = (BackupMeta)_that;
 
-    boolean this_present_backup_info = true && this.isSetBackup_info();
-    boolean that_present_backup_info = true && that.isSetBackup_info();
-    if (this_present_backup_info || that_present_backup_info) {
-      if (!(this_present_backup_info && that_present_backup_info))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.backup_info, that.backup_info))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetBackup_info(), that.isSetBackup_info(), this.backup_info, that.backup_info)) { return false; }
 
-    boolean this_present_meta_files = true && this.isSetMeta_files();
-    boolean that_present_meta_files = true && that.isSetMeta_files();
-    if (this_present_meta_files || that_present_meta_files) {
-      if (!(this_present_meta_files && that_present_meta_files))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.meta_files, that.meta_files))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetMeta_files(), that.isSetMeta_files(), this.meta_files, that.meta_files)) { return false; }
 
-    boolean this_present_backup_name = true && this.isSetBackup_name();
-    boolean that_present_backup_name = true && that.isSetBackup_name();
-    if (this_present_backup_name || that_present_backup_name) {
-      if (!(this_present_backup_name && that_present_backup_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.backup_name, that.backup_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetBackup_name(), that.isSetBackup_name(), this.backup_name, that.backup_name)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_backup_info = true && (isSetBackup_info());
-    builder.append(present_backup_info);
-    if (present_backup_info)
-      builder.append(backup_info);
-
-    boolean present_meta_files = true && (isSetMeta_files());
-    builder.append(present_meta_files);
-    if (present_meta_files)
-      builder.append(meta_files);
-
-    boolean present_backup_name = true && (isSetBackup_name());
-    builder.append(present_backup_name);
-    if (present_backup_name)
-      builder.append(backup_name);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {backup_info, meta_files, backup_name});
   }
 
   @Override
@@ -318,7 +288,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(backup_info, other.backup_info);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMeta_files()).compareTo(other.isSetMeta_files());
@@ -326,7 +296,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(meta_files, other.meta_files);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetBackup_name()).compareTo(other.isSetBackup_name());
@@ -334,73 +304,73 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(backup_name, other.backup_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case BACKUP_INFO:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
-              TMap _map232 = iprot.readMapBegin();
-              this.backup_info = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map232.size));
-              for (int _i233 = 0; 
-                   (_map232.size < 0) ? iprot.peekMap() : (_i233 < _map232.size); 
-                   ++_i233)
+              TMap _map241 = iprot.readMapBegin();
+              this.backup_info = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map241.size));
+              for (int _i242 = 0; 
+                   (_map241.size < 0) ? iprot.peekMap() : (_i242 < _map241.size); 
+                   ++_i242)
               {
-                int _key234;
-                SpaceBackupInfo _val235;
-                _key234 = iprot.readI32();
-                _val235 = new SpaceBackupInfo();
-                _val235.read(iprot);
-                this.backup_info.put(_key234, _val235);
+                int _key243;
+                SpaceBackupInfo _val244;
+                _key243 = iprot.readI32();
+                _val244 = new SpaceBackupInfo();
+                _val244.read(iprot);
+                this.backup_info.put(_key243, _val244);
               }
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case META_FILES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list236 = iprot.readListBegin();
-              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list236.size));
-              for (int _i237 = 0; 
-                   (_list236.size < 0) ? iprot.peekList() : (_i237 < _list236.size); 
-                   ++_i237)
+              TList _list245 = iprot.readListBegin();
+              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list245.size));
+              for (int _i246 = 0; 
+                   (_list245.size < 0) ? iprot.peekList() : (_i246 < _list245.size); 
+                   ++_i246)
               {
-                byte[] _elem238;
-                _elem238 = iprot.readBinary();
-                this.meta_files.add(_elem238);
+                byte[] _elem247;
+                _elem247 = iprot.readBinary();
+                this.meta_files.add(_elem247);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case BACKUP_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.backup_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -420,9 +390,9 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(BACKUP_INFO_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.backup_info.size()));
-        for (Map.Entry<Integer, SpaceBackupInfo> _iter239 : this.backup_info.entrySet())        {
-          oprot.writeI32(_iter239.getKey());
-          _iter239.getValue().write(oprot);
+        for (Map.Entry<Integer, SpaceBackupInfo> _iter248 : this.backup_info.entrySet())        {
+          oprot.writeI32(_iter248.getKey());
+          _iter248.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -432,8 +402,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(META_FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.meta_files.size()));
-        for (byte[] _iter240 : this.meta_files)        {
-          oprot.writeBinary(_iter240);
+        for (byte[] _iter249 : this.meta_files)        {
+          oprot.writeBinary(_iter249);
         }
         oprot.writeListEnd();
       }
@@ -450,19 +420,14 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("BackupMeta");
     sb.append(space);
     sb.append("(");
@@ -473,10 +438,10 @@ String space = prettyPrint ? " " : "";
     sb.append("backup_info");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getBackup_info() == null) {
+    if (this.getBackup_info() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getBackup_info(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getBackup_info(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -484,10 +449,10 @@ String space = prettyPrint ? " " : "";
     sb.append("meta_files");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getMeta_files() == null) {
+    if (this.getMeta_files() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getMeta_files(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getMeta_files(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -495,15 +460,15 @@ String space = prettyPrint ? " " : "";
     sb.append("backup_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getBackup_name() == null) {
+    if (this.getBackup_name() == null) {
       sb.append("null");
     } else {
-        int __backup_name_size = Math.min(this. getBackup_name().length, 128);
+        int __backup_name_size = Math.min(this.getBackup_name().length, 128);
         for (int i = 0; i < __backup_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getBackup_name()[i]).length() > 1 ? Integer.toHexString(this. getBackup_name()[i]).substring(Integer.toHexString(this. getBackup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getBackup_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getBackup_name()[i]).length() > 1 ? Integer.toHexString(this.getBackup_name()[i]).substring(Integer.toHexString(this.getBackup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getBackup_name()[i]).toUpperCase());
         }
-        if (this. getBackup_name().length > 128) sb.append(" ...");
+        if (this.getBackup_name().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -513,7 +478,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

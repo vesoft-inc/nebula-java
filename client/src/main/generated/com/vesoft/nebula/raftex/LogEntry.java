@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.raftex;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
   public byte[] log_str;
   public static final int CLUSTER = 1;
   public static final int LOG_STR = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __CLUSTER_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CLUSTER, new FieldMetaData("cluster", TFieldRequirementType.DEFAULT, 
@@ -60,13 +57,46 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public LogEntry(
-    long cluster,
-    byte[] log_str)
-  {
+      long cluster,
+      byte[] log_str) {
     this();
     this.cluster = cluster;
     setClusterIsSet(true);
     this.log_str = log_str;
+  }
+
+  public static class Builder {
+    private long cluster;
+    private byte[] log_str;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setCluster(final long cluster) {
+      this.cluster = cluster;
+      __optional_isset.set(__CLUSTER_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLog_str(final byte[] log_str) {
+      this.log_str = log_str;
+      return this;
+    }
+
+    public LogEntry build() {
+      LogEntry result = new LogEntry();
+      if (__optional_isset.get(__CLUSTER_ISSET_ID)) {
+        result.setCluster(this.cluster);
+      }
+      result.setLog_str(this.log_str);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -85,12 +115,7 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
     return new LogEntry(this);
   }
 
-  @Deprecated
-  public LogEntry clone() {
-    return new LogEntry(this);
-  }
-
-  public long  getCluster() {
+  public long getCluster() {
     return this.cluster;
   }
 
@@ -109,11 +134,11 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__CLUSTER_ISSET_ID);
   }
 
-  public void setClusterIsSet(boolean value) {
-    __isset_bit_vector.set(__CLUSTER_ISSET_ID, value);
+  public void setClusterIsSet(boolean __value) {
+    __isset_bit_vector.set(__CLUSTER_ISSET_ID, __value);
   }
 
-  public byte[]  getLog_str() {
+  public byte[] getLog_str() {
     return this.log_str;
   }
 
@@ -131,27 +156,27 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
     return this.log_str != null;
   }
 
-  public void setLog_strIsSet(boolean value) {
-    if (!value) {
+  public void setLog_strIsSet(boolean __value) {
+    if (!__value) {
       this.log_str = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CLUSTER:
-      if (value == null) {
+      if (__value == null) {
         unsetCluster();
       } else {
-        setCluster((Long)value);
+        setCluster((Long)__value);
       }
       break;
 
     case LOG_STR:
-      if (value == null) {
+      if (__value == null) {
         unsetLog_str();
       } else {
-        setLog_str((byte[])value);
+        setLog_str((byte[])__value);
       }
       break;
 
@@ -173,69 +198,26 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case CLUSTER:
-      return isSetCluster();
-    case LOG_STR:
-      return isSetLog_str();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof LogEntry)
-      return this.equals((LogEntry)that);
-    return false;
-  }
-
-  public boolean equals(LogEntry that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof LogEntry))
+      return false;
+    LogEntry that = (LogEntry)_that;
 
-    boolean this_present_cluster = true;
-    boolean that_present_cluster = true;
-    if (this_present_cluster || that_present_cluster) {
-      if (!(this_present_cluster && that_present_cluster))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.cluster, that.cluster))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.cluster, that.cluster)) { return false; }
 
-    boolean this_present_log_str = true && this.isSetLog_str();
-    boolean that_present_log_str = true && that.isSetLog_str();
-    if (this_present_log_str || that_present_log_str) {
-      if (!(this_present_log_str && that_present_log_str))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.log_str, that.log_str))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetLog_str(), that.isSetLog_str(), this.log_str, that.log_str)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_cluster = true;
-    builder.append(present_cluster);
-    if (present_cluster)
-      builder.append(cluster);
-
-    boolean present_log_str = true && (isSetLog_str());
-    builder.append(present_log_str);
-    if (present_log_str)
-      builder.append(log_str);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {cluster, log_str});
   }
 
   @Override
@@ -255,7 +237,7 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(cluster, other.cluster);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLog_str()).compareTo(other.isSetLog_str());
@@ -263,40 +245,40 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(log_str, other.log_str);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case CLUSTER:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.cluster = iprot.readI64();
             setClusterIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LOG_STR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.log_str = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -326,19 +308,14 @@ public class LogEntry implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("LogEntry");
     sb.append(space);
     sb.append("(");
@@ -349,22 +326,22 @@ String space = prettyPrint ? " " : "";
     sb.append("cluster");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCluster(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCluster(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("log_str");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLog_str() == null) {
+    if (this.getLog_str() == null) {
       sb.append("null");
     } else {
-        int __log_str_size = Math.min(this. getLog_str().length, 128);
+        int __log_str_size = Math.min(this.getLog_str().length, 128);
         for (int i = 0; i < __log_str_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getLog_str()[i]).length() > 1 ? Integer.toHexString(this. getLog_str()[i]).substring(Integer.toHexString(this. getLog_str()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getLog_str()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getLog_str()[i]).length() > 1 ? Integer.toHexString(this.getLog_str()[i]).substring(Integer.toHexString(this.getLog_str()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getLog_str()[i]).toUpperCase());
         }
-        if (this. getLog_str().length > 128) sb.append(" ...");
+        if (this.getLog_str().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -374,7 +351,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

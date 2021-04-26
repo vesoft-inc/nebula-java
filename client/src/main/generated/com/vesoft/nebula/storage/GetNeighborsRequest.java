@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,13 +39,13 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
   public static final int COLUMN_NAMES = 2;
   public static final int PARTS = 3;
   public static final int TRAVERSE_SPEC = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -74,17 +71,64 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
   }
 
   public GetNeighborsRequest(
-    int space_id,
-    List<byte[]> column_names,
-    Map<Integer,List<com.vesoft.nebula.Row>> parts,
-    TraverseSpec traverse_spec)
-  {
+      int space_id,
+      List<byte[]> column_names,
+      Map<Integer,List<com.vesoft.nebula.Row>> parts,
+      TraverseSpec traverse_spec) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.column_names = column_names;
     this.parts = parts;
     this.traverse_spec = traverse_spec;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private List<byte[]> column_names;
+    private Map<Integer,List<com.vesoft.nebula.Row>> parts;
+    private TraverseSpec traverse_spec;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setColumn_names(final List<byte[]> column_names) {
+      this.column_names = column_names;
+      return this;
+    }
+
+    public Builder setParts(final Map<Integer,List<com.vesoft.nebula.Row>> parts) {
+      this.parts = parts;
+      return this;
+    }
+
+    public Builder setTraverse_spec(final TraverseSpec traverse_spec) {
+      this.traverse_spec = traverse_spec;
+      return this;
+    }
+
+    public GetNeighborsRequest build() {
+      GetNeighborsRequest result = new GetNeighborsRequest();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setColumn_names(this.column_names);
+      result.setParts(this.parts);
+      result.setTraverse_spec(this.traverse_spec);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -109,12 +153,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     return new GetNeighborsRequest(this);
   }
 
-  @Deprecated
-  public GetNeighborsRequest clone() {
-    return new GetNeighborsRequest(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -133,11 +172,11 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public List<byte[]>  getColumn_names() {
+  public List<byte[]> getColumn_names() {
     return this.column_names;
   }
 
@@ -155,13 +194,13 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     return this.column_names != null;
   }
 
-  public void setColumn_namesIsSet(boolean value) {
-    if (!value) {
+  public void setColumn_namesIsSet(boolean __value) {
+    if (!__value) {
       this.column_names = null;
     }
   }
 
-  public Map<Integer,List<com.vesoft.nebula.Row>>  getParts() {
+  public Map<Integer,List<com.vesoft.nebula.Row>> getParts() {
     return this.parts;
   }
 
@@ -179,13 +218,13 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     return this.parts != null;
   }
 
-  public void setPartsIsSet(boolean value) {
-    if (!value) {
+  public void setPartsIsSet(boolean __value) {
+    if (!__value) {
       this.parts = null;
     }
   }
 
-  public TraverseSpec  getTraverse_spec() {
+  public TraverseSpec getTraverse_spec() {
     return this.traverse_spec;
   }
 
@@ -203,44 +242,44 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     return this.traverse_spec != null;
   }
 
-  public void setTraverse_specIsSet(boolean value) {
-    if (!value) {
+  public void setTraverse_specIsSet(boolean __value) {
+    if (!__value) {
       this.traverse_spec = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case COLUMN_NAMES:
-      if (value == null) {
+      if (__value == null) {
         unsetColumn_names();
       } else {
-        setColumn_names((List<byte[]>)value);
+        setColumn_names((List<byte[]>)__value);
       }
       break;
 
     case PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<com.vesoft.nebula.Row>>)value);
+        setParts((Map<Integer,List<com.vesoft.nebula.Row>>)__value);
       }
       break;
 
     case TRAVERSE_SPEC:
-      if (value == null) {
+      if (__value == null) {
         unsetTraverse_spec();
       } else {
-        setTraverse_spec((TraverseSpec)value);
+        setTraverse_spec((TraverseSpec)__value);
       }
       break;
 
@@ -268,124 +307,53 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case COLUMN_NAMES:
-      return isSetColumn_names();
-    case PARTS:
-      return isSetParts();
-    case TRAVERSE_SPEC:
-      return isSetTraverse_spec();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetNeighborsRequest)
-      return this.equals((GetNeighborsRequest)that);
-    return false;
-  }
-
-  public boolean equals(GetNeighborsRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetNeighborsRequest))
+      return false;
+    GetNeighborsRequest that = (GetNeighborsRequest)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_column_names = true && this.isSetColumn_names();
-    boolean that_present_column_names = true && that.isSetColumn_names();
-    if (this_present_column_names || that_present_column_names) {
-      if (!(this_present_column_names && that_present_column_names))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.column_names, that.column_names))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetColumn_names(), that.isSetColumn_names(), this.column_names, that.column_names)) { return false; }
 
-    boolean this_present_parts = true && this.isSetParts();
-    boolean that_present_parts = true && that.isSetParts();
-    if (this_present_parts || that_present_parts) {
-      if (!(this_present_parts && that_present_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.parts, that.parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
-    boolean this_present_traverse_spec = true && this.isSetTraverse_spec();
-    boolean that_present_traverse_spec = true && that.isSetTraverse_spec();
-    if (this_present_traverse_spec || that_present_traverse_spec) {
-      if (!(this_present_traverse_spec && that_present_traverse_spec))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.traverse_spec, that.traverse_spec))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetTraverse_spec(), that.isSetTraverse_spec(), this.traverse_spec, that.traverse_spec)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_column_names = true && (isSetColumn_names());
-    builder.append(present_column_names);
-    if (present_column_names)
-      builder.append(column_names);
-
-    boolean present_parts = true && (isSetParts());
-    builder.append(present_parts);
-    if (present_parts)
-      builder.append(parts);
-
-    boolean present_traverse_spec = true && (isSetTraverse_spec());
-    builder.append(present_traverse_spec);
-    if (present_traverse_spec)
-      builder.append(traverse_spec);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, column_names, parts, traverse_spec});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case COLUMN_NAMES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list36 = iprot.readListBegin();
               this.column_names = new ArrayList<byte[]>(Math.max(0, _list36.size));
@@ -400,11 +368,11 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map39 = iprot.readMapBegin();
               this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map39.size));
@@ -434,19 +402,19 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TRAVERSE_SPEC:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.traverse_spec = new TraverseSpec();
             this.traverse_spec.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -505,19 +473,14 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetNeighborsRequest");
     sb.append(space);
     sb.append("(");
@@ -528,17 +491,17 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("column_names");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getColumn_names() == null) {
+    if (this.getColumn_names() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getColumn_names(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getColumn_names(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -546,10 +509,10 @@ String space = prettyPrint ? " " : "";
     sb.append("parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getParts() == null) {
+    if (this.getParts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getParts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -557,10 +520,10 @@ String space = prettyPrint ? " " : "";
     sb.append("traverse_spec");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getTraverse_spec() == null) {
+    if (this.getTraverse_spec() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getTraverse_spec(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getTraverse_spec(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -570,7 +533,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

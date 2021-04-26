@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -57,7 +54,6 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
   public static final int TIMEZONE = 7;
   public static final int CLIENT_IP = 8;
   public static final int CONFIGS = 9;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SESSION_ID_ISSET_ID = 0;
@@ -67,6 +63,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
   private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SESSION_ID, new FieldMetaData("session_id", TFieldRequirementType.DEFAULT, 
@@ -100,16 +97,15 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Session(
-    long session_id,
-    long create_time,
-    long update_time,
-    byte[] user_name,
-    byte[] space_name,
-    com.vesoft.nebula.HostAddr graph_addr,
-    int timezone,
-    byte[] client_ip,
-    Map<byte[],com.vesoft.nebula.Value> configs)
-  {
+      long session_id,
+      long create_time,
+      long update_time,
+      byte[] user_name,
+      byte[] space_name,
+      com.vesoft.nebula.HostAddr graph_addr,
+      int timezone,
+      byte[] client_ip,
+      Map<byte[],com.vesoft.nebula.Value> configs) {
     this();
     this.session_id = session_id;
     setSession_idIsSet(true);
@@ -124,6 +120,98 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     setTimezoneIsSet(true);
     this.client_ip = client_ip;
     this.configs = configs;
+  }
+
+  public static class Builder {
+    private long session_id;
+    private long create_time;
+    private long update_time;
+    private byte[] user_name;
+    private byte[] space_name;
+    private com.vesoft.nebula.HostAddr graph_addr;
+    private int timezone;
+    private byte[] client_ip;
+    private Map<byte[],com.vesoft.nebula.Value> configs;
+
+    BitSet __optional_isset = new BitSet(4);
+
+    public Builder() {
+    }
+
+    public Builder setSession_id(final long session_id) {
+      this.session_id = session_id;
+      __optional_isset.set(__SESSION_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCreate_time(final long create_time) {
+      this.create_time = create_time;
+      __optional_isset.set(__CREATE_TIME_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setUpdate_time(final long update_time) {
+      this.update_time = update_time;
+      __optional_isset.set(__UPDATE_TIME_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setUser_name(final byte[] user_name) {
+      this.user_name = user_name;
+      return this;
+    }
+
+    public Builder setSpace_name(final byte[] space_name) {
+      this.space_name = space_name;
+      return this;
+    }
+
+    public Builder setGraph_addr(final com.vesoft.nebula.HostAddr graph_addr) {
+      this.graph_addr = graph_addr;
+      return this;
+    }
+
+    public Builder setTimezone(final int timezone) {
+      this.timezone = timezone;
+      __optional_isset.set(__TIMEZONE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setClient_ip(final byte[] client_ip) {
+      this.client_ip = client_ip;
+      return this;
+    }
+
+    public Builder setConfigs(final Map<byte[],com.vesoft.nebula.Value> configs) {
+      this.configs = configs;
+      return this;
+    }
+
+    public Session build() {
+      Session result = new Session();
+      if (__optional_isset.get(__SESSION_ID_ISSET_ID)) {
+        result.setSession_id(this.session_id);
+      }
+      if (__optional_isset.get(__CREATE_TIME_ISSET_ID)) {
+        result.setCreate_time(this.create_time);
+      }
+      if (__optional_isset.get(__UPDATE_TIME_ISSET_ID)) {
+        result.setUpdate_time(this.update_time);
+      }
+      result.setUser_name(this.user_name);
+      result.setSpace_name(this.space_name);
+      result.setGraph_addr(this.graph_addr);
+      if (__optional_isset.get(__TIMEZONE_ISSET_ID)) {
+        result.setTimezone(this.timezone);
+      }
+      result.setClient_ip(this.client_ip);
+      result.setConfigs(this.configs);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -157,12 +245,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return new Session(this);
   }
 
-  @Deprecated
-  public Session clone() {
-    return new Session(this);
-  }
-
-  public long  getSession_id() {
+  public long getSession_id() {
     return this.session_id;
   }
 
@@ -181,11 +264,11 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__SESSION_ID_ISSET_ID);
   }
 
-  public void setSession_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SESSION_ID_ISSET_ID, value);
+  public void setSession_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SESSION_ID_ISSET_ID, __value);
   }
 
-  public long  getCreate_time() {
+  public long getCreate_time() {
     return this.create_time;
   }
 
@@ -204,11 +287,11 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__CREATE_TIME_ISSET_ID);
   }
 
-  public void setCreate_timeIsSet(boolean value) {
-    __isset_bit_vector.set(__CREATE_TIME_ISSET_ID, value);
+  public void setCreate_timeIsSet(boolean __value) {
+    __isset_bit_vector.set(__CREATE_TIME_ISSET_ID, __value);
   }
 
-  public long  getUpdate_time() {
+  public long getUpdate_time() {
     return this.update_time;
   }
 
@@ -227,11 +310,11 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__UPDATE_TIME_ISSET_ID);
   }
 
-  public void setUpdate_timeIsSet(boolean value) {
-    __isset_bit_vector.set(__UPDATE_TIME_ISSET_ID, value);
+  public void setUpdate_timeIsSet(boolean __value) {
+    __isset_bit_vector.set(__UPDATE_TIME_ISSET_ID, __value);
   }
 
-  public byte[]  getUser_name() {
+  public byte[] getUser_name() {
     return this.user_name;
   }
 
@@ -249,13 +332,13 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return this.user_name != null;
   }
 
-  public void setUser_nameIsSet(boolean value) {
-    if (!value) {
+  public void setUser_nameIsSet(boolean __value) {
+    if (!__value) {
       this.user_name = null;
     }
   }
 
-  public byte[]  getSpace_name() {
+  public byte[] getSpace_name() {
     return this.space_name;
   }
 
@@ -273,13 +356,13 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return this.space_name != null;
   }
 
-  public void setSpace_nameIsSet(boolean value) {
-    if (!value) {
+  public void setSpace_nameIsSet(boolean __value) {
+    if (!__value) {
       this.space_name = null;
     }
   }
 
-  public com.vesoft.nebula.HostAddr  getGraph_addr() {
+  public com.vesoft.nebula.HostAddr getGraph_addr() {
     return this.graph_addr;
   }
 
@@ -297,13 +380,13 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return this.graph_addr != null;
   }
 
-  public void setGraph_addrIsSet(boolean value) {
-    if (!value) {
+  public void setGraph_addrIsSet(boolean __value) {
+    if (!__value) {
       this.graph_addr = null;
     }
   }
 
-  public int  getTimezone() {
+  public int getTimezone() {
     return this.timezone;
   }
 
@@ -322,11 +405,11 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__TIMEZONE_ISSET_ID);
   }
 
-  public void setTimezoneIsSet(boolean value) {
-    __isset_bit_vector.set(__TIMEZONE_ISSET_ID, value);
+  public void setTimezoneIsSet(boolean __value) {
+    __isset_bit_vector.set(__TIMEZONE_ISSET_ID, __value);
   }
 
-  public byte[]  getClient_ip() {
+  public byte[] getClient_ip() {
     return this.client_ip;
   }
 
@@ -344,13 +427,13 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return this.client_ip != null;
   }
 
-  public void setClient_ipIsSet(boolean value) {
-    if (!value) {
+  public void setClient_ipIsSet(boolean __value) {
+    if (!__value) {
       this.client_ip = null;
     }
   }
 
-  public Map<byte[],com.vesoft.nebula.Value>  getConfigs() {
+  public Map<byte[],com.vesoft.nebula.Value> getConfigs() {
     return this.configs;
   }
 
@@ -368,84 +451,84 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     return this.configs != null;
   }
 
-  public void setConfigsIsSet(boolean value) {
-    if (!value) {
+  public void setConfigsIsSet(boolean __value) {
+    if (!__value) {
       this.configs = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SESSION_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSession_id();
       } else {
-        setSession_id((Long)value);
+        setSession_id((Long)__value);
       }
       break;
 
     case CREATE_TIME:
-      if (value == null) {
+      if (__value == null) {
         unsetCreate_time();
       } else {
-        setCreate_time((Long)value);
+        setCreate_time((Long)__value);
       }
       break;
 
     case UPDATE_TIME:
-      if (value == null) {
+      if (__value == null) {
         unsetUpdate_time();
       } else {
-        setUpdate_time((Long)value);
+        setUpdate_time((Long)__value);
       }
       break;
 
     case USER_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetUser_name();
       } else {
-        setUser_name((byte[])value);
+        setUser_name((byte[])__value);
       }
       break;
 
     case SPACE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_name();
       } else {
-        setSpace_name((byte[])value);
+        setSpace_name((byte[])__value);
       }
       break;
 
     case GRAPH_ADDR:
-      if (value == null) {
+      if (__value == null) {
         unsetGraph_addr();
       } else {
-        setGraph_addr((com.vesoft.nebula.HostAddr)value);
+        setGraph_addr((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case TIMEZONE:
-      if (value == null) {
+      if (__value == null) {
         unsetTimezone();
       } else {
-        setTimezone((Integer)value);
+        setTimezone((Integer)__value);
       }
       break;
 
     case CLIENT_IP:
-      if (value == null) {
+      if (__value == null) {
         unsetClient_ip();
       } else {
-        setClient_ip((byte[])value);
+        setClient_ip((byte[])__value);
       }
       break;
 
     case CONFIGS:
-      if (value == null) {
+      if (__value == null) {
         unsetConfigs();
       } else {
-        setConfigs((Map<byte[],com.vesoft.nebula.Value>)value);
+        setConfigs((Map<byte[],com.vesoft.nebula.Value>)__value);
       }
       break;
 
@@ -488,279 +571,138 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SESSION_ID:
-      return isSetSession_id();
-    case CREATE_TIME:
-      return isSetCreate_time();
-    case UPDATE_TIME:
-      return isSetUpdate_time();
-    case USER_NAME:
-      return isSetUser_name();
-    case SPACE_NAME:
-      return isSetSpace_name();
-    case GRAPH_ADDR:
-      return isSetGraph_addr();
-    case TIMEZONE:
-      return isSetTimezone();
-    case CLIENT_IP:
-      return isSetClient_ip();
-    case CONFIGS:
-      return isSetConfigs();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Session)
-      return this.equals((Session)that);
-    return false;
-  }
-
-  public boolean equals(Session that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Session))
+      return false;
+    Session that = (Session)_that;
 
-    boolean this_present_session_id = true;
-    boolean that_present_session_id = true;
-    if (this_present_session_id || that_present_session_id) {
-      if (!(this_present_session_id && that_present_session_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.session_id, that.session_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.session_id, that.session_id)) { return false; }
 
-    boolean this_present_create_time = true;
-    boolean that_present_create_time = true;
-    if (this_present_create_time || that_present_create_time) {
-      if (!(this_present_create_time && that_present_create_time))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.create_time, that.create_time))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.create_time, that.create_time)) { return false; }
 
-    boolean this_present_update_time = true;
-    boolean that_present_update_time = true;
-    if (this_present_update_time || that_present_update_time) {
-      if (!(this_present_update_time && that_present_update_time))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.update_time, that.update_time))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.update_time, that.update_time)) { return false; }
 
-    boolean this_present_user_name = true && this.isSetUser_name();
-    boolean that_present_user_name = true && that.isSetUser_name();
-    if (this_present_user_name || that_present_user_name) {
-      if (!(this_present_user_name && that_present_user_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.user_name, that.user_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetUser_name(), that.isSetUser_name(), this.user_name, that.user_name)) { return false; }
 
-    boolean this_present_space_name = true && this.isSetSpace_name();
-    boolean that_present_space_name = true && that.isSetSpace_name();
-    if (this_present_space_name || that_present_space_name) {
-      if (!(this_present_space_name && that_present_space_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.space_name, that.space_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSpace_name(), that.isSetSpace_name(), this.space_name, that.space_name)) { return false; }
 
-    boolean this_present_graph_addr = true && this.isSetGraph_addr();
-    boolean that_present_graph_addr = true && that.isSetGraph_addr();
-    if (this_present_graph_addr || that_present_graph_addr) {
-      if (!(this_present_graph_addr && that_present_graph_addr))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.graph_addr, that.graph_addr))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetGraph_addr(), that.isSetGraph_addr(), this.graph_addr, that.graph_addr)) { return false; }
 
-    boolean this_present_timezone = true;
-    boolean that_present_timezone = true;
-    if (this_present_timezone || that_present_timezone) {
-      if (!(this_present_timezone && that_present_timezone))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.timezone, that.timezone))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.timezone, that.timezone)) { return false; }
 
-    boolean this_present_client_ip = true && this.isSetClient_ip();
-    boolean that_present_client_ip = true && that.isSetClient_ip();
-    if (this_present_client_ip || that_present_client_ip) {
-      if (!(this_present_client_ip && that_present_client_ip))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.client_ip, that.client_ip))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetClient_ip(), that.isSetClient_ip(), this.client_ip, that.client_ip)) { return false; }
 
-    boolean this_present_configs = true && this.isSetConfigs();
-    boolean that_present_configs = true && that.isSetConfigs();
-    if (this_present_configs || that_present_configs) {
-      if (!(this_present_configs && that_present_configs))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.configs, that.configs))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetConfigs(), that.isSetConfigs(), this.configs, that.configs)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_session_id = true;
-    builder.append(present_session_id);
-    if (present_session_id)
-      builder.append(session_id);
-
-    boolean present_create_time = true;
-    builder.append(present_create_time);
-    if (present_create_time)
-      builder.append(create_time);
-
-    boolean present_update_time = true;
-    builder.append(present_update_time);
-    if (present_update_time)
-      builder.append(update_time);
-
-    boolean present_user_name = true && (isSetUser_name());
-    builder.append(present_user_name);
-    if (present_user_name)
-      builder.append(user_name);
-
-    boolean present_space_name = true && (isSetSpace_name());
-    builder.append(present_space_name);
-    if (present_space_name)
-      builder.append(space_name);
-
-    boolean present_graph_addr = true && (isSetGraph_addr());
-    builder.append(present_graph_addr);
-    if (present_graph_addr)
-      builder.append(graph_addr);
-
-    boolean present_timezone = true;
-    builder.append(present_timezone);
-    if (present_timezone)
-      builder.append(timezone);
-
-    boolean present_client_ip = true && (isSetClient_ip());
-    builder.append(present_client_ip);
-    if (present_client_ip)
-      builder.append(client_ip);
-
-    boolean present_configs = true && (isSetConfigs());
-    builder.append(present_configs);
-    if (present_configs)
-      builder.append(configs);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {session_id, create_time, update_time, user_name, space_name, graph_addr, timezone, client_ip, configs});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SESSION_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.session_id = iprot.readI64();
             setSession_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CREATE_TIME:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.create_time = iprot.readI64();
             setCreate_timeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case UPDATE_TIME:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.update_time = iprot.readI64();
             setUpdate_timeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case USER_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.user_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SPACE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.space_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case GRAPH_ADDR:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.graph_addr = new com.vesoft.nebula.HostAddr();
             this.graph_addr.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TIMEZONE:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.timezone = iprot.readI32();
             setTimezoneIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CLIENT_IP:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.client_ip = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CONFIGS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
-              TMap _map261 = iprot.readMapBegin();
-              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map261.size));
-              for (int _i262 = 0; 
-                   (_map261.size < 0) ? iprot.peekMap() : (_i262 < _map261.size); 
-                   ++_i262)
+              TMap _map270 = iprot.readMapBegin();
+              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map270.size));
+              for (int _i271 = 0; 
+                   (_map270.size < 0) ? iprot.peekMap() : (_i271 < _map270.size); 
+                   ++_i271)
               {
-                byte[] _key263;
-                com.vesoft.nebula.Value _val264;
-                _key263 = iprot.readBinary();
-                _val264 = new com.vesoft.nebula.Value();
-                _val264.read(iprot);
-                this.configs.put(_key263, _val264);
+                byte[] _key272;
+                com.vesoft.nebula.Value _val273;
+                _key272 = iprot.readBinary();
+                _val273 = new com.vesoft.nebula.Value();
+                _val273.read(iprot);
+                this.configs.put(_key272, _val273);
               }
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -812,9 +754,9 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CONFIGS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.configs.size()));
-        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter265 : this.configs.entrySet())        {
-          oprot.writeBinary(_iter265.getKey());
-          _iter265.getValue().write(oprot);
+        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter274 : this.configs.entrySet())        {
+          oprot.writeBinary(_iter274.getKey());
+          _iter274.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -826,19 +768,14 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Session");
     sb.append(space);
     sb.append("(");
@@ -849,36 +786,36 @@ String space = prettyPrint ? " " : "";
     sb.append("session_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSession_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSession_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("create_time");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCreate_time(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCreate_time(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("update_time");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getUpdate_time(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getUpdate_time(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("user_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getUser_name() == null) {
+    if (this.getUser_name() == null) {
       sb.append("null");
     } else {
-        int __user_name_size = Math.min(this. getUser_name().length, 128);
+        int __user_name_size = Math.min(this.getUser_name().length, 128);
         for (int i = 0; i < __user_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getUser_name()[i]).length() > 1 ? Integer.toHexString(this. getUser_name()[i]).substring(Integer.toHexString(this. getUser_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getUser_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getUser_name()[i]).length() > 1 ? Integer.toHexString(this.getUser_name()[i]).substring(Integer.toHexString(this.getUser_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getUser_name()[i]).toUpperCase());
         }
-        if (this. getUser_name().length > 128) sb.append(" ...");
+        if (this.getUser_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -886,15 +823,15 @@ String space = prettyPrint ? " " : "";
     sb.append("space_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSpace_name() == null) {
+    if (this.getSpace_name() == null) {
       sb.append("null");
     } else {
-        int __space_name_size = Math.min(this. getSpace_name().length, 128);
+        int __space_name_size = Math.min(this.getSpace_name().length, 128);
         for (int i = 0; i < __space_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getSpace_name()[i]).length() > 1 ? Integer.toHexString(this. getSpace_name()[i]).substring(Integer.toHexString(this. getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getSpace_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getSpace_name()[i]).length() > 1 ? Integer.toHexString(this.getSpace_name()[i]).substring(Integer.toHexString(this.getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSpace_name()[i]).toUpperCase());
         }
-        if (this. getSpace_name().length > 128) sb.append(" ...");
+        if (this.getSpace_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -902,10 +839,10 @@ String space = prettyPrint ? " " : "";
     sb.append("graph_addr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getGraph_addr() == null) {
+    if (this.getGraph_addr() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getGraph_addr(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getGraph_addr(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -913,22 +850,22 @@ String space = prettyPrint ? " " : "";
     sb.append("timezone");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTimezone(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTimezone(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("client_ip");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getClient_ip() == null) {
+    if (this.getClient_ip() == null) {
       sb.append("null");
     } else {
-        int __client_ip_size = Math.min(this. getClient_ip().length, 128);
+        int __client_ip_size = Math.min(this.getClient_ip().length, 128);
         for (int i = 0; i < __client_ip_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getClient_ip()[i]).length() > 1 ? Integer.toHexString(this. getClient_ip()[i]).substring(Integer.toHexString(this. getClient_ip()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getClient_ip()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getClient_ip()[i]).length() > 1 ? Integer.toHexString(this.getClient_ip()[i]).substring(Integer.toHexString(this.getClient_ip()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getClient_ip()[i]).toUpperCase());
         }
-        if (this. getClient_ip().length > 128) sb.append(" ...");
+        if (this.getClient_ip().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -936,10 +873,10 @@ String space = prettyPrint ? " " : "";
     sb.append("configs");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getConfigs() == null) {
+    if (this.getConfigs() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getConfigs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getConfigs(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -949,7 +886,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -45,7 +42,6 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
   public static final int EDGE_NAME = 3;
   public static final int FIELDS = 4;
   public static final int IF_NOT_EXISTS = 5;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -53,6 +49,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -77,12 +74,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
   }
 
   public CreateEdgeIndexReq(
-    int space_id,
-    byte[] index_name,
-    byte[] edge_name,
-    List<IndexFieldDef> fields,
-    boolean if_not_exists)
-  {
+      int space_id,
+      byte[] index_name,
+      byte[] edge_name,
+      List<IndexFieldDef> fields,
+      boolean if_not_exists) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -91,6 +87,64 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     this.fields = fields;
     this.if_not_exists = if_not_exists;
     setIf_not_existsIsSet(true);
+  }
+
+  public static class Builder {
+    private int space_id;
+    private byte[] index_name;
+    private byte[] edge_name;
+    private List<IndexFieldDef> fields;
+    private boolean if_not_exists;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setIndex_name(final byte[] index_name) {
+      this.index_name = index_name;
+      return this;
+    }
+
+    public Builder setEdge_name(final byte[] edge_name) {
+      this.edge_name = edge_name;
+      return this;
+    }
+
+    public Builder setFields(final List<IndexFieldDef> fields) {
+      this.fields = fields;
+      return this;
+    }
+
+    public Builder setIf_not_exists(final boolean if_not_exists) {
+      this.if_not_exists = if_not_exists;
+      __optional_isset.set(__IF_NOT_EXISTS_ISSET_ID, true);
+      return this;
+    }
+
+    public CreateEdgeIndexReq build() {
+      CreateEdgeIndexReq result = new CreateEdgeIndexReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setIndex_name(this.index_name);
+      result.setEdge_name(this.edge_name);
+      result.setFields(this.fields);
+      if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
+        result.setIf_not_exists(this.if_not_exists);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -116,12 +170,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     return new CreateEdgeIndexReq(this);
   }
 
-  @Deprecated
-  public CreateEdgeIndexReq clone() {
-    return new CreateEdgeIndexReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -140,11 +189,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public byte[]  getIndex_name() {
+  public byte[] getIndex_name() {
     return this.index_name;
   }
 
@@ -162,13 +211,13 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     return this.index_name != null;
   }
 
-  public void setIndex_nameIsSet(boolean value) {
-    if (!value) {
+  public void setIndex_nameIsSet(boolean __value) {
+    if (!__value) {
       this.index_name = null;
     }
   }
 
-  public byte[]  getEdge_name() {
+  public byte[] getEdge_name() {
     return this.edge_name;
   }
 
@@ -186,13 +235,13 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     return this.edge_name != null;
   }
 
-  public void setEdge_nameIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_nameIsSet(boolean __value) {
+    if (!__value) {
       this.edge_name = null;
     }
   }
 
-  public List<IndexFieldDef>  getFields() {
+  public List<IndexFieldDef> getFields() {
     return this.fields;
   }
 
@@ -210,13 +259,13 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     return this.fields != null;
   }
 
-  public void setFieldsIsSet(boolean value) {
-    if (!value) {
+  public void setFieldsIsSet(boolean __value) {
+    if (!__value) {
       this.fields = null;
     }
   }
 
-  public boolean  isIf_not_exists() {
+  public boolean isIf_not_exists() {
     return this.if_not_exists;
   }
 
@@ -235,50 +284,50 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  public void setIf_not_existsIsSet(boolean value) {
-    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, value);
+  public void setIf_not_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case INDEX_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetIndex_name();
       } else {
-        setIndex_name((byte[])value);
+        setIndex_name((byte[])__value);
       }
       break;
 
     case EDGE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((byte[])value);
+        setEdge_name((byte[])__value);
       }
       break;
 
     case FIELDS:
-      if (value == null) {
+      if (__value == null) {
         unsetFields();
       } else {
-        setFields((List<IndexFieldDef>)value);
+        setFields((List<IndexFieldDef>)__value);
       }
       break;
 
     case IF_NOT_EXISTS:
-      if (value == null) {
+      if (__value == null) {
         unsetIf_not_exists();
       } else {
-        setIf_not_exists((Boolean)value);
+        setIf_not_exists((Boolean)__value);
       }
       break;
 
@@ -309,117 +358,32 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case INDEX_NAME:
-      return isSetIndex_name();
-    case EDGE_NAME:
-      return isSetEdge_name();
-    case FIELDS:
-      return isSetFields();
-    case IF_NOT_EXISTS:
-      return isSetIf_not_exists();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CreateEdgeIndexReq)
-      return this.equals((CreateEdgeIndexReq)that);
-    return false;
-  }
-
-  public boolean equals(CreateEdgeIndexReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CreateEdgeIndexReq))
+      return false;
+    CreateEdgeIndexReq that = (CreateEdgeIndexReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_index_name = true && this.isSetIndex_name();
-    boolean that_present_index_name = true && that.isSetIndex_name();
-    if (this_present_index_name || that_present_index_name) {
-      if (!(this_present_index_name && that_present_index_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.index_name, that.index_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetIndex_name(), that.isSetIndex_name(), this.index_name, that.index_name)) { return false; }
 
-    boolean this_present_edge_name = true && this.isSetEdge_name();
-    boolean that_present_edge_name = true && that.isSetEdge_name();
-    if (this_present_edge_name || that_present_edge_name) {
-      if (!(this_present_edge_name && that_present_edge_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetEdge_name(), that.isSetEdge_name(), this.edge_name, that.edge_name)) { return false; }
 
-    boolean this_present_fields = true && this.isSetFields();
-    boolean that_present_fields = true && that.isSetFields();
-    if (this_present_fields || that_present_fields) {
-      if (!(this_present_fields && that_present_fields))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.fields, that.fields))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetFields(), that.isSetFields(), this.fields, that.fields)) { return false; }
 
-    boolean this_present_if_not_exists = true;
-    boolean that_present_if_not_exists = true;
-    if (this_present_if_not_exists || that_present_if_not_exists) {
-      if (!(this_present_if_not_exists && that_present_if_not_exists))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_index_name = true && (isSetIndex_name());
-    builder.append(present_index_name);
-    if (present_index_name)
-      builder.append(index_name);
-
-    boolean present_edge_name = true && (isSetEdge_name());
-    builder.append(present_edge_name);
-    if (present_edge_name)
-      builder.append(edge_name);
-
-    boolean present_fields = true && (isSetFields());
-    builder.append(present_fields);
-    if (present_fields)
-      builder.append(fields);
-
-    boolean present_if_not_exists = true;
-    builder.append(present_if_not_exists);
-    if (present_if_not_exists)
-      builder.append(if_not_exists);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, index_name, edge_name, fields, if_not_exists});
   }
 
   @Override
@@ -439,7 +403,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIndex_name()).compareTo(other.isSetIndex_name());
@@ -447,7 +411,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(index_name, other.index_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_name()).compareTo(other.isSetEdge_name());
@@ -455,7 +419,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_name, other.edge_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetFields()).compareTo(other.isSetFields());
@@ -463,7 +427,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(fields, other.fields);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetIf_not_exists()).compareTo(other.isSetIf_not_exists());
@@ -471,75 +435,75 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case INDEX_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.index_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.edge_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case FIELDS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list143 = iprot.readListBegin();
-              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list143.size));
-              for (int _i144 = 0; 
-                   (_list143.size < 0) ? iprot.peekList() : (_i144 < _list143.size); 
-                   ++_i144)
+              TList _list152 = iprot.readListBegin();
+              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list152.size));
+              for (int _i153 = 0; 
+                   (_list152.size < 0) ? iprot.peekList() : (_i153 < _list152.size); 
+                   ++_i153)
               {
-                IndexFieldDef _elem145;
-                _elem145 = new IndexFieldDef();
-                _elem145.read(iprot);
-                this.fields.add(_elem145);
+                IndexFieldDef _elem154;
+                _elem154 = new IndexFieldDef();
+                _elem154.read(iprot);
+                this.fields.add(_elem154);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case IF_NOT_EXISTS:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.if_not_exists = iprot.readBool();
             setIf_not_existsIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -572,8 +536,8 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (IndexFieldDef _iter146 : this.fields)        {
-          _iter146.write(oprot);
+        for (IndexFieldDef _iter155 : this.fields)        {
+          _iter155.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -588,19 +552,14 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CreateEdgeIndexReq");
     sb.append(space);
     sb.append("(");
@@ -611,22 +570,22 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("index_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getIndex_name() == null) {
+    if (this.getIndex_name() == null) {
       sb.append("null");
     } else {
-        int __index_name_size = Math.min(this. getIndex_name().length, 128);
+        int __index_name_size = Math.min(this.getIndex_name().length, 128);
         for (int i = 0; i < __index_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getIndex_name()[i]).length() > 1 ? Integer.toHexString(this. getIndex_name()[i]).substring(Integer.toHexString(this. getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getIndex_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getIndex_name()[i]).length() > 1 ? Integer.toHexString(this.getIndex_name()[i]).substring(Integer.toHexString(this.getIndex_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getIndex_name()[i]).toUpperCase());
         }
-        if (this. getIndex_name().length > 128) sb.append(" ...");
+        if (this.getIndex_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -634,15 +593,15 @@ String space = prettyPrint ? " " : "";
     sb.append("edge_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_name() == null) {
+    if (this.getEdge_name() == null) {
       sb.append("null");
     } else {
-        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        int __edge_name_size = Math.min(this.getEdge_name().length, 128);
         for (int i = 0; i < __edge_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getEdge_name()[i]).length() > 1 ? Integer.toHexString(this.getEdge_name()[i]).substring(Integer.toHexString(this.getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getEdge_name()[i]).toUpperCase());
         }
-        if (this. getEdge_name().length > 128) sb.append(" ...");
+        if (this.getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -650,10 +609,10 @@ String space = prettyPrint ? " " : "";
     sb.append("fields");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getFields() == null) {
+    if (this.getFields() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getFields(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getFields(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -661,7 +620,7 @@ String space = prettyPrint ? " " : "";
     sb.append("if_not_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isIf_not_exists(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -670,7 +629,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
   public List<com.vesoft.nebula.Value> props;
   public static final int TAG_ID = 1;
   public static final int PROPS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __TAG_ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TAG_ID, new FieldMetaData("tag_id", TFieldRequirementType.DEFAULT, 
@@ -61,13 +58,46 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
   }
 
   public NewTag(
-    int tag_id,
-    List<com.vesoft.nebula.Value> props)
-  {
+      int tag_id,
+      List<com.vesoft.nebula.Value> props) {
     this();
     this.tag_id = tag_id;
     setTag_idIsSet(true);
     this.props = props;
+  }
+
+  public static class Builder {
+    private int tag_id;
+    private List<com.vesoft.nebula.Value> props;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setTag_id(final int tag_id) {
+      this.tag_id = tag_id;
+      __optional_isset.set(__TAG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setProps(final List<com.vesoft.nebula.Value> props) {
+      this.props = props;
+      return this;
+    }
+
+    public NewTag build() {
+      NewTag result = new NewTag();
+      if (__optional_isset.get(__TAG_ID_ISSET_ID)) {
+        result.setTag_id(this.tag_id);
+      }
+      result.setProps(this.props);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -86,12 +116,7 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
     return new NewTag(this);
   }
 
-  @Deprecated
-  public NewTag clone() {
-    return new NewTag(this);
-  }
-
-  public int  getTag_id() {
+  public int getTag_id() {
     return this.tag_id;
   }
 
@@ -110,11 +135,11 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__TAG_ID_ISSET_ID);
   }
 
-  public void setTag_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TAG_ID_ISSET_ID, value);
+  public void setTag_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TAG_ID_ISSET_ID, __value);
   }
 
-  public List<com.vesoft.nebula.Value>  getProps() {
+  public List<com.vesoft.nebula.Value> getProps() {
     return this.props;
   }
 
@@ -132,28 +157,28 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
     return this.props != null;
   }
 
-  public void setPropsIsSet(boolean value) {
-    if (!value) {
+  public void setPropsIsSet(boolean __value) {
+    if (!__value) {
       this.props = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TAG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTag_id();
       } else {
-        setTag_id((Integer)value);
+        setTag_id((Integer)__value);
       }
       break;
 
     case PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetProps();
       } else {
-        setProps((List<com.vesoft.nebula.Value>)value);
+        setProps((List<com.vesoft.nebula.Value>)__value);
       }
       break;
 
@@ -175,92 +200,49 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TAG_ID:
-      return isSetTag_id();
-    case PROPS:
-      return isSetProps();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof NewTag)
-      return this.equals((NewTag)that);
-    return false;
-  }
-
-  public boolean equals(NewTag that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof NewTag))
+      return false;
+    NewTag that = (NewTag)_that;
 
-    boolean this_present_tag_id = true;
-    boolean that_present_tag_id = true;
-    if (this_present_tag_id || that_present_tag_id) {
-      if (!(this_present_tag_id && that_present_tag_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.tag_id, that.tag_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.tag_id, that.tag_id)) { return false; }
 
-    boolean this_present_props = true && this.isSetProps();
-    boolean that_present_props = true && that.isSetProps();
-    if (this_present_props || that_present_props) {
-      if (!(this_present_props && that_present_props))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.props, that.props))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetProps(), that.isSetProps(), this.props, that.props)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_tag_id = true;
-    builder.append(present_tag_id);
-    if (present_tag_id)
-      builder.append(tag_id);
-
-    boolean present_props = true && (isSetProps());
-    builder.append(present_props);
-    if (present_props)
-      builder.append(props);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {tag_id, props});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TAG_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.tag_id = iprot.readI32();
             setTag_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROPS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list74 = iprot.readListBegin();
               this.props = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list74.size));
@@ -276,11 +258,11 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -316,19 +298,14 @@ public class NewTag implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("NewTag");
     sb.append(space);
     sb.append("(");
@@ -339,17 +316,17 @@ String space = prettyPrint ? " " : "";
     sb.append("tag_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTag_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTag_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("props");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProps() == null) {
+    if (this.getProps() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProps(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProps(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -359,7 +336,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

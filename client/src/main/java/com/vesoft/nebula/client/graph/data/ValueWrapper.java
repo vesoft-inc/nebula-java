@@ -8,6 +8,7 @@ package com.vesoft.nebula.client.graph.data;
 
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.NullType;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
@@ -40,7 +41,17 @@ public class ValueWrapper {
 
         @Override
         public String toString() {
-            return com.vesoft.nebula.NullType.VALUES_TO_NAMES.get(nullType);
+            switch (nullType) {
+                case __NULL__: return "NULL";
+                case NaN: return "NaN";
+                case BAD_DATA: return "BAD_DATA";
+                case BAD_TYPE: return "BAD_TYPE";
+                case ERR_OVERFLOW: return "ERR_OVERFLOW";
+                case UNKNOWN_PROP: return "UNKNOWN_PROP";
+                case DIV_BY_ZERO: return "DIV_BY_ZERO";
+                case OUT_OF_RANGE: return  "OUT_OF_RANGE";
+                default: return "Unknown type: " + nullType;
+            }
         }
     }
 
@@ -155,7 +166,7 @@ public class ValueWrapper {
 
     public NullType asNull() throws InvalidValueException {
         if (value.getSetField() == Value.NVAL) {
-            return new NullType((int)value.getFieldValue());
+            return new NullType(((com.vesoft.nebula.NullType)value.getFieldValue()).getValue());
         } else {
             throw new InvalidValueException(
                     "Cannot get field nullType because value's type is " + descType());

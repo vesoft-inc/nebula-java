@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.meta;
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
+import com.facebook.thrift.transport.TTransportException;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
@@ -56,7 +57,8 @@ public class MetaClient extends AbstractMetaClient {
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
 
-    // todo change client to Map<HostAndPost, MetaService.Client> when server changes
+    private static final int RETRY_TIMES = 1;
+
     private MetaService.Client client;
     private final List<HostAddress> addresses;
 
@@ -89,14 +91,23 @@ public class MetaClient extends AbstractMetaClient {
     /**
      * connect nebula meta server
      */
-    private void doConnect() throws TException {
+    private void doConnect() throws TTransportException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAddress address = addresses.get(position);
-        transport = new TSocket(address.getHost(), address.getPort(), timeout, timeout);
+        getClient(address.getHost(), address.getPort());
+    }
+
+    private void getClient(String host, int port) throws TTransportException {
+        transport = new TSocket(host, port, timeout, timeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
+    }
+
+    private void freshClient(HostAddr leader) throws TTransportException {
+        close();
+        getClient(leader.getHost(), leader.getPort());
     }
 
     /**
@@ -113,10 +124,30 @@ public class MetaClient extends AbstractMetaClient {
      *
      * @return
      */
-    public synchronized List<IdName> getSpaces() throws TException {
+    public synchronized List<IdName> getSpaces() throws TException, ExecuteFailedException {
+        int retry = RETRY_TIMES;
         ListSpacesReq request = new ListSpacesReq();
-        ListSpacesResp response = client.listSpaces(request);
-        return response.getSpaces();
+        ListSpacesResp response = null;
+        try {
+            while (retry-- >= 0) {
+                response = client.listSpaces(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
+        } catch (TException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
+            throw e;
+        }
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getSpaces();
+        } else {
+            LOGGER.error("Get Spaces execute failed, errorCode: " + response.getCode());
+            throw new ExecuteFailedException(
+                    "Get Spaces execute failed, errorCode: " + response.getCode());
+        }
     }
 
     /**
@@ -125,11 +156,32 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName nebula graph space
      * @return SpaceItem
      */
-    public synchronized SpaceItem getSpace(String spaceName) throws TException {
+    public synchronized SpaceItem getSpace(String spaceName) throws TException,
+            ExecuteFailedException {
+        int retry = RETRY_TIMES;
         GetSpaceReq request = new GetSpaceReq();
         request.setSpace_name(spaceName.getBytes());
-        GetSpaceResp response = client.getSpace(request);
-        return response.getItem();
+        GetSpaceResp response = null;
+        try {
+            while (retry-- >= 0) {
+                response = client.getSpace(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
+        } catch (TException e) {
+            LOGGER.error(String.format("Get Space Error: %s", e.getMessage()));
+            throw e;
+        }
+        if (response.getCode() == ErrorCode.SUCCEEDED) {
+            return response.getItem();
+        } else {
+            LOGGER.error("Get Space execute failed, errorCode: " + response.getCode());
+            throw new ExecuteFailedException(
+                    "Get Space execute failed, errorCode: " + response.getCode());
+        }
     }
 
     /**
@@ -139,25 +191,31 @@ public class MetaClient extends AbstractMetaClient {
      * @return TagItem list
      */
     public synchronized List<TagItem> getTags(String spaceName)
-        throws TException, ExecuteFailedException {
+            throws TException, ExecuteFailedException {
+        int retry = RETRY_TIMES;
 
         int spaceID = getSpace(spaceName).space_id;
         ListTagsReq request = new ListTagsReq(spaceID);
-        ListTagsResp response;
+        ListTagsResp response = null;
         try {
-            response = client.listTags(request);
+            while (retry-- >= 0) {
+                response = client.listTags(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             throw e;
         }
-
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getTags();
         } else {
-            // TODO: Processing leader change error
-            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-            throw new ExecuteFailedException("Get Tags Error:"
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error("Get tags execute failed, errorCode: " + response.getCode());
+            throw new ExecuteFailedException(
+                    "Get Tags execute failed, errorCode: " + response.getCode());
         }
     }
 
@@ -171,29 +229,33 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Schema getTag(String spaceName, String tagName)
             throws TException, ExecuteFailedException {
+        int retry = RETRY_TIMES;
         GetTagReq request = new GetTagReq();
         int spaceID = getSpace(spaceName).getSpace_id();
         request.setSpace_id(spaceID);
         request.setTag_name(tagName.getBytes());
         request.setVersion(LATEST_SCHEMA_VERSION);
-        GetTagResp response;
+        GetTagResp response = null;
 
         try {
-            response = client.getTag(request);
+            while (retry-- >= 0) {
+                response = client.getTag(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             throw e;
         }
-
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
-            // todo process leader change error
-            LOGGER.error(String.format(
-                    "Get tag execute Error: %s",
-                    ErrorCode.VALUES_TO_NAMES.get(response.getCode())));
-            throw new ExecuteFailedException("Get tag execute Error: "
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error("Get tag execute failed, errorCode: " + response.getCode());
+            throw new ExecuteFailedException(
+                    "Get tag execute failed, errorCode: " + response.getCode());
         }
     }
 
@@ -205,24 +267,30 @@ public class MetaClient extends AbstractMetaClient {
      * @return EdgeItem list
      */
     public synchronized List<EdgeItem> getEdges(String spaceName)
-        throws TException, ExecuteFailedException {
+            throws TException, ExecuteFailedException {
+        int retry = RETRY_TIMES;
         int spaceID = getSpace(spaceName).getSpace_id();
         ListEdgesReq request = new ListEdgesReq(spaceID);
-        ListEdgesResp response;
+        ListEdgesResp response = null;
         try {
-            response = client.listEdges(request);
+            while (retry-- >= 0) {
+                response = client.listEdges(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
         } catch (TException e) {
-            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
+            LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             throw e;
         }
-
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getEdges();
         } else {
-            // todo process leader change error
-            LOGGER.error(String.format("Get tags Error: %s", response.getCode()));
-            throw new ExecuteFailedException("Get Edges Error:"
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error("Get edges execute failed: errorCode: " + response.getCode());
+            throw new ExecuteFailedException(
+                    "Get execute edges failed, errorCode: " + response.getCode());
         }
     }
 
@@ -235,30 +303,33 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Schema getEdge(String spaceName, String edgeName)
             throws TException, ExecuteFailedException {
+        int retry = RETRY_TIMES;
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpace(spaceName).getSpace_id();
         request.setSpace_id(spaceID);
         request.setEdge_name(edgeName.getBytes());
         request.setVersion(LATEST_SCHEMA_VERSION);
-        GetEdgeResp response;
+        GetEdgeResp response = null;
 
         try {
-            response = client.getEdge(request);
+            while (retry-- >= 0) {
+                response = client.getEdge(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
         } catch (TException e) {
-            LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
+            LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             throw e;
         }
-
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
         } else {
-            // todo process leader change error
-            LOGGER.error(String.format(
-                    "Get Edge execute Error: %s",
-                    ErrorCode.VALUES_TO_NAMES.get(response.getCode())));
+            LOGGER.error("Get Edge execute failed, errorCode: " + response.getCode());
             throw new ExecuteFailedException(
-                    "Get Edge execute Error: "
-                            + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+                    "Get Edge execute failed, errorCode: " + response.getCode());
         }
     }
 
@@ -272,39 +343,57 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
             throws ExecuteFailedException, TException {
+        int retry = RETRY_TIMES;
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpace(spaceName).getSpace_id();
         request.setSpace_id(spaceID);
 
-        GetPartsAllocResp response;
+        GetPartsAllocResp response = null;
         try {
-            response = client.getPartsAlloc(request);
+            while (retry-- >= 0) {
+                response = client.getPartsAlloc(request);
+                if (response.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(response.getLeader());
+                } else {
+                    break;
+                }
+            }
         } catch (TException e) {
-            LOGGER.error(String.format("Get Parts failed: %s", e.getMessage()));
+            LOGGER.error(String.format("Get Parts Error: %s", e.getMessage()));
             throw e;
         }
-
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getParts();
         } else {
-            // todo process leader change error
-            LOGGER.error(String.format("Get Parts Error: %s", response.getCode()));
-            throw new ExecuteFailedException("Get Parts allocation failed: "
-                    + ErrorCode.VALUES_TO_NAMES.get(response.getCode()));
+            LOGGER.error("Get Parts execute failed, errorCode" + response.getCode());
+            throw new ExecuteFailedException(
+                    "Get Parts execute failed, errorCode" + response.getCode());
         }
     }
 
     /**
-     * get all servers
+     * get all Storaged servers
      */
     public synchronized Set<HostAddr> listHosts() {
+        int retry = RETRY_TIMES;
         ListHostsReq request = new ListHostsReq();
         request.setType(ListHostType.STORAGE);
-        ListHostsResp resp;
+        ListHostsResp resp = null;
         try {
-            resp = client.listHosts(request);
+            while (retry-- >= 0) {
+                resp = client.listHosts(request);
+                if (resp.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(resp.getLeader());
+                } else {
+                    break;
+                }
+            }
         } catch (TException e) {
             LOGGER.error("listHosts error", e);
+            return null;
+        }
+        if (resp.getCode() != ErrorCode.SUCCEEDED) {
+            LOGGER.error("listHosts execute failed, errorCode: " + resp.getCode());
             return null;
         }
         Set<HostAddr> hostAddrs = new HashSet<>();

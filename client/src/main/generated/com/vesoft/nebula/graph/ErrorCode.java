@@ -7,53 +7,79 @@
 package com.vesoft.nebula.graph;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class ErrorCode {
-  public static final int SUCCEEDED = 0;
-  public static final int E_DISCONNECTED = -1;
-  public static final int E_FAIL_TO_CONNECT = -2;
-  public static final int E_RPC_FAILURE = -3;
-  public static final int E_BAD_USERNAME_PASSWORD = -4;
-  public static final int E_SESSION_INVALID = -5;
-  public static final int E_SESSION_TIMEOUT = -6;
-  public static final int E_SYNTAX_ERROR = -7;
-  public static final int E_EXECUTION_ERROR = -8;
-  public static final int E_STATEMENT_EMPTY = -9;
-  public static final int E_USER_NOT_FOUND = -10;
-  public static final int E_BAD_PERMISSION = -11;
-  public static final int E_SEMANTIC_ERROR = -12;
-  public static final int E_TOO_MANY_CONNECTIONS = -13;
-  public static final int E_PARTIAL_SUCCEEDED = -14;
+public enum ErrorCode implements com.facebook.thrift.TEnum {
+  SUCCEEDED(0),
+  E_DISCONNECTED(-1),
+  E_FAIL_TO_CONNECT(-2),
+  E_RPC_FAILURE(-3),
+  E_BAD_USERNAME_PASSWORD(-4),
+  E_SESSION_INVALID(-5),
+  E_SESSION_TIMEOUT(-6),
+  E_SYNTAX_ERROR(-7),
+  E_EXECUTION_ERROR(-8),
+  E_STATEMENT_EMPTY(-9),
+  E_USER_NOT_FOUND(-10),
+  E_BAD_PERMISSION(-11),
+  E_SEMANTIC_ERROR(-12),
+  E_TOO_MANY_CONNECTIONS(-13),
+  E_PARTIAL_SUCCEEDED(-14);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = ErrorCode.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private ErrorCode(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static ErrorCode findByValue(int value) { 
+    switch (value) {
+      case 0:
+        return SUCCEEDED;
+      case -1:
+        return E_DISCONNECTED;
+      case -2:
+        return E_FAIL_TO_CONNECT;
+      case -3:
+        return E_RPC_FAILURE;
+      case -4:
+        return E_BAD_USERNAME_PASSWORD;
+      case -5:
+        return E_SESSION_INVALID;
+      case -6:
+        return E_SESSION_TIMEOUT;
+      case -7:
+        return E_SYNTAX_ERROR;
+      case -8:
+        return E_EXECUTION_ERROR;
+      case -9:
+        return E_STATEMENT_EMPTY;
+      case -10:
+        return E_USER_NOT_FOUND;
+      case -11:
+        return E_BAD_PERMISSION;
+      case -12:
+        return E_SEMANTIC_ERROR;
+      case -13:
+        return E_TOO_MANY_CONNECTIONS;
+      case -14:
+        return E_PARTIAL_SUCCEEDED;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
 
   public List<byte[]> spaces;
   public static final int SPACES = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACES, new FieldMetaData("spaces", TFieldRequirementType.OPTIONAL, 
@@ -54,10 +51,31 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public CreateBackupReq(
-    List<byte[]> spaces)
-  {
+      List<byte[]> spaces) {
     this();
     this.spaces = spaces;
+  }
+
+  public static class Builder {
+    private List<byte[]> spaces;
+
+    public Builder() {
+    }
+
+    public Builder setSpaces(final List<byte[]> spaces) {
+      this.spaces = spaces;
+      return this;
+    }
+
+    public CreateBackupReq build() {
+      CreateBackupReq result = new CreateBackupReq();
+      result.setSpaces(this.spaces);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -73,12 +91,7 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     return new CreateBackupReq(this);
   }
 
-  @Deprecated
-  public CreateBackupReq clone() {
-    return new CreateBackupReq(this);
-  }
-
-  public List<byte[]>  getSpaces() {
+  public List<byte[]> getSpaces() {
     return this.spaces;
   }
 
@@ -96,20 +109,20 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     return this.spaces != null;
   }
 
-  public void setSpacesIsSet(boolean value) {
-    if (!value) {
+  public void setSpacesIsSet(boolean __value) {
+    if (!__value) {
       this.spaces = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACES:
-      if (value == null) {
+      if (__value == null) {
         unsetSpaces();
       } else {
-        setSpaces((List<byte[]>)value);
+        setSpaces((List<byte[]>)__value);
       }
       break;
 
@@ -128,53 +141,24 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACES:
-      return isSetSpaces();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CreateBackupReq)
-      return this.equals((CreateBackupReq)that);
-    return false;
-  }
-
-  public boolean equals(CreateBackupReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CreateBackupReq))
+      return false;
+    CreateBackupReq that = (CreateBackupReq)_that;
 
-    boolean this_present_spaces = true && this.isSetSpaces();
-    boolean that_present_spaces = true && that.isSetSpaces();
-    if (this_present_spaces || that_present_spaces) {
-      if (!(this_present_spaces && that_present_spaces))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.spaces, that.spaces))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetSpaces(), that.isSetSpaces(), this.spaces, that.spaces)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_spaces = true && (isSetSpaces());
-    builder.append(present_spaces);
-    if (present_spaces)
-      builder.append(spaces);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {spaces});
   }
 
   @Override
@@ -194,44 +178,44 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(spaces, other.spaces);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACES:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list241 = iprot.readListBegin();
-              this.spaces = new ArrayList<byte[]>(Math.max(0, _list241.size));
-              for (int _i242 = 0; 
-                   (_list241.size < 0) ? iprot.peekList() : (_i242 < _list241.size); 
-                   ++_i242)
+              TList _list250 = iprot.readListBegin();
+              this.spaces = new ArrayList<byte[]>(Math.max(0, _list250.size));
+              for (int _i251 = 0; 
+                   (_list250.size < 0) ? iprot.peekList() : (_i251 < _list250.size); 
+                   ++_i251)
               {
-                byte[] _elem243;
-                _elem243 = iprot.readBinary();
-                this.spaces.add(_elem243);
+                byte[] _elem252;
+                _elem252 = iprot.readBinary();
+                this.spaces.add(_elem252);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -252,8 +236,8 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
         oprot.writeFieldBegin(SPACES_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.spaces.size()));
-          for (byte[] _iter244 : this.spaces)          {
-            oprot.writeBinary(_iter244);
+          for (byte[] _iter253 : this.spaces)          {
+            oprot.writeBinary(_iter253);
           }
           oprot.writeListEnd();
         }
@@ -266,19 +250,14 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CreateBackupReq");
     sb.append(space);
     sb.append("(");
@@ -291,10 +270,10 @@ String space = prettyPrint ? " " : "";
       sb.append("spaces");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getSpaces() == null) {
+      if (this.getSpaces() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getSpaces(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getSpaces(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -305,7 +284,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

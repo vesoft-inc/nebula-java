@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,17 +33,15 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
    * 
    * @see AlterSchemaOp
    */
-  public int op;
+  public AlterSchemaOp op;
   public Schema schema;
   public static final int OP = 1;
   public static final int SCHEMA = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __OP_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
@@ -64,22 +59,49 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public AlterSchemaItem(
-    int op,
-    Schema schema)
-  {
+      AlterSchemaOp op,
+      Schema schema) {
     this();
     this.op = op;
-    setOpIsSet(true);
     this.schema = schema;
+  }
+
+  public static class Builder {
+    private AlterSchemaOp op;
+    private Schema schema;
+
+    public Builder() {
+    }
+
+    public Builder setOp(final AlterSchemaOp op) {
+      this.op = op;
+      return this;
+    }
+
+    public Builder setSchema(final Schema schema) {
+      this.schema = schema;
+      return this;
+    }
+
+    public AlterSchemaItem build() {
+      AlterSchemaItem result = new AlterSchemaItem();
+      result.setOp(this.op);
+      result.setSchema(this.schema);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public AlterSchemaItem(AlterSchemaItem other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.op = TBaseHelper.deepCopy(other.op);
+    if (other.isSetOp()) {
+      this.op = TBaseHelper.deepCopy(other.op);
+    }
     if (other.isSetSchema()) {
       this.schema = TBaseHelper.deepCopy(other.schema);
     }
@@ -89,16 +111,11 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
     return new AlterSchemaItem(this);
   }
 
-  @Deprecated
-  public AlterSchemaItem clone() {
-    return new AlterSchemaItem(this);
-  }
-
   /**
    * 
    * @see AlterSchemaOp
    */
-  public int  getOp() {
+  public AlterSchemaOp getOp() {
     return this.op;
   }
 
@@ -106,26 +123,27 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
    * 
    * @see AlterSchemaOp
    */
-  public AlterSchemaItem setOp(int op) {
+  public AlterSchemaItem setOp(AlterSchemaOp op) {
     this.op = op;
-    setOpIsSet(true);
     return this;
   }
 
   public void unsetOp() {
-    __isset_bit_vector.clear(__OP_ISSET_ID);
+    this.op = null;
   }
 
   // Returns true if field op is set (has been assigned a value) and false otherwise
   public boolean isSetOp() {
-    return __isset_bit_vector.get(__OP_ISSET_ID);
+    return this.op != null;
   }
 
-  public void setOpIsSet(boolean value) {
-    __isset_bit_vector.set(__OP_ISSET_ID, value);
+  public void setOpIsSet(boolean __value) {
+    if (!__value) {
+      this.op = null;
+    }
   }
 
-  public Schema  getSchema() {
+  public Schema getSchema() {
     return this.schema;
   }
 
@@ -143,27 +161,27 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
     return this.schema != null;
   }
 
-  public void setSchemaIsSet(boolean value) {
-    if (!value) {
+  public void setSchemaIsSet(boolean __value) {
+    if (!__value) {
       this.schema = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case OP:
-      if (value == null) {
+      if (__value == null) {
         unsetOp();
       } else {
-        setOp((Integer)value);
+        setOp((AlterSchemaOp)__value);
       }
       break;
 
     case SCHEMA:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema();
       } else {
-        setSchema((Schema)value);
+        setSchema((Schema)__value);
       }
       break;
 
@@ -185,69 +203,26 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case OP:
-      return isSetOp();
-    case SCHEMA:
-      return isSetSchema();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AlterSchemaItem)
-      return this.equals((AlterSchemaItem)that);
-    return false;
-  }
-
-  public boolean equals(AlterSchemaItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AlterSchemaItem))
+      return false;
+    AlterSchemaItem that = (AlterSchemaItem)_that;
 
-    boolean this_present_op = true;
-    boolean that_present_op = true;
-    if (this_present_op || that_present_op) {
-      if (!(this_present_op && that_present_op))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.op, that.op))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetOp(), that.isSetOp(), this.op, that.op)) { return false; }
 
-    boolean this_present_schema = true && this.isSetSchema();
-    boolean that_present_schema = true && that.isSetSchema();
-    if (this_present_schema || that_present_schema) {
-      if (!(this_present_schema && that_present_schema))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.schema, that.schema))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema(), that.isSetSchema(), this.schema, that.schema)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_op = true;
-    builder.append(present_op);
-    if (present_op)
-      builder.append(op);
-
-    boolean present_schema = true && (isSetSchema());
-    builder.append(present_schema);
-    if (present_schema)
-      builder.append(schema);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {op, schema});
   }
 
   @Override
@@ -267,7 +242,7 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(op, other.op);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema()).compareTo(other.isSetSchema());
@@ -275,41 +250,40 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema, other.schema);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case OP:
-          if (field.type == TType.I32) {
-            this.op = iprot.readI32();
-            setOpIsSet(true);
+          if (__field.type == TType.I32) {
+            this.op = AlterSchemaOp.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -325,9 +299,11 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(OP_FIELD_DESC);
-    oprot.writeI32(this.op);
-    oprot.writeFieldEnd();
+    if (this.op != null) {
+      oprot.writeFieldBegin(OP_FIELD_DESC);
+      oprot.writeI32(this.op == null ? 0 : this.op.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.schema != null) {
       oprot.writeFieldBegin(SCHEMA_FIELD_DESC);
       this.schema.write(oprot);
@@ -339,19 +315,14 @@ public class AlterSchemaItem implements TBase, java.io.Serializable, Cloneable, 
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AlterSchemaItem");
     sb.append(space);
     sb.append("(");
@@ -362,14 +333,18 @@ String space = prettyPrint ? " " : "";
     sb.append("op");
     sb.append(space);
     sb.append(":").append(space);
-    String op_name = AlterSchemaOp.VALUES_TO_NAMES.get(this. getOp());
-    if (op_name != null) {
-      sb.append(op_name);
-      sb.append(" (");
-    }
-    sb.append(this. getOp());
-    if (op_name != null) {
-      sb.append(")");
+    if (this.getOp() == null) {
+      sb.append("null");
+    } else {
+      String op_name = this.getOp() == null ? "null" : this.getOp().name();
+      if (op_name != null) {
+        sb.append(op_name);
+        sb.append(" (");
+      }
+      sb.append(this.getOp());
+      if (op_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -377,10 +352,10 @@ String space = prettyPrint ? " " : "";
     sb.append("schema");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema() == null) {
+    if (this.getSchema() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSchema(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -390,10 +365,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetOp() && !AlterSchemaOp.VALID_VALUES.contains(op)){
-      throw new TProtocolException("The field 'op' has been assigned the invalid value " + op);
-    }
   }
 
 }

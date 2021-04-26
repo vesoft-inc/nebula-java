@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
   public static final int PART_ID = 2;
   public static final int AS_LEARNER = 3;
   public static final int PEERS = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -51,6 +47,7 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
   private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -73,11 +70,10 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public AddPartReq(
-    int space_id,
-    int part_id,
-    boolean as_learner,
-    List<com.vesoft.nebula.HostAddr> peers)
-  {
+      int space_id,
+      int part_id,
+      boolean as_learner,
+      List<com.vesoft.nebula.HostAddr> peers) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -86,6 +82,60 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     this.as_learner = as_learner;
     setAs_learnerIsSet(true);
     this.peers = peers;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private int part_id;
+    private boolean as_learner;
+    private List<com.vesoft.nebula.HostAddr> peers;
+
+    BitSet __optional_isset = new BitSet(3);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setAs_learner(final boolean as_learner) {
+      this.as_learner = as_learner;
+      __optional_isset.set(__AS_LEARNER_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPeers(final List<com.vesoft.nebula.HostAddr> peers) {
+      this.peers = peers;
+      return this;
+    }
+
+    public AddPartReq build() {
+      AddPartReq result = new AddPartReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      if (__optional_isset.get(__AS_LEARNER_ISSET_ID)) {
+        result.setAs_learner(this.as_learner);
+      }
+      result.setPeers(this.peers);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -106,12 +156,7 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     return new AddPartReq(this);
   }
 
-  @Deprecated
-  public AddPartReq clone() {
-    return new AddPartReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -130,11 +175,11 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -153,11 +198,11 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public boolean  isAs_learner() {
+  public boolean isAs_learner() {
     return this.as_learner;
   }
 
@@ -176,11 +221,11 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__AS_LEARNER_ISSET_ID);
   }
 
-  public void setAs_learnerIsSet(boolean value) {
-    __isset_bit_vector.set(__AS_LEARNER_ISSET_ID, value);
+  public void setAs_learnerIsSet(boolean __value) {
+    __isset_bit_vector.set(__AS_LEARNER_ISSET_ID, __value);
   }
 
-  public List<com.vesoft.nebula.HostAddr>  getPeers() {
+  public List<com.vesoft.nebula.HostAddr> getPeers() {
     return this.peers;
   }
 
@@ -198,44 +243,44 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     return this.peers != null;
   }
 
-  public void setPeersIsSet(boolean value) {
-    if (!value) {
+  public void setPeersIsSet(boolean __value) {
+    if (!__value) {
       this.peers = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case AS_LEARNER:
-      if (value == null) {
+      if (__value == null) {
         unsetAs_learner();
       } else {
-        setAs_learner((Boolean)value);
+        setAs_learner((Boolean)__value);
       }
       break;
 
     case PEERS:
-      if (value == null) {
+      if (__value == null) {
         unsetPeers();
       } else {
-        setPeers((List<com.vesoft.nebula.HostAddr>)value);
+        setPeers((List<com.vesoft.nebula.HostAddr>)__value);
       }
       break;
 
@@ -263,101 +308,30 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case PART_ID:
-      return isSetPart_id();
-    case AS_LEARNER:
-      return isSetAs_learner();
-    case PEERS:
-      return isSetPeers();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AddPartReq)
-      return this.equals((AddPartReq)that);
-    return false;
-  }
-
-  public boolean equals(AddPartReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AddPartReq))
+      return false;
+    AddPartReq that = (AddPartReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_as_learner = true;
-    boolean that_present_as_learner = true;
-    if (this_present_as_learner || that_present_as_learner) {
-      if (!(this_present_as_learner && that_present_as_learner))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.as_learner, that.as_learner))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.as_learner, that.as_learner)) { return false; }
 
-    boolean this_present_peers = true && this.isSetPeers();
-    boolean that_present_peers = true && that.isSetPeers();
-    if (this_present_peers || that_present_peers) {
-      if (!(this_present_peers && that_present_peers))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.peers, that.peers))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPeers(), that.isSetPeers(), this.peers, that.peers)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_as_learner = true;
-    builder.append(present_as_learner);
-    if (present_as_learner)
-      builder.append(as_learner);
-
-    boolean present_peers = true && (isSetPeers());
-    builder.append(present_peers);
-    if (present_peers)
-      builder.append(peers);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, as_learner, peers});
   }
 
   @Override
@@ -377,7 +351,7 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
@@ -385,7 +359,7 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetAs_learner()).compareTo(other.isSetAs_learner());
@@ -393,7 +367,7 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(as_learner, other.as_learner);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPeers()).compareTo(other.isSetPeers());
@@ -401,49 +375,49 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(peers, other.peers);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case AS_LEARNER:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.as_learner = iprot.readBool();
             setAs_learnerIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PEERS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list179 = iprot.readListBegin();
               this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list179.size));
@@ -459,11 +433,11 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -505,19 +479,14 @@ public class AddPartReq implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AddPartReq");
     sb.append(space);
     sb.append("(");
@@ -528,31 +497,31 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("as_learner");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isAs_learner(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isAs_learner(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("peers");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPeers() == null) {
+    if (this.getPeers() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPeers(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPeers(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -562,7 +531,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
   public Map<Integer,List<Integer>> leader_parts;
   public static final int RESULT = 1;
   public static final int LEADER_PARTS = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -61,19 +58,46 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
   }
 
   public GetLeaderPartsResp(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
   }
 
   public GetLeaderPartsResp(
-    ResponseCommon result,
-    Map<Integer,List<Integer>> leader_parts)
-  {
+      ResponseCommon result,
+      Map<Integer,List<Integer>> leader_parts) {
     this();
     this.result = result;
     this.leader_parts = leader_parts;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+    private Map<Integer,List<Integer>> leader_parts;
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder setLeader_parts(final Map<Integer,List<Integer>> leader_parts) {
+      this.leader_parts = leader_parts;
+      return this;
+    }
+
+    public GetLeaderPartsResp build() {
+      GetLeaderPartsResp result = new GetLeaderPartsResp();
+      result.setResult(this.result);
+      result.setLeader_parts(this.leader_parts);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -92,12 +116,7 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     return new GetLeaderPartsResp(this);
   }
 
-  @Deprecated
-  public GetLeaderPartsResp clone() {
-    return new GetLeaderPartsResp(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -115,13 +134,13 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public Map<Integer,List<Integer>>  getLeader_parts() {
+  public Map<Integer,List<Integer>> getLeader_parts() {
     return this.leader_parts;
   }
 
@@ -139,28 +158,28 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     return this.leader_parts != null;
   }
 
-  public void setLeader_partsIsSet(boolean value) {
-    if (!value) {
+  public void setLeader_partsIsSet(boolean __value) {
+    if (!__value) {
       this.leader_parts = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
     case LEADER_PARTS:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_parts();
       } else {
-        setLeader_parts((Map<Integer,List<Integer>>)value);
+        setLeader_parts((Map<Integer,List<Integer>>)__value);
       }
       break;
 
@@ -182,69 +201,26 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    case LEADER_PARTS:
-      return isSetLeader_parts();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetLeaderPartsResp)
-      return this.equals((GetLeaderPartsResp)that);
-    return false;
-  }
-
-  public boolean equals(GetLeaderPartsResp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetLeaderPartsResp))
+      return false;
+    GetLeaderPartsResp that = (GetLeaderPartsResp)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    boolean this_present_leader_parts = true && this.isSetLeader_parts();
-    boolean that_present_leader_parts = true && that.isSetLeader_parts();
-    if (this_present_leader_parts || that_present_leader_parts) {
-      if (!(this_present_leader_parts && that_present_leader_parts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_parts, that.leader_parts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLeader_parts(), that.isSetLeader_parts(), this.leader_parts, that.leader_parts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    boolean present_leader_parts = true && (isSetLeader_parts());
-    builder.append(present_leader_parts);
-    if (present_leader_parts)
-      builder.append(leader_parts);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result, leader_parts});
   }
 
   @Override
@@ -264,7 +240,7 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_parts()).compareTo(other.isSetLeader_parts());
@@ -272,33 +248,33 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_parts, other.leader_parts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_PARTS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map183 = iprot.readMapBegin();
               this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map183.size));
@@ -327,11 +303,11 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -376,19 +352,14 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetLeaderPartsResp");
     sb.append(space);
     sb.append("(");
@@ -399,10 +370,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -410,10 +381,10 @@ String space = prettyPrint ? " " : "";
     sb.append("leader_parts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLeader_parts() == null) {
+    if (this.getLeader_parts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLeader_parts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLeader_parts(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -426,7 +397,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,13 +33,13 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
   public byte[] ttl_col;
   public static final int TTL_DURATION = 1;
   public static final int TTL_COL = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __TTL_DURATION_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TTL_DURATION, new FieldMetaData("ttl_duration", TFieldRequirementType.OPTIONAL, 
@@ -60,13 +57,46 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public SchemaProp(
-    long ttl_duration,
-    byte[] ttl_col)
-  {
+      long ttl_duration,
+      byte[] ttl_col) {
     this();
     this.ttl_duration = ttl_duration;
     setTtl_durationIsSet(true);
     this.ttl_col = ttl_col;
+  }
+
+  public static class Builder {
+    private long ttl_duration;
+    private byte[] ttl_col;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setTtl_duration(final long ttl_duration) {
+      this.ttl_duration = ttl_duration;
+      __optional_isset.set(__TTL_DURATION_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTtl_col(final byte[] ttl_col) {
+      this.ttl_col = ttl_col;
+      return this;
+    }
+
+    public SchemaProp build() {
+      SchemaProp result = new SchemaProp();
+      if (__optional_isset.get(__TTL_DURATION_ISSET_ID)) {
+        result.setTtl_duration(this.ttl_duration);
+      }
+      result.setTtl_col(this.ttl_col);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -85,12 +115,7 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
     return new SchemaProp(this);
   }
 
-  @Deprecated
-  public SchemaProp clone() {
-    return new SchemaProp(this);
-  }
-
-  public long  getTtl_duration() {
+  public long getTtl_duration() {
     return this.ttl_duration;
   }
 
@@ -109,11 +134,11 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
     return __isset_bit_vector.get(__TTL_DURATION_ISSET_ID);
   }
 
-  public void setTtl_durationIsSet(boolean value) {
-    __isset_bit_vector.set(__TTL_DURATION_ISSET_ID, value);
+  public void setTtl_durationIsSet(boolean __value) {
+    __isset_bit_vector.set(__TTL_DURATION_ISSET_ID, __value);
   }
 
-  public byte[]  getTtl_col() {
+  public byte[] getTtl_col() {
     return this.ttl_col;
   }
 
@@ -131,27 +156,27 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
     return this.ttl_col != null;
   }
 
-  public void setTtl_colIsSet(boolean value) {
-    if (!value) {
+  public void setTtl_colIsSet(boolean __value) {
+    if (!__value) {
       this.ttl_col = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TTL_DURATION:
-      if (value == null) {
+      if (__value == null) {
         unsetTtl_duration();
       } else {
-        setTtl_duration((Long)value);
+        setTtl_duration((Long)__value);
       }
       break;
 
     case TTL_COL:
-      if (value == null) {
+      if (__value == null) {
         unsetTtl_col();
       } else {
-        setTtl_col((byte[])value);
+        setTtl_col((byte[])__value);
       }
       break;
 
@@ -173,69 +198,26 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case TTL_DURATION:
-      return isSetTtl_duration();
-    case TTL_COL:
-      return isSetTtl_col();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof SchemaProp)
-      return this.equals((SchemaProp)that);
-    return false;
-  }
-
-  public boolean equals(SchemaProp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof SchemaProp))
+      return false;
+    SchemaProp that = (SchemaProp)_that;
 
-    boolean this_present_ttl_duration = true && this.isSetTtl_duration();
-    boolean that_present_ttl_duration = true && that.isSetTtl_duration();
-    if (this_present_ttl_duration || that_present_ttl_duration) {
-      if (!(this_present_ttl_duration && that_present_ttl_duration))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.ttl_duration, that.ttl_duration))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetTtl_duration(), that.isSetTtl_duration(), this.ttl_duration, that.ttl_duration)) { return false; }
 
-    boolean this_present_ttl_col = true && this.isSetTtl_col();
-    boolean that_present_ttl_col = true && that.isSetTtl_col();
-    if (this_present_ttl_col || that_present_ttl_col) {
-      if (!(this_present_ttl_col && that_present_ttl_col))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.ttl_col, that.ttl_col))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetTtl_col(), that.isSetTtl_col(), this.ttl_col, that.ttl_col)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_ttl_duration = true && (isSetTtl_duration());
-    builder.append(present_ttl_duration);
-    if (present_ttl_duration)
-      builder.append(ttl_duration);
-
-    boolean present_ttl_col = true && (isSetTtl_col());
-    builder.append(present_ttl_col);
-    if (present_ttl_col)
-      builder.append(ttl_col);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {ttl_duration, ttl_col});
   }
 
   @Override
@@ -255,7 +237,7 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(ttl_duration, other.ttl_duration);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTtl_col()).compareTo(other.isSetTtl_col());
@@ -263,40 +245,40 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(ttl_col, other.ttl_col);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case TTL_DURATION:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.ttl_duration = iprot.readI64();
             setTtl_durationIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TTL_COL:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.ttl_col = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -330,19 +312,14 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("SchemaProp");
     sb.append(space);
     sb.append("(");
@@ -355,7 +332,7 @@ String space = prettyPrint ? " " : "";
       sb.append("ttl_duration");
       sb.append(space);
       sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this. getTtl_duration(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getTtl_duration(), indent + 1, prettyPrint));
       first = false;
     }
     if (isSetTtl_col())
@@ -365,15 +342,15 @@ String space = prettyPrint ? " " : "";
       sb.append("ttl_col");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getTtl_col() == null) {
+      if (this.getTtl_col() == null) {
         sb.append("null");
       } else {
-          int __ttl_col_size = Math.min(this. getTtl_col().length, 128);
+          int __ttl_col_size = Math.min(this.getTtl_col().length, 128);
           for (int i = 0; i < __ttl_col_size; i++) {
             if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this. getTtl_col()[i]).length() > 1 ? Integer.toHexString(this. getTtl_col()[i]).substring(Integer.toHexString(this. getTtl_col()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getTtl_col()[i]).toUpperCase());
+            sb.append(Integer.toHexString(this.getTtl_col()[i]).length() > 1 ? Integer.toHexString(this.getTtl_col()[i]).substring(Integer.toHexString(this.getTtl_col()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getTtl_col()[i]).toUpperCase());
           }
-          if (this. getTtl_col().length > 128) sb.append(" ...");
+          if (this.getTtl_col().length > 128) sb.append(" ...");
       }
       first = false;
     }
@@ -384,7 +361,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

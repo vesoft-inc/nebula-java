@@ -1,21 +1,19 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.facebook.thrift.async;
 
 import com.facebook.thrift.protocol.TProtocolFactory;
@@ -29,11 +27,18 @@ public abstract class TAsyncClient {
   private Exception ___error;
   private long ___timeout;
 
-  public TAsyncClient(TProtocolFactory protocolFactory, TAsyncClientManager manager, TNonblockingTransport transport) {
+  public TAsyncClient(
+      TProtocolFactory protocolFactory,
+      TAsyncClientManager manager,
+      TNonblockingTransport transport) {
     this(protocolFactory, manager, transport, 0);
   }
 
-  public TAsyncClient(TProtocolFactory protocolFactory, TAsyncClientManager manager, TNonblockingTransport transport, long timeout) {
+  public TAsyncClient(
+      TProtocolFactory protocolFactory,
+      TAsyncClientManager manager,
+      TNonblockingTransport transport,
+      long timeout) {
     this.___protocolFactory = protocolFactory;
     this.___manager = manager;
     this.___transport = transport;
@@ -56,18 +61,12 @@ public abstract class TAsyncClient {
     this.___timeout = timeout;
   }
 
-  /**
-   * Is the client in an error state?
-   * @return
-   */
+  /** Is the client in an error state? */
   public boolean hasError() {
     return ___error != null;
   }
 
-  /**
-   * Get the client's error - returns null if no error
-   * @return
-   */
+  /** Get the client's error - returns null if no error */
   public Exception getError() {
     return ___error;
   }
@@ -75,7 +74,8 @@ public abstract class TAsyncClient {
   protected void checkReady() {
     // Ensure we are not currently executing a method
     if (___currentMethod != null) {
-      throw new IllegalStateException("Client is currently executing another method: " + ___currentMethod.getClass().getName());
+      throw new IllegalStateException(
+          "Client is currently executing another method: " + ___currentMethod.getClass().getName());
     }
 
     // Ensure we're not in an error state
@@ -84,16 +84,12 @@ public abstract class TAsyncClient {
     }
   }
 
-  /**
-   * Called by delegate method when finished
-   */
+  /** Called by delegate method when finished */
   protected void onComplete() {
     ___currentMethod = null;
   }
 
-  /**
-   * Called by delegate method on error
-   */
+  /** Called by delegate method on error */
   protected void onError(Exception exception) {
     ___transport.close();
     ___currentMethod = null;

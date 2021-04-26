@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,7 +33,6 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
   public double proportion;
   public static final int PART_ID = 1;
   public static final int PROPORTION = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __PART_ID_ISSET_ID = 0;
@@ -44,6 +40,7 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(PART_ID, new FieldMetaData("part_id", TFieldRequirementType.DEFAULT, 
@@ -61,14 +58,50 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public Correlativity(
-    int part_id,
-    double proportion)
-  {
+      int part_id,
+      double proportion) {
     this();
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.proportion = proportion;
     setProportionIsSet(true);
+  }
+
+  public static class Builder {
+    private int part_id;
+    private double proportion;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setProportion(final double proportion) {
+      this.proportion = proportion;
+      __optional_isset.set(__PROPORTION_ISSET_ID, true);
+      return this;
+    }
+
+    public Correlativity build() {
+      Correlativity result = new Correlativity();
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      if (__optional_isset.get(__PROPORTION_ISSET_ID)) {
+        result.setProportion(this.proportion);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -85,12 +118,7 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
     return new Correlativity(this);
   }
 
-  @Deprecated
-  public Correlativity clone() {
-    return new Correlativity(this);
-  }
-
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -109,11 +137,11 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public double  getProportion() {
+  public double getProportion() {
     return this.proportion;
   }
 
@@ -132,25 +160,25 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
     return __isset_bit_vector.get(__PROPORTION_ISSET_ID);
   }
 
-  public void setProportionIsSet(boolean value) {
-    __isset_bit_vector.set(__PROPORTION_ISSET_ID, value);
+  public void setProportionIsSet(boolean __value) {
+    __isset_bit_vector.set(__PROPORTION_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case PROPORTION:
-      if (value == null) {
+      if (__value == null) {
         unsetProportion();
       } else {
-        setProportion((Double)value);
+        setProportion((Double)__value);
       }
       break;
 
@@ -172,69 +200,26 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case PART_ID:
-      return isSetPart_id();
-    case PROPORTION:
-      return isSetProportion();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Correlativity)
-      return this.equals((Correlativity)that);
-    return false;
-  }
-
-  public boolean equals(Correlativity that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Correlativity))
+      return false;
+    Correlativity that = (Correlativity)_that;
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_proportion = true;
-    boolean that_present_proportion = true;
-    if (this_present_proportion || that_present_proportion) {
-      if (!(this_present_proportion && that_present_proportion))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.proportion, that.proportion))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.proportion, that.proportion)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_proportion = true;
-    builder.append(present_proportion);
-    if (present_proportion)
-      builder.append(proportion);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {part_id, proportion});
   }
 
   @Override
@@ -254,7 +239,7 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetProportion()).compareTo(other.isSetProportion());
@@ -262,41 +247,41 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(proportion, other.proportion);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROPORTION:
-          if (field.type == TType.DOUBLE) {
+          if (__field.type == TType.DOUBLE) {
             this.proportion = iprot.readDouble();
             setProportionIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -324,19 +309,14 @@ public class Correlativity implements TBase, java.io.Serializable, Cloneable, Co
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Correlativity");
     sb.append(space);
     sb.append("(");
@@ -347,14 +327,14 @@ String space = prettyPrint ? " " : "";
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("proportion");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getProportion(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getProportion(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -363,7 +343,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

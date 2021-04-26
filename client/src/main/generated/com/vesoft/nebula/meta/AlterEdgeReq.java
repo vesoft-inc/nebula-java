@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,13 +39,13 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
   public static final int EDGE_NAME = 2;
   public static final int EDGE_ITEMS = 3;
   public static final int SCHEMA_PROP = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
@@ -71,17 +68,64 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public AlterEdgeReq(
-    int space_id,
-    byte[] edge_name,
-    List<AlterSchemaItem> edge_items,
-    SchemaProp schema_prop)
-  {
+      int space_id,
+      byte[] edge_name,
+      List<AlterSchemaItem> edge_items,
+      SchemaProp schema_prop) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.edge_name = edge_name;
     this.edge_items = edge_items;
     this.schema_prop = schema_prop;
+  }
+
+  public static class Builder {
+    private int space_id;
+    private byte[] edge_name;
+    private List<AlterSchemaItem> edge_items;
+    private SchemaProp schema_prop;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setEdge_name(final byte[] edge_name) {
+      this.edge_name = edge_name;
+      return this;
+    }
+
+    public Builder setEdge_items(final List<AlterSchemaItem> edge_items) {
+      this.edge_items = edge_items;
+      return this;
+    }
+
+    public Builder setSchema_prop(final SchemaProp schema_prop) {
+      this.schema_prop = schema_prop;
+      return this;
+    }
+
+    public AlterEdgeReq build() {
+      AlterEdgeReq result = new AlterEdgeReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setEdge_name(this.edge_name);
+      result.setEdge_items(this.edge_items);
+      result.setSchema_prop(this.schema_prop);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -106,12 +150,7 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
     return new AlterEdgeReq(this);
   }
 
-  @Deprecated
-  public AlterEdgeReq clone() {
-    return new AlterEdgeReq(this);
-  }
-
-  public int  getSpace_id() {
+  public int getSpace_id() {
     return this.space_id;
   }
 
@@ -130,11 +169,11 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
     return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setSpace_idIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public byte[]  getEdge_name() {
+  public byte[] getEdge_name() {
     return this.edge_name;
   }
 
@@ -152,13 +191,13 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
     return this.edge_name != null;
   }
 
-  public void setEdge_nameIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_nameIsSet(boolean __value) {
+    if (!__value) {
       this.edge_name = null;
     }
   }
 
-  public List<AlterSchemaItem>  getEdge_items() {
+  public List<AlterSchemaItem> getEdge_items() {
     return this.edge_items;
   }
 
@@ -176,13 +215,13 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
     return this.edge_items != null;
   }
 
-  public void setEdge_itemsIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_itemsIsSet(boolean __value) {
+    if (!__value) {
       this.edge_items = null;
     }
   }
 
-  public SchemaProp  getSchema_prop() {
+  public SchemaProp getSchema_prop() {
     return this.schema_prop;
   }
 
@@ -200,44 +239,44 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
     return this.schema_prop != null;
   }
 
-  public void setSchema_propIsSet(boolean value) {
-    if (!value) {
+  public void setSchema_propIsSet(boolean __value) {
+    if (!__value) {
       this.schema_prop = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace_id();
       } else {
-        setSpace_id((Integer)value);
+        setSpace_id((Integer)__value);
       }
       break;
 
     case EDGE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((byte[])value);
+        setEdge_name((byte[])__value);
       }
       break;
 
     case EDGE_ITEMS:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_items();
       } else {
-        setEdge_items((List<AlterSchemaItem>)value);
+        setEdge_items((List<AlterSchemaItem>)__value);
       }
       break;
 
     case SCHEMA_PROP:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema_prop();
       } else {
-        setSchema_prop((SchemaProp)value);
+        setSchema_prop((SchemaProp)__value);
       }
       break;
 
@@ -265,101 +304,30 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE_ID:
-      return isSetSpace_id();
-    case EDGE_NAME:
-      return isSetEdge_name();
-    case EDGE_ITEMS:
-      return isSetEdge_items();
-    case SCHEMA_PROP:
-      return isSetSchema_prop();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AlterEdgeReq)
-      return this.equals((AlterEdgeReq)that);
-    return false;
-  }
-
-  public boolean equals(AlterEdgeReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AlterEdgeReq))
+      return false;
+    AlterEdgeReq that = (AlterEdgeReq)_that;
 
-    boolean this_present_space_id = true;
-    boolean that_present_space_id = true;
-    if (this_present_space_id || that_present_space_id) {
-      if (!(this_present_space_id && that_present_space_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    boolean this_present_edge_name = true && this.isSetEdge_name();
-    boolean that_present_edge_name = true && that.isSetEdge_name();
-    if (this_present_edge_name || that_present_edge_name) {
-      if (!(this_present_edge_name && that_present_edge_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetEdge_name(), that.isSetEdge_name(), this.edge_name, that.edge_name)) { return false; }
 
-    boolean this_present_edge_items = true && this.isSetEdge_items();
-    boolean that_present_edge_items = true && that.isSetEdge_items();
-    if (this_present_edge_items || that_present_edge_items) {
-      if (!(this_present_edge_items && that_present_edge_items))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_items, that.edge_items))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEdge_items(), that.isSetEdge_items(), this.edge_items, that.edge_items)) { return false; }
 
-    boolean this_present_schema_prop = true && this.isSetSchema_prop();
-    boolean that_present_schema_prop = true && that.isSetSchema_prop();
-    if (this_present_schema_prop || that_present_schema_prop) {
-      if (!(this_present_schema_prop && that_present_schema_prop))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.schema_prop, that.schema_prop))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema_prop(), that.isSetSchema_prop(), this.schema_prop, that.schema_prop)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space_id = true;
-    builder.append(present_space_id);
-    if (present_space_id)
-      builder.append(space_id);
-
-    boolean present_edge_name = true && (isSetEdge_name());
-    builder.append(present_edge_name);
-    if (present_edge_name)
-      builder.append(edge_name);
-
-    boolean present_edge_items = true && (isSetEdge_items());
-    builder.append(present_edge_items);
-    if (present_edge_items)
-      builder.append(edge_items);
-
-    boolean present_schema_prop = true && (isSetSchema_prop());
-    builder.append(present_schema_prop);
-    if (present_schema_prop)
-      builder.append(schema_prop);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space_id, edge_name, edge_items, schema_prop});
   }
 
   @Override
@@ -379,7 +347,7 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_name()).compareTo(other.isSetEdge_name());
@@ -387,7 +355,7 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_name, other.edge_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_items()).compareTo(other.isSetEdge_items());
@@ -395,7 +363,7 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_items, other.edge_items);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema_prop()).compareTo(other.isSetSchema_prop());
@@ -403,68 +371,68 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema_prop, other.schema_prop);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space_id = iprot.readI32();
             setSpace_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.edge_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_ITEMS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list73 = iprot.readListBegin();
-              this.edge_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list73.size));
-              for (int _i74 = 0; 
-                   (_list73.size < 0) ? iprot.peekList() : (_i74 < _list73.size); 
-                   ++_i74)
+              TList _list82 = iprot.readListBegin();
+              this.edge_items = new ArrayList<AlterSchemaItem>(Math.max(0, _list82.size));
+              for (int _i83 = 0; 
+                   (_list82.size < 0) ? iprot.peekList() : (_i83 < _list82.size); 
+                   ++_i83)
               {
-                AlterSchemaItem _elem75;
-                _elem75 = new AlterSchemaItem();
-                _elem75.read(iprot);
-                this.edge_items.add(_elem75);
+                AlterSchemaItem _elem84;
+                _elem84 = new AlterSchemaItem();
+                _elem84.read(iprot);
+                this.edge_items.add(_elem84);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA_PROP:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.schema_prop = new SchemaProp();
             this.schema_prop.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -492,8 +460,8 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(EDGE_ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.edge_items.size()));
-        for (AlterSchemaItem _iter76 : this.edge_items)        {
-          _iter76.write(oprot);
+        for (AlterSchemaItem _iter85 : this.edge_items)        {
+          _iter85.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -510,19 +478,14 @@ public class AlterEdgeReq implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AlterEdgeReq");
     sb.append(space);
     sb.append("(");
@@ -533,22 +496,22 @@ String space = prettyPrint ? " " : "";
     sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("edge_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_name() == null) {
+    if (this.getEdge_name() == null) {
       sb.append("null");
     } else {
-        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        int __edge_name_size = Math.min(this.getEdge_name().length, 128);
         for (int i = 0; i < __edge_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getEdge_name()[i]).length() > 1 ? Integer.toHexString(this.getEdge_name()[i]).substring(Integer.toHexString(this.getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getEdge_name()[i]).toUpperCase());
         }
-        if (this. getEdge_name().length > 128) sb.append(" ...");
+        if (this.getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -556,10 +519,10 @@ String space = prettyPrint ? " " : "";
     sb.append("edge_items");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_items() == null) {
+    if (this.getEdge_items() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEdge_items(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getEdge_items(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -567,10 +530,10 @@ String space = prettyPrint ? " " : "";
     sb.append("schema_prop");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema_prop() == null) {
+    if (this.getSchema_prop() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSchema_prop(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSchema_prop(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -580,7 +543,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

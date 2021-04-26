@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,13 +39,13 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int LEADER = 2;
   public static final int PEERS = 3;
   public static final int LOSTS = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __PART_ID_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(PART_ID, new FieldMetaData("part_id", TFieldRequirementType.REQUIRED, 
@@ -72,10 +69,9 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public PartItem(
-    int part_id,
-    List<com.vesoft.nebula.HostAddr> peers,
-    List<com.vesoft.nebula.HostAddr> losts)
-  {
+      int part_id,
+      List<com.vesoft.nebula.HostAddr> peers,
+      List<com.vesoft.nebula.HostAddr> losts) {
     this();
     this.part_id = part_id;
     setPart_idIsSet(true);
@@ -84,17 +80,64 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public PartItem(
-    int part_id,
-    com.vesoft.nebula.HostAddr leader,
-    List<com.vesoft.nebula.HostAddr> peers,
-    List<com.vesoft.nebula.HostAddr> losts)
-  {
+      int part_id,
+      com.vesoft.nebula.HostAddr leader,
+      List<com.vesoft.nebula.HostAddr> peers,
+      List<com.vesoft.nebula.HostAddr> losts) {
     this();
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.leader = leader;
     this.peers = peers;
     this.losts = losts;
+  }
+
+  public static class Builder {
+    private int part_id;
+    private com.vesoft.nebula.HostAddr leader;
+    private List<com.vesoft.nebula.HostAddr> peers;
+    private List<com.vesoft.nebula.HostAddr> losts;
+
+    BitSet __optional_isset = new BitSet(1);
+
+    public Builder() {
+    }
+
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLeader(final com.vesoft.nebula.HostAddr leader) {
+      this.leader = leader;
+      return this;
+    }
+
+    public Builder setPeers(final List<com.vesoft.nebula.HostAddr> peers) {
+      this.peers = peers;
+      return this;
+    }
+
+    public Builder setLosts(final List<com.vesoft.nebula.HostAddr> losts) {
+      this.losts = losts;
+      return this;
+    }
+
+    public PartItem build() {
+      PartItem result = new PartItem();
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      result.setLeader(this.leader);
+      result.setPeers(this.peers);
+      result.setLosts(this.losts);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -119,12 +162,7 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
     return new PartItem(this);
   }
 
-  @Deprecated
-  public PartItem clone() {
-    return new PartItem(this);
-  }
-
-  public int  getPart_id() {
+  public int getPart_id() {
     return this.part_id;
   }
 
@@ -143,11 +181,11 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setPart_idIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, value);
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public com.vesoft.nebula.HostAddr  getLeader() {
+  public com.vesoft.nebula.HostAddr getLeader() {
     return this.leader;
   }
 
@@ -165,13 +203,13 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.leader != null;
   }
 
-  public void setLeaderIsSet(boolean value) {
-    if (!value) {
+  public void setLeaderIsSet(boolean __value) {
+    if (!__value) {
       this.leader = null;
     }
   }
 
-  public List<com.vesoft.nebula.HostAddr>  getPeers() {
+  public List<com.vesoft.nebula.HostAddr> getPeers() {
     return this.peers;
   }
 
@@ -189,13 +227,13 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.peers != null;
   }
 
-  public void setPeersIsSet(boolean value) {
-    if (!value) {
+  public void setPeersIsSet(boolean __value) {
+    if (!__value) {
       this.peers = null;
     }
   }
 
-  public List<com.vesoft.nebula.HostAddr>  getLosts() {
+  public List<com.vesoft.nebula.HostAddr> getLosts() {
     return this.losts;
   }
 
@@ -213,44 +251,44 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.losts != null;
   }
 
-  public void setLostsIsSet(boolean value) {
-    if (!value) {
+  public void setLostsIsSet(boolean __value) {
+    if (!__value) {
       this.losts = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case PART_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetPart_id();
       } else {
-        setPart_id((Integer)value);
+        setPart_id((Integer)__value);
       }
       break;
 
     case LEADER:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader();
       } else {
-        setLeader((com.vesoft.nebula.HostAddr)value);
+        setLeader((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
     case PEERS:
-      if (value == null) {
+      if (__value == null) {
         unsetPeers();
       } else {
-        setPeers((List<com.vesoft.nebula.HostAddr>)value);
+        setPeers((List<com.vesoft.nebula.HostAddr>)__value);
       }
       break;
 
     case LOSTS:
-      if (value == null) {
+      if (__value == null) {
         unsetLosts();
       } else {
-        setLosts((List<com.vesoft.nebula.HostAddr>)value);
+        setLosts((List<com.vesoft.nebula.HostAddr>)__value);
       }
       break;
 
@@ -278,101 +316,30 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case PART_ID:
-      return isSetPart_id();
-    case LEADER:
-      return isSetLeader();
-    case PEERS:
-      return isSetPeers();
-    case LOSTS:
-      return isSetLosts();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof PartItem)
-      return this.equals((PartItem)that);
-    return false;
-  }
-
-  public boolean equals(PartItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof PartItem))
+      return false;
+    PartItem that = (PartItem)_that;
 
-    boolean this_present_part_id = true;
-    boolean that_present_part_id = true;
-    if (this_present_part_id || that_present_part_id) {
-      if (!(this_present_part_id && that_present_part_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    boolean this_present_leader = true && this.isSetLeader();
-    boolean that_present_leader = true && that.isSetLeader();
-    if (this_present_leader || that_present_leader) {
-      if (!(this_present_leader && that_present_leader))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader, that.leader))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    boolean this_present_peers = true && this.isSetPeers();
-    boolean that_present_peers = true && that.isSetPeers();
-    if (this_present_peers || that_present_peers) {
-      if (!(this_present_peers && that_present_peers))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.peers, that.peers))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPeers(), that.isSetPeers(), this.peers, that.peers)) { return false; }
 
-    boolean this_present_losts = true && this.isSetLosts();
-    boolean that_present_losts = true && that.isSetLosts();
-    if (this_present_losts || that_present_losts) {
-      if (!(this_present_losts && that_present_losts))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.losts, that.losts))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLosts(), that.isSetLosts(), this.losts, that.losts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_part_id = true;
-    builder.append(present_part_id);
-    if (present_part_id)
-      builder.append(part_id);
-
-    boolean present_leader = true && (isSetLeader());
-    builder.append(present_leader);
-    if (present_leader)
-      builder.append(leader);
-
-    boolean present_peers = true && (isSetPeers());
-    builder.append(present_peers);
-    if (present_peers)
-      builder.append(peers);
-
-    boolean present_losts = true && (isSetLosts());
-    builder.append(present_losts);
-    if (present_losts)
-      builder.append(losts);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {part_id, leader, peers, losts});
   }
 
   @Override
@@ -392,7 +359,7 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
@@ -400,7 +367,7 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader, other.leader);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPeers()).compareTo(other.isSetPeers());
@@ -408,7 +375,7 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(peers, other.peers);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLosts()).compareTo(other.isSetLosts());
@@ -416,81 +383,81 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(losts, other.losts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case PART_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part_id = iprot.readI32();
             setPart_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.leader = new com.vesoft.nebula.HostAddr();
             this.leader.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PEERS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list85 = iprot.readListBegin();
-              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list85.size));
-              for (int _i86 = 0; 
-                   (_list85.size < 0) ? iprot.peekList() : (_i86 < _list85.size); 
-                   ++_i86)
+              TList _list94 = iprot.readListBegin();
+              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list94.size));
+              for (int _i95 = 0; 
+                   (_list94.size < 0) ? iprot.peekList() : (_i95 < _list94.size); 
+                   ++_i95)
               {
-                com.vesoft.nebula.HostAddr _elem87;
-                _elem87 = new com.vesoft.nebula.HostAddr();
-                _elem87.read(iprot);
-                this.peers.add(_elem87);
+                com.vesoft.nebula.HostAddr _elem96;
+                _elem96 = new com.vesoft.nebula.HostAddr();
+                _elem96.read(iprot);
+                this.peers.add(_elem96);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LOSTS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list88 = iprot.readListBegin();
-              this.losts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list88.size));
-              for (int _i89 = 0; 
-                   (_list88.size < 0) ? iprot.peekList() : (_i89 < _list88.size); 
-                   ++_i89)
+              TList _list97 = iprot.readListBegin();
+              this.losts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list97.size));
+              for (int _i98 = 0; 
+                   (_list97.size < 0) ? iprot.peekList() : (_i98 < _list97.size); 
+                   ++_i98)
               {
-                com.vesoft.nebula.HostAddr _elem90;
-                _elem90 = new com.vesoft.nebula.HostAddr();
-                _elem90.read(iprot);
-                this.losts.add(_elem90);
+                com.vesoft.nebula.HostAddr _elem99;
+                _elem99 = new com.vesoft.nebula.HostAddr();
+                _elem99.read(iprot);
+                this.losts.add(_elem99);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -523,8 +490,8 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(PEERS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.peers.size()));
-        for (com.vesoft.nebula.HostAddr _iter91 : this.peers)        {
-          _iter91.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter100 : this.peers)        {
+          _iter100.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -534,8 +501,8 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(LOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.losts.size()));
-        for (com.vesoft.nebula.HostAddr _iter92 : this.losts)        {
-          _iter92.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter101 : this.losts)        {
+          _iter101.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -547,19 +514,14 @@ public class PartItem implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("PartItem");
     sb.append(space);
     sb.append("(");
@@ -570,7 +532,7 @@ String space = prettyPrint ? " " : "";
     sb.append("part_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
     first = false;
     if (isSetLeader())
     {
@@ -579,10 +541,10 @@ String space = prettyPrint ? " " : "";
       sb.append("leader");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getLeader() == null) {
+      if (this.getLeader() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getLeader(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getLeader(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -591,10 +553,10 @@ String space = prettyPrint ? " " : "";
     sb.append("peers");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPeers() == null) {
+    if (this.getPeers() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPeers(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPeers(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -602,10 +564,10 @@ String space = prettyPrint ? " " : "";
     sb.append("losts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLosts() == null) {
+    if (this.getLosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLosts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLosts(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -622,7 +584,6 @@ String space = prettyPrint ? " " : "";
     if (losts == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'losts' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
   public byte[] path;
   public static final int RESULT = 1;
   public static final int PATH = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -58,19 +55,46 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public CreateCPResp(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
   }
 
   public CreateCPResp(
-    ResponseCommon result,
-    byte[] path)
-  {
+      ResponseCommon result,
+      byte[] path) {
     this();
     this.result = result;
     this.path = path;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+    private byte[] path;
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder setPath(final byte[] path) {
+      this.path = path;
+      return this;
+    }
+
+    public CreateCPResp build() {
+      CreateCPResp result = new CreateCPResp();
+      result.setResult(this.result);
+      result.setPath(this.path);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -89,12 +113,7 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     return new CreateCPResp(this);
   }
 
-  @Deprecated
-  public CreateCPResp clone() {
-    return new CreateCPResp(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -112,13 +131,13 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public byte[]  getPath() {
+  public byte[] getPath() {
     return this.path;
   }
 
@@ -136,27 +155,27 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     return this.path != null;
   }
 
-  public void setPathIsSet(boolean value) {
-    if (!value) {
+  public void setPathIsSet(boolean __value) {
+    if (!__value) {
       this.path = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
     case PATH:
-      if (value == null) {
+      if (__value == null) {
         unsetPath();
       } else {
-        setPath((byte[])value);
+        setPath((byte[])__value);
       }
       break;
 
@@ -178,69 +197,26 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    case PATH:
-      return isSetPath();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof CreateCPResp)
-      return this.equals((CreateCPResp)that);
-    return false;
-  }
-
-  public boolean equals(CreateCPResp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof CreateCPResp))
+      return false;
+    CreateCPResp that = (CreateCPResp)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    boolean this_present_path = true && this.isSetPath();
-    boolean that_present_path = true && that.isSetPath();
-    if (this_present_path || that_present_path) {
-      if (!(this_present_path && that_present_path))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.path, that.path))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetPath(), that.isSetPath(), this.path, that.path)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    boolean present_path = true && (isSetPath());
-    builder.append(present_path);
-    if (present_path)
-      builder.append(path);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result, path});
   }
 
   @Override
@@ -260,7 +236,7 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPath()).compareTo(other.isSetPath());
@@ -268,40 +244,40 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(path, other.path);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PATH:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.path = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -333,19 +309,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("CreateCPResp");
     sb.append(space);
     sb.append("(");
@@ -356,10 +327,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -367,15 +338,15 @@ String space = prettyPrint ? " " : "";
     sb.append("path");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPath() == null) {
+    if (this.getPath() == null) {
       sb.append("null");
     } else {
-        int __path_size = Math.min(this. getPath().length, 128);
+        int __path_size = Math.min(this.getPath().length, 128);
         for (int i = 0; i < __path_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getPath()[i]).length() > 1 ? Integer.toHexString(this. getPath()[i]).substring(Integer.toHexString(this. getPath()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getPath()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getPath()[i]).length() > 1 ? Integer.toHexString(this.getPath()[i]).substring(Integer.toHexString(this.getPath()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPath()[i]).toUpperCase());
         }
-        if (this. getPath().length > 128) sb.append(" ...");
+        if (this.getPath().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -388,7 +359,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

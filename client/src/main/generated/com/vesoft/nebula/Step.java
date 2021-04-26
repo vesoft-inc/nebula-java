@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -45,7 +42,6 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
   public static final int NAME = 3;
   public static final int RANKING = 4;
   public static final int PROPS = 5;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __TYPE_ISSET_ID = 0;
@@ -53,6 +49,7 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(DST, new FieldMetaData("dst", TFieldRequirementType.DEFAULT, 
@@ -78,12 +75,11 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
   }
 
   public Step(
-    Vertex dst,
-    int type,
-    byte[] name,
-    long ranking,
-    Map<byte[],Value> props)
-  {
+      Vertex dst,
+      int type,
+      byte[] name,
+      long ranking,
+      Map<byte[],Value> props) {
     this();
     this.dst = dst;
     this.type = type;
@@ -92,6 +88,64 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     this.ranking = ranking;
     setRankingIsSet(true);
     this.props = props;
+  }
+
+  public static class Builder {
+    private Vertex dst;
+    private int type;
+    private byte[] name;
+    private long ranking;
+    private Map<byte[],Value> props;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setDst(final Vertex dst) {
+      this.dst = dst;
+      return this;
+    }
+
+    public Builder setType(final int type) {
+      this.type = type;
+      __optional_isset.set(__TYPE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder setRanking(final long ranking) {
+      this.ranking = ranking;
+      __optional_isset.set(__RANKING_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setProps(final Map<byte[],Value> props) {
+      this.props = props;
+      return this;
+    }
+
+    public Step build() {
+      Step result = new Step();
+      result.setDst(this.dst);
+      if (__optional_isset.get(__TYPE_ISSET_ID)) {
+        result.setType(this.type);
+      }
+      result.setName(this.name);
+      if (__optional_isset.get(__RANKING_ISSET_ID)) {
+        result.setRanking(this.ranking);
+      }
+      result.setProps(this.props);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -117,12 +171,7 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     return new Step(this);
   }
 
-  @Deprecated
-  public Step clone() {
-    return new Step(this);
-  }
-
-  public Vertex  getDst() {
+  public Vertex getDst() {
     return this.dst;
   }
 
@@ -140,13 +189,13 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     return this.dst != null;
   }
 
-  public void setDstIsSet(boolean value) {
-    if (!value) {
+  public void setDstIsSet(boolean __value) {
+    if (!__value) {
       this.dst = null;
     }
   }
 
-  public int  getType() {
+  public int getType() {
     return this.type;
   }
 
@@ -165,11 +214,11 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__TYPE_ISSET_ID);
   }
 
-  public void setTypeIsSet(boolean value) {
-    __isset_bit_vector.set(__TYPE_ISSET_ID, value);
+  public void setTypeIsSet(boolean __value) {
+    __isset_bit_vector.set(__TYPE_ISSET_ID, __value);
   }
 
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -187,13 +236,13 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
 
-  public long  getRanking() {
+  public long getRanking() {
     return this.ranking;
   }
 
@@ -212,11 +261,11 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     return __isset_bit_vector.get(__RANKING_ISSET_ID);
   }
 
-  public void setRankingIsSet(boolean value) {
-    __isset_bit_vector.set(__RANKING_ISSET_ID, value);
+  public void setRankingIsSet(boolean __value) {
+    __isset_bit_vector.set(__RANKING_ISSET_ID, __value);
   }
 
-  public Map<byte[],Value>  getProps() {
+  public Map<byte[],Value> getProps() {
     return this.props;
   }
 
@@ -234,52 +283,52 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     return this.props != null;
   }
 
-  public void setPropsIsSet(boolean value) {
-    if (!value) {
+  public void setPropsIsSet(boolean __value) {
+    if (!__value) {
       this.props = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case DST:
-      if (value == null) {
+      if (__value == null) {
         unsetDst();
       } else {
-        setDst((Vertex)value);
+        setDst((Vertex)__value);
       }
       break;
 
     case TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetType();
       } else {
-        setType((Integer)value);
+        setType((Integer)__value);
       }
       break;
 
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
     case RANKING:
-      if (value == null) {
+      if (__value == null) {
         unsetRanking();
       } else {
-        setRanking((Long)value);
+        setRanking((Long)__value);
       }
       break;
 
     case PROPS:
-      if (value == null) {
+      if (__value == null) {
         unsetProps();
       } else {
-        setProps((Map<byte[],Value>)value);
+        setProps((Map<byte[],Value>)__value);
       }
       break;
 
@@ -310,163 +359,78 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case DST:
-      return isSetDst();
-    case TYPE:
-      return isSetType();
-    case NAME:
-      return isSetName();
-    case RANKING:
-      return isSetRanking();
-    case PROPS:
-      return isSetProps();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Step)
-      return this.equals((Step)that);
-    return false;
-  }
-
-  public boolean equals(Step that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Step))
+      return false;
+    Step that = (Step)_that;
 
-    boolean this_present_dst = true && this.isSetDst();
-    boolean that_present_dst = true && that.isSetDst();
-    if (this_present_dst || that_present_dst) {
-      if (!(this_present_dst && that_present_dst))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.dst, that.dst))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetDst(), that.isSetDst(), this.dst, that.dst)) { return false; }
 
-    boolean this_present_type = true;
-    boolean that_present_type = true;
-    if (this_present_type || that_present_type) {
-      if (!(this_present_type && that_present_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.type, that.type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.type, that.type)) { return false; }
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
-    boolean this_present_ranking = true;
-    boolean that_present_ranking = true;
-    if (this_present_ranking || that_present_ranking) {
-      if (!(this_present_ranking && that_present_ranking))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.ranking, that.ranking))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.ranking, that.ranking)) { return false; }
 
-    boolean this_present_props = true && this.isSetProps();
-    boolean that_present_props = true && that.isSetProps();
-    if (this_present_props || that_present_props) {
-      if (!(this_present_props && that_present_props))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.props, that.props))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetProps(), that.isSetProps(), this.props, that.props)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_dst = true && (isSetDst());
-    builder.append(present_dst);
-    if (present_dst)
-      builder.append(dst);
-
-    boolean present_type = true;
-    builder.append(present_type);
-    if (present_type)
-      builder.append(type);
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    boolean present_ranking = true;
-    builder.append(present_ranking);
-    if (present_ranking)
-      builder.append(ranking);
-
-    boolean present_props = true && (isSetProps());
-    builder.append(present_props);
-    if (present_props)
-      builder.append(props);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {dst, type, name, ranking, props});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case DST:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.dst = new Vertex();
             this.dst.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TYPE:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.type = iprot.readI32();
             setTypeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RANKING:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.ranking = iprot.readI64();
             setRankingIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROPS:
-          if (field.type == TType.MAP) {
+          if (__field.type == TType.MAP) {
             {
               TMap _map39 = iprot.readMapBegin();
               this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map39.size));
@@ -484,11 +448,11 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
               iprot.readMapEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -538,19 +502,14 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Step");
     sb.append(space);
     sb.append("(");
@@ -561,10 +520,10 @@ String space = prettyPrint ? " " : "";
     sb.append("dst");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getDst() == null) {
+    if (this.getDst() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getDst(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getDst(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -572,22 +531,22 @@ String space = prettyPrint ? " " : "";
     sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getType(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getType(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -595,17 +554,17 @@ String space = prettyPrint ? " " : "";
     sb.append("ranking");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getRanking(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getRanking(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("props");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProps() == null) {
+    if (this.getProps() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getProps(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getProps(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -615,7 +574,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int EDGE_NAME = 2;
   public static final int VERSION = 3;
   public static final int SCHEMA = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __EDGE_TYPE_ISSET_ID = 0;
@@ -50,6 +46,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(EDGE_TYPE, new FieldMetaData("edge_type", TFieldRequirementType.DEFAULT, 
@@ -71,11 +68,10 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public EdgeItem(
-    int edge_type,
-    byte[] edge_name,
-    long version,
-    Schema schema)
-  {
+      int edge_type,
+      byte[] edge_name,
+      long version,
+      Schema schema) {
     this();
     this.edge_type = edge_type;
     setEdge_typeIsSet(true);
@@ -83,6 +79,57 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     this.version = version;
     setVersionIsSet(true);
     this.schema = schema;
+  }
+
+  public static class Builder {
+    private int edge_type;
+    private byte[] edge_name;
+    private long version;
+    private Schema schema;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setEdge_type(final int edge_type) {
+      this.edge_type = edge_type;
+      __optional_isset.set(__EDGE_TYPE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setEdge_name(final byte[] edge_name) {
+      this.edge_name = edge_name;
+      return this;
+    }
+
+    public Builder setVersion(final long version) {
+      this.version = version;
+      __optional_isset.set(__VERSION_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setSchema(final Schema schema) {
+      this.schema = schema;
+      return this;
+    }
+
+    public EdgeItem build() {
+      EdgeItem result = new EdgeItem();
+      if (__optional_isset.get(__EDGE_TYPE_ISSET_ID)) {
+        result.setEdge_type(this.edge_type);
+      }
+      result.setEdge_name(this.edge_name);
+      if (__optional_isset.get(__VERSION_ISSET_ID)) {
+        result.setVersion(this.version);
+      }
+      result.setSchema(this.schema);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -105,12 +152,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     return new EdgeItem(this);
   }
 
-  @Deprecated
-  public EdgeItem clone() {
-    return new EdgeItem(this);
-  }
-
-  public int  getEdge_type() {
+  public int getEdge_type() {
     return this.edge_type;
   }
 
@@ -129,11 +171,11 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__EDGE_TYPE_ISSET_ID);
   }
 
-  public void setEdge_typeIsSet(boolean value) {
-    __isset_bit_vector.set(__EDGE_TYPE_ISSET_ID, value);
+  public void setEdge_typeIsSet(boolean __value) {
+    __isset_bit_vector.set(__EDGE_TYPE_ISSET_ID, __value);
   }
 
-  public byte[]  getEdge_name() {
+  public byte[] getEdge_name() {
     return this.edge_name;
   }
 
@@ -151,13 +193,13 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.edge_name != null;
   }
 
-  public void setEdge_nameIsSet(boolean value) {
-    if (!value) {
+  public void setEdge_nameIsSet(boolean __value) {
+    if (!__value) {
       this.edge_name = null;
     }
   }
 
-  public long  getVersion() {
+  public long getVersion() {
     return this.version;
   }
 
@@ -176,11 +218,11 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     return __isset_bit_vector.get(__VERSION_ISSET_ID);
   }
 
-  public void setVersionIsSet(boolean value) {
-    __isset_bit_vector.set(__VERSION_ISSET_ID, value);
+  public void setVersionIsSet(boolean __value) {
+    __isset_bit_vector.set(__VERSION_ISSET_ID, __value);
   }
 
-  public Schema  getSchema() {
+  public Schema getSchema() {
     return this.schema;
   }
 
@@ -198,43 +240,43 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     return this.schema != null;
   }
 
-  public void setSchemaIsSet(boolean value) {
-    if (!value) {
+  public void setSchemaIsSet(boolean __value) {
+    if (!__value) {
       this.schema = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case EDGE_TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_type();
       } else {
-        setEdge_type((Integer)value);
+        setEdge_type((Integer)__value);
       }
       break;
 
     case EDGE_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetEdge_name();
       } else {
-        setEdge_name((byte[])value);
+        setEdge_name((byte[])__value);
       }
       break;
 
     case VERSION:
-      if (value == null) {
+      if (__value == null) {
         unsetVersion();
       } else {
-        setVersion((Long)value);
+        setVersion((Long)__value);
       }
       break;
 
     case SCHEMA:
-      if (value == null) {
+      if (__value == null) {
         unsetSchema();
       } else {
-        setSchema((Schema)value);
+        setSchema((Schema)__value);
       }
       break;
 
@@ -262,101 +304,30 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case EDGE_TYPE:
-      return isSetEdge_type();
-    case EDGE_NAME:
-      return isSetEdge_name();
-    case VERSION:
-      return isSetVersion();
-    case SCHEMA:
-      return isSetSchema();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof EdgeItem)
-      return this.equals((EdgeItem)that);
-    return false;
-  }
-
-  public boolean equals(EdgeItem that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof EdgeItem))
+      return false;
+    EdgeItem that = (EdgeItem)_that;
 
-    boolean this_present_edge_type = true;
-    boolean that_present_edge_type = true;
-    if (this_present_edge_type || that_present_edge_type) {
-      if (!(this_present_edge_type && that_present_edge_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.edge_type, that.edge_type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.edge_type, that.edge_type)) { return false; }
 
-    boolean this_present_edge_name = true && this.isSetEdge_name();
-    boolean that_present_edge_name = true && that.isSetEdge_name();
-    if (this_present_edge_name || that_present_edge_name) {
-      if (!(this_present_edge_name && that_present_edge_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.edge_name, that.edge_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetEdge_name(), that.isSetEdge_name(), this.edge_name, that.edge_name)) { return false; }
 
-    boolean this_present_version = true;
-    boolean that_present_version = true;
-    if (this_present_version || that_present_version) {
-      if (!(this_present_version && that_present_version))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.version, that.version))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.version, that.version)) { return false; }
 
-    boolean this_present_schema = true && this.isSetSchema();
-    boolean that_present_schema = true && that.isSetSchema();
-    if (this_present_schema || that_present_schema) {
-      if (!(this_present_schema && that_present_schema))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.schema, that.schema))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema(), that.isSetSchema(), this.schema, that.schema)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_edge_type = true;
-    builder.append(present_edge_type);
-    if (present_edge_type)
-      builder.append(edge_type);
-
-    boolean present_edge_name = true && (isSetEdge_name());
-    builder.append(present_edge_name);
-    if (present_edge_name)
-      builder.append(edge_name);
-
-    boolean present_version = true;
-    builder.append(present_version);
-    if (present_version)
-      builder.append(version);
-
-    boolean present_schema = true && (isSetSchema());
-    builder.append(present_schema);
-    if (present_schema)
-      builder.append(schema);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {edge_type, edge_name, version, schema});
   }
 
   @Override
@@ -376,7 +347,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_type, other.edge_type);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetEdge_name()).compareTo(other.isSetEdge_name());
@@ -384,7 +355,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(edge_name, other.edge_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
@@ -392,7 +363,7 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(version, other.version);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSchema()).compareTo(other.isSetSchema());
@@ -400,56 +371,56 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(schema, other.schema);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case EDGE_TYPE:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.edge_type = iprot.readI32();
             setEdge_typeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EDGE_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.edge_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case VERSION:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.version = iprot.readI64();
             setVersionIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCHEMA:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.schema = new Schema();
             this.schema.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -487,19 +458,14 @@ public class EdgeItem implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("EdgeItem");
     sb.append(space);
     sb.append("(");
@@ -510,22 +476,22 @@ String space = prettyPrint ? " " : "";
     sb.append("edge_type");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getEdge_type(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getEdge_type(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("edge_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEdge_name() == null) {
+    if (this.getEdge_name() == null) {
       sb.append("null");
     } else {
-        int __edge_name_size = Math.min(this. getEdge_name().length, 128);
+        int __edge_name_size = Math.min(this.getEdge_name().length, 128);
         for (int i = 0; i < __edge_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getEdge_name()[i]).length() > 1 ? Integer.toHexString(this. getEdge_name()[i]).substring(Integer.toHexString(this. getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getEdge_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getEdge_name()[i]).length() > 1 ? Integer.toHexString(this.getEdge_name()[i]).substring(Integer.toHexString(this.getEdge_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getEdge_name()[i]).toUpperCase());
         }
-        if (this. getEdge_name().length > 128) sb.append(" ...");
+        if (this.getEdge_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -533,17 +499,17 @@ String space = prettyPrint ? " " : "";
     sb.append("version");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getVersion(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getVersion(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("schema");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSchema() == null) {
+    if (this.getSchema() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSchema(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSchema(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -553,7 +519,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

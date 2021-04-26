@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,17 +36,15 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see StatType
    */
-  public int stat;
+  public StatType stat;
   public static final int ALIAS = 1;
   public static final int PROP = 2;
   public static final int STAT = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __STAT_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ALIAS, new FieldMetaData("alias", TFieldRequirementType.DEFAULT, 
@@ -69,42 +64,71 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public StatProp(
-    byte[] alias,
-    byte[] prop,
-    int stat)
-  {
+      byte[] alias,
+      byte[] prop,
+      StatType stat) {
     this();
     this.alias = alias;
     this.prop = prop;
     this.stat = stat;
-    setStatIsSet(true);
+  }
+
+  public static class Builder {
+    private byte[] alias;
+    private byte[] prop;
+    private StatType stat;
+
+    public Builder() {
+    }
+
+    public Builder setAlias(final byte[] alias) {
+      this.alias = alias;
+      return this;
+    }
+
+    public Builder setProp(final byte[] prop) {
+      this.prop = prop;
+      return this;
+    }
+
+    public Builder setStat(final StatType stat) {
+      this.stat = stat;
+      return this;
+    }
+
+    public StatProp build() {
+      StatProp result = new StatProp();
+      result.setAlias(this.alias);
+      result.setProp(this.prop);
+      result.setStat(this.stat);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public StatProp(StatProp other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetAlias()) {
       this.alias = TBaseHelper.deepCopy(other.alias);
     }
     if (other.isSetProp()) {
       this.prop = TBaseHelper.deepCopy(other.prop);
     }
-    this.stat = TBaseHelper.deepCopy(other.stat);
+    if (other.isSetStat()) {
+      this.stat = TBaseHelper.deepCopy(other.stat);
+    }
   }
 
   public StatProp deepCopy() {
     return new StatProp(this);
   }
 
-  @Deprecated
-  public StatProp clone() {
-    return new StatProp(this);
-  }
-
-  public byte[]  getAlias() {
+  public byte[] getAlias() {
     return this.alias;
   }
 
@@ -122,13 +146,13 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
     return this.alias != null;
   }
 
-  public void setAliasIsSet(boolean value) {
-    if (!value) {
+  public void setAliasIsSet(boolean __value) {
+    if (!__value) {
       this.alias = null;
     }
   }
 
-  public byte[]  getProp() {
+  public byte[] getProp() {
     return this.prop;
   }
 
@@ -146,8 +170,8 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
     return this.prop != null;
   }
 
-  public void setPropIsSet(boolean value) {
-    if (!value) {
+  public void setPropIsSet(boolean __value) {
+    if (!__value) {
       this.prop = null;
     }
   }
@@ -156,7 +180,7 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see StatType
    */
-  public int  getStat() {
+  public StatType getStat() {
     return this.stat;
   }
 
@@ -164,48 +188,49 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see StatType
    */
-  public StatProp setStat(int stat) {
+  public StatProp setStat(StatType stat) {
     this.stat = stat;
-    setStatIsSet(true);
     return this;
   }
 
   public void unsetStat() {
-    __isset_bit_vector.clear(__STAT_ISSET_ID);
+    this.stat = null;
   }
 
   // Returns true if field stat is set (has been assigned a value) and false otherwise
   public boolean isSetStat() {
-    return __isset_bit_vector.get(__STAT_ISSET_ID);
+    return this.stat != null;
   }
 
-  public void setStatIsSet(boolean value) {
-    __isset_bit_vector.set(__STAT_ISSET_ID, value);
+  public void setStatIsSet(boolean __value) {
+    if (!__value) {
+      this.stat = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ALIAS:
-      if (value == null) {
+      if (__value == null) {
         unsetAlias();
       } else {
-        setAlias((byte[])value);
+        setAlias((byte[])__value);
       }
       break;
 
     case PROP:
-      if (value == null) {
+      if (__value == null) {
         unsetProp();
       } else {
-        setProp((byte[])value);
+        setProp((byte[])__value);
       }
       break;
 
     case STAT:
-      if (value == null) {
+      if (__value == null) {
         unsetStat();
       } else {
-        setStat((Integer)value);
+        setStat((StatType)__value);
       }
       break;
 
@@ -230,85 +255,28 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ALIAS:
-      return isSetAlias();
-    case PROP:
-      return isSetProp();
-    case STAT:
-      return isSetStat();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof StatProp)
-      return this.equals((StatProp)that);
-    return false;
-  }
-
-  public boolean equals(StatProp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof StatProp))
+      return false;
+    StatProp that = (StatProp)_that;
 
-    boolean this_present_alias = true && this.isSetAlias();
-    boolean that_present_alias = true && that.isSetAlias();
-    if (this_present_alias || that_present_alias) {
-      if (!(this_present_alias && that_present_alias))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.alias, that.alias))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetAlias(), that.isSetAlias(), this.alias, that.alias)) { return false; }
 
-    boolean this_present_prop = true && this.isSetProp();
-    boolean that_present_prop = true && that.isSetProp();
-    if (this_present_prop || that_present_prop) {
-      if (!(this_present_prop && that_present_prop))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.prop, that.prop))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetProp(), that.isSetProp(), this.prop, that.prop)) { return false; }
 
-    boolean this_present_stat = true;
-    boolean that_present_stat = true;
-    if (this_present_stat || that_present_stat) {
-      if (!(this_present_stat && that_present_stat))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.stat, that.stat))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStat(), that.isSetStat(), this.stat, that.stat)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_alias = true && (isSetAlias());
-    builder.append(present_alias);
-    if (present_alias)
-      builder.append(alias);
-
-    boolean present_prop = true && (isSetProp());
-    builder.append(present_prop);
-    if (present_prop)
-      builder.append(prop);
-
-    boolean present_stat = true;
-    builder.append(present_stat);
-    if (present_stat)
-      builder.append(stat);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {alias, prop, stat});
   }
 
   @Override
@@ -328,7 +296,7 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(alias, other.alias);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetProp()).compareTo(other.isSetProp());
@@ -336,7 +304,7 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(prop, other.prop);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStat()).compareTo(other.isSetStat());
@@ -344,47 +312,46 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(stat, other.stat);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ALIAS:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.alias = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PROP:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.prop = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STAT:
-          if (field.type == TType.I32) {
-            this.stat = iprot.readI32();
-            setStatIsSet(true);
+          if (__field.type == TType.I32) {
+            this.stat = StatType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -410,28 +377,25 @@ public class StatProp implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeBinary(this.prop);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(STAT_FIELD_DESC);
-    oprot.writeI32(this.stat);
-    oprot.writeFieldEnd();
+    if (this.stat != null) {
+      oprot.writeFieldBegin(STAT_FIELD_DESC);
+      oprot.writeI32(this.stat == null ? 0 : this.stat.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("StatProp");
     sb.append(space);
     sb.append("(");
@@ -442,15 +406,15 @@ String space = prettyPrint ? " " : "";
     sb.append("alias");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getAlias() == null) {
+    if (this.getAlias() == null) {
       sb.append("null");
     } else {
-        int __alias_size = Math.min(this. getAlias().length, 128);
+        int __alias_size = Math.min(this.getAlias().length, 128);
         for (int i = 0; i < __alias_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getAlias()[i]).length() > 1 ? Integer.toHexString(this. getAlias()[i]).substring(Integer.toHexString(this. getAlias()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAlias()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getAlias()[i]).length() > 1 ? Integer.toHexString(this.getAlias()[i]).substring(Integer.toHexString(this.getAlias()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getAlias()[i]).toUpperCase());
         }
-        if (this. getAlias().length > 128) sb.append(" ...");
+        if (this.getAlias().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -458,15 +422,15 @@ String space = prettyPrint ? " " : "";
     sb.append("prop");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getProp() == null) {
+    if (this.getProp() == null) {
       sb.append("null");
     } else {
-        int __prop_size = Math.min(this. getProp().length, 128);
+        int __prop_size = Math.min(this.getProp().length, 128);
         for (int i = 0; i < __prop_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getProp()[i]).length() > 1 ? Integer.toHexString(this. getProp()[i]).substring(Integer.toHexString(this. getProp()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getProp()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getProp()[i]).length() > 1 ? Integer.toHexString(this.getProp()[i]).substring(Integer.toHexString(this.getProp()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getProp()[i]).toUpperCase());
         }
-        if (this. getProp().length > 128) sb.append(" ...");
+        if (this.getProp().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -474,14 +438,18 @@ String space = prettyPrint ? " " : "";
     sb.append("stat");
     sb.append(space);
     sb.append(":").append(space);
-    String stat_name = StatType.VALUES_TO_NAMES.get(this. getStat());
-    if (stat_name != null) {
-      sb.append(stat_name);
-      sb.append(" (");
-    }
-    sb.append(this. getStat());
-    if (stat_name != null) {
-      sb.append(")");
+    if (this.getStat() == null) {
+      sb.append("null");
+    } else {
+      String stat_name = this.getStat() == null ? "null" : this.getStat().name();
+      if (stat_name != null) {
+        sb.append(stat_name);
+        sb.append(" (");
+      }
+      sb.append(this.getStat());
+      if (stat_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -491,10 +459,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetStat() && !StatType.VALID_VALUES.contains(stat)){
-      throw new TProtocolException("The field 'stat' has been assigned the invalid value " + stat);
-    }
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -38,18 +35,16 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see SnapshotStatus
    */
-  public int status;
+  public SnapshotStatus status;
   public byte[] hosts;
   public static final int NAME = 1;
   public static final int STATUS = 2;
   public static final int HOSTS = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __STATUS_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
@@ -69,27 +64,61 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   public Snapshot(
-    byte[] name,
-    int status,
-    byte[] hosts)
-  {
+      byte[] name,
+      SnapshotStatus status,
+      byte[] hosts) {
     this();
     this.name = name;
     this.status = status;
-    setStatusIsSet(true);
     this.hosts = hosts;
+  }
+
+  public static class Builder {
+    private byte[] name;
+    private SnapshotStatus status;
+    private byte[] hosts;
+
+    public Builder() {
+    }
+
+    public Builder setName(final byte[] name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder setStatus(final SnapshotStatus status) {
+      this.status = status;
+      return this;
+    }
+
+    public Builder setHosts(final byte[] hosts) {
+      this.hosts = hosts;
+      return this;
+    }
+
+    public Snapshot build() {
+      Snapshot result = new Snapshot();
+      result.setName(this.name);
+      result.setStatus(this.status);
+      result.setHosts(this.hosts);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public Snapshot(Snapshot other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetName()) {
       this.name = TBaseHelper.deepCopy(other.name);
     }
-    this.status = TBaseHelper.deepCopy(other.status);
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
+    }
     if (other.isSetHosts()) {
       this.hosts = TBaseHelper.deepCopy(other.hosts);
     }
@@ -99,12 +128,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     return new Snapshot(this);
   }
 
-  @Deprecated
-  public Snapshot clone() {
-    return new Snapshot(this);
-  }
-
-  public byte[]  getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -122,8 +146,8 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     return this.name != null;
   }
 
-  public void setNameIsSet(boolean value) {
-    if (!value) {
+  public void setNameIsSet(boolean __value) {
+    if (!__value) {
       this.name = null;
     }
   }
@@ -132,7 +156,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see SnapshotStatus
    */
-  public int  getStatus() {
+  public SnapshotStatus getStatus() {
     return this.status;
   }
 
@@ -140,26 +164,27 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see SnapshotStatus
    */
-  public Snapshot setStatus(int status) {
+  public Snapshot setStatus(SnapshotStatus status) {
     this.status = status;
-    setStatusIsSet(true);
     return this;
   }
 
   public void unsetStatus() {
-    __isset_bit_vector.clear(__STATUS_ISSET_ID);
+    this.status = null;
   }
 
   // Returns true if field status is set (has been assigned a value) and false otherwise
   public boolean isSetStatus() {
-    return __isset_bit_vector.get(__STATUS_ISSET_ID);
+    return this.status != null;
   }
 
-  public void setStatusIsSet(boolean value) {
-    __isset_bit_vector.set(__STATUS_ISSET_ID, value);
+  public void setStatusIsSet(boolean __value) {
+    if (!__value) {
+      this.status = null;
+    }
   }
 
-  public byte[]  getHosts() {
+  public byte[] getHosts() {
     return this.hosts;
   }
 
@@ -177,35 +202,35 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     return this.hosts != null;
   }
 
-  public void setHostsIsSet(boolean value) {
-    if (!value) {
+  public void setHostsIsSet(boolean __value) {
+    if (!__value) {
       this.hosts = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetName();
       } else {
-        setName((byte[])value);
+        setName((byte[])__value);
       }
       break;
 
     case STATUS:
-      if (value == null) {
+      if (__value == null) {
         unsetStatus();
       } else {
-        setStatus((Integer)value);
+        setStatus((SnapshotStatus)__value);
       }
       break;
 
     case HOSTS:
-      if (value == null) {
+      if (__value == null) {
         unsetHosts();
       } else {
-        setHosts((byte[])value);
+        setHosts((byte[])__value);
       }
       break;
 
@@ -230,85 +255,28 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case NAME:
-      return isSetName();
-    case STATUS:
-      return isSetStatus();
-    case HOSTS:
-      return isSetHosts();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Snapshot)
-      return this.equals((Snapshot)that);
-    return false;
-  }
-
-  public boolean equals(Snapshot that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Snapshot))
+      return false;
+    Snapshot that = (Snapshot)_that;
 
-    boolean this_present_name = true && this.isSetName();
-    boolean that_present_name = true && that.isSetName();
-    if (this_present_name || that_present_name) {
-      if (!(this_present_name && that_present_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.name, that.name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
-    boolean this_present_status = true;
-    boolean that_present_status = true;
-    if (this_present_status || that_present_status) {
-      if (!(this_present_status && that_present_status))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.status, that.status))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
 
-    boolean this_present_hosts = true && this.isSetHosts();
-    boolean that_present_hosts = true && that.isSetHosts();
-    if (this_present_hosts || that_present_hosts) {
-      if (!(this_present_hosts && that_present_hosts))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.hosts, that.hosts))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetHosts(), that.isSetHosts(), this.hosts, that.hosts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_name = true && (isSetName());
-    builder.append(present_name);
-    if (present_name)
-      builder.append(name);
-
-    boolean present_status = true;
-    builder.append(present_status);
-    if (present_status)
-      builder.append(status);
-
-    boolean present_hosts = true && (isSetHosts());
-    builder.append(present_hosts);
-    if (present_hosts)
-      builder.append(hosts);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {name, status, hosts});
   }
 
   @Override
@@ -328,7 +296,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
@@ -336,7 +304,7 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(status, other.status);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
@@ -344,47 +312,46 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STATUS:
-          if (field.type == TType.I32) {
-            this.status = iprot.readI32();
-            setStatusIsSet(true);
+          if (__field.type == TType.I32) {
+            this.status = SnapshotStatus.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case HOSTS:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.hosts = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -405,9 +372,11 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(STATUS_FIELD_DESC);
-    oprot.writeI32(this.status);
-    oprot.writeFieldEnd();
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeI32(this.status == null ? 0 : this.status.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.hosts != null) {
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       oprot.writeBinary(this.hosts);
@@ -419,19 +388,14 @@ public class Snapshot implements TBase, java.io.Serializable, Cloneable, Compara
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Snapshot");
     sb.append(space);
     sb.append("(");
@@ -442,15 +406,15 @@ String space = prettyPrint ? " " : "";
     sb.append("name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getName() == null) {
+    if (this.getName() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this. getName().length, 128);
+        int __name_size = Math.min(this.getName().length, 128);
         for (int i = 0; i < __name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getName()[i]).length() > 1 ? Integer.toHexString(this. getName()[i]).substring(Integer.toHexString(this. getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getName()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
         }
-        if (this. getName().length > 128) sb.append(" ...");
+        if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -458,14 +422,18 @@ String space = prettyPrint ? " " : "";
     sb.append("status");
     sb.append(space);
     sb.append(":").append(space);
-    String status_name = SnapshotStatus.VALUES_TO_NAMES.get(this. getStatus());
-    if (status_name != null) {
-      sb.append(status_name);
-      sb.append(" (");
-    }
-    sb.append(this. getStatus());
-    if (status_name != null) {
-      sb.append(")");
+    if (this.getStatus() == null) {
+      sb.append("null");
+    } else {
+      String status_name = this.getStatus() == null ? "null" : this.getStatus().name();
+      if (status_name != null) {
+        sb.append(status_name);
+        sb.append(" (");
+      }
+      sb.append(this.getStatus());
+      if (status_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -473,15 +441,15 @@ String space = prettyPrint ? " " : "";
     sb.append("hosts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getHosts() == null) {
+    if (this.getHosts() == null) {
       sb.append("null");
     } else {
-        int __hosts_size = Math.min(this. getHosts().length, 128);
+        int __hosts_size = Math.min(this.getHosts().length, 128);
         for (int i = 0; i < __hosts_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getHosts()[i]).length() > 1 ? Integer.toHexString(this. getHosts()[i]).substring(Integer.toHexString(this. getHosts()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getHosts()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getHosts()[i]).length() > 1 ? Integer.toHexString(this.getHosts()[i]).substring(Integer.toHexString(this.getHosts()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getHosts()[i]).toUpperCase());
         }
-        if (this. getHosts().length > 128) sb.append(" ...");
+        if (this.getHosts().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -491,10 +459,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetStatus() && !SnapshotStatus.VALID_VALUES.contains(status)){
-      throw new TProtocolException("The field 'status' has been assigned the invalid value " + status);
-    }
   }
 
 }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -42,7 +39,6 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
   public static final int MINUTE = 2;
   public static final int SEC = 3;
   public static final int MICROSEC = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __HOUR_ISSET_ID = 0;
@@ -52,6 +48,7 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
   private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(HOUR, new FieldMetaData("hour", TFieldRequirementType.DEFAULT, 
@@ -73,11 +70,10 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
   }
 
   public Time(
-    byte hour,
-    byte minute,
-    byte sec,
-    int microsec)
-  {
+      byte hour,
+      byte minute,
+      byte sec,
+      int microsec) {
     this();
     this.hour = hour;
     setHourIsSet(true);
@@ -87,6 +83,63 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     setSecIsSet(true);
     this.microsec = microsec;
     setMicrosecIsSet(true);
+  }
+
+  public static class Builder {
+    private byte hour;
+    private byte minute;
+    private byte sec;
+    private int microsec;
+
+    BitSet __optional_isset = new BitSet(4);
+
+    public Builder() {
+    }
+
+    public Builder setHour(final byte hour) {
+      this.hour = hour;
+      __optional_isset.set(__HOUR_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMinute(final byte minute) {
+      this.minute = minute;
+      __optional_isset.set(__MINUTE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setSec(final byte sec) {
+      this.sec = sec;
+      __optional_isset.set(__SEC_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setMicrosec(final int microsec) {
+      this.microsec = microsec;
+      __optional_isset.set(__MICROSEC_ISSET_ID, true);
+      return this;
+    }
+
+    public Time build() {
+      Time result = new Time();
+      if (__optional_isset.get(__HOUR_ISSET_ID)) {
+        result.setHour(this.hour);
+      }
+      if (__optional_isset.get(__MINUTE_ISSET_ID)) {
+        result.setMinute(this.minute);
+      }
+      if (__optional_isset.get(__SEC_ISSET_ID)) {
+        result.setSec(this.sec);
+      }
+      if (__optional_isset.get(__MICROSEC_ISSET_ID)) {
+        result.setMicrosec(this.microsec);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -105,12 +158,7 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     return new Time(this);
   }
 
-  @Deprecated
-  public Time clone() {
-    return new Time(this);
-  }
-
-  public byte  getHour() {
+  public byte getHour() {
     return this.hour;
   }
 
@@ -129,11 +177,11 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__HOUR_ISSET_ID);
   }
 
-  public void setHourIsSet(boolean value) {
-    __isset_bit_vector.set(__HOUR_ISSET_ID, value);
+  public void setHourIsSet(boolean __value) {
+    __isset_bit_vector.set(__HOUR_ISSET_ID, __value);
   }
 
-  public byte  getMinute() {
+  public byte getMinute() {
     return this.minute;
   }
 
@@ -152,11 +200,11 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__MINUTE_ISSET_ID);
   }
 
-  public void setMinuteIsSet(boolean value) {
-    __isset_bit_vector.set(__MINUTE_ISSET_ID, value);
+  public void setMinuteIsSet(boolean __value) {
+    __isset_bit_vector.set(__MINUTE_ISSET_ID, __value);
   }
 
-  public byte  getSec() {
+  public byte getSec() {
     return this.sec;
   }
 
@@ -175,11 +223,11 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__SEC_ISSET_ID);
   }
 
-  public void setSecIsSet(boolean value) {
-    __isset_bit_vector.set(__SEC_ISSET_ID, value);
+  public void setSecIsSet(boolean __value) {
+    __isset_bit_vector.set(__SEC_ISSET_ID, __value);
   }
 
-  public int  getMicrosec() {
+  public int getMicrosec() {
     return this.microsec;
   }
 
@@ -198,41 +246,41 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     return __isset_bit_vector.get(__MICROSEC_ISSET_ID);
   }
 
-  public void setMicrosecIsSet(boolean value) {
-    __isset_bit_vector.set(__MICROSEC_ISSET_ID, value);
+  public void setMicrosecIsSet(boolean __value) {
+    __isset_bit_vector.set(__MICROSEC_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case HOUR:
-      if (value == null) {
+      if (__value == null) {
         unsetHour();
       } else {
-        setHour((Byte)value);
+        setHour((Byte)__value);
       }
       break;
 
     case MINUTE:
-      if (value == null) {
+      if (__value == null) {
         unsetMinute();
       } else {
-        setMinute((Byte)value);
+        setMinute((Byte)__value);
       }
       break;
 
     case SEC:
-      if (value == null) {
+      if (__value == null) {
         unsetSec();
       } else {
-        setSec((Byte)value);
+        setSec((Byte)__value);
       }
       break;
 
     case MICROSEC:
-      if (value == null) {
+      if (__value == null) {
         unsetMicrosec();
       } else {
-        setMicrosec((Integer)value);
+        setMicrosec((Integer)__value);
       }
       break;
 
@@ -260,101 +308,30 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case HOUR:
-      return isSetHour();
-    case MINUTE:
-      return isSetMinute();
-    case SEC:
-      return isSetSec();
-    case MICROSEC:
-      return isSetMicrosec();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Time)
-      return this.equals((Time)that);
-    return false;
-  }
-
-  public boolean equals(Time that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Time))
+      return false;
+    Time that = (Time)_that;
 
-    boolean this_present_hour = true;
-    boolean that_present_hour = true;
-    if (this_present_hour || that_present_hour) {
-      if (!(this_present_hour && that_present_hour))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.hour, that.hour))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.hour, that.hour)) { return false; }
 
-    boolean this_present_minute = true;
-    boolean that_present_minute = true;
-    if (this_present_minute || that_present_minute) {
-      if (!(this_present_minute && that_present_minute))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.minute, that.minute))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.minute, that.minute)) { return false; }
 
-    boolean this_present_sec = true;
-    boolean that_present_sec = true;
-    if (this_present_sec || that_present_sec) {
-      if (!(this_present_sec && that_present_sec))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.sec, that.sec))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.sec, that.sec)) { return false; }
 
-    boolean this_present_microsec = true;
-    boolean that_present_microsec = true;
-    if (this_present_microsec || that_present_microsec) {
-      if (!(this_present_microsec && that_present_microsec))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.microsec, that.microsec))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.microsec, that.microsec)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_hour = true;
-    builder.append(present_hour);
-    if (present_hour)
-      builder.append(hour);
-
-    boolean present_minute = true;
-    builder.append(present_minute);
-    if (present_minute)
-      builder.append(minute);
-
-    boolean present_sec = true;
-    builder.append(present_sec);
-    if (present_sec)
-      builder.append(sec);
-
-    boolean present_microsec = true;
-    builder.append(present_microsec);
-    if (present_microsec)
-      builder.append(microsec);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {hour, minute, sec, microsec});
   }
 
   @Override
@@ -374,7 +351,7 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(hour, other.hour);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMinute()).compareTo(other.isSetMinute());
@@ -382,7 +359,7 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(minute, other.minute);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetSec()).compareTo(other.isSetSec());
@@ -390,7 +367,7 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(sec, other.sec);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetMicrosec()).compareTo(other.isSetMicrosec());
@@ -398,57 +375,57 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(microsec, other.microsec);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case HOUR:
-          if (field.type == TType.BYTE) {
+          if (__field.type == TType.BYTE) {
             this.hour = iprot.readByte();
             setHourIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MINUTE:
-          if (field.type == TType.BYTE) {
+          if (__field.type == TType.BYTE) {
             this.minute = iprot.readByte();
             setMinuteIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SEC:
-          if (field.type == TType.BYTE) {
+          if (__field.type == TType.BYTE) {
             this.sec = iprot.readByte();
             setSecIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case MICROSEC:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.microsec = iprot.readI32();
             setMicrosecIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -482,19 +459,14 @@ public class Time implements TBase, java.io.Serializable, Cloneable, Comparable<
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Time");
     sb.append(space);
     sb.append("(");
@@ -505,28 +477,28 @@ String space = prettyPrint ? " " : "";
     sb.append("hour");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getHour(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getHour(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("minute");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMinute(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMinute(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("sec");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSec(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSec(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("microsec");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getMicrosec(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getMicrosec(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -535,7 +507,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

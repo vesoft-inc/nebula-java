@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
 
   public ConfigItem item;
   public static final int ITEM = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ITEM, new FieldMetaData("item", TFieldRequirementType.DEFAULT, 
@@ -53,10 +50,31 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
   }
 
   public GetConfigReq(
-    ConfigItem item)
-  {
+      ConfigItem item) {
     this();
     this.item = item;
+  }
+
+  public static class Builder {
+    private ConfigItem item;
+
+    public Builder() {
+    }
+
+    public Builder setItem(final ConfigItem item) {
+      this.item = item;
+      return this;
+    }
+
+    public GetConfigReq build() {
+      GetConfigReq result = new GetConfigReq();
+      result.setItem(this.item);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -72,12 +90,7 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
     return new GetConfigReq(this);
   }
 
-  @Deprecated
-  public GetConfigReq clone() {
-    return new GetConfigReq(this);
-  }
-
-  public ConfigItem  getItem() {
+  public ConfigItem getItem() {
     return this.item;
   }
 
@@ -95,19 +108,19 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
     return this.item != null;
   }
 
-  public void setItemIsSet(boolean value) {
-    if (!value) {
+  public void setItemIsSet(boolean __value) {
+    if (!__value) {
       this.item = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ITEM:
-      if (value == null) {
+      if (__value == null) {
         unsetItem();
       } else {
-        setItem((ConfigItem)value);
+        setItem((ConfigItem)__value);
       }
       break;
 
@@ -126,76 +139,47 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ITEM:
-      return isSetItem();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof GetConfigReq)
-      return this.equals((GetConfigReq)that);
-    return false;
-  }
-
-  public boolean equals(GetConfigReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof GetConfigReq))
+      return false;
+    GetConfigReq that = (GetConfigReq)_that;
 
-    boolean this_present_item = true && this.isSetItem();
-    boolean that_present_item = true && that.isSetItem();
-    if (this_present_item || that_present_item) {
-      if (!(this_present_item && that_present_item))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.item, that.item))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetItem(), that.isSetItem(), this.item, that.item)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_item = true && (isSetItem());
-    builder.append(present_item);
-    if (present_item)
-      builder.append(item);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {item});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ITEM:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.item = new ConfigItem();
             this.item.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -222,19 +206,14 @@ public class GetConfigReq implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("GetConfigReq");
     sb.append(space);
     sb.append("(");
@@ -245,10 +224,10 @@ String space = prettyPrint ? " " : "";
     sb.append("item");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getItem() == null) {
+    if (this.getItem() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getItem(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getItem(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -258,7 +237,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

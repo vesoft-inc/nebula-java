@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.raftex;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -35,15 +32,13 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
    * 
    * @see ErrorCode
    */
-  public int error_code;
+  public ErrorCode error_code;
   public static final int ERROR_CODE = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __ERROR_CODE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.DEFAULT, 
@@ -59,28 +54,43 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
   }
 
   public SendSnapshotResponse(
-    int error_code)
-  {
+      ErrorCode error_code) {
     this();
     this.error_code = error_code;
-    setError_codeIsSet(true);
+  }
+
+  public static class Builder {
+    private ErrorCode error_code;
+
+    public Builder() {
+    }
+
+    public Builder setError_code(final ErrorCode error_code) {
+      this.error_code = error_code;
+      return this;
+    }
+
+    public SendSnapshotResponse build() {
+      SendSnapshotResponse result = new SendSnapshotResponse();
+      result.setError_code(this.error_code);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public SendSnapshotResponse(SendSnapshotResponse other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.error_code = TBaseHelper.deepCopy(other.error_code);
+    if (other.isSetError_code()) {
+      this.error_code = TBaseHelper.deepCopy(other.error_code);
+    }
   }
 
   public SendSnapshotResponse deepCopy() {
-    return new SendSnapshotResponse(this);
-  }
-
-  @Deprecated
-  public SendSnapshotResponse clone() {
     return new SendSnapshotResponse(this);
   }
 
@@ -88,7 +98,7 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
    * 
    * @see ErrorCode
    */
-  public int  getError_code() {
+  public ErrorCode getError_code() {
     return this.error_code;
   }
 
@@ -96,32 +106,33 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
    * 
    * @see ErrorCode
    */
-  public SendSnapshotResponse setError_code(int error_code) {
+  public SendSnapshotResponse setError_code(ErrorCode error_code) {
     this.error_code = error_code;
-    setError_codeIsSet(true);
     return this;
   }
 
   public void unsetError_code() {
-    __isset_bit_vector.clear(__ERROR_CODE_ISSET_ID);
+    this.error_code = null;
   }
 
   // Returns true if field error_code is set (has been assigned a value) and false otherwise
   public boolean isSetError_code() {
-    return __isset_bit_vector.get(__ERROR_CODE_ISSET_ID);
+    return this.error_code != null;
   }
 
-  public void setError_codeIsSet(boolean value) {
-    __isset_bit_vector.set(__ERROR_CODE_ISSET_ID, value);
+  public void setError_codeIsSet(boolean __value) {
+    if (!__value) {
+      this.error_code = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ERROR_CODE:
-      if (value == null) {
+      if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((Integer)value);
+        setError_code((ErrorCode)__value);
       }
       break;
 
@@ -140,53 +151,24 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ERROR_CODE:
-      return isSetError_code();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof SendSnapshotResponse)
-      return this.equals((SendSnapshotResponse)that);
-    return false;
-  }
-
-  public boolean equals(SendSnapshotResponse that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof SendSnapshotResponse))
+      return false;
+    SendSnapshotResponse that = (SendSnapshotResponse)_that;
 
-    boolean this_present_error_code = true;
-    boolean that_present_error_code = true;
-    if (this_present_error_code || that_present_error_code) {
-      if (!(this_present_error_code && that_present_error_code))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.error_code, that.error_code))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetError_code(), that.isSetError_code(), this.error_code, that.error_code)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_error_code = true;
-    builder.append(present_error_code);
-    if (present_error_code)
-      builder.append(error_code);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {error_code});
   }
 
   @Override
@@ -206,33 +188,32 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(error_code, other.error_code);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ERROR_CODE:
-          if (field.type == TType.I32) {
-            this.error_code = iprot.readI32();
-            setError_codeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.error_code = ErrorCode.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -248,28 +229,25 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
-    oprot.writeI32(this.error_code);
-    oprot.writeFieldEnd();
+    if (this.error_code != null) {
+      oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
+      oprot.writeI32(this.error_code == null ? 0 : this.error_code.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("SendSnapshotResponse");
     sb.append(space);
     sb.append("(");
@@ -280,14 +258,18 @@ String space = prettyPrint ? " " : "";
     sb.append("error_code");
     sb.append(space);
     sb.append(":").append(space);
-    String error_code_name = ErrorCode.VALUES_TO_NAMES.get(this. getError_code());
-    if (error_code_name != null) {
-      sb.append(error_code_name);
-      sb.append(" (");
-    }
-    sb.append(this. getError_code());
-    if (error_code_name != null) {
-      sb.append(")");
+    if (this.getError_code() == null) {
+      sb.append("null");
+    } else {
+      String error_code_name = this.getError_code() == null ? "null" : this.getError_code().name();
+      if (error_code_name != null) {
+        sb.append(error_code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getError_code());
+      if (error_code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -297,10 +279,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetError_code() && !ErrorCode.VALID_VALUES.contains(error_code)){
-      throw new TProtocolException("The field 'error_code' has been assigned the invalid value " + error_code);
-    }
   }
 
 }

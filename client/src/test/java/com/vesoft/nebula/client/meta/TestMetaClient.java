@@ -57,7 +57,7 @@ public class TestMetaClient extends TestCase {
             List<IdName> spaces = metaClient.getSpaces();
             assert (spaces.size() >= 1);
             assert (metaClient.getSpace("testMeta") != null);
-        } catch (TException e) {
+        } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
             assert (false);
         }

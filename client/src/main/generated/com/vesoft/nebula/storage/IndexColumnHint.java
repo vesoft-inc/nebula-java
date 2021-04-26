@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,20 +36,18 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
    * 
    * @see ScanType
    */
-  public int scan_type;
+  public ScanType scan_type;
   public com.vesoft.nebula.Value begin_value;
   public com.vesoft.nebula.Value end_value;
   public static final int COLUMN_NAME = 1;
   public static final int SCAN_TYPE = 2;
   public static final int BEGIN_VALUE = 3;
   public static final int END_VALUE = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __SCAN_TYPE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(COLUMN_NAME, new FieldMetaData("column_name", TFieldRequirementType.DEFAULT, 
@@ -74,29 +69,70 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
   }
 
   public IndexColumnHint(
-    byte[] column_name,
-    int scan_type,
-    com.vesoft.nebula.Value begin_value,
-    com.vesoft.nebula.Value end_value)
-  {
+      byte[] column_name,
+      ScanType scan_type,
+      com.vesoft.nebula.Value begin_value,
+      com.vesoft.nebula.Value end_value) {
     this();
     this.column_name = column_name;
     this.scan_type = scan_type;
-    setScan_typeIsSet(true);
     this.begin_value = begin_value;
     this.end_value = end_value;
+  }
+
+  public static class Builder {
+    private byte[] column_name;
+    private ScanType scan_type;
+    private com.vesoft.nebula.Value begin_value;
+    private com.vesoft.nebula.Value end_value;
+
+    public Builder() {
+    }
+
+    public Builder setColumn_name(final byte[] column_name) {
+      this.column_name = column_name;
+      return this;
+    }
+
+    public Builder setScan_type(final ScanType scan_type) {
+      this.scan_type = scan_type;
+      return this;
+    }
+
+    public Builder setBegin_value(final com.vesoft.nebula.Value begin_value) {
+      this.begin_value = begin_value;
+      return this;
+    }
+
+    public Builder setEnd_value(final com.vesoft.nebula.Value end_value) {
+      this.end_value = end_value;
+      return this;
+    }
+
+    public IndexColumnHint build() {
+      IndexColumnHint result = new IndexColumnHint();
+      result.setColumn_name(this.column_name);
+      result.setScan_type(this.scan_type);
+      result.setBegin_value(this.begin_value);
+      result.setEnd_value(this.end_value);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public IndexColumnHint(IndexColumnHint other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetColumn_name()) {
       this.column_name = TBaseHelper.deepCopy(other.column_name);
     }
-    this.scan_type = TBaseHelper.deepCopy(other.scan_type);
+    if (other.isSetScan_type()) {
+      this.scan_type = TBaseHelper.deepCopy(other.scan_type);
+    }
     if (other.isSetBegin_value()) {
       this.begin_value = TBaseHelper.deepCopy(other.begin_value);
     }
@@ -109,12 +145,7 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     return new IndexColumnHint(this);
   }
 
-  @Deprecated
-  public IndexColumnHint clone() {
-    return new IndexColumnHint(this);
-  }
-
-  public byte[]  getColumn_name() {
+  public byte[] getColumn_name() {
     return this.column_name;
   }
 
@@ -132,8 +163,8 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     return this.column_name != null;
   }
 
-  public void setColumn_nameIsSet(boolean value) {
-    if (!value) {
+  public void setColumn_nameIsSet(boolean __value) {
+    if (!__value) {
       this.column_name = null;
     }
   }
@@ -142,7 +173,7 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
    * 
    * @see ScanType
    */
-  public int  getScan_type() {
+  public ScanType getScan_type() {
     return this.scan_type;
   }
 
@@ -150,26 +181,27 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
    * 
    * @see ScanType
    */
-  public IndexColumnHint setScan_type(int scan_type) {
+  public IndexColumnHint setScan_type(ScanType scan_type) {
     this.scan_type = scan_type;
-    setScan_typeIsSet(true);
     return this;
   }
 
   public void unsetScan_type() {
-    __isset_bit_vector.clear(__SCAN_TYPE_ISSET_ID);
+    this.scan_type = null;
   }
 
   // Returns true if field scan_type is set (has been assigned a value) and false otherwise
   public boolean isSetScan_type() {
-    return __isset_bit_vector.get(__SCAN_TYPE_ISSET_ID);
+    return this.scan_type != null;
   }
 
-  public void setScan_typeIsSet(boolean value) {
-    __isset_bit_vector.set(__SCAN_TYPE_ISSET_ID, value);
+  public void setScan_typeIsSet(boolean __value) {
+    if (!__value) {
+      this.scan_type = null;
+    }
   }
 
-  public com.vesoft.nebula.Value  getBegin_value() {
+  public com.vesoft.nebula.Value getBegin_value() {
     return this.begin_value;
   }
 
@@ -187,13 +219,13 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     return this.begin_value != null;
   }
 
-  public void setBegin_valueIsSet(boolean value) {
-    if (!value) {
+  public void setBegin_valueIsSet(boolean __value) {
+    if (!__value) {
       this.begin_value = null;
     }
   }
 
-  public com.vesoft.nebula.Value  getEnd_value() {
+  public com.vesoft.nebula.Value getEnd_value() {
     return this.end_value;
   }
 
@@ -211,43 +243,43 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     return this.end_value != null;
   }
 
-  public void setEnd_valueIsSet(boolean value) {
-    if (!value) {
+  public void setEnd_valueIsSet(boolean __value) {
+    if (!__value) {
       this.end_value = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case COLUMN_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetColumn_name();
       } else {
-        setColumn_name((byte[])value);
+        setColumn_name((byte[])__value);
       }
       break;
 
     case SCAN_TYPE:
-      if (value == null) {
+      if (__value == null) {
         unsetScan_type();
       } else {
-        setScan_type((Integer)value);
+        setScan_type((ScanType)__value);
       }
       break;
 
     case BEGIN_VALUE:
-      if (value == null) {
+      if (__value == null) {
         unsetBegin_value();
       } else {
-        setBegin_value((com.vesoft.nebula.Value)value);
+        setBegin_value((com.vesoft.nebula.Value)__value);
       }
       break;
 
     case END_VALUE:
-      if (value == null) {
+      if (__value == null) {
         unsetEnd_value();
       } else {
-        setEnd_value((com.vesoft.nebula.Value)value);
+        setEnd_value((com.vesoft.nebula.Value)__value);
       }
       break;
 
@@ -275,147 +307,75 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case COLUMN_NAME:
-      return isSetColumn_name();
-    case SCAN_TYPE:
-      return isSetScan_type();
-    case BEGIN_VALUE:
-      return isSetBegin_value();
-    case END_VALUE:
-      return isSetEnd_value();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof IndexColumnHint)
-      return this.equals((IndexColumnHint)that);
-    return false;
-  }
-
-  public boolean equals(IndexColumnHint that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof IndexColumnHint))
+      return false;
+    IndexColumnHint that = (IndexColumnHint)_that;
 
-    boolean this_present_column_name = true && this.isSetColumn_name();
-    boolean that_present_column_name = true && that.isSetColumn_name();
-    if (this_present_column_name || that_present_column_name) {
-      if (!(this_present_column_name && that_present_column_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.column_name, that.column_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetColumn_name(), that.isSetColumn_name(), this.column_name, that.column_name)) { return false; }
 
-    boolean this_present_scan_type = true;
-    boolean that_present_scan_type = true;
-    if (this_present_scan_type || that_present_scan_type) {
-      if (!(this_present_scan_type && that_present_scan_type))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.scan_type, that.scan_type))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetScan_type(), that.isSetScan_type(), this.scan_type, that.scan_type)) { return false; }
 
-    boolean this_present_begin_value = true && this.isSetBegin_value();
-    boolean that_present_begin_value = true && that.isSetBegin_value();
-    if (this_present_begin_value || that_present_begin_value) {
-      if (!(this_present_begin_value && that_present_begin_value))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.begin_value, that.begin_value))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetBegin_value(), that.isSetBegin_value(), this.begin_value, that.begin_value)) { return false; }
 
-    boolean this_present_end_value = true && this.isSetEnd_value();
-    boolean that_present_end_value = true && that.isSetEnd_value();
-    if (this_present_end_value || that_present_end_value) {
-      if (!(this_present_end_value && that_present_end_value))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.end_value, that.end_value))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetEnd_value(), that.isSetEnd_value(), this.end_value, that.end_value)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_column_name = true && (isSetColumn_name());
-    builder.append(present_column_name);
-    if (present_column_name)
-      builder.append(column_name);
-
-    boolean present_scan_type = true;
-    builder.append(present_scan_type);
-    if (present_scan_type)
-      builder.append(scan_type);
-
-    boolean present_begin_value = true && (isSetBegin_value());
-    builder.append(present_begin_value);
-    if (present_begin_value)
-      builder.append(begin_value);
-
-    boolean present_end_value = true && (isSetEnd_value());
-    builder.append(present_end_value);
-    if (present_end_value)
-      builder.append(end_value);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {column_name, scan_type, begin_value, end_value});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case COLUMN_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.column_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case SCAN_TYPE:
-          if (field.type == TType.I32) {
-            this.scan_type = iprot.readI32();
-            setScan_typeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.scan_type = ScanType.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case BEGIN_VALUE:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.begin_value = new com.vesoft.nebula.Value();
             this.begin_value.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case END_VALUE:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.end_value = new com.vesoft.nebula.Value();
             this.end_value.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -436,9 +396,11 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
       oprot.writeBinary(this.column_name);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(SCAN_TYPE_FIELD_DESC);
-    oprot.writeI32(this.scan_type);
-    oprot.writeFieldEnd();
+    if (this.scan_type != null) {
+      oprot.writeFieldBegin(SCAN_TYPE_FIELD_DESC);
+      oprot.writeI32(this.scan_type == null ? 0 : this.scan_type.getValue());
+      oprot.writeFieldEnd();
+    }
     if (this.begin_value != null) {
       oprot.writeFieldBegin(BEGIN_VALUE_FIELD_DESC);
       this.begin_value.write(oprot);
@@ -455,19 +417,14 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("IndexColumnHint");
     sb.append(space);
     sb.append("(");
@@ -478,15 +435,15 @@ String space = prettyPrint ? " " : "";
     sb.append("column_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getColumn_name() == null) {
+    if (this.getColumn_name() == null) {
       sb.append("null");
     } else {
-        int __column_name_size = Math.min(this. getColumn_name().length, 128);
+        int __column_name_size = Math.min(this.getColumn_name().length, 128);
         for (int i = 0; i < __column_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getColumn_name()[i]).length() > 1 ? Integer.toHexString(this. getColumn_name()[i]).substring(Integer.toHexString(this. getColumn_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getColumn_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getColumn_name()[i]).length() > 1 ? Integer.toHexString(this.getColumn_name()[i]).substring(Integer.toHexString(this.getColumn_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getColumn_name()[i]).toUpperCase());
         }
-        if (this. getColumn_name().length > 128) sb.append(" ...");
+        if (this.getColumn_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -494,14 +451,18 @@ String space = prettyPrint ? " " : "";
     sb.append("scan_type");
     sb.append(space);
     sb.append(":").append(space);
-    String scan_type_name = ScanType.VALUES_TO_NAMES.get(this. getScan_type());
-    if (scan_type_name != null) {
-      sb.append(scan_type_name);
-      sb.append(" (");
-    }
-    sb.append(this. getScan_type());
-    if (scan_type_name != null) {
-      sb.append(")");
+    if (this.getScan_type() == null) {
+      sb.append("null");
+    } else {
+      String scan_type_name = this.getScan_type() == null ? "null" : this.getScan_type().name();
+      if (scan_type_name != null) {
+        sb.append(scan_type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getScan_type());
+      if (scan_type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -509,10 +470,10 @@ String space = prettyPrint ? " " : "";
     sb.append("begin_value");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getBegin_value() == null) {
+    if (this.getBegin_value() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getBegin_value(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getBegin_value(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -520,10 +481,10 @@ String space = prettyPrint ? " " : "";
     sb.append("end_value");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getEnd_value() == null) {
+    if (this.getEnd_value() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getEnd_value(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getEnd_value(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -533,10 +494,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetScan_type() && !ScanType.VALID_VALUES.contains(scan_type)){
-      throw new TProtocolException("The field 'scan_type' has been assigned the invalid value " + scan_type);
-    }
   }
 
 }

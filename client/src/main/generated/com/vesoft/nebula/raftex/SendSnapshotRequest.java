@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.raftex;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -63,7 +60,6 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   public static final int TOTAL_SIZE = 9;
   public static final int TOTAL_COUNT = 10;
   public static final int DONE = 11;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ISSET_ID = 0;
@@ -78,6 +74,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   private BitSet __isset_bit_vector = new BitSet(9);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
@@ -114,18 +111,17 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   }
 
   public SendSnapshotRequest(
-    int space,
-    int part,
-    long term,
-    long committed_log_id,
-    long committed_log_term,
-    String leader_addr,
-    int leader_port,
-    List<byte[]> rows,
-    long total_size,
-    long total_count,
-    boolean done)
-  {
+      int space,
+      int part,
+      long term,
+      long committed_log_id,
+      long committed_log_term,
+      String leader_addr,
+      int leader_port,
+      List<byte[]> rows,
+      long total_size,
+      long total_count,
+      boolean done) {
     this();
     this.space = space;
     setSpaceIsSet(true);
@@ -147,6 +143,127 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     setTotal_countIsSet(true);
     this.done = done;
     setDoneIsSet(true);
+  }
+
+  public static class Builder {
+    private int space;
+    private int part;
+    private long term;
+    private long committed_log_id;
+    private long committed_log_term;
+    private String leader_addr;
+    private int leader_port;
+    private List<byte[]> rows;
+    private long total_size;
+    private long total_count;
+    private boolean done;
+
+    BitSet __optional_isset = new BitSet(9);
+
+    public Builder() {
+    }
+
+    public Builder setSpace(final int space) {
+      this.space = space;
+      __optional_isset.set(__SPACE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart(final int part) {
+      this.part = part;
+      __optional_isset.set(__PART_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTerm(final long term) {
+      this.term = term;
+      __optional_isset.set(__TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCommitted_log_id(final long committed_log_id) {
+      this.committed_log_id = committed_log_id;
+      __optional_isset.set(__COMMITTED_LOG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCommitted_log_term(final long committed_log_term) {
+      this.committed_log_term = committed_log_term;
+      __optional_isset.set(__COMMITTED_LOG_TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLeader_addr(final String leader_addr) {
+      this.leader_addr = leader_addr;
+      return this;
+    }
+
+    public Builder setLeader_port(final int leader_port) {
+      this.leader_port = leader_port;
+      __optional_isset.set(__LEADER_PORT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setRows(final List<byte[]> rows) {
+      this.rows = rows;
+      return this;
+    }
+
+    public Builder setTotal_size(final long total_size) {
+      this.total_size = total_size;
+      __optional_isset.set(__TOTAL_SIZE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTotal_count(final long total_count) {
+      this.total_count = total_count;
+      __optional_isset.set(__TOTAL_COUNT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setDone(final boolean done) {
+      this.done = done;
+      __optional_isset.set(__DONE_ISSET_ID, true);
+      return this;
+    }
+
+    public SendSnapshotRequest build() {
+      SendSnapshotRequest result = new SendSnapshotRequest();
+      if (__optional_isset.get(__SPACE_ISSET_ID)) {
+        result.setSpace(this.space);
+      }
+      if (__optional_isset.get(__PART_ISSET_ID)) {
+        result.setPart(this.part);
+      }
+      if (__optional_isset.get(__TERM_ISSET_ID)) {
+        result.setTerm(this.term);
+      }
+      if (__optional_isset.get(__COMMITTED_LOG_ID_ISSET_ID)) {
+        result.setCommitted_log_id(this.committed_log_id);
+      }
+      if (__optional_isset.get(__COMMITTED_LOG_TERM_ISSET_ID)) {
+        result.setCommitted_log_term(this.committed_log_term);
+      }
+      result.setLeader_addr(this.leader_addr);
+      if (__optional_isset.get(__LEADER_PORT_ISSET_ID)) {
+        result.setLeader_port(this.leader_port);
+      }
+      result.setRows(this.rows);
+      if (__optional_isset.get(__TOTAL_SIZE_ISSET_ID)) {
+        result.setTotal_size(this.total_size);
+      }
+      if (__optional_isset.get(__TOTAL_COUNT_ISSET_ID)) {
+        result.setTotal_count(this.total_count);
+      }
+      if (__optional_isset.get(__DONE_ISSET_ID)) {
+        result.setDone(this.done);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -176,12 +293,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return new SendSnapshotRequest(this);
   }
 
-  @Deprecated
-  public SendSnapshotRequest clone() {
-    return new SendSnapshotRequest(this);
-  }
-
-  public int  getSpace() {
+  public int getSpace() {
     return this.space;
   }
 
@@ -200,11 +312,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__SPACE_ISSET_ID);
   }
 
-  public void setSpaceIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ISSET_ID, value);
+  public void setSpaceIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ISSET_ID, __value);
   }
 
-  public int  getPart() {
+  public int getPart() {
     return this.part;
   }
 
@@ -223,11 +335,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__PART_ISSET_ID);
   }
 
-  public void setPartIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ISSET_ID, value);
+  public void setPartIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ISSET_ID, __value);
   }
 
-  public long  getTerm() {
+  public long getTerm() {
     return this.term;
   }
 
@@ -246,11 +358,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__TERM_ISSET_ID);
   }
 
-  public void setTermIsSet(boolean value) {
-    __isset_bit_vector.set(__TERM_ISSET_ID, value);
+  public void setTermIsSet(boolean __value) {
+    __isset_bit_vector.set(__TERM_ISSET_ID, __value);
   }
 
-  public long  getCommitted_log_id() {
+  public long getCommitted_log_id() {
     return this.committed_log_id;
   }
 
@@ -269,11 +381,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__COMMITTED_LOG_ID_ISSET_ID);
   }
 
-  public void setCommitted_log_idIsSet(boolean value) {
-    __isset_bit_vector.set(__COMMITTED_LOG_ID_ISSET_ID, value);
+  public void setCommitted_log_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__COMMITTED_LOG_ID_ISSET_ID, __value);
   }
 
-  public long  getCommitted_log_term() {
+  public long getCommitted_log_term() {
     return this.committed_log_term;
   }
 
@@ -292,11 +404,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__COMMITTED_LOG_TERM_ISSET_ID);
   }
 
-  public void setCommitted_log_termIsSet(boolean value) {
-    __isset_bit_vector.set(__COMMITTED_LOG_TERM_ISSET_ID, value);
+  public void setCommitted_log_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__COMMITTED_LOG_TERM_ISSET_ID, __value);
   }
 
-  public String  getLeader_addr() {
+  public String getLeader_addr() {
     return this.leader_addr;
   }
 
@@ -314,13 +426,13 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return this.leader_addr != null;
   }
 
-  public void setLeader_addrIsSet(boolean value) {
-    if (!value) {
+  public void setLeader_addrIsSet(boolean __value) {
+    if (!__value) {
       this.leader_addr = null;
     }
   }
 
-  public int  getLeader_port() {
+  public int getLeader_port() {
     return this.leader_port;
   }
 
@@ -339,11 +451,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__LEADER_PORT_ISSET_ID);
   }
 
-  public void setLeader_portIsSet(boolean value) {
-    __isset_bit_vector.set(__LEADER_PORT_ISSET_ID, value);
+  public void setLeader_portIsSet(boolean __value) {
+    __isset_bit_vector.set(__LEADER_PORT_ISSET_ID, __value);
   }
 
-  public List<byte[]>  getRows() {
+  public List<byte[]> getRows() {
     return this.rows;
   }
 
@@ -361,13 +473,13 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return this.rows != null;
   }
 
-  public void setRowsIsSet(boolean value) {
-    if (!value) {
+  public void setRowsIsSet(boolean __value) {
+    if (!__value) {
       this.rows = null;
     }
   }
 
-  public long  getTotal_size() {
+  public long getTotal_size() {
     return this.total_size;
   }
 
@@ -386,11 +498,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__TOTAL_SIZE_ISSET_ID);
   }
 
-  public void setTotal_sizeIsSet(boolean value) {
-    __isset_bit_vector.set(__TOTAL_SIZE_ISSET_ID, value);
+  public void setTotal_sizeIsSet(boolean __value) {
+    __isset_bit_vector.set(__TOTAL_SIZE_ISSET_ID, __value);
   }
 
-  public long  getTotal_count() {
+  public long getTotal_count() {
     return this.total_count;
   }
 
@@ -409,11 +521,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__TOTAL_COUNT_ISSET_ID);
   }
 
-  public void setTotal_countIsSet(boolean value) {
-    __isset_bit_vector.set(__TOTAL_COUNT_ISSET_ID, value);
+  public void setTotal_countIsSet(boolean __value) {
+    __isset_bit_vector.set(__TOTAL_COUNT_ISSET_ID, __value);
   }
 
-  public boolean  isDone() {
+  public boolean isDone() {
     return this.done;
   }
 
@@ -432,98 +544,98 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     return __isset_bit_vector.get(__DONE_ISSET_ID);
   }
 
-  public void setDoneIsSet(boolean value) {
-    __isset_bit_vector.set(__DONE_ISSET_ID, value);
+  public void setDoneIsSet(boolean __value) {
+    __isset_bit_vector.set(__DONE_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace();
       } else {
-        setSpace((Integer)value);
+        setSpace((Integer)__value);
       }
       break;
 
     case PART:
-      if (value == null) {
+      if (__value == null) {
         unsetPart();
       } else {
-        setPart((Integer)value);
+        setPart((Integer)__value);
       }
       break;
 
     case TERM:
-      if (value == null) {
+      if (__value == null) {
         unsetTerm();
       } else {
-        setTerm((Long)value);
+        setTerm((Long)__value);
       }
       break;
 
     case COMMITTED_LOG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetCommitted_log_id();
       } else {
-        setCommitted_log_id((Long)value);
+        setCommitted_log_id((Long)__value);
       }
       break;
 
     case COMMITTED_LOG_TERM:
-      if (value == null) {
+      if (__value == null) {
         unsetCommitted_log_term();
       } else {
-        setCommitted_log_term((Long)value);
+        setCommitted_log_term((Long)__value);
       }
       break;
 
     case LEADER_ADDR:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_addr();
       } else {
-        setLeader_addr((String)value);
+        setLeader_addr((String)__value);
       }
       break;
 
     case LEADER_PORT:
-      if (value == null) {
+      if (__value == null) {
         unsetLeader_port();
       } else {
-        setLeader_port((Integer)value);
+        setLeader_port((Integer)__value);
       }
       break;
 
     case ROWS:
-      if (value == null) {
+      if (__value == null) {
         unsetRows();
       } else {
-        setRows((List<byte[]>)value);
+        setRows((List<byte[]>)__value);
       }
       break;
 
     case TOTAL_SIZE:
-      if (value == null) {
+      if (__value == null) {
         unsetTotal_size();
       } else {
-        setTotal_size((Long)value);
+        setTotal_size((Long)__value);
       }
       break;
 
     case TOTAL_COUNT:
-      if (value == null) {
+      if (__value == null) {
         unsetTotal_count();
       } else {
-        setTotal_count((Long)value);
+        setTotal_count((Long)__value);
       }
       break;
 
     case DONE:
-      if (value == null) {
+      if (__value == null) {
         unsetDone();
       } else {
-        setDone((Boolean)value);
+        setDone((Boolean)__value);
       }
       break;
 
@@ -572,213 +684,44 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE:
-      return isSetSpace();
-    case PART:
-      return isSetPart();
-    case TERM:
-      return isSetTerm();
-    case COMMITTED_LOG_ID:
-      return isSetCommitted_log_id();
-    case COMMITTED_LOG_TERM:
-      return isSetCommitted_log_term();
-    case LEADER_ADDR:
-      return isSetLeader_addr();
-    case LEADER_PORT:
-      return isSetLeader_port();
-    case ROWS:
-      return isSetRows();
-    case TOTAL_SIZE:
-      return isSetTotal_size();
-    case TOTAL_COUNT:
-      return isSetTotal_count();
-    case DONE:
-      return isSetDone();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof SendSnapshotRequest)
-      return this.equals((SendSnapshotRequest)that);
-    return false;
-  }
-
-  public boolean equals(SendSnapshotRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof SendSnapshotRequest))
+      return false;
+    SendSnapshotRequest that = (SendSnapshotRequest)_that;
 
-    boolean this_present_space = true;
-    boolean that_present_space = true;
-    if (this_present_space || that_present_space) {
-      if (!(this_present_space && that_present_space))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space, that.space))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space, that.space)) { return false; }
 
-    boolean this_present_part = true;
-    boolean that_present_part = true;
-    if (this_present_part || that_present_part) {
-      if (!(this_present_part && that_present_part))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part, that.part))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part, that.part)) { return false; }
 
-    boolean this_present_term = true;
-    boolean that_present_term = true;
-    if (this_present_term || that_present_term) {
-      if (!(this_present_term && that_present_term))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.term, that.term))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.term, that.term)) { return false; }
 
-    boolean this_present_committed_log_id = true;
-    boolean that_present_committed_log_id = true;
-    if (this_present_committed_log_id || that_present_committed_log_id) {
-      if (!(this_present_committed_log_id && that_present_committed_log_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id)) { return false; }
 
-    boolean this_present_committed_log_term = true;
-    boolean that_present_committed_log_term = true;
-    if (this_present_committed_log_term || that_present_committed_log_term) {
-      if (!(this_present_committed_log_term && that_present_committed_log_term))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.committed_log_term, that.committed_log_term))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.committed_log_term, that.committed_log_term)) { return false; }
 
-    boolean this_present_leader_addr = true && this.isSetLeader_addr();
-    boolean that_present_leader_addr = true && that.isSetLeader_addr();
-    if (this_present_leader_addr || that_present_leader_addr) {
-      if (!(this_present_leader_addr && that_present_leader_addr))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_addr, that.leader_addr))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetLeader_addr(), that.isSetLeader_addr(), this.leader_addr, that.leader_addr)) { return false; }
 
-    boolean this_present_leader_port = true;
-    boolean that_present_leader_port = true;
-    if (this_present_leader_port || that_present_leader_port) {
-      if (!(this_present_leader_port && that_present_leader_port))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.leader_port, that.leader_port))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.leader_port, that.leader_port)) { return false; }
 
-    boolean this_present_rows = true && this.isSetRows();
-    boolean that_present_rows = true && that.isSetRows();
-    if (this_present_rows || that_present_rows) {
-      if (!(this_present_rows && that_present_rows))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.rows, that.rows))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetRows(), that.isSetRows(), this.rows, that.rows)) { return false; }
 
-    boolean this_present_total_size = true;
-    boolean that_present_total_size = true;
-    if (this_present_total_size || that_present_total_size) {
-      if (!(this_present_total_size && that_present_total_size))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.total_size, that.total_size))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.total_size, that.total_size)) { return false; }
 
-    boolean this_present_total_count = true;
-    boolean that_present_total_count = true;
-    if (this_present_total_count || that_present_total_count) {
-      if (!(this_present_total_count && that_present_total_count))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.total_count, that.total_count))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.total_count, that.total_count)) { return false; }
 
-    boolean this_present_done = true;
-    boolean that_present_done = true;
-    if (this_present_done || that_present_done) {
-      if (!(this_present_done && that_present_done))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.done, that.done))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.done, that.done)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space = true;
-    builder.append(present_space);
-    if (present_space)
-      builder.append(space);
-
-    boolean present_part = true;
-    builder.append(present_part);
-    if (present_part)
-      builder.append(part);
-
-    boolean present_term = true;
-    builder.append(present_term);
-    if (present_term)
-      builder.append(term);
-
-    boolean present_committed_log_id = true;
-    builder.append(present_committed_log_id);
-    if (present_committed_log_id)
-      builder.append(committed_log_id);
-
-    boolean present_committed_log_term = true;
-    builder.append(present_committed_log_term);
-    if (present_committed_log_term)
-      builder.append(committed_log_term);
-
-    boolean present_leader_addr = true && (isSetLeader_addr());
-    builder.append(present_leader_addr);
-    if (present_leader_addr)
-      builder.append(leader_addr);
-
-    boolean present_leader_port = true;
-    builder.append(present_leader_port);
-    if (present_leader_port)
-      builder.append(leader_port);
-
-    boolean present_rows = true && (isSetRows());
-    builder.append(present_rows);
-    if (present_rows)
-      builder.append(rows);
-
-    boolean present_total_size = true;
-    builder.append(present_total_size);
-    if (present_total_size)
-      builder.append(total_size);
-
-    boolean present_total_count = true;
-    builder.append(present_total_count);
-    if (present_total_count)
-      builder.append(total_count);
-
-    boolean present_done = true;
-    builder.append(present_done);
-    if (present_done)
-      builder.append(done);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space, part, term, committed_log_id, committed_log_term, leader_addr, leader_port, rows, total_size, total_count, done});
   }
 
   @Override
@@ -798,7 +741,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space, other.space);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart()).compareTo(other.isSetPart());
@@ -806,7 +749,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part, other.part);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTerm()).compareTo(other.isSetTerm());
@@ -814,7 +757,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(term, other.term);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCommitted_log_id()).compareTo(other.isSetCommitted_log_id());
@@ -822,7 +765,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(committed_log_id, other.committed_log_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCommitted_log_term()).compareTo(other.isSetCommitted_log_term());
@@ -830,7 +773,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(committed_log_term, other.committed_log_term);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_addr()).compareTo(other.isSetLeader_addr());
@@ -838,7 +781,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_addr, other.leader_addr);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLeader_port()).compareTo(other.isSetLeader_port());
@@ -846,7 +789,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader_port, other.leader_port);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetRows()).compareTo(other.isSetRows());
@@ -854,7 +797,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(rows, other.rows);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTotal_size()).compareTo(other.isSetTotal_size());
@@ -862,7 +805,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(total_size, other.total_size);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTotal_count()).compareTo(other.isSetTotal_count());
@@ -870,7 +813,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(total_count, other.total_count);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetDone()).compareTo(other.isSetDone());
@@ -878,80 +821,80 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(done, other.done);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space = iprot.readI32();
             setSpaceIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part = iprot.readI32();
             setPartIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TERM:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.term = iprot.readI64();
             setTermIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case COMMITTED_LOG_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.committed_log_id = iprot.readI64();
             setCommitted_log_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case COMMITTED_LOG_TERM:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.committed_log_term = iprot.readI64();
             setCommitted_log_termIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_ADDR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.leader_addr = iprot.readString();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LEADER_PORT:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.leader_port = iprot.readI32();
             setLeader_portIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case ROWS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
               TList _list4 = iprot.readListBegin();
               this.rows = new ArrayList<byte[]>(Math.max(0, _list4.size));
@@ -966,35 +909,35 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TOTAL_SIZE:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.total_size = iprot.readI64();
             setTotal_sizeIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TOTAL_COUNT:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.total_count = iprot.readI64();
             setTotal_countIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case DONE:
-          if (field.type == TType.BOOL) {
+          if (__field.type == TType.BOOL) {
             this.done = iprot.readBool();
             setDoneIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -1059,19 +1002,14 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("SendSnapshotRequest");
     sb.append(space);
     sb.append("(");
@@ -1082,45 +1020,45 @@ String space = prettyPrint ? " " : "";
     sb.append("space");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTerm(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTerm(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("committed_log_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCommitted_log_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCommitted_log_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("committed_log_term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCommitted_log_term(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCommitted_log_term(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("leader_addr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getLeader_addr() == null) {
+    if (this.getLeader_addr() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getLeader_addr(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getLeader_addr(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1128,17 +1066,17 @@ String space = prettyPrint ? " " : "";
     sb.append("leader_port");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLeader_port(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLeader_port(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("rows");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getRows() == null) {
+    if (this.getRows() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getRows(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getRows(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -1146,21 +1084,21 @@ String space = prettyPrint ? " " : "";
     sb.append("total_size");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTotal_size(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTotal_size(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("total_count");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTotal_count(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTotal_count(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("done");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. isDone(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isDone(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -1169,7 +1107,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

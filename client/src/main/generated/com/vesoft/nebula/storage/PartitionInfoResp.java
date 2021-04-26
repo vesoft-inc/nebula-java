@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
   public static final int RESULT = 1;
   public static final int BACKUP_NAME = 2;
   public static final int PARTITION_INFO = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
@@ -63,21 +60,55 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
   }
 
   public PartitionInfoResp(
-    ResponseCommon result)
-  {
+      ResponseCommon result) {
     this();
     this.result = result;
   }
 
   public PartitionInfoResp(
-    ResponseCommon result,
-    byte[] backup_name,
-    com.vesoft.nebula.PartitionBackupInfo partition_info)
-  {
+      ResponseCommon result,
+      byte[] backup_name,
+      com.vesoft.nebula.PartitionBackupInfo partition_info) {
     this();
     this.result = result;
     this.backup_name = backup_name;
     this.partition_info = partition_info;
+  }
+
+  public static class Builder {
+    private ResponseCommon result;
+    private byte[] backup_name;
+    private com.vesoft.nebula.PartitionBackupInfo partition_info;
+
+    public Builder() {
+    }
+
+    public Builder setResult(final ResponseCommon result) {
+      this.result = result;
+      return this;
+    }
+
+    public Builder setBackup_name(final byte[] backup_name) {
+      this.backup_name = backup_name;
+      return this;
+    }
+
+    public Builder setPartition_info(final com.vesoft.nebula.PartitionBackupInfo partition_info) {
+      this.partition_info = partition_info;
+      return this;
+    }
+
+    public PartitionInfoResp build() {
+      PartitionInfoResp result = new PartitionInfoResp();
+      result.setResult(this.result);
+      result.setBackup_name(this.backup_name);
+      result.setPartition_info(this.partition_info);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -99,12 +130,7 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
     return new PartitionInfoResp(this);
   }
 
-  @Deprecated
-  public PartitionInfoResp clone() {
-    return new PartitionInfoResp(this);
-  }
-
-  public ResponseCommon  getResult() {
+  public ResponseCommon getResult() {
     return this.result;
   }
 
@@ -122,13 +148,13 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
     return this.result != null;
   }
 
-  public void setResultIsSet(boolean value) {
-    if (!value) {
+  public void setResultIsSet(boolean __value) {
+    if (!__value) {
       this.result = null;
     }
   }
 
-  public byte[]  getBackup_name() {
+  public byte[] getBackup_name() {
     return this.backup_name;
   }
 
@@ -146,13 +172,13 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
     return this.backup_name != null;
   }
 
-  public void setBackup_nameIsSet(boolean value) {
-    if (!value) {
+  public void setBackup_nameIsSet(boolean __value) {
+    if (!__value) {
       this.backup_name = null;
     }
   }
 
-  public com.vesoft.nebula.PartitionBackupInfo  getPartition_info() {
+  public com.vesoft.nebula.PartitionBackupInfo getPartition_info() {
     return this.partition_info;
   }
 
@@ -170,35 +196,35 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
     return this.partition_info != null;
   }
 
-  public void setPartition_infoIsSet(boolean value) {
-    if (!value) {
+  public void setPartition_infoIsSet(boolean __value) {
+    if (!__value) {
       this.partition_info = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
-      if (value == null) {
+      if (__value == null) {
         unsetResult();
       } else {
-        setResult((ResponseCommon)value);
+        setResult((ResponseCommon)__value);
       }
       break;
 
     case BACKUP_NAME:
-      if (value == null) {
+      if (__value == null) {
         unsetBackup_name();
       } else {
-        setBackup_name((byte[])value);
+        setBackup_name((byte[])__value);
       }
       break;
 
     case PARTITION_INFO:
-      if (value == null) {
+      if (__value == null) {
         unsetPartition_info();
       } else {
-        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)value);
+        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)__value);
       }
       break;
 
@@ -223,85 +249,28 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case RESULT:
-      return isSetResult();
-    case BACKUP_NAME:
-      return isSetBackup_name();
-    case PARTITION_INFO:
-      return isSetPartition_info();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof PartitionInfoResp)
-      return this.equals((PartitionInfoResp)that);
-    return false;
-  }
-
-  public boolean equals(PartitionInfoResp that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof PartitionInfoResp))
+      return false;
+    PartitionInfoResp that = (PartitionInfoResp)_that;
 
-    boolean this_present_result = true && this.isSetResult();
-    boolean that_present_result = true && that.isSetResult();
-    if (this_present_result || that_present_result) {
-      if (!(this_present_result && that_present_result))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.result, that.result))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    boolean this_present_backup_name = true && this.isSetBackup_name();
-    boolean that_present_backup_name = true && that.isSetBackup_name();
-    if (this_present_backup_name || that_present_backup_name) {
-      if (!(this_present_backup_name && that_present_backup_name))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.backup_name, that.backup_name))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetBackup_name(), that.isSetBackup_name(), this.backup_name, that.backup_name)) { return false; }
 
-    boolean this_present_partition_info = true && this.isSetPartition_info();
-    boolean that_present_partition_info = true && that.isSetPartition_info();
-    if (this_present_partition_info || that_present_partition_info) {
-      if (!(this_present_partition_info && that_present_partition_info))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.partition_info, that.partition_info))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPartition_info(), that.isSetPartition_info(), this.partition_info, that.partition_info)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_result = true && (isSetResult());
-    builder.append(present_result);
-    if (present_result)
-      builder.append(result);
-
-    boolean present_backup_name = true && (isSetBackup_name());
-    builder.append(present_backup_name);
-    if (present_backup_name)
-      builder.append(backup_name);
-
-    boolean present_partition_info = true && (isSetPartition_info());
-    builder.append(present_partition_info);
-    if (present_partition_info)
-      builder.append(partition_info);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {result, backup_name, partition_info});
   }
 
   @Override
@@ -321,7 +290,7 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetBackup_name()).compareTo(other.isSetBackup_name());
@@ -329,7 +298,7 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(backup_name, other.backup_name);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPartition_info()).compareTo(other.isSetPartition_info());
@@ -337,48 +306,48 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(partition_info, other.partition_info);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case RESULT:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.result = new ResponseCommon();
             this.result.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case BACKUP_NAME:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.backup_name = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTITION_INFO:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.partition_info = new com.vesoft.nebula.PartitionBackupInfo();
             this.partition_info.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -415,19 +384,14 @@ public class PartitionInfoResp implements TBase, java.io.Serializable, Cloneable
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("PartitionInfoResp");
     sb.append(space);
     sb.append("(");
@@ -438,10 +402,10 @@ String space = prettyPrint ? " " : "";
     sb.append("result");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getResult() == null) {
+    if (this.getResult() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getResult(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -449,15 +413,15 @@ String space = prettyPrint ? " " : "";
     sb.append("backup_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getBackup_name() == null) {
+    if (this.getBackup_name() == null) {
       sb.append("null");
     } else {
-        int __backup_name_size = Math.min(this. getBackup_name().length, 128);
+        int __backup_name_size = Math.min(this.getBackup_name().length, 128);
         for (int i = 0; i < __backup_name_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getBackup_name()[i]).length() > 1 ? Integer.toHexString(this. getBackup_name()[i]).substring(Integer.toHexString(this. getBackup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getBackup_name()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getBackup_name()[i]).length() > 1 ? Integer.toHexString(this.getBackup_name()[i]).substring(Integer.toHexString(this.getBackup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getBackup_name()[i]).toUpperCase());
         }
-        if (this. getBackup_name().length > 128) sb.append(" ...");
+        if (this.getBackup_name().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -465,10 +429,10 @@ String space = prettyPrint ? " " : "";
     sb.append("partition_info");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPartition_info() == null) {
+    if (this.getPartition_info() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPartition_info(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPartition_info(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -481,7 +445,6 @@ String space = prettyPrint ? " " : "";
     if (result == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
     }
-    // check that fields of type enum have valid values
   }
 
 }

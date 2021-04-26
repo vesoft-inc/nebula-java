@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.storage;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -36,11 +33,11 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
   public byte[] expr;
   public static final int ALIAS = 1;
   public static final int EXPR = 2;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ALIAS, new FieldMetaData("alias", TFieldRequirementType.DEFAULT, 
@@ -58,12 +55,40 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
   }
 
   public Expr(
-    byte[] alias,
-    byte[] expr)
-  {
+      byte[] alias,
+      byte[] expr) {
     this();
     this.alias = alias;
     this.expr = expr;
+  }
+
+  public static class Builder {
+    private byte[] alias;
+    private byte[] expr;
+
+    public Builder() {
+    }
+
+    public Builder setAlias(final byte[] alias) {
+      this.alias = alias;
+      return this;
+    }
+
+    public Builder setExpr(final byte[] expr) {
+      this.expr = expr;
+      return this;
+    }
+
+    public Expr build() {
+      Expr result = new Expr();
+      result.setAlias(this.alias);
+      result.setExpr(this.expr);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -82,12 +107,7 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
     return new Expr(this);
   }
 
-  @Deprecated
-  public Expr clone() {
-    return new Expr(this);
-  }
-
-  public byte[]  getAlias() {
+  public byte[] getAlias() {
     return this.alias;
   }
 
@@ -105,13 +125,13 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
     return this.alias != null;
   }
 
-  public void setAliasIsSet(boolean value) {
-    if (!value) {
+  public void setAliasIsSet(boolean __value) {
+    if (!__value) {
       this.alias = null;
     }
   }
 
-  public byte[]  getExpr() {
+  public byte[] getExpr() {
     return this.expr;
   }
 
@@ -129,27 +149,27 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
     return this.expr != null;
   }
 
-  public void setExprIsSet(boolean value) {
-    if (!value) {
+  public void setExprIsSet(boolean __value) {
+    if (!__value) {
       this.expr = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ALIAS:
-      if (value == null) {
+      if (__value == null) {
         unsetAlias();
       } else {
-        setAlias((byte[])value);
+        setAlias((byte[])__value);
       }
       break;
 
     case EXPR:
-      if (value == null) {
+      if (__value == null) {
         unsetExpr();
       } else {
-        setExpr((byte[])value);
+        setExpr((byte[])__value);
       }
       break;
 
@@ -171,69 +191,26 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ALIAS:
-      return isSetAlias();
-    case EXPR:
-      return isSetExpr();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof Expr)
-      return this.equals((Expr)that);
-    return false;
-  }
-
-  public boolean equals(Expr that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof Expr))
+      return false;
+    Expr that = (Expr)_that;
 
-    boolean this_present_alias = true && this.isSetAlias();
-    boolean that_present_alias = true && that.isSetAlias();
-    if (this_present_alias || that_present_alias) {
-      if (!(this_present_alias && that_present_alias))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.alias, that.alias))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetAlias(), that.isSetAlias(), this.alias, that.alias)) { return false; }
 
-    boolean this_present_expr = true && this.isSetExpr();
-    boolean that_present_expr = true && that.isSetExpr();
-    if (this_present_expr || that_present_expr) {
-      if (!(this_present_expr && that_present_expr))
-        return false;
-      if (!TBaseHelper.equalsSlow(this.expr, that.expr))
-        return false;
-    }
+    if (!TBaseHelper.equalsSlow(this.isSetExpr(), that.isSetExpr(), this.expr, that.expr)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_alias = true && (isSetAlias());
-    builder.append(present_alias);
-    if (present_alias)
-      builder.append(alias);
-
-    boolean present_expr = true && (isSetExpr());
-    builder.append(present_expr);
-    if (present_expr)
-      builder.append(expr);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {alias, expr});
   }
 
   @Override
@@ -253,7 +230,7 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(alias, other.alias);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetExpr()).compareTo(other.isSetExpr());
@@ -261,39 +238,39 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(expr, other.expr);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ALIAS:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.alias = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case EXPR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.expr = iprot.readBinary();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -325,19 +302,14 @@ public class Expr implements TBase, java.io.Serializable, Cloneable, Comparable<
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("Expr");
     sb.append(space);
     sb.append("(");
@@ -348,15 +320,15 @@ String space = prettyPrint ? " " : "";
     sb.append("alias");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getAlias() == null) {
+    if (this.getAlias() == null) {
       sb.append("null");
     } else {
-        int __alias_size = Math.min(this. getAlias().length, 128);
+        int __alias_size = Math.min(this.getAlias().length, 128);
         for (int i = 0; i < __alias_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getAlias()[i]).length() > 1 ? Integer.toHexString(this. getAlias()[i]).substring(Integer.toHexString(this. getAlias()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getAlias()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getAlias()[i]).length() > 1 ? Integer.toHexString(this.getAlias()[i]).substring(Integer.toHexString(this.getAlias()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getAlias()[i]).toUpperCase());
         }
-        if (this. getAlias().length > 128) sb.append(" ...");
+        if (this.getAlias().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -364,15 +336,15 @@ String space = prettyPrint ? " " : "";
     sb.append("expr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getExpr() == null) {
+    if (this.getExpr() == null) {
       sb.append("null");
     } else {
-        int __expr_size = Math.min(this. getExpr().length, 128);
+        int __expr_size = Math.min(this.getExpr().length, 128);
         for (int i = 0; i < __expr_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this. getExpr()[i]).length() > 1 ? Integer.toHexString(this. getExpr()[i]).substring(Integer.toHexString(this. getExpr()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this. getExpr()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getExpr()[i]).length() > 1 ? Integer.toHexString(this.getExpr()[i]).substring(Integer.toHexString(this.getExpr()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getExpr()[i]).toUpperCase());
         }
-        if (this. getExpr().length > 128) sb.append(" ...");
+        if (this.getExpr().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -382,7 +354,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

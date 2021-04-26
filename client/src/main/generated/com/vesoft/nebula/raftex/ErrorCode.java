@@ -7,57 +7,58 @@
 package com.vesoft.nebula.raftex;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class ErrorCode {
-  public static final int SUCCEEDED = 0;
-  public static final int E_LOG_GAP = -1;
-  public static final int E_LOG_STALE = -2;
-  public static final int E_MISSING_COMMIT = -3;
-  public static final int E_WAITING_SNAPSHOT = -4;
-  public static final int E_UNKNOWN_PART = -5;
-  public static final int E_TERM_OUT_OF_DATE = -6;
-  public static final int E_LAST_LOG_TERM_TOO_OLD = -7;
-  public static final int E_BAD_STATE = -8;
-  public static final int E_WRONG_LEADER = -9;
-  public static final int E_WAL_FAIL = -10;
-  public static final int E_NOT_READY = -11;
-  public static final int E_HOST_STOPPED = -12;
-  public static final int E_NOT_A_LEADER = -13;
-  public static final int E_HOST_DISCONNECTED = -14;
-  public static final int E_TOO_MANY_REQUESTS = -15;
-  public static final int E_PERSIST_SNAPSHOT_FAILED = -16;
-  public static final int E_BAD_ROLE = -17;
-  public static final int E_EXCEPTION = -20;
+public enum ErrorCode implements com.facebook.thrift.TEnum {
+  SUCCEEDED(0),
+  E_LOG_GAP(-1),
+  E_LOG_STALE(-2),
+  E_MISSING_COMMIT(-3),
+  E_WAITING_SNAPSHOT(-4),
+  E_UNKNOWN_PART(-5),
+  E_TERM_OUT_OF_DATE(-6),
+  E_LAST_LOG_TERM_TOO_OLD(-7),
+  E_BAD_STATE(-8),
+  E_WRONG_LEADER(-9),
+  E_WAL_FAIL(-10),
+  E_NOT_READY(-11),
+  E_HOST_STOPPED(-12),
+  E_NOT_A_LEADER(-13),
+  E_HOST_DISCONNECTED(-14),
+  E_TOO_MANY_REQUESTS(-15),
+  E_PERSIST_SNAPSHOT_FAILED(-16),
+  E_BAD_ROLE(-17),
+  E_EXCEPTION(-20);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private static final Map<Integer, ErrorCode> INDEXED_VALUES = new HashMap<Integer, ErrorCode>();
 
   static {
-    try {
-      Class<?> klass = ErrorCode.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+    for (ErrorCode e: values()) {
+      INDEXED_VALUES.put(e.getValue(), e);
     }
+  }
 
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
+  private final int value;
 
-    VALID_VALUES = new IntRangeSet(values);
+  private ErrorCode(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static ErrorCode findByValue(int value) { 
+    return INDEXED_VALUES.get(value);
   }
 }

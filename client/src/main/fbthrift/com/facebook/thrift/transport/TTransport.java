@@ -1,28 +1,24 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift.transport;
 
 /**
- * Generic class that encapsulates the I/O layer. This is basically a thin
- * wrapper around the combined functionality of Java input/output streams.
- *
+ * Generic class that encapsulates the I/O layer. This is basically a thin wrapper around the
+ * combined functionality of Java input/output streams.
  */
 public abstract class TTransport {
 
@@ -47,12 +43,9 @@ public abstract class TTransport {
    *
    * @throws TTransportException if the transport could not be opened
    */
-  public abstract void open()
-    throws TTransportException;
+  public abstract void open() throws TTransportException;
 
-  /**
-   * Closes the transport.
-   */
+  /** Closes the transport. */
   public abstract void close();
 
   /**
@@ -64,8 +57,7 @@ public abstract class TTransport {
    * @return The number of bytes actually read
    * @throws TTransportException if there was an error reading data
    */
-  public abstract int read(byte[] buf, int off, int len)
-    throws TTransportException;
+  public abstract int read(byte[] buf, int off, int len) throws TTransportException;
 
   /**
    * Guarantees that all of len bytes are actually read off the transport.
@@ -76,14 +68,18 @@ public abstract class TTransport {
    * @return The number of bytes actually read, which must be equal to len
    * @throws TTransportException if there was an error reading data
    */
-  public int readAll(byte[] buf, int off, int len)
-    throws TTransportException {
+  public int readAll(byte[] buf, int off, int len) throws TTransportException {
     int got = 0;
     int ret = 0;
     while (got < len) {
-      ret = read(buf, off+got, len-got);
+      ret = read(buf, off + got, len - got);
       if (ret <= 0) {
-        throw new TTransportException("Cannot read. Remote side has closed. Tried to read " + len + " bytes, but only got " + got + " bytes.");
+        throw new TTransportException(
+            "Cannot read. Remote side has closed. Tried to read "
+                + len
+                + " bytes, but only got "
+                + got
+                + " bytes.");
       }
       got += ret;
     }
@@ -108,16 +104,14 @@ public abstract class TTransport {
    * @param len The number of bytes to write
    * @throws TTransportException if there was an error writing data
    */
-  public abstract void write(byte[] buf, int off, int len)
-    throws TTransportException;
+  public abstract void write(byte[] buf, int off, int len) throws TTransportException;
 
   /**
    * Flush any pending data out of a transport buffer.
    *
    * @throws TTransportException if there was an error writing out data.
    */
-  public void flush()
-    throws TTransportException {}
+  public void flush() throws TTransportException {}
 
   /**
    * Flush any pending data out of a transport buffer for a oneway call.
@@ -129,35 +123,29 @@ public abstract class TTransport {
   }
 
   /**
-   * Access the protocol's underlying buffer directly. If this is not a
-   * buffered transport, return null.
-   * @return
+   * Access the protocol's underlying buffer directly. If this is not a buffered transport, return
+   * null.
    */
   public byte[] getBuffer() {
     return null;
   }
 
   /**
-   * Return the index within the underlying buffer that specifies the next spot
-   * that should be read from.
-   * @return
+   * Return the index within the underlying buffer that specifies the next spot that should be read
+   * from.
    */
   public int getBufferPosition() {
     return 0;
   }
 
   /**
-   * Get the number of bytes remaining in the underlying buffer. Returns -1 if
-   * this is a non-buffered transport.
-   * @return
+   * Get the number of bytes remaining in the underlying buffer. Returns -1 if this is a
+   * non-buffered transport.
    */
   public int getBytesRemainingInBuffer() {
     return -1;
   }
 
-  /**
-   * Consume len bytes from the underlying buffer.
-   * @param len
-   */
+  /** Consume len bytes from the underlying buffer. */
   public void consumeBuffer(int len) {}
 }

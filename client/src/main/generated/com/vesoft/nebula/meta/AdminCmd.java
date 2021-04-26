@@ -7,47 +7,61 @@
 package com.vesoft.nebula.meta;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class AdminCmd {
-  public static final int COMPACT = 0;
-  public static final int FLUSH = 1;
-  public static final int REBUILD_TAG_INDEX = 2;
-  public static final int REBUILD_EDGE_INDEX = 3;
-  public static final int STATS = 4;
-  public static final int DATA_BALANCE = 5;
-  public static final int DOWELOAD = 6;
-  public static final int INGEST = 7;
-  public static final int UNKNOWN = 99;
+public enum AdminCmd implements com.facebook.thrift.TEnum {
+  COMPACT(0),
+  FLUSH(1),
+  REBUILD_TAG_INDEX(2),
+  REBUILD_EDGE_INDEX(3),
+  STATS(4),
+  DATA_BALANCE(5),
+  DOWELOAD(6),
+  INGEST(7),
+  UNKNOWN(99);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = AdminCmd.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private AdminCmd(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static AdminCmd findByValue(int value) { 
+    switch (value) {
+      case 0:
+        return COMPACT;
+      case 1:
+        return FLUSH;
+      case 2:
+        return REBUILD_TAG_INDEX;
+      case 3:
+        return REBUILD_EDGE_INDEX;
+      case 4:
+        return STATS;
+      case 5:
+        return DATA_BALANCE;
+      case 6:
+        return DOWELOAD;
+      case 7:
+        return INGEST;
+      case 99:
+        return UNKNOWN;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

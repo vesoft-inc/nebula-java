@@ -7,44 +7,52 @@
 package com.vesoft.nebula.meta;
 
 
-import java.lang.reflect.*;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import com.facebook.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public class JobStatus {
-  public static final int QUEUE = 1;
-  public static final int RUNNING = 2;
-  public static final int FINISHED = 3;
-  public static final int FAILED = 4;
-  public static final int STOPPED = 5;
-  public static final int INVALID = 255;
+public enum JobStatus implements com.facebook.thrift.TEnum {
+  QUEUE(1),
+  RUNNING(2),
+  FINISHED(3),
+  FAILED(4),
+  STOPPED(5),
+  INVALID(255);
 
-  public static final IntRangeSet VALID_VALUES;
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>();
+  private final int value;
 
-  static {
-    try {
-      Class<?> klass = JobStatus.class;
-      for (Field f : klass.getDeclaredFields()) {
-        if (f.getType() == Integer.TYPE) {
-          VALUES_TO_NAMES.put(f.getInt(null), f.getName());
-        }
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
+  private JobStatus(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static JobStatus findByValue(int value) { 
+    switch (value) {
+      case 1:
+        return QUEUE;
+      case 2:
+        return RUNNING;
+      case 3:
+        return FINISHED;
+      case 4:
+        return FAILED;
+      case 5:
+        return STOPPED;
+      case 255:
+        return INVALID;
+      default:
+        return null;
     }
-
-    int[] values = new int[VALUES_TO_NAMES.size()];
-    int i = 0;
-    for (Integer v : VALUES_TO_NAMES.keySet()) {
-      values[i++] = v;
-    }
-
-    VALID_VALUES = new IntRangeSet(values);
   }
 }

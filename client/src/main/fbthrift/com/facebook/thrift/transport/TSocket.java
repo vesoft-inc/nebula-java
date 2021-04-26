@@ -1,24 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.facebook.thrift.transport;
 
+import com.facebook.thrift.utils.Logger;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -26,40 +24,24 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Socket implementation of the TTransport interface. To be commented soon!
- *
- */
+/** Socket implementation of the TTransport interface. To be commented soon! */
 public class TSocket extends TIOStreamTransport implements TSocketIf {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TSocket.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(TSocket.class.getName());
 
-  /**
-   * Wrapped Socket object
-   */
+  /** Wrapped Socket object */
   private Socket socket_ = null;
 
-  /**
-   * Remote host
-   */
-  private String host_  = null;
+  /** Remote host */
+  private String host_ = null;
 
-  /**
-   * Remote port
-   */
+  /** Remote port */
   private int port_ = 0;
 
-  /**
-   * Socket timeout
-   */
+  /** Socket timeout */
   private int timeout_ = 0;
 
-  /**
-   * Socket connection timeout
-   */
+  /** Socket connection timeout */
   private int connectionTimeout_ = 0;
 
   /**
@@ -89,8 +71,7 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
   }
 
   /**
-   * Creates a new unconnected socket that will connect to the given host
-   * on the given port.
+   * Creates a new unconnected socket that will connect to the given host on the given port.
    *
    * @param host Remote host
    * @param port Remote port
@@ -100,11 +81,10 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
   }
 
   /**
-   * Creates a new unconnected socket that will connect to the given host
-   * on the given port.
+   * Creates a new unconnected socket that will connect to the given host on the given port.
    *
-   * @param host    Remote host
-   * @param port    Remote port
+   * @param host Remote host
+   * @param port Remote port
    * @param timeout Socket timeout
    */
   public TSocket(String host, int port, int timeout) {
@@ -112,12 +92,11 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
   }
 
   /**
-   * Creates a new unconnected socket that will connect to the given host
-   * on the given port.
+   * Creates a new unconnected socket that will connect to the given host on the given port.
    *
-   * @param host              Remote host
-   * @param port              Remote port
-   * @param timeout           Socket timeout
+   * @param host Remote host
+   * @param port Remote port
+   * @param timeout Socket timeout
    * @param connectionTimeout Socket connection timeout
    */
   public TSocket(String host, int port, int timeout, int connectionTimeout) {
@@ -128,9 +107,7 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
     initSocket();
   }
 
-  /**
-   * Initializes the socket object
-   */
+  /** Initializes the socket object */
   private void initSocket() {
     socket_ = new Socket();
     try {
@@ -156,9 +133,7 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
     }
   }
 
-  /**
-   * Returns a reference to the underlying socket.
-   */
+  /** Returns a reference to the underlying socket. */
   public Socket getSocket() {
     if (socket_ == null) {
       initSocket();
@@ -166,9 +141,7 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
     return socket_;
   }
 
-  /**
-   * Checks whether the socket is connected.
-   */
+  /** Checks whether the socket is connected. */
   public boolean isOpen() {
     if (socket_ == null) {
       return false;
@@ -176,9 +149,7 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
     return socket_.isConnected();
   }
 
-  /**
-   * Connects the socket, creating a new socket object if necessary.
-   */
+  /** Connects the socket, creating a new socket object if necessary. */
   public void open() throws TTransportException {
     if (isOpen()) {
       throw new TTransportException(TTransportException.ALREADY_OPEN, "Socket already connected.");
@@ -205,9 +176,7 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
     }
   }
 
-  /**
-   * Closes the socket.
-   */
+  /** Closes the socket. */
   public void close() {
     // Close the underlying streams
     super.close();
@@ -222,5 +191,4 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
       socket_ = null;
     }
   }
-
 }

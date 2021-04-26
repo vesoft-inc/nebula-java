@@ -262,7 +262,7 @@ public class TestData {
             resp.data = getDateset();
             ResultSet resultSet = new ResultSet(resp);
             assert resultSet.isSucceeded();
-            assert resultSet.getErrorCode() == ErrorCode.SUCCEEDED;
+            assert resultSet.getErrorCode() == ErrorCode.SUCCEEDED.getValue();
             assert resultSet.isEmpty() == false;
             assert Objects.equals(resultSet.getComment(), "test_comment");
             assert Objects.equals(resultSet.getSpaceName(), "test_space");

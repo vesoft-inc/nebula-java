@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -33,11 +30,11 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
 
   public List<ConfigItem> items;
   public static final int ITEMS = 1;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ITEMS, new FieldMetaData("items", TFieldRequirementType.DEFAULT, 
@@ -54,10 +51,31 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
   }
 
   public RegConfigReq(
-    List<ConfigItem> items)
-  {
+      List<ConfigItem> items) {
     this();
     this.items = items;
+  }
+
+  public static class Builder {
+    private List<ConfigItem> items;
+
+    public Builder() {
+    }
+
+    public Builder setItems(final List<ConfigItem> items) {
+      this.items = items;
+      return this;
+    }
+
+    public RegConfigReq build() {
+      RegConfigReq result = new RegConfigReq();
+      result.setItems(this.items);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -73,12 +91,7 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
     return new RegConfigReq(this);
   }
 
-  @Deprecated
-  public RegConfigReq clone() {
-    return new RegConfigReq(this);
-  }
-
-  public List<ConfigItem>  getItems() {
+  public List<ConfigItem> getItems() {
     return this.items;
   }
 
@@ -96,20 +109,20 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
     return this.items != null;
   }
 
-  public void setItemsIsSet(boolean value) {
-    if (!value) {
+  public void setItemsIsSet(boolean __value) {
+    if (!__value) {
       this.items = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ITEMS:
-      if (value == null) {
+      if (__value == null) {
         unsetItems();
       } else {
-        setItems((List<ConfigItem>)value);
+        setItems((List<ConfigItem>)__value);
       }
       break;
 
@@ -128,88 +141,59 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case ITEMS:
-      return isSetItems();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof RegConfigReq)
-      return this.equals((RegConfigReq)that);
-    return false;
-  }
-
-  public boolean equals(RegConfigReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof RegConfigReq))
+      return false;
+    RegConfigReq that = (RegConfigReq)_that;
 
-    boolean this_present_items = true && this.isSetItems();
-    boolean that_present_items = true && that.isSetItems();
-    if (this_present_items || that_present_items) {
-      if (!(this_present_items && that_present_items))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.items, that.items))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetItems(), that.isSetItems(), this.items, that.items)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_items = true && (isSetItems());
-    builder.append(present_items);
-    if (present_items)
-      builder.append(items);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {items});
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case ITEMS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list168 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list168.size));
-              for (int _i169 = 0; 
-                   (_list168.size < 0) ? iprot.peekList() : (_i169 < _list168.size); 
-                   ++_i169)
+              TList _list177 = iprot.readListBegin();
+              this.items = new ArrayList<ConfigItem>(Math.max(0, _list177.size));
+              for (int _i178 = 0; 
+                   (_list177.size < 0) ? iprot.peekList() : (_i178 < _list177.size); 
+                   ++_i178)
               {
-                ConfigItem _elem170;
-                _elem170 = new ConfigItem();
-                _elem170.read(iprot);
-                this.items.add(_elem170);
+                ConfigItem _elem179;
+                _elem179 = new ConfigItem();
+                _elem179.read(iprot);
+                this.items.add(_elem179);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -229,8 +213,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter171 : this.items)        {
-          _iter171.write(oprot);
+        for (ConfigItem _iter180 : this.items)        {
+          _iter180.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -242,19 +226,14 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("RegConfigReq");
     sb.append(space);
     sb.append("(");
@@ -265,10 +244,10 @@ String space = prettyPrint ? " " : "";
     sb.append("items");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getItems() == null) {
+    if (this.getItems() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getItems(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getItems(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -278,7 +257,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

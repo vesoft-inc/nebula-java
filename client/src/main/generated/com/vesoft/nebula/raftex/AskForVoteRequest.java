@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.raftex;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -51,7 +48,6 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   public static final int TERM = 5;
   public static final int LAST_LOG_ID = 6;
   public static final int LAST_LOG_TERM = 7;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
   private static final int __SPACE_ISSET_ID = 0;
@@ -63,6 +59,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   private BitSet __isset_bit_vector = new BitSet(6);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
@@ -90,14 +87,13 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   }
 
   public AskForVoteRequest(
-    int space,
-    int part,
-    String candidate_addr,
-    int candidate_port,
-    long term,
-    long last_log_id,
-    long last_log_term)
-  {
+      int space,
+      int part,
+      String candidate_addr,
+      int candidate_port,
+      long term,
+      long last_log_id,
+      long last_log_term) {
     this();
     this.space = space;
     setSpaceIsSet(true);
@@ -112,6 +108,90 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     setLast_log_idIsSet(true);
     this.last_log_term = last_log_term;
     setLast_log_termIsSet(true);
+  }
+
+  public static class Builder {
+    private int space;
+    private int part;
+    private String candidate_addr;
+    private int candidate_port;
+    private long term;
+    private long last_log_id;
+    private long last_log_term;
+
+    BitSet __optional_isset = new BitSet(6);
+
+    public Builder() {
+    }
+
+    public Builder setSpace(final int space) {
+      this.space = space;
+      __optional_isset.set(__SPACE_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setPart(final int part) {
+      this.part = part;
+      __optional_isset.set(__PART_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setCandidate_addr(final String candidate_addr) {
+      this.candidate_addr = candidate_addr;
+      return this;
+    }
+
+    public Builder setCandidate_port(final int candidate_port) {
+      this.candidate_port = candidate_port;
+      __optional_isset.set(__CANDIDATE_PORT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTerm(final long term) {
+      this.term = term;
+      __optional_isset.set(__TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLast_log_id(final long last_log_id) {
+      this.last_log_id = last_log_id;
+      __optional_isset.set(__LAST_LOG_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setLast_log_term(final long last_log_term) {
+      this.last_log_term = last_log_term;
+      __optional_isset.set(__LAST_LOG_TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public AskForVoteRequest build() {
+      AskForVoteRequest result = new AskForVoteRequest();
+      if (__optional_isset.get(__SPACE_ISSET_ID)) {
+        result.setSpace(this.space);
+      }
+      if (__optional_isset.get(__PART_ISSET_ID)) {
+        result.setPart(this.part);
+      }
+      result.setCandidate_addr(this.candidate_addr);
+      if (__optional_isset.get(__CANDIDATE_PORT_ISSET_ID)) {
+        result.setCandidate_port(this.candidate_port);
+      }
+      if (__optional_isset.get(__TERM_ISSET_ID)) {
+        result.setTerm(this.term);
+      }
+      if (__optional_isset.get(__LAST_LOG_ID_ISSET_ID)) {
+        result.setLast_log_id(this.last_log_id);
+      }
+      if (__optional_isset.get(__LAST_LOG_TERM_ISSET_ID)) {
+        result.setLast_log_term(this.last_log_term);
+      }
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -135,12 +215,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return new AskForVoteRequest(this);
   }
 
-  @Deprecated
-  public AskForVoteRequest clone() {
-    return new AskForVoteRequest(this);
-  }
-
-  public int  getSpace() {
+  public int getSpace() {
     return this.space;
   }
 
@@ -159,11 +234,11 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__SPACE_ISSET_ID);
   }
 
-  public void setSpaceIsSet(boolean value) {
-    __isset_bit_vector.set(__SPACE_ISSET_ID, value);
+  public void setSpaceIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ISSET_ID, __value);
   }
 
-  public int  getPart() {
+  public int getPart() {
     return this.part;
   }
 
@@ -182,11 +257,11 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__PART_ISSET_ID);
   }
 
-  public void setPartIsSet(boolean value) {
-    __isset_bit_vector.set(__PART_ISSET_ID, value);
+  public void setPartIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ISSET_ID, __value);
   }
 
-  public String  getCandidate_addr() {
+  public String getCandidate_addr() {
     return this.candidate_addr;
   }
 
@@ -204,13 +279,13 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return this.candidate_addr != null;
   }
 
-  public void setCandidate_addrIsSet(boolean value) {
-    if (!value) {
+  public void setCandidate_addrIsSet(boolean __value) {
+    if (!__value) {
       this.candidate_addr = null;
     }
   }
 
-  public int  getCandidate_port() {
+  public int getCandidate_port() {
     return this.candidate_port;
   }
 
@@ -229,11 +304,11 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__CANDIDATE_PORT_ISSET_ID);
   }
 
-  public void setCandidate_portIsSet(boolean value) {
-    __isset_bit_vector.set(__CANDIDATE_PORT_ISSET_ID, value);
+  public void setCandidate_portIsSet(boolean __value) {
+    __isset_bit_vector.set(__CANDIDATE_PORT_ISSET_ID, __value);
   }
 
-  public long  getTerm() {
+  public long getTerm() {
     return this.term;
   }
 
@@ -252,11 +327,11 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__TERM_ISSET_ID);
   }
 
-  public void setTermIsSet(boolean value) {
-    __isset_bit_vector.set(__TERM_ISSET_ID, value);
+  public void setTermIsSet(boolean __value) {
+    __isset_bit_vector.set(__TERM_ISSET_ID, __value);
   }
 
-  public long  getLast_log_id() {
+  public long getLast_log_id() {
     return this.last_log_id;
   }
 
@@ -275,11 +350,11 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__LAST_LOG_ID_ISSET_ID);
   }
 
-  public void setLast_log_idIsSet(boolean value) {
-    __isset_bit_vector.set(__LAST_LOG_ID_ISSET_ID, value);
+  public void setLast_log_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_LOG_ID_ISSET_ID, __value);
   }
 
-  public long  getLast_log_term() {
+  public long getLast_log_term() {
     return this.last_log_term;
   }
 
@@ -298,65 +373,65 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     return __isset_bit_vector.get(__LAST_LOG_TERM_ISSET_ID);
   }
 
-  public void setLast_log_termIsSet(boolean value) {
-    __isset_bit_vector.set(__LAST_LOG_TERM_ISSET_ID, value);
+  public void setLast_log_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_LOG_TERM_ISSET_ID, __value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace();
       } else {
-        setSpace((Integer)value);
+        setSpace((Integer)__value);
       }
       break;
 
     case PART:
-      if (value == null) {
+      if (__value == null) {
         unsetPart();
       } else {
-        setPart((Integer)value);
+        setPart((Integer)__value);
       }
       break;
 
     case CANDIDATE_ADDR:
-      if (value == null) {
+      if (__value == null) {
         unsetCandidate_addr();
       } else {
-        setCandidate_addr((String)value);
+        setCandidate_addr((String)__value);
       }
       break;
 
     case CANDIDATE_PORT:
-      if (value == null) {
+      if (__value == null) {
         unsetCandidate_port();
       } else {
-        setCandidate_port((Integer)value);
+        setCandidate_port((Integer)__value);
       }
       break;
 
     case TERM:
-      if (value == null) {
+      if (__value == null) {
         unsetTerm();
       } else {
-        setTerm((Long)value);
+        setTerm((Long)__value);
       }
       break;
 
     case LAST_LOG_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetLast_log_id();
       } else {
-        setLast_log_id((Long)value);
+        setLast_log_id((Long)__value);
       }
       break;
 
     case LAST_LOG_TERM:
-      if (value == null) {
+      if (__value == null) {
         unsetLast_log_term();
       } else {
-        setLast_log_term((Long)value);
+        setLast_log_term((Long)__value);
       }
       break;
 
@@ -393,149 +468,36 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE:
-      return isSetSpace();
-    case PART:
-      return isSetPart();
-    case CANDIDATE_ADDR:
-      return isSetCandidate_addr();
-    case CANDIDATE_PORT:
-      return isSetCandidate_port();
-    case TERM:
-      return isSetTerm();
-    case LAST_LOG_ID:
-      return isSetLast_log_id();
-    case LAST_LOG_TERM:
-      return isSetLast_log_term();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof AskForVoteRequest)
-      return this.equals((AskForVoteRequest)that);
-    return false;
-  }
-
-  public boolean equals(AskForVoteRequest that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof AskForVoteRequest))
+      return false;
+    AskForVoteRequest that = (AskForVoteRequest)_that;
 
-    boolean this_present_space = true;
-    boolean that_present_space = true;
-    if (this_present_space || that_present_space) {
-      if (!(this_present_space && that_present_space))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space, that.space))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.space, that.space)) { return false; }
 
-    boolean this_present_part = true;
-    boolean that_present_part = true;
-    if (this_present_part || that_present_part) {
-      if (!(this_present_part && that_present_part))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.part, that.part))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.part, that.part)) { return false; }
 
-    boolean this_present_candidate_addr = true && this.isSetCandidate_addr();
-    boolean that_present_candidate_addr = true && that.isSetCandidate_addr();
-    if (this_present_candidate_addr || that_present_candidate_addr) {
-      if (!(this_present_candidate_addr && that_present_candidate_addr))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.candidate_addr, that.candidate_addr))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetCandidate_addr(), that.isSetCandidate_addr(), this.candidate_addr, that.candidate_addr)) { return false; }
 
-    boolean this_present_candidate_port = true;
-    boolean that_present_candidate_port = true;
-    if (this_present_candidate_port || that_present_candidate_port) {
-      if (!(this_present_candidate_port && that_present_candidate_port))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.candidate_port, that.candidate_port))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.candidate_port, that.candidate_port)) { return false; }
 
-    boolean this_present_term = true;
-    boolean that_present_term = true;
-    if (this_present_term || that_present_term) {
-      if (!(this_present_term && that_present_term))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.term, that.term))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.term, that.term)) { return false; }
 
-    boolean this_present_last_log_id = true;
-    boolean that_present_last_log_id = true;
-    if (this_present_last_log_id || that_present_last_log_id) {
-      if (!(this_present_last_log_id && that_present_last_log_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.last_log_id, that.last_log_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.last_log_id, that.last_log_id)) { return false; }
 
-    boolean this_present_last_log_term = true;
-    boolean that_present_last_log_term = true;
-    if (this_present_last_log_term || that_present_last_log_term) {
-      if (!(this_present_last_log_term && that_present_last_log_term))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.last_log_term, that.last_log_term))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.last_log_term, that.last_log_term)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space = true;
-    builder.append(present_space);
-    if (present_space)
-      builder.append(space);
-
-    boolean present_part = true;
-    builder.append(present_part);
-    if (present_part)
-      builder.append(part);
-
-    boolean present_candidate_addr = true && (isSetCandidate_addr());
-    builder.append(present_candidate_addr);
-    if (present_candidate_addr)
-      builder.append(candidate_addr);
-
-    boolean present_candidate_port = true;
-    builder.append(present_candidate_port);
-    if (present_candidate_port)
-      builder.append(candidate_port);
-
-    boolean present_term = true;
-    builder.append(present_term);
-    if (present_term)
-      builder.append(term);
-
-    boolean present_last_log_id = true;
-    builder.append(present_last_log_id);
-    if (present_last_log_id)
-      builder.append(last_log_id);
-
-    boolean present_last_log_term = true;
-    builder.append(present_last_log_term);
-    if (present_last_log_term)
-      builder.append(last_log_term);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space, part, candidate_addr, candidate_port, term, last_log_id, last_log_term});
   }
 
   @Override
@@ -555,7 +517,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space, other.space);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPart()).compareTo(other.isSetPart());
@@ -563,7 +525,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part, other.part);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCandidate_addr()).compareTo(other.isSetCandidate_addr());
@@ -571,7 +533,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(candidate_addr, other.candidate_addr);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCandidate_port()).compareTo(other.isSetCandidate_port());
@@ -579,7 +541,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(candidate_port, other.candidate_port);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTerm()).compareTo(other.isSetTerm());
@@ -587,7 +549,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(term, other.term);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLast_log_id()).compareTo(other.isSetLast_log_id());
@@ -595,7 +557,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_log_id, other.last_log_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetLast_log_term()).compareTo(other.isSetLast_log_term());
@@ -603,80 +565,80 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_log_term, other.last_log_term);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.space = iprot.readI32();
             setSpaceIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PART:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.part = iprot.readI32();
             setPartIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CANDIDATE_ADDR:
-          if (field.type == TType.STRING) {
+          if (__field.type == TType.STRING) {
             this.candidate_addr = iprot.readString();
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CANDIDATE_PORT:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.candidate_port = iprot.readI32();
             setCandidate_portIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TERM:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.term = iprot.readI64();
             setTermIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LAST_LOG_ID:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.last_log_id = iprot.readI64();
             setLast_log_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case LAST_LOG_TERM:
-          if (field.type == TType.I64) {
+          if (__field.type == TType.I64) {
             this.last_log_term = iprot.readI64();
             setLast_log_termIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -721,19 +683,14 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("AskForVoteRequest");
     sb.append(space);
     sb.append("(");
@@ -744,24 +701,24 @@ String space = prettyPrint ? " " : "";
     sb.append("space");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getSpace(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("part");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getPart(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getPart(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("candidate_addr");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getCandidate_addr() == null) {
+    if (this.getCandidate_addr() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getCandidate_addr(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getCandidate_addr(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -769,28 +726,28 @@ String space = prettyPrint ? " " : "";
     sb.append("candidate_port");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getCandidate_port(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCandidate_port(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTerm(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTerm(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("last_log_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLast_log_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_log_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("last_log_term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getLast_log_term(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_log_term(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -799,7 +756,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

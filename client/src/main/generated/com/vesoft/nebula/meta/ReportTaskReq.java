@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -38,7 +35,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see ErrorCode
    */
-  public int code;
+  public ErrorCode code;
   public int job_id;
   public int task_id;
   public StatisItem statis;
@@ -46,15 +43,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   public static final int JOB_ID = 2;
   public static final int TASK_ID = 3;
   public static final int STATIS = 4;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
-  private static final int __CODE_ISSET_ID = 0;
-  private static final int __JOB_ID_ISSET_ID = 1;
-  private static final int __TASK_ID_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __JOB_ID_ISSET_ID = 0;
+  private static final int __TASK_ID_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
@@ -76,13 +72,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ReportTaskReq(
-    int code,
-    int job_id,
-    int task_id)
-  {
+      ErrorCode code,
+      int job_id,
+      int task_id) {
     this();
     this.code = code;
-    setCodeIsSet(true);
     this.job_id = job_id;
     setJob_idIsSet(true);
     this.task_id = task_id;
@@ -90,19 +84,68 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ReportTaskReq(
-    int code,
-    int job_id,
-    int task_id,
-    StatisItem statis)
-  {
+      ErrorCode code,
+      int job_id,
+      int task_id,
+      StatisItem statis) {
     this();
     this.code = code;
-    setCodeIsSet(true);
     this.job_id = job_id;
     setJob_idIsSet(true);
     this.task_id = task_id;
     setTask_idIsSet(true);
     this.statis = statis;
+  }
+
+  public static class Builder {
+    private ErrorCode code;
+    private int job_id;
+    private int task_id;
+    private StatisItem statis;
+
+    BitSet __optional_isset = new BitSet(2);
+
+    public Builder() {
+    }
+
+    public Builder setCode(final ErrorCode code) {
+      this.code = code;
+      return this;
+    }
+
+    public Builder setJob_id(final int job_id) {
+      this.job_id = job_id;
+      __optional_isset.set(__JOB_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTask_id(final int task_id) {
+      this.task_id = task_id;
+      __optional_isset.set(__TASK_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setStatis(final StatisItem statis) {
+      this.statis = statis;
+      return this;
+    }
+
+    public ReportTaskReq build() {
+      ReportTaskReq result = new ReportTaskReq();
+      result.setCode(this.code);
+      if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
+        result.setJob_id(this.job_id);
+      }
+      if (__optional_isset.get(__TASK_ID_ISSET_ID)) {
+        result.setTask_id(this.task_id);
+      }
+      result.setStatis(this.statis);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -111,7 +154,9 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   public ReportTaskReq(ReportTaskReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.code = TBaseHelper.deepCopy(other.code);
+    if (other.isSetCode()) {
+      this.code = TBaseHelper.deepCopy(other.code);
+    }
     this.job_id = TBaseHelper.deepCopy(other.job_id);
     this.task_id = TBaseHelper.deepCopy(other.task_id);
     if (other.isSetStatis()) {
@@ -123,16 +168,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     return new ReportTaskReq(this);
   }
 
-  @Deprecated
-  public ReportTaskReq clone() {
-    return new ReportTaskReq(this);
-  }
-
   /**
    * 
    * @see ErrorCode
    */
-  public int  getCode() {
+  public ErrorCode getCode() {
     return this.code;
   }
 
@@ -140,26 +180,27 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see ErrorCode
    */
-  public ReportTaskReq setCode(int code) {
+  public ReportTaskReq setCode(ErrorCode code) {
     this.code = code;
-    setCodeIsSet(true);
     return this;
   }
 
   public void unsetCode() {
-    __isset_bit_vector.clear(__CODE_ISSET_ID);
+    this.code = null;
   }
 
   // Returns true if field code is set (has been assigned a value) and false otherwise
   public boolean isSetCode() {
-    return __isset_bit_vector.get(__CODE_ISSET_ID);
+    return this.code != null;
   }
 
-  public void setCodeIsSet(boolean value) {
-    __isset_bit_vector.set(__CODE_ISSET_ID, value);
+  public void setCodeIsSet(boolean __value) {
+    if (!__value) {
+      this.code = null;
+    }
   }
 
-  public int  getJob_id() {
+  public int getJob_id() {
     return this.job_id;
   }
 
@@ -178,11 +219,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     return __isset_bit_vector.get(__JOB_ID_ISSET_ID);
   }
 
-  public void setJob_idIsSet(boolean value) {
-    __isset_bit_vector.set(__JOB_ID_ISSET_ID, value);
+  public void setJob_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__JOB_ID_ISSET_ID, __value);
   }
 
-  public int  getTask_id() {
+  public int getTask_id() {
     return this.task_id;
   }
 
@@ -201,11 +242,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     return __isset_bit_vector.get(__TASK_ID_ISSET_ID);
   }
 
-  public void setTask_idIsSet(boolean value) {
-    __isset_bit_vector.set(__TASK_ID_ISSET_ID, value);
+  public void setTask_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__TASK_ID_ISSET_ID, __value);
   }
 
-  public StatisItem  getStatis() {
+  public StatisItem getStatis() {
     return this.statis;
   }
 
@@ -223,43 +264,43 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     return this.statis != null;
   }
 
-  public void setStatisIsSet(boolean value) {
-    if (!value) {
+  public void setStatisIsSet(boolean __value) {
+    if (!__value) {
       this.statis = null;
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
-      if (value == null) {
+      if (__value == null) {
         unsetCode();
       } else {
-        setCode((Integer)value);
+        setCode((ErrorCode)__value);
       }
       break;
 
     case JOB_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetJob_id();
       } else {
-        setJob_id((Integer)value);
+        setJob_id((Integer)__value);
       }
       break;
 
     case TASK_ID:
-      if (value == null) {
+      if (__value == null) {
         unsetTask_id();
       } else {
-        setTask_id((Integer)value);
+        setTask_id((Integer)__value);
       }
       break;
 
     case STATIS:
-      if (value == null) {
+      if (__value == null) {
         unsetStatis();
       } else {
-        setStatis((StatisItem)value);
+        setStatis((StatisItem)__value);
       }
       break;
 
@@ -287,101 +328,30 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case CODE:
-      return isSetCode();
-    case JOB_ID:
-      return isSetJob_id();
-    case TASK_ID:
-      return isSetTask_id();
-    case STATIS:
-      return isSetStatis();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof ReportTaskReq)
-      return this.equals((ReportTaskReq)that);
-    return false;
-  }
-
-  public boolean equals(ReportTaskReq that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof ReportTaskReq))
+      return false;
+    ReportTaskReq that = (ReportTaskReq)_that;
 
-    boolean this_present_code = true;
-    boolean that_present_code = true;
-    if (this_present_code || that_present_code) {
-      if (!(this_present_code && that_present_code))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.code, that.code))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
-    boolean this_present_job_id = true;
-    boolean that_present_job_id = true;
-    if (this_present_job_id || that_present_job_id) {
-      if (!(this_present_job_id && that_present_job_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id)) { return false; }
 
-    boolean this_present_task_id = true;
-    boolean that_present_task_id = true;
-    if (this_present_task_id || that_present_task_id) {
-      if (!(this_present_task_id && that_present_task_id))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id)) { return false; }
 
-    boolean this_present_statis = true && this.isSetStatis();
-    boolean that_present_statis = true && that.isSetStatis();
-    if (this_present_statis || that_present_statis) {
-      if (!(this_present_statis && that_present_statis))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.statis, that.statis))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetStatis(), that.isSetStatis(), this.statis, that.statis)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_code = true;
-    builder.append(present_code);
-    if (present_code)
-      builder.append(code);
-
-    boolean present_job_id = true;
-    builder.append(present_job_id);
-    if (present_job_id)
-      builder.append(job_id);
-
-    boolean present_task_id = true;
-    builder.append(present_task_id);
-    if (present_task_id)
-      builder.append(task_id);
-
-    boolean present_statis = true && (isSetStatis());
-    builder.append(present_statis);
-    if (present_statis)
-      builder.append(statis);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {code, job_id, task_id, statis});
   }
 
   @Override
@@ -401,7 +371,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(code, other.code);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetJob_id()).compareTo(other.isSetJob_id());
@@ -409,7 +379,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(job_id, other.job_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetTask_id()).compareTo(other.isSetTask_id());
@@ -417,7 +387,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(task_id, other.task_id);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetStatis()).compareTo(other.isSetStatis());
@@ -425,57 +395,56 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(statis, other.statis);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case CODE:
-          if (field.type == TType.I32) {
-            this.code = iprot.readI32();
-            setCodeIsSet(true);
+          if (__field.type == TType.I32) {
+            this.code = ErrorCode.findByValue(iprot.readI32());
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case JOB_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.job_id = iprot.readI32();
             setJob_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case TASK_ID:
-          if (field.type == TType.I32) {
+          if (__field.type == TType.I32) {
             this.task_id = iprot.readI32();
             setTask_idIsSet(true);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case STATIS:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.statis = new StatisItem();
             this.statis.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -491,9 +460,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(CODE_FIELD_DESC);
-    oprot.writeI32(this.code);
-    oprot.writeFieldEnd();
+    if (this.code != null) {
+      oprot.writeFieldBegin(CODE_FIELD_DESC);
+      oprot.writeI32(this.code == null ? 0 : this.code.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldBegin(JOB_ID_FIELD_DESC);
     oprot.writeI32(this.job_id);
     oprot.writeFieldEnd();
@@ -513,19 +484,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("ReportTaskReq");
     sb.append(space);
     sb.append("(");
@@ -536,14 +502,18 @@ String space = prettyPrint ? " " : "";
     sb.append("code");
     sb.append(space);
     sb.append(":").append(space);
-    String code_name = ErrorCode.VALUES_TO_NAMES.get(this. getCode());
-    if (code_name != null) {
-      sb.append(code_name);
-      sb.append(" (");
-    }
-    sb.append(this. getCode());
-    if (code_name != null) {
-      sb.append(")");
+    if (this.getCode() == null) {
+      sb.append("null");
+    } else {
+      String code_name = this.getCode() == null ? "null" : this.getCode().name();
+      if (code_name != null) {
+        sb.append(code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getCode());
+      if (code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -551,14 +521,14 @@ String space = prettyPrint ? " " : "";
     sb.append("job_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getJob_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getJob_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("task_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this. getTask_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getTask_id(), indent + 1, prettyPrint));
     first = false;
     if (isSetStatis())
     {
@@ -567,10 +537,10 @@ String space = prettyPrint ? " " : "";
       sb.append("statis");
       sb.append(space);
       sb.append(":").append(space);
-      if (this. getStatis() == null) {
+      if (this.getStatis() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this. getStatis(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getStatis(), indent + 1, prettyPrint));
       }
       first = false;
     }
@@ -581,10 +551,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetCode() && !ErrorCode.VALID_VALUES.contains(code)){
-      throw new TProtocolException("The field 'code' has been assigned the invalid value " + code);
-    }
   }
 
 }

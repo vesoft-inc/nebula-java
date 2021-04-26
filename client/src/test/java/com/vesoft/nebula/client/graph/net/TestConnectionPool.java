@@ -134,7 +134,7 @@ public class TestConnectionPool {
                 Session session = pool.getSession("root", "nebula", false);
                 assert (session != null);
                 ResultSet resp = session.execute("SHOW SPACES");
-                assert (resp.getErrorCode() == ErrorCode.SUCCEEDED);
+                assert (resp.getErrorCode() == ErrorCode.SUCCEEDED.getValue());
                 sessions.add(session);
                 i++;
             }

@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.meta;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,10 +15,8 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.facebook.thrift.*;
+import com.facebook.thrift.annotations.*;
 import com.facebook.thrift.async.*;
 import com.facebook.thrift.meta_data.*;
 import com.facebook.thrift.server.*;
@@ -39,11 +36,11 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
   public static final int SPACE = 1;
   public static final int PARTITION_INFO = 2;
   public static final int CP_DIRS = 3;
-  public static boolean DEFAULT_PRETTY_PRINT = true;
 
   // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
+
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
@@ -64,14 +61,49 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public SpaceBackupInfo(
-    SpaceDesc space,
-    com.vesoft.nebula.PartitionBackupInfo partition_info,
-    List<CheckpointInfo> cp_dirs)
-  {
+      SpaceDesc space,
+      com.vesoft.nebula.PartitionBackupInfo partition_info,
+      List<CheckpointInfo> cp_dirs) {
     this();
     this.space = space;
     this.partition_info = partition_info;
     this.cp_dirs = cp_dirs;
+  }
+
+  public static class Builder {
+    private SpaceDesc space;
+    private com.vesoft.nebula.PartitionBackupInfo partition_info;
+    private List<CheckpointInfo> cp_dirs;
+
+    public Builder() {
+    }
+
+    public Builder setSpace(final SpaceDesc space) {
+      this.space = space;
+      return this;
+    }
+
+    public Builder setPartition_info(final com.vesoft.nebula.PartitionBackupInfo partition_info) {
+      this.partition_info = partition_info;
+      return this;
+    }
+
+    public Builder setCp_dirs(final List<CheckpointInfo> cp_dirs) {
+      this.cp_dirs = cp_dirs;
+      return this;
+    }
+
+    public SpaceBackupInfo build() {
+      SpaceBackupInfo result = new SpaceBackupInfo();
+      result.setSpace(this.space);
+      result.setPartition_info(this.partition_info);
+      result.setCp_dirs(this.cp_dirs);
+      return result;
+    }
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -93,12 +125,7 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     return new SpaceBackupInfo(this);
   }
 
-  @Deprecated
-  public SpaceBackupInfo clone() {
-    return new SpaceBackupInfo(this);
-  }
-
-  public SpaceDesc  getSpace() {
+  public SpaceDesc getSpace() {
     return this.space;
   }
 
@@ -116,13 +143,13 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     return this.space != null;
   }
 
-  public void setSpaceIsSet(boolean value) {
-    if (!value) {
+  public void setSpaceIsSet(boolean __value) {
+    if (!__value) {
       this.space = null;
     }
   }
 
-  public com.vesoft.nebula.PartitionBackupInfo  getPartition_info() {
+  public com.vesoft.nebula.PartitionBackupInfo getPartition_info() {
     return this.partition_info;
   }
 
@@ -140,13 +167,13 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     return this.partition_info != null;
   }
 
-  public void setPartition_infoIsSet(boolean value) {
-    if (!value) {
+  public void setPartition_infoIsSet(boolean __value) {
+    if (!__value) {
       this.partition_info = null;
     }
   }
 
-  public List<CheckpointInfo>  getCp_dirs() {
+  public List<CheckpointInfo> getCp_dirs() {
     return this.cp_dirs;
   }
 
@@ -164,36 +191,36 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     return this.cp_dirs != null;
   }
 
-  public void setCp_dirsIsSet(boolean value) {
-    if (!value) {
+  public void setCp_dirsIsSet(boolean __value) {
+    if (!__value) {
       this.cp_dirs = null;
     }
   }
 
   @SuppressWarnings("unchecked")
-  public void setFieldValue(int fieldID, Object value) {
+  public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
-      if (value == null) {
+      if (__value == null) {
         unsetSpace();
       } else {
-        setSpace((SpaceDesc)value);
+        setSpace((SpaceDesc)__value);
       }
       break;
 
     case PARTITION_INFO:
-      if (value == null) {
+      if (__value == null) {
         unsetPartition_info();
       } else {
-        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)value);
+        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)__value);
       }
       break;
 
     case CP_DIRS:
-      if (value == null) {
+      if (__value == null) {
         unsetCp_dirs();
       } else {
-        setCp_dirs((List<CheckpointInfo>)value);
+        setCp_dirs((List<CheckpointInfo>)__value);
       }
       break;
 
@@ -218,85 +245,28 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  // Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
-    case SPACE:
-      return isSetSpace();
-    case PARTITION_INFO:
-      return isSetPartition_info();
-    case CP_DIRS:
-      return isSetCp_dirs();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-    }
-  }
-
   @Override
-  public boolean equals(Object that) {
-    if (that == null)
+  public boolean equals(Object _that) {
+    if (_that == null)
       return false;
-    if (that instanceof SpaceBackupInfo)
-      return this.equals((SpaceBackupInfo)that);
-    return false;
-  }
-
-  public boolean equals(SpaceBackupInfo that) {
-    if (that == null)
-      return false;
-    if (this == that)
+    if (this == _that)
       return true;
+    if (!(_that instanceof SpaceBackupInfo))
+      return false;
+    SpaceBackupInfo that = (SpaceBackupInfo)_that;
 
-    boolean this_present_space = true && this.isSetSpace();
-    boolean that_present_space = true && that.isSetSpace();
-    if (this_present_space || that_present_space) {
-      if (!(this_present_space && that_present_space))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.space, that.space))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetSpace(), that.isSetSpace(), this.space, that.space)) { return false; }
 
-    boolean this_present_partition_info = true && this.isSetPartition_info();
-    boolean that_present_partition_info = true && that.isSetPartition_info();
-    if (this_present_partition_info || that_present_partition_info) {
-      if (!(this_present_partition_info && that_present_partition_info))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.partition_info, that.partition_info))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetPartition_info(), that.isSetPartition_info(), this.partition_info, that.partition_info)) { return false; }
 
-    boolean this_present_cp_dirs = true && this.isSetCp_dirs();
-    boolean that_present_cp_dirs = true && that.isSetCp_dirs();
-    if (this_present_cp_dirs || that_present_cp_dirs) {
-      if (!(this_present_cp_dirs && that_present_cp_dirs))
-        return false;
-      if (!TBaseHelper.equalsNobinary(this.cp_dirs, that.cp_dirs))
-        return false;
-    }
+    if (!TBaseHelper.equalsNobinary(this.isSetCp_dirs(), that.isSetCp_dirs(), this.cp_dirs, that.cp_dirs)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    HashCodeBuilder builder = new HashCodeBuilder();
-
-    boolean present_space = true && (isSetSpace());
-    builder.append(present_space);
-    if (present_space)
-      builder.append(space);
-
-    boolean present_partition_info = true && (isSetPartition_info());
-    builder.append(present_partition_info);
-    if (present_partition_info)
-      builder.append(partition_info);
-
-    boolean present_cp_dirs = true && (isSetCp_dirs());
-    builder.append(present_cp_dirs);
-    if (present_cp_dirs)
-      builder.append(cp_dirs);
-
-    return builder.toHashCode();
+    return Arrays.deepHashCode(new Object[] {space, partition_info, cp_dirs});
   }
 
   @Override
@@ -316,7 +286,7 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space, other.space);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetPartition_info()).compareTo(other.isSetPartition_info());
@@ -324,7 +294,7 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(partition_info, other.partition_info);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     lastComparison = Boolean.valueOf(isSetCp_dirs()).compareTo(other.isSetCp_dirs());
@@ -332,61 +302,61 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(cp_dirs, other.cp_dirs);
-    if (lastComparison != 0) {
+    if (lastComparison != 0) { 
       return lastComparison;
     }
     return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
-    TField field;
+    TField __field;
     iprot.readStructBegin(metaDataMap);
     while (true)
     {
-      field = iprot.readFieldBegin();
-      if (field.type == TType.STOP) { 
+      __field = iprot.readFieldBegin();
+      if (__field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
+      switch (__field.id)
       {
         case SPACE:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.space = new SpaceDesc();
             this.space.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case PARTITION_INFO:
-          if (field.type == TType.STRUCT) {
+          if (__field.type == TType.STRUCT) {
             this.partition_info = new com.vesoft.nebula.PartitionBackupInfo();
             this.partition_info.read(iprot);
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case CP_DIRS:
-          if (field.type == TType.LIST) {
+          if (__field.type == TType.LIST) {
             {
-              TList _list228 = iprot.readListBegin();
-              this.cp_dirs = new ArrayList<CheckpointInfo>(Math.max(0, _list228.size));
-              for (int _i229 = 0; 
-                   (_list228.size < 0) ? iprot.peekList() : (_i229 < _list228.size); 
-                   ++_i229)
+              TList _list237 = iprot.readListBegin();
+              this.cp_dirs = new ArrayList<CheckpointInfo>(Math.max(0, _list237.size));
+              for (int _i238 = 0; 
+                   (_list237.size < 0) ? iprot.peekList() : (_i238 < _list237.size); 
+                   ++_i238)
               {
-                CheckpointInfo _elem230;
-                _elem230 = new CheckpointInfo();
-                _elem230.read(iprot);
-                this.cp_dirs.add(_elem230);
+                CheckpointInfo _elem239;
+                _elem239 = new CheckpointInfo();
+                _elem239.read(iprot);
+                this.cp_dirs.add(_elem239);
               }
               iprot.readListEnd();
             }
           } else { 
-            TProtocolUtil.skip(iprot, field.type);
+            TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         default:
-          TProtocolUtil.skip(iprot, field.type);
+          TProtocolUtil.skip(iprot, __field.type);
           break;
       }
       iprot.readFieldEnd();
@@ -416,8 +386,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(CP_DIRS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.cp_dirs.size()));
-        for (CheckpointInfo _iter231 : this.cp_dirs)        {
-          _iter231.write(oprot);
+        for (CheckpointInfo _iter240 : this.cp_dirs)        {
+          _iter240.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -429,19 +399,14 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
 
   @Override
   public String toString() {
-    return toString(DEFAULT_PRETTY_PRINT);
-  }
-
-  @Override
-  public String toString(boolean prettyPrint) {
-    return toString(1, prettyPrint);
+    return toString(1, true);
   }
 
   @Override
   public String toString(int indent, boolean prettyPrint) {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
-String space = prettyPrint ? " " : "";
+    String space = prettyPrint ? " " : "";
     StringBuilder sb = new StringBuilder("SpaceBackupInfo");
     sb.append(space);
     sb.append("(");
@@ -452,10 +417,10 @@ String space = prettyPrint ? " " : "";
     sb.append("space");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getSpace() == null) {
+    if (this.getSpace() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getSpace(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSpace(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -463,10 +428,10 @@ String space = prettyPrint ? " " : "";
     sb.append("partition_info");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getPartition_info() == null) {
+    if (this.getPartition_info() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getPartition_info(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPartition_info(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -474,10 +439,10 @@ String space = prettyPrint ? " " : "";
     sb.append("cp_dirs");
     sb.append(space);
     sb.append(":").append(space);
-    if (this. getCp_dirs() == null) {
+    if (this.getCp_dirs() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this. getCp_dirs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getCp_dirs(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -487,7 +452,6 @@ String space = prettyPrint ? " " : "";
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

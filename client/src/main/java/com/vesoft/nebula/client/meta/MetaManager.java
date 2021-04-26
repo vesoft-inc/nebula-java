@@ -17,6 +17,7 @@ import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -344,7 +345,11 @@ public class MetaManager implements MetaCache {
      * get all storage addresses
      */
     public Set<HostAddr> listHosts() {
-        return metaClient.listHosts();
+        Set<HostAddr> hosts = metaClient.listHosts();
+        if (hosts == null) {
+            return new HashSet<>();
+        }
+        return hosts;
     }
 
     public int getConnectionRetry() {
