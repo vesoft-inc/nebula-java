@@ -18,6 +18,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.PropertyType;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -211,6 +212,7 @@ public class TestEncoder {
         TagItem tagItem2 = cacheImplTest.getTag("test", "tag_with_empty_string");
         TagItem tagItem3 = cacheImplTest.getTag("test", "tag_with_default");
         TagItem tagItem4 = cacheImplTest.getTag("test", "tag_without_string");
+        TagItem tagItem5 = cacheImplTest.getTag("test", "tag_without_property");
         try {
             codec.encodeTag(tagItem1, colNames, colVals);
             Assert.fail();
@@ -267,6 +269,18 @@ public class TestEncoder {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
         }
+
+        // test without empty property
+        try {
+            byte[] encodeStr = codec.encodeTag(tagItem5, new ArrayList<>(), new ArrayList<>());
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "0907";
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
+        }
     }
 
     @Test()
@@ -276,6 +290,7 @@ public class TestEncoder {
         List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long)100);
         EdgeItem edgeItem1 = cacheImplTest.getEdge("test", "edge_no_default");
         EdgeItem edgeItem2 = cacheImplTest.getEdge("test", "edge_with_empty_string");
+        EdgeItem edgeItem3 = cacheImplTest.getEdge("test", "edge_without_property");
         try {
             codec.encodeEdge(edgeItem1, colNames, colVals);
             Assert.fail();
@@ -300,6 +315,18 @@ public class TestEncoder {
                 Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
+        }
+
+        // test without empty property
+        try {
+            byte[] encodeStr = codec.encodeEdge(edgeItem3, new ArrayList<>(), new ArrayList<>());
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "0907";
             Assert.assertArrayEquals(expectResult.getBytes(),
                 hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
