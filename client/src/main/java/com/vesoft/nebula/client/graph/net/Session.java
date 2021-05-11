@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.graph.net;
 
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ExecutionResponse;
@@ -101,5 +102,12 @@ public class Session {
         } catch (Exception e) {
             log.warn("Return object to pool failed.");
         }
+    }
+
+    public HostAddress getGraphHost() {
+        if (connection == null) {
+            return null;
+        }
+        return connection.getServerAddress();
     }
 }

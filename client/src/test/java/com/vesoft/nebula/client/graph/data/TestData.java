@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.client.graph.data;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
@@ -88,6 +90,62 @@ public class TestData {
                     String.format("classmate").getBytes(), 100, props));
         }
         return new Path(getVertex(startId), steps);
+    }
+
+    public Vertex getSimpleVertex() {
+        Map<byte[], Value> props1 = new HashMap<>();
+        props1.put("tag1_prop".getBytes(), new Value(Value.IVAL, (long)100));
+        Map<byte[], Value> props2 = new HashMap<>();
+        props2.put("tag2_prop".getBytes(), new Value(Value.IVAL, (long)200));
+        List<Tag> tags = Arrays.asList(new Tag("tag1".getBytes(), props1),
+            new Tag("tag2".getBytes(), props2));
+        return new Vertex(new Value(Value.SVAL, "vertex".getBytes()), tags);
+    }
+
+    public Edge getSimpleEdge(boolean isReverse) {
+        Map<byte[], Value> props = new HashMap<>();
+        props.put("edge_prop".getBytes(), new Value(Value.IVAL, (long)100));
+        int type = 1;
+        if (isReverse) {
+            type = -1;
+        }
+        return new Edge(new Value(Value.SVAL, "Tom".getBytes()),
+            new Value(Value.SVAL, "Lily".getBytes()),
+            type,
+            "classmate".getBytes(),
+            10,
+            props);
+    }
+
+    public Path getSimplePath(boolean isReverse) {
+        Map<byte[], Value> props1 = new HashMap<>();
+        props1.put("tag1_prop".getBytes(), new Value(Value.IVAL, (long)200));
+        List<Tag> tags2 = Arrays.asList(new Tag("tag1".getBytes(), props1));
+        Vertex vertex1 = new Vertex(new Value(Value.SVAL, "vertex1".getBytes()), tags2);
+        List<Step> steps = new ArrayList<>();
+        Map<byte[], Value> props3 = new HashMap<>();
+        props3.put("edge1_prop".getBytes(), new Value(Value.IVAL, (long)100));
+        steps.add(new Step(vertex1,
+                1,
+                String.format("classmate").getBytes(),
+                100,
+                props3));
+        Map<byte[], Value> props2 = new HashMap<>();
+        props2.put("tag2_prop".getBytes(), new Value(Value.IVAL, (long)300));
+        List<Tag> tags3 = Arrays.asList(new Tag("tag2".getBytes(), props2));
+        Vertex vertex2 = new Vertex(new Value(Value.SVAL, "vertex2".getBytes()), tags3);
+        Map<byte[], Value> props4 = new HashMap<>();
+        props4.put("edge2_prop".getBytes(), new Value(Value.IVAL, (long)200));
+        steps.add(new Step(vertex2,
+                isReverse ? -1 : 1,
+                String.format("classmate").getBytes(),
+                10,
+                props4));
+        Map<byte[], Value> props0 = new HashMap<>();
+        props0.put("tag0_prop".getBytes(), new Value(Value.IVAL, (long)100));
+        List<Tag> tags1 = Arrays.asList(new Tag("tag0".getBytes(), props0));
+        Vertex vertex0 = new Vertex(new Value(Value.SVAL, "vertex0".getBytes()), tags1);
+        return new Path(vertex0, steps);
     }
 
     public DataSet getDateset() {
@@ -344,6 +402,50 @@ public class TestData {
             assert Objects.equals(record.get(14).asPath(),
                 new PathWrapper(getPath("Tom", 3)));
             assert resultSet.toString().length() > 100;
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (false);
+        }
+    }
+
+    @Test
+    public void testToString() {
+        try {
+            // test node
+            ValueWrapper valueWrapper = new ValueWrapper(
+                new Value(Value.VVAL, getSimpleVertex()),  "utf-8");
+            String expectString =
+                "(\"vertex\" :tag1 {tag1_prop: 100} :tag2 {tag2_prop: 200})";
+            Assert.assertEquals(expectString, valueWrapper.asNode().toString());
+
+            // test relationship
+            valueWrapper = new ValueWrapper(
+                new Value(Value.EVAL, getSimpleEdge(false)),  "utf-8");
+            expectString = "(\"Tom\")-[:classmate@10{edge_prop: 100}]->(\"Lily\")";
+            Assert.assertEquals(expectString, valueWrapper.asRelationship().toString());
+
+            valueWrapper = new ValueWrapper(
+                new Value(Value.EVAL, getSimpleEdge(true)),  "utf-8");
+            expectString = "(\"Lily\")-[:classmate@10{edge_prop: 100}]->(\"Tom\")";
+            Assert.assertEquals(expectString, valueWrapper.asRelationship().toString());
+
+            // test path
+            valueWrapper = new ValueWrapper(
+                new Value(Value.PVAL, getSimplePath(true)),  "utf-8");
+            expectString =
+                "(\"vertex0\" :tag0 {tag0_prop: 100})"
+                    + "-[:classmate@100{edge1_prop: 100}]->"
+                    + "(\"vertex1\" :tag1 {tag1_prop: 200})<-[:classmate@10{edge2_prop: 200}]-"
+                    + "(\"vertex2\" :tag2 {tag2_prop: 300})";
+            Assert.assertEquals(expectString, valueWrapper.asPath().toString());
+            valueWrapper = new ValueWrapper(
+                new Value(Value.PVAL, getSimplePath(false)),  "utf-8");
+            expectString =
+                "(\"vertex0\" :tag0 {tag0_prop: 100})"
+                    + "-[:classmate@100{edge1_prop: 100}]->"
+                    + "(\"vertex1\" :tag1 {tag1_prop: 200})-[:classmate@10{edge2_prop: 200}]->"
+                    + "(\"vertex2\" :tag2 {tag2_prop: 300})";
+            Assert.assertEquals(expectString, valueWrapper.asPath().toString());
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);

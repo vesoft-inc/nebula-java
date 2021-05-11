@@ -153,8 +153,8 @@ public class Node {
     public String toString() {
         try {
             List<String> tagsStr = new ArrayList<>();
-            List<String> propStrs = new ArrayList<>();
             for (String name : tagNames()) {
+                List<String> propStrs = new ArrayList<>();
                 Map<String, ValueWrapper> props = properties(name);
                 for (String key : props.keySet()) {
                     propStrs.add(key + ": " + props.get(key).toString());

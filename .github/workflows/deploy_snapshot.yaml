@@ -2,7 +2,8 @@ name: Deploy snapshot to the Maven Central Repository
 
 on:
   push:
-    branches: [ master ]
+    # branches: [ master ]
+    branches: [ test ]
 
 jobs:
   deploy:
