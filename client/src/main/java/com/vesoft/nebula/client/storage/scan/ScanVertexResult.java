@@ -13,6 +13,7 @@ import com.vesoft.nebula.client.storage.data.VertexRow;
 import com.vesoft.nebula.client.storage.data.VertexTableRow;
 import com.vesoft.nebula.client.storage.processor.VertexProcessor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -28,37 +29,40 @@ public class ScanVertexResult {
     /**
      * VertexRow for table view
      */
-    private List<VertexTableRow> vertexTableRows;
+    private List<VertexTableRow> vertexTableRows = new ArrayList<>();
 
     /**
      * schema for VertexRow's values
      */
-    private List<String> propNames;
+    private List<String> propNames = new ArrayList<>();
 
     /**
      * Vertex for structure view with prop name
      */
-    private List<VertexRow> verticeRows;
+    private List<VertexRow> verticeRows = new ArrayList<>();
 
-    private Map<ValueWrapper, VertexRow> vidVertices;
+    private Map<ValueWrapper, VertexRow> vidVertices = new HashMap<>();
 
     private String decodeType = "utf-8";
+
+    private boolean isEmpty;
 
     public ScanVertexResult(List<DataSet> dataSets, ScanStatus status) {
         this.dataSets = dataSets;
         this.scanStatus = status;
+        this.isEmpty = isDatasetEmpty();
     }
 
     public List<VertexTableRow> getVertexTableRows() {
-        if (vertexTableRows == null) {
+        if (!isEmpty && vertexTableRows.isEmpty()) {
             constructVertexTableRow();
         }
         return vertexTableRows;
     }
 
     public List<String> getPropNames() {
-        if (propNames == null) {
-            constrcutPropNames();
+        if (!isEmpty && propNames.isEmpty()) {
+            constructPropNames();
         }
         return propNames;
     }
@@ -70,7 +74,7 @@ public class ScanVertexResult {
      * @return Vertex
      */
     public VertexRow getVertex(ValueWrapper vid) {
-        if (vidVertices == null) {
+        if (!isEmpty && vidVertices.isEmpty()) {
             constructVertexRow();
         }
         if (vidVertices.isEmpty()) {
@@ -85,7 +89,7 @@ public class ScanVertexResult {
      * @return List
      */
     public List<VertexRow> getVertices() {
-        if (verticeRows == null) {
+        if (!isEmpty && verticeRows.isEmpty()) {
             constructVertexRow();
         }
         return verticeRows;
@@ -93,7 +97,7 @@ public class ScanVertexResult {
 
 
     public Map<ValueWrapper, VertexRow> getVidVertices() {
-        if (vidVertices == null) {
+        if (!isEmpty && vidVertices.isEmpty()) {
             constructVertexRow();
         }
         return vidVertices;
@@ -115,6 +119,15 @@ public class ScanVertexResult {
      * @return boolean
      */
     public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    /**
+     * check if dataset is empty
+     *
+     * @return boolean
+     */
+    private boolean isDatasetEmpty() {
         if (dataSets == null || dataSets.isEmpty()) {
             return true;
         }
@@ -126,36 +139,44 @@ public class ScanVertexResult {
         return true;
     }
 
+    /**
+     * construct vertex row from datasets
+     */
     private void constructVertexRow() {
-        if (dataSets.isEmpty()) {
+        if (isEmpty) {
             return;
         }
         synchronized (this) {
-            if (vidVertices == null) {
+            if (vidVertices.isEmpty()) {
                 vidVertices = VertexProcessor.constructVertexRow(dataSets, decodeType);
                 verticeRows = new ArrayList<>(vidVertices.values());
             }
         }
     }
 
+    /**
+     * construct vertex table row from datasets
+     */
     private void constructVertexTableRow() {
-        if (dataSets.isEmpty()) {
+        if (isEmpty) {
             return;
         }
         synchronized (this) {
-            if (vertexTableRows == null) {
+            if (vertexTableRows.isEmpty()) {
                 vertexTableRows = VertexProcessor.constructVertexTableRow(dataSets, decodeType);
             }
         }
     }
 
-    private void constrcutPropNames() {
-        if (dataSets.isEmpty()) {
+    /**
+     * construct property name from dataset
+     */
+    private void constructPropNames() {
+        if (isEmpty) {
             return;
         }
         synchronized (this) {
-            if (propNames == null) {
-                propNames = new ArrayList<>();
+            if (propNames.isEmpty()) {
                 List<byte[]> colNames = dataSets.get(0).getColumn_names();
                 for (byte[] colName : colNames) {
                     String name = new String(colName).split("\\.")[1];
