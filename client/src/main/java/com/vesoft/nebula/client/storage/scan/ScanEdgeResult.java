@@ -28,43 +28,46 @@ public class ScanEdgeResult {
     /**
      * VertexTableRow for table view
      */
-    private List<EdgeTableRow> edgeTableRows;
+    private List<EdgeTableRow> edgeTableRows = new ArrayList<>();
 
     /**
      * schema for VertexRow's values
      */
-    private List<String> propNames;
+    private List<String> propNames = new ArrayList<>();
 
     /**
      * Vertex for structure view with prop name
      */
-    private List<EdgeRow> edgeRows;
+    private List<EdgeRow> edgeRows = new ArrayList<>();
 
     // todo set decodeType
     private String decodeType = "utf-8";
+
+    private boolean isEmpty;
 
 
     public ScanEdgeResult(List<DataSet> dataSets, ScanStatus status) {
         this.dataSets = dataSets;
         this.scanStatus = status;
+        this.isEmpty = isDatasetEmpty();
     }
 
     public List<EdgeTableRow> getEdgeTableRows() {
-        if (edgeTableRows == null) {
+        if (!isEmpty && edgeTableRows.isEmpty()) {
             constructEdgeTableRow();
         }
         return edgeTableRows;
     }
 
     public List<String> getPropNames() {
-        if (propNames == null) {
+        if (!isEmpty && propNames.isEmpty()) {
             constructPropNames();
         }
         return propNames;
     }
 
     public List<EdgeRow> getEdges() {
-        if (edgeRows == null) {
+        if (!isEmpty && edgeRows.isEmpty()) {
             constructEdgeRow();
         }
         return edgeRows;
@@ -85,6 +88,10 @@ public class ScanEdgeResult {
      * @return boolean
      */
     public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    private boolean isDatasetEmpty() {
         if (dataSets == null || dataSets.isEmpty()) {
             return true;
         }
@@ -100,11 +107,11 @@ public class ScanEdgeResult {
      * convert dataSets to edgeTableRows.
      */
     private void constructEdgeTableRow() {
-        if (dataSets.isEmpty()) {
+        if (isEmpty) {
             return;
         }
         synchronized (this) {
-            if (edgeTableRows == null) {
+            if (edgeTableRows.isEmpty()) {
                 edgeTableRows = EdgeProcessor.constructEdgeTableRow(dataSets, decodeType);
             }
         }
@@ -114,11 +121,11 @@ public class ScanEdgeResult {
      * convert datasets to edgeRows.
      */
     private void constructEdgeRow() {
-        if (dataSets.isEmpty()) {
+        if (isEmpty) {
             return;
         }
         synchronized (this) {
-            if (edgeRows == null) {
+            if (edgeRows.isEmpty()) {
                 edgeRows = EdgeProcessor.constructEdgeRow(dataSets, decodeType);
             }
         }
@@ -128,12 +135,11 @@ public class ScanEdgeResult {
      * extract result's property names
      */
     private void constructPropNames() {
-        if (dataSets.isEmpty()) {
+        if (isEmpty) {
             return;
         }
         synchronized (this) {
-            if (propNames == null) {
-                propNames = new ArrayList<>();
+            if (propNames.isEmpty()) {
                 List<byte[]> colNames = dataSets.get(0).getColumn_names();
                 for (byte[] colName : colNames) {
                     String name = new String(colName).split("\\.")[1];
