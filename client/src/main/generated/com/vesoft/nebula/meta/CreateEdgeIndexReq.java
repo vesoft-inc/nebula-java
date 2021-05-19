@@ -31,17 +31,20 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
   private static final TField EDGE_NAME_FIELD_DESC = new TField("edge_name", TType.STRING, (short)3);
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)4);
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)5);
+  private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)6);
 
   public int space_id;
   public byte[] index_name;
   public byte[] edge_name;
   public List<IndexFieldDef> fields;
   public boolean if_not_exists;
+  public byte[] comment;
   public static final int SPACE_ID = 1;
   public static final int INDEX_NAME = 2;
   public static final int EDGE_NAME = 3;
   public static final int FIELDS = 4;
   public static final int IF_NOT_EXISTS = 5;
+  public static final int COMMENT = 6;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -63,6 +66,8 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
             new StructMetaData(TType.STRUCT, IndexFieldDef.class))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -89,12 +94,31 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     setIf_not_existsIsSet(true);
   }
 
+  public CreateEdgeIndexReq(
+      int space_id,
+      byte[] index_name,
+      byte[] edge_name,
+      List<IndexFieldDef> fields,
+      boolean if_not_exists,
+      byte[] comment) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.index_name = index_name;
+    this.edge_name = edge_name;
+    this.fields = fields;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    this.comment = comment;
+  }
+
   public static class Builder {
     private int space_id;
     private byte[] index_name;
     private byte[] edge_name;
     private List<IndexFieldDef> fields;
     private boolean if_not_exists;
+    private byte[] comment;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -128,6 +152,11 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
+    public Builder setComment(final byte[] comment) {
+      this.comment = comment;
+      return this;
+    }
+
     public CreateEdgeIndexReq build() {
       CreateEdgeIndexReq result = new CreateEdgeIndexReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -139,6 +168,7 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
         result.setIf_not_exists(this.if_not_exists);
       }
+      result.setComment(this.comment);
       return result;
     }
   }
@@ -164,6 +194,9 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       this.fields = TBaseHelper.deepCopy(other.fields);
     }
     this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
+    if (other.isSetComment()) {
+      this.comment = TBaseHelper.deepCopy(other.comment);
+    }
   }
 
   public CreateEdgeIndexReq deepCopy() {
@@ -288,6 +321,30 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
+  public byte[] getComment() {
+    return this.comment;
+  }
+
+  public CreateEdgeIndexReq setComment(byte[] comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  // Returns true if field comment is set (has been assigned a value) and false otherwise
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean __value) {
+    if (!__value) {
+      this.comment = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -331,6 +388,14 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case COMMENT:
+      if (__value == null) {
+        unsetComment();
+      } else {
+        setComment((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -352,6 +417,9 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
 
     case IF_NOT_EXISTS:
       return new Boolean(isIf_not_exists());
+
+    case COMMENT:
+      return getComment();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -378,12 +446,14 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, index_name, edge_name, fields, if_not_exists});
+    return Arrays.deepHashCode(new Object[] {space_id, index_name, edge_name, fields, if_not_exists, comment});
   }
 
   @Override
@@ -435,6 +505,14 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetComment()).compareTo(other.isSetComment());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(comment, other.comment);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -502,6 +580,13 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMENT:
+          if (__field.type == TType.STRING) {
+            this.comment = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -546,6 +631,13 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
     oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
+    if (this.comment != null) {
+      if (isSetComment()) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeBinary(this.comment);
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -622,6 +714,25 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
+    if (isSetComment())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("comment");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getComment() == null) {
+        sb.append("null");
+      } else {
+          int __comment_size = Math.min(this.getComment().length, 128);
+          for (int i = 0; i < __comment_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
+          }
+          if (this.getComment().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

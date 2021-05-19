@@ -32,9 +32,9 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
   public byte[] error_msg;
   public long session_id;
   public static final int ERROR_CODE = 1;
@@ -66,13 +66,13 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public AuthResponse(
-      ErrorCode error_code) {
+      com.vesoft.nebula.ErrorCode error_code) {
     this();
     this.error_code = error_code;
   }
 
   public AuthResponse(
-      ErrorCode error_code,
+      com.vesoft.nebula.ErrorCode error_code,
       byte[] error_msg,
       long session_id) {
     this();
@@ -83,7 +83,7 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
     private byte[] error_msg;
     private long session_id;
 
@@ -92,7 +92,7 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
       return this;
     }
@@ -144,17 +144,17 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public AuthResponse setError_code(ErrorCode error_code) {
+  public AuthResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -227,7 +227,7 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -344,7 +344,7 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

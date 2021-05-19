@@ -34,6 +34,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField VID_TYPE_FIELD_DESC = new TField("vid_type", TType.STRUCT, (short)6);
   private static final TField GROUP_NAME_FIELD_DESC = new TField("group_name", TType.STRING, (short)7);
   private static final TField ISOLATION_LEVEL_FIELD_DESC = new TField("isolation_level", TType.I32, (short)8);
+  private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)9);
 
   public byte[] space_name;
   public int partition_num;
@@ -47,6 +48,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
    * @see IsolationLevel
    */
   public IsolationLevel isolation_level;
+  public byte[] comment;
   public static final int SPACE_NAME = 1;
   public static final int PARTITION_NUM = 2;
   public static final int REPLICA_FACTOR = 3;
@@ -55,6 +57,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   public static final int VID_TYPE = 6;
   public static final int GROUP_NAME = 7;
   public static final int ISOLATION_LEVEL = 8;
+  public static final int COMMENT = 9;
 
   // isset id assignments
   private static final int __PARTITION_NUM_ISSET_ID = 0;
@@ -81,6 +84,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(ISOLATION_LEVEL, new FieldMetaData("isolation_level", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -125,7 +130,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       byte[] collate_name,
       ColumnTypeDef vid_type,
       byte[] group_name,
-      IsolationLevel isolation_level) {
+      IsolationLevel isolation_level,
+      byte[] comment) {
     this();
     this.space_name = space_name;
     this.partition_num = partition_num;
@@ -137,6 +143,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.vid_type = vid_type;
     this.group_name = group_name;
     this.isolation_level = isolation_level;
+    this.comment = comment;
   }
 
   public static class Builder {
@@ -148,6 +155,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     private ColumnTypeDef vid_type;
     private byte[] group_name;
     private IsolationLevel isolation_level;
+    private byte[] comment;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -196,6 +204,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
+    public Builder setComment(final byte[] comment) {
+      this.comment = comment;
+      return this;
+    }
+
     public SpaceDesc build() {
       SpaceDesc result = new SpaceDesc();
       result.setSpace_name(this.space_name);
@@ -210,6 +223,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       result.setVid_type(this.vid_type);
       result.setGroup_name(this.group_name);
       result.setIsolation_level(this.isolation_level);
+      result.setComment(this.comment);
       return result;
     }
   }
@@ -243,6 +257,9 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     }
     if (other.isSetIsolation_level()) {
       this.isolation_level = TBaseHelper.deepCopy(other.isolation_level);
+    }
+    if (other.isSetComment()) {
+      this.comment = TBaseHelper.deepCopy(other.comment);
     }
   }
 
@@ -448,6 +465,30 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
+  public byte[] getComment() {
+    return this.comment;
+  }
+
+  public SpaceDesc setComment(byte[] comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  // Returns true if field comment is set (has been assigned a value) and false otherwise
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean __value) {
+    if (!__value) {
+      this.comment = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_NAME:
@@ -514,6 +555,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       }
       break;
 
+    case COMMENT:
+      if (__value == null) {
+        unsetComment();
+      } else {
+        setComment((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -544,6 +593,9 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
 
     case ISOLATION_LEVEL:
       return getIsolation_level();
+
+    case COMMENT:
+      return getComment();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -576,12 +628,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
 
     if (!TBaseHelper.equalsNobinary(this.isSetIsolation_level(), that.isSetIsolation_level(), this.isolation_level, that.isolation_level)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_name, partition_num, replica_factor, charset_name, collate_name, vid_type, group_name, isolation_level});
+    return Arrays.deepHashCode(new Object[] {space_name, partition_num, replica_factor, charset_name, collate_name, vid_type, group_name, isolation_level, comment});
   }
 
   @Override
@@ -660,6 +714,14 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetComment()).compareTo(other.isSetComment());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(comment, other.comment);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -733,6 +795,13 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMENT:
+          if (__field.type == TType.STRING) {
+            this.comment = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -787,6 +856,13 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       if (isSetIsolation_level()) {
         oprot.writeFieldBegin(ISOLATION_LEVEL_FIELD_DESC);
         oprot.writeI32(this.isolation_level == null ? 0 : this.isolation_level.getValue());
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.comment != null) {
+      if (isSetComment()) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeBinary(this.comment);
         oprot.writeFieldEnd();
       }
     }
@@ -920,6 +996,25 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         if (isolation_level_name != null) {
           sb.append(")");
         }
+      }
+      first = false;
+    }
+    if (isSetComment())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("comment");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getComment() == null) {
+        sb.append("null");
+      } else {
+          int __comment_size = Math.min(this.getComment().length, 128);
+          for (int i = 0; i < __comment_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
+          }
+          if (this.getComment().length > 128) sb.append(" ...");
       }
       first = false;
     }

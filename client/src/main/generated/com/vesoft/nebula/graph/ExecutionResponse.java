@@ -36,9 +36,9 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
   public int latency_in_us;
   public com.vesoft.nebula.DataSet data;
   public byte[] space_name;
@@ -86,7 +86,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public ExecutionResponse(
-      ErrorCode error_code,
+      com.vesoft.nebula.ErrorCode error_code,
       int latency_in_us) {
     this();
     this.error_code = error_code;
@@ -95,7 +95,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public ExecutionResponse(
-      ErrorCode error_code,
+      com.vesoft.nebula.ErrorCode error_code,
       int latency_in_us,
       com.vesoft.nebula.DataSet data,
       byte[] space_name,
@@ -114,7 +114,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
     private int latency_in_us;
     private com.vesoft.nebula.DataSet data;
     private byte[] space_name;
@@ -127,7 +127,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
       return this;
     }
@@ -215,17 +215,17 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ExecutionResponse setError_code(ErrorCode error_code) {
+  public ExecutionResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -394,7 +394,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -524,7 +524,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

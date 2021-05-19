@@ -32,9 +32,9 @@ public class GetTagResp implements TBase, java.io.Serializable, Cloneable, Compa
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode code;
+  public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public Schema schema;
   public static final int CODE = 1;
@@ -64,7 +64,7 @@ public class GetTagResp implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public GetTagResp(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
       Schema schema) {
     this();
@@ -74,14 +74,14 @@ public class GetTagResp implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public static class Builder {
-    private ErrorCode code;
+    private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
     private Schema schema;
 
     public Builder() {
     }
 
-    public Builder setCode(final ErrorCode code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
       return this;
     }
@@ -130,17 +130,17 @@ public class GetTagResp implements TBase, java.io.Serializable, Cloneable, Compa
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getCode() {
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public GetTagResp setCode(ErrorCode code) {
+  public GetTagResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -214,7 +214,7 @@ public class GetTagResp implements TBase, java.io.Serializable, Cloneable, Compa
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((ErrorCode)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -331,7 +331,7 @@ public class GetTagResp implements TBase, java.io.Serializable, Cloneable, Compa
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = ErrorCode.findByValue(iprot.readI32());
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

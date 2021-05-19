@@ -32,9 +32,9 @@ public class ListPartsResp implements TBase, java.io.Serializable, Cloneable, Co
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode code;
+  public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public List<PartItem> parts;
   public static final int CODE = 1;
@@ -65,7 +65,7 @@ public class ListPartsResp implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ListPartsResp(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
       List<PartItem> parts) {
     this();
@@ -75,14 +75,14 @@ public class ListPartsResp implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public static class Builder {
-    private ErrorCode code;
+    private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
     private List<PartItem> parts;
 
     public Builder() {
     }
 
-    public Builder setCode(final ErrorCode code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
       return this;
     }
@@ -131,17 +131,17 @@ public class ListPartsResp implements TBase, java.io.Serializable, Cloneable, Co
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getCode() {
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ListPartsResp setCode(ErrorCode code) {
+  public ListPartsResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -216,7 +216,7 @@ public class ListPartsResp implements TBase, java.io.Serializable, Cloneable, Co
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((ErrorCode)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -333,7 +333,7 @@ public class ListPartsResp implements TBase, java.io.Serializable, Cloneable, Co
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = ErrorCode.findByValue(iprot.readI32());
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

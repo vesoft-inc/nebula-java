@@ -32,9 +32,9 @@ public class GetZoneResp implements TBase, java.io.Serializable, Cloneable, Comp
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode code;
+  public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public List<com.vesoft.nebula.HostAddr> hosts;
   public static final int CODE = 1;
@@ -65,7 +65,7 @@ public class GetZoneResp implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public GetZoneResp(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
       List<com.vesoft.nebula.HostAddr> hosts) {
     this();
@@ -75,14 +75,14 @@ public class GetZoneResp implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public static class Builder {
-    private ErrorCode code;
+    private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
     private List<com.vesoft.nebula.HostAddr> hosts;
 
     public Builder() {
     }
 
-    public Builder setCode(final ErrorCode code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
       return this;
     }
@@ -131,17 +131,17 @@ public class GetZoneResp implements TBase, java.io.Serializable, Cloneable, Comp
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getCode() {
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public GetZoneResp setCode(ErrorCode code) {
+  public GetZoneResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -216,7 +216,7 @@ public class GetZoneResp implements TBase, java.io.Serializable, Cloneable, Comp
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((ErrorCode)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -333,7 +333,7 @@ public class GetZoneResp implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = ErrorCode.findByValue(iprot.readI32());
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

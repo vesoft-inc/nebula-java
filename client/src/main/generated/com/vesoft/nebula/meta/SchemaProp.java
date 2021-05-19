@@ -28,11 +28,14 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TStruct STRUCT_DESC = new TStruct("SchemaProp");
   private static final TField TTL_DURATION_FIELD_DESC = new TField("ttl_duration", TType.I64, (short)1);
   private static final TField TTL_COL_FIELD_DESC = new TField("ttl_col", TType.STRING, (short)2);
+  private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)3);
 
   public long ttl_duration;
   public byte[] ttl_col;
+  public byte[] comment;
   public static final int TTL_DURATION = 1;
   public static final int TTL_COL = 2;
+  public static final int COMMENT = 3;
 
   // isset id assignments
   private static final int __TTL_DURATION_ISSET_ID = 0;
@@ -46,6 +49,8 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(TTL_COL, new FieldMetaData("ttl_col", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -58,16 +63,19 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
 
   public SchemaProp(
       long ttl_duration,
-      byte[] ttl_col) {
+      byte[] ttl_col,
+      byte[] comment) {
     this();
     this.ttl_duration = ttl_duration;
     setTtl_durationIsSet(true);
     this.ttl_col = ttl_col;
+    this.comment = comment;
   }
 
   public static class Builder {
     private long ttl_duration;
     private byte[] ttl_col;
+    private byte[] comment;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -85,12 +93,18 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
+    public Builder setComment(final byte[] comment) {
+      this.comment = comment;
+      return this;
+    }
+
     public SchemaProp build() {
       SchemaProp result = new SchemaProp();
       if (__optional_isset.get(__TTL_DURATION_ISSET_ID)) {
         result.setTtl_duration(this.ttl_duration);
       }
       result.setTtl_col(this.ttl_col);
+      result.setComment(this.comment);
       return result;
     }
   }
@@ -108,6 +122,9 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
     this.ttl_duration = TBaseHelper.deepCopy(other.ttl_duration);
     if (other.isSetTtl_col()) {
       this.ttl_col = TBaseHelper.deepCopy(other.ttl_col);
+    }
+    if (other.isSetComment()) {
+      this.comment = TBaseHelper.deepCopy(other.comment);
     }
   }
 
@@ -162,6 +179,30 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
+  public byte[] getComment() {
+    return this.comment;
+  }
+
+  public SchemaProp setComment(byte[] comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  // Returns true if field comment is set (has been assigned a value) and false otherwise
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean __value) {
+    if (!__value) {
+      this.comment = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TTL_DURATION:
@@ -180,6 +221,14 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
+    case COMMENT:
+      if (__value == null) {
+        unsetComment();
+      } else {
+        setComment((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -192,6 +241,9 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
 
     case TTL_COL:
       return getTtl_col();
+
+    case COMMENT:
+      return getComment();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -212,12 +264,14 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
 
     if (!TBaseHelper.equalsSlow(this.isSetTtl_col(), that.isSetTtl_col(), this.ttl_col, that.ttl_col)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {ttl_duration, ttl_col});
+    return Arrays.deepHashCode(new Object[] {ttl_duration, ttl_col, comment});
   }
 
   @Override
@@ -245,6 +299,14 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(ttl_col, other.ttl_col);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetComment()).compareTo(other.isSetComment());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(comment, other.comment);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -277,6 +339,13 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMENT:
+          if (__field.type == TType.STRING) {
+            this.comment = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -303,6 +372,13 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
       if (isSetTtl_col()) {
         oprot.writeFieldBegin(TTL_COL_FIELD_DESC);
         oprot.writeBinary(this.ttl_col);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.comment != null) {
+      if (isSetComment()) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeBinary(this.comment);
         oprot.writeFieldEnd();
       }
     }
@@ -351,6 +427,25 @@ public class SchemaProp implements TBase, java.io.Serializable, Cloneable, Compa
             sb.append(Integer.toHexString(this.getTtl_col()[i]).length() > 1 ? Integer.toHexString(this.getTtl_col()[i]).substring(Integer.toHexString(this.getTtl_col()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getTtl_col()[i]).toUpperCase());
           }
           if (this.getTtl_col().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetComment())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("comment");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getComment() == null) {
+        sb.append("null");
+      } else {
+          int __comment_size = Math.min(this.getComment().length, 128);
+          for (int i = 0; i < __comment_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
+          }
+          if (this.getComment().length > 128) sb.append(" ...");
       }
       first = false;
     }

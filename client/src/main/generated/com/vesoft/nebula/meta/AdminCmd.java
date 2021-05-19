@@ -19,7 +19,7 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
   REBUILD_EDGE_INDEX(3),
   STATS(4),
   DATA_BALANCE(5),
-  DOWELOAD(6),
+  DOWNLOAD(6),
   INGEST(7),
   UNKNOWN(99);
 
@@ -55,7 +55,7 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
       case 5:
         return DATA_BALANCE;
       case 6:
-        return DOWELOAD;
+        return DOWNLOAD;
       case 7:
         return INGEST;
       case 99:

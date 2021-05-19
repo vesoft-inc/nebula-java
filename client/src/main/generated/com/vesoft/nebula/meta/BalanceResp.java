@@ -33,9 +33,9 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode code;
+  public com.vesoft.nebula.ErrorCode code;
   public long id;
   public com.vesoft.nebula.HostAddr leader;
   public List<BalanceTask> tasks;
@@ -72,7 +72,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public BalanceResp(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       long id,
       com.vesoft.nebula.HostAddr leader,
       List<BalanceTask> tasks) {
@@ -85,7 +85,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public static class Builder {
-    private ErrorCode code;
+    private com.vesoft.nebula.ErrorCode code;
     private long id;
     private com.vesoft.nebula.HostAddr leader;
     private List<BalanceTask> tasks;
@@ -95,7 +95,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     public Builder() {
     }
 
-    public Builder setCode(final ErrorCode code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
       return this;
     }
@@ -156,17 +156,17 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getCode() {
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public BalanceResp setCode(ErrorCode code) {
+  public BalanceResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -264,7 +264,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((ErrorCode)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -402,7 +402,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = ErrorCode.findByValue(iprot.readI32());
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

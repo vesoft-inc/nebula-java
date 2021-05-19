@@ -33,9 +33,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode code;
+  public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public long cluster_id;
   public long last_update_time_in_ms;
@@ -72,7 +72,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   }
 
   public HBResp(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
       long cluster_id,
       long last_update_time_in_ms) {
@@ -86,7 +86,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   }
 
   public static class Builder {
-    private ErrorCode code;
+    private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
     private long cluster_id;
     private long last_update_time_in_ms;
@@ -96,7 +96,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     public Builder() {
     }
 
-    public Builder setCode(final ErrorCode code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
       return this;
     }
@@ -158,17 +158,17 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getCode() {
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public HBResp setCode(ErrorCode code) {
+  public HBResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -264,7 +264,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((ErrorCode)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -402,7 +402,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = ErrorCode.findByValue(iprot.readI32());
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

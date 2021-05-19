@@ -31,17 +31,20 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField SCHEMA_ID_FIELD_DESC = new TField("schema_id", TType.STRUCT, (short)3);
   private static final TField SCHEMA_NAME_FIELD_DESC = new TField("schema_name", TType.STRING, (short)4);
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)5);
+  private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)6);
 
   public int index_id;
   public byte[] index_name;
   public SchemaID schema_id;
   public byte[] schema_name;
   public List<ColumnDef> fields;
+  public byte[] comment;
   public static final int INDEX_ID = 1;
   public static final int INDEX_NAME = 2;
   public static final int SCHEMA_ID = 3;
   public static final int SCHEMA_NAME = 4;
   public static final int FIELDS = 5;
+  public static final int COMMENT = 6;
 
   // isset id assignments
   private static final int __INDEX_ID_ISSET_ID = 0;
@@ -62,6 +65,8 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, ColumnDef.class))));
+    tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -87,12 +92,30 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     this.fields = fields;
   }
 
+  public IndexItem(
+      int index_id,
+      byte[] index_name,
+      SchemaID schema_id,
+      byte[] schema_name,
+      List<ColumnDef> fields,
+      byte[] comment) {
+    this();
+    this.index_id = index_id;
+    setIndex_idIsSet(true);
+    this.index_name = index_name;
+    this.schema_id = schema_id;
+    this.schema_name = schema_name;
+    this.fields = fields;
+    this.comment = comment;
+  }
+
   public static class Builder {
     private int index_id;
     private byte[] index_name;
     private SchemaID schema_id;
     private byte[] schema_name;
     private List<ColumnDef> fields;
+    private byte[] comment;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -125,6 +148,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
+    public Builder setComment(final byte[] comment) {
+      this.comment = comment;
+      return this;
+    }
+
     public IndexItem build() {
       IndexItem result = new IndexItem();
       if (__optional_isset.get(__INDEX_ID_ISSET_ID)) {
@@ -134,6 +162,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       result.setSchema_id(this.schema_id);
       result.setSchema_name(this.schema_name);
       result.setFields(this.fields);
+      result.setComment(this.comment);
       return result;
     }
   }
@@ -160,6 +189,9 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
     if (other.isSetFields()) {
       this.fields = TBaseHelper.deepCopy(other.fields);
+    }
+    if (other.isSetComment()) {
+      this.comment = TBaseHelper.deepCopy(other.comment);
     }
   }
 
@@ -286,6 +318,30 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
+  public byte[] getComment() {
+    return this.comment;
+  }
+
+  public IndexItem setComment(byte[] comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  // Returns true if field comment is set (has been assigned a value) and false otherwise
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean __value) {
+    if (!__value) {
+      this.comment = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -329,6 +385,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       }
       break;
 
+    case COMMENT:
+      if (__value == null) {
+        unsetComment();
+      } else {
+        setComment((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -350,6 +414,9 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
     case FIELDS:
       return getFields();
+
+    case COMMENT:
+      return getComment();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -376,12 +443,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
     if (!TBaseHelper.equalsNobinary(this.isSetFields(), that.isSetFields(), this.fields, that.fields)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields});
+    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields, comment});
   }
 
   @Override
@@ -433,6 +502,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(fields, other.fields);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetComment()).compareTo(other.isSetComment());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(comment, other.comment);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -500,6 +577,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMENT:
+          if (__field.type == TType.STRING) {
+            this.comment = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -545,6 +629,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
+    }
+    if (this.comment != null) {
+      if (isSetComment()) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeBinary(this.comment);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -626,6 +717,25 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       sb.append(TBaseHelper.toString(this.getFields(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetComment())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("comment");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getComment() == null) {
+        sb.append("null");
+      } else {
+          int __comment_size = Math.min(this.getComment().length, 128);
+          for (int i = 0; i < __comment_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
+          }
+          if (this.getComment().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
