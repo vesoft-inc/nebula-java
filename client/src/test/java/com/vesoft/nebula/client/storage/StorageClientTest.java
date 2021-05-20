@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,7 +67,7 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
-            assert (result.getPropNames().size() == 1);
+            Assert.assertEquals(1, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.isAllSuccess());
 
@@ -117,7 +118,7 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
-            assert (result.getPropNames().size() == 3);
+            Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.getPropNames().get(1).equals("name"));
             assert (result.getPropNames().get(2).equals("age"));
@@ -178,7 +179,7 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
-            assert (result.getPropNames().size() == 3);
+            Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (Arrays.asList("name", "age").contains(result.getPropNames().get(1)));
             assert (Arrays.asList("name", "age").contains(result.getPropNames().get(2)));
@@ -205,7 +206,7 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
-            assert (result.getPropNames().size() == 3);
+            Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_src"));
             assert (result.getPropNames().get(1).equals("_dst"));
             assert (result.getPropNames().get(2).equals("_rank"));
@@ -222,7 +223,7 @@ public class StorageClientTest {
                     e.printStackTrace();
                     assert (false);
                 }
-                assert (row.getProps().size() == 0);
+                Assert.assertEquals(0, row.getProps().size());
             }
 
             List<EdgeTableRow> tableRows = result.getEdgeTableRows();
@@ -264,7 +265,7 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
-            assert (result.getPropNames().size() == 4);
+            Assert.assertEquals(4, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_src"));
             assert (result.getPropNames().get(1).equals("_dst"));
             assert (result.getPropNames().get(2).equals("_rank"));
@@ -284,7 +285,7 @@ public class StorageClientTest {
                     assert (false);
                 }
                 assert (Arrays.asList(0L).contains(row.getRank()));
-                assert (row.getProps().size() == 1);
+                Assert.assertEquals(1, row.getProps().size());
                 assert (Arrays.asList(1.0, 2.1, 3.2, 4.5, 5.9)
                         .contains(row.getProps().get("likeness").asDouble()));
             }
@@ -329,7 +330,7 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
-            assert (result.getPropNames().size() == 4);
+            Assert.assertEquals(4, result.getPropNames().size());
             assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
                     .contains(result.getPropNames().get(0)));
             assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
