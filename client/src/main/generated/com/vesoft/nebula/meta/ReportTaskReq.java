@@ -33,9 +33,9 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode code;
+  public com.vesoft.nebula.ErrorCode code;
   public int job_id;
   public int task_id;
   public StatisItem statis;
@@ -72,7 +72,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ReportTaskReq(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       int job_id,
       int task_id) {
     this();
@@ -84,7 +84,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ReportTaskReq(
-      ErrorCode code,
+      com.vesoft.nebula.ErrorCode code,
       int job_id,
       int task_id,
       StatisItem statis) {
@@ -98,7 +98,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public static class Builder {
-    private ErrorCode code;
+    private com.vesoft.nebula.ErrorCode code;
     private int job_id;
     private int task_id;
     private StatisItem statis;
@@ -108,7 +108,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     public Builder() {
     }
 
-    public Builder setCode(final ErrorCode code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
       return this;
     }
@@ -170,17 +170,17 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getCode() {
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ReportTaskReq setCode(ErrorCode code) {
+  public ReportTaskReq setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -276,7 +276,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((ErrorCode)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -414,7 +414,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = ErrorCode.findByValue(iprot.readI32());
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

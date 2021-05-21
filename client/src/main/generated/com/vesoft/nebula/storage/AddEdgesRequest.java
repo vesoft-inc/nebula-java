@@ -29,20 +29,20 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
   private static final TField PROP_NAMES_FIELD_DESC = new TField("prop_names", TType.LIST, (short)3);
-  private static final TField OVERWRITABLE_FIELD_DESC = new TField("overwritable", TType.BOOL, (short)4);
+  private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
 
   public int space_id;
   public Map<Integer,List<NewEdge>> parts;
   public List<byte[]> prop_names;
-  public boolean overwritable;
+  public boolean if_not_exists;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int PROP_NAMES = 3;
-  public static final int OVERWRITABLE = 4;
+  public static final int IF_NOT_EXISTS = 4;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private static final int __OVERWRITABLE_ISSET_ID = 1;
+  private static final int __IF_NOT_EXISTS_ISSET_ID = 1;
   private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
@@ -59,7 +59,7 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(PROP_NAMES, new FieldMetaData("prop_names", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
-    tmpMetaDataMap.put(OVERWRITABLE, new FieldMetaData("overwritable", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -69,29 +69,27 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   }
 
   public AddEdgesRequest() {
-    this.overwritable = true;
-
   }
 
   public AddEdgesRequest(
       int space_id,
       Map<Integer,List<NewEdge>> parts,
       List<byte[]> prop_names,
-      boolean overwritable) {
+      boolean if_not_exists) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
     this.prop_names = prop_names;
-    this.overwritable = overwritable;
-    setOverwritableIsSet(true);
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
   }
 
   public static class Builder {
     private int space_id;
     private Map<Integer,List<NewEdge>> parts;
     private List<byte[]> prop_names;
-    private boolean overwritable;
+    private boolean if_not_exists;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -114,9 +112,9 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
-    public Builder setOverwritable(final boolean overwritable) {
-      this.overwritable = overwritable;
-      __optional_isset.set(__OVERWRITABLE_ISSET_ID, true);
+    public Builder setIf_not_exists(final boolean if_not_exists) {
+      this.if_not_exists = if_not_exists;
+      __optional_isset.set(__IF_NOT_EXISTS_ISSET_ID, true);
       return this;
     }
 
@@ -127,8 +125,8 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       }
       result.setParts(this.parts);
       result.setProp_names(this.prop_names);
-      if (__optional_isset.get(__OVERWRITABLE_ISSET_ID)) {
-        result.setOverwritable(this.overwritable);
+      if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
+        result.setIf_not_exists(this.if_not_exists);
       }
       return result;
     }
@@ -151,7 +149,7 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     if (other.isSetProp_names()) {
       this.prop_names = TBaseHelper.deepCopy(other.prop_names);
     }
-    this.overwritable = TBaseHelper.deepCopy(other.overwritable);
+    this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
   }
 
   public AddEdgesRequest deepCopy() {
@@ -229,27 +227,27 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public boolean isOverwritable() {
-    return this.overwritable;
+  public boolean isIf_not_exists() {
+    return this.if_not_exists;
   }
 
-  public AddEdgesRequest setOverwritable(boolean overwritable) {
-    this.overwritable = overwritable;
-    setOverwritableIsSet(true);
+  public AddEdgesRequest setIf_not_exists(boolean if_not_exists) {
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
     return this;
   }
 
-  public void unsetOverwritable() {
-    __isset_bit_vector.clear(__OVERWRITABLE_ISSET_ID);
+  public void unsetIf_not_exists() {
+    __isset_bit_vector.clear(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  // Returns true if field overwritable is set (has been assigned a value) and false otherwise
-  public boolean isSetOverwritable() {
-    return __isset_bit_vector.get(__OVERWRITABLE_ISSET_ID);
+  // Returns true if field if_not_exists is set (has been assigned a value) and false otherwise
+  public boolean isSetIf_not_exists() {
+    return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
   }
 
-  public void setOverwritableIsSet(boolean __value) {
-    __isset_bit_vector.set(__OVERWRITABLE_ISSET_ID, __value);
+  public void setIf_not_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
@@ -279,11 +277,11 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
-    case OVERWRITABLE:
+    case IF_NOT_EXISTS:
       if (__value == null) {
-        unsetOverwritable();
+        unsetIf_not_exists();
       } else {
-        setOverwritable((Boolean)__value);
+        setIf_not_exists((Boolean)__value);
       }
       break;
 
@@ -303,8 +301,8 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     case PROP_NAMES:
       return getProp_names();
 
-    case OVERWRITABLE:
-      return new Boolean(isOverwritable());
+    case IF_NOT_EXISTS:
+      return new Boolean(isIf_not_exists());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -327,14 +325,14 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsSlow(this.isSetProp_names(), that.isSetProp_names(), this.prop_names, that.prop_names)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.overwritable, that.overwritable)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, overwritable});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -409,10 +407,10 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case OVERWRITABLE:
+        case IF_NOT_EXISTS:
           if (__field.type == TType.BOOL) {
-            this.overwritable = iprot.readBool();
-            setOverwritableIsSet(true);
+            this.if_not_exists = iprot.readBool();
+            setIf_not_existsIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -466,8 +464,8 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(OVERWRITABLE_FIELD_DESC);
-    oprot.writeBool(this.overwritable);
+    oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
+    oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -519,10 +517,10 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("overwritable");
+    sb.append("if_not_exists");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isOverwritable(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

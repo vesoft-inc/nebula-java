@@ -7,9 +7,9 @@
 package com.vesoft.nebula.client.graph.data;
 
 import com.google.common.collect.Lists;
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Value;
-import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.PlanDescription;
 import java.util.ArrayList;

@@ -6,11 +6,11 @@
 
 package com.vesoft.nebula.client.graph.net;
 
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.graph.ErrorCode;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;

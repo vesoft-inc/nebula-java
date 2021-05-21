@@ -13,11 +13,11 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.AuthResponse;
-import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 

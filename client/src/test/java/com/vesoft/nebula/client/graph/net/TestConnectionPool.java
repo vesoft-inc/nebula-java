@@ -6,15 +6,14 @@
 
 package com.vesoft.nebula.client.graph.net;
 
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
-import com.vesoft.nebula.graph.ErrorCode;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Assert;

@@ -28,11 +28,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
   private static final TStruct STRUCT_DESC = new TStruct("CreateCPResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
   private static final TField PATH_FIELD_DESC = new TField("path", TType.STRING, (short)2);
+  private static final TField PARTITION_INFO_FIELD_DESC = new TField("partition_info", TType.STRUCT, (short)3);
 
   public ResponseCommon result;
   public byte[] path;
+  public com.vesoft.nebula.PartitionBackupInfo partition_info;
   public static final int RESULT = 1;
   public static final int PATH = 2;
+  public static final int PARTITION_INFO = 3;
 
   // isset id assignments
 
@@ -44,6 +47,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
     tmpMetaDataMap.put(PATH, new FieldMetaData("path", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(PARTITION_INFO, new FieldMetaData("partition_info", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.PartitionBackupInfo.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -62,15 +67,18 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   public CreateCPResp(
       ResponseCommon result,
-      byte[] path) {
+      byte[] path,
+      com.vesoft.nebula.PartitionBackupInfo partition_info) {
     this();
     this.result = result;
     this.path = path;
+    this.partition_info = partition_info;
   }
 
   public static class Builder {
     private ResponseCommon result;
     private byte[] path;
+    private com.vesoft.nebula.PartitionBackupInfo partition_info;
 
     public Builder() {
     }
@@ -85,10 +93,16 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
+    public Builder setPartition_info(final com.vesoft.nebula.PartitionBackupInfo partition_info) {
+      this.partition_info = partition_info;
+      return this;
+    }
+
     public CreateCPResp build() {
       CreateCPResp result = new CreateCPResp();
       result.setResult(this.result);
       result.setPath(this.path);
+      result.setPartition_info(this.partition_info);
       return result;
     }
   }
@@ -106,6 +120,9 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     }
     if (other.isSetPath()) {
       this.path = TBaseHelper.deepCopy(other.path);
+    }
+    if (other.isSetPartition_info()) {
+      this.partition_info = TBaseHelper.deepCopy(other.partition_info);
     }
   }
 
@@ -161,6 +178,30 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
+  public com.vesoft.nebula.PartitionBackupInfo getPartition_info() {
+    return this.partition_info;
+  }
+
+  public CreateCPResp setPartition_info(com.vesoft.nebula.PartitionBackupInfo partition_info) {
+    this.partition_info = partition_info;
+    return this;
+  }
+
+  public void unsetPartition_info() {
+    this.partition_info = null;
+  }
+
+  // Returns true if field partition_info is set (has been assigned a value) and false otherwise
+  public boolean isSetPartition_info() {
+    return this.partition_info != null;
+  }
+
+  public void setPartition_infoIsSet(boolean __value) {
+    if (!__value) {
+      this.partition_info = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
@@ -179,6 +220,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
+    case PARTITION_INFO:
+      if (__value == null) {
+        unsetPartition_info();
+      } else {
+        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -191,6 +240,9 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
     case PATH:
       return getPath();
+
+    case PARTITION_INFO:
+      return getPartition_info();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -211,12 +263,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
     if (!TBaseHelper.equalsSlow(this.isSetPath(), that.isSetPath(), this.path, that.path)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetPartition_info(), that.isSetPartition_info(), this.partition_info, that.partition_info)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, path});
+    return Arrays.deepHashCode(new Object[] {result, path, partition_info});
   }
 
   @Override
@@ -244,6 +298,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(path, other.path);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPartition_info()).compareTo(other.isSetPartition_info());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(partition_info, other.partition_info);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -276,6 +338,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case PARTITION_INFO:
+          if (__field.type == TType.STRUCT) {
+            this.partition_info = new com.vesoft.nebula.PartitionBackupInfo();
+            this.partition_info.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -301,6 +371,11 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     if (this.path != null) {
       oprot.writeFieldBegin(PATH_FIELD_DESC);
       oprot.writeBinary(this.path);
+      oprot.writeFieldEnd();
+    }
+    if (this.partition_info != null) {
+      oprot.writeFieldBegin(PARTITION_INFO_FIELD_DESC);
+      this.partition_info.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -347,6 +422,17 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
           sb.append(Integer.toHexString(this.getPath()[i]).length() > 1 ? Integer.toHexString(this.getPath()[i]).substring(Integer.toHexString(this.getPath()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPath()[i]).toUpperCase());
         }
         if (this.getPath().length > 128) sb.append(" ...");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("partition_info");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getPartition_info() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getPartition_info(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

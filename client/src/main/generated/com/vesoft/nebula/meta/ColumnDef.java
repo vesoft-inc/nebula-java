@@ -30,15 +30,18 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.STRUCT, (short)2);
   private static final TField DEFAULT_VALUE_FIELD_DESC = new TField("default_value", TType.STRING, (short)3);
   private static final TField NULLABLE_FIELD_DESC = new TField("nullable", TType.BOOL, (short)4);
+  private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)5);
 
   public byte[] name;
   public ColumnTypeDef type;
   public byte[] default_value;
   public boolean nullable;
+  public byte[] comment;
   public static final int NAME = 1;
   public static final int TYPE = 2;
   public static final int DEFAULT_VALUE = 3;
   public static final int NULLABLE = 4;
+  public static final int COMMENT = 5;
 
   // isset id assignments
   private static final int __NULLABLE_ISSET_ID = 0;
@@ -56,6 +59,8 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(NULLABLE, new FieldMetaData("nullable", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -80,13 +85,15 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       byte[] name,
       ColumnTypeDef type,
       byte[] default_value,
-      boolean nullable) {
+      boolean nullable,
+      byte[] comment) {
     this();
     this.name = name;
     this.type = type;
     this.default_value = default_value;
     this.nullable = nullable;
     setNullableIsSet(true);
+    this.comment = comment;
   }
 
   public static class Builder {
@@ -94,6 +101,7 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     private ColumnTypeDef type;
     private byte[] default_value;
     private boolean nullable;
+    private byte[] comment;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -121,6 +129,11 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
+    public Builder setComment(final byte[] comment) {
+      this.comment = comment;
+      return this;
+    }
+
     public ColumnDef build() {
       ColumnDef result = new ColumnDef();
       result.setName(this.name);
@@ -129,6 +142,7 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       if (__optional_isset.get(__NULLABLE_ISSET_ID)) {
         result.setNullable(this.nullable);
       }
+      result.setComment(this.comment);
       return result;
     }
   }
@@ -153,6 +167,9 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       this.default_value = TBaseHelper.deepCopy(other.default_value);
     }
     this.nullable = TBaseHelper.deepCopy(other.nullable);
+    if (other.isSetComment()) {
+      this.comment = TBaseHelper.deepCopy(other.comment);
+    }
   }
 
   public ColumnDef deepCopy() {
@@ -254,6 +271,30 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
     __isset_bit_vector.set(__NULLABLE_ISSET_ID, __value);
   }
 
+  public byte[] getComment() {
+    return this.comment;
+  }
+
+  public ColumnDef setComment(byte[] comment) {
+    this.comment = comment;
+    return this;
+  }
+
+  public void unsetComment() {
+    this.comment = null;
+  }
+
+  // Returns true if field comment is set (has been assigned a value) and false otherwise
+  public boolean isSetComment() {
+    return this.comment != null;
+  }
+
+  public void setCommentIsSet(boolean __value) {
+    if (!__value) {
+      this.comment = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case NAME:
@@ -288,6 +329,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       }
       break;
 
+    case COMMENT:
+      if (__value == null) {
+        unsetComment();
+      } else {
+        setComment((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -306,6 +355,9 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
 
     case NULLABLE:
       return new Boolean(isNullable());
+
+    case COMMENT:
+      return getComment();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -330,12 +382,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
 
     if (!TBaseHelper.equalsNobinary(this.isSetNullable(), that.isSetNullable(), this.nullable, that.nullable)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {name, type, default_value, nullable});
+    return Arrays.deepHashCode(new Object[] {name, type, default_value, nullable, comment});
   }
 
   @Override
@@ -379,6 +433,14 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(nullable, other.nullable);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetComment()).compareTo(other.isSetComment());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(comment, other.comment);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -426,6 +488,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMENT:
+          if (__field.type == TType.STRING) {
+            this.comment = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -464,6 +533,13 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(NULLABLE_FIELD_DESC);
       oprot.writeBool(this.nullable);
       oprot.writeFieldEnd();
+    }
+    if (this.comment != null) {
+      if (isSetComment()) {
+        oprot.writeFieldBegin(COMMENT_FIELD_DESC);
+        oprot.writeBinary(this.comment);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -538,6 +614,25 @@ public class ColumnDef implements TBase, java.io.Serializable, Cloneable, Compar
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this.isNullable(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetComment())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("comment");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getComment() == null) {
+        sb.append("null");
+      } else {
+          int __comment_size = Math.min(this.getComment().length, 128);
+          for (int i = 0; i < __comment_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
+          }
+          if (this.getComment().length > 128) sb.append(" ...");
+      }
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
