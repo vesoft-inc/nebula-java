@@ -61,8 +61,53 @@ public class NebulaPool {
         }
     }
 
+    protected SyncConnection getConnection() throws NotValidConnectionException, IOErrorException {
+        // If no idle connection, try once
+        int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
+        SyncConnection connection = null;
+        boolean hasOkConn = false;
+        try {
+            while (retry-- > 0) {
+                connection = objectPool.borrowObject(waitTime);
+                if (connection == null) {
+                    continue;
+                }
+                if (!connection.ping()) {
+                    log.debug("The connection is broken, set invalidateObject");
+                    setInvalidateConnection(connection);
+                    continue;
+                }
+                hasOkConn = true;
+                break;
+            }
+            // All idle connections are broken, so need to create new one
+            if (!hasOkConn) {
+                connection = objectPool.borrowObject(waitTime);
+                if (connection == null) {
+                    throw new NotValidConnectionException("Get null connection from the pool");
+                }
+                if (!connection.ping()) {
+                    log.debug("The connection is broken, set invalidateObject");
+                    setInvalidateConnection(connection);
+                    throw new NotValidConnectionException("The connection ping failed.");
+                }
+            }
+            log.info(String.format("Get connection to %s:%d",
+                    connection.getServerAddress().getHost(),
+                    connection.getServerAddress().getPort()));
+            return connection;
+        } catch (NotValidConnectionException | IOErrorException e) {
+            throw e;
+        } catch (IllegalStateException e) {
+            throw new NotValidConnectionException(e.getMessage());
+        } catch (Exception e) {
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        }
+    }
+
+
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
-            throws UnknownHostException, InvalidConfigException {
+        throws UnknownHostException, InvalidConfigException {
         checkConfig(config);
         List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
@@ -89,24 +134,9 @@ public class NebulaPool {
     public Session getSession(String userName, String password, boolean reconnect)
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
         try {
-            // If no idle connection, try once
-            int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
-            SyncConnection connection = null;
-            while (retry-- > 0) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null || !connection.ping()) {
-                    continue;
-                }
-                break;
-            }
-            if (connection == null) {
-                throw new NotValidConnectionException("Get connection object failed.");
-            }
-            log.info(String.format("Get connection to %s:%d",
-                     connection.getServerAddress().getHost(),
-                     connection.getServerAddress().getPort()));
+            SyncConnection connection = getConnection();
             long sessionID = connection.authenticate(userName, password);
-            return new Session(connection, sessionID, this.objectPool, reconnect);
+            return new Session(connection, sessionID, this, reconnect);
         } catch (NotValidConnectionException | AuthFailedException | IOErrorException e) {
             throw e;
         } catch (IllegalStateException e) {
@@ -132,5 +162,17 @@ public class NebulaPool {
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();
         }
+    }
+
+    protected void setInvalidateConnection(SyncConnection connection) {
+        try {
+            objectPool.invalidateObject(connection);
+        } catch (Exception e) {
+            log.error("Set invalidate object failed");
+        }
+    }
+
+    protected void returnConnection(SyncConnection connection) {
+        objectPool.returnObject(connection);
     }
 }
