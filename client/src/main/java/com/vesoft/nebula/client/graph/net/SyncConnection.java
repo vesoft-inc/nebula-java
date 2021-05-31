@@ -86,15 +86,10 @@ public class SyncConnection extends Connection {
     @Override
     public boolean ping() {
         try {
-            client.execute(0, "YIELD 1;".getBytes());
+            execute(0, "YIELD 1;");
             return true;
-        } catch (TException e) {
-            if (e instanceof TTransportException) {
-                TTransportException te = (TTransportException) e;
-                return te.getType() != TTransportException.END_OF_FILE
-                        && te.getType() != TTransportException.NOT_OPEN;
-            }
-            return true;
+        } catch (IOErrorException e) {
+            return false;
         }
     }
 

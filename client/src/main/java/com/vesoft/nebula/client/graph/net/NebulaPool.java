@@ -61,51 +61,6 @@ public class NebulaPool {
         }
     }
 
-    protected SyncConnection getConnection() throws NotValidConnectionException, IOErrorException {
-        // If no idle connection, try once
-        int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
-        SyncConnection connection = null;
-        boolean hasOkConn = false;
-        try {
-            while (retry-- > 0) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null) {
-                    continue;
-                }
-                if (!connection.ping()) {
-                    log.debug("The connection is broken, set invalidateObject");
-                    setInvalidateConnection(connection);
-                    continue;
-                }
-                hasOkConn = true;
-                break;
-            }
-            // All idle connections are broken, so need to create new one
-            if (!hasOkConn) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null) {
-                    throw new NotValidConnectionException("Get null connection from the pool");
-                }
-                if (!connection.ping()) {
-                    log.debug("The connection is broken, set invalidateObject");
-                    setInvalidateConnection(connection);
-                    throw new NotValidConnectionException("The connection ping failed.");
-                }
-            }
-            log.info(String.format("Get connection to %s:%d",
-                    connection.getServerAddress().getHost(),
-                    connection.getServerAddress().getPort()));
-            return connection;
-        } catch (NotValidConnectionException | IOErrorException e) {
-            throw e;
-        } catch (IllegalStateException e) {
-            throw new NotValidConnectionException(e.getMessage());
-        } catch (Exception e) {
-            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
-        }
-    }
-
-
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
         throws UnknownHostException, InvalidConfigException {
         checkConfig(config);
@@ -174,5 +129,50 @@ public class NebulaPool {
 
     protected void returnConnection(SyncConnection connection) {
         objectPool.returnObject(connection);
+    }
+
+    protected SyncConnection getConnection() throws NotValidConnectionException, IOErrorException {
+        // If no idle connection, try once
+        int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
+        SyncConnection connection = null;
+        boolean hasOkConn = false;
+        try {
+            while (retry-- > 0) {
+                connection = objectPool.borrowObject(waitTime);
+                if (connection == null) {
+                    continue;
+                }
+                if (!connection.ping()) {
+                    log.info("The connection is broken, set invalidateObject");
+                    setInvalidateConnection(connection);
+                    continue;
+                }
+                hasOkConn = true;
+                break;
+            }
+            // All idle connections are broken, so need to create new one
+            if (!hasOkConn) {
+                connection = objectPool.borrowObject(waitTime);
+                if (connection == null) {
+                    throw new NotValidConnectionException("Get null connection from the pool");
+                }
+                if (!connection.ping()) {
+                    log.info("The connection is broken, set invalidateObject");
+                    setInvalidateConnection(connection);
+                    throw new NotValidConnectionException("The connection ping failed.");
+                }
+                log.info("Create new connection");
+            }
+            log.info(String.format("Get connection to %s:%d",
+                    connection.getServerAddress().getHost(),
+                    connection.getServerAddress().getPort()));
+            return connection;
+        } catch (NotValidConnectionException | IOErrorException e) {
+            throw e;
+        } catch (IllegalStateException e) {
+            throw new NotValidConnectionException(e.getMessage());
+        } catch (Exception e) {
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        }
     }
 }
