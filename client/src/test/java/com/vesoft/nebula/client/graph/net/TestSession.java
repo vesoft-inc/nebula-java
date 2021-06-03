@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class TestSession {
         }
     }
 
-    @Test()
+    @Test
     public void testMultiThreadUseTheSameSession() {
         NebulaPool pool = new NebulaPool();
         try {
@@ -77,7 +76,7 @@ public class TestSession {
         }
     }
 
-    @Test()
+    @Test
     public void testReconnectWithOneService() {
         System.out.println("testReconnectWithOneService");
         NebulaPool pool = new NebulaPool();
@@ -111,7 +110,7 @@ public class TestSession {
         }
     }
 
-    @Test()
+    @Test
     public void testReconnectWithMultiServices() {
         Runtime runtime = Runtime.getRuntime();
         NebulaPool pool = new NebulaPool();
