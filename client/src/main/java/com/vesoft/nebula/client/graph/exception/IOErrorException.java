@@ -16,6 +16,8 @@ public class IOErrorException extends java.lang.Exception {
 
     public static final int E_CONNECT_BROKEN = 2;
 
+    public static final int E_MULTI_THREADS_USE_CONNECTION = 3;
+
     private int type = E_UNKNOWN;
 
     public IOErrorException(int errorType, String message) {
