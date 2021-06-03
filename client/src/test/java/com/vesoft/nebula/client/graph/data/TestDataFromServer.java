@@ -333,4 +333,15 @@ public class TestDataFromServer {
             assert false;
         }
     }
+
+    @Test
+    public void testErrorResult() {
+        try {
+            ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
+            Assert.assertTrue(result.toString().contains("ExecutionResponse"));
+        } catch (IOErrorException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
 }

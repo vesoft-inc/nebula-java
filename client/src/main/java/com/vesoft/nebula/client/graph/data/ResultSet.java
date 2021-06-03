@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 public class ResultSet {
     private final ExecutionResponse response;
-    private List<String> columnNames;
+    private List<String> columnNames = new ArrayList<>();
     private final String decodeType = "utf-8";
 
     public static class Record implements Iterable<ValueWrapper> {
@@ -131,7 +131,6 @@ public class ResultSet {
         }
         this.response = resp;
         if (resp.data != null) {
-            this.columnNames = Lists.newArrayListWithCapacity(resp.data.column_names.size());
             // space name's charset is 'utf-8'
             for (byte[] column : resp.data.column_names) {
                 this.columnNames.add(new String(column));
@@ -290,6 +289,10 @@ public class ResultSet {
 
     @Override
     public String toString() {
+        // When error, print the raw data directly
+        if (!isSucceeded()) {
+            return response.toString();
+        }
         int i = 0;
         List<String> rowStrs = new ArrayList<>();
         while (i < rowsSize()) {
