@@ -37,7 +37,41 @@ public class TestSession {
     }
 
     @Test()
-    public void testReconnect() {
+    public void testReconnectWithOneService() {
+        System.out.println("testReconnectWithOneService");
+        NebulaPool pool = new NebulaPool();
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMaxConnSize(1);
+            List<HostAddress> addresses = Arrays.asList(
+                new HostAddress("127.0.0.1", 9669));
+            Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
+            Session session = pool.getSession("root", "nebula", true);
+            session.release();
+
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker restart nebula-docker-compose_graphd0_1")
+                .waitFor(5, TimeUnit.SECONDS);
+            TimeUnit.SECONDS.sleep(5);
+            // the connections in pool are broken, test getSession can get right connection
+            session = pool.getSession("root", "nebula", true);
+
+            // the connections in pool are broken, test execute can get right connection
+            runtime.exec("docker restart nebula-docker-compose_graphd0_1")
+                .waitFor(5, TimeUnit.SECONDS);
+            TimeUnit.SECONDS.sleep(5);
+            session.execute("SHOW SPACES");
+            session.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(), true);
+        } finally {
+            pool.close();
+        }
+    }
+
+    @Test()
+    public void testReconnectWithMultiServices() {
         Runtime runtime = Runtime.getRuntime();
         NebulaPool pool = new NebulaPool();
         try {
