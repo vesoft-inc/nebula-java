@@ -15,7 +15,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +40,43 @@ public class TestSession {
         }
     }
 
-    @Test()
+    @Test
+    public void testMultiThreadUseTheSameSession() {
+        NebulaPool pool = new NebulaPool();
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMaxConnSize(1);
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9670));
+            Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
+            Session session = pool.getSession("root", "nebula", true);
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            AtomicInteger failedCount = new AtomicInteger(0);
+            AtomicReference<String> exceptionStr = new AtomicReference<>("");
+            for (int i = 0; i < 10; i++) {
+                executorService.submit(() -> {
+                    try {
+                        session.execute("SHOW SPACES;");
+                    } catch (Exception e) {
+                        exceptionStr.set(e.getMessage());
+                        failedCount.incrementAndGet();
+                    }
+                });
+            }
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+            executorService.shutdown();
+            assert failedCount.get() > 0;
+            Assert.assertTrue(exceptionStr.get().contains(
+                "Multi threads use the same session, "
+                    + "the previous execution was not completed, current thread is:"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(),false);
+        } finally {
+            pool.close();
+        }
+    }
+
+    @Test
     public void testReconnectWithOneService() {
         System.out.println("testReconnectWithOneService");
         NebulaPool pool = new NebulaPool();
@@ -70,7 +110,7 @@ public class TestSession {
         }
     }
 
-    @Test()
+    @Test
     public void testReconnectWithMultiServices() {
         Runtime runtime = Runtime.getRuntime();
         NebulaPool pool = new NebulaPool();
@@ -84,9 +124,9 @@ public class TestSession {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(6);
             List<HostAddress> addresses = Arrays.asList(
-                    new HostAddress("127.0.0.1", 9669),
-                    new HostAddress("127.0.0.1", 9670),
-                    new HostAddress("127.0.0.1", 9671));
+                new HostAddress("127.0.0.1", 9669),
+                new HostAddress("127.0.0.1", 9670),
+                new HostAddress("127.0.0.1", 9671));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             Session session = pool.getSession("root", "nebula", true);
             System.out.println("The address of session is " + session.getGraphHost());
@@ -136,9 +176,9 @@ public class TestSession {
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")
-                        .waitFor(5, TimeUnit.SECONDS);
+                    .waitFor(5, TimeUnit.SECONDS);
                 runtime.exec("docker start nebula-docker-compose_graphd1_1")
-                        .waitFor(5, TimeUnit.SECONDS);
+                    .waitFor(5, TimeUnit.SECONDS);
             } catch (Exception e) {
                 e.printStackTrace();
             }

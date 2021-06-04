@@ -14,7 +14,6 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
-import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +49,7 @@ public class MockStorageData {
                 assert (false);
             }
         } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException
-                | UnsupportedEncodingException e) {
+                | IOErrorException | AuthFailedException e) {
             e.printStackTrace();
         } finally {
             pool.close();
