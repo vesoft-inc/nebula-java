@@ -33,42 +33,59 @@ public class GraphClientExample {
             for (ValueWrapper value : record.values()) {
                 if (value.isLong()) {
                     System.out.printf("%15s |", value.asLong());
+                     continue;
                 }
                 if (value.isBoolean()) {
                     System.out.printf("%15s |", value.asBoolean());
+                     continue;
                 }
                 if (value.isDouble()) {
                     System.out.printf("%15s |", value.asDouble());
+                     continue;
                 }
                 if (value.isString()) {
                     System.out.printf("%15s |", value.asString());
+                     continue;
                 }
                 if (value.isTime()) {
                     System.out.printf("%15s |", value.asTime());
+                     continue;
                 }
                 if (value.isDate()) {
                     System.out.printf("%15s |", value.asDate());
+                     continue;
                 }
                 if (value.isDateTime()) {
                     System.out.printf("%15s |", value.asDateTime());
+                     continue;
                 }
                 if (value.isVertex()) {
                     System.out.printf("%15s |", value.asNode());
+                     continue;
                 }
                 if (value.isEdge()) {
                     System.out.printf("%15s |", value.asRelationship());
+                     continue;
                 }
                 if (value.isPath()) {
                     System.out.printf("%15s |", value.asPath());
+                     continue;
                 }
                 if (value.isList()) {
                     System.out.printf("%15s |", value.asList());
+                     continue;
                 }
                 if (value.isSet()) {
                     System.out.printf("%15s |", value.asSet());
+                     continue;
                 }
                 if (value.isMap()) {
                     System.out.printf("%15s |", value.asMap());
+                     continue;
+                }
+                if (value.isEmpty()){
+                    System.out.printf("%15s |", value.toString());
+                    continue;
                 }
             }
             System.out.println();
