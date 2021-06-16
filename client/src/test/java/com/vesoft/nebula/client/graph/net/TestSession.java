@@ -42,6 +42,7 @@ public class TestSession {
 
     @Test
     public void testMultiThreadUseTheSameSession() {
+        System.out.println("<==== testMultiThreadUseTheSameSession ====>");
         NebulaPool pool = new NebulaPool();
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
@@ -78,7 +79,7 @@ public class TestSession {
 
     @Test
     public void testReconnectWithOneService() {
-        System.out.println("testReconnectWithOneService");
+        System.out.println("<==== testReconnectWithOneService ====>");
         NebulaPool pool = new NebulaPool();
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
@@ -112,6 +113,7 @@ public class TestSession {
 
     @Test
     public void testReconnectWithMultiServices() {
+        System.out.println("<==== testReconnectWithMultiServices ====>");
         Runtime runtime = Runtime.getRuntime();
         NebulaPool pool = new NebulaPool();
         try {
@@ -134,6 +136,9 @@ public class TestSession {
             // test ping
             Assert.assertTrue(session.ping());
 
+            ResultSet resp = session.execute(
+                "CREATE SPACE IF NOT EXISTS test_session; USE test_session;");
+            Assert.assertTrue(resp.isSucceeded());
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
                     cmd = "docker stop nebula-docker-compose_graphd0_1";
@@ -146,16 +151,13 @@ public class TestSession {
                     printProcessStatus(cmd, p);
                 }
                 try {
-                    ResultSet resp = session.execute("SHOW SPACES");
+                    resp = session.execute("SHOW TAGS");
                     System.out.println("The address of session is " + session.getGraphHost());
-                    if (i >= 3) {
-                        Assert.assertEquals(
-                            ErrorCode.E_SESSION_INVALID.getValue(), resp.getErrorCode());
-                    } else {
-                        Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), resp.getErrorCode());
-                    }
+                    Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+                    Assert.assertEquals(resp.getSpaceName(), "test_session");
                 } catch (IOErrorException ie) {
-                    Assert.fail();
+                    ie.printStackTrace();
+                    Assert.assertFalse(ie.getMessage(), true);
                 }
                 TimeUnit.SECONDS.sleep(2);
             }
@@ -179,6 +181,7 @@ public class TestSession {
                     .waitFor(5, TimeUnit.SECONDS);
                 runtime.exec("docker start nebula-docker-compose_graphd1_1")
                     .waitFor(5, TimeUnit.SECONDS);
+                TimeUnit.SECONDS.sleep(5);
             } catch (Exception e) {
                 e.printStackTrace();
             }
