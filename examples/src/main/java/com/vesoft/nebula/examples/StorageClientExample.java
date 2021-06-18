@@ -30,10 +30,13 @@ public class StorageClientExample {
             client.connect();
         } catch (Exception e) {
             LOGGER.error("storage client connect error, ", e);
+            client.close();
             System.exit(1);
         }
         scanVertex(client);
         scanEdge(client);
+
+        client.close();
     }
 
     /**
@@ -53,6 +56,7 @@ public class StorageClientExample {
                 result = iterator.next();
             } catch (Exception e) {
                 LOGGER.error("scan error, ", e);
+                client.close();
                 System.exit(1);
             }
             if (result.isEmpty()) {
@@ -99,6 +103,7 @@ public class StorageClientExample {
                 result = iterator.next();
             } catch (Exception e) {
                 LOGGER.error("scan error, ", e);
+                client.close();
                 System.exit(1);
             }
             if (result.isEmpty()) {
