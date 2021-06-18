@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanEdgeResultIterator.class);
 
     private final ScanEdgeRequest request;
+    private ExecutorService threadPool = null;
 
     private ScanEdgeResultIterator(MetaManager metaManager,
                                    StorageConnPool pool,
@@ -62,6 +65,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         CountDownLatch countDownLatch = new CountDownLatch(addresses.size());
         AtomicInteger existSuccess = new AtomicInteger(0);
 
+        threadPool = Executors.newFixedThreadPool(addresses.size());
         for (HostAddress addr : addresses) {
             threadPool.submit(() -> {
                 ScanEdgeRequest partRequest = new ScanEdgeRequest(request);
@@ -121,6 +125,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
         try {
             countDownLatch.await();
+            threadPool.shutdown();
         } catch (InterruptedException interruptedE) {
             LOGGER.error("scan interrupted:", interruptedE);
             throw interruptedE;
