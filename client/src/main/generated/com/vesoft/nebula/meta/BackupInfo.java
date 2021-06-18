@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula;
+package com.vesoft.nebula.meta;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,12 +24,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<PartitionBackupInfo> {
-  private static final TStruct STRUCT_DESC = new TStruct("PartitionBackupInfo");
-  private static final TField INFO_FIELD_DESC = new TField("info", TType.MAP, (short)1);
+public class BackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<BackupInfo> {
+  private static final TStruct STRUCT_DESC = new TStruct("BackupInfo");
+  private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)1);
+  private static final TField INFO_FIELD_DESC = new TField("info", TType.LIST, (short)2);
 
-  public Map<Integer,LogInfo> info;
-  public static final int INFO = 1;
+  public com.vesoft.nebula.HostAddr host;
+  public List<com.vesoft.nebula.CheckpointInfo> info;
+  public static final int HOST = 1;
+  public static final int INFO = 2;
 
   // isset id assignments
 
@@ -37,39 +40,49 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new StructMetaData(TType.STRUCT, LogInfo.class))));
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.CheckpointInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(PartitionBackupInfo.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(BackupInfo.class, metaDataMap);
   }
 
-  public PartitionBackupInfo() {
+  public BackupInfo() {
   }
 
-  public PartitionBackupInfo(
-      Map<Integer,LogInfo> info) {
+  public BackupInfo(
+      com.vesoft.nebula.HostAddr host,
+      List<com.vesoft.nebula.CheckpointInfo> info) {
     this();
+    this.host = host;
     this.info = info;
   }
 
   public static class Builder {
-    private Map<Integer,LogInfo> info;
+    private com.vesoft.nebula.HostAddr host;
+    private List<com.vesoft.nebula.CheckpointInfo> info;
 
     public Builder() {
     }
 
-    public Builder setInfo(final Map<Integer,LogInfo> info) {
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
+    public Builder setInfo(final List<com.vesoft.nebula.CheckpointInfo> info) {
       this.info = info;
       return this;
     }
 
-    public PartitionBackupInfo build() {
-      PartitionBackupInfo result = new PartitionBackupInfo();
+    public BackupInfo build() {
+      BackupInfo result = new BackupInfo();
+      result.setHost(this.host);
       result.setInfo(this.info);
       return result;
     }
@@ -82,21 +95,48 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public PartitionBackupInfo(PartitionBackupInfo other) {
+  public BackupInfo(BackupInfo other) {
+    if (other.isSetHost()) {
+      this.host = TBaseHelper.deepCopy(other.host);
+    }
     if (other.isSetInfo()) {
       this.info = TBaseHelper.deepCopy(other.info);
     }
   }
 
-  public PartitionBackupInfo deepCopy() {
-    return new PartitionBackupInfo(this);
+  public BackupInfo deepCopy() {
+    return new BackupInfo(this);
   }
 
-  public Map<Integer,LogInfo> getInfo() {
+  public com.vesoft.nebula.HostAddr getHost() {
+    return this.host;
+  }
+
+  public BackupInfo setHost(com.vesoft.nebula.HostAddr host) {
+    this.host = host;
+    return this;
+  }
+
+  public void unsetHost() {
+    this.host = null;
+  }
+
+  // Returns true if field host is set (has been assigned a value) and false otherwise
+  public boolean isSetHost() {
+    return this.host != null;
+  }
+
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
+      this.host = null;
+    }
+  }
+
+  public List<com.vesoft.nebula.CheckpointInfo> getInfo() {
     return this.info;
   }
 
-  public PartitionBackupInfo setInfo(Map<Integer,LogInfo> info) {
+  public BackupInfo setInfo(List<com.vesoft.nebula.CheckpointInfo> info) {
     this.info = info;
     return this;
   }
@@ -119,11 +159,19 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
+    case HOST:
+      if (__value == null) {
+        unsetHost();
+      } else {
+        setHost((com.vesoft.nebula.HostAddr)__value);
+      }
+      break;
+
     case INFO:
       if (__value == null) {
         unsetInfo();
       } else {
-        setInfo((Map<Integer,LogInfo>)__value);
+        setInfo((List<com.vesoft.nebula.CheckpointInfo>)__value);
       }
       break;
 
@@ -134,6 +182,9 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case HOST:
+      return getHost();
+
     case INFO:
       return getInfo();
 
@@ -148,9 +199,11 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof PartitionBackupInfo))
+    if (!(_that instanceof BackupInfo))
       return false;
-    PartitionBackupInfo that = (PartitionBackupInfo)_that;
+    BackupInfo that = (BackupInfo)_that;
+
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
 
@@ -159,11 +212,11 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {info});
+    return Arrays.deepHashCode(new Object[] {host, info});
   }
 
   @Override
-  public int compareTo(PartitionBackupInfo other) {
+  public int compareTo(BackupInfo other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -174,6 +227,14 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(host, other.host);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
     if (lastComparison != 0) {
       return lastComparison;
@@ -196,23 +257,29 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       }
       switch (__field.id)
       {
+        case HOST:
+          if (__field.type == TType.STRUCT) {
+            this.host = new com.vesoft.nebula.HostAddr();
+            this.host.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         case INFO:
-          if (__field.type == TType.MAP) {
+          if (__field.type == TType.LIST) {
             {
-              TMap _map52 = iprot.readMapBegin();
-              this.info = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map52.size));
-              for (int _i53 = 0; 
-                   (_map52.size < 0) ? iprot.peekMap() : (_i53 < _map52.size); 
-                   ++_i53)
+              TList _list237 = iprot.readListBegin();
+              this.info = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list237.size));
+              for (int _i238 = 0; 
+                   (_list237.size < 0) ? iprot.peekList() : (_i238 < _list237.size); 
+                   ++_i238)
               {
-                int _key54;
-                LogInfo _val55;
-                _key54 = iprot.readI32();
-                _val55 = new LogInfo();
-                _val55.read(iprot);
-                this.info.put(_key54, _val55);
+                com.vesoft.nebula.CheckpointInfo _elem239;
+                _elem239 = new com.vesoft.nebula.CheckpointInfo();
+                _elem239.read(iprot);
+                this.info.add(_elem239);
               }
-              iprot.readMapEnd();
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -235,15 +302,19 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    if (this.host != null) {
+      oprot.writeFieldBegin(HOST_FIELD_DESC);
+      this.host.write(oprot);
+      oprot.writeFieldEnd();
+    }
     if (this.info != null) {
       oprot.writeFieldBegin(INFO_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.info.size()));
-        for (Map.Entry<Integer, LogInfo> _iter56 : this.info.entrySet())        {
-          oprot.writeI32(_iter56.getKey());
-          _iter56.getValue().write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
+        for (com.vesoft.nebula.CheckpointInfo _iter240 : this.info)        {
+          _iter240.write(oprot);
         }
-        oprot.writeMapEnd();
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -261,12 +332,23 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("PartitionBackupInfo");
+    StringBuilder sb = new StringBuilder("BackupInfo");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
+    sb.append(indentStr);
+    sb.append("host");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getHost() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("info");
     sb.append(space);

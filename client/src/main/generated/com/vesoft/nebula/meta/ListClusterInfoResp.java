@@ -24,11 +24,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListFTClientsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListFTClientsResp");
+public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListClusterInfoResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListClusterInfoResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.LIST, (short)3);
+  private static final TField META_SERVERS_FIELD_DESC = new TField("meta_servers", TType.LIST, (short)3);
+  private static final TField STORAGE_SERVERS_FIELD_DESC = new TField("storage_servers", TType.LIST, (short)4);
 
   /**
    * 
@@ -36,10 +37,12 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<FTClient> clients;
+  public List<com.vesoft.nebula.HostAddr> meta_servers;
+  public List<com.vesoft.nebula.NodeInfo> storage_servers;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int CLIENTS = 3;
+  public static final int META_SERVERS = 3;
+  public static final int STORAGE_SERVERS = 4;
 
   // isset id assignments
 
@@ -51,33 +54,39 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(CLIENTS, new FieldMetaData("clients", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(META_SERVERS, new FieldMetaData("meta_servers", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, FTClient.class))));
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(STORAGE_SERVERS, new FieldMetaData("storage_servers", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.NodeInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListFTClientsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListClusterInfoResp.class, metaDataMap);
   }
 
-  public ListFTClientsResp() {
+  public ListClusterInfoResp() {
   }
 
-  public ListFTClientsResp(
+  public ListClusterInfoResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<FTClient> clients) {
+      List<com.vesoft.nebula.HostAddr> meta_servers,
+      List<com.vesoft.nebula.NodeInfo> storage_servers) {
     this();
     this.code = code;
     this.leader = leader;
-    this.clients = clients;
+    this.meta_servers = meta_servers;
+    this.storage_servers = storage_servers;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<FTClient> clients;
+    private List<com.vesoft.nebula.HostAddr> meta_servers;
+    private List<com.vesoft.nebula.NodeInfo> storage_servers;
 
     public Builder() {
     }
@@ -92,16 +101,22 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
-    public Builder setClients(final List<FTClient> clients) {
-      this.clients = clients;
+    public Builder setMeta_servers(final List<com.vesoft.nebula.HostAddr> meta_servers) {
+      this.meta_servers = meta_servers;
       return this;
     }
 
-    public ListFTClientsResp build() {
-      ListFTClientsResp result = new ListFTClientsResp();
+    public Builder setStorage_servers(final List<com.vesoft.nebula.NodeInfo> storage_servers) {
+      this.storage_servers = storage_servers;
+      return this;
+    }
+
+    public ListClusterInfoResp build() {
+      ListClusterInfoResp result = new ListClusterInfoResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setClients(this.clients);
+      result.setMeta_servers(this.meta_servers);
+      result.setStorage_servers(this.storage_servers);
       return result;
     }
   }
@@ -113,20 +128,23 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListFTClientsResp(ListFTClientsResp other) {
+  public ListClusterInfoResp(ListClusterInfoResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetClients()) {
-      this.clients = TBaseHelper.deepCopy(other.clients);
+    if (other.isSetMeta_servers()) {
+      this.meta_servers = TBaseHelper.deepCopy(other.meta_servers);
+    }
+    if (other.isSetStorage_servers()) {
+      this.storage_servers = TBaseHelper.deepCopy(other.storage_servers);
     }
   }
 
-  public ListFTClientsResp deepCopy() {
-    return new ListFTClientsResp(this);
+  public ListClusterInfoResp deepCopy() {
+    return new ListClusterInfoResp(this);
   }
 
   /**
@@ -141,7 +159,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ListFTClientsResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public ListClusterInfoResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +183,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     return this.leader;
   }
 
-  public ListFTClientsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public ListClusterInfoResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,27 +203,51 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<FTClient> getClients() {
-    return this.clients;
+  public List<com.vesoft.nebula.HostAddr> getMeta_servers() {
+    return this.meta_servers;
   }
 
-  public ListFTClientsResp setClients(List<FTClient> clients) {
-    this.clients = clients;
+  public ListClusterInfoResp setMeta_servers(List<com.vesoft.nebula.HostAddr> meta_servers) {
+    this.meta_servers = meta_servers;
     return this;
   }
 
-  public void unsetClients() {
-    this.clients = null;
+  public void unsetMeta_servers() {
+    this.meta_servers = null;
   }
 
-  // Returns true if field clients is set (has been assigned a value) and false otherwise
-  public boolean isSetClients() {
-    return this.clients != null;
+  // Returns true if field meta_servers is set (has been assigned a value) and false otherwise
+  public boolean isSetMeta_servers() {
+    return this.meta_servers != null;
   }
 
-  public void setClientsIsSet(boolean __value) {
+  public void setMeta_serversIsSet(boolean __value) {
     if (!__value) {
-      this.clients = null;
+      this.meta_servers = null;
+    }
+  }
+
+  public List<com.vesoft.nebula.NodeInfo> getStorage_servers() {
+    return this.storage_servers;
+  }
+
+  public ListClusterInfoResp setStorage_servers(List<com.vesoft.nebula.NodeInfo> storage_servers) {
+    this.storage_servers = storage_servers;
+    return this;
+  }
+
+  public void unsetStorage_servers() {
+    this.storage_servers = null;
+  }
+
+  // Returns true if field storage_servers is set (has been assigned a value) and false otherwise
+  public boolean isSetStorage_servers() {
+    return this.storage_servers != null;
+  }
+
+  public void setStorage_serversIsSet(boolean __value) {
+    if (!__value) {
+      this.storage_servers = null;
     }
   }
 
@@ -228,11 +270,19 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case CLIENTS:
+    case META_SERVERS:
       if (__value == null) {
-        unsetClients();
+        unsetMeta_servers();
       } else {
-        setClients((List<FTClient>)__value);
+        setMeta_servers((List<com.vesoft.nebula.HostAddr>)__value);
+      }
+      break;
+
+    case STORAGE_SERVERS:
+      if (__value == null) {
+        unsetStorage_servers();
+      } else {
+        setStorage_servers((List<com.vesoft.nebula.NodeInfo>)__value);
       }
       break;
 
@@ -249,8 +299,11 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     case LEADER:
       return getLeader();
 
-    case CLIENTS:
-      return getClients();
+    case META_SERVERS:
+      return getMeta_servers();
+
+    case STORAGE_SERVERS:
+      return getStorage_servers();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +316,28 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListFTClientsResp))
+    if (!(_that instanceof ListClusterInfoResp))
       return false;
-    ListFTClientsResp that = (ListFTClientsResp)_that;
+    ListClusterInfoResp that = (ListClusterInfoResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetClients(), that.isSetClients(), this.clients, that.clients)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetMeta_servers(), that.isSetMeta_servers(), this.meta_servers, that.meta_servers)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetStorage_servers(), that.isSetStorage_servers(), this.storage_servers, that.storage_servers)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, clients});
+    return Arrays.deepHashCode(new Object[] {code, leader, meta_servers, storage_servers});
   }
 
   @Override
-  public int compareTo(ListFTClientsResp other) {
+  public int compareTo(ListClusterInfoResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +364,19 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetClients()).compareTo(other.isSetClients());
+    lastComparison = Boolean.valueOf(isSetMeta_servers()).compareTo(other.isSetMeta_servers());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(clients, other.clients);
+    lastComparison = TBaseHelper.compareTo(meta_servers, other.meta_servers);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetStorage_servers()).compareTo(other.isSetStorage_servers());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(storage_servers, other.storage_servers);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,19 +409,39 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case CLIENTS:
+        case META_SERVERS:
           if (__field.type == TType.LIST) {
             {
-              TList _list270 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list270.size));
-              for (int _i271 = 0; 
-                   (_list270.size < 0) ? iprot.peekList() : (_i271 < _list270.size); 
-                   ++_i271)
+              TList _list296 = iprot.readListBegin();
+              this.meta_servers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list296.size));
+              for (int _i297 = 0; 
+                   (_list296.size < 0) ? iprot.peekList() : (_i297 < _list296.size); 
+                   ++_i297)
               {
-                FTClient _elem272;
-                _elem272 = new FTClient();
-                _elem272.read(iprot);
-                this.clients.add(_elem272);
+                com.vesoft.nebula.HostAddr _elem298;
+                _elem298 = new com.vesoft.nebula.HostAddr();
+                _elem298.read(iprot);
+                this.meta_servers.add(_elem298);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case STORAGE_SERVERS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list299 = iprot.readListBegin();
+              this.storage_servers = new ArrayList<com.vesoft.nebula.NodeInfo>(Math.max(0, _list299.size));
+              for (int _i300 = 0; 
+                   (_list299.size < 0) ? iprot.peekList() : (_i300 < _list299.size); 
+                   ++_i300)
+              {
+                com.vesoft.nebula.NodeInfo _elem301;
+                _elem301 = new com.vesoft.nebula.NodeInfo();
+                _elem301.read(iprot);
+                this.storage_servers.add(_elem301);
               }
               iprot.readListEnd();
             }
@@ -393,12 +476,23 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.clients != null) {
-      oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
+    if (this.meta_servers != null) {
+      oprot.writeFieldBegin(META_SERVERS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter273 : this.clients)        {
-          _iter273.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.meta_servers.size()));
+        for (com.vesoft.nebula.HostAddr _iter302 : this.meta_servers)        {
+          _iter302.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.storage_servers != null) {
+      oprot.writeFieldBegin(STORAGE_SERVERS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.storage_servers.size()));
+        for (com.vesoft.nebula.NodeInfo _iter303 : this.storage_servers)        {
+          _iter303.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -418,7 +512,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListFTClientsResp");
+    StringBuilder sb = new StringBuilder("ListClusterInfoResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -455,13 +549,24 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("clients");
+    sb.append("meta_servers");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getClients() == null) {
+    if (this.getMeta_servers() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getClients(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getMeta_servers(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("storage_servers");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getStorage_servers() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getStorage_servers(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

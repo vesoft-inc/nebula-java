@@ -22,12 +22,13 @@ public class ResultSet {
     private final ExecutionResponse response;
     private List<String> columnNames = new ArrayList<>();
     private final String decodeType = "utf-8";
+    private final int timezoneOffset;
 
     public static class Record implements Iterable<ValueWrapper> {
         private final List<ValueWrapper> colValues = new ArrayList<>();
         private List<String> columnNames = new ArrayList<>();
 
-        public Record(List<String> columnNames, Row row, String decodeType) {
+        public Record(List<String> columnNames, Row row, String decodeType, int timezoneOffset) {
             if (columnNames == null) {
                 return;
             }
@@ -37,7 +38,7 @@ public class ResultSet {
             }
 
             for (Value value : row.values) {
-                this.colValues.add(new ValueWrapper(value, decodeType));
+                this.colValues.add(new ValueWrapper(value, decodeType, timezoneOffset));
             }
 
             this.columnNames = columnNames;
@@ -125,11 +126,12 @@ public class ResultSet {
 
     }
 
-    public ResultSet(ExecutionResponse resp) {
+    public ResultSet(ExecutionResponse resp, int timezoneOffset) {
         if (resp == null) {
             throw new RuntimeException("Input an null `ExecutionResponse' object");
         }
         this.response = resp;
+        this.timezoneOffset = timezoneOffset;
         if (resp.data != null) {
             // space name's charset is 'utf-8'
             for (byte[] column : resp.data.column_names) {
@@ -253,7 +255,7 @@ public class ResultSet {
         if (index >= response.data.rows.size()) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return new Record(columnNames, response.data.rows.get(index), decodeType);
+        return new Record(columnNames, response.data.rows.get(index), decodeType, timezoneOffset);
     }
 
     /**
@@ -271,7 +273,9 @@ public class ResultSet {
         }
         List<ValueWrapper> values = new ArrayList<>();
         for (int i = 0; i < response.data.rows.size(); i++) {
-            values.add(new ValueWrapper(response.data.rows.get(i).values.get(index), decodeType));
+            values.add(new ValueWrapper(response.data.rows.get(i).values.get(index),
+                                        decodeType,
+                                        timezoneOffset));
         }
         return values;
     }

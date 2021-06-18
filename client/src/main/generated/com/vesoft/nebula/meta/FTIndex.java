@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.storage;
+package com.vesoft.nebula.meta;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,15 +24,18 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, Comparable<KVRemoveRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("KVRemoveRequest");
+public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparable<FTIndex> {
+  private static final TStruct STRUCT_DESC = new TStruct("FTIndex");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField DEPEND_SCHEMA_FIELD_DESC = new TField("depend_schema", TType.STRUCT, (short)2);
+  private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)3);
 
   public int space_id;
-  public Map<Integer,List<byte[]>> parts;
+  public SchemaID depend_schema;
+  public List<byte[]> fields;
   public static final int SPACE_ID = 1;
-  public static final int PARTS = 2;
+  public static final int DEPEND_SCHEMA = 2;
+  public static final int FIELDS = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -44,33 +47,36 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.STRING)))));
+    tmpMetaDataMap.put(DEPEND_SCHEMA, new FieldMetaData("depend_schema", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, SchemaID.class)));
+    tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(KVRemoveRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(FTIndex.class, metaDataMap);
   }
 
-  public KVRemoveRequest() {
+  public FTIndex() {
   }
 
-  public KVRemoveRequest(
+  public FTIndex(
       int space_id,
-      Map<Integer,List<byte[]>> parts) {
+      SchemaID depend_schema,
+      List<byte[]> fields) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.parts = parts;
+    this.depend_schema = depend_schema;
+    this.fields = fields;
   }
 
   public static class Builder {
     private int space_id;
-    private Map<Integer,List<byte[]>> parts;
+    private SchemaID depend_schema;
+    private List<byte[]> fields;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -83,17 +89,23 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public Builder setParts(final Map<Integer,List<byte[]>> parts) {
-      this.parts = parts;
+    public Builder setDepend_schema(final SchemaID depend_schema) {
+      this.depend_schema = depend_schema;
       return this;
     }
 
-    public KVRemoveRequest build() {
-      KVRemoveRequest result = new KVRemoveRequest();
+    public Builder setFields(final List<byte[]> fields) {
+      this.fields = fields;
+      return this;
+    }
+
+    public FTIndex build() {
+      FTIndex result = new FTIndex();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
-      result.setParts(this.parts);
+      result.setDepend_schema(this.depend_schema);
+      result.setFields(this.fields);
       return result;
     }
   }
@@ -105,24 +117,27 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public KVRemoveRequest(KVRemoveRequest other) {
+  public FTIndex(FTIndex other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetParts()) {
-      this.parts = TBaseHelper.deepCopy(other.parts);
+    if (other.isSetDepend_schema()) {
+      this.depend_schema = TBaseHelper.deepCopy(other.depend_schema);
+    }
+    if (other.isSetFields()) {
+      this.fields = TBaseHelper.deepCopy(other.fields);
     }
   }
 
-  public KVRemoveRequest deepCopy() {
-    return new KVRemoveRequest(this);
+  public FTIndex deepCopy() {
+    return new FTIndex(this);
   }
 
   public int getSpace_id() {
     return this.space_id;
   }
 
-  public KVRemoveRequest setSpace_id(int space_id) {
+  public FTIndex setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -141,27 +156,51 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<byte[]>> getParts() {
-    return this.parts;
+  public SchemaID getDepend_schema() {
+    return this.depend_schema;
   }
 
-  public KVRemoveRequest setParts(Map<Integer,List<byte[]>> parts) {
-    this.parts = parts;
+  public FTIndex setDepend_schema(SchemaID depend_schema) {
+    this.depend_schema = depend_schema;
     return this;
   }
 
-  public void unsetParts() {
-    this.parts = null;
+  public void unsetDepend_schema() {
+    this.depend_schema = null;
   }
 
-  // Returns true if field parts is set (has been assigned a value) and false otherwise
-  public boolean isSetParts() {
-    return this.parts != null;
+  // Returns true if field depend_schema is set (has been assigned a value) and false otherwise
+  public boolean isSetDepend_schema() {
+    return this.depend_schema != null;
   }
 
-  public void setPartsIsSet(boolean __value) {
+  public void setDepend_schemaIsSet(boolean __value) {
     if (!__value) {
-      this.parts = null;
+      this.depend_schema = null;
+    }
+  }
+
+  public List<byte[]> getFields() {
+    return this.fields;
+  }
+
+  public FTIndex setFields(List<byte[]> fields) {
+    this.fields = fields;
+    return this;
+  }
+
+  public void unsetFields() {
+    this.fields = null;
+  }
+
+  // Returns true if field fields is set (has been assigned a value) and false otherwise
+  public boolean isSetFields() {
+    return this.fields != null;
+  }
+
+  public void setFieldsIsSet(boolean __value) {
+    if (!__value) {
+      this.fields = null;
     }
   }
 
@@ -176,11 +215,19 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
-    case PARTS:
+    case DEPEND_SCHEMA:
       if (__value == null) {
-        unsetParts();
+        unsetDepend_schema();
       } else {
-        setParts((Map<Integer,List<byte[]>>)__value);
+        setDepend_schema((SchemaID)__value);
+      }
+      break;
+
+    case FIELDS:
+      if (__value == null) {
+        unsetFields();
+      } else {
+        setFields((List<byte[]>)__value);
       }
       break;
 
@@ -194,8 +241,11 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PARTS:
-      return getParts();
+    case DEPEND_SCHEMA:
+      return getDepend_schema();
+
+    case FIELDS:
+      return getFields();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -208,24 +258,26 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof KVRemoveRequest))
+    if (!(_that instanceof FTIndex))
       return false;
-    KVRemoveRequest that = (KVRemoveRequest)_that;
+    FTIndex that = (FTIndex)_that;
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetDepend_schema(), that.isSetDepend_schema(), this.depend_schema, that.depend_schema)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetFields(), that.isSetFields(), this.fields, that.fields)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts});
+    return Arrays.deepHashCode(new Object[] {space_id, depend_schema, fields});
   }
 
   @Override
-  public int compareTo(KVRemoveRequest other) {
+  public int compareTo(FTIndex other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -244,11 +296,19 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
+    lastComparison = Boolean.valueOf(isSetDepend_schema()).compareTo(other.isSetDepend_schema());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
+    lastComparison = TBaseHelper.compareTo(depend_schema, other.depend_schema);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetFields()).compareTo(other.isSetFields());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(fields, other.fields);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -274,34 +334,28 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PARTS:
-          if (__field.type == TType.MAP) {
+        case DEPEND_SCHEMA:
+          if (__field.type == TType.STRUCT) {
+            this.depend_schema = new SchemaID();
+            this.depend_schema.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case FIELDS:
+          if (__field.type == TType.LIST) {
             {
-              TMap _map227 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map227.size));
-              for (int _i228 = 0; 
-                   (_map227.size < 0) ? iprot.peekMap() : (_i228 < _map227.size); 
-                   ++_i228)
+              TList _list274 = iprot.readListBegin();
+              this.fields = new ArrayList<byte[]>(Math.max(0, _list274.size));
+              for (int _i275 = 0; 
+                   (_list274.size < 0) ? iprot.peekList() : (_i275 < _list274.size); 
+                   ++_i275)
               {
-                int _key229;
-                List<byte[]> _val230;
-                _key229 = iprot.readI32();
-                {
-                  TList _list231 = iprot.readListBegin();
-                  _val230 = new ArrayList<byte[]>(Math.max(0, _list231.size));
-                  for (int _i232 = 0; 
-                       (_list231.size < 0) ? iprot.peekList() : (_i232 < _list231.size); 
-                       ++_i232)
-                  {
-                    byte[] _elem233;
-                    _elem233 = iprot.readBinary();
-                    _val230.add(_elem233);
-                  }
-                  iprot.readListEnd();
-                }
-                this.parts.put(_key229, _val230);
+                byte[] _elem276;
+                _elem276 = iprot.readBinary();
+                this.fields.add(_elem276);
               }
-              iprot.readMapEnd();
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -327,21 +381,19 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.parts != null) {
-      oprot.writeFieldBegin(PARTS_FIELD_DESC);
+    if (this.depend_schema != null) {
+      oprot.writeFieldBegin(DEPEND_SCHEMA_FIELD_DESC);
+      this.depend_schema.write(oprot);
+      oprot.writeFieldEnd();
+    }
+    if (this.fields != null) {
+      oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<byte[]>> _iter234 : this.parts.entrySet())        {
-          oprot.writeI32(_iter234.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.STRING, _iter234.getValue().size()));
-            for (byte[] _iter235 : _iter234.getValue())            {
-              oprot.writeBinary(_iter235);
-            }
-            oprot.writeListEnd();
-          }
+        oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
+        for (byte[] _iter277 : this.fields)        {
+          oprot.writeBinary(_iter277);
         }
-        oprot.writeMapEnd();
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -359,7 +411,7 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("KVRemoveRequest");
+    StringBuilder sb = new StringBuilder("FTIndex");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -373,13 +425,24 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("parts");
+    sb.append("depend_schema");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getParts() == null) {
+    if (this.getDepend_schema() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getDepend_schema(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("fields");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getFields() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getFields(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

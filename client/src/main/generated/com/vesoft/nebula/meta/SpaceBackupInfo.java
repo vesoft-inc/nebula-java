@@ -27,15 +27,12 @@ import com.facebook.thrift.protocol.*;
 public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<SpaceBackupInfo> {
   private static final TStruct STRUCT_DESC = new TStruct("SpaceBackupInfo");
   private static final TField SPACE_FIELD_DESC = new TField("space", TType.STRUCT, (short)1);
-  private static final TField PARTITION_INFO_FIELD_DESC = new TField("partition_info", TType.STRUCT, (short)2);
-  private static final TField CP_DIRS_FIELD_DESC = new TField("cp_dirs", TType.LIST, (short)3);
+  private static final TField INFO_FIELD_DESC = new TField("info", TType.LIST, (short)2);
 
   public SpaceDesc space;
-  public com.vesoft.nebula.PartitionBackupInfo partition_info;
-  public List<CheckpointInfo> cp_dirs;
+  public List<BackupInfo> info;
   public static final int SPACE = 1;
-  public static final int PARTITION_INFO = 2;
-  public static final int CP_DIRS = 3;
+  public static final int INFO = 2;
 
   // isset id assignments
 
@@ -45,11 +42,9 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, SpaceDesc.class)));
-    tmpMetaDataMap.put(PARTITION_INFO, new FieldMetaData("partition_info", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.PartitionBackupInfo.class)));
-    tmpMetaDataMap.put(CP_DIRS, new FieldMetaData("cp_dirs", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, CheckpointInfo.class))));
+            new StructMetaData(TType.STRUCT, BackupInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -62,18 +57,15 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
 
   public SpaceBackupInfo(
       SpaceDesc space,
-      com.vesoft.nebula.PartitionBackupInfo partition_info,
-      List<CheckpointInfo> cp_dirs) {
+      List<BackupInfo> info) {
     this();
     this.space = space;
-    this.partition_info = partition_info;
-    this.cp_dirs = cp_dirs;
+    this.info = info;
   }
 
   public static class Builder {
     private SpaceDesc space;
-    private com.vesoft.nebula.PartitionBackupInfo partition_info;
-    private List<CheckpointInfo> cp_dirs;
+    private List<BackupInfo> info;
 
     public Builder() {
     }
@@ -83,21 +75,15 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public Builder setPartition_info(final com.vesoft.nebula.PartitionBackupInfo partition_info) {
-      this.partition_info = partition_info;
-      return this;
-    }
-
-    public Builder setCp_dirs(final List<CheckpointInfo> cp_dirs) {
-      this.cp_dirs = cp_dirs;
+    public Builder setInfo(final List<BackupInfo> info) {
+      this.info = info;
       return this;
     }
 
     public SpaceBackupInfo build() {
       SpaceBackupInfo result = new SpaceBackupInfo();
       result.setSpace(this.space);
-      result.setPartition_info(this.partition_info);
-      result.setCp_dirs(this.cp_dirs);
+      result.setInfo(this.info);
       return result;
     }
   }
@@ -113,11 +99,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     if (other.isSetSpace()) {
       this.space = TBaseHelper.deepCopy(other.space);
     }
-    if (other.isSetPartition_info()) {
-      this.partition_info = TBaseHelper.deepCopy(other.partition_info);
-    }
-    if (other.isSetCp_dirs()) {
-      this.cp_dirs = TBaseHelper.deepCopy(other.cp_dirs);
+    if (other.isSetInfo()) {
+      this.info = TBaseHelper.deepCopy(other.info);
     }
   }
 
@@ -149,51 +132,27 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  public com.vesoft.nebula.PartitionBackupInfo getPartition_info() {
-    return this.partition_info;
+  public List<BackupInfo> getInfo() {
+    return this.info;
   }
 
-  public SpaceBackupInfo setPartition_info(com.vesoft.nebula.PartitionBackupInfo partition_info) {
-    this.partition_info = partition_info;
+  public SpaceBackupInfo setInfo(List<BackupInfo> info) {
+    this.info = info;
     return this;
   }
 
-  public void unsetPartition_info() {
-    this.partition_info = null;
+  public void unsetInfo() {
+    this.info = null;
   }
 
-  // Returns true if field partition_info is set (has been assigned a value) and false otherwise
-  public boolean isSetPartition_info() {
-    return this.partition_info != null;
+  // Returns true if field info is set (has been assigned a value) and false otherwise
+  public boolean isSetInfo() {
+    return this.info != null;
   }
 
-  public void setPartition_infoIsSet(boolean __value) {
+  public void setInfoIsSet(boolean __value) {
     if (!__value) {
-      this.partition_info = null;
-    }
-  }
-
-  public List<CheckpointInfo> getCp_dirs() {
-    return this.cp_dirs;
-  }
-
-  public SpaceBackupInfo setCp_dirs(List<CheckpointInfo> cp_dirs) {
-    this.cp_dirs = cp_dirs;
-    return this;
-  }
-
-  public void unsetCp_dirs() {
-    this.cp_dirs = null;
-  }
-
-  // Returns true if field cp_dirs is set (has been assigned a value) and false otherwise
-  public boolean isSetCp_dirs() {
-    return this.cp_dirs != null;
-  }
-
-  public void setCp_dirsIsSet(boolean __value) {
-    if (!__value) {
-      this.cp_dirs = null;
+      this.info = null;
     }
   }
 
@@ -208,19 +167,11 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
-    case PARTITION_INFO:
+    case INFO:
       if (__value == null) {
-        unsetPartition_info();
+        unsetInfo();
       } else {
-        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)__value);
-      }
-      break;
-
-    case CP_DIRS:
-      if (__value == null) {
-        unsetCp_dirs();
-      } else {
-        setCp_dirs((List<CheckpointInfo>)__value);
+        setInfo((List<BackupInfo>)__value);
       }
       break;
 
@@ -234,11 +185,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     case SPACE:
       return getSpace();
 
-    case PARTITION_INFO:
-      return getPartition_info();
-
-    case CP_DIRS:
-      return getCp_dirs();
+    case INFO:
+      return getInfo();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -257,16 +205,14 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
 
     if (!TBaseHelper.equalsNobinary(this.isSetSpace(), that.isSetSpace(), this.space, that.space)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetPartition_info(), that.isSetPartition_info(), this.partition_info, that.partition_info)) { return false; }
-
-    if (!TBaseHelper.equalsNobinary(this.isSetCp_dirs(), that.isSetCp_dirs(), this.cp_dirs, that.cp_dirs)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, partition_info, cp_dirs});
+    return Arrays.deepHashCode(new Object[] {space, info});
   }
 
   @Override
@@ -289,19 +235,11 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetPartition_info()).compareTo(other.isSetPartition_info());
+    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(partition_info, other.partition_info);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetCp_dirs()).compareTo(other.isSetCp_dirs());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(cp_dirs, other.cp_dirs);
+    lastComparison = TBaseHelper.compareTo(info, other.info);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -327,27 +265,19 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PARTITION_INFO:
-          if (__field.type == TType.STRUCT) {
-            this.partition_info = new com.vesoft.nebula.PartitionBackupInfo();
-            this.partition_info.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case CP_DIRS:
+        case INFO:
           if (__field.type == TType.LIST) {
             {
-              TList _list237 = iprot.readListBegin();
-              this.cp_dirs = new ArrayList<CheckpointInfo>(Math.max(0, _list237.size));
-              for (int _i238 = 0; 
-                   (_list237.size < 0) ? iprot.peekList() : (_i238 < _list237.size); 
-                   ++_i238)
+              TList _list241 = iprot.readListBegin();
+              this.info = new ArrayList<BackupInfo>(Math.max(0, _list241.size));
+              for (int _i242 = 0; 
+                   (_list241.size < 0) ? iprot.peekList() : (_i242 < _list241.size); 
+                   ++_i242)
               {
-                CheckpointInfo _elem239;
-                _elem239 = new CheckpointInfo();
-                _elem239.read(iprot);
-                this.cp_dirs.add(_elem239);
+                BackupInfo _elem243;
+                _elem243 = new BackupInfo();
+                _elem243.read(iprot);
+                this.info.add(_elem243);
               }
               iprot.readListEnd();
             }
@@ -377,17 +307,12 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       this.space.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.partition_info != null) {
-      oprot.writeFieldBegin(PARTITION_INFO_FIELD_DESC);
-      this.partition_info.write(oprot);
-      oprot.writeFieldEnd();
-    }
-    if (this.cp_dirs != null) {
-      oprot.writeFieldBegin(CP_DIRS_FIELD_DESC);
+    if (this.info != null) {
+      oprot.writeFieldBegin(INFO_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.cp_dirs.size()));
-        for (CheckpointInfo _iter240 : this.cp_dirs)        {
-          _iter240.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
+        for (BackupInfo _iter244 : this.info)        {
+          _iter244.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -425,24 +350,13 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("partition_info");
+    sb.append("info");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getPartition_info() == null) {
+    if (this.getInfo() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getPartition_info(), indent + 1, prettyPrint));
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("cp_dirs");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getCp_dirs() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getCp_dirs(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getInfo(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

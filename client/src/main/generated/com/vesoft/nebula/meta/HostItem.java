@@ -33,6 +33,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   private static final TField ROLE_FIELD_DESC = new TField("role", TType.I32, (short)5);
   private static final TField GIT_INFO_SHA_FIELD_DESC = new TField("git_info_sha", TType.STRING, (short)6);
   private static final TField ZONE_NAME_FIELD_DESC = new TField("zone_name", TType.STRING, (short)7);
+  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)8);
 
   public com.vesoft.nebula.HostAddr hostAddr;
   /**
@@ -45,6 +46,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   public HostRole role;
   public byte[] git_info_sha;
   public byte[] zone_name;
+  public byte[] version;
   public static final int HOSTADDR = 1;
   public static final int STATUS = 2;
   public static final int LEADER_PARTS = 3;
@@ -52,6 +54,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
   public static final int ROLE = 5;
   public static final int GIT_INFO_SHA = 6;
   public static final int ZONE_NAME = 7;
+  public static final int VERSION = 8;
 
   // isset id assignments
 
@@ -78,6 +81,8 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     tmpMetaDataMap.put(GIT_INFO_SHA, new FieldMetaData("git_info_sha", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(ZONE_NAME, new FieldMetaData("zone_name", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -112,7 +117,8 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       Map<byte[],List<Integer>> all_parts,
       HostRole role,
       byte[] git_info_sha,
-      byte[] zone_name) {
+      byte[] zone_name,
+      byte[] version) {
     this();
     this.hostAddr = hostAddr;
     this.status = status;
@@ -121,6 +127,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     this.role = role;
     this.git_info_sha = git_info_sha;
     this.zone_name = zone_name;
+    this.version = version;
   }
 
   public static class Builder {
@@ -131,6 +138,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     private HostRole role;
     private byte[] git_info_sha;
     private byte[] zone_name;
+    private byte[] version;
 
     public Builder() {
     }
@@ -170,6 +178,11 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return this;
     }
 
+    public Builder setVersion(final byte[] version) {
+      this.version = version;
+      return this;
+    }
+
     public HostItem build() {
       HostItem result = new HostItem();
       result.setHostAddr(this.hostAddr);
@@ -179,6 +192,7 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       result.setRole(this.role);
       result.setGit_info_sha(this.git_info_sha);
       result.setZone_name(this.zone_name);
+      result.setVersion(this.version);
       return result;
     }
   }
@@ -211,6 +225,9 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
     if (other.isSetZone_name()) {
       this.zone_name = TBaseHelper.deepCopy(other.zone_name);
+    }
+    if (other.isSetVersion()) {
+      this.version = TBaseHelper.deepCopy(other.version);
     }
   }
 
@@ -394,6 +411,30 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
+  public byte[] getVersion() {
+    return this.version;
+  }
+
+  public HostItem setVersion(byte[] version) {
+    this.version = version;
+    return this;
+  }
+
+  public void unsetVersion() {
+    this.version = null;
+  }
+
+  // Returns true if field version is set (has been assigned a value) and false otherwise
+  public boolean isSetVersion() {
+    return this.version != null;
+  }
+
+  public void setVersionIsSet(boolean __value) {
+    if (!__value) {
+      this.version = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -453,6 +494,14 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
+    case VERSION:
+      if (__value == null) {
+        unsetVersion();
+      } else {
+        setVersion((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -480,6 +529,9 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
 
     case ZONE_NAME:
       return getZone_name();
+
+    case VERSION:
+      return getVersion();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -510,12 +562,14 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
 
     if (!TBaseHelper.equalsSlow(this.isSetZone_name(), that.isSetZone_name(), this.zone_name, that.zone_name)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {hostAddr, status, leader_parts, all_parts, role, git_info_sha, zone_name});
+    return Arrays.deepHashCode(new Object[] {hostAddr, status, leader_parts, all_parts, role, git_info_sha, zone_name, version});
   }
 
   @Override
@@ -583,6 +637,14 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(zone_name, other.zone_name);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(version, other.version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -702,6 +764,13 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case VERSION:
+          if (__field.type == TType.STRING) {
+            this.version = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -779,6 +848,13 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
       if (isSetZone_name()) {
         oprot.writeFieldBegin(ZONE_NAME_FIELD_DESC);
         oprot.writeBinary(this.zone_name);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.version != null) {
+      if (isSetVersion()) {
+        oprot.writeFieldBegin(VERSION_FIELD_DESC);
+        oprot.writeBinary(this.version);
         oprot.writeFieldEnd();
       }
     }
@@ -904,6 +980,25 @@ public class HostItem implements TBase, java.io.Serializable, Cloneable, Compara
             sb.append(Integer.toHexString(this.getZone_name()[i]).length() > 1 ? Integer.toHexString(this.getZone_name()[i]).substring(Integer.toHexString(this.getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getZone_name()[i]).toUpperCase());
           }
           if (this.getZone_name().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetVersion())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("version");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getVersion() == null) {
+        sb.append("null");
+      } else {
+          int __version_size = Math.min(this.getVersion().length, 128);
+          for (int i = 0; i < __version_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
+          }
+          if (this.getVersion().length > 128) sb.append(" ...");
       }
       first = false;
     }
