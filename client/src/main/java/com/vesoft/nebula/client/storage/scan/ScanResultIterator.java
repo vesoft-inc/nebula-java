@@ -25,7 +25,6 @@ public class ScanResultIterator {
     protected boolean hasNext = true;
 
     protected final Map<Integer, byte[]> partCursor;
-    protected final ExecutorService threadPool;
 
     protected final MetaManager metaManager;
     protected final StorageConnPool pool;
@@ -45,8 +44,6 @@ public class ScanResultIterator {
         this.spaceName = spaceName;
         this.labelName = labelName;
         this.partSuccess = partSuccess;
-
-        this.threadPool = Executors.newFixedThreadPool(addresses.size());
         this.partCursor = new HashMap<>(partScanQueue.size());
     }
 
