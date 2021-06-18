@@ -36,7 +36,7 @@ public class StorageClient {
     private int timeout = 10000; // ms
 
     /**
-     * @param ip the ip of metad server
+     * @param ip   the ip of metad server
      * @param port the port of meted server
      */
     public StorageClient(String ip, int port) {
@@ -53,7 +53,7 @@ public class StorageClient {
 
     /**
      * @param addresses the address of metad server
-     * @param timeout the timeout of scan vertex or edge
+     * @param timeout   the timeout of scan vertex or edge
      */
     public StorageClient(List<HostAddress> addresses, int timeout) {
         this.connection = new GraphStorageConnection();
@@ -761,8 +761,12 @@ public class StorageClient {
      * release storage client
      */
     public void close() {
-        pool.close();
-        connection.close();
+        if (pool != null) {
+            pool.close();
+        }
+        if (connection != null) {
+            connection.close();
+        }
     }
 
 
