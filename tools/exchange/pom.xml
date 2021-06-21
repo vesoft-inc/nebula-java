@@ -670,7 +670,7 @@
     <repositories>
         <repository>
             <id>SparkPackagesRepo</id>
-            <url>http://dl.bintray.com/spark-packages/maven</url>
+            <url>https://repos.spark-packages.org</url>
         </repository>
         <repository>
             <id>bintray-streamnative-maven</id>
