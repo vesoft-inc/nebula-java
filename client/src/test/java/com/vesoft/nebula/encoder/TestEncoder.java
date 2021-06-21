@@ -281,6 +281,22 @@ public class TestEncoder {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
         }
+
+        // test with chinese value
+        try {
+            byte[] encodeStr = codec.encodeTag(tagItem2,
+                                               Collections.singletonList("Col01"),
+                                               Collections.singletonList("中国"));
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "080900000006000000e4b8ade59bbd";
+            System.out.println(hexStr);
+            System.out.println(expectResult);
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
+        }
     }
 
     @Test()
