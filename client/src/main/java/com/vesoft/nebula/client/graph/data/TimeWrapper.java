@@ -52,6 +52,13 @@ public class TimeWrapper extends BaseDataObject {
     }
 
     /**
+     * @return the Time with the specified timezoneOffset
+     */
+    public Time getTimeWithTimezoneOffset(int timezoneOffset) {
+        return TimeUtil.timeConvertWithTimezone(time, timezoneOffset);
+    }
+
+    /**
      * @return the Time String with the timezone
      */
     public String getLocalTimeStr() {

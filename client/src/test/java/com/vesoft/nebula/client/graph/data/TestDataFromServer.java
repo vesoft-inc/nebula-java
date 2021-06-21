@@ -139,27 +139,27 @@ public class TestDataFromServer {
 
             DateTimeWrapper dateTimeWrapper = (DateTimeWrapper) new DateTimeWrapper(
                     new DateTime((short) 2010, (byte) 9,
-                            (byte) 10, (byte) 10, (byte) 8, (byte) 2, 0)).setTimezoneOffset(28800);
+                            (byte) 10, (byte) 02, (byte) 8, (byte) 2, 0)).setTimezoneOffset(28800);
             DateTimeWrapper resultDateTime =  properties.get("birthday").asDateTime();
             Assert.assertEquals(dateTimeWrapper, resultDateTime);
-            Assert.assertEquals("utc datetime: 2020-09-10T10:08:02.000000, timezoneOffset: 28800",
+            Assert.assertEquals("utc datetime: 2010-09-10T02:08:02.000000, timezoneOffset: 28800",
                 resultDateTime.toString());
-            Assert.assertEquals("2020-09-10T18:08:02.000000",
+            Assert.assertEquals("2010-09-10T10:08:02.000000",
                 resultDateTime.getLocalDateTimeStr());
-            Assert.assertEquals("2020-09-10T10:08:02.000000",
+            Assert.assertEquals("2010-09-10T02:08:02.000000",
                 resultDateTime.getUTCDateTimeStr());
 
             DateWrapper dateWrapper = new DateWrapper(new Date((short) 2017, (byte) 9, (byte) 10));
             Assert.assertEquals(dateWrapper, properties.get("start_school").asDate());
 
             TimeWrapper timeWrapper = (TimeWrapper) new TimeWrapper(
-                new Time((byte) 7, (byte) 10, (byte) 0, 0)).setTimezoneOffset(28800);
+                new Time((byte) 23, (byte) 10, (byte) 0, 0)).setTimezoneOffset(28800);
             TimeWrapper resultTime = properties.get("morning").asTime();
             Assert.assertEquals(timeWrapper, resultTime);
-            Assert.assertEquals("utc time: 07:10:00.000000, timezoneOffset: 28800",
+            Assert.assertEquals("utc time: 23:10:00.000000, timezoneOffset: 28800",
                 resultTime.toString());
-            Assert.assertEquals("15:10:00.000000", resultTime.getLocalTimeStr());
-            Assert.assertEquals("07:10:00.000000", resultTime.getUTCTimeStr());
+            Assert.assertEquals("07:10:00.000000", resultTime.getLocalTimeStr());
+            Assert.assertEquals("23:10:00.000000", resultTime.getUTCTimeStr());
 
             Assert.assertEquals(1000.0, properties.get("property").asDouble(), 0.0);
             Assert.assertEquals(false, properties.get("is_girl").asBoolean());

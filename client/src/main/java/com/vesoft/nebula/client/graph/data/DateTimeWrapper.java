@@ -73,6 +73,13 @@ public class DateTimeWrapper extends BaseDataObject {
     }
 
     /**
+     * @return the DateTime with the specified timezoneOffset
+     */
+    public DateTime getDateTimeWithTimezoneOffset(int timezoneOffset) {
+        return TimeUtil.datetimeConvertWithTimezone(dateTime, timezoneOffset);
+    }
+
+    /**
      * @return the DataTime String with the timezone
      */
     public String getLocalDateTimeStr() {

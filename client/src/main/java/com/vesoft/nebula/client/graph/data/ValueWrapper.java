@@ -299,7 +299,9 @@ public class ValueWrapper {
 
     public PathWrapper asPath() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.PVAL) {
-            return new PathWrapper(value.getPVal());
+            return (PathWrapper) new PathWrapper(value.getPVal())
+                .setDecodeType(decodeType)
+                .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field PathWrapper because value's type is " + descType());
