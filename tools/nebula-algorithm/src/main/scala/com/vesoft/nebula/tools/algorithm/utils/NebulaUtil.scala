@@ -10,8 +10,10 @@ import java.util
 
 import com.vesoft.nebula.shaded.google.common.net.HostAndPort
 import com.vesoft.nebula.bean.Parameters
+import com.vesoft.nebula.client.graph.async.AsyncGraphClientImpl
 import com.vesoft.nebula.client.meta.MetaClientImpl
 import com.vesoft.nebula.common.Type
+import com.vesoft.nebula.tools.algorithm.config.{NebulaConfigEntry, NebulaWriteConfigEntry}
 import com.vesoft.nebula.tools.connector.{ConnectionException, NebulaUtils}
 import org.apache.spark.graphx.{Edge, Graph}
 import org.apache.spark.rdd.RDD
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConverters._
 
 object NebulaUtil {
   private val LOG = LoggerFactory.getLogger(this.getClass)
@@ -218,4 +221,65 @@ object NebulaUtil {
     resultFilePath + algorithmName
   }
 
+  def writeNebula(dataset: Dataset[Row],
+                  nebulaWriteConfigEntry: NebulaWriteConfigEntry,
+                  algo: String): Unit = {
+    dataset.foreachPartition(rows => {
+      val space    = nebulaWriteConfigEntry.space
+      val tag      = nebulaWriteConfigEntry.tag
+      val prop     = nebulaWriteConfigEntry.propCol
+      val propType = nebulaWriteConfigEntry.propType
+
+      val address                           = HostAndPort.fromString(nebulaWriteConfigEntry.graphAddress)
+      val addresses                         = List(address).asJava
+      val graphClient: AsyncGraphClientImpl = new AsyncGraphClientImpl(addresses, 6000, 1, 1)
+      graphClient.connect()
+      graphClient.execute(s"Use ${space}")
+      rows
+        .grouped(1000)
+        .foreach(vertices => {
+          val exec = BATCH_INSERT_TEMPLATE.format(
+            "VERTEX",
+            tag,
+            prop,
+            vertices
+              .map(v => {
+                algo.toLowerCase match {
+                  case "degreestatic" => {
+                    if (propType.equalsIgnoreCase("string")) {
+                      INSERT_VALUE_TEMPLATE.format(
+                        v.get(0),
+                        v.get(1).toString.mkString("\"", "", "\"") + ","
+                          + v.get(2).toString.mkString("\"", "", "\"") + ","
+                          + v.get(3).toString.mkString("\"", "", "\""))
+                    } else {
+                      INSERT_VALUE_TEMPLATE.format(v.get(0),
+                                                   v.get(1) + "," + v.get(2) + "," + v.get(3))
+                    }
+                  }
+                  case "shortestpaths" => {
+                    INSERT_VALUE_TEMPLATE.format(v.get(0),
+                                                 v.get(1).toString.mkString("\"", "", "\""))
+                  }
+                  case _ => {
+                    if (propType.equalsIgnoreCase("string")) {
+                      INSERT_VALUE_TEMPLATE.format(v.get(0),
+                                                   v.get(1).toString.mkString("\"", "", "\""))
+                    } else {
+                      INSERT_VALUE_TEMPLATE.format(v.get(0), v.get(1))
+                    }
+                  }
+                }
+
+              })
+              .mkString(",")
+          )
+          LOG.info(exec)
+          graphClient.execute(exec)
+        })
+    })
+  }
+
+  private[this] val BATCH_INSERT_TEMPLATE = "INSERT %s %s(%s) VALUES %s"
+  private[this] val INSERT_VALUE_TEMPLATE = "%s: (%s)"
 }

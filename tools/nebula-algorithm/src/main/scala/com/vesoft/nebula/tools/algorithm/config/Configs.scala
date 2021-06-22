@@ -61,21 +61,84 @@ object AlgorithmConfigEntry {
   }
 }
 
+/** DataSourceEntry is used to determine the data source , nebula or local */
+object DataSourceSinkEntry {
+  def apply(config: Config): DataSourceSinkEntry = {
+    val dataSource = config.getString("data.source")
+    val dataSink   = config.getString("data.sink")
+    val hasWeight = if (config.hasPath("data.hasWeight")) {
+      config.getBoolean("data.hasWeight")
+    } else false
+    DataSourceSinkEntry(dataSource, dataSink, hasWeight)
+  }
+}
+
 /**
   * NebulaConfig is used to read edge data
   */
 object NebulaConfigEntry {
   def apply(config: Config): NebulaConfigEntry = {
-    val nebulaConfig       = config.getConfig("nebula")
-    val addresses          = nebulaConfig.getString("addresses")
-    val space              = nebulaConfig.getString("space")
-    val partitionNumber    = nebulaConfig.getString("partitionNumber")
-    val labels             = nebulaConfig.getStringList("labels").asScala.toList
-    val hasWeight: Boolean = nebulaConfig.getBoolean("hasWeight")
-    val weightCols = if (hasWeight) {
-      nebulaConfig.getStringList("weightCols").asScala.toList
-    } else { List() }
-    NebulaConfigEntry(addresses, space, partitionNumber, labels, hasWeight, weightCols)
+    if (!config.hasPath("nebula")) {
+      return NebulaConfigEntry(NebulaReadConfigEntry(), NebulaWriteConfigEntry())
+    }
+    val nebulaConfig = config.getConfig("nebula")
+
+    val metaAddress         = nebulaConfig.getString("read.metaAddress")
+    val readSpace           = nebulaConfig.getString("read.space")
+    val readPartitionNumber = nebulaConfig.getString("read.partitionNumber")
+    val readLabels          = nebulaConfig.getStringList("read.labels").asScala.toList
+    val readWeightCols      = nebulaConfig.getStringList("read.weightCols").asScala.toList
+    val readConfigEntry =
+      NebulaReadConfigEntry(metaAddress, readSpace, readPartitionNumber, readLabels, readWeightCols)
+
+    val graphAddress = nebulaConfig.getString("write.graphAddress")
+    val user         = nebulaConfig.getString("write.user")
+    val pswd         = nebulaConfig.getString("write.pswd")
+    val writeSpace   = nebulaConfig.getString("write.space")
+    val writeTag     = nebulaConfig.getString("write.tag")
+    val writePropCol = nebulaConfig.getString("write.propCol")
+    val writeColType = nebulaConfig.getString("write.colType")
+    val writeConfigEntry = NebulaWriteConfigEntry(graphAddress,
+                                                  user,
+                                                  pswd,
+                                                  writeSpace,
+                                                  writeTag,
+                                                  writePropCol,
+                                                  writeColType)
+    NebulaConfigEntry(readConfigEntry, writeConfigEntry)
+  }
+}
+
+object LocalConfigEntry {
+  def apply(config: Config): LocalConfigEntry = {
+
+    var filePath: String   = ""
+    var src: String        = ""
+    var dst: String        = ""
+    var weight: String     = ""
+    var resultPath: String = null
+    var header: Boolean    = false
+    var delimiter: String  = ","
+
+    if (config.hasPath("local.read.filePath")) {
+      filePath = config.getString("local.read.filePath")
+      src = config.getString("local.read.srcId")
+      dst = config.getString("local.read.dstId")
+      if (config.hasPath("local.read.weight")) {
+        weight = config.getString("local.read.weight")
+      }
+      if (config.hasPath("local.read.delimiter")) {
+        delimiter = config.getString("local.read.delimiter")
+      }
+      if (config.hasPath("local.read.header")) {
+        header = config.getBoolean("local.read.header")
+      }
+    }
+    if (config.hasPath("local.write.resultPath")) {
+      resultPath = config.getString("local.write.resultPath")
+    }
+
+    LocalConfigEntry(filePath, src, dst, weight, resultPath, header, delimiter)
   }
 }
 
@@ -102,32 +165,71 @@ case class AlgorithmConfigEntry(map: Map[String, String]) {
 }
 
 /**
+  * DataSourceEntry
+  */
+case class DataSourceSinkEntry(source: String, sink: String, hasWeight: Boolean) {
+  override def toString: String = {
+    s"DataSourceEntry: {source:$source, sink:$sink, hasWeight:$hasWeight}"
+  }
+}
+
+case class LocalConfigEntry(filePath: String,
+                            srcId: String,
+                            dstId: String,
+                            weight: String,
+                            resultPath: String,
+                            header: Boolean,
+                            delimiter: String) {
+  override def toString: String = {
+    s"LocalConfigEntry: {filePath: $filePath, srcId: $srcId, dstId: $dstId, " +
+      s"weight:$weight, resultPath:$resultPath, delimiter:$delimiter}"
+  }
+}
+
+/**
   * NebulaConfigEntry support key-value pairs for nebula.
   *
-  * @param address
-  * @param space
-  * @param partitionNumber
-  * @param labels
-  * @param weightCols
   */
-case class NebulaConfigEntry(address: String,
-                             space: String,
-                             partitionNumber: String,
-                             labels: List[String],
-                             hasWeight: Boolean,
-                             weightCols: List[String]) {
+case class NebulaConfigEntry(readConfigEntry: NebulaReadConfigEntry,
+                             writeConfigEntry: NebulaWriteConfigEntry) {
   override def toString: String = {
-    s"NebulaConfigEntry: " +
+    s"NebulaConfigEntry:{${readConfigEntry.toString}, ${writeConfigEntry.toString}"
+  }
+}
+
+case class NebulaReadConfigEntry(address: String = "",
+                                 space: String = "",
+                                 partitionNumber: String = "",
+                                 labels: List[String] = List(),
+                                 weightCols: List[String] = List()) {
+  override def toString: String = {
+    s"NebulaReadConfigEntry: " +
       s"{address: $address, space: $space, partitionNumber: $partitionNumber, " +
-      s"labels: ${labels.mkString(",")}, hasWeight: $hasWeight, weightCols: ${weightCols.mkString(",")}"
+      s"labels: ${labels.mkString(",")}, weightCols: ${weightCols.mkString(",")}"
+  }
+}
+
+case class NebulaWriteConfigEntry(graphAddress: String = "",
+                                  user: String = "",
+                                  pswd: String = "",
+                                  space: String = "",
+                                  tag: String = "",
+                                  propCol: String = "",
+                                  propType: String = "") {
+  override def toString: String = {
+    s"NebulaWriteConfigEntry: " +
+      s"{graphAddress: $graphAddress, user: $user, password: $pswd, space: $space, tag: $tag, " +
+      s"propCol: $propCol, propType: $propType}"
   }
 }
 
 /**
   * Configs
   */
-case class Configs(nebulaConfig: NebulaConfigEntry,
-                   sparkConfig: SparkConfigEntry,
+case class Configs(sparkConfig: SparkConfigEntry,
+                   dataSourceSinkEntry: DataSourceSinkEntry,
+                   nebulaConfig: NebulaConfigEntry,
+                   localConfigEntry: LocalConfigEntry,
                    algorithmConfig: AlgorithmConfigEntry)
 
 object Configs {
@@ -144,11 +246,13 @@ object Configs {
     }
 
     val config            = ConfigFactory.parseFile(configPath)
+    val dataSourceEntry   = DataSourceSinkEntry(config)
+    val localConfigEntry  = LocalConfigEntry(config)
     val nebulaConfigEntry = NebulaConfigEntry(config)
     val sparkEntry        = SparkConfigEntry(config)
     val algorithmEntry    = AlgorithmConfigEntry(config)
 
-    Configs(nebulaConfigEntry, sparkEntry, algorithmEntry)
+    Configs(sparkEntry, dataSourceEntry, nebulaConfigEntry, localConfigEntry, algorithmEntry)
   }
 
   /**
@@ -227,11 +331,7 @@ object Configs {
     }
   }
 
-  final case class Argument(config: File = new File("application.conf"),
-                            hive: Boolean = false,
-                            directly: Boolean = false,
-                            dry: Boolean = false,
-                            reload: String = "")
+  final case class Argument(config: File = new File("application.conf"))
 
   /**
     * Use to parse command line arguments.

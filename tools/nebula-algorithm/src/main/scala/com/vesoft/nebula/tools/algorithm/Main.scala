@@ -7,10 +7,36 @@
 package com.vesoft.nebula.tools.algorithm
 
 import com.vesoft.nebula.tools.algorithm.config.Configs.Argument
-import com.vesoft.nebula.tools.algorithm.config.{AlgoConfig, Configs}
-import com.vesoft.nebula.tools.algorithm.lib.{LouvainAlgo, PageRankAlgo}
+import com.vesoft.nebula.tools.algorithm.config.{
+  AlgoConfig,
+  BetweennessConfig,
+  CcConfig,
+  Configs,
+  DegreeStaticConfig,
+  KCoreConfig,
+  LPAConfig,
+  LouvainConfig,
+  NebulaConfig,
+  PRConfig,
+  ShortestPathConfig,
+  SparkConfig
+}
+import com.vesoft.nebula.tools.algorithm.lib.{
+  BetweennessCentralityAlgo,
+  ConnectedComponentsAlgo,
+  DegreeStaticAlgo,
+  KCoreAlgo,
+  LabelPropagationAlgo,
+  LouvainAlgo,
+  PageRankAlgo,
+  ShortestPathAlgo,
+  StronglyConnectedComponentsAlgo,
+  TriangleCountAlgo
+}
+import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
 import org.apache.commons.math3.ode.UnknownParameterException
 import org.apache.log4j.Logger
+import org.apache.spark.sql.{Dataset, Row}
 
 /**
   * This object is the entry of all graph algorithms.
@@ -40,10 +66,124 @@ object Main {
     val algoName: String = AlgoConfig.getAlgoName(configs)
     LOGGER.info(s"algoName= ${algoName}")
 
-    algoName.toLowerCase match {
-      case "pagerank" => PageRankAlgo(configs)
-      case "louvain"  => LouvainAlgo(configs)
-      case _          => throw new UnknownParameterException("unknown executeAlgo name.")
+    val sparkConfig = SparkConfig.getSpark(configs)
+    val dataSource  = configs.dataSourceSinkEntry.source
+    val hasWeight   = configs.dataSourceSinkEntry.hasWeight
+
+    val nebulaReadConfig = NebulaConfig.getReadNebula(configs)
+
+    val localPath = configs.localConfigEntry.filePath
+    val src       = configs.localConfigEntry.srcId
+    val dst       = configs.localConfigEntry.dstId
+    val weight    = configs.localConfigEntry.weight
+
+    // reader
+    val dataSet: Dataset[Row] = dataSource.toLowerCase match {
+      case "nebula" => {
+        NebulaUtil.scanEdgeData(
+          sparkConfig.spark,
+          sparkConfig.partitionNum,
+          nebulaReadConfig.address,
+          nebulaReadConfig.partitionNumber,
+          nebulaReadConfig.space,
+          nebulaReadConfig.labels,
+          hasWeight,
+          nebulaReadConfig.weightCols
+        )
+      }
+
+      case "csv" => {
+        val delimiter = configs.localConfigEntry.delimiter
+        val header    = configs.localConfigEntry.header
+        val data =
+          sparkConfig.spark.read
+            .option("header", header)
+            .option("delimiter", delimiter)
+            .csv(localPath)
+
+        if (weight == null || weight.trim.isEmpty) {
+          data.select(src, dst)
+        } else {
+          data.select(src, dst, weight)
+        }
+      }
+      case "json" => {
+        val data = sparkConfig.spark.read.json(localPath)
+        if (weight == null || weight.trim.isEmpty) {
+          data.select(src, dst)
+        } else {
+          data.select(src, dst, weight)
+        }
+      }
+      case "parquet" => {
+        val data = sparkConfig.spark.read.parquet(localPath)
+        if (weight == null || weight.trim.isEmpty) {
+          data.select(src, dst)
+        } else {
+          data.select(src, dst, weight)
+        }
+      }
+    }
+
+    val algoResult = {
+      algoName.toLowerCase match {
+        case "pagerank" => {
+          val pageRankConfig = PRConfig.getPRConfig(configs)
+          PageRankAlgo(sparkConfig.spark, dataSet, pageRankConfig, hasWeight)
+        }
+        case "louvain" => {
+          val louvainConfig = LouvainConfig.getLouvainConfig(configs)
+          LouvainAlgo(sparkConfig.spark, dataSet, louvainConfig, hasWeight)
+        }
+        case "connectedcomponent" => {
+          val ccConfig = CcConfig.getCcConfig(configs)
+          ConnectedComponentsAlgo(sparkConfig.spark, dataSet, ccConfig, hasWeight)
+        }
+        case "labelpropagation" => {
+          val lpaConfig = LPAConfig.getLPAConfig(configs)
+          LabelPropagationAlgo(sparkConfig.spark, dataSet, lpaConfig, hasWeight)
+        }
+        case "shortestpaths" => {
+          val spConfig = ShortestPathConfig.getShortestPathConfig(configs)
+          ShortestPathAlgo(sparkConfig.spark, dataSet, spConfig, hasWeight)
+        }
+        case "degreestatic" => {
+          DegreeStaticAlgo(sparkConfig.spark, dataSet)
+        }
+        case "kcore" => {
+          val kCoreConfig = KCoreConfig.getKCoreConfig(configs)
+          KCoreAlgo(sparkConfig.spark, dataSet, kCoreConfig)
+        }
+        case "stronglyconnectedcomponent" => {
+          val ccConfig = CcConfig.getCcConfig(configs)
+          StronglyConnectedComponentsAlgo(sparkConfig.spark, dataSet, ccConfig, hasWeight)
+        }
+        case "betweenness" => {
+          val betweennessConfig = BetweennessConfig.getBetweennessConfig(configs)
+          BetweennessCentralityAlgo(sparkConfig.spark, dataSet, betweennessConfig, hasWeight)
+        }
+        case "trianglecount" => {
+          TriangleCountAlgo(sparkConfig.spark, dataSet)
+        }
+        case _ => throw new UnknownParameterException("unknown executeAlgo name.")
+      }
+    }
+
+    // writer
+    val dataSink          = configs.dataSourceSinkEntry.sink
+    val nebulaWriteConfig = configs.nebulaConfig.writeConfigEntry
+    val resultPath        = configs.localConfigEntry.resultPath
+    dataSink.toLowerCase match {
+      case "nebula" => {
+        NebulaUtil.writeNebula(algoResult, nebulaWriteConfig, algoName)
+      }
+      case "csv" => {
+        algoResult.repartition(1).write.option("header", "true").csv(resultPath)
+      }
+      case "txt" => {
+        algoResult.repartition(1).write.option("header", "true").text(resultPath)
+      }
+      case _ => throw new UnsupportedOperationException("unsupported data sink")
     }
   }
 }

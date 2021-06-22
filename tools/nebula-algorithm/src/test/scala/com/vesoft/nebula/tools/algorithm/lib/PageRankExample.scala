@@ -6,12 +6,19 @@
 
 package com.vesoft.nebula.tools.algorithm.lib
 
-import com.vesoft.nebula.tools.algorithm.config.{ConfigSuite, Configs}
+import com.vesoft.nebula.tools.algorithm.config.{ConfigSuite, Configs, PRConfig, SparkConfig}
+import org.apache.spark.sql.DataFrame
 
 object PageRankExample {
   def main(args: Array[String]): Unit = {
     val configs: Configs = ConfigSuite.configMock()
+    val spark            = SparkConfig.getSpark(configs).spark
+
+    // construct your dataset
+    val dataSet: DataFrame = null
+
+    val pageRankAlgoConfig = PRConfig.getPRConfig(configs)
     // print the result
-    PageRankAlgo.apply(configs).show(10)
+    PageRankAlgo.apply(spark, dataSet, pageRankAlgoConfig, false).show(10)
   }
 }

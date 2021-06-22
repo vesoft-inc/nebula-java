@@ -16,8 +16,12 @@ object ConfigSuite {
     val hasWeight       = true
     val weightCols      = List("start_year", "degree")
 
+    val readConfigEntry: NebulaReadConfigEntry = NebulaReadConfigEntry()
+
+    val writeConfigEntry: NebulaWriteConfigEntry = NebulaWriteConfigEntry()
+
     val nebulaConfigEntry: NebulaConfigEntry =
-      NebulaConfigEntry(address, space, partitionNumber, labels, hasWeight, weightCols)
+      NebulaConfigEntry(readConfigEntry, writeConfigEntry)
 
     val sparkMap: Map[String, String] =
       Map("spark.app.name" -> "test", "spark.app.partitionNum" -> "12", "spark.master" -> "local")
@@ -28,6 +32,15 @@ object ConfigSuite {
                                            "algorithm.pagerank.maxIter" -> "10")
     val algorithmConfigEntry = AlgorithmConfigEntry(algoMap)
 
-    Configs(nebulaConfigEntry, sparkConfig, algorithmConfigEntry)
+    val dataSourceSinkEntry: DataSourceSinkEntry = DataSourceSinkEntry("csv", "csv", false)
+
+    val localConfigEntry: LocalConfigEntry =
+      LocalConfigEntry("file", "src", "dst", "weight", "result", false, ",")
+
+    Configs(sparkConfig,
+            dataSourceSinkEntry,
+            nebulaConfigEntry,
+            localConfigEntry,
+            algorithmConfigEntry)
   }
 }

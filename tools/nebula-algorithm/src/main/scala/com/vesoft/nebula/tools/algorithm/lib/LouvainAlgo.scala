@@ -23,40 +23,16 @@ object LouvainAlgo {
 
   /**
     * run the louvain algorithm for nebula graph
-    *
-    * 1. get the configuration which is configured in application.conf
-    * 2. read nebula edge data
-    * 3. construct initial graph
-    * 4. execute louvain algorithm
-    * 5. save the louvain result
     */
-  def apply(configs: Configs): DataFrame = {
+  def apply(spark: SparkSession,
+            dataset: Dataset[Row],
+            louvainConfig: LouvainConfig,
+            hasWeight: Boolean): DataFrame = {
 
-    val sparkConfig   = SparkConfig.getSpark(configs, ALGORITHM)
-    val nebulaConfig  = NebulaConfig.getNebula(configs)
-    val louvainConfig = LouvainConfig.getLouvainConfig(configs)
-
-    val dataSet: Dataset[Row] =
-      NebulaUtil.scanEdgeData(
-        sparkConfig.spark,
-        sparkConfig.partitionNum,
-        nebulaConfig.hostPorts,
-        nebulaConfig.partitionNumber,
-        nebulaConfig.nameSpace,
-        nebulaConfig.labels,
-        nebulaConfig.hasWeight,
-        nebulaConfig.weightCols
-      )
-
-    val resultPath                      = NebulaUtil.getResultPath(louvainConfig.louvainPath, ALGORITHM)
-    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataSet, nebulaConfig.hasWeight)
+    val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, hasWeight)
 
     val louvainResultRDD: RDD[Row] =
-      execute(sparkConfig.spark,
-              graph,
-              louvainConfig.maxIter,
-              louvainConfig.internalIter,
-              louvainConfig.tol)
+      execute(spark, graph, louvainConfig.maxIter, louvainConfig.internalIter, louvainConfig.tol)
 
     val schema = StructType(
       List(
@@ -64,9 +40,8 @@ object LouvainAlgo {
         StructField("_community", LongType, nullable = false)
       ))
 
-    val louvainResult = sparkConfig.spark.sqlContext
+    val louvainResult = spark.sqlContext
       .createDataFrame(louvainResultRDD, schema)
-    louvainResult.write.parquet(resultPath)
     louvainResult
   }
 

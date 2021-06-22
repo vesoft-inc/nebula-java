@@ -6,24 +6,15 @@
 
 package com.vesoft.nebula.tools.algorithm.config
 
-case class NebulaConfig(hostPorts: String,
-                        nameSpace: String,
-                        partitionNumber: String,
-                        labels: List[String],
-                        hasWeight: Boolean,
-                        weightCols: List[String])
-
 object NebulaConfig {
 
-  def getNebula(configs: Configs): NebulaConfig = {
-    val nebulaConfigs   = configs.nebulaConfig
-    val hostPorts       = nebulaConfigs.address
-    val nameSpace       = nebulaConfigs.space
-    val partitionNumber = nebulaConfigs.partitionNumber
-    val labels          = nebulaConfigs.labels
-    val hasWeight       = nebulaConfigs.hasWeight
-    val weightCols      = nebulaConfigs.weightCols
+  def getReadNebula(configs: Configs): NebulaReadConfigEntry = {
+    val nebulaConfigs = configs.nebulaConfig
+    nebulaConfigs.readConfigEntry
+  }
 
-    NebulaConfig(hostPorts, nameSpace, partitionNumber, labels, hasWeight, weightCols)
+  def getWriteNebula(configs: Configs): NebulaWriteConfigEntry = {
+    val nebulaConfigs = configs.nebulaConfig
+    nebulaConfigs.writeConfigEntry
   }
 }

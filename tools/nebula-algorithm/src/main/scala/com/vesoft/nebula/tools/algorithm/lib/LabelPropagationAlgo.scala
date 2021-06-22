@@ -6,45 +6,44 @@
 
 package com.vesoft.nebula.tools.algorithm.lib
 
-import com.vesoft.nebula.tools.algorithm.config.{Configs, NebulaConfig, PRConfig, SparkConfig}
+import com.vesoft.nebula.tools.algorithm.config.LPAConfig
 import org.apache.log4j.Logger
-import org.apache.spark.graphx.{Graph, VertexRDD}
+import org.apache.spark.graphx.{Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 import com.vesoft.nebula.tools.algorithm.utils.NebulaUtil
-import org.apache.spark.graphx.lib.PageRank
+import org.apache.spark.graphx.lib.LabelPropagation
 import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
-object PageRankAlgo {
+object LabelPropagationAlgo {
   private val LOGGER = Logger.getLogger(this.getClass)
 
-  val ALGORITHM: String = "PageRank"
+  val ALGORITHM: String = "LabelPropagation"
 
   /**
-    * run the pagerank algorithm for nebula graph
+    * run the LabelPropagation algorithm for nebula graph
     */
   def apply(spark: SparkSession,
             dataset: Dataset[Row],
-            pageRankConfig: PRConfig,
+            lpaConfig: LPAConfig,
             hasWeight: Boolean): DataFrame = {
-
     val graph: Graph[None.type, Double] = NebulaUtil.loadInitGraph(dataset, hasWeight)
 
-    val prResultRDD = execute(graph, pageRankConfig.maxIter, pageRankConfig.resetProb)
+    val lpaResultRDD = execute(graph, lpaConfig.maxIter)
 
     val schema = StructType(
       List(
         StructField("_id", LongType, nullable = false),
-        StructField("_pagerank", DoubleType, nullable = true)
+        StructField("_lpa", LongType, nullable = true)
       ))
     val algoResult = spark.sqlContext
-      .createDataFrame(prResultRDD, schema)
+      .createDataFrame(lpaResultRDD, schema)
 
     algoResult
   }
 
-  def execute(graph: Graph[None.type, Double], maxIter: Int, resetProb: Double): RDD[Row] = {
-    val prResultRDD: VertexRDD[Double] = PageRank.run(graph, maxIter, resetProb).vertices
-    prResultRDD.map(row => Row(row._1, row._2))
+  def execute(graph: Graph[None.type, Double], maxIter: Int): RDD[Row] = {
+    val lpaResultRDD: VertexRDD[VertexId] = LabelPropagation.run(graph, maxIter).vertices
+    lpaResultRDD.map(row => Row(row._1, row._2))
   }
 }
