@@ -48,10 +48,48 @@ public class MockNebulaGraph {
     }
 
     public static String createSpace() {
-        String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10);"
+        String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10, "
+                + "vid_type=fixed_string(10));"
                 + "USE testMeta;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int);"
                 + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
         return exec;
+    }
+
+    public static void createMultiVersionTagAndEdge() {
+        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+        nebulaPoolConfig.setMaxConnSize(100);
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
+                new HostAddress("127.0.0.1", 9670));
+        NebulaPool pool = new NebulaPool();
+        Session session = null;
+        try {
+            pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", true);
+
+            String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10, "
+                    + "vid_type=fixed_string(10));"
+                    + "USE testMeta;"
+                    + "CREATE TAG IF NOT EXISTS player();"
+                    + "CREATE EDGE IF NOT EXISTS couples()";
+            ResultSet resp = session.execute(exec);
+            if (!resp.isSucceeded()) {
+                System.exit(1);
+            }
+            Thread.sleep(10000);
+            String updateSchema = "USE testMeta;"
+                    + "ALTER TAG player ADD(col1 string);"
+                    + "ALTER EDGE couples ADD(col1 string)";
+            ResultSet updateResp = session.execute(updateSchema);
+            if (!updateResp.isSucceeded()) {
+                if (!"Existed!".equals(updateResp.getErrorMessage())) {
+                    System.exit(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close();
+        }
     }
 }
