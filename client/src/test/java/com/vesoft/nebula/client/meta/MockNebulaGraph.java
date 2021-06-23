@@ -17,14 +17,17 @@ import com.vesoft.nebula.client.graph.net.Session;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * two spaces: test1, test2, both have 2 parts
  * each space has one tag and one edge
  */
 public class MockNebulaGraph {
-    public static void initGraph() {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MockNebulaGraph.class);
 
+    public static void initGraph() {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
@@ -37,6 +40,7 @@ public class MockNebulaGraph {
 
             ResultSet resp = session.execute(createSpace());
             if (!resp.isSucceeded()) {
+                LOGGER.error(resp.getErrorMessage());
                 System.exit(1);
             }
         } catch (UnknownHostException | NotValidConnectionException
@@ -74,6 +78,7 @@ public class MockNebulaGraph {
                     + "CREATE EDGE IF NOT EXISTS couples()";
             ResultSet resp = session.execute(exec);
             if (!resp.isSucceeded()) {
+                LOGGER.error(resp.getErrorMessage());
                 System.exit(1);
             }
             Thread.sleep(10000);
@@ -83,6 +88,7 @@ public class MockNebulaGraph {
             ResultSet updateResp = session.execute(updateSchema);
             if (!updateResp.isSucceeded()) {
                 if (!"Existed!".equals(updateResp.getErrorMessage())) {
+                    LOGGER.error(resp.getErrorMessage());
                     System.exit(1);
                 }
             }
