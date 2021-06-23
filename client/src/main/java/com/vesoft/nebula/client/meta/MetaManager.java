@@ -81,6 +81,7 @@ public class MetaManager implements MetaCache {
      * close meta client
      */
     public void close() {
+        metaManager = null;
         metaClient.close();
     }
 
@@ -99,16 +100,23 @@ public class MetaManager implements MetaCache {
                 spaceInfo.spaceItem = spaceItem;
                 List<TagItem> tags = metaClient.getTags(spaceName);
                 for (TagItem tag : tags) {
-                    spaceInfo.tagItems.put(new String(tag.tag_name), tag);
-                    spaceInfo.tagIdNames.put(tag.tag_id, new String(tag.tag_name));
+                    String tagName = new String(tag.tag_name);
+                    if (!spaceInfo.tagItems.containsKey(tagName)
+                            || spaceInfo.tagItems.get(tagName).getVersion() < tag.getVersion()) {
+                        spaceInfo.tagItems.put(tagName, tag);
+                        spaceInfo.tagIdNames.put(tag.tag_id, tagName);
+                    }
                 }
                 List<EdgeItem> edges = metaClient.getEdges(spaceName);
                 for (EdgeItem edge : edges) {
-                    spaceInfo.edgeItems.put(new String(edge.edge_name), edge);
-                    spaceInfo.edgeTypeNames.put(edge.edge_type, new String(edge.edge_name));
+                    String edgeName = new String(edge.edge_name);
+                    if (!spaceInfo.edgeItems.containsKey(edgeName)
+                            || spaceInfo.edgeItems.get(edgeName).getVersion() < edge.getVersion()) {
+                        spaceInfo.edgeItems.put(edgeName, edge);
+                        spaceInfo.edgeTypeNames.put(edge.edge_type, edgeName);
+                    }
                 }
-                Map<Integer, List<HostAddr>> partsAlloc = metaClient.getPartsAlloc(spaceName);
-                spaceInfo.partsAlloc = partsAlloc;
+                spaceInfo.partsAlloc = metaClient.getPartsAlloc(spaceName);
                 tempSpacesInfo.put(spaceName, spaceInfo);
             }
             try {
