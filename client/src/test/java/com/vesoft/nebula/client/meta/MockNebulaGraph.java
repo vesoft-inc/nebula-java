@@ -53,7 +53,7 @@ public class MockNebulaGraph {
 
     public static String createSpace() {
         String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10, "
-                + "vid_type=fixed_string(10));"
+                + "vid_type=fixed_string(8));"
                 + "USE testMeta;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int);"
                 + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
