@@ -154,7 +154,7 @@ public class TestConnectionPool {
                 s.release();
             }
             Assert.assertEquals(0, pool.getActiveConnNum());
-            Assert.assertEquals(4, pool.getIdleConnNum());
+            Assert.assertEquals(2, pool.getIdleConnNum());
             Session session = pool.getSession("root", "nebula", false);
             Assert.assertNotNull(session);
             Assert.assertEquals(1, pool.getActiveConnNum());
