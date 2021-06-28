@@ -23,7 +23,7 @@ public class TestMetaManager extends TestCase {
     public void setUp() throws Exception {
         MockNebulaGraph.initGraph();
         metaManager = MetaManager.getMetaManager(
-            Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
+                Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
     }
 
     public void tearDown() {
@@ -82,7 +82,7 @@ public class TestMetaManager extends TestCase {
     public void testGetSpaceParts() {
         assert (metaManager.getSpaceParts("testMeta").size() == 10);
         Assert.assertArrayEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).toArray(),
-            metaManager.getSpaceParts("testMeta").toArray());
+                metaManager.getSpaceParts("testMeta").toArray());
 
         // test get leader
         HostAddr hostAddr = metaManager.getLeader("testMeta", 1);
@@ -95,5 +95,19 @@ public class TestMetaManager extends TestCase {
         hostAddr = metaManager.getLeader("testMeta", 1);
         Assert.assertNotNull(hostAddr);
         Assert.assertEquals(hostAddr.port, 4400);
+    }
+
+    public void testMultiVersionSchema() {
+        MockNebulaGraph.createMultiVersionTagAndEdge();
+        metaManager.close();
+        metaManager = MetaManager.getMetaManager(
+                Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
+        TagItem tagItem = metaManager.getTag("testMeta", "player");
+        assert (tagItem.getVersion() == 1);
+        assert (tagItem.schema.getColumns().size() == 1);
+
+        EdgeItem edgeItem = metaManager.getEdge("testMeta", "couples");
+        assert (edgeItem.getVersion() == 1);
+        assert (edgeItem.schema.getColumns().size() == 1);
     }
 }
