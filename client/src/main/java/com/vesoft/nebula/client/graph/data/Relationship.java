@@ -16,9 +16,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class Relationship {
+public class Relationship extends BaseDataObject {
     private final Edge edge;
-    private final String decodeType = "utf-8";
 
     public Relationship(Edge edge) {
         if (edge == null) {
@@ -33,8 +32,8 @@ public class Relationship {
      *     if string id, you can call srcId().asString()
      */
     public ValueWrapper srcId() {
-        return edge.type > 0 ? new ValueWrapper(edge.src, decodeType)
-            : new ValueWrapper(edge.dst, decodeType);
+        return edge.type > 0 ? new ValueWrapper(edge.src, getDecodeType(), getTimezoneOffset())
+            : new ValueWrapper(edge.dst, getDecodeType(), getTimezoneOffset());
     }
 
     /**
@@ -43,8 +42,8 @@ public class Relationship {
      *     if string id, you can call srcId().asString()
      */
     public ValueWrapper dstId() {
-        return edge.type > 0 ? new ValueWrapper(edge.dst, decodeType)
-            : new ValueWrapper(edge.src, decodeType);
+        return edge.type > 0 ? new ValueWrapper(edge.dst, getDecodeType(), getTimezoneOffset())
+            : new ValueWrapper(edge.src, getDecodeType(), getTimezoneOffset());
     }
 
     /**
@@ -66,7 +65,7 @@ public class Relationship {
     public List<String> keys() throws UnsupportedEncodingException {
         List<String> propNames = new ArrayList<>();
         for (byte[] name : edge.props.keySet()) {
-            propNames.add(new String(name, decodeType));
+            propNames.add(new String(name, getDecodeType()));
         }
         return propNames;
     }
@@ -78,7 +77,7 @@ public class Relationship {
     public List<ValueWrapper> values() {
         List<ValueWrapper> propVals = new ArrayList<>();
         for (Value val : edge.props.values()) {
-            propVals.add(new ValueWrapper(val, decodeType));
+            propVals.add(new ValueWrapper(val, getDecodeType(), getTimezoneOffset()));
         }
         return propVals;
     }
@@ -90,8 +89,8 @@ public class Relationship {
     public HashMap<String, ValueWrapper> properties() throws UnsupportedEncodingException {
         HashMap<String, ValueWrapper> properties = new HashMap<>();
         for (byte[] key : edge.props.keySet()) {
-            properties.put(new String(key, decodeType),
-                new ValueWrapper(edge.props.get(key), decodeType));
+            properties.put(new String(key, getDecodeType()),
+                new ValueWrapper(edge.props.get(key), getDecodeType(), getTimezoneOffset()));
         }
         return properties;
     }
@@ -113,7 +112,7 @@ public class Relationship {
 
     @Override
     public int hashCode() {
-        return Objects.hash(edge, decodeType);
+        return Objects.hash(edge, getDecodeType(), getTimezoneOffset());
     }
 
     @Override

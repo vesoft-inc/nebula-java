@@ -182,17 +182,17 @@ public class InternalStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void getValue(GetValueRequest req, AsyncMethodCallback resultHandler437) throws TException {
+    public void getValue(GetValueRequest req, AsyncMethodCallback resultHandler447) throws TException {
       checkReady();
-      getValue_call method_call = new getValue_call(req, resultHandler437, this, ___protocolFactory, ___transport);
+      getValue_call method_call = new getValue_call(req, resultHandler447, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getValue_call extends TAsyncMethodCall {
       private GetValueRequest req;
-      public getValue_call(GetValueRequest req, AsyncMethodCallback resultHandler438, TAsyncClient client434, TProtocolFactory protocolFactory435, TNonblockingTransport transport436) throws TException {
-        super(client434, protocolFactory435, transport436, resultHandler438, false);
+      public getValue_call(GetValueRequest req, AsyncMethodCallback resultHandler448, TAsyncClient client444, TProtocolFactory protocolFactory445, TNonblockingTransport transport446) throws TException {
+        super(client444, protocolFactory445, transport446, resultHandler448, false);
         this.req = req;
       }
 
@@ -214,17 +214,17 @@ public class InternalStorageService {
       }
     }
 
-    public void forwardTransaction(InternalTxnRequest req, AsyncMethodCallback resultHandler442) throws TException {
+    public void forwardTransaction(InternalTxnRequest req, AsyncMethodCallback resultHandler452) throws TException {
       checkReady();
-      forwardTransaction_call method_call = new forwardTransaction_call(req, resultHandler442, this, ___protocolFactory, ___transport);
+      forwardTransaction_call method_call = new forwardTransaction_call(req, resultHandler452, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class forwardTransaction_call extends TAsyncMethodCall {
       private InternalTxnRequest req;
-      public forwardTransaction_call(InternalTxnRequest req, AsyncMethodCallback resultHandler443, TAsyncClient client439, TProtocolFactory protocolFactory440, TNonblockingTransport transport441) throws TException {
-        super(client439, protocolFactory440, transport441, resultHandler443, false);
+      public forwardTransaction_call(InternalTxnRequest req, AsyncMethodCallback resultHandler453, TAsyncClient client449, TProtocolFactory protocolFactory450, TNonblockingTransport transport451) throws TException {
+        super(client449, protocolFactory450, transport451, resultHandler453, false);
         this.req = req;
       }
 

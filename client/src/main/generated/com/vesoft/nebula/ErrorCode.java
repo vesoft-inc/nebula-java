@@ -38,6 +38,7 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_PARTIAL_RESULT(-27),
   E_REBUILD_INDEX_FAILED(-28),
   E_INVALID_PASSWORD(-29),
+  E_FAILED_GET_ABS_PATH(-30),
   E_BAD_USERNAME_PASSWORD(-1001),
   E_SESSION_INVALID(-1002),
   E_SESSION_TIMEOUT(-1003),
@@ -87,6 +88,9 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_BACKUP_SPACE_NOT_FOUND(-2067),
   E_RESTORE_FAILURE(-2068),
   E_SESSION_NOT_FOUND(-2069),
+  E_LIST_CLUSTER_FAILURE(-2070),
+  E_LIST_CLUSTER_GET_ABS_PATH_FAILURE(-2071),
+  E_GET_META_DIR_FAILURE(-2072),
   E_CONSENSUS_ERROR(-3001),
   E_KEY_HAS_EXISTS(-3002),
   E_DATA_TYPE_MISMATCH(-3003),
@@ -118,6 +122,7 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_OUTDATED_LOCK(-3047),
   E_INVALID_TASK_PARA(-3051),
   E_USER_CANCEL(-3052),
+  E_TASK_EXECUTION_FAILED(-3053),
   E_UNKNOWN(-8000);
 
   private static final Map<Integer, ErrorCode> INDEXED_VALUES = new HashMap<Integer, ErrorCode>();

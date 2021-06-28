@@ -9,7 +9,7 @@ package com.vesoft.nebula.client.graph.data;
 import com.vesoft.nebula.Date;
 import java.util.Objects;
 
-public class DateWrapper {
+public class DateWrapper extends BaseDataObject {
     private Date date;
 
     public DateWrapper(Date date) {

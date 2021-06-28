@@ -770,17 +770,17 @@ public class GraphStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void getNeighbors(GetNeighborsRequest req, AsyncMethodCallback resultHandler257) throws TException {
+    public void getNeighbors(GetNeighborsRequest req, AsyncMethodCallback resultHandler261) throws TException {
       checkReady();
-      getNeighbors_call method_call = new getNeighbors_call(req, resultHandler257, this, ___protocolFactory, ___transport);
+      getNeighbors_call method_call = new getNeighbors_call(req, resultHandler261, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getNeighbors_call extends TAsyncMethodCall {
       private GetNeighborsRequest req;
-      public getNeighbors_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler258, TAsyncClient client254, TProtocolFactory protocolFactory255, TNonblockingTransport transport256) throws TException {
-        super(client254, protocolFactory255, transport256, resultHandler258, false);
+      public getNeighbors_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler262, TAsyncClient client258, TProtocolFactory protocolFactory259, TNonblockingTransport transport260) throws TException {
+        super(client258, protocolFactory259, transport260, resultHandler262, false);
         this.req = req;
       }
 
@@ -802,17 +802,17 @@ public class GraphStorageService {
       }
     }
 
-    public void getProps(GetPropRequest req, AsyncMethodCallback resultHandler262) throws TException {
+    public void getProps(GetPropRequest req, AsyncMethodCallback resultHandler266) throws TException {
       checkReady();
-      getProps_call method_call = new getProps_call(req, resultHandler262, this, ___protocolFactory, ___transport);
+      getProps_call method_call = new getProps_call(req, resultHandler266, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getProps_call extends TAsyncMethodCall {
       private GetPropRequest req;
-      public getProps_call(GetPropRequest req, AsyncMethodCallback resultHandler263, TAsyncClient client259, TProtocolFactory protocolFactory260, TNonblockingTransport transport261) throws TException {
-        super(client259, protocolFactory260, transport261, resultHandler263, false);
+      public getProps_call(GetPropRequest req, AsyncMethodCallback resultHandler267, TAsyncClient client263, TProtocolFactory protocolFactory264, TNonblockingTransport transport265) throws TException {
+        super(client263, protocolFactory264, transport265, resultHandler267, false);
         this.req = req;
       }
 
@@ -834,17 +834,17 @@ public class GraphStorageService {
       }
     }
 
-    public void addVertices(AddVerticesRequest req, AsyncMethodCallback resultHandler267) throws TException {
+    public void addVertices(AddVerticesRequest req, AsyncMethodCallback resultHandler271) throws TException {
       checkReady();
-      addVertices_call method_call = new addVertices_call(req, resultHandler267, this, ___protocolFactory, ___transport);
+      addVertices_call method_call = new addVertices_call(req, resultHandler271, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addVertices_call extends TAsyncMethodCall {
       private AddVerticesRequest req;
-      public addVertices_call(AddVerticesRequest req, AsyncMethodCallback resultHandler268, TAsyncClient client264, TProtocolFactory protocolFactory265, TNonblockingTransport transport266) throws TException {
-        super(client264, protocolFactory265, transport266, resultHandler268, false);
+      public addVertices_call(AddVerticesRequest req, AsyncMethodCallback resultHandler272, TAsyncClient client268, TProtocolFactory protocolFactory269, TNonblockingTransport transport270) throws TException {
+        super(client268, protocolFactory269, transport270, resultHandler272, false);
         this.req = req;
       }
 
@@ -866,17 +866,17 @@ public class GraphStorageService {
       }
     }
 
-    public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler272) throws TException {
+    public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler276) throws TException {
       checkReady();
-      addEdges_call method_call = new addEdges_call(req, resultHandler272, this, ___protocolFactory, ___transport);
+      addEdges_call method_call = new addEdges_call(req, resultHandler276, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addEdges_call extends TAsyncMethodCall {
       private AddEdgesRequest req;
-      public addEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler273, TAsyncClient client269, TProtocolFactory protocolFactory270, TNonblockingTransport transport271) throws TException {
-        super(client269, protocolFactory270, transport271, resultHandler273, false);
+      public addEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler277, TAsyncClient client273, TProtocolFactory protocolFactory274, TNonblockingTransport transport275) throws TException {
+        super(client273, protocolFactory274, transport275, resultHandler277, false);
         this.req = req;
       }
 
@@ -898,17 +898,17 @@ public class GraphStorageService {
       }
     }
 
-    public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler277) throws TException {
+    public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler281) throws TException {
       checkReady();
-      deleteEdges_call method_call = new deleteEdges_call(req, resultHandler277, this, ___protocolFactory, ___transport);
+      deleteEdges_call method_call = new deleteEdges_call(req, resultHandler281, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class deleteEdges_call extends TAsyncMethodCall {
       private DeleteEdgesRequest req;
-      public deleteEdges_call(DeleteEdgesRequest req, AsyncMethodCallback resultHandler278, TAsyncClient client274, TProtocolFactory protocolFactory275, TNonblockingTransport transport276) throws TException {
-        super(client274, protocolFactory275, transport276, resultHandler278, false);
+      public deleteEdges_call(DeleteEdgesRequest req, AsyncMethodCallback resultHandler282, TAsyncClient client278, TProtocolFactory protocolFactory279, TNonblockingTransport transport280) throws TException {
+        super(client278, protocolFactory279, transport280, resultHandler282, false);
         this.req = req;
       }
 
@@ -930,17 +930,17 @@ public class GraphStorageService {
       }
     }
 
-    public void deleteVertices(DeleteVerticesRequest req, AsyncMethodCallback resultHandler282) throws TException {
+    public void deleteVertices(DeleteVerticesRequest req, AsyncMethodCallback resultHandler286) throws TException {
       checkReady();
-      deleteVertices_call method_call = new deleteVertices_call(req, resultHandler282, this, ___protocolFactory, ___transport);
+      deleteVertices_call method_call = new deleteVertices_call(req, resultHandler286, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class deleteVertices_call extends TAsyncMethodCall {
       private DeleteVerticesRequest req;
-      public deleteVertices_call(DeleteVerticesRequest req, AsyncMethodCallback resultHandler283, TAsyncClient client279, TProtocolFactory protocolFactory280, TNonblockingTransport transport281) throws TException {
-        super(client279, protocolFactory280, transport281, resultHandler283, false);
+      public deleteVertices_call(DeleteVerticesRequest req, AsyncMethodCallback resultHandler287, TAsyncClient client283, TProtocolFactory protocolFactory284, TNonblockingTransport transport285) throws TException {
+        super(client283, protocolFactory284, transport285, resultHandler287, false);
         this.req = req;
       }
 
@@ -962,17 +962,17 @@ public class GraphStorageService {
       }
     }
 
-    public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler287) throws TException {
+    public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler291) throws TException {
       checkReady();
-      updateVertex_call method_call = new updateVertex_call(req, resultHandler287, this, ___protocolFactory, ___transport);
+      updateVertex_call method_call = new updateVertex_call(req, resultHandler291, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class updateVertex_call extends TAsyncMethodCall {
       private UpdateVertexRequest req;
-      public updateVertex_call(UpdateVertexRequest req, AsyncMethodCallback resultHandler288, TAsyncClient client284, TProtocolFactory protocolFactory285, TNonblockingTransport transport286) throws TException {
-        super(client284, protocolFactory285, transport286, resultHandler288, false);
+      public updateVertex_call(UpdateVertexRequest req, AsyncMethodCallback resultHandler292, TAsyncClient client288, TProtocolFactory protocolFactory289, TNonblockingTransport transport290) throws TException {
+        super(client288, protocolFactory289, transport290, resultHandler292, false);
         this.req = req;
       }
 
@@ -994,17 +994,17 @@ public class GraphStorageService {
       }
     }
 
-    public void updateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler292) throws TException {
+    public void updateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler296) throws TException {
       checkReady();
-      updateEdge_call method_call = new updateEdge_call(req, resultHandler292, this, ___protocolFactory, ___transport);
+      updateEdge_call method_call = new updateEdge_call(req, resultHandler296, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class updateEdge_call extends TAsyncMethodCall {
       private UpdateEdgeRequest req;
-      public updateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler293, TAsyncClient client289, TProtocolFactory protocolFactory290, TNonblockingTransport transport291) throws TException {
-        super(client289, protocolFactory290, transport291, resultHandler293, false);
+      public updateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler297, TAsyncClient client293, TProtocolFactory protocolFactory294, TNonblockingTransport transport295) throws TException {
+        super(client293, protocolFactory294, transport295, resultHandler297, false);
         this.req = req;
       }
 
@@ -1026,17 +1026,17 @@ public class GraphStorageService {
       }
     }
 
-    public void scanVertex(ScanVertexRequest req, AsyncMethodCallback resultHandler297) throws TException {
+    public void scanVertex(ScanVertexRequest req, AsyncMethodCallback resultHandler301) throws TException {
       checkReady();
-      scanVertex_call method_call = new scanVertex_call(req, resultHandler297, this, ___protocolFactory, ___transport);
+      scanVertex_call method_call = new scanVertex_call(req, resultHandler301, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scanVertex_call extends TAsyncMethodCall {
       private ScanVertexRequest req;
-      public scanVertex_call(ScanVertexRequest req, AsyncMethodCallback resultHandler298, TAsyncClient client294, TProtocolFactory protocolFactory295, TNonblockingTransport transport296) throws TException {
-        super(client294, protocolFactory295, transport296, resultHandler298, false);
+      public scanVertex_call(ScanVertexRequest req, AsyncMethodCallback resultHandler302, TAsyncClient client298, TProtocolFactory protocolFactory299, TNonblockingTransport transport300) throws TException {
+        super(client298, protocolFactory299, transport300, resultHandler302, false);
         this.req = req;
       }
 
@@ -1058,17 +1058,17 @@ public class GraphStorageService {
       }
     }
 
-    public void scanEdge(ScanEdgeRequest req, AsyncMethodCallback resultHandler302) throws TException {
+    public void scanEdge(ScanEdgeRequest req, AsyncMethodCallback resultHandler306) throws TException {
       checkReady();
-      scanEdge_call method_call = new scanEdge_call(req, resultHandler302, this, ___protocolFactory, ___transport);
+      scanEdge_call method_call = new scanEdge_call(req, resultHandler306, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scanEdge_call extends TAsyncMethodCall {
       private ScanEdgeRequest req;
-      public scanEdge_call(ScanEdgeRequest req, AsyncMethodCallback resultHandler303, TAsyncClient client299, TProtocolFactory protocolFactory300, TNonblockingTransport transport301) throws TException {
-        super(client299, protocolFactory300, transport301, resultHandler303, false);
+      public scanEdge_call(ScanEdgeRequest req, AsyncMethodCallback resultHandler307, TAsyncClient client303, TProtocolFactory protocolFactory304, TNonblockingTransport transport305) throws TException {
+        super(client303, protocolFactory304, transport305, resultHandler307, false);
         this.req = req;
       }
 
@@ -1090,17 +1090,17 @@ public class GraphStorageService {
       }
     }
 
-    public void getUUID(GetUUIDReq req, AsyncMethodCallback resultHandler307) throws TException {
+    public void getUUID(GetUUIDReq req, AsyncMethodCallback resultHandler311) throws TException {
       checkReady();
-      getUUID_call method_call = new getUUID_call(req, resultHandler307, this, ___protocolFactory, ___transport);
+      getUUID_call method_call = new getUUID_call(req, resultHandler311, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getUUID_call extends TAsyncMethodCall {
       private GetUUIDReq req;
-      public getUUID_call(GetUUIDReq req, AsyncMethodCallback resultHandler308, TAsyncClient client304, TProtocolFactory protocolFactory305, TNonblockingTransport transport306) throws TException {
-        super(client304, protocolFactory305, transport306, resultHandler308, false);
+      public getUUID_call(GetUUIDReq req, AsyncMethodCallback resultHandler312, TAsyncClient client308, TProtocolFactory protocolFactory309, TNonblockingTransport transport310) throws TException {
+        super(client308, protocolFactory309, transport310, resultHandler312, false);
         this.req = req;
       }
 
@@ -1122,17 +1122,17 @@ public class GraphStorageService {
       }
     }
 
-    public void lookupIndex(LookupIndexRequest req, AsyncMethodCallback resultHandler312) throws TException {
+    public void lookupIndex(LookupIndexRequest req, AsyncMethodCallback resultHandler316) throws TException {
       checkReady();
-      lookupIndex_call method_call = new lookupIndex_call(req, resultHandler312, this, ___protocolFactory, ___transport);
+      lookupIndex_call method_call = new lookupIndex_call(req, resultHandler316, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class lookupIndex_call extends TAsyncMethodCall {
       private LookupIndexRequest req;
-      public lookupIndex_call(LookupIndexRequest req, AsyncMethodCallback resultHandler313, TAsyncClient client309, TProtocolFactory protocolFactory310, TNonblockingTransport transport311) throws TException {
-        super(client309, protocolFactory310, transport311, resultHandler313, false);
+      public lookupIndex_call(LookupIndexRequest req, AsyncMethodCallback resultHandler317, TAsyncClient client313, TProtocolFactory protocolFactory314, TNonblockingTransport transport315) throws TException {
+        super(client313, protocolFactory314, transport315, resultHandler317, false);
         this.req = req;
       }
 
@@ -1154,17 +1154,17 @@ public class GraphStorageService {
       }
     }
 
-    public void lookupAndTraverse(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler317) throws TException {
+    public void lookupAndTraverse(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler321) throws TException {
       checkReady();
-      lookupAndTraverse_call method_call = new lookupAndTraverse_call(req, resultHandler317, this, ___protocolFactory, ___transport);
+      lookupAndTraverse_call method_call = new lookupAndTraverse_call(req, resultHandler321, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class lookupAndTraverse_call extends TAsyncMethodCall {
       private LookupAndTraverseRequest req;
-      public lookupAndTraverse_call(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler318, TAsyncClient client314, TProtocolFactory protocolFactory315, TNonblockingTransport transport316) throws TException {
-        super(client314, protocolFactory315, transport316, resultHandler318, false);
+      public lookupAndTraverse_call(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler322, TAsyncClient client318, TProtocolFactory protocolFactory319, TNonblockingTransport transport320) throws TException {
+        super(client318, protocolFactory319, transport320, resultHandler322, false);
         this.req = req;
       }
 
@@ -1186,17 +1186,17 @@ public class GraphStorageService {
       }
     }
 
-    public void addEdgesAtomic(AddEdgesRequest req, AsyncMethodCallback resultHandler322) throws TException {
+    public void addEdgesAtomic(AddEdgesRequest req, AsyncMethodCallback resultHandler326) throws TException {
       checkReady();
-      addEdgesAtomic_call method_call = new addEdgesAtomic_call(req, resultHandler322, this, ___protocolFactory, ___transport);
+      addEdgesAtomic_call method_call = new addEdgesAtomic_call(req, resultHandler326, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addEdgesAtomic_call extends TAsyncMethodCall {
       private AddEdgesRequest req;
-      public addEdgesAtomic_call(AddEdgesRequest req, AsyncMethodCallback resultHandler323, TAsyncClient client319, TProtocolFactory protocolFactory320, TNonblockingTransport transport321) throws TException {
-        super(client319, protocolFactory320, transport321, resultHandler323, false);
+      public addEdgesAtomic_call(AddEdgesRequest req, AsyncMethodCallback resultHandler327, TAsyncClient client323, TProtocolFactory protocolFactory324, TNonblockingTransport transport325) throws TException {
+        super(client323, protocolFactory324, transport325, resultHandler327, false);
         this.req = req;
       }
 

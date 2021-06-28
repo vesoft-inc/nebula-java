@@ -31,6 +31,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)3);
   private static final TField LEADER_PART_IDS_FIELD_DESC = new TField("leader_partIds", TType.MAP, (short)4);
   private static final TField GIT_INFO_SHA_FIELD_DESC = new TField("git_info_sha", TType.STRING, (short)5);
+  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)6);
 
   /**
    * 
@@ -41,11 +42,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public long cluster_id;
   public Map<Integer,List<LeaderInfo>> leader_partIds;
   public byte[] git_info_sha;
+  public byte[] version;
   public static final int ROLE = 1;
   public static final int HOST = 2;
   public static final int CLUSTER_ID = 3;
   public static final int LEADER_PARTIDS = 4;
   public static final int GIT_INFO_SHA = 5;
+  public static final int VERSION = 6;
 
   // isset id assignments
   private static final int __CLUSTER_ID_ISSET_ID = 0;
@@ -67,6 +70,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
             new ListMetaData(TType.LIST, 
                 new StructMetaData(TType.STRUCT, LeaderInfo.class)))));
     tmpMetaDataMap.put(GIT_INFO_SHA, new FieldMetaData("git_info_sha", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -96,7 +101,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       com.vesoft.nebula.HostAddr host,
       long cluster_id,
       Map<Integer,List<LeaderInfo>> leader_partIds,
-      byte[] git_info_sha) {
+      byte[] git_info_sha,
+      byte[] version) {
     this();
     this.role = role;
     this.host = host;
@@ -104,6 +110,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     setCluster_idIsSet(true);
     this.leader_partIds = leader_partIds;
     this.git_info_sha = git_info_sha;
+    this.version = version;
   }
 
   public static class Builder {
@@ -112,6 +119,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     private long cluster_id;
     private Map<Integer,List<LeaderInfo>> leader_partIds;
     private byte[] git_info_sha;
+    private byte[] version;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -144,6 +152,11 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return this;
     }
 
+    public Builder setVersion(final byte[] version) {
+      this.version = version;
+      return this;
+    }
+
     public HBReq build() {
       HBReq result = new HBReq();
       result.setRole(this.role);
@@ -153,6 +166,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       result.setLeader_partIds(this.leader_partIds);
       result.setGit_info_sha(this.git_info_sha);
+      result.setVersion(this.version);
       return result;
     }
   }
@@ -179,6 +193,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
     if (other.isSetGit_info_sha()) {
       this.git_info_sha = TBaseHelper.deepCopy(other.git_info_sha);
+    }
+    if (other.isSetVersion()) {
+      this.version = TBaseHelper.deepCopy(other.version);
     }
   }
 
@@ -313,6 +330,30 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
   }
 
+  public byte[] getVersion() {
+    return this.version;
+  }
+
+  public HBReq setVersion(byte[] version) {
+    this.version = version;
+    return this;
+  }
+
+  public void unsetVersion() {
+    this.version = null;
+  }
+
+  // Returns true if field version is set (has been assigned a value) and false otherwise
+  public boolean isSetVersion() {
+    return this.version != null;
+  }
+
+  public void setVersionIsSet(boolean __value) {
+    if (!__value) {
+      this.version = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -356,6 +397,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       break;
 
+    case VERSION:
+      if (__value == null) {
+        unsetVersion();
+      } else {
+        setVersion((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -377,6 +426,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     case GIT_INFO_SHA:
       return getGit_info_sha();
+
+    case VERSION:
+      return getVersion();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -403,12 +455,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     if (!TBaseHelper.equalsSlow(this.isSetGit_info_sha(), that.isSetGit_info_sha(), this.git_info_sha, that.git_info_sha)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha});
+    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, version});
   }
 
   @Override
@@ -460,6 +514,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(git_info_sha, other.git_info_sha);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(version, other.version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -541,6 +603,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case VERSION:
+          if (__field.type == TType.STRING) {
+            this.version = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -595,6 +664,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       oprot.writeFieldBegin(GIT_INFO_SHA_FIELD_DESC);
       oprot.writeBinary(this.git_info_sha);
       oprot.writeFieldEnd();
+    }
+    if (this.version != null) {
+      if (isSetVersion()) {
+        oprot.writeFieldBegin(VERSION_FIELD_DESC);
+        oprot.writeBinary(this.version);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -682,6 +758,25 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         if (this.getGit_info_sha().length > 128) sb.append(" ...");
     }
     first = false;
+    if (isSetVersion())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("version");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getVersion() == null) {
+        sb.append("null");
+      } else {
+          int __version_size = Math.min(this.getVersion().length, 128);
+          for (int i = 0; i < __version_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
+          }
+          if (this.getVersion().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
