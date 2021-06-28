@@ -70,6 +70,7 @@ public class NebulaPool {
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
         objConfig.setMinIdle(config.getMinConnSize());
+        objConfig.setMaxIdle(config.getMinConnSize());
         objConfig.setMaxTotal(config.getMaxConnSize());
         objConfig.setMinEvictableIdleTimeMillis(
                 config.getIdleTime() <= 0 ? Long.MAX_VALUE : config.getIdleTime());
