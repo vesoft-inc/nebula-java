@@ -25,7 +25,7 @@ public class RowWriterImpl implements RowWriter {
     private long approxStrLen = 0;
     private ByteBuffer buf;
     private final List<Boolean> isSet;
-    private final List<String> strList = new ArrayList<>();
+    private final List<byte[]> strList = new ArrayList<>();
     private ByteOrder byteOrder;
     static int[] andBits = {0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE};
     static int[] orBits = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
@@ -511,7 +511,7 @@ public class RowWriterImpl implements RowWriter {
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
             case STRING: {
-                strList.add(new String(v));
+                strList.add(v);
                 outOfSpaceStr = true;
                 approxStrLen += v.length;
                 break;
@@ -836,11 +836,11 @@ public class RowWriterImpl implements RowWriter {
                 if (strNum >= strList.size()) {
                     throw new RuntimeException("Wrong strNum: " + strNum);
                 }
-                temp.put(strList.get(strNum).getBytes());
+                temp.put(strList.get(strNum));
 
                 // Set the new offset and length
                 temp.putInt(offset, strOffset);
-                int len = strList.get(strNum).length();
+                int len = strList.get(strNum).length;
                 temp.putInt(offset + Integer.BYTES, len);
                 strOffset += len;
             }
