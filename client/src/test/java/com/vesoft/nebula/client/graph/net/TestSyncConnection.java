@@ -21,18 +21,18 @@ public class TestSyncConnection {
             connection.open(new HostAddress("127.0.0.1", 9671), 1000);
 
             // Test authenticate
-            long sessionId = connection.authenticate("root", "nebula");
-            Assert.assertNotEquals(0, sessionId);
+            AuthResult authResult = connection.authenticate("root", "nebula");
+            Assert.assertNotEquals(0, authResult.getSessionId());
 
             // Test execute
-            ExecutionResponse resp = connection.execute(sessionId, "SHOW SPACES;");
+            ExecutionResponse resp = connection.execute(authResult.getSessionId(), "SHOW SPACES;");
             Assert.assertEquals(ErrorCode.SUCCEEDED, resp.error_code);
 
             // Test signout
-            connection.signout(sessionId);
+            connection.signout(authResult.getSessionId());
 
             try {
-                connection.execute(sessionId, "SHOW SPACES;");
+                connection.execute(authResult.getSessionId(), "SHOW SPACES;");
             } catch (Exception e) {
                 assert (true);
             }

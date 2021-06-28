@@ -90,8 +90,8 @@ public class NebulaPool {
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
         try {
             SyncConnection connection = getConnection();
-            long sessionID = connection.authenticate(userName, password);
-            return new Session(connection, sessionID, this, reconnect);
+            AuthResult authResult = connection.authenticate(userName, password);
+            return new Session(connection, authResult, this, reconnect);
         } catch (NotValidConnectionException | AuthFailedException | IOErrorException e) {
             throw e;
         } catch (IllegalStateException e) {

@@ -24,15 +24,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Comparable<KVGetResponse> {
-  private static final TStruct STRUCT_DESC = new TStruct("KVGetResponse");
+public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListClusterInfoResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListClusterInfoResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField KEY_VALUES_FIELD_DESC = new TField("key_values", TType.MAP, (short)2);
+  private static final TField DIR_FIELD_DESC = new TField("dir", TType.STRUCT, (short)2);
 
   public ResponseCommon result;
-  public Map<byte[],byte[]> key_values;
+  public com.vesoft.nebula.DirInfo dir;
   public static final int RESULT = 1;
-  public static final int KEY_VALUES = 2;
+  public static final int DIR = 2;
 
   // isset id assignments
 
@@ -42,37 +42,35 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(KEY_VALUES, new FieldMetaData("key_values", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.STRING), 
-            new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(DIR, new FieldMetaData("dir", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DirInfo.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(KVGetResponse.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListClusterInfoResp.class, metaDataMap);
   }
 
-  public KVGetResponse() {
+  public ListClusterInfoResp() {
   }
 
-  public KVGetResponse(
+  public ListClusterInfoResp(
       ResponseCommon result) {
     this();
     this.result = result;
   }
 
-  public KVGetResponse(
+  public ListClusterInfoResp(
       ResponseCommon result,
-      Map<byte[],byte[]> key_values) {
+      com.vesoft.nebula.DirInfo dir) {
     this();
     this.result = result;
-    this.key_values = key_values;
+    this.dir = dir;
   }
 
   public static class Builder {
     private ResponseCommon result;
-    private Map<byte[],byte[]> key_values;
+    private com.vesoft.nebula.DirInfo dir;
 
     public Builder() {
     }
@@ -82,15 +80,15 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
-    public Builder setKey_values(final Map<byte[],byte[]> key_values) {
-      this.key_values = key_values;
+    public Builder setDir(final com.vesoft.nebula.DirInfo dir) {
+      this.dir = dir;
       return this;
     }
 
-    public KVGetResponse build() {
-      KVGetResponse result = new KVGetResponse();
+    public ListClusterInfoResp build() {
+      ListClusterInfoResp result = new ListClusterInfoResp();
       result.setResult(this.result);
-      result.setKey_values(this.key_values);
+      result.setDir(this.dir);
       return result;
     }
   }
@@ -102,24 +100,24 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public KVGetResponse(KVGetResponse other) {
+  public ListClusterInfoResp(ListClusterInfoResp other) {
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetKey_values()) {
-      this.key_values = TBaseHelper.deepCopy(other.key_values);
+    if (other.isSetDir()) {
+      this.dir = TBaseHelper.deepCopy(other.dir);
     }
   }
 
-  public KVGetResponse deepCopy() {
-    return new KVGetResponse(this);
+  public ListClusterInfoResp deepCopy() {
+    return new ListClusterInfoResp(this);
   }
 
   public ResponseCommon getResult() {
     return this.result;
   }
 
-  public KVGetResponse setResult(ResponseCommon result) {
+  public ListClusterInfoResp setResult(ResponseCommon result) {
     this.result = result;
     return this;
   }
@@ -139,31 +137,30 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public Map<byte[],byte[]> getKey_values() {
-    return this.key_values;
+  public com.vesoft.nebula.DirInfo getDir() {
+    return this.dir;
   }
 
-  public KVGetResponse setKey_values(Map<byte[],byte[]> key_values) {
-    this.key_values = key_values;
+  public ListClusterInfoResp setDir(com.vesoft.nebula.DirInfo dir) {
+    this.dir = dir;
     return this;
   }
 
-  public void unsetKey_values() {
-    this.key_values = null;
+  public void unsetDir() {
+    this.dir = null;
   }
 
-  // Returns true if field key_values is set (has been assigned a value) and false otherwise
-  public boolean isSetKey_values() {
-    return this.key_values != null;
+  // Returns true if field dir is set (has been assigned a value) and false otherwise
+  public boolean isSetDir() {
+    return this.dir != null;
   }
 
-  public void setKey_valuesIsSet(boolean __value) {
+  public void setDirIsSet(boolean __value) {
     if (!__value) {
-      this.key_values = null;
+      this.dir = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
@@ -174,11 +171,11 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case KEY_VALUES:
+    case DIR:
       if (__value == null) {
-        unsetKey_values();
+        unsetDir();
       } else {
-        setKey_values((Map<byte[],byte[]>)__value);
+        setDir((com.vesoft.nebula.DirInfo)__value);
       }
       break;
 
@@ -192,8 +189,8 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
     case RESULT:
       return getResult();
 
-    case KEY_VALUES:
-      return getKey_values();
+    case DIR:
+      return getDir();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -206,24 +203,24 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof KVGetResponse))
+    if (!(_that instanceof ListClusterInfoResp))
       return false;
-    KVGetResponse that = (KVGetResponse)_that;
+    ListClusterInfoResp that = (ListClusterInfoResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetKey_values(), that.isSetKey_values(), this.key_values, that.key_values)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetDir(), that.isSetDir(), this.dir, that.dir)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, key_values});
+    return Arrays.deepHashCode(new Object[] {result, dir});
   }
 
   @Override
-  public int compareTo(KVGetResponse other) {
+  public int compareTo(ListClusterInfoResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -242,11 +239,11 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetKey_values()).compareTo(other.isSetKey_values());
+    lastComparison = Boolean.valueOf(isSetDir()).compareTo(other.isSetDir());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(key_values, other.key_values);
+    lastComparison = TBaseHelper.compareTo(dir, other.dir);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -272,23 +269,10 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case KEY_VALUES:
-          if (__field.type == TType.MAP) {
-            {
-              TMap _map213 = iprot.readMapBegin();
-              this.key_values = new HashMap<byte[],byte[]>(Math.max(0, 2*_map213.size));
-              for (int _i214 = 0; 
-                   (_map213.size < 0) ? iprot.peekMap() : (_i214 < _map213.size); 
-                   ++_i214)
-              {
-                byte[] _key215;
-                byte[] _val216;
-                _key215 = iprot.readBinary();
-                _val216 = iprot.readBinary();
-                this.key_values.put(_key215, _val216);
-              }
-              iprot.readMapEnd();
-            }
+        case DIR:
+          if (__field.type == TType.STRUCT) {
+            this.dir = new com.vesoft.nebula.DirInfo();
+            this.dir.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -315,16 +299,9 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.key_values != null) {
-      oprot.writeFieldBegin(KEY_VALUES_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.STRING, TType.STRING, this.key_values.size()));
-        for (Map.Entry<byte[], byte[]> _iter217 : this.key_values.entrySet())        {
-          oprot.writeBinary(_iter217.getKey());
-          oprot.writeBinary(_iter217.getValue());
-        }
-        oprot.writeMapEnd();
-      }
+    if (this.dir != null) {
+      oprot.writeFieldBegin(DIR_FIELD_DESC);
+      this.dir.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -341,7 +318,7 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("KVGetResponse");
+    StringBuilder sb = new StringBuilder("ListClusterInfoResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -359,13 +336,13 @@ public class KVGetResponse implements TBase, java.io.Serializable, Cloneable, Co
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("key_values");
+    sb.append("dir");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getKey_values() == null) {
+    if (this.getDir() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getKey_values(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getDir(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

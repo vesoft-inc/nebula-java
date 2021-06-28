@@ -41,14 +41,14 @@ public class SyncConnection extends Connection {
         }
     }
 
-    public long authenticate(String user, String password)
+    public AuthResult authenticate(String user, String password)
             throws AuthFailedException, IOErrorException {
         try {
             AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 throw new AuthFailedException(new String(resp.error_msg).intern());
             }
-            return resp.session_id;
+            return new AuthResult(resp.getSession_id(), resp.getTime_zone_offset_seconds());
         } catch (TException e) {
             if (e instanceof TTransportException) {
                 TTransportException te = (TTransportException)e;

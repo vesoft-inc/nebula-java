@@ -16,18 +16,20 @@ import org.slf4j.LoggerFactory;
 
 public class Session {
     private final long sessionID;
+    private final int timezoneOffset;
     private SyncConnection connection;
     private final NebulaPool pool;
     private final Boolean retryConnect;
-    private final AtomicBoolean isRuning = new AtomicBoolean(false);
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Session(SyncConnection connection,
-                   long sessionID,
+                   AuthResult authResult,
                    NebulaPool connPool,
                    Boolean retryConnect) {
         this.connection = connection;
-        this.sessionID = sessionID;
+        this.sessionID = authResult.getSessionId();
+        this.timezoneOffset = authResult.getTimezoneOffset();
         this.pool = connPool;
         this.retryConnect = retryConnect;
     }
@@ -39,21 +41,21 @@ public class Session {
      * @return The ResultSet.
      */
     public ResultSet execute(String stmt) throws IOErrorException {
-        if (isRuning.get()) {
+        if (isRunning.get()) {
             throw new IOErrorException(
                 IOErrorException.E_MULTI_THREADS_USE_CONNECTION,
                 "Multi threads use the same session, "
                     + "the previous execution was not completed, current thread is: "
                     + Thread.currentThread().getName());
         }
-        isRuning.set(true);
+        isRunning.set(true);
         try {
             if (connection == null) {
                 throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
                         "Connection is null");
             }
             ExecutionResponse resp = connection.execute(sessionID, stmt);
-            return new ResultSet(resp);
+            return new ResultSet(resp, timezoneOffset);
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
                 pool.updateServerStatus();
@@ -61,7 +63,7 @@ public class Session {
                 if (retryConnect) {
                     if (retryConnect()) {
                         ExecutionResponse resp = connection.execute(sessionID, stmt);
-                        return new ResultSet(resp);
+                        return new ResultSet(resp, timezoneOffset);
                     } else {
                         throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
                                 "All servers are broken.");
@@ -70,7 +72,7 @@ public class Session {
             }
             throw ie;
         } finally {
-            isRuning.set(false);
+            isRunning.set(false);
         }
     }
 

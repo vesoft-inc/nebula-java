@@ -6,8 +6,6 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
@@ -28,6 +26,7 @@ import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.PlanDescription;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +40,6 @@ import org.junit.Test;
 
 public class TestData {
     public Vertex getVertex(String vid) {
-        Vertex vertex = new Vertex();
         List<Tag> tags = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             Map<byte[], Value> props = new HashMap<>();
@@ -84,10 +82,9 @@ public class TestData {
             if (i % 2 != 0) {
                 type = -1;
             }
-            Vertex dstId = getVertex(String.format("vertex%d", i));
             steps.add(new Step(getVertex(String.format("vertex%d", i)),
                     type,
-                    String.format("classmate").getBytes(), 100, props));
+                    ("classmate").getBytes(), 100, props));
         }
         return new Path(getVertex(startId), steps);
     }
@@ -120,49 +117,49 @@ public class TestData {
     public Path getSimplePath(boolean isReverse) {
         Map<byte[], Value> props1 = new HashMap<>();
         props1.put("tag1_prop".getBytes(), new Value(Value.IVAL, (long)200));
-        List<Tag> tags2 = Arrays.asList(new Tag("tag1".getBytes(), props1));
+        List<Tag> tags2 = Collections.singletonList(new Tag("tag1".getBytes(), props1));
         Vertex vertex1 = new Vertex(new Value(Value.SVAL, "vertex1".getBytes()), tags2);
         List<Step> steps = new ArrayList<>();
         Map<byte[], Value> props3 = new HashMap<>();
         props3.put("edge1_prop".getBytes(), new Value(Value.IVAL, (long)100));
         steps.add(new Step(vertex1,
                 1,
-                String.format("classmate").getBytes(),
+                "classmate".getBytes(),
                 100,
                 props3));
         Map<byte[], Value> props2 = new HashMap<>();
         props2.put("tag2_prop".getBytes(), new Value(Value.IVAL, (long)300));
-        List<Tag> tags3 = Arrays.asList(new Tag("tag2".getBytes(), props2));
+        List<Tag> tags3 = Collections.singletonList(new Tag("tag2".getBytes(), props2));
         Vertex vertex2 = new Vertex(new Value(Value.SVAL, "vertex2".getBytes()), tags3);
         Map<byte[], Value> props4 = new HashMap<>();
         props4.put("edge2_prop".getBytes(), new Value(Value.IVAL, (long)200));
         steps.add(new Step(vertex2,
                 isReverse ? -1 : 1,
-                String.format("classmate").getBytes(),
+                "classmate".getBytes(),
                 10,
                 props4));
         Map<byte[], Value> props0 = new HashMap<>();
         props0.put("tag0_prop".getBytes(), new Value(Value.IVAL, (long)100));
-        List<Tag> tags1 = Arrays.asList(new Tag("tag0".getBytes(), props0));
+        List<Tag> tags1 = Collections.singletonList(new Tag("tag0".getBytes(), props0));
         Vertex vertex0 = new Vertex(new Value(Value.SVAL, "vertex0".getBytes()), tags1);
         return new Path(vertex0, steps);
     }
 
     public DataSet getDateset() {
         final ArrayList<Value> list = new ArrayList<>();
-        list.add(new Value(Value.IVAL, new Long(1)));
-        list.add(new Value(Value.IVAL, new Long(2)));
+        list.add(new Value(Value.IVAL, 1L));
+        list.add(new Value(Value.IVAL, 2L));
         final HashSet<Value> set = new HashSet<>();
-        set.add(new Value(Value.IVAL, new Long(1)));
-        set.add(new Value(Value.IVAL, new Long(2)));
+        set.add(new Value(Value.IVAL, 1L));
+        set.add(new Value(Value.IVAL, 2L));
         final HashMap<byte[], Value> map = new HashMap();
-        map.put("key1".getBytes(), new Value(Value.IVAL, new Long(1)));
-        map.put("key2".getBytes(), new Value(Value.IVAL, new Long(2)));
+        map.put("key1".getBytes(), new Value(Value.IVAL, 1L));
+        map.put("key2".getBytes(), new Value(Value.IVAL, 2L));
         final Row row = new Row(Arrays.asList(
                 new Value(),
                 new Value(Value.NVAL, NullType.OUT_OF_RANGE),
                 new Value(Value.BVAL, false),
-                new Value(Value.IVAL, new Long(1)),
+                new Value(Value.IVAL, 1L),
                 new Value(Value.FVAL, 10.01),
                 new Value(Value.SVAL, "value1".getBytes()),
                 new Value(Value.LVAL, new NList(list)),
@@ -192,13 +189,13 @@ public class TestData {
             "col12_vertex".getBytes(),
             "col13_edge".getBytes(),
             "col14_path".getBytes());
-        return new DataSet(columnNames, Arrays.asList(row));
+        return new DataSet(columnNames, Collections.singletonList(row));
     }
 
     @Test
     public void testNode() {
         try {
-            Node node = new Node(getVertex(new String("Tom")));
+            Node node = new Node(getVertex("Tom"));
             assert Objects.equals(node.getId().asString(), "Tom");
             assert node.hasTagName("tag1");
             List<String> names = Arrays.asList("prop0", "prop1", "prop2", "prop3", "prop4");
@@ -221,7 +218,7 @@ public class TestData {
     @Test
     public void testRelationShip() {
         try {
-            Edge edge = getEdge(new String("Tom"), new String("Lily"));
+            Edge edge = getEdge("Tom", "Lily");
             Relationship relationShip = new Relationship(edge);
             assert Objects.equals(relationShip.srcId().asString(), "Tom");
             assert Objects.equals(relationShip.dstId().asString(), "Lily");
@@ -248,22 +245,22 @@ public class TestData {
 
             // check properties
             HashMap<String, ValueWrapper> properties = relationShip.properties();
-            assert properties.keySet().contains("prop0");
+            assert properties.containsKey("prop0");
             assert properties.get("prop0").isLong();
             Assert.assertEquals(properties.get("prop0").asLong(), 0L);
-            assert properties.keySet().contains("prop1");
+            assert properties.containsKey("prop1");
             assert properties.get("prop1").isLong();
             Assert.assertEquals(properties.get("prop1").asLong(), 1L);
-            assert properties.keySet().contains("prop2");
+            assert properties.containsKey("prop2");
             assert properties.get("prop2").isLong();
             Assert.assertEquals(properties.get("prop2").asLong(), 2L);
-            assert properties.keySet().contains("prop3");
+            assert properties.containsKey("prop3");
             assert properties.get("prop3").isLong();
             Assert.assertEquals(properties.get("prop3").asLong(), 3L);
-            assert properties.keySet().contains("prop4");
+            assert properties.containsKey("prop4");
             assert properties.get("prop4").isLong();
             Assert.assertEquals(properties.get("prop4").asLong(), 4L);
-            assert properties.keySet().contains("prop4");
+            assert properties.containsKey("prop4");
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
@@ -318,10 +315,10 @@ public class TestData {
             resp.plan_desc = new PlanDescription();
             resp.space_name = "test_space".getBytes();
             resp.data = getDateset();
-            ResultSet resultSet = new ResultSet(resp);
+            ResultSet resultSet = new ResultSet(resp, 28800);
             assert resultSet.isSucceeded();
             assert resultSet.getErrorCode() == ErrorCode.SUCCEEDED.getValue();
-            assert resultSet.isEmpty() == false;
+            assert !resultSet.isEmpty();
             assert Objects.equals(resultSet.getComment(), "test_comment");
             assert Objects.equals(resultSet.getSpaceName(), "test_space");
             Assert.assertEquals(1000, resultSet.getLatency());
@@ -340,7 +337,7 @@ public class TestData {
             assert record.get(1).asNull().getNullType() == ValueWrapper.NullType.OUT_OF_RANGE;
 
             assert record.get(2).isBoolean();
-            assert record.get(2).asBoolean() == false;
+            assert !record.get(2).asBoolean();
 
             assert record.get(3).isLong();
             assert record.get(3).asLong() == 1;
@@ -372,9 +369,15 @@ public class TestData {
 
             assert record.get(9).isTime();
             assert record.get(9).asTime() instanceof TimeWrapper;
-            TimeWrapper timeWrapper = new TimeWrapper(new Time((byte)10, (byte)30, (byte)0, 100));
+            TimeWrapper timeWrapper = (TimeWrapper) new TimeWrapper(
+                new Time((byte)10, (byte)30, (byte)0, 100)).setTimezoneOffset(28800);
             assert Objects.equals(record.get(9).asTime(), timeWrapper);
-            Assert.assertEquals("10:30:00.000100", timeWrapper.toString());
+            Assert.assertEquals("utc time: 10:30:00.000100, timezoneOffset: 28800",
+                                timeWrapper.toString());
+            Assert.assertEquals("18:30:00.000100", timeWrapper.getLocalTimeStr());
+            Assert.assertEquals("10:30:00.000100", timeWrapper.getUTCTimeStr());
+            Assert.assertEquals(new Time(
+                (byte)18, (byte)30, (byte)0, 100), timeWrapper.getLocalTime());
 
             assert record.get(10).isDate();
             assert record.get(10).asDate() instanceof DateWrapper;
@@ -383,12 +386,21 @@ public class TestData {
             Assert.assertEquals("2020-10-10", dateWrapper.toString());
 
             assert record.get(11).isDateTime();
-            DateTimeWrapper dateTimeWrapper = new DateTimeWrapper(
+            DateTimeWrapper dateTimeWrapper = (DateTimeWrapper) new DateTimeWrapper(
                 new DateTime((short)2020, (byte)10,
-                (byte)10, (byte)10, (byte)30, (byte)0, 100));
+                (byte)10, (byte)10, (byte)30, (byte)0, 100)).setTimezoneOffset(28800);
             assert record.get(11).asDateTime() instanceof DateTimeWrapper;
             assert Objects.equals(record.get(11).asDateTime(), dateTimeWrapper);
-            Assert.assertEquals("2020-10-10T10:30:00.000100", dateTimeWrapper.toString());
+            Assert.assertEquals("utc datetime: 2020-10-10T10:30:00.000100, timezoneOffset: 28800",
+                                dateTimeWrapper.toString());
+            Assert.assertEquals("2020-10-10T18:30:00.000100",
+                dateTimeWrapper.getLocalDateTimeStr());
+            Assert.assertEquals("2020-10-10T10:30:00.000100",
+                dateTimeWrapper.getUTCDateTimeStr());
+            Assert.assertEquals(
+                new DateTime((short)2020, (byte)10,
+                    (byte)10, (byte)18, (byte)30, (byte)0, 100),
+                dateTimeWrapper.getLocalDateTime());
 
             assert record.get(12).isVertex();
             assert Objects.equals(record.get(12).asNode(),
@@ -413,25 +425,25 @@ public class TestData {
         try {
             // test node
             ValueWrapper valueWrapper = new ValueWrapper(
-                new Value(Value.VVAL, getSimpleVertex()),  "utf-8");
+                new Value(Value.VVAL, getSimpleVertex()),  "utf-8",28800);
             String expectString =
                 "(\"vertex\" :tag1 {tag1_prop: 100} :tag2 {tag2_prop: 200})";
             Assert.assertEquals(expectString, valueWrapper.asNode().toString());
 
             // test relationship
             valueWrapper = new ValueWrapper(
-                new Value(Value.EVAL, getSimpleEdge(false)),  "utf-8");
+                new Value(Value.EVAL, getSimpleEdge(false)),  "utf-8", 28800);
             expectString = "(\"Tom\")-[:classmate@10{edge_prop: 100}]->(\"Lily\")";
             Assert.assertEquals(expectString, valueWrapper.asRelationship().toString());
 
             valueWrapper = new ValueWrapper(
-                new Value(Value.EVAL, getSimpleEdge(true)),  "utf-8");
+                new Value(Value.EVAL, getSimpleEdge(true)),  "utf-8", 28800);
             expectString = "(\"Lily\")-[:classmate@10{edge_prop: 100}]->(\"Tom\")";
             Assert.assertEquals(expectString, valueWrapper.asRelationship().toString());
 
             // test path
             valueWrapper = new ValueWrapper(
-                new Value(Value.PVAL, getSimplePath(true)),  "utf-8");
+                new Value(Value.PVAL, getSimplePath(true)),  "utf-8", 28800);
             expectString =
                 "(\"vertex0\" :tag0 {tag0_prop: 100})"
                     + "-[:classmate@100{edge1_prop: 100}]->"
@@ -439,7 +451,7 @@ public class TestData {
                     + "(\"vertex2\" :tag2 {tag2_prop: 300})";
             Assert.assertEquals(expectString, valueWrapper.asPath().toString());
             valueWrapper = new ValueWrapper(
-                new Value(Value.PVAL, getSimplePath(false)),  "utf-8");
+                new Value(Value.PVAL, getSimplePath(false)),  "utf-8", 28800);
             expectString =
                 "(\"vertex0\" :tag0 {tag0_prop: 100})"
                     + "-[:classmate@100{edge1_prop: 100}]->"

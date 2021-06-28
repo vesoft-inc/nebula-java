@@ -27,15 +27,12 @@ import com.facebook.thrift.protocol.*;
 public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Comparable<CreateCPResp> {
   private static final TStruct STRUCT_DESC = new TStruct("CreateCPResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField PATH_FIELD_DESC = new TField("path", TType.STRING, (short)2);
-  private static final TField PARTITION_INFO_FIELD_DESC = new TField("partition_info", TType.STRUCT, (short)3);
+  private static final TField INFO_FIELD_DESC = new TField("info", TType.LIST, (short)2);
 
   public ResponseCommon result;
-  public byte[] path;
-  public com.vesoft.nebula.PartitionBackupInfo partition_info;
+  public List<com.vesoft.nebula.CheckpointInfo> info;
   public static final int RESULT = 1;
-  public static final int PATH = 2;
-  public static final int PARTITION_INFO = 3;
+  public static final int INFO = 2;
 
   // isset id assignments
 
@@ -45,10 +42,9 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(PATH, new FieldMetaData("path", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(PARTITION_INFO, new FieldMetaData("partition_info", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.PartitionBackupInfo.class)));
+    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.CheckpointInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -67,18 +63,15 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   public CreateCPResp(
       ResponseCommon result,
-      byte[] path,
-      com.vesoft.nebula.PartitionBackupInfo partition_info) {
+      List<com.vesoft.nebula.CheckpointInfo> info) {
     this();
     this.result = result;
-    this.path = path;
-    this.partition_info = partition_info;
+    this.info = info;
   }
 
   public static class Builder {
     private ResponseCommon result;
-    private byte[] path;
-    private com.vesoft.nebula.PartitionBackupInfo partition_info;
+    private List<com.vesoft.nebula.CheckpointInfo> info;
 
     public Builder() {
     }
@@ -88,21 +81,15 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
-    public Builder setPath(final byte[] path) {
-      this.path = path;
-      return this;
-    }
-
-    public Builder setPartition_info(final com.vesoft.nebula.PartitionBackupInfo partition_info) {
-      this.partition_info = partition_info;
+    public Builder setInfo(final List<com.vesoft.nebula.CheckpointInfo> info) {
+      this.info = info;
       return this;
     }
 
     public CreateCPResp build() {
       CreateCPResp result = new CreateCPResp();
       result.setResult(this.result);
-      result.setPath(this.path);
-      result.setPartition_info(this.partition_info);
+      result.setInfo(this.info);
       return result;
     }
   }
@@ -118,11 +105,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetPath()) {
-      this.path = TBaseHelper.deepCopy(other.path);
-    }
-    if (other.isSetPartition_info()) {
-      this.partition_info = TBaseHelper.deepCopy(other.partition_info);
+    if (other.isSetInfo()) {
+      this.info = TBaseHelper.deepCopy(other.info);
     }
   }
 
@@ -154,54 +138,31 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  public byte[] getPath() {
-    return this.path;
+  public List<com.vesoft.nebula.CheckpointInfo> getInfo() {
+    return this.info;
   }
 
-  public CreateCPResp setPath(byte[] path) {
-    this.path = path;
+  public CreateCPResp setInfo(List<com.vesoft.nebula.CheckpointInfo> info) {
+    this.info = info;
     return this;
   }
 
-  public void unsetPath() {
-    this.path = null;
+  public void unsetInfo() {
+    this.info = null;
   }
 
-  // Returns true if field path is set (has been assigned a value) and false otherwise
-  public boolean isSetPath() {
-    return this.path != null;
+  // Returns true if field info is set (has been assigned a value) and false otherwise
+  public boolean isSetInfo() {
+    return this.info != null;
   }
 
-  public void setPathIsSet(boolean __value) {
+  public void setInfoIsSet(boolean __value) {
     if (!__value) {
-      this.path = null;
+      this.info = null;
     }
   }
 
-  public com.vesoft.nebula.PartitionBackupInfo getPartition_info() {
-    return this.partition_info;
-  }
-
-  public CreateCPResp setPartition_info(com.vesoft.nebula.PartitionBackupInfo partition_info) {
-    this.partition_info = partition_info;
-    return this;
-  }
-
-  public void unsetPartition_info() {
-    this.partition_info = null;
-  }
-
-  // Returns true if field partition_info is set (has been assigned a value) and false otherwise
-  public boolean isSetPartition_info() {
-    return this.partition_info != null;
-  }
-
-  public void setPartition_infoIsSet(boolean __value) {
-    if (!__value) {
-      this.partition_info = null;
-    }
-  }
-
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
@@ -212,19 +173,11 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
-    case PATH:
+    case INFO:
       if (__value == null) {
-        unsetPath();
+        unsetInfo();
       } else {
-        setPath((byte[])__value);
-      }
-      break;
-
-    case PARTITION_INFO:
-      if (__value == null) {
-        unsetPartition_info();
-      } else {
-        setPartition_info((com.vesoft.nebula.PartitionBackupInfo)__value);
+        setInfo((List<com.vesoft.nebula.CheckpointInfo>)__value);
       }
       break;
 
@@ -238,11 +191,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     case RESULT:
       return getResult();
 
-    case PATH:
-      return getPath();
-
-    case PARTITION_INFO:
-      return getPartition_info();
+    case INFO:
+      return getInfo();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -261,16 +211,14 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
     if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetPath(), that.isSetPath(), this.path, that.path)) { return false; }
-
-    if (!TBaseHelper.equalsNobinary(this.isSetPartition_info(), that.isSetPartition_info(), this.partition_info, that.partition_info)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, path, partition_info});
+    return Arrays.deepHashCode(new Object[] {result, info});
   }
 
   @Override
@@ -293,19 +241,11 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetPath()).compareTo(other.isSetPath());
+    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(path, other.path);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetPartition_info()).compareTo(other.isSetPartition_info());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(partition_info, other.partition_info);
+    lastComparison = TBaseHelper.compareTo(info, other.info);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -331,17 +271,22 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PATH:
-          if (__field.type == TType.STRING) {
-            this.path = iprot.readBinary();
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case PARTITION_INFO:
-          if (__field.type == TType.STRUCT) {
-            this.partition_info = new com.vesoft.nebula.PartitionBackupInfo();
-            this.partition_info.read(iprot);
+        case INFO:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list200 = iprot.readListBegin();
+              this.info = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list200.size));
+              for (int _i201 = 0; 
+                   (_list200.size < 0) ? iprot.peekList() : (_i201 < _list200.size); 
+                   ++_i201)
+              {
+                com.vesoft.nebula.CheckpointInfo _elem202;
+                _elem202 = new com.vesoft.nebula.CheckpointInfo();
+                _elem202.read(iprot);
+                this.info.add(_elem202);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -368,14 +313,15 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.path != null) {
-      oprot.writeFieldBegin(PATH_FIELD_DESC);
-      oprot.writeBinary(this.path);
-      oprot.writeFieldEnd();
-    }
-    if (this.partition_info != null) {
-      oprot.writeFieldBegin(PARTITION_INFO_FIELD_DESC);
-      this.partition_info.write(oprot);
+    if (this.info != null) {
+      oprot.writeFieldBegin(INFO_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
+        for (com.vesoft.nebula.CheckpointInfo _iter203 : this.info)        {
+          _iter203.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -410,29 +356,13 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("path");
+    sb.append("info");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getPath() == null) {
+    if (this.getInfo() == null) {
       sb.append("null");
     } else {
-        int __path_size = Math.min(this.getPath().length, 128);
-        for (int i = 0; i < __path_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getPath()[i]).length() > 1 ? Integer.toHexString(this.getPath()[i]).substring(Integer.toHexString(this.getPath()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPath()[i]).toUpperCase());
-        }
-        if (this.getPath().length > 128) sb.append(" ...");
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("partition_info");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getPartition_info() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getPartition_info(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getInfo(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

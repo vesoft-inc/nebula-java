@@ -6,10 +6,6 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-import com.vesoft.nebula.Date;
-import com.vesoft.nebula.DateTime;
-import com.vesoft.nebula.NullType;
-import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.exception.InvalidValueException;
 import java.io.UnsupportedEncodingException;
@@ -57,6 +53,7 @@ public class ValueWrapper {
 
     private final Value value;
     private String decodeType = "utf-8";
+    private int timezoneOffset = 0;
 
     private String descType() {
         switch (value.getSetField()) {
@@ -98,6 +95,13 @@ public class ValueWrapper {
     public ValueWrapper(Value value, String decodeType) {
         this.value = value;
         this.decodeType = decodeType;
+        this.timezoneOffset = 0;
+    }
+
+    public ValueWrapper(Value value, String decodeType, int timezoneOffset) {
+        this.value = value;
+        this.decodeType = decodeType;
+        this.timezoneOffset = timezoneOffset;
     }
 
     public Value getValue() {
@@ -213,7 +217,7 @@ public class ValueWrapper {
         }
         ArrayList<ValueWrapper> values = new ArrayList<>();
         for (Value value : value.getLVal().getValues()) {
-            values.add(new ValueWrapper(value, decodeType));
+            values.add(new ValueWrapper(value, decodeType, timezoneOffset));
         }
         return values;
     }
@@ -225,7 +229,7 @@ public class ValueWrapper {
         }
         HashSet<ValueWrapper> values = new HashSet<>();
         for (Value value : value.getUVal().getValues()) {
-            values.add(new ValueWrapper(value, decodeType));
+            values.add(new ValueWrapper(value, decodeType, timezoneOffset));
         }
         return values;
     }
@@ -239,14 +243,17 @@ public class ValueWrapper {
         HashMap<String, ValueWrapper> kvs = new HashMap<>();
         Map<byte[], Value> inValues = value.getMVal().getKvs();
         for (byte[] key : inValues.keySet()) {
-            kvs.put(new String(key, decodeType), new ValueWrapper(inValues.get(key), decodeType));
+            kvs.put(new String(key, decodeType),
+                    new ValueWrapper(inValues.get(key), decodeType, timezoneOffset));
         }
         return kvs;
     }
 
     public TimeWrapper asTime() throws InvalidValueException {
         if (value.getSetField() == Value.TVAL) {
-            return new TimeWrapper(value.getTVal());
+            return (TimeWrapper) new TimeWrapper(value.getTVal())
+                .setDecodeType(decodeType)
+                .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
             "Cannot get field time because value's type is " + descType());
@@ -262,7 +269,9 @@ public class ValueWrapper {
 
     public DateTimeWrapper asDateTime() throws InvalidValueException {
         if (value.getSetField() == Value.DTVAL) {
-            return new DateTimeWrapper(value.getDtVal());
+            return (DateTimeWrapper) new DateTimeWrapper(value.getDtVal())
+                .setDecodeType(decodeType)
+                .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
             "Cannot get field datetime because value's type is " + descType());
@@ -270,7 +279,9 @@ public class ValueWrapper {
 
     public Node asNode() throws InvalidValueException, UnsupportedEncodingException  {
         if (value.getSetField() == Value.VVAL) {
-            return new Node(value.getVVal());
+            return (Node) new Node(value.getVVal())
+                .setDecodeType(decodeType)
+                .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field Node because value's type is " + descType());
@@ -278,7 +289,9 @@ public class ValueWrapper {
 
     public Relationship asRelationship() {
         if (value.getSetField() == Value.EVAL) {
-            return new Relationship(value.getEVal());
+            return (Relationship) new Relationship(value.getEVal())
+                .setDecodeType(decodeType)
+                .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field Relationship because value's type is " + descType());
@@ -286,7 +299,9 @@ public class ValueWrapper {
 
     public PathWrapper asPath() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.PVAL) {
-            return new PathWrapper(value.getPVal());
+            return (PathWrapper) new PathWrapper(value.getPVal())
+                .setDecodeType(decodeType)
+                .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field PathWrapper because value's type is " + descType());

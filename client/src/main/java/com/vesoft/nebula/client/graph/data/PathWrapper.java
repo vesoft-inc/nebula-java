@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class PathWrapper {
+public class PathWrapper extends BaseDataObject {
     private List<Segment> segments = new ArrayList<>();
     private List<Node> nodes = new ArrayList<>();
     private List<Relationship> relationships = new ArrayList<>();
@@ -153,7 +153,9 @@ public class PathWrapper {
             this.segments = new ArrayList<>();
             return;
         }
-        nodes.add(new Node(path.src));
+        nodes.add((Node) new Node(path.src)
+            .setDecodeType(getDecodeType())
+            .setTimezoneOffset(getTimezoneOffset()));
         List<Value> vids = new ArrayList<>();
         vids.add(path.src.vid);
         Value srcId;
@@ -164,13 +166,17 @@ public class PathWrapper {
             int type = step.type;
             if (step.type > 0) {
                 startNode = nodes.get(nodes.size() - 1);
-                endNode = new Node(step.dst);
+                endNode = (Node) new Node(step.dst)
+                    .setDecodeType(getDecodeType())
+                    .setTimezoneOffset(getTimezoneOffset());
                 nodes.add(endNode);
                 srcId = vids.get(vids.size() - 1);
                 dstId = step.dst.vid;
             } else {
                 type = -type;
-                startNode = new Node(step.dst);
+                startNode = (Node) new Node(step.dst)
+                    .setDecodeType(getDecodeType())
+                    .setTimezoneOffset(getTimezoneOffset());
                 endNode = nodes.get(nodes.size() - 1);
                 nodes.add(startNode);
                 dstId = vids.get(vids.size() - 1);
@@ -183,8 +189,10 @@ public class PathWrapper {
                                  step.name,
                                  step.ranking,
                                  step.props);
-            Relationship relationShip = new Relationship(edge);
-            relationships.add(new Relationship(edge));
+            Relationship relationShip = (Relationship) new Relationship(edge)
+                .setDecodeType(getDecodeType())
+                .setTimezoneOffset(getTimezoneOffset());;
+            relationships.add(relationShip);
             Segment segment = new Segment(startNode, relationShip, endNode);
             if (segment.getStartNode() != nodes.get(nodes.size() - 1)
                     && segment.getEndNode() != nodes.get(nodes.size() - 1)) {
