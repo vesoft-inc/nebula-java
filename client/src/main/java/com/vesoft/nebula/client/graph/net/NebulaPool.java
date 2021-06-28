@@ -133,7 +133,8 @@ public class NebulaPool {
 
     protected SyncConnection getConnection() throws NotValidConnectionException, IOErrorException {
         // If no idle connection, try once
-        int retry = getIdleConnNum() == 0 ? 1 : getIdleConnNum();
+        int idleConnNum = getIdleConnNum();
+        int retry = idleConnNum == 0 ? 1 : idleConnNum;
         SyncConnection connection = null;
         boolean hasOkConn = false;
         try {
