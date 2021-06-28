@@ -279,16 +279,16 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
         case CLIENTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list262 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list262.size));
-              for (int _i263 = 0; 
-                   (_list262.size < 0) ? iprot.peekList() : (_i263 < _list262.size); 
-                   ++_i263)
+              TList _list266 = iprot.readListBegin();
+              this.clients = new ArrayList<FTClient>(Math.max(0, _list266.size));
+              for (int _i267 = 0; 
+                   (_list266.size < 0) ? iprot.peekList() : (_i267 < _list266.size); 
+                   ++_i267)
               {
-                FTClient _elem264;
-                _elem264 = new FTClient();
-                _elem264.read(iprot);
-                this.clients.add(_elem264);
+                FTClient _elem268;
+                _elem268 = new FTClient();
+                _elem268.read(iprot);
+                this.clients.add(_elem268);
               }
               iprot.readListEnd();
             }
@@ -322,8 +322,8 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter265 : this.clients)        {
-          _iter265.write(oprot);
+        for (FTClient _iter269 : this.clients)        {
+          _iter269.write(oprot);
         }
         oprot.writeListEnd();
       }

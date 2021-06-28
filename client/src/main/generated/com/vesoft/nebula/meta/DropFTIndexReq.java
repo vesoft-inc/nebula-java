@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.storage;
+package com.vesoft.nebula.meta;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,15 +24,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, Comparable<KVRemoveRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("KVRemoveRequest");
+public class DropFTIndexReq implements TBase, java.io.Serializable, Cloneable, Comparable<DropFTIndexReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("DropFTIndexReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField FULLTEXT_INDEX_NAME_FIELD_DESC = new TField("fulltext_index_name", TType.STRING, (short)2);
 
   public int space_id;
-  public Map<Integer,List<byte[]>> parts;
+  public byte[] fulltext_index_name;
   public static final int SPACE_ID = 1;
-  public static final int PARTS = 2;
+  public static final int FULLTEXT_INDEX_NAME = 2;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -44,33 +44,30 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.STRING)))));
+    tmpMetaDataMap.put(FULLTEXT_INDEX_NAME, new FieldMetaData("fulltext_index_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(KVRemoveRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(DropFTIndexReq.class, metaDataMap);
   }
 
-  public KVRemoveRequest() {
+  public DropFTIndexReq() {
   }
 
-  public KVRemoveRequest(
+  public DropFTIndexReq(
       int space_id,
-      Map<Integer,List<byte[]>> parts) {
+      byte[] fulltext_index_name) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.parts = parts;
+    this.fulltext_index_name = fulltext_index_name;
   }
 
   public static class Builder {
     private int space_id;
-    private Map<Integer,List<byte[]>> parts;
+    private byte[] fulltext_index_name;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -83,17 +80,17 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public Builder setParts(final Map<Integer,List<byte[]>> parts) {
-      this.parts = parts;
+    public Builder setFulltext_index_name(final byte[] fulltext_index_name) {
+      this.fulltext_index_name = fulltext_index_name;
       return this;
     }
 
-    public KVRemoveRequest build() {
-      KVRemoveRequest result = new KVRemoveRequest();
+    public DropFTIndexReq build() {
+      DropFTIndexReq result = new DropFTIndexReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
-      result.setParts(this.parts);
+      result.setFulltext_index_name(this.fulltext_index_name);
       return result;
     }
   }
@@ -105,24 +102,24 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public KVRemoveRequest(KVRemoveRequest other) {
+  public DropFTIndexReq(DropFTIndexReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetParts()) {
-      this.parts = TBaseHelper.deepCopy(other.parts);
+    if (other.isSetFulltext_index_name()) {
+      this.fulltext_index_name = TBaseHelper.deepCopy(other.fulltext_index_name);
     }
   }
 
-  public KVRemoveRequest deepCopy() {
-    return new KVRemoveRequest(this);
+  public DropFTIndexReq deepCopy() {
+    return new DropFTIndexReq(this);
   }
 
   public int getSpace_id() {
     return this.space_id;
   }
 
-  public KVRemoveRequest setSpace_id(int space_id) {
+  public DropFTIndexReq setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -141,31 +138,30 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<byte[]>> getParts() {
-    return this.parts;
+  public byte[] getFulltext_index_name() {
+    return this.fulltext_index_name;
   }
 
-  public KVRemoveRequest setParts(Map<Integer,List<byte[]>> parts) {
-    this.parts = parts;
+  public DropFTIndexReq setFulltext_index_name(byte[] fulltext_index_name) {
+    this.fulltext_index_name = fulltext_index_name;
     return this;
   }
 
-  public void unsetParts() {
-    this.parts = null;
+  public void unsetFulltext_index_name() {
+    this.fulltext_index_name = null;
   }
 
-  // Returns true if field parts is set (has been assigned a value) and false otherwise
-  public boolean isSetParts() {
-    return this.parts != null;
+  // Returns true if field fulltext_index_name is set (has been assigned a value) and false otherwise
+  public boolean isSetFulltext_index_name() {
+    return this.fulltext_index_name != null;
   }
 
-  public void setPartsIsSet(boolean __value) {
+  public void setFulltext_index_nameIsSet(boolean __value) {
     if (!__value) {
-      this.parts = null;
+      this.fulltext_index_name = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -176,11 +172,11 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
-    case PARTS:
+    case FULLTEXT_INDEX_NAME:
       if (__value == null) {
-        unsetParts();
+        unsetFulltext_index_name();
       } else {
-        setParts((Map<Integer,List<byte[]>>)__value);
+        setFulltext_index_name((byte[])__value);
       }
       break;
 
@@ -194,8 +190,8 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PARTS:
-      return getParts();
+    case FULLTEXT_INDEX_NAME:
+      return getFulltext_index_name();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -208,24 +204,24 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof KVRemoveRequest))
+    if (!(_that instanceof DropFTIndexReq))
       return false;
-    KVRemoveRequest that = (KVRemoveRequest)_that;
+    DropFTIndexReq that = (DropFTIndexReq)_that;
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetFulltext_index_name(), that.isSetFulltext_index_name(), this.fulltext_index_name, that.fulltext_index_name)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts});
+    return Arrays.deepHashCode(new Object[] {space_id, fulltext_index_name});
   }
 
   @Override
-  public int compareTo(KVRemoveRequest other) {
+  public int compareTo(DropFTIndexReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -244,11 +240,11 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
+    lastComparison = Boolean.valueOf(isSetFulltext_index_name()).compareTo(other.isSetFulltext_index_name());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
+    lastComparison = TBaseHelper.compareTo(fulltext_index_name, other.fulltext_index_name);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -274,35 +270,9 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PARTS:
-          if (__field.type == TType.MAP) {
-            {
-              TMap _map227 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map227.size));
-              for (int _i228 = 0; 
-                   (_map227.size < 0) ? iprot.peekMap() : (_i228 < _map227.size); 
-                   ++_i228)
-              {
-                int _key229;
-                List<byte[]> _val230;
-                _key229 = iprot.readI32();
-                {
-                  TList _list231 = iprot.readListBegin();
-                  _val230 = new ArrayList<byte[]>(Math.max(0, _list231.size));
-                  for (int _i232 = 0; 
-                       (_list231.size < 0) ? iprot.peekList() : (_i232 < _list231.size); 
-                       ++_i232)
-                  {
-                    byte[] _elem233;
-                    _elem233 = iprot.readBinary();
-                    _val230.add(_elem233);
-                  }
-                  iprot.readListEnd();
-                }
-                this.parts.put(_key229, _val230);
-              }
-              iprot.readMapEnd();
-            }
+        case FULLTEXT_INDEX_NAME:
+          if (__field.type == TType.STRING) {
+            this.fulltext_index_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -327,22 +297,9 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.parts != null) {
-      oprot.writeFieldBegin(PARTS_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<byte[]>> _iter234 : this.parts.entrySet())        {
-          oprot.writeI32(_iter234.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.STRING, _iter234.getValue().size()));
-            for (byte[] _iter235 : _iter234.getValue())            {
-              oprot.writeBinary(_iter235);
-            }
-            oprot.writeListEnd();
-          }
-        }
-        oprot.writeMapEnd();
-      }
+    if (this.fulltext_index_name != null) {
+      oprot.writeFieldBegin(FULLTEXT_INDEX_NAME_FIELD_DESC);
+      oprot.writeBinary(this.fulltext_index_name);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -359,7 +316,7 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("KVRemoveRequest");
+    StringBuilder sb = new StringBuilder("DropFTIndexReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -373,13 +330,18 @@ public class KVRemoveRequest implements TBase, java.io.Serializable, Cloneable, 
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("parts");
+    sb.append("fulltext_index_name");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getParts() == null) {
+    if (this.getFulltext_index_name() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
+        int __fulltext_index_name_size = Math.min(this.getFulltext_index_name().length, 128);
+        for (int i = 0; i < __fulltext_index_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getFulltext_index_name()[i]).length() > 1 ? Integer.toHexString(this.getFulltext_index_name()[i]).substring(Integer.toHexString(this.getFulltext_index_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFulltext_index_name()[i]).toUpperCase());
+        }
+        if (this.getFulltext_index_name().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

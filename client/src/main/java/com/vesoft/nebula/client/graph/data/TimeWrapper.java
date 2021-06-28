@@ -9,38 +9,79 @@ package com.vesoft.nebula.client.graph.data;
 import com.vesoft.nebula.Time;
 import java.util.Objects;
 
-public class TimeWrapper {
-    private Time time;
+public class TimeWrapper extends BaseDataObject {
+    private final Time time;
 
     public TimeWrapper(Time time) {
         this.time = time;
     }
 
+    /**
+     * @return utc Time hour
+     */
     public byte getHour() {
         return time.getHour();
     }
 
+    /**
+     * @return utc Time minute
+     */
     public byte getMinute() {
         return time.getMinute();
     }
 
+    /**
+     * @return utc Time second
+     */
     public byte getSecond() {
         return time.getSec();
     }
 
+    /**
+     * @return utc Time microsec
+     */
     public int getMicrosec() {
         return time.getMicrosec();
     }
 
-    public String getLocalTime() {
-        // TODO: Need server support set and get timezone
-        return "";
+    /**
+     * @return the Time with the timezone
+     */
+    public Time getLocalTime() {
+        return TimeUtil.timeConvertWithTimezone(time, getTimezoneOffset());
     }
 
+    /**
+     * @return the Time with the specified timezoneOffset
+     */
+    public Time getTimeWithTimezoneOffset(int timezoneOffset) {
+        return TimeUtil.timeConvertWithTimezone(time, timezoneOffset);
+    }
+
+    /**
+     * @return the Time String with the timezone
+     */
+    public String getLocalTimeStr() {
+        Time localTime = TimeUtil.timeConvertWithTimezone(time, getTimezoneOffset());
+        return String.format("%02d:%02d:%02d.%06d",
+            localTime.hour, localTime.minute, localTime.sec, localTime.microsec);
+    }
+
+    /**
+     * @return the utc Time String
+     */
+    public String getUTCTimeStr() {
+        return String.format("%02d:%02d:%02d.%06d",
+                             time.hour, time.minute, time.sec, time.microsec);
+    }
+
+    /**
+     * @return the utc time string
+     */
     @Override
     public String toString() {
-        return String.format("%02d:%02d:%02d.%06d",
-            time.hour, time.minute, time.sec, time.microsec);
+        return String.format("utc time: %02d:%02d:%02d.%06d, timezoneOffset: %d",
+            time.hour, time.minute, time.sec, time.microsec, getTimezoneOffset());
     }
 
     @Override

@@ -16,20 +16,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Node {
-    private Vertex vertex;
-    private ValueWrapper vid;
-    private String decodeType = "utf-8";
+public class Node extends BaseDataObject {
+    private final Vertex vertex;
+    private final ValueWrapper vid;
+
     List<String> tagNames = new ArrayList<>();
 
     public Node(Vertex vertex) throws UnsupportedEncodingException {
         if (vertex == null) {
             throw new RuntimeException("Input an null vertex object");
         }
-        vid = new ValueWrapper(vertex.vid, this.decodeType);
+        vid = new ValueWrapper(vertex.vid, getDecodeType(), getTimezoneOffset());
         this.vertex = vertex;
         for (Tag tag : vertex.tags) {
-            this.tagNames.add(new String(tag.name, decodeType));
+            this.tagNames.add(new String(tag.name, getDecodeType()));
         }
     }
 
@@ -87,7 +87,7 @@ public class Node {
         }
         List<ValueWrapper> values = new ArrayList<>();
         for (Value val : vertex.tags.get(index).props.values()) {
-            values.add(new ValueWrapper(val, decodeType));
+            values.add(new ValueWrapper(val, getDecodeType(), getTimezoneOffset()));
         }
         return values;
     }
@@ -106,7 +106,7 @@ public class Node {
 
         List<String> keys = new ArrayList<>();
         for (byte[] name : vertex.tags.get(index).props.keySet()) {
-            keys.add(new String(name, decodeType));
+            keys.add(new String(name, getDecodeType()));
         }
         return keys;
     }
@@ -126,8 +126,10 @@ public class Node {
 
         HashMap<String, ValueWrapper> properties = new HashMap();
         for (byte[] name : vertex.tags.get(index).props.keySet()) {
-            properties.put(new String(name, decodeType),
-                new ValueWrapper(vertex.tags.get(index).props.get(name), decodeType));
+            properties.put(new String(name, getDecodeType()),
+                new ValueWrapper(vertex.tags.get(index).props.get(name),
+                                 getDecodeType(),
+                                 getTimezoneOffset()));
         }
         return properties;
     }
@@ -146,7 +148,7 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return Objects.hash(vertex, vid, decodeType, tagNames);
+        return Objects.hash(vertex, vid, getDecodeType(), getTimezoneOffset(), tagNames);
     }
 
     @Override

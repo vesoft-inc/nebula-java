@@ -29,6 +29,8 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   private static final TField ERROR_CODE_FIELD_DESC = new TField("error_code", TType.I32, (short)1);
   private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)2);
   private static final TField SESSION_ID_FIELD_DESC = new TField("session_id", TType.I64, (short)3);
+  private static final TField TIME_ZONE_OFFSET_SECONDS_FIELD_DESC = new TField("time_zone_offset_seconds", TType.I32, (short)4);
+  private static final TField TIME_ZONE_NAME_FIELD_DESC = new TField("time_zone_name", TType.STRING, (short)5);
 
   /**
    * 
@@ -37,13 +39,18 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   public com.vesoft.nebula.ErrorCode error_code;
   public byte[] error_msg;
   public long session_id;
+  public int time_zone_offset_seconds;
+  public byte[] time_zone_name;
   public static final int ERROR_CODE = 1;
   public static final int ERROR_MSG = 2;
   public static final int SESSION_ID = 3;
+  public static final int TIME_ZONE_OFFSET_SECONDS = 4;
+  public static final int TIME_ZONE_NAME = 5;
 
   // isset id assignments
   private static final int __SESSION_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __TIME_ZONE_OFFSET_SECONDS_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -55,6 +62,10 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(SESSION_ID, new FieldMetaData("session_id", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(TIME_ZONE_OFFSET_SECONDS, new FieldMetaData("time_zone_offset_seconds", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(TIME_ZONE_NAME, new FieldMetaData("time_zone_name", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -74,20 +85,27 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
   public AuthResponse(
       com.vesoft.nebula.ErrorCode error_code,
       byte[] error_msg,
-      long session_id) {
+      long session_id,
+      int time_zone_offset_seconds,
+      byte[] time_zone_name) {
     this();
     this.error_code = error_code;
     this.error_msg = error_msg;
     this.session_id = session_id;
     setSession_idIsSet(true);
+    this.time_zone_offset_seconds = time_zone_offset_seconds;
+    setTime_zone_offset_secondsIsSet(true);
+    this.time_zone_name = time_zone_name;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode error_code;
     private byte[] error_msg;
     private long session_id;
+    private int time_zone_offset_seconds;
+    private byte[] time_zone_name;
 
-    BitSet __optional_isset = new BitSet(1);
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
@@ -108,6 +126,17 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
+    public Builder setTime_zone_offset_seconds(final int time_zone_offset_seconds) {
+      this.time_zone_offset_seconds = time_zone_offset_seconds;
+      __optional_isset.set(__TIME_ZONE_OFFSET_SECONDS_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setTime_zone_name(final byte[] time_zone_name) {
+      this.time_zone_name = time_zone_name;
+      return this;
+    }
+
     public AuthResponse build() {
       AuthResponse result = new AuthResponse();
       result.setError_code(this.error_code);
@@ -115,6 +144,10 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       if (__optional_isset.get(__SESSION_ID_ISSET_ID)) {
         result.setSession_id(this.session_id);
       }
+      if (__optional_isset.get(__TIME_ZONE_OFFSET_SECONDS_ISSET_ID)) {
+        result.setTime_zone_offset_seconds(this.time_zone_offset_seconds);
+      }
+      result.setTime_zone_name(this.time_zone_name);
       return result;
     }
   }
@@ -136,6 +169,10 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       this.error_msg = TBaseHelper.deepCopy(other.error_msg);
     }
     this.session_id = TBaseHelper.deepCopy(other.session_id);
+    this.time_zone_offset_seconds = TBaseHelper.deepCopy(other.time_zone_offset_seconds);
+    if (other.isSetTime_zone_name()) {
+      this.time_zone_name = TBaseHelper.deepCopy(other.time_zone_name);
+    }
   }
 
   public AuthResponse deepCopy() {
@@ -221,6 +258,53 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__SESSION_ID_ISSET_ID, __value);
   }
 
+  public int getTime_zone_offset_seconds() {
+    return this.time_zone_offset_seconds;
+  }
+
+  public AuthResponse setTime_zone_offset_seconds(int time_zone_offset_seconds) {
+    this.time_zone_offset_seconds = time_zone_offset_seconds;
+    setTime_zone_offset_secondsIsSet(true);
+    return this;
+  }
+
+  public void unsetTime_zone_offset_seconds() {
+    __isset_bit_vector.clear(__TIME_ZONE_OFFSET_SECONDS_ISSET_ID);
+  }
+
+  // Returns true if field time_zone_offset_seconds is set (has been assigned a value) and false otherwise
+  public boolean isSetTime_zone_offset_seconds() {
+    return __isset_bit_vector.get(__TIME_ZONE_OFFSET_SECONDS_ISSET_ID);
+  }
+
+  public void setTime_zone_offset_secondsIsSet(boolean __value) {
+    __isset_bit_vector.set(__TIME_ZONE_OFFSET_SECONDS_ISSET_ID, __value);
+  }
+
+  public byte[] getTime_zone_name() {
+    return this.time_zone_name;
+  }
+
+  public AuthResponse setTime_zone_name(byte[] time_zone_name) {
+    this.time_zone_name = time_zone_name;
+    return this;
+  }
+
+  public void unsetTime_zone_name() {
+    this.time_zone_name = null;
+  }
+
+  // Returns true if field time_zone_name is set (has been assigned a value) and false otherwise
+  public boolean isSetTime_zone_name() {
+    return this.time_zone_name != null;
+  }
+
+  public void setTime_zone_nameIsSet(boolean __value) {
+    if (!__value) {
+      this.time_zone_name = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ERROR_CODE:
@@ -247,6 +331,22 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
+    case TIME_ZONE_OFFSET_SECONDS:
+      if (__value == null) {
+        unsetTime_zone_offset_seconds();
+      } else {
+        setTime_zone_offset_seconds((Integer)__value);
+      }
+      break;
+
+    case TIME_ZONE_NAME:
+      if (__value == null) {
+        unsetTime_zone_name();
+      } else {
+        setTime_zone_name((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -262,6 +362,12 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
     case SESSION_ID:
       return new Long(getSession_id());
+
+    case TIME_ZONE_OFFSET_SECONDS:
+      return new Integer(getTime_zone_offset_seconds());
+
+    case TIME_ZONE_NAME:
+      return getTime_zone_name();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -284,12 +390,16 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
 
     if (!TBaseHelper.equalsNobinary(this.isSetSession_id(), that.isSetSession_id(), this.session_id, that.session_id)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetTime_zone_offset_seconds(), that.isSetTime_zone_offset_seconds(), this.time_zone_offset_seconds, that.time_zone_offset_seconds)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetTime_zone_name(), that.isSetTime_zone_name(), this.time_zone_name, that.time_zone_name)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {error_code, error_msg, session_id});
+    return Arrays.deepHashCode(new Object[] {error_code, error_msg, session_id, time_zone_offset_seconds, time_zone_name});
   }
 
   @Override
@@ -325,6 +435,22 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(session_id, other.session_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTime_zone_offset_seconds()).compareTo(other.isSetTime_zone_offset_seconds());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(time_zone_offset_seconds, other.time_zone_offset_seconds);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTime_zone_name()).compareTo(other.isSetTime_zone_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(time_zone_name, other.time_zone_name);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -364,6 +490,21 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case TIME_ZONE_OFFSET_SECONDS:
+          if (__field.type == TType.I32) {
+            this.time_zone_offset_seconds = iprot.readI32();
+            setTime_zone_offset_secondsIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case TIME_ZONE_NAME:
+          if (__field.type == TType.STRING) {
+            this.time_zone_name = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -397,6 +538,18 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
       oprot.writeI64(this.session_id);
       oprot.writeFieldEnd();
+    }
+    if (isSetTime_zone_offset_seconds()) {
+      oprot.writeFieldBegin(TIME_ZONE_OFFSET_SECONDS_FIELD_DESC);
+      oprot.writeI32(this.time_zone_offset_seconds);
+      oprot.writeFieldEnd();
+    }
+    if (this.time_zone_name != null) {
+      if (isSetTime_zone_name()) {
+        oprot.writeFieldBegin(TIME_ZONE_NAME_FIELD_DESC);
+        oprot.writeBinary(this.time_zone_name);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -463,6 +616,35 @@ public class AuthResponse implements TBase, java.io.Serializable, Cloneable, Com
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this.getSession_id(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetTime_zone_offset_seconds())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("time_zone_offset_seconds");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getTime_zone_offset_seconds(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetTime_zone_name())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("time_zone_name");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getTime_zone_name() == null) {
+        sb.append("null");
+      } else {
+          int __time_zone_name_size = Math.min(this.getTime_zone_name().length, 128);
+          for (int i = 0; i < __time_zone_name_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getTime_zone_name()[i]).length() > 1 ? Integer.toHexString(this.getTime_zone_name()[i]).substring(Integer.toHexString(this.getTime_zone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getTime_zone_name()[i]).toUpperCase());
+          }
+          if (this.getTime_zone_name().length > 128) sb.append(" ...");
+      }
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

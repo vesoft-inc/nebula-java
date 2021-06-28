@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListFTClientsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListFTClientsResp");
+public class ListFTIndexesResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListFTIndexesResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListFTIndexesResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.LIST, (short)3);
+  private static final TField INDEXES_FIELD_DESC = new TField("indexes", TType.MAP, (short)3);
 
   /**
    * 
@@ -36,10 +36,10 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<FTClient> clients;
+  public Map<byte[],FTIndex> indexes;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int CLIENTS = 3;
+  public static final int INDEXES = 3;
 
   // isset id assignments
 
@@ -51,33 +51,34 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(CLIENTS, new FieldMetaData("clients", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, FTClient.class))));
+    tmpMetaDataMap.put(INDEXES, new FieldMetaData("indexes", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.STRING), 
+            new StructMetaData(TType.STRUCT, FTIndex.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListFTClientsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListFTIndexesResp.class, metaDataMap);
   }
 
-  public ListFTClientsResp() {
+  public ListFTIndexesResp() {
   }
 
-  public ListFTClientsResp(
+  public ListFTIndexesResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<FTClient> clients) {
+      Map<byte[],FTIndex> indexes) {
     this();
     this.code = code;
     this.leader = leader;
-    this.clients = clients;
+    this.indexes = indexes;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<FTClient> clients;
+    private Map<byte[],FTIndex> indexes;
 
     public Builder() {
     }
@@ -92,16 +93,16 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
-    public Builder setClients(final List<FTClient> clients) {
-      this.clients = clients;
+    public Builder setIndexes(final Map<byte[],FTIndex> indexes) {
+      this.indexes = indexes;
       return this;
     }
 
-    public ListFTClientsResp build() {
-      ListFTClientsResp result = new ListFTClientsResp();
+    public ListFTIndexesResp build() {
+      ListFTIndexesResp result = new ListFTIndexesResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setClients(this.clients);
+      result.setIndexes(this.indexes);
       return result;
     }
   }
@@ -113,20 +114,20 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListFTClientsResp(ListFTClientsResp other) {
+  public ListFTIndexesResp(ListFTIndexesResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetClients()) {
-      this.clients = TBaseHelper.deepCopy(other.clients);
+    if (other.isSetIndexes()) {
+      this.indexes = TBaseHelper.deepCopy(other.indexes);
     }
   }
 
-  public ListFTClientsResp deepCopy() {
-    return new ListFTClientsResp(this);
+  public ListFTIndexesResp deepCopy() {
+    return new ListFTIndexesResp(this);
   }
 
   /**
@@ -141,7 +142,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ListFTClientsResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public ListFTIndexesResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +166,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     return this.leader;
   }
 
-  public ListFTClientsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public ListFTIndexesResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,27 +186,27 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<FTClient> getClients() {
-    return this.clients;
+  public Map<byte[],FTIndex> getIndexes() {
+    return this.indexes;
   }
 
-  public ListFTClientsResp setClients(List<FTClient> clients) {
-    this.clients = clients;
+  public ListFTIndexesResp setIndexes(Map<byte[],FTIndex> indexes) {
+    this.indexes = indexes;
     return this;
   }
 
-  public void unsetClients() {
-    this.clients = null;
+  public void unsetIndexes() {
+    this.indexes = null;
   }
 
-  // Returns true if field clients is set (has been assigned a value) and false otherwise
-  public boolean isSetClients() {
-    return this.clients != null;
+  // Returns true if field indexes is set (has been assigned a value) and false otherwise
+  public boolean isSetIndexes() {
+    return this.indexes != null;
   }
 
-  public void setClientsIsSet(boolean __value) {
+  public void setIndexesIsSet(boolean __value) {
     if (!__value) {
-      this.clients = null;
+      this.indexes = null;
     }
   }
 
@@ -228,11 +229,11 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case CLIENTS:
+    case INDEXES:
       if (__value == null) {
-        unsetClients();
+        unsetIndexes();
       } else {
-        setClients((List<FTClient>)__value);
+        setIndexes((Map<byte[],FTIndex>)__value);
       }
       break;
 
@@ -249,8 +250,8 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     case LEADER:
       return getLeader();
 
-    case CLIENTS:
-      return getClients();
+    case INDEXES:
+      return getIndexes();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +264,26 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListFTClientsResp))
+    if (!(_that instanceof ListFTIndexesResp))
       return false;
-    ListFTClientsResp that = (ListFTClientsResp)_that;
+    ListFTIndexesResp that = (ListFTIndexesResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetClients(), that.isSetClients(), this.clients, that.clients)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetIndexes(), that.isSetIndexes(), this.indexes, that.indexes)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, clients});
+    return Arrays.deepHashCode(new Object[] {code, leader, indexes});
   }
 
   @Override
-  public int compareTo(ListFTClientsResp other) {
+  public int compareTo(ListFTIndexesResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +310,11 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetClients()).compareTo(other.isSetClients());
+    lastComparison = Boolean.valueOf(isSetIndexes()).compareTo(other.isSetIndexes());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(clients, other.clients);
+    lastComparison = TBaseHelper.compareTo(indexes, other.indexes);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,21 +347,23 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case CLIENTS:
-          if (__field.type == TType.LIST) {
+        case INDEXES:
+          if (__field.type == TType.MAP) {
             {
-              TList _list270 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list270.size));
-              for (int _i271 = 0; 
-                   (_list270.size < 0) ? iprot.peekList() : (_i271 < _list270.size); 
-                   ++_i271)
+              TMap _map278 = iprot.readMapBegin();
+              this.indexes = new HashMap<byte[],FTIndex>(Math.max(0, 2*_map278.size));
+              for (int _i279 = 0; 
+                   (_map278.size < 0) ? iprot.peekMap() : (_i279 < _map278.size); 
+                   ++_i279)
               {
-                FTClient _elem272;
-                _elem272 = new FTClient();
-                _elem272.read(iprot);
-                this.clients.add(_elem272);
+                byte[] _key280;
+                FTIndex _val281;
+                _key280 = iprot.readBinary();
+                _val281 = new FTIndex();
+                _val281.read(iprot);
+                this.indexes.put(_key280, _val281);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -393,14 +396,15 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.clients != null) {
-      oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
+    if (this.indexes != null) {
+      oprot.writeFieldBegin(INDEXES_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter273 : this.clients)        {
-          _iter273.write(oprot);
+        oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.indexes.size()));
+        for (Map.Entry<byte[], FTIndex> _iter282 : this.indexes.entrySet())        {
+          oprot.writeBinary(_iter282.getKey());
+          _iter282.getValue().write(oprot);
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -418,7 +422,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListFTClientsResp");
+    StringBuilder sb = new StringBuilder("ListFTIndexesResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -455,13 +459,13 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("clients");
+    sb.append("indexes");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getClients() == null) {
+    if (this.getIndexes() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getClients(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getIndexes(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
