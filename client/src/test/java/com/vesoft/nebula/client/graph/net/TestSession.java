@@ -62,7 +62,7 @@ public class TestSession {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(1);
             List<HostAddress> addresses = Arrays.asList(
-                new HostAddress("127.0.0.1", 9669));
+                    new HostAddress("127.0.0.1", 9669));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             Session session = pool.getSession("root", "nebula", true);
             session.release();
@@ -70,14 +70,14 @@ public class TestSession {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                 .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(5);
             // the connections in pool are broken, test getSession can get right connection
             session = pool.getSession("root", "nebula", true);
 
             // the connections in pool are broken, test execute can get right connection
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                 .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(5);
             session.execute("SHOW SPACES");
             session.release();
         } catch (Exception e) {
@@ -111,7 +111,6 @@ public class TestSession {
 
             // test ping
             Assert.assertTrue(session.ping());
-
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
                     cmd = "docker stop nebula-docker-compose_graphd0_1";
@@ -156,7 +155,7 @@ public class TestSession {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(e.getMessage(),false);
+            Assert.assertFalse(e.getMessage(), false);
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")

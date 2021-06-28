@@ -48,7 +48,8 @@ public class TestDataFromServer {
         Assert.assertTrue(pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
                 nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
-        ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data; "
+        ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data"
+                + "(vid_type=fixed_string(8)); "
                 + "USE test_data;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int8, grade int16, "
                 + "friends int32, book_num int64, birthday datetime, "

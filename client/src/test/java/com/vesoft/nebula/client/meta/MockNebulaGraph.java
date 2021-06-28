@@ -18,14 +18,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * two spaces: test1, test2, both have 2 parts
  * each space has one tag and one edge
  */
 public class MockNebulaGraph {
-    public static void initGraph() {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MockNebulaGraph.class);
 
+    public static void initGraph() {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
@@ -38,6 +41,7 @@ public class MockNebulaGraph {
 
             ResultSet resp = session.execute(createSpace());
             if (!resp.isSucceeded()) {
+                LOGGER.error(resp.getErrorMessage());
                 System.exit(1);
             }
         } catch (UnknownHostException | NotValidConnectionException
@@ -49,10 +53,50 @@ public class MockNebulaGraph {
     }
 
     public static String createSpace() {
-        String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10);"
+        String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10, "
+                + "vid_type=fixed_string(8));"
                 + "USE testMeta;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int);"
                 + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
         return exec;
+    }
+
+    public static void createMultiVersionTagAndEdge() {
+        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+        nebulaPoolConfig.setMaxConnSize(100);
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
+                new HostAddress("127.0.0.1", 9670));
+        NebulaPool pool = new NebulaPool();
+        Session session = null;
+        try {
+            pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", true);
+
+            String exec = "CREATE SPACE IF NOT EXISTS testMeta(partition_num=10, "
+                    + "vid_type=fixed_string(10));"
+                    + "USE testMeta;"
+                    + "CREATE TAG IF NOT EXISTS player();"
+                    + "CREATE EDGE IF NOT EXISTS couples()";
+            ResultSet resp = session.execute(exec);
+            if (!resp.isSucceeded()) {
+                LOGGER.error(resp.getErrorMessage());
+                System.exit(1);
+            }
+            Thread.sleep(10000);
+            String updateSchema = "USE testMeta;"
+                    + "ALTER TAG player ADD(col1 string);"
+                    + "ALTER EDGE couples ADD(col1 string)";
+            ResultSet updateResp = session.execute(updateSchema);
+            if (!updateResp.isSucceeded()) {
+                if (!"Existed!".equals(updateResp.getErrorMessage())) {
+                    LOGGER.error(resp.getErrorMessage());
+                    System.exit(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close();
+        }
     }
 }
