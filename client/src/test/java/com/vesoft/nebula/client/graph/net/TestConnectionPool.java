@@ -158,7 +158,7 @@ public class TestConnectionPool {
             Session session = pool.getSession("root", "nebula", false);
             Assert.assertNotNull(session);
             Assert.assertEquals(1, pool.getActiveConnNum());
-            Assert.assertEquals(3, pool.getIdleConnNum());
+            Assert.assertEquals(1, pool.getIdleConnNum());
 
             // Test multi release
             session.release();
