@@ -162,10 +162,14 @@ public class TestSession {
                 }
                 TimeUnit.SECONDS.sleep(2);
             }
-            session.release();
             // test release then execute ngql
-            ResultSet result = session.execute("SHOW SPACES;");
-            Assert.assertFalse(result.isSucceeded());
+            session.release();
+            try {
+                session.execute("SHOW SPACES;");
+                assert false;
+            } catch (IOErrorException e) {
+                assert true;
+            }
 
             // get new session from the pool
             Session session1 = pool.getSession("root", "nebula", false);
