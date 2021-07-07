@@ -125,15 +125,13 @@ public class TestConnectionPool {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMinConnSize(2);
             nebulaPoolConfig.setMaxConnSize(4);
-            // set timeout
-            nebulaPoolConfig.setTimeout(1000);
             // set idle time
             nebulaPoolConfig.setIdleTime(2000);
             nebulaPoolConfig.setIntervalIdle(1000);
             // set wait time
             nebulaPoolConfig.setWaitTime(1000);
             List<HostAddress> addresses = Collections.singletonList(
-                    new HostAddress("127.0.0.1", 9671));
+                    new HostAddress("127.0.0.1", 9670));
             NebulaPool pool = new NebulaPool();
             assert pool.init(addresses, nebulaPoolConfig);
             int i = 0;
@@ -156,7 +154,9 @@ public class TestConnectionPool {
                 Assert.assertTrue(session == null);
             } catch (Exception e) {
                 System.out.println("We expect must reach here: get session failed.");
-                Assert.assertTrue(System.currentTimeMillis() - beginTime > 1000);
+                long  timeInterval = System.currentTimeMillis() - beginTime;
+                System.out.println("timeInterval is " + timeInterval);
+                Assert.assertTrue(System.currentTimeMillis() - beginTime >= 1000);
                 assert (true);
             }
 
@@ -168,20 +168,6 @@ public class TestConnectionPool {
             Assert.assertEquals(4, pool.getIdleConnNum());
             Session session = pool.getSession("root", "nebula", false);
             Assert.assertNotNull(session);
-            // test timeout
-            try {
-                StringBuilder ngql = new StringBuilder();
-                for (int n = 0; n < 20000; n++) {
-                    ngql.append("show hosts;");
-                }
-                session.execute(ngql.toString());
-                assert false;
-            } catch (IOErrorException e) {
-                System.out.println(e.getMessage());
-                Assert.assertTrue(e.getMessage().contains("timed out"));
-                assert true;
-            }
-
             Assert.assertEquals(1, pool.getActiveConnNum());
             Assert.assertEquals(3, pool.getIdleConnNum());
 
@@ -201,12 +187,50 @@ public class TestConnectionPool {
     }
 
     @Test()
+    public void testExecuteTimeout() {
+        Session session = null;
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMinConnSize(1);
+            nebulaPoolConfig.setMaxConnSize(1);
+            // set timeout
+            nebulaPoolConfig.setTimeout(100);
+            List<HostAddress> addresses = Collections.singletonList(
+                new HostAddress("127.0.0.1", 9670));
+            NebulaPool pool = new NebulaPool();
+            assert pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", false);
+            // test timeout
+            try {
+                StringBuilder ngql = new StringBuilder();
+                for (int n = 0; n < 500; n++) {
+                    ngql.append("show hosts;");
+                }
+                ResultSet resultSet = session.execute(ngql.toString());
+                System.out.println(resultSet);
+                assert false;
+            } catch (IOErrorException e) {
+                System.out.println(e.getMessage());
+                Assert.assertTrue(e.getMessage().contains("timed out"));
+                assert true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (false);
+        } finally {
+            if (session != null) {
+                session.release();
+            }
+        }
+    }
+
+    @Test()
     public void testClose() {
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(1);
             List<HostAddress> addresses = Collections.singletonList(
-                    new HostAddress("127.0.0.1", 9671));
+                    new HostAddress("127.0.0.1", 9670));
             NebulaPool pool = new NebulaPool();
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             pool.close();
