@@ -17,10 +17,11 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
   FLUSH(1),
   REBUILD_TAG_INDEX(2),
   REBUILD_EDGE_INDEX(3),
-  STATS(4),
-  DATA_BALANCE(5),
-  DOWNLOAD(6),
-  INGEST(7),
+  REBUILD_FULLTEXT_INDEX(4),
+  STATS(5),
+  DATA_BALANCE(6),
+  DOWNLOAD(7),
+  INGEST(8),
   UNKNOWN(99);
 
   private final int value;
@@ -51,12 +52,14 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
       case 3:
         return REBUILD_EDGE_INDEX;
       case 4:
-        return STATS;
+        return REBUILD_FULLTEXT_INDEX;
       case 5:
-        return DATA_BALANCE;
+        return STATS;
       case 6:
-        return DOWNLOAD;
+        return DATA_BALANCE;
       case 7:
+        return DOWNLOAD;
+      case 8:
         return INGEST;
       case 99:
         return UNKNOWN;
