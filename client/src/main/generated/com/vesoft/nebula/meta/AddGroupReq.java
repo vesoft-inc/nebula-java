@@ -267,15 +267,15 @@ public class AddGroupReq implements TBase, java.io.Serializable, Cloneable, Comp
         case ZONE_NAMES:
           if (__field.type == TType.LIST) {
             {
-              TList _list213 = iprot.readListBegin();
-              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list213.size));
-              for (int _i214 = 0; 
-                   (_list213.size < 0) ? iprot.peekList() : (_i214 < _list213.size); 
-                   ++_i214)
+              TList _list218 = iprot.readListBegin();
+              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list218.size));
+              for (int _i219 = 0; 
+                   (_list218.size < 0) ? iprot.peekList() : (_i219 < _list218.size); 
+                   ++_i219)
               {
-                byte[] _elem215;
-                _elem215 = iprot.readBinary();
-                this.zone_names.add(_elem215);
+                byte[] _elem220;
+                _elem220 = iprot.readBinary();
+                this.zone_names.add(_elem220);
               }
               iprot.readListEnd();
             }
@@ -309,8 +309,8 @@ public class AddGroupReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(ZONE_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.zone_names.size()));
-        for (byte[] _iter216 : this.zone_names)        {
-          oprot.writeBinary(_iter216);
+        for (byte[] _iter221 : this.zone_names)        {
+          oprot.writeBinary(_iter221);
         }
         oprot.writeListEnd();
       }
