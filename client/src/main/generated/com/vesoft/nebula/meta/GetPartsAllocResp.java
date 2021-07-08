@@ -29,6 +29,7 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)3);
+  private static final TField TERMS_FIELD_DESC = new TField("terms", TType.MAP, (short)4);
 
   /**
    * 
@@ -37,9 +38,11 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public Map<Integer,List<com.vesoft.nebula.HostAddr>> parts;
+  public Map<Integer,Long> terms;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int PARTS = 3;
+  public static final int TERMS = 4;
 
   // isset id assignments
 
@@ -56,6 +59,10 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
                 new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)))));
+    tmpMetaDataMap.put(TERMS, new FieldMetaData("terms", TFieldRequirementType.OPTIONAL, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new FieldValueMetaData(TType.I64))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -76,10 +83,23 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
     this.parts = parts;
   }
 
+  public GetPartsAllocResp(
+      com.vesoft.nebula.ErrorCode code,
+      com.vesoft.nebula.HostAddr leader,
+      Map<Integer,List<com.vesoft.nebula.HostAddr>> parts,
+      Map<Integer,Long> terms) {
+    this();
+    this.code = code;
+    this.leader = leader;
+    this.parts = parts;
+    this.terms = terms;
+  }
+
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
     private Map<Integer,List<com.vesoft.nebula.HostAddr>> parts;
+    private Map<Integer,Long> terms;
 
     public Builder() {
     }
@@ -99,11 +119,17 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
+    public Builder setTerms(final Map<Integer,Long> terms) {
+      this.terms = terms;
+      return this;
+    }
+
     public GetPartsAllocResp build() {
       GetPartsAllocResp result = new GetPartsAllocResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
       result.setParts(this.parts);
+      result.setTerms(this.terms);
       return result;
     }
   }
@@ -124,6 +150,9 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
     }
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
+    }
+    if (other.isSetTerms()) {
+      this.terms = TBaseHelper.deepCopy(other.terms);
     }
   }
 
@@ -211,6 +240,30 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
+  public Map<Integer,Long> getTerms() {
+    return this.terms;
+  }
+
+  public GetPartsAllocResp setTerms(Map<Integer,Long> terms) {
+    this.terms = terms;
+    return this;
+  }
+
+  public void unsetTerms() {
+    this.terms = null;
+  }
+
+  // Returns true if field terms is set (has been assigned a value) and false otherwise
+  public boolean isSetTerms() {
+    return this.terms != null;
+  }
+
+  public void setTermsIsSet(boolean __value) {
+    if (!__value) {
+      this.terms = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -238,6 +291,14 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
+    case TERMS:
+      if (__value == null) {
+        unsetTerms();
+      } else {
+        setTerms((Map<Integer,Long>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -253,6 +314,9 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
 
     case PARTS:
       return getParts();
+
+    case TERMS:
+      return getTerms();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -275,12 +339,14 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
 
     if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetTerms(), that.isSetTerms(), this.terms, that.terms)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, parts});
+    return Arrays.deepHashCode(new Object[] {code, leader, parts, terms});
   }
 
   @Override
@@ -316,6 +382,14 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(parts, other.parts);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTerms()).compareTo(other.isSetTerms());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(terms, other.terms);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -382,6 +456,27 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case TERMS:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map117 = iprot.readMapBegin();
+              this.terms = new HashMap<Integer,Long>(Math.max(0, 2*_map117.size));
+              for (int _i118 = 0; 
+                   (_map117.size < 0) ? iprot.peekMap() : (_i118 < _map117.size); 
+                   ++_i118)
+              {
+                int _key119;
+                long _val120;
+                _key119 = iprot.readI32();
+                _val120 = iprot.readI64();
+                this.terms.put(_key119, _val120);
+              }
+              iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -413,12 +508,12 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.HostAddr>> _iter117 : this.parts.entrySet())        {
-          oprot.writeI32(_iter117.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.HostAddr>> _iter121 : this.parts.entrySet())        {
+          oprot.writeI32(_iter121.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter117.getValue().size()));
-            for (com.vesoft.nebula.HostAddr _iter118 : _iter117.getValue())            {
-              _iter118.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter121.getValue().size()));
+            for (com.vesoft.nebula.HostAddr _iter122 : _iter121.getValue())            {
+              _iter122.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -426,6 +521,20 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
         oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
+    }
+    if (this.terms != null) {
+      if (isSetTerms()) {
+        oprot.writeFieldBegin(TERMS_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.I32, TType.I64, this.terms.size()));
+          for (Map.Entry<Integer, Long> _iter123 : this.terms.entrySet())          {
+            oprot.writeI32(_iter123.getKey());
+            oprot.writeI64(_iter123.getValue());
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -487,6 +596,20 @@ public class GetPartsAllocResp implements TBase, java.io.Serializable, Cloneable
       sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetTerms())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("terms");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getTerms() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getTerms(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

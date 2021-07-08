@@ -35,6 +35,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
   private static final TField TIMEZONE_FIELD_DESC = new TField("timezone", TType.I32, (short)7);
   private static final TField CLIENT_IP_FIELD_DESC = new TField("client_ip", TType.STRING, (short)8);
   private static final TField CONFIGS_FIELD_DESC = new TField("configs", TType.MAP, (short)9);
+  private static final TField QUERIES_FIELD_DESC = new TField("queries", TType.MAP, (short)10);
 
   public long session_id;
   public long create_time;
@@ -45,6 +46,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
   public int timezone;
   public byte[] client_ip;
   public Map<byte[],com.vesoft.nebula.Value> configs;
+  public Map<Long,QueryDesc> queries;
   public static final int SESSION_ID = 1;
   public static final int CREATE_TIME = 2;
   public static final int UPDATE_TIME = 3;
@@ -54,6 +56,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
   public static final int TIMEZONE = 7;
   public static final int CLIENT_IP = 8;
   public static final int CONFIGS = 9;
+  public static final int QUERIES = 10;
 
   // isset id assignments
   private static final int __SESSION_ID_ISSET_ID = 0;
@@ -86,6 +89,10 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.STRING), 
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class))));
+    tmpMetaDataMap.put(QUERIES, new FieldMetaData("queries", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I64), 
+            new StructMetaData(TType.STRUCT, QueryDesc.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -105,7 +112,8 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       com.vesoft.nebula.HostAddr graph_addr,
       int timezone,
       byte[] client_ip,
-      Map<byte[],com.vesoft.nebula.Value> configs) {
+      Map<byte[],com.vesoft.nebula.Value> configs,
+      Map<Long,QueryDesc> queries) {
     this();
     this.session_id = session_id;
     setSession_idIsSet(true);
@@ -120,6 +128,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     setTimezoneIsSet(true);
     this.client_ip = client_ip;
     this.configs = configs;
+    this.queries = queries;
   }
 
   public static class Builder {
@@ -132,6 +141,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     private int timezone;
     private byte[] client_ip;
     private Map<byte[],com.vesoft.nebula.Value> configs;
+    private Map<Long,QueryDesc> queries;
 
     BitSet __optional_isset = new BitSet(4);
 
@@ -187,6 +197,11 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
+    public Builder setQueries(final Map<Long,QueryDesc> queries) {
+      this.queries = queries;
+      return this;
+    }
+
     public Session build() {
       Session result = new Session();
       if (__optional_isset.get(__SESSION_ID_ISSET_ID)) {
@@ -206,6 +221,7 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       }
       result.setClient_ip(this.client_ip);
       result.setConfigs(this.configs);
+      result.setQueries(this.queries);
       return result;
     }
   }
@@ -238,6 +254,9 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     }
     if (other.isSetConfigs()) {
       this.configs = TBaseHelper.deepCopy(other.configs);
+    }
+    if (other.isSetQueries()) {
+      this.queries = TBaseHelper.deepCopy(other.queries);
     }
   }
 
@@ -457,6 +476,30 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public Map<Long,QueryDesc> getQueries() {
+    return this.queries;
+  }
+
+  public Session setQueries(Map<Long,QueryDesc> queries) {
+    this.queries = queries;
+    return this;
+  }
+
+  public void unsetQueries() {
+    this.queries = null;
+  }
+
+  // Returns true if field queries is set (has been assigned a value) and false otherwise
+  public boolean isSetQueries() {
+    return this.queries != null;
+  }
+
+  public void setQueriesIsSet(boolean __value) {
+    if (!__value) {
+      this.queries = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -532,6 +575,14 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case QUERIES:
+      if (__value == null) {
+        unsetQueries();
+      } else {
+        setQueries((Map<Long,QueryDesc>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -566,6 +617,9 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
     case CONFIGS:
       return getConfigs();
 
+    case QUERIES:
+      return getQueries();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -599,12 +653,14 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsSlow(this.isSetConfigs(), that.isSetConfigs(), this.configs, that.configs)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetQueries(), that.isSetQueries(), this.queries, that.queries)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {session_id, create_time, update_time, user_name, space_name, graph_addr, timezone, client_ip, configs});
+    return Arrays.deepHashCode(new Object[] {session_id, create_time, update_time, user_name, space_name, graph_addr, timezone, client_ip, configs, queries});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -682,18 +738,40 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
         case CONFIGS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map283 = iprot.readMapBegin();
-              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map283.size));
-              for (int _i284 = 0; 
-                   (_map283.size < 0) ? iprot.peekMap() : (_i284 < _map283.size); 
-                   ++_i284)
+              TMap _map288 = iprot.readMapBegin();
+              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map288.size));
+              for (int _i289 = 0; 
+                   (_map288.size < 0) ? iprot.peekMap() : (_i289 < _map288.size); 
+                   ++_i289)
               {
-                byte[] _key285;
-                com.vesoft.nebula.Value _val286;
-                _key285 = iprot.readBinary();
-                _val286 = new com.vesoft.nebula.Value();
-                _val286.read(iprot);
-                this.configs.put(_key285, _val286);
+                byte[] _key290;
+                com.vesoft.nebula.Value _val291;
+                _key290 = iprot.readBinary();
+                _val291 = new com.vesoft.nebula.Value();
+                _val291.read(iprot);
+                this.configs.put(_key290, _val291);
+              }
+              iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case QUERIES:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map292 = iprot.readMapBegin();
+              this.queries = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map292.size));
+              for (int _i293 = 0; 
+                   (_map292.size < 0) ? iprot.peekMap() : (_i293 < _map292.size); 
+                   ++_i293)
+              {
+                long _key294;
+                QueryDesc _val295;
+                _key294 = iprot.readI64();
+                _val295 = new QueryDesc();
+                _val295.read(iprot);
+                this.queries.put(_key294, _val295);
               }
               iprot.readMapEnd();
             }
@@ -754,9 +832,21 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CONFIGS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.configs.size()));
-        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter287 : this.configs.entrySet())        {
-          oprot.writeBinary(_iter287.getKey());
-          _iter287.getValue().write(oprot);
+        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter296 : this.configs.entrySet())        {
+          oprot.writeBinary(_iter296.getKey());
+          _iter296.getValue().write(oprot);
+        }
+        oprot.writeMapEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.queries != null) {
+      oprot.writeFieldBegin(QUERIES_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, this.queries.size()));
+        for (Map.Entry<Long, QueryDesc> _iter297 : this.queries.entrySet())        {
+          oprot.writeI64(_iter297.getKey());
+          _iter297.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -877,6 +967,17 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this.getConfigs(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("queries");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getQueries() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getQueries(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListZonesResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListZonesResp");
+public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneable, Comparable<UpdateSessionsResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("UpdateSessionsResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField ZONES_FIELD_DESC = new TField("zones", TType.LIST, (short)3);
+  private static final TField KILLED_QUERIES_FIELD_DESC = new TField("killed_queries", TType.MAP, (short)3);
 
   /**
    * 
@@ -36,10 +36,10 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<Zone> zones;
+  public Map<Long,Map<Long,QueryDesc>> killed_queries;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int ZONES = 3;
+  public static final int KILLED_QUERIES = 3;
 
   // isset id assignments
 
@@ -51,33 +51,36 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(ZONES, new FieldMetaData("zones", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, Zone.class))));
+    tmpMetaDataMap.put(KILLED_QUERIES, new FieldMetaData("killed_queries", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I64), 
+            new MapMetaData(TType.MAP, 
+                new FieldValueMetaData(TType.I64), 
+                new StructMetaData(TType.STRUCT, QueryDesc.class)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListZonesResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(UpdateSessionsResp.class, metaDataMap);
   }
 
-  public ListZonesResp() {
+  public UpdateSessionsResp() {
   }
 
-  public ListZonesResp(
+  public UpdateSessionsResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<Zone> zones) {
+      Map<Long,Map<Long,QueryDesc>> killed_queries) {
     this();
     this.code = code;
     this.leader = leader;
-    this.zones = zones;
+    this.killed_queries = killed_queries;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<Zone> zones;
+    private Map<Long,Map<Long,QueryDesc>> killed_queries;
 
     public Builder() {
     }
@@ -92,16 +95,16 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
-    public Builder setZones(final List<Zone> zones) {
-      this.zones = zones;
+    public Builder setKilled_queries(final Map<Long,Map<Long,QueryDesc>> killed_queries) {
+      this.killed_queries = killed_queries;
       return this;
     }
 
-    public ListZonesResp build() {
-      ListZonesResp result = new ListZonesResp();
+    public UpdateSessionsResp build() {
+      UpdateSessionsResp result = new UpdateSessionsResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setZones(this.zones);
+      result.setKilled_queries(this.killed_queries);
       return result;
     }
   }
@@ -113,20 +116,20 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListZonesResp(ListZonesResp other) {
+  public UpdateSessionsResp(UpdateSessionsResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetZones()) {
-      this.zones = TBaseHelper.deepCopy(other.zones);
+    if (other.isSetKilled_queries()) {
+      this.killed_queries = TBaseHelper.deepCopy(other.killed_queries);
     }
   }
 
-  public ListZonesResp deepCopy() {
-    return new ListZonesResp(this);
+  public UpdateSessionsResp deepCopy() {
+    return new UpdateSessionsResp(this);
   }
 
   /**
@@ -141,7 +144,7 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ListZonesResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public UpdateSessionsResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +168,7 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
     return this.leader;
   }
 
-  public ListZonesResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public UpdateSessionsResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,27 +188,27 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public List<Zone> getZones() {
-    return this.zones;
+  public Map<Long,Map<Long,QueryDesc>> getKilled_queries() {
+    return this.killed_queries;
   }
 
-  public ListZonesResp setZones(List<Zone> zones) {
-    this.zones = zones;
+  public UpdateSessionsResp setKilled_queries(Map<Long,Map<Long,QueryDesc>> killed_queries) {
+    this.killed_queries = killed_queries;
     return this;
   }
 
-  public void unsetZones() {
-    this.zones = null;
+  public void unsetKilled_queries() {
+    this.killed_queries = null;
   }
 
-  // Returns true if field zones is set (has been assigned a value) and false otherwise
-  public boolean isSetZones() {
-    return this.zones != null;
+  // Returns true if field killed_queries is set (has been assigned a value) and false otherwise
+  public boolean isSetKilled_queries() {
+    return this.killed_queries != null;
   }
 
-  public void setZonesIsSet(boolean __value) {
+  public void setKilled_queriesIsSet(boolean __value) {
     if (!__value) {
-      this.zones = null;
+      this.killed_queries = null;
     }
   }
 
@@ -228,11 +231,11 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case ZONES:
+    case KILLED_QUERIES:
       if (__value == null) {
-        unsetZones();
+        unsetKilled_queries();
       } else {
-        setZones((List<Zone>)__value);
+        setKilled_queries((Map<Long,Map<Long,QueryDesc>>)__value);
       }
       break;
 
@@ -249,8 +252,8 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
     case LEADER:
       return getLeader();
 
-    case ZONES:
-      return getZones();
+    case KILLED_QUERIES:
+      return getKilled_queries();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +266,26 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListZonesResp))
+    if (!(_that instanceof UpdateSessionsResp))
       return false;
-    ListZonesResp that = (ListZonesResp)_that;
+    UpdateSessionsResp that = (UpdateSessionsResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetZones(), that.isSetZones(), this.zones, that.zones)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetKilled_queries(), that.isSetKilled_queries(), this.killed_queries, that.killed_queries)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, zones});
+    return Arrays.deepHashCode(new Object[] {code, leader, killed_queries});
   }
 
   @Override
-  public int compareTo(ListZonesResp other) {
+  public int compareTo(UpdateSessionsResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +312,11 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetZones()).compareTo(other.isSetZones());
+    lastComparison = Boolean.valueOf(isSetKilled_queries()).compareTo(other.isSetKilled_queries());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(zones, other.zones);
+    lastComparison = TBaseHelper.compareTo(killed_queries, other.killed_queries);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,21 +349,37 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case ZONES:
-          if (__field.type == TType.LIST) {
+        case KILLED_QUERIES:
+          if (__field.type == TType.MAP) {
             {
-              TList _list214 = iprot.readListBegin();
-              this.zones = new ArrayList<Zone>(Math.max(0, _list214.size));
-              for (int _i215 = 0; 
-                   (_list214.size < 0) ? iprot.peekList() : (_i215 < _list214.size); 
-                   ++_i215)
+              TMap _map302 = iprot.readMapBegin();
+              this.killed_queries = new HashMap<Long,Map<Long,QueryDesc>>(Math.max(0, 2*_map302.size));
+              for (int _i303 = 0; 
+                   (_map302.size < 0) ? iprot.peekMap() : (_i303 < _map302.size); 
+                   ++_i303)
               {
-                Zone _elem216;
-                _elem216 = new Zone();
-                _elem216.read(iprot);
-                this.zones.add(_elem216);
+                long _key304;
+                Map<Long,QueryDesc> _val305;
+                _key304 = iprot.readI64();
+                {
+                  TMap _map306 = iprot.readMapBegin();
+                  _val305 = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map306.size));
+                  for (int _i307 = 0; 
+                       (_map306.size < 0) ? iprot.peekMap() : (_i307 < _map306.size); 
+                       ++_i307)
+                  {
+                    long _key308;
+                    QueryDesc _val309;
+                    _key308 = iprot.readI64();
+                    _val309 = new QueryDesc();
+                    _val309.read(iprot);
+                    _val305.put(_key308, _val309);
+                  }
+                  iprot.readMapEnd();
+                }
+                this.killed_queries.put(_key304, _val305);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -393,14 +412,22 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.zones != null) {
-      oprot.writeFieldBegin(ZONES_FIELD_DESC);
+    if (this.killed_queries != null) {
+      oprot.writeFieldBegin(KILLED_QUERIES_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.zones.size()));
-        for (Zone _iter217 : this.zones)        {
-          _iter217.write(oprot);
+        oprot.writeMapBegin(new TMap(TType.I64, TType.MAP, this.killed_queries.size()));
+        for (Map.Entry<Long, Map<Long,QueryDesc>> _iter310 : this.killed_queries.entrySet())        {
+          oprot.writeI64(_iter310.getKey());
+          {
+            oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, _iter310.getValue().size()));
+            for (Map.Entry<Long, QueryDesc> _iter311 : _iter310.getValue().entrySet())            {
+              oprot.writeI64(_iter311.getKey());
+              _iter311.getValue().write(oprot);
+            }
+            oprot.writeMapEnd();
+          }
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -418,7 +445,7 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListZonesResp");
+    StringBuilder sb = new StringBuilder("UpdateSessionsResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -455,13 +482,13 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("zones");
+    sb.append("killed_queries");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getZones() == null) {
+    if (this.getKilled_queries() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getZones(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getKilled_queries(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
