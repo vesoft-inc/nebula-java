@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.pool2.impl.AbandonedConfig;
+import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class NebulaPool {
     private LoadBalancer loadBalancer;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     // the wait time to get idle connection, unit ms
-    private final int waitTime = 60 * 1000;
+    private int waitTime = 0;
 
     private List<HostAddress> hostToIp(List<HostAddress> addresses)
         throws UnknownHostException {
@@ -59,21 +60,31 @@ public class NebulaPool {
             throw new InvalidConfigException(
                 "Config timeout:" + config.getTimeout() + " is illegal");
         }
+
+        if (config.getWaitTime() < 0) {
+            throw new InvalidConfigException(
+                "Config waitTime:" + config.getWaitTime() + " is illegal");
+        }
     }
 
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
         throws UnknownHostException, InvalidConfigException {
         checkConfig(config);
+        this.waitTime = config.getWaitTime();
         List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
         objConfig.setMinIdle(config.getMinConnSize());
-        objConfig.setMaxIdle(config.getMinConnSize());
+        objConfig.setMaxIdle(config.getMaxConnSize());
         objConfig.setMaxTotal(config.getMaxConnSize());
-        objConfig.setMinEvictableIdleTimeMillis(
-                config.getIdleTime() <= 0 ? Long.MAX_VALUE : config.getIdleTime());
+        objConfig.setTimeBetweenEvictionRunsMillis(config.getIntervalIdle() <= 0
+            ? BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS
+            : config.getIntervalIdle());
+        objConfig.setSoftMinEvictableIdleTimeMillis(config.getIdleTime() <= 0
+            ? BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS
+            : config.getIdleTime());
         this.objectPool.setConfig(objConfig);
 
         AbandonedConfig abandonedConfig = new AbandonedConfig();

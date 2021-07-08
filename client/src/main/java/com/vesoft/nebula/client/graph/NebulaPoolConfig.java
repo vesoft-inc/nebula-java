@@ -21,6 +21,12 @@ public class NebulaPoolConfig {
     // 0 means never delete
     private int idleTime = 0;
 
+    // the interval time to check idle connection, unit ms, -1 means no check
+    private int intervalIdle = -1;
+
+    // the wait time to get idle connection, unit ms
+    private int waitTime = 0;
+
     public int getMinConnSize() {
         return minConnsSize;
     }
@@ -51,5 +57,21 @@ public class NebulaPoolConfig {
 
     public void setIdleTime(int idleTime) {
         this.idleTime = idleTime;
+    }
+
+    public int getIntervalIdle() {
+        return intervalIdle;
+    }
+
+    public void setIntervalIdle(int intervalIdle) {
+        this.intervalIdle = intervalIdle;
+    }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
     }
 }
