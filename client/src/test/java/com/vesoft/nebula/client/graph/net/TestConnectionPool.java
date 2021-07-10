@@ -10,12 +10,14 @@ import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -123,8 +125,13 @@ public class TestConnectionPool {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMinConnSize(2);
             nebulaPoolConfig.setMaxConnSize(4);
+            // set idle time
+            nebulaPoolConfig.setIdleTime(2000);
+            nebulaPoolConfig.setIntervalIdle(1000);
+            // set wait time
+            nebulaPoolConfig.setWaitTime(1000);
             List<HostAddress> addresses = Collections.singletonList(
-                    new HostAddress("127.0.0.1", 9671));
+                    new HostAddress("127.0.0.1", 9670));
             NebulaPool pool = new NebulaPool();
             assert pool.init(addresses, nebulaPoolConfig);
             int i = 0;
@@ -140,12 +147,16 @@ public class TestConnectionPool {
 
             assert (pool.getActiveConnNum() == 4);
             assert (pool.getIdleConnNum() == 0);
-            // All sessions are in used, so getSession failed
+            // All sessions are in used, so getSession failed, and the wait time is 1000ms
+            long beginTime = System.currentTimeMillis();
             try {
                 Session session = pool.getSession("root", "nebula", false);
-                assert (session == null);
+                Assert.assertTrue(session == null);
             } catch (Exception e) {
                 System.out.println("We expect must reach here: get session failed.");
+                long  timeInterval = System.currentTimeMillis() - beginTime;
+                System.out.println("timeInterval is " + timeInterval);
+                Assert.assertTrue(System.currentTimeMillis() - beginTime >= 1000);
                 assert (true);
             }
 
@@ -154,11 +165,17 @@ public class TestConnectionPool {
                 s.release();
             }
             Assert.assertEquals(0, pool.getActiveConnNum());
-            Assert.assertEquals(2, pool.getIdleConnNum());
+            Assert.assertEquals(4, pool.getIdleConnNum());
             Session session = pool.getSession("root", "nebula", false);
             Assert.assertNotNull(session);
             Assert.assertEquals(1, pool.getActiveConnNum());
             Assert.assertEquals(3, pool.getIdleConnNum());
+
+            // test idletime connection is closed
+            session.release();
+            TimeUnit.SECONDS.sleep(3);
+            Assert.assertEquals(2, pool.getIdleConnNum());
+            Assert.assertEquals(0, pool.getActiveConnNum());
 
             // Test multi release
             session.release();
@@ -170,12 +187,50 @@ public class TestConnectionPool {
     }
 
     @Test()
+    public void testExecuteTimeout() {
+        Session session = null;
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMinConnSize(1);
+            nebulaPoolConfig.setMaxConnSize(1);
+            // set timeout
+            nebulaPoolConfig.setTimeout(100);
+            List<HostAddress> addresses = Collections.singletonList(
+                new HostAddress("127.0.0.1", 9670));
+            NebulaPool pool = new NebulaPool();
+            assert pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", false);
+            // test timeout
+            try {
+                StringBuilder ngql = new StringBuilder();
+                for (int n = 0; n < 500; n++) {
+                    ngql.append("show hosts;");
+                }
+                ResultSet resultSet = session.execute(ngql.toString());
+                System.out.println(resultSet);
+                assert false;
+            } catch (IOErrorException e) {
+                System.out.println(e.getMessage());
+                Assert.assertTrue(e.getMessage().contains("timed out"));
+                assert true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (false);
+        } finally {
+            if (session != null) {
+                session.release();
+            }
+        }
+    }
+
+    @Test()
     public void testClose() {
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(1);
             List<HostAddress> addresses = Collections.singletonList(
-                    new HostAddress("127.0.0.1", 9671));
+                    new HostAddress("127.0.0.1", 9670));
             NebulaPool pool = new NebulaPool();
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             pool.close();

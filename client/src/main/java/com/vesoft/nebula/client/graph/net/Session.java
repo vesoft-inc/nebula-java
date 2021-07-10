@@ -49,11 +49,11 @@ public class Session {
                     + Thread.currentThread().getName());
         }
         isRunning.set(true);
+        if (connection == null) {
+            throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
+                "Connection is null");
+        }
         try {
-            if (connection == null) {
-                throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
-                        "Connection is null");
-            }
             ExecutionResponse resp = connection.execute(sessionID, stmt);
             return new ResultSet(resp, timezoneOffset);
         } catch (IOErrorException ie) {
@@ -108,6 +108,7 @@ public class Session {
         } catch (Exception e) {
             log.warn("Return object to pool failed.");
         }
+        connection = null;
     }
 
     public HostAddress getGraphHost() {

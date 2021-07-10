@@ -13,6 +13,7 @@ import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public class TestMetaClient extends TestCase {
         try {
             metaClient.connect();
         } catch (TException e) {
+            e.printStackTrace();
             assert (false);
         }
     }
@@ -59,6 +61,7 @@ public class TestMetaClient extends TestCase {
             assert (metaClient.getSpace("testMeta") != null);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
+            e.printStackTrace();
             assert (false);
         }
     }
@@ -66,10 +69,10 @@ public class TestMetaClient extends TestCase {
     public void testGetTags() {
         try {
             List<TagItem> tags = metaClient.getTags("testMeta");
-            assert (tags.size() == 1);
+            Assert.assertTrue(tags.size() >= 1);
             assert (metaClient.getTag("testMeta", "person") != null);
         } catch (TException | ExecuteFailedException e) {
-            LOGGER.error(e.getMessage());
+            e.printStackTrace();
             assert (false);
         }
     }
@@ -77,10 +80,10 @@ public class TestMetaClient extends TestCase {
     public void testGetEdges() {
         try {
             List<EdgeItem> edges = metaClient.getEdges("testMeta");
-            assert (edges.size() == 1);
+            Assert.assertTrue(edges.size() >= 1);
             assert (metaClient.getEdge("testMeta", "friend") != null);
         } catch (TException | ExecuteFailedException e) {
-            LOGGER.error(e.getMessage());
+            e.printStackTrace();
             assert (false);
         }
     }
@@ -89,7 +92,7 @@ public class TestMetaClient extends TestCase {
         try {
             assert (metaClient.getPartsAlloc("testMeta").size() == 10);
         } catch (ExecuteFailedException | TException e) {
-            LOGGER.error(e.getMessage());
+            e.printStackTrace();
             assert (false);
         }
     }
