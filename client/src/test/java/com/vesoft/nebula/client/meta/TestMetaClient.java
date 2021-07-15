@@ -114,14 +114,23 @@ public class TestMetaClient extends TestCase {
             Process p = runtime.exec(cmd);
             p.waitFor(5, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
-            Thread.sleep(12000); // wait to update the storaged's status to OFFLINE
+            Thread.sleep(5000); // wait to update the storaged's status to OFFLINE
         } catch (Exception e) {
-            LOGGER.error("stop docker service cmd error, ", e);
-
+            LOGGER.error("stop docker service error, ", e);
+            assert (false);
         }
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
         assert (metaClient.listHosts().size() == 2);
+
+        try {
+            runtime.exec("docker start nebula-docker-compose_storaged0_1")
+                    .waitFor(5, TimeUnit.SECONDS);
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            LOGGER.error("start docker service error,", e);
+            assert (false);
+        }
     }
 }
