@@ -8,10 +8,12 @@ package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -102,5 +104,24 @@ public class TestMetaClient extends TestCase {
             metaClient = new MetaClient(address, port);
         }
         assert (metaClient.listHosts().size() == 3);
+    }
+
+    public void testListOnlineHosts() {
+        // stop one storage server
+        String cmd = "docker stop nebula-docker-compose_storaged0_1";
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+            Thread.sleep(12000); // wait to update the storaged's status to OFFLINE
+        } catch (Exception e) {
+            LOGGER.error("stop docker service cmd error, ", e);
+
+        }
+        if (metaClient == null) {
+            metaClient = new MetaClient(address, port);
+        }
+        assert (metaClient.listHosts().size() == 2);
     }
 }
