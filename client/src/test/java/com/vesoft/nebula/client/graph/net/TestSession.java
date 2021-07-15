@@ -11,6 +11,7 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ErrorCode;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -96,8 +97,8 @@ public class TestSession {
             // make sure the graphd2_1 without any sessions
             String cmd = "docker restart nebula-docker-compose_graphd2_1";
             Process p = runtime.exec(cmd);
-            p.waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(10);
+            p.waitFor(10, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
 
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(6);
@@ -113,10 +114,14 @@ public class TestSession {
 
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
-                    runtime.exec("docker stop nebula-docker-compose_graphd0_1")
-                            .waitFor(5, TimeUnit.SECONDS);
-                    runtime.exec("docker stop nebula-docker-compose_graphd1_1")
-                            .waitFor(5, TimeUnit.SECONDS);
+                    cmd = "docker stop nebula-docker-compose_graphd0_1";
+                    p = runtime.exec(cmd);
+                    p.waitFor(5, TimeUnit.SECONDS);
+                    ProcessUtil.printProcessStatus(cmd, p);
+                    cmd = "docker stop nebula-docker-compose_graphd1_1";
+                    p = runtime.exec(cmd);
+                    p.waitFor(5, TimeUnit.SECONDS);
+                    ProcessUtil.printProcessStatus(cmd, p);
                 }
                 try {
                     ResultSet resp = session.execute("SHOW SPACES");
