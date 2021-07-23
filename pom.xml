@@ -43,37 +43,100 @@
             </roles>
         </developer>
     </developers>
-
     <modules>
         <module>client</module>
         <module>examples</module>
     </modules>
 
+    <profiles>
+        <!-- Deployment profile (required so these plugins are only used when deploying) -->
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <!-- Source plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- GPG plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Prevent `gpg` from using pinentry programs -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
     <distributionManagement>
         <repository>
-            <id>release</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>ossrh</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>ossrh</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
     <build>
         <plugins>
+            <!-- Nexus Staging Plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
