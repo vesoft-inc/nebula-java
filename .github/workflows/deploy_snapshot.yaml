@@ -2,8 +2,9 @@ name: Deploy snapshot to the Maven Central Repository
 
 on:
   push:
-    # branches: [ master ]
-    branches: [ test ]
+    branches: [ master ]
+  schedule:
+    - cron: '0 6 * * *'
 
 jobs:
   deploy:
@@ -28,7 +29,6 @@ jobs:
           sleep 10
           popd
           popd
-
       - name: Deploy Snapshot to Maven package
         uses: samuelmeuli/action-maven-publish@v1
         with:
