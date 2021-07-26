@@ -38,16 +38,23 @@ public class SessionsManager {
         }
     }
 
-    public synchronized SessionWrapper getSession() throws RuntimeException {
+    /**
+     * getSessionWrapper: return a SessionWrapper from sessionManager,
+     * the SessionWrapper couldn't use by multi-thread
+     * @return SessionWrapper
+     * @throws RuntimeException the exception when get SessionWrapper
+     */
+    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException {
         checkClose();
         if (pool == null) {
             init();
         }
-        if (canUseBitSet.isEmpty() && sessionList.size() >= config.getPoolConfig().getMaxConnSize()) {
-            throw new RuntimeException("The driverManager does not have available sessions.");
+        if (canUseBitSet.isEmpty()
+            && sessionList.size() >= config.getPoolConfig().getMaxConnSize()) {
+            throw new RuntimeException("The SessionsManager does not have available sessions.");
         }
         if (!canUseBitSet.isEmpty()) {
-            for (int index = 0; index < canUseBitSet.size(); index ++) {
+            for (int index = 0; index < canUseBitSet.size(); index++) {
                 if (canUseBitSet.get(index)) {
                     canUseBitSet.set(index, false);
                     return sessionList.get(index);
@@ -74,7 +81,12 @@ public class SessionsManager {
         }
     }
 
-    public synchronized void returnSession(SessionWrapper session) {
+    /**
+     * returnSessionWrapper: return the SessionWrapper to the sessionManger,
+     * the old SessionWrapper couldn't use again.
+     * @param session The SessionWrapper
+     */
+    public synchronized void returnSessionWrapper(SessionWrapper session) {
         checkClose();
         if (session == null) {
             return;
@@ -88,6 +100,9 @@ public class SessionsManager {
         }
     }
 
+    /**
+     * close: release all sessions and close the connection pool
+     */
     public synchronized void close() {
         for (SessionWrapper session : sessionList) {
             session.release();
@@ -98,10 +113,10 @@ public class SessionsManager {
     }
 
     private void init() throws RuntimeException {
-        pool = new NebulaPool();
         try {
+            pool = new NebulaPool();
             if (!pool.init(config.getAddresses(), config.getPoolConfig())) {
-                throw new RuntimeException("Init pool failed");
+                throw new RuntimeException("Init pool failed: services are broken.");
             }
             canUseBitSet = new BitSet(config.getPoolConfig().getMaxConnSize());
             canUseBitSet.set(0, config.getPoolConfig().getMaxConnSize(), false);
@@ -112,7 +127,7 @@ public class SessionsManager {
 
     private void checkClose() {
         if (isClose) {
-            throw new RuntimeException("The SessionDriver was closed.");
+            throw new RuntimeException("The SessionsManager was closed.");
         }
     }
 }

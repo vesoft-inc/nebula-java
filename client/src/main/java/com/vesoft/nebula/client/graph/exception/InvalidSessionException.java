@@ -8,6 +8,6 @@ package com.vesoft.nebula.client.graph.exception;
 
 public class InvalidSessionException extends RuntimeException {
     public InvalidSessionException() {
-            super("The session was released, could not use again.");
-        }
+        super("The session was released, could not use again.");
+    }
 }

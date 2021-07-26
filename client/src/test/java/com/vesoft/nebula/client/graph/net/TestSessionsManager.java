@@ -15,13 +15,13 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.InvalidSessionException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
-import org.junit.Assert;
-import org.junit.Test;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class TestSessionsManager {
@@ -32,10 +32,12 @@ public class TestSessionsManager {
                 NebulaPool pool = new NebulaPool();
                 NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
                 nebulaPoolConfig.setMaxConnSize(1);
-                Assert.assertTrue(pool.init(Collections.singletonList(new HostAddress("127.0.0.1", 9670)),
+                Assert.assertTrue(pool.init(Collections.singletonList(
+                    new HostAddress("127.0.0.1", 9670)),
                     nebulaPoolConfig));
                 Session session = pool.getSession("root", "nebula", true);
-                ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_session_manager(vid_type=INT);");
+                ResultSet resp = session.execute(
+                    "CREATE SPACE IF NOT EXISTS test_session_manager(vid_type=INT);");
                 Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
                 session.release();
                 pool.close();
@@ -58,26 +60,27 @@ public class TestSessionsManager {
                 .setPoolConfig(poolConfig);
             SessionsManager sessionsManager = new SessionsManager(config);
             // Gets the session of the specified space
-            SessionWrapper session = sessionsManager.getSession();
+            SessionWrapper session = sessionsManager.getSessionWrapper();
             ResultSet resultSet = session.execute("SHOW TAGS");
             Assert.assertEquals("test_session_manager", resultSet.getSpaceName());
 
             // Test get SessionWrapper failed
             List<SessionWrapper> sessionList = new ArrayList<>();
-            for (int i = 0 ; i < 3; i++) {
-                sessionList.add(sessionsManager.getSession());
+            for (int i = 0; i < 3; i++) {
+                sessionList.add(sessionsManager.getSessionWrapper());
             }
             try {
-                sessionsManager.getSession();
+                sessionsManager.getSessionWrapper();
                 Assert.fail();
             } catch (RuntimeException e) {
-                Assert.assertTrue(e.getMessage().contains("The driverManager does not have available sessions."));
+                Assert.assertTrue(e.getMessage().contains(
+                    "The SessionsManager does not have available sessions."));
                 Assert.assertTrue(e.getMessage(), true);
             }
 
             // Test return Session
             try {
-                sessionsManager.returnSession(session);
+                sessionsManager.returnSessionWrapper(session);
                 session.execute("SHOW TAGS");
                 Assert.fail();
             } catch (InvalidSessionException e) {
@@ -88,18 +91,18 @@ public class TestSessionsManager {
 
             // Test get the session success after return session
             try {
-                SessionWrapper session2 = sessionsManager.getSession();
+                SessionWrapper session2 = sessionsManager.getSessionWrapper();
                 resultSet = session2.execute("SHOW TAGS");
                 Assert.assertEquals("test_session_manager", resultSet.getSpaceName());
             } catch (RuntimeException e) {
                 Assert.assertFalse(e.getMessage(), true);
             }
-            for (int i = 0 ; i < 3; i++) {
-                sessionsManager.returnSession(sessionList.get(i));
+            for (int i = 0; i < 3; i++) {
+                sessionsManager.returnSessionWrapper(sessionList.get(i));
             }
             try {
-                for (int i = 0 ; i < 3; i++) {
-                    sessionsManager.getSession();
+                for (int i = 0; i < 3; i++) {
+                    sessionsManager.getSessionWrapper();
                 }
             } catch (RuntimeException e) {
                 Assert.assertFalse(e.getMessage(), true);
@@ -107,7 +110,7 @@ public class TestSessionsManager {
 
             // Test close
             try {
-                session = sessionsManager.getSession();
+                session = sessionsManager.getSessionWrapper();
                 sessionsManager.close();
                 session.execute("SHOW SPACES");
             } catch (RuntimeException e) {

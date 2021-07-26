@@ -5,10 +5,10 @@
  */
 
 package com.vesoft.nebula.client.graph.net;
+
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidSessionException;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SessionWrapper {
