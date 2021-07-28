@@ -51,7 +51,7 @@ public class ScanResultIterator {
     /**
      * if iter has more vertex data
      *
-     * @return boolean
+     * @return true if the scan cursor is not at end.
      */
     public boolean hasNext() {
         return hasNext;

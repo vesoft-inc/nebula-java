@@ -49,9 +49,12 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
 
     /**
-     * get the next edgeRow set
+     * get the next edge set
      *
-     * @return ScanEdgeResult
+     * <p>in every next function, the client will send new scan request to storage server
+     * parallel, and the parallel num is the space's leader hosts.
+     *
+     * @return {@link ScanEdgeResult}
      */
     public ScanEdgeResult next() throws Exception {
         if (!hasNext()) {
@@ -184,7 +187,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
 
     /**
-     * builder to build {@link ScanEdgeResult}
+     * builder to build {@link ScanEdgeResultIterator}
      */
     public static class ScanEdgeResultBuilder {
 

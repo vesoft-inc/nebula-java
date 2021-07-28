@@ -53,6 +53,11 @@ public class ScanVertexResult {
         this.isEmpty = isDatasetEmpty();
     }
 
+    /**
+     * get vertex table rows
+     *
+     * @return list of {@link VertexTableRow}
+     */
     public List<VertexTableRow> getVertexTableRows() {
         if (!isEmpty && vertexTableRows.isEmpty()) {
             constructVertexTableRow();
@@ -60,6 +65,11 @@ public class ScanVertexResult {
         return vertexTableRows;
     }
 
+    /**
+     * get the result's property names
+     *
+     * @return list of property name
+     */
     public List<String> getPropNames() {
         if (!isEmpty && propNames.isEmpty()) {
             constructPropNames();
@@ -68,10 +78,10 @@ public class ScanVertexResult {
     }
 
     /**
-     * get vertex with id
+     * get vertex row with id
      *
-     * @param vid ValueWrapper, int type or string type
-     * @return Vertex
+     * @param vid ValueWrapper, int type or string type vid
+     * @return {@link VertexRow}
      */
     public VertexRow getVertex(ValueWrapper vid) {
         if (!isEmpty && vidVertices.isEmpty()) {
@@ -84,9 +94,9 @@ public class ScanVertexResult {
     }
 
     /**
-     * get all vertex
+     * get all vertex row
      *
-     * @return List
+     * @return list of {@link VertexRow}
      */
     public List<VertexRow> getVertices() {
         if (!isEmpty && verticeRows.isEmpty()) {
@@ -96,6 +106,11 @@ public class ScanVertexResult {
     }
 
 
+    /**
+     * get the map of vid and vertex row
+     *
+     * @return map of vid wrapper{@link ValueWrapper} and {@link VertexRow}
+     */
     public Map<ValueWrapper, VertexRow> getVidVertices() {
         if (!isEmpty && vidVertices.isEmpty()) {
             constructVertexRow();
@@ -107,7 +122,7 @@ public class ScanVertexResult {
     /**
      * get the result status
      *
-     * @return boolean
+     * @return true if all parts scan succeed
      */
     public boolean isAllSuccess() {
         return scanStatus == ScanStatus.ALL_SUCCESS;
@@ -116,7 +131,7 @@ public class ScanVertexResult {
     /**
      * whether result data is empty
      *
-     * @return boolean
+     * @return true if result data is empty
      */
     public boolean isEmpty() {
         return isEmpty;

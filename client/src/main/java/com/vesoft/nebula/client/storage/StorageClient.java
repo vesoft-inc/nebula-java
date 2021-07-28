@@ -36,15 +36,21 @@ public class StorageClient {
     private int timeout = 10000; // ms
 
     /**
+     * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
+     * one server host.
+     *
      * @param ip   the ip of metad server
-     * @param port the port of meted server
+     * @param port the port of metad server
      */
     public StorageClient(String ip, int port) {
         this(Arrays.asList(new HostAddress(ip, port)));
     }
 
     /**
-     * @param addresses the address of metad server
+     * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with multi
+     * servers' host.
+     *
+     * @param addresses the {@link HostAddress} list of metad servers
      */
     public StorageClient(List<HostAddress> addresses) {
         this.connection = new GraphStorageConnection();
@@ -52,7 +58,10 @@ public class StorageClient {
     }
 
     /**
-     * @param addresses the address of metad server
+     * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
+     * multi servers' hosts and timeout.
+     *
+     * @param addresses the {@link HostAddress} list of metad servers
      * @param timeout   the timeout of scan vertex or edge
      */
     public StorageClient(List<HostAddress> addresses, int timeout) {
@@ -61,6 +70,11 @@ public class StorageClient {
         this.timeout = timeout;
     }
 
+    /**
+     * Connect to Nebula Storage server.
+     *
+     * @return true if connect successfully.
+     */
     public boolean connect() throws Exception {
         connection.open(addresses.get(0), timeout);
         StoragePoolConfig config = new StoragePoolConfig();
@@ -71,7 +85,15 @@ public class StorageClient {
 
 
     /**
-     * scan vertex of all parts with specific return cols
+     * scan vertex of all parts with specific return cols, if returnCols is an empty list, then
+     * return all the columns of specific tagName.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param tagName    Nebula tag name
+     * @param returnCols Nebula tag properties to return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName, String tagName,
                                                List<String> returnCols) {
@@ -79,7 +101,16 @@ public class StorageClient {
     }
 
     /**
-     * scan vertex of specific part with specific return cols
+     * scan vertex of specific part with specific return cols, if returnCols is an empty list,
+     * then return all the columns of specific tagName.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param part       Nebula data partition
+     * @param tagName    Nebula tag name
+     * @param returnCols Nebula tag properties to return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName, int part, String tagName,
                                                List<String> returnCols) {
@@ -87,21 +118,42 @@ public class StorageClient {
     }
 
     /**
-     * scan vertex of all parts with no return cols
+     * scan vertex of all parts with no return cols.
+     *
+     * <p>the result only contains vertex id.
+     *
+     * @param spaceName Nebula space name
+     * @param tagName   Nebula tag name
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName, String tagName) {
         return scanVertex(spaceName, tagName, DEFAULT_LIMIT);
     }
 
     /**
-     * scan vertex of specific part with no return cols
+     * scan vertex of specific part with no return cols.
+     *
+     * <p>the result only contains vertex id.
+     *
+     * @param spaceName Nebula space name
+     * @param part      Nebula data partition
+     * @param tagName   Nebula tag name
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName, int part, String tagName) {
         return scanVertex(spaceName, part, tagName, DEFAULT_LIMIT);
     }
 
     /**
-     * scan vertex of all part with specific return cols and limit
+     * scan vertex of all parts with specific return cols and limit.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param tagName    Nebula tag name
+     * @param returnCols Nebula tag properties to return
+     * @param limit      the data amount of scan in every iterator
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
@@ -111,6 +163,18 @@ public class StorageClient {
                 DEFAULT_END_TIME);
     }
 
+    /**
+     * scan vertex of specific part with specific return cols and limit.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param part       Nebula data partition
+     * @param tagName    Nebula tag name
+     * @param returnCols Nebula tag properties to return
+     * @param limit      the data amount of scan in every iterator
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
                                                String tagName,
@@ -120,22 +184,56 @@ public class StorageClient {
                 DEFAULT_END_TIME);
     }
 
+    /**
+     * scan vertex of all parts with no return cols and limit.
+     *
+     * <p>the result only contains vertex id.
+     *
+     * @param spaceName Nebula space name
+     * @param tagName   Nebula tag name
+     * @param limit     the data amount of scan in every iterator
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
                                                int limit) {
         return scanVertex(spaceName, tagName, limit, DEFAULT_START_TIME, DEFAULT_END_TIME);
     }
 
-
+    /**
+     * scan vertex of specific part with no return cols and limit.
+     *
+     * <p>the result only contains vertex id.
+     *
+     * @param spaceName Nebula space name
+     * @param part      Nebula data partition
+     * @param tagName   Nebula tag name
+     * @param limit     the data amount of scan in every iterator
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
                                                String tagName,
                                                int limit) {
-
         return scanVertex(spaceName, part, tagName,
                 limit, DEFAULT_START_TIME, DEFAULT_END_TIME);
     }
 
+    /**
+     * scan vertex of all parts with specific returnCols, limit, startTime and endTime.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param tagName    Nebula tag name
+     * @param returnCols nebula tag properties to return
+     * @param limit      the data amount of scan operation for each partition in every iterator
+     * @param startTime  the time range's start time of the data to be scanned, if data was insert
+     *                   before start time, then it will not be return.
+     * @param endTime    the time range's end time of the data to be scanned, if data was insert
+     *                   after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
                                                List<String> returnCols,
@@ -146,7 +244,22 @@ public class StorageClient {
                 DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
-
+    /**
+     * scan vertex of specific part with specific returnCols, limit, startTime and endTime.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param part       Nebula data partition
+     * @param tagName    Nebula tag name
+     * @param returnCols Nebula tag properties to return
+     * @param limit      the data amount of scan operation for each partition in every iterator
+     * @param startTime  the time range's start time of the data to be scanned, if data was insert
+     *                   before start time, then it will not be return.
+     * @param endTime    the time range's end time of the data to be scanned, if data was insert
+     *                   after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
                                                String tagName,
@@ -158,7 +271,20 @@ public class StorageClient {
                 DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
-
+    /**
+     * scan vertex of all parts with no returnCols, limit, startTime and endTime.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName Nebula space name
+     * @param tagName   Nebula tag name
+     * @param limit     the data amount of scan operation for each partition in every iterator
+     * @param startTime the time range's start time of the data to be scanned, if data was insert
+     *                  before start time, then it will not be return.
+     * @param endTime   the time range's end time of the data to be scanned, if data was insert
+     *                  after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
                                                int limit,
@@ -168,7 +294,20 @@ public class StorageClient {
                 DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
-
+    /**
+     * scan vertex of specific part with no returnCols, limit, startTime and endTime.
+     *
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName Nebula space name
+     * @param tagName   Nebula tag name
+     * @param limit     the data amount of scan operation for each partition in every iterator
+     * @param startTime the time range's start time of the data to be scanned, if data was insert
+     *                  before start time, then it will not be return.
+     * @param endTime   the time range's end time of the data to be scanned, if data was insert
+     *                  after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
+     */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
                                                String tagName,
@@ -188,17 +327,25 @@ public class StorageClient {
 
 
     /**
-     * scan vertex of all parts with specific return cols
+     * scan vertex of all parts with specific return cols, limit, startTime, endTime， whether
+     * allow partial success, whether allow read from storage follower.
      *
-     * @param spaceName             nebula graph space
-     * @param tagName               nebula tag name
-     * @param returnCols            return cols
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName             Nebula graph space
+     * @param tagName               Nebula tag name
+     * @param returnCols            Nebula tag properties to return
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert
+     *                              before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert
+     *                              after end time, then it will not be return.
      * @param allowPartSuccess      if allow part success
      * @param allowReadFromFollower if allow read from follower
-     * @return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
@@ -227,18 +374,26 @@ public class StorageClient {
 
 
     /**
-     * scan vertex of specific part with specific return cols
+     * scan vertex of specific part with specific return cols, limit, startTime, endTime， whether
+     * allow partial success, whether allow read from storage follower.
      *
-     * @param spaceName             nebula graph space
-     * @param part                  nebula graph part
-     * @param tagName               nebula tag name
-     * @param returnCols            return cols
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
+     * <p>the result contains vertex id and return cols.
+     *
+     * @param spaceName             Nebula graph space
+     * @param part                  Nebula data partition
+     * @param tagName               Nebula tag name
+     * @param returnCols            Nebula tag properties to return
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert
+     *                              before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert
+     *                              after end time, then it will not be return.
      * @param allowPartSuccess      if allow part success
      * @param allowReadFromFollower if allow read from follower
-     * @return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
@@ -264,16 +419,24 @@ public class StorageClient {
 
 
     /**
-     * scan vertex of all parts with no return cols
+     * scan vertex of all parts with no return cols, limit, startTime, endTime， whether
+     * allow partial success, whether allow read from storage follower.
      *
-     * @param spaceName             nebula graph space
-     * @param tagName               nebula tag name
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
+     * <p>the result only contains vertex id.
+     *
+     * @param spaceName             Nebula graph space
+     * @param tagName               Nebula tag name
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert
+     *                              before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert
+     *                              after end time, then it will not be return.
      * @param allowPartSuccess      if allow part success
      * @param allowReadFromFollower if allow read from follower
-     * @return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                String tagName,
@@ -300,17 +463,24 @@ public class StorageClient {
     }
 
     /**
-     * scan vertex of specific part with no return cols
+     * scan vertex of specific part with no return cols, limit, startTime, endTime， whether
+     * allow partial success, whether allow read from storage follower.
      *
-     * @param spaceName             nebula graph space
-     * @param part                  nebula graph space part
-     * @param tagName               nebula tag name
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
+     * <p>the result only contains vertex id.
+     *
+     * @param spaceName             Nebula graph space
+     * @param part                  Nebula data partition
+     * @param tagName               Nebula tag name
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert
+     *                              before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert after end time, then it will not be return.
      * @param allowPartSuccess      if allow part success
      * @param allowReadFromFollower if allow read from follower
-     * @return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanVertexResultIterator scanVertex(String spaceName,
                                                int part,
@@ -333,19 +503,6 @@ public class StorageClient {
                 allowReadFromFollower);
     }
 
-    /**
-     * scan vertex with parts
-     *
-     * @param spaceName  nebula graph space
-     * @param parts      parts to scan
-     * @param tagName    nebula tag name
-     * @param returnCols return cols
-     * @param noColumns  if return no col
-     * @param limit      return data limit
-     * @param startTime  start time
-     * @param endTime    end time
-     * @return
-     */
     private ScanVertexResultIterator scanVertex(String spaceName,
                                                 List<Integer> parts,
                                                 String tagName,
@@ -410,13 +567,13 @@ public class StorageClient {
     /**
      * do scan vertex
      *
-     * @param spaceName        nebula graph space
-     * @param tagName          nebula tag name
-     * @param partScanInfoSet  leaders of all parts
+     * @param spaceName        Nebula space name
+     * @param tagName          Nebula tag name
+     * @param partScanInfoSet  leaders and scan cursors of all data partitions
      * @param request          {@link ScanVertexRequest}
      * @param addrs            storage address list
      * @param allowPartSuccess whether allow part success
-     * @return result iterator
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     private ScanVertexResultIterator doScanVertex(String spaceName,
                                                   String tagName,
@@ -442,7 +599,14 @@ public class StorageClient {
 
 
     /**
-     * scan edge of all parts with specific return cols
+     * scan edge of all parts with return cols.
+     *
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param edgeName   Nebula edge type name
+     * @param returnCols Nebula edge properties to return
+     * @return an iterator to get data by call {@link ScanVertexResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName,
                                            List<String> returnCols) {
@@ -451,7 +615,15 @@ public class StorageClient {
     }
 
     /**
-     * scan edge of specific part with specific return cols
+     * scan edge of specific part with return cols.
+     *
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param part       Nebula data partition
+     * @param edgeName   Nebula edge type name
+     * @param returnCols Nebula edge properties to return
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, int part, String edgeName,
                                            List<String> returnCols) {
@@ -460,21 +632,43 @@ public class StorageClient {
     }
 
     /**
-     * scan edge of all parts with no return cols
+     * scan edge of all parts with no return cols.
+     *
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName Nebula space name
+     * @param edgeName  Nebula edge type name
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName) {
         return scanEdge(spaceName, edgeName, DEFAULT_LIMIT);
     }
 
     /**
-     * scan edge of specific part with no return cols
+     * scan edge of specific part with no return cols.
+     *
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName Nebula space name
+     * @param part      Nebula data partition
+     * @param edgeName  Nebula edge type name
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, int part, String edgeName) {
         return scanEdge(spaceName, part, edgeName, DEFAULT_LIMIT);
     }
 
     /**
-     * scan edge of all part with specific return cols and limit
+     * scan edge of all parts with return cols and limit config.
+     *
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param edgeName   Nebula edge type name
+     * @param returnCols Nebula edge properties to return
+     * @param limit      the data amount of scan operation for each partition in every
+     *                   iterator
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName,
                                            List<String> returnCols, int limit) {
@@ -483,7 +677,16 @@ public class StorageClient {
     }
 
     /**
-     * scan edge of specific part with specific return cols and limit
+     * scan edge of specific part with return cols.
+     *
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param edgeName   Nebula edge type name
+     * @param returnCols Nebula edge properties to return
+     * @param limit      the data amount of scan operation for each partition in every
+     *                   iterator
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, int part, String edgeName,
                                            List<String> returnCols, int limit) {
@@ -492,19 +695,48 @@ public class StorageClient {
     }
 
     /**
-     * scan edge of all part with no cols
+     * scan edge of all parts with no return cols and limit config.
+     *
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName Nebula space name
+     * @param edgeName  Nebula edge type name
+     * @param limit     the data amount of scan operation for each partition in every
+     *                  iterator
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName, int limit) {
         return scanEdge(spaceName, edgeName, limit, DEFAULT_START_TIME, DEFAULT_END_TIME);
     }
 
     /**
-     * scan edge of specific part with no cols
+     * scan edge of specific part with no return cols and limit config.
+     *
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName Nebula space name
+     * @param part      Nebula data partition
+     * @param edgeName  Nebula edge type name
+     * @param limit     the data amount of scan operation for each partition in every
+     *                  iterator
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName, int part, String edgeName, int limit) {
         return scanEdge(spaceName, part, edgeName, limit, DEFAULT_START_TIME, DEFAULT_END_TIME);
     }
 
+    /**
+     * scan edge of all parts with return cols and limit, start time, end time config.
+     *
+     * <p>the result only contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param edgeName   Nebula edge type name
+     * @param returnCols Nebula edge properties to return
+     * @param limit      the data amount of scan operation for each partition in every
+     *                   iterator
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
+     */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            String edgeName,
                                            List<String> returnCols,
@@ -515,6 +747,23 @@ public class StorageClient {
                 DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
+    /**
+     * scan edge of specific part with return cols and limit, start time, end time config.
+     *
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName  Nebula space name
+     * @param part       Nebula data partition
+     * @param edgeName   Nebula edge type name
+     * @param returnCols Nebula edge properties to return
+     * @param limit      the data amount of scan operation for each partition in every
+     *                   iterator
+     * @param startTime  the time range's start time of the data to be scanned, if
+     *                   data was insert before start time, then it will not be return.
+     * @param endTime    the time range's end time of the data to be scanned, if data
+     *                   was insert after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
+     */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            int part,
                                            String edgeName,
@@ -526,7 +775,21 @@ public class StorageClient {
                 DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
-
+    /**
+     * scan edge of all parts with no return cols and limit, start time, end time config.
+     *
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName Nebula space name
+     * @param edgeName  Nebula edge type name
+     * @param limit     the data amount of scan operation for each partition in every
+     *                  iterator
+     * @param startTime the time range's start time of the data to be scanned, if
+     *                  data was insert before start time, then it will not be return.
+     * @param endTime   the time range's end time of the data to be scanned, if data
+     *                  was insert after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
+     */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            String edgeName,
                                            int limit,
@@ -536,6 +799,22 @@ public class StorageClient {
                 DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
+    /**
+     * scan edge of specific part with no return cols and limit, start time, end time config.
+     *
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName Nebula space name
+     * @param part      Nebula data partition
+     * @param edgeName  Nebula edge type name
+     * @param limit     the data amount of scan operation for each partition in every
+     *                  iterator
+     * @param startTime the time range's start time of the data to be scanned, if
+     *                  data was insert before start time, then it will not be return.
+     * @param endTime   the time range's end time of the data to be scanned, if data
+     *                  was insert after end time, then it will not be return.
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
+     */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            int part,
                                            String edgeName,
@@ -548,17 +827,22 @@ public class StorageClient {
 
 
     /**
-     * scan edge of all parts with specific return cols
+     * scan edge of all parts with return cols and limit, start time, end time, if allow partial
+     * success, if allow read data from storage follower config.
      *
-     * @param spaceName             nebula graph space
-     * @param edgeName              nebula edge name
-     * @param returnCols            return cols
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
-     * @param allowPartSuccess      whether allow part success
-     * @param allowReadFromFollower whether allow read data from follower
-     * @return
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName             Nebula space name
+     * @param edgeName              Nebula edge type name
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert after end time, then it will not be return.
+     * @param allowPartSuccess      if allow part success
+     * @param allowReadFromFollower if allow read from follower
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            String edgeName,
@@ -579,18 +863,23 @@ public class StorageClient {
     }
 
     /**
-     * scan edge of specific part with specific return cols
+     * scan edge of specific part with return cols and limit, start time, end time, if allow partial
+     * success, if allow read data from storage follower config.
      *
-     * @param spaceName             nebula graph space
-     * @param part                  nebula graph part
-     * @param edgeName              nebula edge name
-     * @param returnCols            return cols
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
-     * @param allowPartSuccess      whether allow part success
-     * @param allowReadFromFollower whether allow read data from follower
-     * @return
+     * <p>the result contains edge src id, dst id, rank and return cols.
+     *
+     * @param spaceName             Nebula space name
+     * @param part                  Nebula data partition
+     * @param edgeName              Nebula edge type name
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert after end time, then it will not be return.
+     * @param allowPartSuccess      if allow part success
+     * @param allowReadFromFollower if allow read from follower
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            int part,
@@ -607,16 +896,22 @@ public class StorageClient {
 
 
     /**
-     * scan edge of all parts with no return cols
+     * scan edge of all parts with no return cols and limit, start time, end time, if allow partial
+     * success, if allow read data from storage follower config.
      *
-     * @param spaceName             nebula graph space
-     * @param edgeName              nebula edge name
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
-     * @param allowPartSuccess      whether allow part success
-     * @param allowReadFromFollower whether allow read data from follower
-     * @return
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName             Nebula space name
+     * @param edgeName              Nebula edge type name
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert after end time, then it will not be return.
+     * @param allowPartSuccess      if allow part success
+     * @param allowReadFromFollower if allow read from follower
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            String edgeName,
@@ -636,17 +931,23 @@ public class StorageClient {
 
 
     /**
-     * scan edge of specific part with no return cols
+     * scan edge of specific part with no return cols and limit, start time, end time, if allow
+     * partial success, if allow read data from storage follower config.
      *
-     * @param spaceName             nebula graph space
-     * @param part                  part to scan
-     * @param edgeName              nebula edge name
-     * @param limit                 return data limit
-     * @param startTime             start time
-     * @param endTime               end time
+     * <p>the result only contains edge src id, dst id, rank.
+     *
+     * @param spaceName             Nebula space name
+     * @param edgeName              Nebula edge type name
+     * @param part                  Nebula data partition
+     * @param limit                 the data amount of scan operation for each partition in every
+     *                              iterator
+     * @param startTime             the time range's start time of the data to be scanned, if
+     *                              data was insert before start time, then it will not be return.
+     * @param endTime               the time range's end time of the data to be scanned, if data
+     *                              was insert after end time, then it will not be return.
      * @param allowPartSuccess      if allow part success
-     * @param allowReadFromFollower if allow read follower
-     * @return
+     * @param allowReadFromFollower if allow read from follower
+     * @return an iterator to get data by call {@link ScanEdgeResultIterator#next()}
      */
     public ScanEdgeResultIterator scanEdge(String spaceName,
                                            int part,
@@ -727,11 +1028,12 @@ public class StorageClient {
     /**
      * do scan edge
      *
-     * @param spaceName       nebula graph space
-     * @param edgeName        nebula edge name
-     * @param partScanInfoSet leaders of all parts
-     * @param request         {@link ScanVertexRequest}
-     * @param addrs           storage server list
+     * @param spaceName        Nebula graph space
+     * @param edgeName         Nebula edge name
+     * @param partScanInfoSet  leaders and scan cursors of all parts
+     * @param request          {@link ScanVertexRequest}
+     * @param addrs            storage server list
+     * @param allowPartSuccess if allow partial success
      * @return result iterator
      */
     private ScanEdgeResultIterator doScanEdge(String spaceName,
@@ -771,24 +1073,31 @@ public class StorageClient {
 
 
     /**
-     * return client's connection
+     * return client's connection session
      *
      * @return StorageConnection
      */
-    public GraphStorageConnection getConnection() {
+    protected GraphStorageConnection getConnection() {
         return this.connection;
     }
 
 
     /**
-     * get space id from space name
+     * get the space id of specific space name
+     *
+     * @param spaceName Nebula space name
+     * @return space id
      */
     private int getSpaceId(String spaceName) {
         return metaManager.getSpaceId(spaceName);
     }
 
     /**
-     * get edge id
+     * get get edge id of specific edge type
+     *
+     * @param spaceName Nebula space name
+     * @param edgeName  Nebula edge type name
+     * @return edge id
      */
     private long getEdgeId(String spaceName, String edgeName) {
         return metaManager.getEdge(spaceName, edgeName).getEdge_type();
