@@ -54,7 +54,10 @@ public class ScanVertexResultIterator extends ScanResultIterator {
     /**
      * get the next vertex set
      *
-     * @return ScanVertexResult
+     * <p>in every next function, the client will send new scan request to storage server
+     * parallel, and the parallel num is the space's leader hosts.
+     *
+     * @return {@link ScanVertexResult}
      */
     public ScanVertexResult next() throws Exception {
         if (!hasNext()) {

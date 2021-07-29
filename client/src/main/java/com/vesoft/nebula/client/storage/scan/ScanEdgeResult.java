@@ -52,6 +52,11 @@ public class ScanEdgeResult {
         this.isEmpty = isDatasetEmpty();
     }
 
+    /**
+     * get edge table rows
+     *
+     * @return list of {@link EdgeTableRow}
+     */
     public List<EdgeTableRow> getEdgeTableRows() {
         if (!isEmpty && edgeTableRows.isEmpty()) {
             constructEdgeTableRow();
@@ -59,6 +64,11 @@ public class ScanEdgeResult {
         return edgeTableRows;
     }
 
+    /**
+     * get the result's property names
+     *
+     * @return list of property name
+     */
     public List<String> getPropNames() {
         if (!isEmpty && propNames.isEmpty()) {
             constructPropNames();
@@ -66,6 +76,12 @@ public class ScanEdgeResult {
         return propNames;
     }
 
+
+    /**
+     * get edge rows
+     *
+     * @return list of {@link EdgeRow}
+     */
     public List<EdgeRow> getEdges() {
         if (!isEmpty && edgeRows.isEmpty()) {
             constructEdgeRow();
@@ -76,7 +92,7 @@ public class ScanEdgeResult {
     /**
      * get the result status
      *
-     * @return boolean
+     * @return true if all parts scan succeed
      */
     public boolean isAllSuccess() {
         return scanStatus == ScanStatus.ALL_SUCCESS;
@@ -85,7 +101,7 @@ public class ScanEdgeResult {
     /**
      * whether result data is empty
      *
-     * @return boolean
+     * @return true if result data is empty
      */
     public boolean isEmpty() {
         return isEmpty;
