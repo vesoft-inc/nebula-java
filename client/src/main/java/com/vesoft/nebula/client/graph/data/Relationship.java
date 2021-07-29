@@ -8,6 +8,8 @@ package com.vesoft.nebula.client.graph.data;
 
 import com.vesoft.nebula.Edge;
 import com.vesoft.nebula.Value;
+import com.vesoft.nebula.client.graph.exception.InvalidValueException;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,10 @@ import java.util.Set;
 public class Relationship extends BaseDataObject {
     private final Edge edge;
 
+    /**
+     * Relationship is a wrapper around the Edge type returned by nebula-graph
+     * @param edge the Edge type returned by nebula-graph
+     */
     public Relationship(Edge edge) {
         if (edge == null) {
             throw new RuntimeException("Input an null edge object");
@@ -62,6 +68,11 @@ public class Relationship extends BaseDataObject {
         return edge.ranking;
     }
 
+    /**
+     * get all property name from the relationship
+     * @return the List of String
+     * @throws UnsupportedEncodingException
+     */
     public List<String> keys() throws UnsupportedEncodingException {
         List<String> propNames = new ArrayList<>();
         for (byte[] name : edge.props.keySet()) {

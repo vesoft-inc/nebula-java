@@ -12,6 +12,10 @@ import java.util.Objects;
 public class TimeWrapper extends BaseDataObject {
     private final Time time;
 
+    /**
+     *  TimeWrapper is a wrapper for the time tyoe of nebula-graph
+     * @param time the utc time
+     */
     public TimeWrapper(Time time) {
         this.time = time;
     }

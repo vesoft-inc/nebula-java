@@ -13,6 +13,11 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 public class TimeUtil {
+    /**
+     * @param dateTime the utc datetime
+     * @param timezoneOffset the timezone offset, unit is seconds
+     * @return the datetime with the timezoneoffset
+     */
     public static DateTime datetimeConvertWithTimezone(DateTime dateTime, int timezoneOffset) {
         LocalDateTime localDateTime = LocalDateTime.of(dateTime.getYear(),
             dateTime.getMonth(),
@@ -33,6 +38,11 @@ public class TimeUtil {
             localOffsetDateTime.getNano() / 1000);
     }
 
+    /**
+     * @param time the utc time
+     * @param timezoneOffset the timezone offset, unit is seconds
+     * @return the time with the timezone offset
+     */
     public static Time timeConvertWithTimezone(Time time, int timezoneOffset) {
         DateTime dateTime = new DateTime(
             (short) 0,(byte)1, (byte)1,

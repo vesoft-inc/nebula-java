@@ -28,20 +28,38 @@ public class PathWrapper extends BaseDataObject {
         Relationship relationShip;
         Node endNode;
 
+        /**
+         * The segment is used to represent an edge in a path.
+         * It contains information about the starting point and the ending point,
+         * as well as information about the edge,
+         * and its direction is used to indicate that the starting point points to the ending point
+         * @param startNode the start node
+         * @param relationShip the edge
+         * @param endNode the end node
+         */
         public Segment(Node startNode, Relationship relationShip, Node endNode) {
             this.startNode = startNode;
             this.relationShip = relationShip;
             this.endNode = endNode;
         }
 
+        /**
+         * @return the start node of the segment
+         */
         public Node getStartNode() {
             return startNode;
         }
 
+        /**
+         * @return the relationship of the segment
+         */
         public Relationship getRelationShip() {
             return relationShip;
         }
 
+        /**
+         * @return the en node
+         */
         public Node getEndNode() {
             return endNode;
         }
@@ -147,6 +165,12 @@ public class PathWrapper extends BaseDataObject {
         return segments.size();
     }
 
+    /**
+     * PathWrapper is a wrapper around the Path type returned by nebula-graph
+     * @param path the Path type returned by nebula-graph
+     * @throws InvalidValueException
+     * @throws UnsupportedEncodingException
+     */
     public PathWrapper(Path path) throws InvalidValueException, UnsupportedEncodingException {
         if (path == null) {
             this.nodes = new ArrayList<>();

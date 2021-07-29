@@ -92,82 +92,162 @@ public class ValueWrapper {
         }
     }
 
+    /**
+     * @param value the Value get from service
+     * @param decodeType the decodeType get from the service to decode the byte array,
+     *                   but now the service no return the decodeType, so use the utf-8
+     */
     public ValueWrapper(Value value, String decodeType) {
         this.value = value;
         this.decodeType = decodeType;
         this.timezoneOffset = 0;
     }
 
+    /**
+     * @param value the Value get from service
+     * @param decodeType the decodeType get from the service to decode the byte array,
+     *                   but now the service no return the decodeType, so use the utf-8
+     * @param timezoneOffset the timezone offset get from the service to calculate local time
+     */
     public ValueWrapper(Value value, String decodeType, int timezoneOffset) {
         this.value = value;
         this.decodeType = decodeType;
         this.timezoneOffset = timezoneOffset;
     }
 
+    /**
+     * get the original data structure, the Value is the return from nebula-graph
+     * @return Value
+     */
     public Value getValue() {
         return value;
     }
 
+    /**
+     * judge the Value is Empty type, the Empty type is the nebula's type
+     * @return boolean
+     */
     public boolean isEmpty() {
         return value.getSetField() == 0;
     }
 
+    /**
+     * judge the Value is Null type,the Null type is the nebula's type
+     * @return boolean
+     */
     public boolean isNull() {
         return value.getSetField() == Value.NVAL;
     }
 
+    /**
+     * judge the Value is Boolean type
+     * @return boolean
+     */
     public boolean isBoolean() {
         return value.getSetField() == Value.BVAL;
     }
 
+    /**
+     * judge the Value is Long type
+     * @return boolean
+     */
     public boolean isLong() {
         return value.getSetField() == Value.IVAL;
     }
 
+    /**
+     * judge the Value is Double type
+     * @return boolean
+     */
     public boolean isDouble() {
         return value.getSetField() == Value.FVAL;
     }
 
+    /**
+     * judge the Value is String type
+     * @return boolean
+     */
     public boolean isString() {
         return value.getSetField() == Value.SVAL;
     }
 
+    /**
+     * judge the Value is List type, the List type is the nebula's type
+     * @return boolean
+     */
     public boolean isList() {
         return value.getSetField() == Value.LVAL;
     }
 
+    /**
+     * judge the Value is Set type, the Set type is the nebula's type
+     * @return boolean
+     */
     public boolean isSet() {
         return value.getSetField() == Value.UVAL;
     }
 
+    /**
+     * judge the Value is Map type, the Map type is the nebula's type
+     * @return boolean
+     */
     public boolean isMap() {
         return value.getSetField() == Value.MVAL;
     }
 
+    /**
+     * judge the Value is Time type, the Time type is the nebula's type
+     * @return boolean
+     */
     public boolean isTime() {
         return value.getSetField() == Value.TVAL;
     }
 
+    /**
+     * judge the Value is Date type, the Date type is the nebula's type
+     * @return boolean
+     */
     public boolean isDate() {
         return value.getSetField() == Value.DVAL;
     }
 
+    /**
+     * judge the Value is DateTime type, the DateTime type is the nebula's type
+     * @return boolean
+     */
     public boolean isDateTime() {
         return value.getSetField() == Value.DTVAL;
     }
 
+    /**
+     * judge the Value is Vertex type, the Vertex type is the nebula's type
+     * @return boolean
+     */
     public boolean isVertex() {
         return value.getSetField() == Value.VVAL;
     }
 
+    /**
+     * judge the Value is Edge type, the Edge type is the nebula's type
+     * @return boolean
+     */
     public boolean isEdge() {
         return value.getSetField() == Value.EVAL;
     }
 
+    /**
+     * judge the Value is Path type, the Path type is the nebula's type
+     * @return boolean
+     */
     public boolean isPath() {
         return value.getSetField() == Value.PVAL;
     }
 
+    /**
+     * Convert the original data type Value to NullType
+     * @return NullType
+     * @throws InvalidValueException
+     */
     public NullType asNull() throws InvalidValueException {
         if (value.getSetField() == Value.NVAL) {
             return new NullType(((com.vesoft.nebula.NullType)value.getFieldValue()).getValue());
@@ -177,6 +257,11 @@ public class ValueWrapper {
         }
     }
 
+    /**
+     * Convert the original data type Value to boolean
+     * @return boolean
+     * @throws InvalidValueException
+     */
     public boolean asBoolean() throws InvalidValueException {
         if (value.getSetField() == Value.BVAL) {
             return (boolean)(value.getFieldValue());
@@ -185,6 +270,11 @@ public class ValueWrapper {
             "Cannot get field boolean because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to long
+     * @return long
+     * @throws InvalidValueException
+     */
     public long asLong() throws InvalidValueException {
         if (value.getSetField() == Value.IVAL) {
             return (long)(value.getFieldValue());
@@ -194,6 +284,12 @@ public class ValueWrapper {
         }
     }
 
+    /**
+     * Convert the original data type Value to String
+     * @return String
+     * @throws InvalidValueException
+     * @throws UnsupportedEncodingException
+     */
     public String asString() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.SVAL) {
             return new String((byte[])value.getFieldValue(), decodeType);
@@ -202,6 +298,11 @@ public class ValueWrapper {
                 "Cannot get field string because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to double
+     * @return double
+     * @throws InvalidValueException
+     */
     public double asDouble() throws InvalidValueException {
         if (value.getSetField() == Value.FVAL) {
             return (double)value.getFieldValue();
@@ -210,6 +311,11 @@ public class ValueWrapper {
                 "Cannot get field double because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to ArrayList<ValueWrapper>
+     * @return ArrayList<ValueWrapper>
+     * @throws InvalidValueException
+     */
     public ArrayList<ValueWrapper> asList() throws InvalidValueException {
         if (value.getSetField() != Value.LVAL) {
             throw new InvalidValueException(
@@ -222,6 +328,11 @@ public class ValueWrapper {
         return values;
     }
 
+    /**
+     * Convert the original data type Value to HashSet<ValueWrapper>
+     * @return HashSet<ValueWrapper>
+     * @throws InvalidValueException
+     */
     public HashSet<ValueWrapper> asSet() throws InvalidValueException {
         if (value.getSetField() != Value.UVAL) {
             throw new InvalidValueException(
@@ -234,6 +345,11 @@ public class ValueWrapper {
         return values;
     }
 
+    /**
+     * Convert the original data type Value to HashMap<String, ValueWrapper>
+     * @return HashMap<String, ValueWrapper>
+     * @throws InvalidValueException
+     */
     public HashMap<String, ValueWrapper> asMap()
         throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() != Value.MVAL) {
@@ -249,6 +365,11 @@ public class ValueWrapper {
         return kvs;
     }
 
+    /**
+     * Convert the original data type Value to TimeWrapper
+     * @return TimeWrapper
+     * @throws InvalidValueException
+     */
     public TimeWrapper asTime() throws InvalidValueException {
         if (value.getSetField() == Value.TVAL) {
             return (TimeWrapper) new TimeWrapper(value.getTVal())
@@ -259,6 +380,11 @@ public class ValueWrapper {
             "Cannot get field time because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to DateWrapper
+     * @return DateWrapper
+     * @throws InvalidValueException
+     */
     public DateWrapper asDate() throws InvalidValueException {
         if (value.getSetField() == Value.DVAL) {
             return new DateWrapper(value.getDVal());
@@ -267,6 +393,11 @@ public class ValueWrapper {
             "Cannot get field date because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to DateTimeWrapper
+     * @return DateTimeWrapper
+     * @throws InvalidValueException
+     */
     public DateTimeWrapper asDateTime() throws InvalidValueException {
         if (value.getSetField() == Value.DTVAL) {
             return (DateTimeWrapper) new DateTimeWrapper(value.getDtVal())
@@ -277,6 +408,12 @@ public class ValueWrapper {
             "Cannot get field datetime because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to Node
+     * @return Node
+     * @throws InvalidValueException
+     * @throws UnsupportedEncodingException
+     */
     public Node asNode() throws InvalidValueException, UnsupportedEncodingException  {
         if (value.getSetField() == Value.VVAL) {
             return (Node) new Node(value.getVVal())
@@ -287,6 +424,10 @@ public class ValueWrapper {
                 "Cannot get field Node because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to Relationship
+     * @return Relationship
+     */
     public Relationship asRelationship() {
         if (value.getSetField() == Value.EVAL) {
             return (Relationship) new Relationship(value.getEVal())
@@ -297,6 +438,12 @@ public class ValueWrapper {
                 "Cannot get field Relationship because value's type is " + descType());
     }
 
+    /**
+     * Convert the original data type Value to Path
+     * @return Path
+     * @throws InvalidValueException
+     * @throws UnsupportedEncodingException
+     */
     public PathWrapper asPath() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.PVAL) {
             return (PathWrapper) new PathWrapper(value.getPVal())
@@ -325,6 +472,10 @@ public class ValueWrapper {
         return Objects.hash(value, decodeType);
     }
 
+    /**
+     * Convert Value to String format
+     * @return String
+     */
     @Override
     public String toString() {
         try {

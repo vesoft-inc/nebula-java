@@ -31,47 +31,53 @@ public class NebulaPoolConfig {
         return minConnsSize;
     }
 
-    public void setMinConnSize(int minConnSize) {
+    public NebulaPoolConfig setMinConnSize(int minConnSize) {
         this.minConnsSize = minConnSize;
+        return this;
     }
 
     public int getMaxConnSize() {
         return maxConnsSize;
     }
 
-    public void setMaxConnSize(int maxConnSize) {
+    public NebulaPoolConfig setMaxConnSize(int maxConnSize) {
         this.maxConnsSize = maxConnSize;
+        return this;
     }
 
     public int getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(int timeout) {
+    public NebulaPoolConfig setTimeout(int timeout) {
         this.timeout = timeout;
+        return this;
     }
 
     public int getIdleTime() {
         return idleTime;
     }
 
-    public void setIdleTime(int idleTime) {
+    public NebulaPoolConfig setIdleTime(int idleTime) {
         this.idleTime = idleTime;
+        return this;
     }
 
     public int getIntervalIdle() {
         return intervalIdle;
     }
 
-    public void setIntervalIdle(int intervalIdle) {
+    public NebulaPoolConfig setIntervalIdle(int intervalIdle) {
         this.intervalIdle = intervalIdle;
+        return this;
     }
 
     public int getWaitTime() {
         return waitTime;
     }
 
-    public void setWaitTime(int waitTime) {
+    public NebulaPoolConfig setWaitTime(int waitTime) {
         this.waitTime = waitTime;
+        return this;
     }
 }

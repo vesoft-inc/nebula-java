@@ -6,7 +6,6 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-import com.google.common.collect.Lists;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Value;
@@ -20,7 +19,7 @@ import java.util.function.Consumer;
 
 public class ResultSet {
     private final ExecutionResponse response;
-    private List<String> columnNames = new ArrayList<>();
+    private final List<String> columnNames = new ArrayList<>();
     private final String decodeType = "utf-8";
     private final int timezoneOffset;
 
@@ -62,7 +61,6 @@ public class ResultSet {
 
         @Override
         public String toString() {
-            StringBuilder rowStr = new StringBuilder();
             List<String> valueStr = new ArrayList<>();
             for (ValueWrapper v : colValues) {
                 valueStr.add(v.toString());
@@ -101,7 +99,7 @@ public class ResultSet {
 
         /**
          * get all values
-         * @return
+         * @return the list of ValueWrapper
          */
         public List<ValueWrapper> values() {
             return colValues;
@@ -109,7 +107,7 @@ public class ResultSet {
 
         /**
          * get the size of record
-         * @return int
+         * @return int the size of columns
          */
         public int size() {
             return this.columnNames.size();
@@ -218,7 +216,7 @@ public class ResultSet {
 
     /**
      * get keys of the dataset
-     * @return
+     * @return the list of String
      */
     public List<String> keys() {
         return columnNames;
@@ -226,7 +224,7 @@ public class ResultSet {
 
     /**
      * get column names of the dataset
-     * @return
+     * @return the
      */
     public List<String> getColumnNames() {
         return columnNames;
@@ -261,7 +259,7 @@ public class ResultSet {
     /**
      * get col values on the column key
      * @param columnName the column name
-     * @return
+     * @return the list of ValueWrapper
      */
     public List<ValueWrapper> colValues(String columnName) {
         if (response.data == null) {
@@ -282,7 +280,7 @@ public class ResultSet {
 
     /**
      * get all rows, the value is the origin value, the string is binary
-     * @return
+     * @return the list of Row
      */
     public List<Row> getRows() {
         if (response.data == null) {
