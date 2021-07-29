@@ -54,7 +54,8 @@ public class SessionsManager {
             throw new RuntimeException("The SessionsManager does not have available sessions.");
         }
         if (!canUseBitSet.isEmpty()) {
-            for (int index = 0; index < canUseBitSet.size(); index++) {
+            int index = canUseBitSet.nextSetBit(0);
+            if (index >= 0) {
                 if (canUseBitSet.get(index)) {
                     canUseBitSet.set(index, false);
                     return sessionList.get(index);

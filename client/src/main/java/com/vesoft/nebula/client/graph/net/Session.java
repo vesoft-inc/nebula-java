@@ -82,6 +82,7 @@ public class Session {
             SyncConnection newConn = pool.getConnection();
             if (newConn == null) {
                 log.error("Get connection object failed.");
+                return false;
             }
             connection = newConn;
             return true;
