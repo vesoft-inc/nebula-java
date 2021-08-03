@@ -20,7 +20,7 @@ public class Session {
     private SyncConnection connection;
     private final NebulaPool pool;
     private final Boolean retryConnect;
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+    private final AtomicBoolean connectionIsBroken = new AtomicBoolean(false);
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Session(SyncConnection connection,
@@ -40,39 +40,43 @@ public class Session {
      * @param stmt The query sentence.
      * @return The ResultSet.
      */
-    public ResultSet execute(String stmt) throws IOErrorException {
-        if (isRunning.get()) {
-            throw new IOErrorException(
-                IOErrorException.E_MULTI_THREADS_USE_CONNECTION,
-                "Multi threads use the same session, "
-                    + "the previous execution was not completed, current thread is: "
-                    + Thread.currentThread().getName());
-        }
-        isRunning.set(true);
+    public synchronized ResultSet execute(String stmt) throws IOErrorException {
         if (connection == null) {
             throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
-                "Connection is null");
+                "The session was released, couldn't use again.");
         }
+
+        if (connectionIsBroken.get() && retryConnect) {
+            if (retryConnect()) {
+                ExecutionResponse resp = connection.execute(sessionID, stmt);
+                return new ResultSet(resp, timezoneOffset);
+            } else {
+                throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                    "All servers are broken.");
+            }
+        }
+
         try {
             ExecutionResponse resp = connection.execute(sessionID, stmt);
             return new ResultSet(resp, timezoneOffset);
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                connectionIsBroken.set(true);
                 pool.updateServerStatus();
 
                 if (retryConnect) {
                     if (retryConnect()) {
+                        connectionIsBroken.set(false);
                         ExecutionResponse resp = connection.execute(sessionID, stmt);
                         return new ResultSet(resp, timezoneOffset);
                     } else {
+                        connectionIsBroken.set(true);
                         throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
                                 "All servers are broken.");
                     }
                 }
             }
             throw ie;
-        } finally {
-            isRunning.set(false);
         }
     }
 
@@ -87,19 +91,20 @@ public class Session {
             connection = newConn;
             return true;
         } catch (Exception e) {
+            log.error("Reconnected failed: " + e);
             return false;
         }
     }
 
     // Need server supported, v1.0 nebula-graph doesn't supported
-    public boolean ping() {
+    public synchronized boolean ping() {
         if (connection == null) {
             return false;
         }
         return connection.ping();
     }
 
-    public void release() {
+    public synchronized void release() {
         if (connection == null) {
             return;
         }
@@ -112,7 +117,7 @@ public class Session {
         connection = null;
     }
 
-    public HostAddress getGraphHost() {
+    public synchronized HostAddress getGraphHost() {
         if (connection == null) {
             return null;
         }
