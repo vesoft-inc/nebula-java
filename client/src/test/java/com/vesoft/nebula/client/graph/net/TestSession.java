@@ -38,23 +38,18 @@ public class TestSession {
             Session session = pool.getSession("root", "nebula", true);
             ExecutorService executorService = Executors.newFixedThreadPool(10);
             AtomicInteger failedCount = new AtomicInteger(0);
-            AtomicReference<String> exceptionStr = new AtomicReference<>("");
             for (int i = 0; i < 10; i++) {
                 executorService.submit(() -> {
                     try {
                         session.execute("SHOW SPACES;");
                     } catch (Exception e) {
-                        exceptionStr.set(e.getMessage());
                         failedCount.incrementAndGet();
                     }
                 });
             }
             executorService.awaitTermination(10, TimeUnit.SECONDS);
             executorService.shutdown();
-            assert failedCount.get() > 0;
-            Assert.assertTrue(exceptionStr.get().contains(
-                    "Multi threads use the same session, "
-                            + "the previous execution was not completed, current thread is:"));
+            assert failedCount.get() == 0;
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertFalse(e.getMessage(), false);
