@@ -13,12 +13,48 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TestSession {
-    @Test()
+    @Test
+    public void testMultiThreadUseTheSameSession() {
+        System.out.println("<==== testMultiThreadUseTheSameSession ====>");
+        NebulaPool pool = new NebulaPool();
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMaxConnSize(1);
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9670));
+            Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
+            Session session = pool.getSession("root", "nebula", true);
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            AtomicInteger failedCount = new AtomicInteger(0);
+            for (int i = 0; i < 10; i++) {
+                executorService.submit(() -> {
+                    try {
+                        session.execute("SHOW SPACES;");
+                    } catch (Exception e) {
+                        failedCount.incrementAndGet();
+                    }
+                });
+            }
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+            executorService.shutdown();
+            assert failedCount.get() == 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(), false);
+        } finally {
+            pool.close();
+        }
+    }
+
+    @Test
     public void testReconnectWithOneService() {
         System.out.println("testReconnectWithOneService");
         NebulaPool pool = new NebulaPool();

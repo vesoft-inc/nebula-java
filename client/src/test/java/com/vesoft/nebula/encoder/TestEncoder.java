@@ -253,6 +253,45 @@ public class TestEncoder {
                 "Unsupported default value yet".getBytes());
             assert (true);
         }
+
+        // test without string type
+        try {
+            byte[] encodeStr = codec.encodeTag(
+                tagItem4, Arrays.asList("Col01"), Arrays.asList(1024));
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "09070004000000000000";
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
+        }
+
+        // test without empty property
+        try {
+            byte[] encodeStr = codec.encodeTag(tagItem5, new ArrayList<>(), new ArrayList<>());
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "0907";
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
+        }
+
+        // test with chinese value
+        try {
+            byte[] encodeStr = codec.encodeTag(tagItem2,
+                                               Collections.singletonList("Col01"),
+                                               Collections.singletonList("中国"));
+            String hexStr = Hex.encodeHexString(encodeStr);
+            String expectResult = "080900000006000000e4b8ade59bbd";
+            Assert.assertArrayEquals(expectResult.getBytes(),
+                hexStr.substring(0, hexStr.length() - 16).getBytes());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Assert.fail(exception.getMessage());
+        }
     }
 
     @Test()

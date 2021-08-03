@@ -54,6 +54,10 @@ public class SyncConnection extends Connection {
                 TTransportException te = (TTransportException)e;
                 if (te.getType() == TTransportException.END_OF_FILE) {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
+                } else if (te.getType() == TTransportException.TIMED_OUT) {
+                    throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                } else if (te.getType() == TTransportException.NOT_OPEN) {
+                    throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 }
             }
             throw new AuthFailedException(String.format("Authenticate failed: %s", e.getMessage()));

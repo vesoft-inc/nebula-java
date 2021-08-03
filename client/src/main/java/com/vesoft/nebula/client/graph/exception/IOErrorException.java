@@ -16,6 +16,10 @@ public class IOErrorException extends java.lang.Exception {
 
     public static final int E_CONNECT_BROKEN = 2;
 
+    public static final int E_TIME_OUT = 4;
+
+    public static final int E_NO_OPEN = 5;
+
     private int type = E_UNKNOWN;
 
     public IOErrorException(int errorType, String message) {

@@ -6,11 +6,11 @@
 
 package com.vesoft.nebula.client.graph.net;
 
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.graph.ExecutionResponse;
-import java.io.UnsupportedEncodingException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +19,7 @@ public class Session {
     private SyncConnection connection;
     private final NebulaPool pool;
     private final Boolean retryConnect;
+    private final AtomicBoolean connectionIsBroken = new AtomicBoolean(false);
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Session(SyncConnection connection,
@@ -37,7 +38,22 @@ public class Session {
      * @param stmt The query sentence.
      * @return The ResultSet.
      */
-    public ResultSet execute(String stmt) throws IOErrorException, UnsupportedEncodingException {
+    public synchronized ResultSet execute(String stmt) throws IOErrorException {
+        if (connection == null) {
+            throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
+                "The session was released, couldn't use again.");
+        }
+
+        if (connectionIsBroken.get() && retryConnect) {
+            if (retryConnect()) {
+                ExecutionResponse resp = connection.execute(sessionID, stmt);
+                return new ResultSet(resp);
+            } else {
+                throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                    "All servers are broken.");
+            }
+        }
+
         try {
             if (connection == null) {
                 throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
@@ -47,13 +63,16 @@ public class Session {
             return new ResultSet(resp);
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                connectionIsBroken.set(true);
                 pool.updateServerStatus();
 
                 if (retryConnect) {
                     if (retryConnect()) {
+                        connectionIsBroken.set(false);
                         ExecutionResponse resp = connection.execute(sessionID, stmt);
                         return new ResultSet(resp);
                     } else {
+                        connectionIsBroken.set(true);
                         throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
                                 "All servers are broken.");
                     }
@@ -69,23 +88,25 @@ public class Session {
             SyncConnection newConn = pool.getConnection();
             if (newConn == null) {
                 log.error("Get connection object failed.");
+                return false;
             }
             connection = newConn;
             return true;
         } catch (Exception e) {
+            log.error("Reconnected failed: " + e);
             return false;
         }
     }
 
     // Need server supported, v1.0 nebula-graph doesn't supported
-    public boolean ping() {
+    public synchronized boolean ping() {
         if (connection == null) {
             return false;
         }
         return connection.ping();
     }
 
-    public void release() {
+    public synchronized void release() {
         if (connection == null) {
             return;
         }
@@ -95,5 +116,13 @@ public class Session {
         } catch (Exception e) {
             log.warn("Return object to pool failed.");
         }
+        connection = null;
+    }
+
+    public synchronized HostAddress getGraphHost() {
+        if (connection == null) {
+            return null;
+        }
+        return connection.getServerAddress();
     }
 }
