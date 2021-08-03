@@ -168,8 +168,8 @@ public class PathWrapper extends BaseDataObject {
     /**
      * PathWrapper is a wrapper around the Path type returned by nebula-graph
      * @param path the Path type returned by nebula-graph
-     * @throws InvalidValueException
-     * @throws UnsupportedEncodingException
+     * @throws InvalidValueException if the path is illegal
+     * @throws UnsupportedEncodingException if decode binary failed
      */
     public PathWrapper(Path path) throws InvalidValueException, UnsupportedEncodingException {
         if (path == null) {

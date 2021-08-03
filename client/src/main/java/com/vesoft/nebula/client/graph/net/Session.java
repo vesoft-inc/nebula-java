@@ -56,7 +56,8 @@ public class Session {
     /**
      * Execute the nGql sentence.
      *
-     * @param stmt The nGql sentence. such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
+     * @param stmt The nGql sentence.
+     *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
      * @return The ResultSet
      */
     public synchronized ResultSet execute(String stmt) throws IOErrorException {
@@ -112,7 +113,8 @@ public class Session {
     }
 
     /**
-     * Notifies the server that the session is no longer needed and returns the connection to the pool,
+     * Notifies the server that the session is no longer needed
+     * and returns the connection to the pool,
      * and the connection will be reuse.
      * This function is called if the user is no longer using the session.
      */

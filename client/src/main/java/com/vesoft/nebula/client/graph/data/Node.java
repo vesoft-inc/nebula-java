@@ -25,7 +25,7 @@ public class Node extends BaseDataObject {
     /**
      * Node is a wrapper around the Vertex type returned by nebula-graph
      * @param vertex the vertex returned by nebula-graph
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException if decoded binary failed
      */
     public Node(Vertex vertex) throws UnsupportedEncodingException {
         if (vertex == null) {

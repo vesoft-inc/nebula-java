@@ -70,9 +70,10 @@ public class NebulaPool {
     /**
      * @param addresses the graphd services addresses
      * @param config the config for the pool
-     * @return boolean if all graphd services are ok, return true, if some of them broken return false
-     * @throws UnknownHostException
-     * @throws InvalidConfigException
+     * @return boolean if all graph services are ok, return true,
+     *         if some of them broken return false
+     * @throws UnknownHostException if host address is illegal
+     * @throws InvalidConfigException if config is illegal
      */
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
         throws UnknownHostException, InvalidConfigException {
@@ -114,9 +115,9 @@ public class NebulaPool {
      * @param password the password to authenticate with nebula-graph
      * @param reconnect whether to retry after the connection is disconnected
      * @return Session
-     * @throws NotValidConnectionException
-     * @throws IOErrorException
-     * @throws AuthFailedException
+     * @throws NotValidConnectionException if get connection failed
+     * @throws IOErrorException if get unexpected exception
+     * @throws AuthFailedException if authenticate failed
      */
     public Session getSession(String userName, String password, boolean reconnect)
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
@@ -158,7 +159,8 @@ public class NebulaPool {
     }
 
     /**
-     * Update the services' status when the connection is broken, it is called by Session and NebulaPool
+     * Update the services' status when the connection is broken,
+     * it is called by Session and NebulaPool
      */
     protected void updateServerStatus() {
         if (objectPool.getFactory() instanceof ConnObjectPool) {

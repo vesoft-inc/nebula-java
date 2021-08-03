@@ -246,7 +246,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to NullType
      * @return NullType
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not null
      */
     public NullType asNull() throws InvalidValueException {
         if (value.getSetField() == Value.NVAL) {
@@ -260,7 +260,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to boolean
      * @return boolean
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not boolean
      */
     public boolean asBoolean() throws InvalidValueException {
         if (value.getSetField() == Value.BVAL) {
@@ -273,7 +273,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to long
      * @return long
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not long
      */
     public long asLong() throws InvalidValueException {
         if (value.getSetField() == Value.IVAL) {
@@ -287,8 +287,8 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to String
      * @return String
-     * @throws InvalidValueException
-     * @throws UnsupportedEncodingException
+     * @throws InvalidValueException if the value type is not string
+     * @throws UnsupportedEncodingException if decode bianry failed
      */
     public String asString() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.SVAL) {
@@ -301,7 +301,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to double
      * @return double
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not double
      */
     public double asDouble() throws InvalidValueException {
         if (value.getSetField() == Value.FVAL) {
@@ -312,9 +312,9 @@ public class ValueWrapper {
     }
 
     /**
-     * Convert the original data type Value to ArrayList<ValueWrapper>
-     * @return ArrayList<ValueWrapper>
-     * @throws InvalidValueException
+     * Convert the original data type Value to ArrayList
+     * @return ArrayList of ValueWrapper
+     * @throws InvalidValueException if the value type is not list
      */
     public ArrayList<ValueWrapper> asList() throws InvalidValueException {
         if (value.getSetField() != Value.LVAL) {
@@ -329,9 +329,9 @@ public class ValueWrapper {
     }
 
     /**
-     * Convert the original data type Value to HashSet<ValueWrapper>
-     * @return HashSet<ValueWrapper>
-     * @throws InvalidValueException
+     * Convert the original data type Value to HashSet
+     * @return HashSet of ValueWrapper
+     * @throws InvalidValueException if the value type is not set
      */
     public HashSet<ValueWrapper> asSet() throws InvalidValueException {
         if (value.getSetField() != Value.UVAL) {
@@ -346,9 +346,9 @@ public class ValueWrapper {
     }
 
     /**
-     * Convert the original data type Value to HashMap<String, ValueWrapper>
-     * @return HashMap<String, ValueWrapper>
-     * @throws InvalidValueException
+     * Convert the original data type Value to HashMap
+     * @return HashMap, the key is String, value is ValueWrapper
+     * @throws InvalidValueException if the value type is not map
      */
     public HashMap<String, ValueWrapper> asMap()
         throws InvalidValueException, UnsupportedEncodingException {
@@ -368,7 +368,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to TimeWrapper
      * @return TimeWrapper
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not time
      */
     public TimeWrapper asTime() throws InvalidValueException {
         if (value.getSetField() == Value.TVAL) {
@@ -383,7 +383,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to DateWrapper
      * @return DateWrapper
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not date
      */
     public DateWrapper asDate() throws InvalidValueException {
         if (value.getSetField() == Value.DVAL) {
@@ -396,7 +396,7 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to DateTimeWrapper
      * @return DateTimeWrapper
-     * @throws InvalidValueException
+     * @throws InvalidValueException if the value type is not datetime
      */
     public DateTimeWrapper asDateTime() throws InvalidValueException {
         if (value.getSetField() == Value.DTVAL) {
@@ -411,8 +411,8 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to Node
      * @return Node
-     * @throws InvalidValueException
-     * @throws UnsupportedEncodingException
+     * @throws InvalidValueException if the value type is not vertex
+     * @throws UnsupportedEncodingException if decode binary failed
      */
     public Node asNode() throws InvalidValueException, UnsupportedEncodingException  {
         if (value.getSetField() == Value.VVAL) {
@@ -426,9 +426,11 @@ public class ValueWrapper {
 
     /**
      * Convert the original data type Value to Relationship
+     *
      * @return Relationship
+     * @throws InvalidValueException if the value type is not edge
      */
-    public Relationship asRelationship() {
+    public Relationship asRelationship() throws InvalidValueException {
         if (value.getSetField() == Value.EVAL) {
             return (Relationship) new Relationship(value.getEVal())
                 .setDecodeType(decodeType)
@@ -441,8 +443,8 @@ public class ValueWrapper {
     /**
      * Convert the original data type Value to Path
      * @return Path
-     * @throws InvalidValueException
-     * @throws UnsupportedEncodingException
+     * @throws InvalidValueException if the value type is not path
+     * @throws UnsupportedEncodingException if decode bianry failed
      */
     public PathWrapper asPath() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.PVAL) {

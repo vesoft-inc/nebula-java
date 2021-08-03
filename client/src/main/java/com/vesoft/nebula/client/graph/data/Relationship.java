@@ -8,15 +8,12 @@ package com.vesoft.nebula.client.graph.data;
 
 import com.vesoft.nebula.Edge;
 import com.vesoft.nebula.Value;
-import com.vesoft.nebula.client.graph.exception.InvalidValueException;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class Relationship extends BaseDataObject {
     private final Edge edge;
@@ -71,7 +68,7 @@ public class Relationship extends BaseDataObject {
     /**
      * get all property name from the relationship
      * @return the List of String
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException if decode binary failed
      */
     public List<String> keys() throws UnsupportedEncodingException {
         List<String> propNames = new ArrayList<>();
