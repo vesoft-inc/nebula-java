@@ -67,6 +67,14 @@ public class NebulaPool {
         }
     }
 
+    /**
+     * @param addresses the graphd services addresses
+     * @param config the config for the pool
+     * @return boolean if all graph services are ok, return true,
+     *         if some of them broken return false
+     * @throws UnknownHostException if host address is illegal
+     * @throws InvalidConfigException if config is illegal
+     */
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
         throws UnknownHostException, InvalidConfigException {
         checkConfig(config);
@@ -93,11 +101,24 @@ public class NebulaPool {
         return objectPool.init();
     }
 
+    /**
+     * close the pool, all connections will be closed
+     */
     public void close() {
         this.loadBalancer.close();
         this.objectPool.close();
     }
 
+    /**
+     * get a session from the NebulaPool
+     * @param userName the userName to authenticate with nebula-graph
+     * @param password the password to authenticate with nebula-graph
+     * @param reconnect whether to retry after the connection is disconnected
+     * @return Session
+     * @throws NotValidConnectionException if get connection failed
+     * @throws IOErrorException if get unexpected exception
+     * @throws AuthFailedException if authenticate failed
+     */
     public Session getSession(String userName, String password, boolean reconnect)
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
         try {
@@ -113,24 +134,44 @@ public class NebulaPool {
         }
     }
 
+    /**
+     * Get the number of connections was used by users
+     * @return the active connection number
+     */
     public int getActiveConnNum() {
         return objectPool.getNumActive();
     }
 
+    /**
+     * Get the number of free connections in the pool
+     * @return the idle connection number
+     */
     public int getIdleConnNum() {
         return objectPool.getNumIdle();
     }
 
+    /**
+     * Get the number of waits in a waiting get connection
+     * @return the waiting connection number
+     */
     public int getWaitersNum() {
         return objectPool.getNumWaiters();
     }
 
-    public void updateServerStatus() {
+    /**
+     * Update the services' status when the connection is broken,
+     * it is called by Session and NebulaPool
+     */
+    protected void updateServerStatus() {
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();
         }
     }
 
+    /**
+     * Set the connection is invalidate, and the object pool will destroy it
+     * @param connection the invalidate connection
+     */
     protected void setInvalidateConnection(SyncConnection connection) {
         try {
             objectPool.invalidateObject(connection);
@@ -139,6 +180,10 @@ public class NebulaPool {
         }
     }
 
+    /**
+     * Return the connection to object pool
+     * @param connection the return connection
+     */
     protected void returnConnection(SyncConnection connection) {
         objectPool.returnObject(connection);
     }

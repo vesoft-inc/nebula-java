@@ -14,11 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class Relationship extends BaseDataObject {
     private final Edge edge;
 
+    /**
+     * Relationship is a wrapper around the Edge type returned by nebula-graph
+     * @param edge the Edge type returned by nebula-graph
+     */
     public Relationship(Edge edge) {
         if (edge == null) {
             throw new RuntimeException("Input an null edge object");
@@ -62,6 +65,11 @@ public class Relationship extends BaseDataObject {
         return edge.ranking;
     }
 
+    /**
+     * get all property name from the relationship
+     * @return the List of String
+     * @throws UnsupportedEncodingException if decode binary failed
+     */
     public List<String> keys() throws UnsupportedEncodingException {
         List<String> propNames = new ArrayList<>();
         for (byte[] name : edge.props.keySet()) {

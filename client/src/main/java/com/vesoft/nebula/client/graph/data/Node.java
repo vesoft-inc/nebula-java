@@ -22,6 +22,11 @@ public class Node extends BaseDataObject {
 
     List<String> tagNames = new ArrayList<>();
 
+    /**
+     * Node is a wrapper around the Vertex type returned by nebula-graph
+     * @param vertex the vertex returned by nebula-graph
+     * @throws UnsupportedEncodingException if decoded binary failed
+     */
     public Node(Vertex vertex) throws UnsupportedEncodingException {
         if (vertex == null) {
             throw new RuntimeException("Input an null vertex object");
