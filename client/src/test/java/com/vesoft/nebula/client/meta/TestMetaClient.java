@@ -15,6 +15,7 @@ import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +69,7 @@ public class TestMetaClient extends TestCase {
     public void testGetTags() {
         try {
             List<TagItem> tags = metaClient.getTags("testMeta");
-            assert (tags.size() == 1);
+            Assert.assertTrue(tags.size() >= 1);
             assert (metaClient.getTag("testMeta", "person") != null);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
@@ -79,7 +80,7 @@ public class TestMetaClient extends TestCase {
     public void testGetEdges() {
         try {
             List<EdgeItem> edges = metaClient.getEdges("testMeta");
-            assert (edges.size() == 1);
+            Assert.assertTrue(edges.size() >= 1);
             assert (metaClient.getEdge("testMeta", "friend") != null);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
@@ -100,7 +101,7 @@ public class TestMetaClient extends TestCase {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
-        assert (metaClient.listHosts().size() == 3);
+        Assert.assertEquals(3, metaClient.listHosts().size());
     }
 
     public void testListOnlineHosts() {
