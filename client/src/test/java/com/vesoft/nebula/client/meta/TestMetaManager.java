@@ -6,6 +6,7 @@
 
 package com.vesoft.nebula.client.meta;
 
+import com.facebook.thrift.TException;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.meta.EdgeItem;
@@ -98,16 +99,21 @@ public class TestMetaManager extends TestCase {
     }
 
     public void testMultiVersionSchema() {
-        MockNebulaGraph.createMultiVersionTagAndEdge();
-        metaManager.close();
-        metaManager = MetaManager.getMetaManager(
+        try {
+            MockNebulaGraph.createMultiVersionTagAndEdge();
+            metaManager.close();
+            metaManager = MetaManager.getMetaManager(
                 Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
-        TagItem tagItem = metaManager.getTag("testMeta", "player");
-        assert (tagItem.getVersion() == 1);
-        assert (tagItem.schema.getColumns().size() == 1);
+            TagItem tagItem = metaManager.getTag("testMeta", "player");
+            assert (tagItem.getVersion() == 1);
+            assert (tagItem.schema.getColumns().size() == 1);
 
-        EdgeItem edgeItem = metaManager.getEdge("testMeta", "couples");
-        assert (edgeItem.getVersion() == 1);
-        assert (edgeItem.schema.getColumns().size() == 1);
+            EdgeItem edgeItem = metaManager.getEdge("testMeta", "couples");
+            assert (edgeItem.getVersion() == 1);
+            assert (edgeItem.schema.getColumns().size() == 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        }
     }
 }

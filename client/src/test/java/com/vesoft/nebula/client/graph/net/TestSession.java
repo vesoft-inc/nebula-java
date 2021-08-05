@@ -10,8 +10,8 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.graph.ErrorCode;
 import com.vesoft.nebula.client.util.ProcessUtil;
+import com.vesoft.nebula.graph.ErrorCode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -70,14 +70,14 @@ public class TestSession {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                 .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             // the connections in pool are broken, test getSession can get right connection
             session = pool.getSession("root", "nebula", true);
 
             // the connections in pool are broken, test execute can get right connection
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                 .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             session.execute("SHOW SPACES");
             session.release();
         } catch (Exception e) {

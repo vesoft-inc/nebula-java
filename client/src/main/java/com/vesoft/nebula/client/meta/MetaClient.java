@@ -310,7 +310,7 @@ public class MetaClient extends AbstractMetaClient {
         }
         Set<HostAddr> hostAddrs = new HashSet<>();
         for (HostItem hostItem : resp.hosts) {
-            if (hostItem.getStatus().getValue() == HostStatus.ONLINE.getValue()) {
+            if (hostItem.getStatus() == HostStatus.ONLINE) {
                 hostAddrs.add(hostItem.getHostAddr());
             }
         }
