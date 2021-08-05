@@ -379,7 +379,7 @@ public class TestDataFromServer {
         try {
             ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
             Assert.assertTrue(result.toString().contains("ExecutionResponse"));
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
         }

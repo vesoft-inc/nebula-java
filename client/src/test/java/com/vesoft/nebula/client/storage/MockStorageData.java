@@ -50,8 +50,7 @@ public class MockStorageData {
                 assert (false);
             }
         } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException
-                | UnsupportedEncodingException e) {
+                | IOErrorException | AuthFailedException e) {
             e.printStackTrace();
         }
     }

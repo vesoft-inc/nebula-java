@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,7 +55,7 @@ public class TestSession {
 
     @Test
     public void testReconnectWithOneService() {
-        System.out.println("testReconnectWithOneService");
+        System.out.println("<==== testReconnectWithOneService ====>");
         NebulaPool pool = new NebulaPool();
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
@@ -70,14 +69,14 @@ public class TestSession {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                 .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             // the connections in pool are broken, test getSession can get right connection
             session = pool.getSession("root", "nebula", true);
 
             // the connections in pool are broken, test execute can get right connection
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                 .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             session.execute("SHOW SPACES");
             session.release();
         } catch (Exception e) {
@@ -88,11 +87,18 @@ public class TestSession {
         }
     }
 
-    @Test()
+    @Test
     public void testReconnectWithMultiServices() {
+        System.out.println("<==== testReconnectWithMultiServices ====>");
         Runtime runtime = Runtime.getRuntime();
         NebulaPool pool = new NebulaPool();
         try {
+            // make sure the graphd2_1 without any sessions
+            String cmd = "docker restart nebula-docker-compose_graphd2_1";
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            TimeUnit.SECONDS.sleep(10);
+
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(6);
             List<HostAddress> addresses = Arrays.asList(
@@ -126,8 +132,16 @@ public class TestSession {
             }
             session.release();
             // test release then execute ngql
-            ResultSet result = session.execute("SHOW SPACES;");
-            Assert.assertFalse(result.isSucceeded());
+            try {
+                ResultSet result = session.execute("SHOW SPACES;");
+                assert false;
+            } catch (IOErrorException e) {
+                Assert.assertTrue(e.getMessage().contains(
+                    "The session was released, couldn't use again."));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Assert.assertFalse(e.getMessage(),false);
+            }
 
             // get new session from the pool
             Session session1 = pool.getSession("root", "nebula", false);
@@ -144,6 +158,7 @@ public class TestSession {
                         .waitFor(5, TimeUnit.SECONDS);
                 runtime.exec("docker start nebula-docker-compose_graphd1_1")
                         .waitFor(5, TimeUnit.SECONDS);
+                TimeUnit.SECONDS.sleep(5);
             } catch (Exception e) {
                 e.printStackTrace();
             }

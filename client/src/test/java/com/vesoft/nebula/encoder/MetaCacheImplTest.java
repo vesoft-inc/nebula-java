@@ -166,6 +166,10 @@ public class MetaCacheImplTest implements MetaCache {
         return new Schema(columns, null);
     }
 
+    public Schema genWithoutProp() {
+        return new Schema(new ArrayList<>(), null);
+    }
+
     public MetaCacheImplTest() {
         spaceItem.space_id = 1;
         SpaceDesc spaceDesc = new SpaceDesc("test_space".getBytes(),
@@ -203,6 +207,14 @@ public class MetaCacheImplTest implements MetaCache {
         tagItem4.version = 7;
         tagItem4.schema = genWithoutString();
         this.tagItems.put(new String(tagItem4.tag_name), tagItem4);
+
+        TagItem tagItem5 = new TagItem();
+        tagItem5.tag_name = "tag_without_property".getBytes();
+        tagItem5.version = 7;
+        tagItem5.schema = genWithoutProp();
+        this.tagItems.put(new String(tagItem5.tag_name), tagItem5);
+
+        this.tagItems.put("person", createPersonTag());
 
         EdgeItem edgeItem1 = new EdgeItem();
         edgeItem1.edge_name = "edge_no_default".getBytes();

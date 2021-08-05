@@ -18,6 +18,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.PropertyType;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -211,6 +212,7 @@ public class TestEncoder {
         TagItem tagItem2 = cacheImplTest.getTag("test", "tag_with_empty_string");
         TagItem tagItem3 = cacheImplTest.getTag("test", "tag_with_default");
         TagItem tagItem4 = cacheImplTest.getTag("test", "tag_without_string");
+        TagItem tagItem5 = cacheImplTest.getTag("test", "tag_without_property");
         try {
             codec.encodeTag(tagItem1, colNames, colVals);
             Assert.fail();

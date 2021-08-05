@@ -145,6 +145,7 @@ public class PathWrapper {
             this.segments = new ArrayList<>();
             return;
         }
+        this.path = path;
         nodes.add(new Node(path.src));
         List<Value> vids = new ArrayList<>();
         vids.add(path.src.vid);
@@ -197,10 +198,10 @@ public class PathWrapper {
                 List<String> propStrs = new ArrayList<>();
                 Map<String, ValueWrapper> props = relationship.properties();
                 for (String key : props.keySet()) {
-                    propStrs.add(key + ":" + props.get(key).toString());
+                    propStrs.add(key + ": " + props.get(key).toString());
                 }
                 Step step = path.steps.get(i);
-                Node node = (Node) new Node(step.dst);
+                Node node = new Node(step.dst);
                 if (step.type > 0) {
                     edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
                         relationship.edgeName(),
