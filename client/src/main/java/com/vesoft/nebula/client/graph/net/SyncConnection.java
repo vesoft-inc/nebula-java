@@ -25,14 +25,15 @@ public class SyncConnection extends Connection {
     protected TTransport transport = null;
     protected TProtocol protocol = null;
     private GraphService.Client client = null;
+    private int timeout = 0;
 
     @Override
     public void open(HostAddress address, int timeout) throws IOErrorException {
         this.serverAddr = address;
         try {
-            int newTimeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
+            this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.transport = new TSocket(
-                    address.getHost(), address.getPort(), newTimeout, newTimeout);
+                    address.getHost(), address.getPort(), this.timeout, this.timeout);
             this.transport.open();
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
@@ -41,12 +42,24 @@ public class SyncConnection extends Connection {
         }
     }
 
+    @Override
+    public void reopen() throws IOErrorException {
+        close();
+        open(serverAddr, timeout);
+    }
+
     public long authenticate(String user, String password)
             throws AuthFailedException, IOErrorException {
         try {
             AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
-                throw new AuthFailedException(new String(resp.error_msg).intern());
+                if (resp.error_msg != null) {
+                    throw new AuthFailedException(new String(resp.error_msg));
+                } else {
+                    throw new AuthFailedException(
+                        "The error_msg is null, "
+                            + "maybe the service not set or the response is disorder.");
+                }
             }
             return resp.session_id;
         } catch (TException e) {
@@ -54,7 +67,8 @@ public class SyncConnection extends Connection {
                 TTransportException te = (TTransportException)e;
                 if (te.getType() == TTransportException.END_OF_FILE) {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
-                } else if (te.getType() == TTransportException.TIMED_OUT) {
+                } else if (te.getType() == TTransportException.TIMED_OUT
+                    || te.getMessage().contains("Read timed out")) {
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 } else if (te.getType() == TTransportException.NOT_OPEN) {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
@@ -73,6 +87,11 @@ public class SyncConnection extends Connection {
                 TTransportException te = (TTransportException) e;
                 if (te.getType() == TTransportException.END_OF_FILE) {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
+                } else if (te.getType() == TTransportException.NOT_OPEN) {
+                    throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
+                } else if (te.getType() == TTransportException.TIMED_OUT
+                    || te.getMessage().contains("Read timed out")) {
+                    throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }
             }
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
