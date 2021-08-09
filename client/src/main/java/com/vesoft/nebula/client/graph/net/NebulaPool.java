@@ -16,6 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -29,6 +30,8 @@ public class NebulaPool {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     // the wait time to get idle connection, unit ms
     private int waitTime = 0;
+    private AtomicBoolean hasInit = new AtomicBoolean(false);
+    private AtomicBoolean isClosed = new AtomicBoolean(false);
 
     private List<HostAddress> hostToIp(List<HostAddress> addresses)
         throws UnknownHostException {
@@ -77,6 +80,8 @@ public class NebulaPool {
      */
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
         throws UnknownHostException, InvalidConfigException {
+        checkInit();
+        hasInit.set(true);
         checkConfig(config);
         this.waitTime = config.getWaitTime();
         List<HostAddress> newAddrs = hostToIp(addresses);
@@ -105,6 +110,8 @@ public class NebulaPool {
      * close the pool, all connections will be closed
      */
     public void close() {
+        checkClosed();
+        isClosed.set(true);
         this.loadBalancer.close();
         this.objectPool.close();
     }
@@ -121,16 +128,19 @@ public class NebulaPool {
      */
     public Session getSession(String userName, String password, boolean reconnect)
             throws NotValidConnectionException, IOErrorException, AuthFailedException {
+        checkNoInitAndClosed();
+        SyncConnection connection = null;
         try {
-            SyncConnection connection = getConnection();
+            connection = getConnection();
             AuthResult authResult = connection.authenticate(userName, password);
             return new Session(connection, authResult, this, reconnect);
-        } catch (NotValidConnectionException | AuthFailedException | IOErrorException e) {
-            throw e;
-        } catch (IllegalStateException e) {
-            throw new NotValidConnectionException(e.getMessage());
         } catch (Exception e) {
-            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+            // if get the connection succeeded, but authenticate failed,
+            // needs to return connection to pool
+            if (connection != null) {
+                setInvalidateConnection(connection);
+            }
+            throw e;
         }
     }
 
@@ -139,6 +149,7 @@ public class NebulaPool {
      * @return the active connection number
      */
     public int getActiveConnNum() {
+        checkNoInitAndClosed();
         return objectPool.getNumActive();
     }
 
@@ -147,6 +158,7 @@ public class NebulaPool {
      * @return the idle connection number
      */
     public int getIdleConnNum() {
+        checkNoInitAndClosed();
         return objectPool.getNumIdle();
     }
 
@@ -155,6 +167,7 @@ public class NebulaPool {
      * @return the waiting connection number
      */
     public int getWaitersNum() {
+        checkNoInitAndClosed();
         return objectPool.getNumWaiters();
     }
 
@@ -163,6 +176,7 @@ public class NebulaPool {
      * it is called by Session and NebulaPool
      */
     protected void updateServerStatus() {
+        checkNoInitAndClosed();
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();
         }
@@ -173,6 +187,7 @@ public class NebulaPool {
      * @param connection the invalidate connection
      */
     protected void setInvalidateConnection(SyncConnection connection) {
+        checkNoInitAndClosed();
         try {
             objectPool.invalidateObject(connection);
         } catch (Exception e) {
@@ -185,52 +200,42 @@ public class NebulaPool {
      * @param connection the return connection
      */
     protected void returnConnection(SyncConnection connection) {
+        checkNoInitAndClosed();
         objectPool.returnObject(connection);
     }
 
-    protected SyncConnection getConnection() throws NotValidConnectionException, IOErrorException {
-        // If no idle connection, try once
-        int idleConnNum = getIdleConnNum();
-        int retry = idleConnNum == 0 ? 1 : idleConnNum;
-        SyncConnection connection = null;
-        boolean hasOkConn = false;
+    protected SyncConnection getConnection() throws NotValidConnectionException {
+        checkNoInitAndClosed();
         try {
-            while (retry-- > 0) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null) {
-                    continue;
-                }
-                if (!connection.ping()) {
-                    log.info("The connection is broken, set invalidateObject");
-                    setInvalidateConnection(connection);
-                    continue;
-                }
-                hasOkConn = true;
-                break;
-            }
-            // All idle connections are broken, so need to create new one
-            if (!hasOkConn) {
-                connection = objectPool.borrowObject(waitTime);
-                if (connection == null) {
-                    throw new NotValidConnectionException("Get null connection from the pool");
-                }
-                if (!connection.ping()) {
-                    log.info("The connection is broken, set invalidateObject");
-                    setInvalidateConnection(connection);
-                    throw new NotValidConnectionException("The connection ping failed.");
-                }
-                log.info("Create new connection");
-            }
-            log.info(String.format("Get connection to %s:%d",
-                    connection.getServerAddress().getHost(),
-                    connection.getServerAddress().getPort()));
-            return connection;
-        } catch (NotValidConnectionException | IOErrorException e) {
-            throw e;
-        } catch (IllegalStateException e) {
-            throw new NotValidConnectionException(e.getMessage());
+            return objectPool.borrowObject(waitTime);
         } catch (Exception e) {
-            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+            throw new NotValidConnectionException(e.getMessage());
+        }
+    }
+
+    private void checkNoInit() throws RuntimeException {
+        if (!hasInit.get()) {
+            throw new RuntimeException(
+                "The pool has not been initialized, please initialize it first.");
+        }
+    }
+
+    private void checkInit() throws RuntimeException {
+        if (hasInit.get()) {
+            throw new RuntimeException(
+                "The pool has already been initialized. "
+                    + "Please do not initialize the pool repeatedly.");
+        }
+    }
+
+    private void checkNoInitAndClosed() throws RuntimeException {
+        checkNoInit();
+        checkClosed();
+    }
+
+    private void checkClosed() throws RuntimeException {
+        if (isClosed.get()) {
+            throw new RuntimeException("The pool has closed. Couldn't use again.");
         }
     }
 }

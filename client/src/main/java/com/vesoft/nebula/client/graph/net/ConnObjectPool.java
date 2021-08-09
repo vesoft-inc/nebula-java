@@ -64,6 +64,17 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
         return true;
     }
 
+    @Override
+    public void activateObject(PooledObject<SyncConnection> p) throws Exception {
+        if (p.getObject() == null) {
+            throw new RuntimeException("The connection is null.");
+        }
+        if (!p.getObject().ping()) {
+            throw new RuntimeException("The connection is broken.");
+        }
+        super.activateObject(p);
+    }
+
     public boolean init() {
         return loadBalancer.isServersOK();
     }
