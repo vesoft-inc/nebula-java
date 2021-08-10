@@ -21,6 +21,7 @@ public class PathWrapper {
     private List<Segment> segments = new ArrayList<>();
     private List<Node> nodes = new ArrayList<>();
     private List<Relationship> relationships = new ArrayList<>();
+    private Path path = null;
 
     public static class Segment {
         Node startNode;
@@ -144,6 +145,7 @@ public class PathWrapper {
             this.segments = new ArrayList<>();
             return;
         }
+        this.path = path;
         nodes.add(new Node(path.src));
         List<Value> vids = new ArrayList<>();
         vids.add(path.src.vid);
@@ -190,48 +192,28 @@ public class PathWrapper {
     @Override
     public String toString() {
         try {
-            Node startNode = getStartNode();
             List<String> edgeStrs = new ArrayList<>();
-            if (segments.size() >= 1) {
+            for (int i = 0; i < relationships.size(); i++) {
+                Relationship relationship = relationships.get(i);
                 List<String> propStrs = new ArrayList<>();
-                Map<String, ValueWrapper> props = segments.get(0).getRelationShip().properties();
+                Map<String, ValueWrapper> props = relationship.properties();
                 for (String key : props.keySet()) {
-                    propStrs.add(key + ":" + props.get(key).toString());
+                    propStrs.add(key + ": " + props.get(key).toString());
                 }
-                if (segments.get(0).getStartNode() == startNode) {
+                Step step = path.steps.get(i);
+                Node node = new Node(step.dst);
+                if (step.type > 0) {
                     edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
-                        segments.get(0).getRelationShip().edgeName(),
-                        segments.get(0).getRelationShip().ranking(),
+                        relationship.edgeName(),
+                        relationship.ranking(),
                         String.join(", ", propStrs),
-                        segments.get(0).getEndNode().toString()));
+                        node.toString()));
                 } else {
                     edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
-                        segments.get(0).getRelationShip().edgeName(),
-                        segments.get(0).getRelationShip().ranking(),
+                        relationship.edgeName(),
+                        relationship.ranking(),
                         String.join(", ", propStrs),
-                        segments.get(0).getStartNode().toString()));
-                }
-
-            }
-
-            for (int i = 1; i < segments.size(); i++) {
-                List<String> propStrs = new ArrayList<>();
-                Map<String, ValueWrapper> props = segments.get(0).getRelationShip().properties();
-                for (String key : props.keySet()) {
-                    propStrs.add(key + ":" + props.get(key).toString());
-                }
-                if (segments.get(i).getStartNode() == segments.get(i - 1).getStartNode()) {
-                    edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
-                        segments.get(i).getRelationShip().edgeName(),
-                        segments.get(i).getRelationShip().ranking(),
-                        String.join(", ", propStrs),
-                        segments.get(i).getEndNode().toString()));
-                } else {
-                    edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
-                        segments.get(i).getRelationShip().edgeName(),
-                        segments.get(i).getRelationShip().ranking(),
-                        String.join(", ", propStrs),
-                        segments.get(i).getStartNode().toString()));
+                        node.toString()));
                 }
             }
             return String.format("%s%s",

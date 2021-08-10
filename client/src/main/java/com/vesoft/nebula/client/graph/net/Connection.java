@@ -12,6 +12,8 @@ public abstract class Connection {
 
     public abstract void open(HostAddress address, int timeout) throws IOErrorException;
 
+    protected abstract void reopen() throws IOErrorException;
+
     public abstract void close();
 
     public abstract boolean ping();

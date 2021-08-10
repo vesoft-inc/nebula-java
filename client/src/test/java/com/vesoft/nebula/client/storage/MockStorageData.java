@@ -50,14 +50,14 @@ public class MockStorageData {
                 assert (false);
             }
         } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException
-                | UnsupportedEncodingException e) {
+                | IOErrorException | AuthFailedException e) {
             e.printStackTrace();
         }
     }
 
     public static String createSpace() {
-        String exec = "CREATE SPACE IF NOT EXISTS testStorage(partition_num=10);"
+        String exec = "CREATE SPACE IF NOT EXISTS testStorage(partition_num=10,"
+                + "vid_type=fixed_string(8));"
                 + "USE testStorage;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int);"
                 + "CREATE EDGE IF NOT EXISTS friend(likeness double);";

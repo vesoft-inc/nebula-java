@@ -25,7 +25,7 @@ public class RowWriterImpl implements RowWriter {
     private long approxStrLen = 0;
     private ByteBuffer buf;
     private final List<Boolean> isSet;
-    private final List<String> strList = new ArrayList<>();
+    private final List<byte[]> strList = new ArrayList<>();
     private ByteOrder byteOrder;
     static int[] andBits = {0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE};
     static int[] orBits = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
@@ -82,7 +82,7 @@ public class RowWriterImpl implements RowWriter {
         if (numNullables > 0) {
             numNullBytes = ((numNullables - 1) >> 3) + 1;
         }
-        buf = ByteBuffer.allocate(headerLen + numNullBytes + schema.size());
+        buf = ByteBuffer.allocate(headerLen + numNullBytes + schema.size() + Long.BYTES);
         buf.order(this.byteOrder);
         buf.put(header);
         if (ver > 0) {
@@ -480,7 +480,7 @@ public class RowWriterImpl implements RowWriter {
         int offset = headerLen + numNullBytes + field.offset();
         switch (field.type()) {
             case PropertyType.STRING: {
-                strList.add(new String(v));
+                strList.add(v);
                 outOfSpaceStr = true;
                 approxStrLen += v.length;
                 break;
@@ -767,9 +767,9 @@ public class RowWriterImpl implements RowWriter {
 
         // Reserve enough space to avoid memory re-allocation
         // Copy the data except the strings
-        temp = temp.put(buf.array());
+        temp = temp.put(buf.array(), 0, buf.array().length - Long.BYTES);
 
-        int strOffset = buf.array().length;
+        int strOffset = buf.array().length - Long.BYTES;
 
         // Now let's process all strings
         int strNum = 0;
@@ -789,11 +789,11 @@ public class RowWriterImpl implements RowWriter {
                 if (strNum >= strList.size()) {
                     throw new RuntimeException("Wrong strNum: " + strNum);
                 }
-                temp.put(strList.get(strNum).getBytes());
+                temp.put(strList.get(strNum));
 
                 // Set the new offset and length
                 temp.putInt(offset, strOffset);
-                int len = strList.get(strNum).length();
+                int len = strList.get(strNum).length;
                 temp.putInt(offset + Integer.BYTES, len);
                 strOffset += len;
             }
@@ -812,7 +812,7 @@ public class RowWriterImpl implements RowWriter {
             buf = processOutOfSpace();
         }
         // Save the timestamp to the tail of buf
-        buf.putLong(getTimestamp());
+        buf.putLong(buf.array().length - Long.BYTES, getTimestamp());
     }
 
     private long getTimestamp() {

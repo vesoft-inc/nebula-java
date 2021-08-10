@@ -8,11 +8,14 @@ package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +69,7 @@ public class TestMetaClient extends TestCase {
     public void testGetTags() {
         try {
             List<TagItem> tags = metaClient.getTags("testMeta");
-            assert (tags.size() == 1);
+            Assert.assertTrue(tags.size() >= 1);
             assert (metaClient.getTag("testMeta", "person") != null);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
@@ -77,7 +80,7 @@ public class TestMetaClient extends TestCase {
     public void testGetEdges() {
         try {
             List<EdgeItem> edges = metaClient.getEdges("testMeta");
-            assert (edges.size() == 1);
+            Assert.assertTrue(edges.size() >= 1);
             assert (metaClient.getEdge("testMeta", "friend") != null);
         } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
@@ -98,6 +101,34 @@ public class TestMetaClient extends TestCase {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
-        assert (metaClient.listHosts().size() == 3);
+        Assert.assertEquals(3, metaClient.listHosts().size());
+    }
+
+    public void testListOnlineHosts() {
+        // stop one storage server
+        String cmd = "docker stop nebula-docker-compose_storaged0_1";
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+            Thread.sleep(5000); // wait to update the storaged's status to OFFLINE
+        } catch (Exception e) {
+            LOGGER.error("stop docker service error, ", e);
+            assert (false);
+        }
+        if (metaClient == null) {
+            metaClient = new MetaClient(address, port);
+        }
+        assert (metaClient.listHosts().size() == 2);
+
+        try {
+            runtime.exec("docker start nebula-docker-compose_storaged0_1")
+                    .waitFor(5, TimeUnit.SECONDS);
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            LOGGER.error("start docker service error,", e);
+            assert (false);
+        }
     }
 }

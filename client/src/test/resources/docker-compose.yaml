@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   metad0:
-    image: vesoft/nebula-metad:v2-nightly
+    image: vesoft/nebula-metad:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -15,6 +15,7 @@ services:
       - --v=0
       - --minloglevel=0
       - --heartbeat_interval_secs=2
+      - --expired_time_factor=2
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.28.1.1:11000/status"]
       interval: 30s
@@ -36,7 +37,7 @@ services:
       - SYS_PTRACE
 
   metad1:
-    image: vesoft/nebula-metad:v2-nightly
+    image: vesoft/nebula-metad:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -50,6 +51,7 @@ services:
       - --v=0
       - --minloglevel=0
       - --heartbeat_interval_secs=2
+      - --expired_time_factor=2
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.28.1.2:11000/status"]
       interval: 30s
@@ -71,7 +73,7 @@ services:
       - SYS_PTRACE
 
   metad2:
-    image: vesoft/nebula-metad:v2-nightly
+    image: vesoft/nebula-metad:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -85,6 +87,7 @@ services:
       - --v=0
       - --minloglevel=0
       - --heartbeat_interval_secs=2
+      - --expired_time_factor=2
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.28.1.3:11000/status"]
       interval: 30s
@@ -106,7 +109,7 @@ services:
       - SYS_PTRACE
 
   storaged0:
-    image: vesoft/nebula-storaged:v2-nightly
+    image: vesoft/nebula-storaged:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -145,7 +148,7 @@ services:
       - SYS_PTRACE
 
   storaged1:
-    image: vesoft/nebula-storaged:v2-nightly
+    image: vesoft/nebula-storaged:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -184,7 +187,7 @@ services:
       - SYS_PTRACE
 
   storaged2:
-    image: vesoft/nebula-storaged:v2-nightly
+    image: vesoft/nebula-storaged:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -223,7 +226,7 @@ services:
       - SYS_PTRACE
 
   graphd0:
-    image: vesoft/nebula-graphd:v2-nightly
+    image: vesoft/nebula-graphd:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -259,7 +262,7 @@ services:
       - SYS_PTRACE
 
   graphd1:
-    image: vesoft/nebula-graphd:v2-nightly
+    image: vesoft/nebula-graphd:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -295,7 +298,7 @@ services:
       - SYS_PTRACE
 
   graphd2:
-    image: vesoft/nebula-graphd:v2-nightly
+    image: vesoft/nebula-graphd:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"

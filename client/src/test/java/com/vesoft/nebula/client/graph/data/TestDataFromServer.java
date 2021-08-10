@@ -45,10 +45,11 @@ public class TestDataFromServer {
     public void setUp() throws Exception {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(1);
-        Assert.assertTrue(pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9671)),
+        Assert.assertTrue(pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
                 nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
-        ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data; "
+        ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data"
+                + "(vid_type=fixed_string(8)); "
                 + "USE test_data;"
                 + "CREATE TAG IF NOT EXISTS person(name string, age int8, grade int16, "
                 + "friends int32, book_num int64, birthday datetime, "
@@ -329,6 +330,57 @@ public class TestDataFromServer {
             Assert.assertEquals("Jerry", path.getEndNode().getId().asString());
             Assert.assertEquals(2, path.length());
         } catch (IOErrorException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void tesDataset() {
+        try {
+            ResultSet result = session.execute(
+                "CREATE TAG IF NOT EXISTS player(name string, age int);"
+                    + "CREATE EDGE IF NOT EXISTS like(likeness int);");
+            Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
+            TimeUnit.SECONDS.sleep(6);
+            result = session.execute(
+                "INSERT VERTEX player(name, age) values \"a\":(\"a\", 1); "
+                    + "INSERT VERTEX player(name, age) values \"b\":(\"b\", 2); "
+                    + "INSERT VERTEX player(name, age) values \"c\":(\"c\", 3); "
+                    + "INSERT VERTEX player(name, age) values \"d\":(\"d\", 4);"
+                    + "INSERT VERTEX player(name, age) values \"f\":(\"f\", 5);"
+                    + "INSERT VERTEX player(name, age) values \"g\":(\"g\", 6);"
+                    + "INSERT EDGE like(likeness) values \"d\" -> \"a\":(10); "
+                    + "INSERT EDGE like(likeness) values \"d\" -> \"c\":(10);"
+                    + "INSERT EDGE like(likeness) values \"b\" -> \"a\":(10); "
+                    + "INSERT EDGE like(likeness) values \"c\" -> \"b\":(10);"
+                    + "INSERT EDGE like(likeness) values \"a\" -> \"f\":(10); "
+                    + "INSERT EDGE like(likeness) values \"c\" -> \"f\":(10);"
+                    + "INSERT EDGE like(likeness) values \"a\" -> \"g\":(10); "
+                    + "INSERT EDGE like(likeness) values \"g\" -> \"c\":(10);");
+            Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
+            result = session.execute(
+                "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS");
+            Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
+            Assert.assertEquals(4, result.rowsSize());
+            String expectString = "ColumnName: [path], "
+                + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
+                + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
+                + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
+                + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
+            Assert.assertEquals(expectString, result.toString());
+        } catch (IOErrorException | InterruptedException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testErrorResult() {
+        try {
+            ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
+            Assert.assertTrue(result.toString().contains("ExecutionResponse"));
+        } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
         }

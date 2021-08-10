@@ -23,6 +23,7 @@ import com.vesoft.nebula.meta.GetSpaceResp;
 import com.vesoft.nebula.meta.GetTagReq;
 import com.vesoft.nebula.meta.GetTagResp;
 import com.vesoft.nebula.meta.HostItem;
+import com.vesoft.nebula.meta.HostStatus;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.ListEdgesReq;
 import com.vesoft.nebula.meta.ListEdgesResp;
@@ -309,7 +310,9 @@ public class MetaClient extends AbstractMetaClient {
         }
         Set<HostAddr> hostAddrs = new HashSet<>();
         for (HostItem hostItem : resp.hosts) {
-            hostAddrs.add(hostItem.getHostAddr());
+            if (hostItem.getStatus() == HostStatus.ONLINE) {
+                hostAddrs.add(hostItem.getHostAddr());
+            }
         }
         return hostAddrs;
     }

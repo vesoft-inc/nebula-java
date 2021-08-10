@@ -9,15 +9,16 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.graph.ErrorCode;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestConnectionPool {
@@ -120,13 +121,14 @@ public class TestConnectionPool {
 
     @Test()
     public void testGetSession() {
+        NebulaPool pool = null;
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMinConnSize(2);
             nebulaPoolConfig.setMaxConnSize(4);
             List<HostAddress> addresses = Collections.singletonList(
                     new HostAddress("127.0.0.1", 9671));
-            NebulaPool pool = new NebulaPool();
+            pool = new NebulaPool();
             assert pool.init(addresses, nebulaPoolConfig);
             int i = 0;
             List<Session> sessions = new ArrayList<>();
@@ -167,6 +169,10 @@ public class TestConnectionPool {
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
+        } finally {
+            if (pool != null) {
+                pool.close();
+            }
         }
     }
 
@@ -180,7 +186,7 @@ public class TestConnectionPool {
             NebulaPool pool = new NebulaPool();
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             pool.close();
-            Session s = pool.getSession("root", "nebula", false);
+            pool.getSession("root", "nebula", false);
             assert (false);
         } catch (NotValidConnectionException e) {
             System.out.println("We expect must reach here: get session failed.");
@@ -188,6 +194,63 @@ public class TestConnectionPool {
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
+        }
+    }
+
+    @Ignore("The test data no exists nba.")
+    @Test()
+    public void testExecuteTimeout() {
+        System.out.println("====== testExecuteTimeout ======");
+        NebulaPool pool = null;
+        Session session = null;
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMaxConnSize(1);
+            nebulaPoolConfig.setTimeout(1000);
+            List<HostAddress> addresses = Collections.singletonList(
+                new HostAddress("127.0.0.1", 9669));
+            pool = new NebulaPool();
+            assert pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", false);
+            assert (session != null);
+            try {
+                session.execute(
+                    "USE nba;GO 500 STEPS FROM \"Tim Duncan\" OVER like");
+                assert false;
+            } catch (IOErrorException e) {
+                Assert.assertTrue(e.getMessage().contains("Read timed out"));
+                assert true;
+            }
+
+            try {
+                ResultSet resultSet = session.execute("SHOW SPACES");
+                Assert.assertTrue(resultSet.isSucceeded());
+                Assert.assertTrue(resultSet.toString().contains("ColumnName: [Name]"));
+                assert true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert false;
+            }
+            session.release();
+            try {
+                session = pool.getSession("root", "nebula", false);
+                ResultSet resultSet = session.execute("SHOW HOSTS");
+                Assert.assertTrue(resultSet.isSucceeded());
+                Assert.assertTrue(resultSet.toString().contains("ColumnName:"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (session != null) {
+                session.release();
+            }
+            if (pool != null) {
+                pool.close();
+            }
         }
     }
 }
