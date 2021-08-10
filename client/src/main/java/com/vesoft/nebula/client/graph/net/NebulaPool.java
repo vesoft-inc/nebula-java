@@ -27,7 +27,7 @@ public class NebulaPool {
     private LoadBalancer loadBalancer;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     // the wait time to get idle connection, unit ms
-    private final int waitTime = 60 * 1000;
+    private final int waitTime = 0;
 
     private List<HostAddress> hostToIp(List<HostAddress> addresses)
         throws UnknownHostException {

@@ -12,7 +12,7 @@ public abstract class Connection {
 
     public abstract void open(HostAddress address, int timeout) throws IOErrorException;
 
-    public abstract void reopen() throws IOErrorException;
+    protected abstract void reopen() throws IOErrorException;
 
     public abstract void close();
 
