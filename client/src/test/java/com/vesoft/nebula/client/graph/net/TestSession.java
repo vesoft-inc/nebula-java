@@ -74,14 +74,14 @@ public class TestSession {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                     .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             // the connections in pool are broken, test getSession can get right connection
             session = pool.getSession("root", "nebula", true);
 
             // the connections in pool are broken, test execute can get right connection
             runtime.exec("docker restart nebula-docker-compose_graphd0_1")
                     .waitFor(5, TimeUnit.SECONDS);
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(10);
             session.execute("SHOW SPACES");
             session.release();
         } catch (Exception e) {

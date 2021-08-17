@@ -122,11 +122,11 @@ public class Session {
         if (connection == null) {
             return;
         }
-        connection.signout(sessionID);
         try {
+            connection.signout(sessionID);
             pool.returnConnection(connection);
         } catch (Exception e) {
-            log.warn("Return object to pool failed.");
+            log.warn("Release session or return object to pool failed:" + e.getMessage());
         }
         connection = null;
     }
