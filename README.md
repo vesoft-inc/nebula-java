@@ -67,7 +67,7 @@ There are the version correspondence between client and Nebula:
 
 ## Graph client example
 
-To connect to the `nebula-graphd` process of Nebula Graph v2.0:
+To connect to the `nebula-graphd` process of Nebula Graph v2.5:
 
 ```java
 NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
