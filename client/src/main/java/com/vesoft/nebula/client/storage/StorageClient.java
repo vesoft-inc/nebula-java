@@ -1060,7 +1060,7 @@ public class StorageClient {
 
 
     /**
-     * release storage client
+     * release storage client and meta client
      */
     public void close() {
         if (pool != null) {
@@ -1068,6 +1068,9 @@ public class StorageClient {
         }
         if (connection != null) {
             connection.close();
+        }
+        if (metaManager != null) {
+            metaManager.close();
         }
     }
 
