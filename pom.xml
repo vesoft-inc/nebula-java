@@ -46,6 +46,7 @@
     <modules>
         <module>client</module>
         <module>examples</module>
+        <module>graph-orm</module>
     </modules>
 
     <profiles>
