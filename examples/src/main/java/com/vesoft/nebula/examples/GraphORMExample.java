@@ -3,6 +3,7 @@
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
  */
+
 package com.vesoft.nebula.examples;
 
 import com.google.common.collect.Lists;
@@ -20,15 +21,10 @@ import com.vesoft.nebula.enums.GraphKeyPolicy;
 import com.vesoft.nebula.enums.GraphPropertyTypeEnum;
 import com.vesoft.nebula.mapper.NebulaGraphMapper;
 import com.vesoft.nebula.session.NebulaPoolSessionManager;
-import org.apache.commons.lang3.StringUtils;
-
 import java.net.UnknownHostException;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
-/**
- * @Author ZhaoLai Huang
- * created by ZhaoLai Huang on 2021/9/16
- */
 public class GraphORMExample {
 
     private static int nebulaPoolMaxConnSize = 1000;
@@ -56,14 +52,16 @@ public class GraphORMExample {
         return nebulaPoolConfig;
     }
 
-    public static NebulaPool nebulaPool(NebulaPoolConfig nebulaPoolConfig) throws UnknownHostException {
+    public static NebulaPool nebulaPool(NebulaPoolConfig nebulaPoolConfig)
+            throws UnknownHostException {
         List<HostAddress> addresses = null;
         try {
             String[] hostPorts = StringUtils.split(nebulaCluster, ",");
             addresses = Lists.newArrayListWithExpectedSize(hostPorts.length);
             for (String hostPort : hostPorts) {
                 String[] linkElements = StringUtils.split(hostPort, ":");
-                HostAddress hostAddress = new HostAddress(linkElements[0], Integer.valueOf(linkElements[1]));
+                HostAddress hostAddress = new HostAddress(linkElements[0],
+                        Integer.valueOf(linkElements[1]));
                 addresses.add(hostAddress);
             }
         } catch (Exception e) {
@@ -78,12 +76,14 @@ public class GraphORMExample {
         return new NebulaPoolSessionManager(nebulaPool, userName, password, true);
     }
 
-    public static NebulaGraphMapper nebulaGraphMapper(NebulaPoolSessionManager nebulaPoolSessionManager) {
+    public static NebulaGraphMapper nebulaGraphMapper(
+            NebulaPoolSessionManager nebulaPoolSessionManager) {
         return new NebulaGraphMapper(nebulaPoolSessionManager, space);
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(nebulaPool(nebulaPoolConfig())));
+        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
+                nebulaPool(nebulaPoolConfig())));
         User user = new User("UR123", "张三");
         //保存顶点
         int i = nebulaGraphMapper.saveVertexEntities(Lists.newArrayList(user));
@@ -98,13 +98,15 @@ public class GraphORMExample {
         //查询反向边
         List<Follow> fans = nebulaGraphMapper.goReverseEdge(Follow.class, "UR123");
         //查询API
-        VertexQuery query = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123").yield("userName");
+        VertexQuery query = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
+                .yield("userName");
         QueryResult rows = nebulaGraphMapper.executeQuery(query);
     }
 
     @GraphVertex(value = "user", keyPolicy = GraphKeyPolicy.string_key)
     public static class User {
-        @GraphProperty(value = "user_no", required = true, propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID)
+        @GraphProperty(value = "user_no", required = true,
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID)
         private String userNo;
         @GraphProperty(value = "user_name", required = true)
         private String userName;
@@ -120,9 +122,11 @@ public class GraphORMExample {
 
     @GraphEdge(value = "user", srcVertex = User.class, dstVertex = User.class)
     public static class Follow {
-        @GraphProperty(value = "user_no1", required = true, propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
+        @GraphProperty(value = "user_no1", required = true,
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
         private String userNo1;
-        @GraphProperty(value = "user_no2", required = true, propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID)
+        @GraphProperty(value = "user_no2", required = true,
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID)
         private String userNo2;
         @GraphProperty(value = "follow_type", required = true, dataType = GraphDataTypeEnum.INT)
         private Integer followType;
