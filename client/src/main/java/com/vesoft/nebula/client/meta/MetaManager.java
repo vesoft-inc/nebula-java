@@ -27,8 +27,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * MetaManager is a manager for meta info, such as spaces,tags and edges.
- * How to use:
- * MetaManager manager = MetaManager.getMetaManager(Arrays.asList(HostAddress(host, port)));
  */
 public class MetaManager implements MetaCache {
     private class SpaceInfo {
@@ -45,43 +43,22 @@ public class MetaManager implements MetaCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaManager.class);
 
-    private static MetaClient metaClient;
-    private static MetaManager metaManager;
+    private MetaClient metaClient;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private MetaManager() {
-    }
 
     /**
      * init the meta info cache
-     * make sure this method is called before use metaManager
      */
-    private void init(List<HostAddress> address) throws TException {
+    public MetaManager(List<HostAddress> address) throws TException {
         metaClient = new MetaClient(address);
         metaClient.connect();
         fillMetaInfo();
     }
 
     /**
-     * only way to get a MetaManager object
-     */
-    public static MetaManager getMetaManager(List<HostAddress> address) throws TException {
-        if (metaManager == null) {
-            synchronized (MetaManager.class) {
-                if (metaManager == null) {
-                    metaManager = new MetaManager();
-                    metaManager.init(address);
-                }
-            }
-        }
-        return metaManager;
-    }
-
-    /**
      * close meta client
      */
     public void close() {
-        metaManager = null;
         metaClient.close();
     }
 
