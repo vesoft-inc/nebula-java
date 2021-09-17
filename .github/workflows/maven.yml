@@ -45,4 +45,6 @@ jobs:
         popd
 
     - name: Build with Maven
-      run: mvn -B package
+      run: |
+        mvn -B package
+        bash <(curl -s https://codecov.io/bash)
