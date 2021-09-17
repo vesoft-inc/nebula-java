@@ -67,6 +67,9 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
+            if (result.isEmpty()) {
+                continue;
+            }
             Assert.assertEquals(1, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.isAllSuccess());
@@ -117,6 +120,9 @@ public class StorageClientTest {
             } catch (Exception e) {
                 e.printStackTrace();
                 assert (false);
+            }
+            if (result.isEmpty()) {
+                continue;
             }
             Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
@@ -179,6 +185,9 @@ public class StorageClientTest {
                 e.printStackTrace();
                 assert (false);
             }
+            if (result.isEmpty()) {
+                continue;
+            }
             Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (Arrays.asList("name", "age").contains(result.getPropNames().get(1)));
@@ -205,6 +214,9 @@ public class StorageClientTest {
             } catch (Exception e) {
                 e.printStackTrace();
                 assert (false);
+            }
+            if (result.isEmpty()) {
+                continue;
             }
             Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_src"));
@@ -264,6 +276,9 @@ public class StorageClientTest {
             } catch (Exception e) {
                 e.printStackTrace();
                 assert (false);
+            }
+            if (result.isEmpty()) {
+                continue;
             }
             Assert.assertEquals(4, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_src"));
@@ -329,6 +344,9 @@ public class StorageClientTest {
             } catch (Exception e) {
                 e.printStackTrace();
                 assert (false);
+            }
+            if (result.isEmpty()) {
+                continue;
             }
             Assert.assertEquals(4, result.getPropNames().size());
             assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
