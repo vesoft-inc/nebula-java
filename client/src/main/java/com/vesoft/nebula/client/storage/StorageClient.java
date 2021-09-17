@@ -79,7 +79,7 @@ public class StorageClient {
         connection.open(addresses.get(0), timeout);
         StoragePoolConfig config = new StoragePoolConfig();
         pool = new StorageConnPool(config);
-        metaManager = MetaManager.getMetaManager(addresses);
+        metaManager = new MetaManager(addresses);
         return true;
     }
 
@@ -1068,6 +1068,9 @@ public class StorageClient {
         }
         if (connection != null) {
             connection.close();
+        }
+        if (metaManager != null) {
+            metaManager.close();
         }
     }
 
