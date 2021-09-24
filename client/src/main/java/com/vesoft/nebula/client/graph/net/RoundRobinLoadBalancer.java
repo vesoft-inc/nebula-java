@@ -3,9 +3,9 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private static final int S_OK = 0;
     private static final int S_BAD = 1;
     private final List<HostAddress> addresses = new ArrayList<>();
-    private final Map<HostAddress, Integer> serversStatus = new HashMap<>();
+    private final Map<HostAddress, Integer> serversStatus = new ConcurrentHashMap<>();
     private final int timeout;
     private final AtomicInteger pos = new AtomicInteger(0);
     private final int delayTime = 60;  // unit seconds
