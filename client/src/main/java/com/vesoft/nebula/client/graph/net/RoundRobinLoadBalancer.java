@@ -64,8 +64,9 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         try {
             Connection connection = new SyncConnection();
             connection.open(addr, this.timeout);
+            boolean pong = connection.ping();
             connection.close();
-            return true;
+            return pong;
         } catch (IOErrorException e) {
             return false;
         }
