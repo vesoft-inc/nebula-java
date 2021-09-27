@@ -22,7 +22,7 @@ public class TestMetaManager extends TestCase {
 
     public void setUp() throws Exception {
         MockNebulaGraph.initGraph();
-        metaManager = MetaManager.getMetaManager(
+        metaManager = new MetaManager(
                 Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
     }
 
@@ -100,7 +100,7 @@ public class TestMetaManager extends TestCase {
     public void testMultiVersionSchema() {
         MockNebulaGraph.createMultiVersionTagAndEdge();
         metaManager.close();
-        metaManager = MetaManager.getMetaManager(
+        metaManager = new MetaManager(
                 Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
         TagItem tagItem = metaManager.getTag("testMeta", "player");
         assert (tagItem.getVersion() == 1);
