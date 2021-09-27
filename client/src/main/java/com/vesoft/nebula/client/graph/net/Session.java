@@ -146,8 +146,8 @@ public class Session {
      *                   },
      *                   "comment ":"",
      *                   "errors":{
-     *                     "errorCode":0,
-     *                     "errorMsg":""
+     *                     "code":0,
+     *                     "message":""
      *                   }
      *                 }
      *               ]

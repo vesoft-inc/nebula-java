@@ -438,16 +438,16 @@ public class TestDataFromServer {
         try {
             String ngql = "MATCH (v:invalidTag {name: \"Bob\"}) RETURN v";
             JSONObject resp = JSON.parseObject(session.executeJson(ngql));
-            String errCode = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
-                    .getString("errorCode");
-            String errMsg = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
-                    .getString("errorMsg");
+            int code = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
+                    .getInteger("code");
+            String message = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
+                    .getString("message");
 
-            // check errorcode
-            Assert.assertEquals(errCode, "E_SEMANTIC_ERROR");
+            // check error code
+            Assert.assertEquals(code, -1009);
 
             // check error message
-            Assert.assertEquals(errMsg, "SemanticError: `invalidTag': Unknown tag");
+            Assert.assertEquals(message, "SemanticError: `invalidTag': Unknown tag");
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
