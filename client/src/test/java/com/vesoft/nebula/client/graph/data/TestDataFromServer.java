@@ -398,14 +398,14 @@ public class TestDataFromServer {
         try {
             String ngql = "YIELD 1, 2.2, \"hello\", [1,2,\"abc\"], {key: \"value\"}, \"汉字\"";
             JSONObject resp = JSON.parseObject(session.executeJson(ngql));
-            String rowData = resp.getJSONArray("result").getJSONObject(0).getJSONArray("data")
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
                     .getJSONObject(0).getJSONArray("row").toJSONString();
-            String spaceName = resp.getJSONArray("result").getJSONObject(0).getString("spaceName");
+            String exp = "[1,2.2,\"hello\",[1,2,\"abc\"],{\"key\":\"value\"},\"汉字\"]";
 
-            String exp = "[1, 2.2, \"hello\", [1,2,\"abc\"], {\"key\": \"value\"}, \"汉字\"]";
             // check row data
             Assert.assertEquals(rowData, exp);
             // check space name
+            String spaceName = resp.getJSONArray("results").getJSONObject(0).getString("spaceName");
             Assert.assertEquals(spaceName, "test_data");
         } catch (IOErrorException e) {
             e.printStackTrace();
@@ -418,15 +418,14 @@ public class TestDataFromServer {
         try {
             JSONObject resp = JSON.parseObject(session.executeJson("MATCH (v:person {name: "
                     + "\"Bob\"}) RETURN v"));
-            String rowData = resp.getJSONArray("result").getJSONObject(0).getJSONArray("data")
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
                     .getJSONObject(0).getJSONArray("row").toJSONString();
-            Assert.assertEquals(rowData, "[{\"person.age\":10,\"person"
-                    + ".birthday\":\"2010-09-10T02:08:02.0Z\",\"person.book_num\":100,\"person"
-                    + ".child_name\":\"Hello Worl\",\"person.expend\":100,\"person"
-                    + ".first_out_city\":1111,\"person.friends\":10,\"person.grade\":3,\"person"
-                    + ".hobby\":null,\"person.is_girl\":false,\"person.morning\":\"23:10:00"
-                    + ".000000Z\",\"person.name\":\"Bob\",\"person.property\":1000,\"person"
-                    + ".start_school\":\"2017-09-10\",\"student.name\":\"Bob\"}]");
+            Assert.assertEquals(rowData, "[{\"person.first_out_city\":1111,\"person"
+                + ".book_num\":100,\"person.age\":10,\"person.expend\":100,\"person.is_girl\":"
+                + "false,\"person.name\":\"Bob\",\"person.grade\":3,\"person.birthday\":\"2010"
+                + "-09-10T02:08:02.0Z\",\"student.name\":\"Bob\",\"person.child_name\":\"Hello"
+                + " Worl\",\"person.property\":1000,\"person.morning\":\"23:10:00.000000Z\",\""
+                + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
@@ -439,9 +438,9 @@ public class TestDataFromServer {
         try {
             String ngql = "MATCH (v:invalidTag {name: \"Bob\"}) RETURN v";
             JSONObject resp = JSON.parseObject(session.executeJson(ngql));
-            String errCode = resp.getJSONArray("result").getJSONObject(0).getJSONObject("errors")
+            String errCode = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
                     .getString("errorCode");
-            String errMsg = resp.getJSONArray("result").getJSONObject(0).getJSONObject("errors")
+            String errMsg = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
                     .getString("errorMsg");
 
             // check errorcode

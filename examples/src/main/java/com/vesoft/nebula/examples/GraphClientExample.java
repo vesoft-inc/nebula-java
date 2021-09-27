@@ -146,7 +146,8 @@ public class GraphClientExample {
             {
                 String queryForJson = "YIELD 1";
                 String resp = session.executeJson(queryForJson);
-                JSONObject errors = JSON.parseObject(resp).getJSONArray("result").getJSONObject(0).getJSONObject("errors");
+                JSONObject errors = JSON.parseObject(resp).getJSONArray("result").getJSONObject(0)
+                        .getJSONObject("errors");
                 if (!errors.getString("errorCode").equals("0")) {
                     log.error(String.format("Execute: `%s', failed: %s",
                             queryForJson, errors.getString("errorMsg")));
