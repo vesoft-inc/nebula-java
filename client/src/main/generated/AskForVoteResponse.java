@@ -4,8 +4,6 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,59 +22,55 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetStatisReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("GetStatisReq");
-  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
+public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneable, Comparable<AskForVoteResponse> {
+  private static final TStruct STRUCT_DESC = new TStruct("AskForVoteResponse");
+  private static final TField ERROR_CODE_FIELD_DESC = new TField("error_code", TType.I32, (short)1);
 
-  public int space_id;
-  public static final int SPACE_ID = 1;
+  /**
+   * 
+   * @see ErrorCode
+   */
+  public ErrorCode error_code;
+  public static final int ERROR_CODE = 1;
 
   // isset id assignments
-  private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(GetStatisReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(AskForVoteResponse.class, metaDataMap);
   }
 
-  public GetStatisReq() {
+  public AskForVoteResponse() {
   }
 
-  public GetStatisReq(
-      int space_id) {
+  public AskForVoteResponse(
+      ErrorCode error_code) {
     this();
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+    this.error_code = error_code;
   }
 
   public static class Builder {
-    private int space_id;
-
-    BitSet __optional_isset = new BitSet(1);
+    private ErrorCode error_code;
 
     public Builder() {
     }
 
-    public Builder setSpace_id(final int space_id) {
-      this.space_id = space_id;
-      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+    public Builder setError_code(final ErrorCode error_code) {
+      this.error_code = error_code;
       return this;
     }
 
-    public GetStatisReq build() {
-      GetStatisReq result = new GetStatisReq();
-      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
-        result.setSpace_id(this.space_id);
-      }
+    public AskForVoteResponse build() {
+      AskForVoteResponse result = new AskForVoteResponse();
+      result.setError_code(this.error_code);
       return result;
     }
   }
@@ -88,46 +82,55 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public GetStatisReq(GetStatisReq other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.space_id = TBaseHelper.deepCopy(other.space_id);
+  public AskForVoteResponse(AskForVoteResponse other) {
+    if (other.isSetError_code()) {
+      this.error_code = TBaseHelper.deepCopy(other.error_code);
+    }
   }
 
-  public GetStatisReq deepCopy() {
-    return new GetStatisReq(this);
+  public AskForVoteResponse deepCopy() {
+    return new AskForVoteResponse(this);
   }
 
-  public int getSpace_id() {
-    return this.space_id;
+  /**
+   * 
+   * @see ErrorCode
+   */
+  public ErrorCode getError_code() {
+    return this.error_code;
   }
 
-  public GetStatisReq setSpace_id(int space_id) {
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+  /**
+   * 
+   * @see ErrorCode
+   */
+  public AskForVoteResponse setError_code(ErrorCode error_code) {
+    this.error_code = error_code;
     return this;
   }
 
-  public void unsetSpace_id() {
-    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
+  public void unsetError_code() {
+    this.error_code = null;
   }
 
-  // Returns true if field space_id is set (has been assigned a value) and false otherwise
-  public boolean isSetSpace_id() {
-    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
+  // Returns true if field error_code is set (has been assigned a value) and false otherwise
+  public boolean isSetError_code() {
+    return this.error_code != null;
   }
 
-  public void setSpace_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
+  public void setError_codeIsSet(boolean __value) {
+    if (!__value) {
+      this.error_code = null;
+    }
   }
 
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case SPACE_ID:
+    case ERROR_CODE:
       if (__value == null) {
-        unsetSpace_id();
+        unsetError_code();
       } else {
-        setSpace_id((Integer)__value);
+        setError_code((ErrorCode)__value);
       }
       break;
 
@@ -138,8 +141,8 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case SPACE_ID:
-      return new Integer(getSpace_id());
+    case ERROR_CODE:
+      return getError_code();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -152,22 +155,22 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof GetStatisReq))
+    if (!(_that instanceof AskForVoteResponse))
       return false;
-    GetStatisReq that = (GetStatisReq)_that;
+    AskForVoteResponse that = (AskForVoteResponse)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetError_code(), that.isSetError_code(), this.error_code, that.error_code)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id});
+    return Arrays.deepHashCode(new Object[] {error_code});
   }
 
   @Override
-  public int compareTo(GetStatisReq other) {
+  public int compareTo(AskForVoteResponse other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -178,11 +181,11 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    lastComparison = Boolean.valueOf(isSetError_code()).compareTo(other.isSetError_code());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    lastComparison = TBaseHelper.compareTo(error_code, other.error_code);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -200,10 +203,9 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (__field.id)
       {
-        case SPACE_ID:
+        case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.space_id = iprot.readI32();
-            setSpace_idIsSet(true);
+            this.error_code = ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -225,9 +227,11 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
-    oprot.writeI32(this.space_id);
-    oprot.writeFieldEnd();
+    if (this.error_code != null) {
+      oprot.writeFieldBegin(ERROR_CODE_FIELD_DESC);
+      oprot.writeI32(this.error_code == null ? 0 : this.error_code.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -242,17 +246,29 @@ public class GetStatisReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("GetStatisReq");
+    StringBuilder sb = new StringBuilder("AskForVoteResponse");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("space_id");
+    sb.append("error_code");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
+    if (this.getError_code() == null) {
+      sb.append("null");
+    } else {
+      String error_code_name = this.getError_code() == null ? "null" : this.getError_code().name();
+      if (error_code_name != null) {
+        sb.append(error_code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getError_code());
+      if (error_code_name != null) {
+        sb.append(")");
+      }
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

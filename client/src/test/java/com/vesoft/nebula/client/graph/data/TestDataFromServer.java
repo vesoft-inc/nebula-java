@@ -6,6 +6,9 @@
 
 package com.vesoft.nebula.client.graph.data;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
@@ -23,6 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import jdk.nashorn.internal.parser.JSONParser;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -385,6 +390,57 @@ public class TestDataFromServer {
         try {
             ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
             Assert.assertTrue(result.toString().contains("ExecutionResponse"));
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testBasicTypeForJson() {
+        try {
+            JSONObject resp = JSON.parseObject(session.executeJson("'YIELD 1, 2.2, \"hello\", [1,2,\"abc\"], {key: \"value\"}, \"汉字\"'"));
+            String rowData = resp.getJSONArray("result").getJSONObject(0).getJSONArray("data").getJSONObject(0).getJSONArray("row").toJSONString();
+            String spaceName = resp.getJSONArray("result").getJSONObject(0).getString("spaceName");
+
+            // check row data
+            Assert.assertEquals(rowData, "[1, 2.2, \"hello\", [1,2,\"abc\"], {\"key\": \"value\"}, \"汉字\"]");
+            // check space name
+            Assert.assertEquals(spaceName, "test_data");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testComplexTypeForJson() {
+        try {
+            JSONObject resp = JSON.parseObject(session.executeJson("MATCH (v:person {name: \"Bob\"}) RETURN v"));
+            String rowData = resp.getJSONArray("result").getJSONObject(0).getJSONArray("data").getJSONObject(0).getJSONArray("row").toJSONString();
+            Assert.assertEquals(rowData, "[{\"person.age\":10,\"person.birthday\":\"2010-09-10T02:08:02.0Z\",\"person.book_num\":100,\"person.child_name\":" +
+                    "\"Hello Worl\",\"person.expend\":100,\"person.first_out_city\":1111,\"person.friends\":10,\"person.grade\":3,\"person.hobby\":null,\"" +
+                    "person.is_girl\":false,\"person.morning\":\"23:10:00.000000Z\",\"person.name\":\"Bob\",\"person.property\":1000,\"person.start_school\"" +
+                    ":\"2017-09-10\",\"student.name\":\"Bob\"}]");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+
+    @Test
+    public void testErrorForJson() {
+        try {
+            JSONObject resp = JSON.parseObject(session.executeJson("MATCH (v:invalidTag {name: \"Bob\"}) RETURN v"));
+            String errCode = resp.getJSONArray("result").getJSONObject(0).getJSONObject("errors").getString("errorCode");
+            String errMsg = resp.getJSONArray("result").getJSONObject(0).getJSONObject("errors").getString("errorMsg");
+
+            // check errorcode
+            Assert.assertEquals(errCode, "E_SEMANTIC_ERROR");
+
+            // check error message
+            Assert.assertEquals(errMsg, "SemanticError: `invalidTag': Unknown tag");
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;

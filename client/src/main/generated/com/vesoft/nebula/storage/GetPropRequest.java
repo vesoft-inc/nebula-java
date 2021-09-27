@@ -35,6 +35,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TField ORDER_BY_FIELD_DESC = new TField("order_by", TType.LIST, (short)7);
   private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)8);
   private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)9);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)10);
 
   public int space_id;
   public Map<Integer,List<com.vesoft.nebula.Row>> parts;
@@ -45,6 +46,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   public List<OrderBy> order_by;
   public long limit;
   public byte[] filter;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int VERTEX_PROPS = 3;
@@ -54,6 +56,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
   public static final int ORDER_BY = 7;
   public static final int LIMIT = 8;
   public static final int FILTER = 9;
+  public static final int COMMON = 10;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -90,6 +93,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(FILTER, new FieldMetaData("filter", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -123,7 +128,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       boolean dedup,
       List<OrderBy> order_by,
       long limit,
-      byte[] filter) {
+      byte[] filter,
+      RequestCommon common) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -137,6 +143,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     this.limit = limit;
     setLimitIsSet(true);
     this.filter = filter;
+    this.common = common;
   }
 
   public static class Builder {
@@ -149,6 +156,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     private List<OrderBy> order_by;
     private long limit;
     private byte[] filter;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(3);
 
@@ -203,6 +211,11 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public GetPropRequest build() {
       GetPropRequest result = new GetPropRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -220,6 +233,7 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         result.setLimit(this.limit);
       }
       result.setFilter(this.filter);
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -254,6 +268,9 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     this.limit = TBaseHelper.deepCopy(other.limit);
     if (other.isSetFilter()) {
       this.filter = TBaseHelper.deepCopy(other.filter);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
@@ -474,6 +491,30 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public GetPropRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -549,6 +590,14 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -583,6 +632,9 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
     case FILTER:
       return getFilter();
 
+    case COMMON:
+      return getCommon();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -616,12 +668,14 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsSlow(this.isSetFilter(), that.isSetFilter(), this.filter, that.filter)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, vertex_props, edge_props, expressions, dedup, order_by, limit, filter});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, vertex_props, edge_props, expressions, dedup, order_by, limit, filter, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -646,30 +700,30 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map49 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map49.size));
-              for (int _i50 = 0; 
-                   (_map49.size < 0) ? iprot.peekMap() : (_i50 < _map49.size); 
-                   ++_i50)
+              TMap _map54 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map54.size));
+              for (int _i55 = 0; 
+                   (_map54.size < 0) ? iprot.peekMap() : (_i55 < _map54.size); 
+                   ++_i55)
               {
-                int _key51;
-                List<com.vesoft.nebula.Row> _val52;
-                _key51 = iprot.readI32();
+                int _key56;
+                List<com.vesoft.nebula.Row> _val57;
+                _key56 = iprot.readI32();
                 {
-                  TList _list53 = iprot.readListBegin();
-                  _val52 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list53.size));
-                  for (int _i54 = 0; 
-                       (_list53.size < 0) ? iprot.peekList() : (_i54 < _list53.size); 
-                       ++_i54)
+                  TList _list58 = iprot.readListBegin();
+                  _val57 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list58.size));
+                  for (int _i59 = 0; 
+                       (_list58.size < 0) ? iprot.peekList() : (_i59 < _list58.size); 
+                       ++_i59)
                   {
-                    com.vesoft.nebula.Row _elem55;
-                    _elem55 = new com.vesoft.nebula.Row();
-                    _elem55.read(iprot);
-                    _val52.add(_elem55);
+                    com.vesoft.nebula.Row _elem60;
+                    _elem60 = new com.vesoft.nebula.Row();
+                    _elem60.read(iprot);
+                    _val57.add(_elem60);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key51, _val52);
+                this.parts.put(_key56, _val57);
               }
               iprot.readMapEnd();
             }
@@ -680,16 +734,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case VERTEX_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list56 = iprot.readListBegin();
-              this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list56.size));
-              for (int _i57 = 0; 
-                   (_list56.size < 0) ? iprot.peekList() : (_i57 < _list56.size); 
-                   ++_i57)
+              TList _list61 = iprot.readListBegin();
+              this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list61.size));
+              for (int _i62 = 0; 
+                   (_list61.size < 0) ? iprot.peekList() : (_i62 < _list61.size); 
+                   ++_i62)
               {
-                VertexProp _elem58;
-                _elem58 = new VertexProp();
-                _elem58.read(iprot);
-                this.vertex_props.add(_elem58);
+                VertexProp _elem63;
+                _elem63 = new VertexProp();
+                _elem63.read(iprot);
+                this.vertex_props.add(_elem63);
               }
               iprot.readListEnd();
             }
@@ -700,16 +754,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case EDGE_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list59 = iprot.readListBegin();
-              this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list59.size));
-              for (int _i60 = 0; 
-                   (_list59.size < 0) ? iprot.peekList() : (_i60 < _list59.size); 
-                   ++_i60)
+              TList _list64 = iprot.readListBegin();
+              this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list64.size));
+              for (int _i65 = 0; 
+                   (_list64.size < 0) ? iprot.peekList() : (_i65 < _list64.size); 
+                   ++_i65)
               {
-                EdgeProp _elem61;
-                _elem61 = new EdgeProp();
-                _elem61.read(iprot);
-                this.edge_props.add(_elem61);
+                EdgeProp _elem66;
+                _elem66 = new EdgeProp();
+                _elem66.read(iprot);
+                this.edge_props.add(_elem66);
               }
               iprot.readListEnd();
             }
@@ -720,16 +774,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case EXPRESSIONS:
           if (__field.type == TType.LIST) {
             {
-              TList _list62 = iprot.readListBegin();
-              this.expressions = new ArrayList<Expr>(Math.max(0, _list62.size));
-              for (int _i63 = 0; 
-                   (_list62.size < 0) ? iprot.peekList() : (_i63 < _list62.size); 
-                   ++_i63)
+              TList _list67 = iprot.readListBegin();
+              this.expressions = new ArrayList<Expr>(Math.max(0, _list67.size));
+              for (int _i68 = 0; 
+                   (_list67.size < 0) ? iprot.peekList() : (_i68 < _list67.size); 
+                   ++_i68)
               {
-                Expr _elem64;
-                _elem64 = new Expr();
-                _elem64.read(iprot);
-                this.expressions.add(_elem64);
+                Expr _elem69;
+                _elem69 = new Expr();
+                _elem69.read(iprot);
+                this.expressions.add(_elem69);
               }
               iprot.readListEnd();
             }
@@ -748,16 +802,16 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case ORDER_BY:
           if (__field.type == TType.LIST) {
             {
-              TList _list65 = iprot.readListBegin();
-              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list65.size));
-              for (int _i66 = 0; 
-                   (_list65.size < 0) ? iprot.peekList() : (_i66 < _list65.size); 
-                   ++_i66)
+              TList _list70 = iprot.readListBegin();
+              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list70.size));
+              for (int _i71 = 0; 
+                   (_list70.size < 0) ? iprot.peekList() : (_i71 < _list70.size); 
+                   ++_i71)
               {
-                OrderBy _elem67;
-                _elem67 = new OrderBy();
-                _elem67.read(iprot);
-                this.order_by.add(_elem67);
+                OrderBy _elem72;
+                _elem72 = new OrderBy();
+                _elem72.read(iprot);
+                this.order_by.add(_elem72);
               }
               iprot.readListEnd();
             }
@@ -776,6 +830,14 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         case FILTER:
           if (__field.type == TType.STRING) {
             this.filter = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -804,12 +866,12 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter68 : this.parts.entrySet())        {
-          oprot.writeI32(_iter68.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter73 : this.parts.entrySet())        {
+          oprot.writeI32(_iter73.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter68.getValue().size()));
-            for (com.vesoft.nebula.Row _iter69 : _iter68.getValue())            {
-              _iter69.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter73.getValue().size()));
+            for (com.vesoft.nebula.Row _iter74 : _iter73.getValue())            {
+              _iter74.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -823,8 +885,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(VERTEX_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.vertex_props.size()));
-          for (VertexProp _iter70 : this.vertex_props)          {
-            _iter70.write(oprot);
+          for (VertexProp _iter75 : this.vertex_props)          {
+            _iter75.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -836,8 +898,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(EDGE_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.edge_props.size()));
-          for (EdgeProp _iter71 : this.edge_props)          {
-            _iter71.write(oprot);
+          for (EdgeProp _iter76 : this.edge_props)          {
+            _iter76.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -849,8 +911,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(EXPRESSIONS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.expressions.size()));
-          for (Expr _iter72 : this.expressions)          {
-            _iter72.write(oprot);
+          for (Expr _iter77 : this.expressions)          {
+            _iter77.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -865,8 +927,8 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
         oprot.writeFieldBegin(ORDER_BY_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.order_by.size()));
-          for (OrderBy _iter73 : this.order_by)          {
-            _iter73.write(oprot);
+          for (OrderBy _iter78 : this.order_by)          {
+            _iter78.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -882,6 +944,13 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
       if (isSetFilter()) {
         oprot.writeFieldBegin(FILTER_FIELD_DESC);
         oprot.writeBinary(this.filter);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -1011,6 +1080,20 @@ public class GetPropRequest implements TBase, java.io.Serializable, Cloneable {
             sb.append(Integer.toHexString(this.getFilter()[i]).length() > 1 ? Integer.toHexString(this.getFilter()[i]).substring(Integer.toHexString(this.getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFilter()[i]).toUpperCase());
           }
           if (this.getFilter().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
       }
       first = false;
     }

@@ -101,6 +101,99 @@ public class Session {
     }
 
     /**
+     * Execute the nGql sentence.
+     * Date and Datetime will be returned in UTC
+     *             JSON struct:
+     *             {
+     *               "results":[
+     *                 {
+     *                   "columns":[],
+     *                   "data":[
+     *                     {
+     *                       "row":row-data,
+     *                       "meta":metadata]
+     *                     }
+     *                   ],
+     *                   "latencyInUs":0,
+     *                   "spaceName":"",
+     *                   "planDesc ":{
+     *                     "planNodeDescs":[
+     *                       {
+     *                         "name":"",
+     *                         "id":0,
+     *                         "outputVar":"",
+     *                         "description":{
+     *                           "key":""
+     *                         },
+     *                         "profiles":[
+     *                           {
+     *                             "rows":1,
+     *                             "execDurationInUs":0,
+     *                             "totalDurationInUs":0,
+     *                             "otherStats":{}
+     *                           }
+     *                         ],
+     *                         "branchInfo":{
+     *                           "isDoBranch":false,
+     *                           "conditionNodeId":-1
+     *                         },
+     *                         "dependencies":[]
+     *                       }
+     *                     ],
+     *                     "nodeIndexMap":{},
+     *                     "format":"",
+     *                     "optimize_time_in_us":0
+     *                   },
+     *                   "comment ":"",
+     *                   "errors":{
+     *                     "errorCode":0,
+     *                     "errorMsg":""
+     *                   }
+     *                 }
+     *               ]
+     *             }
+     * @param stmt The nGql sentence.
+     *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
+     * @return The JSON string
+     */
+    public synchronized String executeJson(String stmt) throws IOErrorException {
+        if (connection == null) {
+            throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
+                    "The session was released, couldn't use again.");
+        }
+
+        if (connectionIsBroken.get() && retryConnect) {
+            if (retryConnect()) {
+                return connection.executeJson(sessionID, stmt);
+            } else {
+                throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                        "All servers are broken.");
+            }
+        }
+
+        try {
+            return connection.executeJson(sessionID, stmt);
+        } catch (IOErrorException ie) {
+            if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                connectionIsBroken.set(true);
+                pool.updateServerStatus();
+
+                if (retryConnect) {
+                    if (retryConnect()) {
+                        connectionIsBroken.set(false);
+                        return connection.executeJson(sessionID, stmt);
+                    } else {
+                        connectionIsBroken.set(true);
+                        throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                                "All servers are broken.");
+                    }
+                }
+            }
+            throw ie;
+        }
+    }
+
+    /**
      * Check current connection is ok
      *
      * @return boolean

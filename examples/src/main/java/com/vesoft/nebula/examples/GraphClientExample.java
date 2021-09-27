@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.examples;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
@@ -139,6 +141,18 @@ public class GraphClientExample {
                     System.exit(1);
                 }
                 printResult(resp);
+            }
+
+            {
+                String queryForJson = "YIELD 1";
+                String resp = session.executeJson(queryForJson);
+                JSONObject errors = JSON.parseObject(resp).getJSONArray("result").getJSONObject(0).getJSONObject("errors");
+                if (!errors.getString("errorCode").equals("0")) {
+                    log.error(String.format("Execute: `%s', failed: %s",
+                            queryForJson, errors.getString("errorMsg")));
+                    System.exit(1);
+                }
+                System.out.println(resp);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,11 +28,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   private static final TStruct STRUCT_DESC = new TStruct("ResponseCommon");
   private static final TField FAILED_PARTS_FIELD_DESC = new TField("failed_parts", TType.LIST, (short)1);
   private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I32, (short)2);
+  private static final TField LATENCY_DETAIL_US_FIELD_DESC = new TField("latency_detail_us", TType.MAP, (short)3);
 
   public List<PartitionResult> failed_parts;
   public int latency_in_us;
+  public Map<String,Integer> latency_detail_us;
   public static final int FAILED_PARTS = 1;
   public static final int LATENCY_IN_US = 2;
+  public static final int LATENCY_DETAIL_US = 3;
 
   // isset id assignments
   private static final int __LATENCY_IN_US_ISSET_ID = 0;
@@ -47,6 +50,10 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
             new StructMetaData(TType.STRUCT, PartitionResult.class))));
     tmpMetaDataMap.put(LATENCY_IN_US, new FieldMetaData("latency_in_us", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(LATENCY_DETAIL_US, new FieldMetaData("latency_detail_us", TFieldRequirementType.OPTIONAL, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.STRING), 
+            new FieldValueMetaData(TType.I32))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -66,9 +73,21 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     setLatency_in_usIsSet(true);
   }
 
+  public ResponseCommon(
+      List<PartitionResult> failed_parts,
+      int latency_in_us,
+      Map<String,Integer> latency_detail_us) {
+    this();
+    this.failed_parts = failed_parts;
+    this.latency_in_us = latency_in_us;
+    setLatency_in_usIsSet(true);
+    this.latency_detail_us = latency_detail_us;
+  }
+
   public static class Builder {
     private List<PartitionResult> failed_parts;
     private int latency_in_us;
+    private Map<String,Integer> latency_detail_us;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -86,12 +105,18 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return this;
     }
 
+    public Builder setLatency_detail_us(final Map<String,Integer> latency_detail_us) {
+      this.latency_detail_us = latency_detail_us;
+      return this;
+    }
+
     public ResponseCommon build() {
       ResponseCommon result = new ResponseCommon();
       result.setFailed_parts(this.failed_parts);
       if (__optional_isset.get(__LATENCY_IN_US_ISSET_ID)) {
         result.setLatency_in_us(this.latency_in_us);
       }
+      result.setLatency_detail_us(this.latency_detail_us);
       return result;
     }
   }
@@ -110,6 +135,9 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       this.failed_parts = TBaseHelper.deepCopy(other.failed_parts);
     }
     this.latency_in_us = TBaseHelper.deepCopy(other.latency_in_us);
+    if (other.isSetLatency_detail_us()) {
+      this.latency_detail_us = TBaseHelper.deepCopy(other.latency_detail_us);
+    }
   }
 
   public ResponseCommon deepCopy() {
@@ -163,6 +191,30 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     __isset_bit_vector.set(__LATENCY_IN_US_ISSET_ID, __value);
   }
 
+  public Map<String,Integer> getLatency_detail_us() {
+    return this.latency_detail_us;
+  }
+
+  public ResponseCommon setLatency_detail_us(Map<String,Integer> latency_detail_us) {
+    this.latency_detail_us = latency_detail_us;
+    return this;
+  }
+
+  public void unsetLatency_detail_us() {
+    this.latency_detail_us = null;
+  }
+
+  // Returns true if field latency_detail_us is set (has been assigned a value) and false otherwise
+  public boolean isSetLatency_detail_us() {
+    return this.latency_detail_us != null;
+  }
+
+  public void setLatency_detail_usIsSet(boolean __value) {
+    if (!__value) {
+      this.latency_detail_us = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -182,6 +234,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
+    case LATENCY_DETAIL_US:
+      if (__value == null) {
+        unsetLatency_detail_us();
+      } else {
+        setLatency_detail_us((Map<String,Integer>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -194,6 +254,9 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
     case LATENCY_IN_US:
       return new Integer(getLatency_in_us());
+
+    case LATENCY_DETAIL_US:
+      return getLatency_detail_us();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -214,12 +277,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
     if (!TBaseHelper.equalsNobinary(this.latency_in_us, that.latency_in_us)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetLatency_detail_us(), that.isSetLatency_detail_us(), this.latency_detail_us, that.latency_detail_us)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {failed_parts, latency_in_us});
+    return Arrays.deepHashCode(new Object[] {failed_parts, latency_in_us, latency_detail_us});
   }
 
   @Override
@@ -247,6 +312,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(latency_in_us, other.latency_in_us);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetLatency_detail_us()).compareTo(other.isSetLatency_detail_us());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(latency_detail_us, other.latency_detail_us);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -292,6 +365,27 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case LATENCY_DETAIL_US:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map3 = iprot.readMapBegin();
+              this.latency_detail_us = new HashMap<String,Integer>(Math.max(0, 2*_map3.size));
+              for (int _i4 = 0; 
+                   (_map3.size < 0) ? iprot.peekMap() : (_i4 < _map3.size); 
+                   ++_i4)
+              {
+                String _key5;
+                int _val6;
+                _key5 = iprot.readString();
+                _val6 = iprot.readI32();
+                this.latency_detail_us.put(_key5, _val6);
+              }
+              iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -316,8 +410,8 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(FAILED_PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.failed_parts.size()));
-        for (PartitionResult _iter3 : this.failed_parts)        {
-          _iter3.write(oprot);
+        for (PartitionResult _iter7 : this.failed_parts)        {
+          _iter7.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -326,6 +420,20 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     oprot.writeFieldBegin(LATENCY_IN_US_FIELD_DESC);
     oprot.writeI32(this.latency_in_us);
     oprot.writeFieldEnd();
+    if (this.latency_detail_us != null) {
+      if (isSetLatency_detail_us()) {
+        oprot.writeFieldBegin(LATENCY_DETAIL_US_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.STRING, TType.I32, this.latency_detail_us.size()));
+          for (Map.Entry<String, Integer> _iter8 : this.latency_detail_us.entrySet())          {
+            oprot.writeString(_iter8.getKey());
+            oprot.writeI32(_iter8.getValue());
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -363,6 +471,20 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getLatency_in_us(), indent + 1, prettyPrint));
     first = false;
+    if (isSetLatency_detail_us())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("latency_detail_us");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getLatency_detail_us() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getLatency_detail_us(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

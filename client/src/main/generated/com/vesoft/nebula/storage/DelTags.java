@@ -24,13 +24,13 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class NewVertex implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("NewVertex");
+public class DelTags implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("DelTags");
   private static final TField ID_FIELD_DESC = new TField("id", TType.STRUCT, (short)1);
   private static final TField TAGS_FIELD_DESC = new TField("tags", TType.LIST, (short)2);
 
   public com.vesoft.nebula.Value id;
-  public List<NewTag> tags;
+  public List<Integer> tags;
   public static final int ID = 1;
   public static final int TAGS = 2;
 
@@ -44,20 +44,20 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
     tmpMetaDataMap.put(TAGS, new FieldMetaData("tags", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, NewTag.class))));
+            new FieldValueMetaData(TType.I32))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(NewVertex.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(DelTags.class, metaDataMap);
   }
 
-  public NewVertex() {
+  public DelTags() {
   }
 
-  public NewVertex(
+  public DelTags(
       com.vesoft.nebula.Value id,
-      List<NewTag> tags) {
+      List<Integer> tags) {
     this();
     this.id = id;
     this.tags = tags;
@@ -65,7 +65,7 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
 
   public static class Builder {
     private com.vesoft.nebula.Value id;
-    private List<NewTag> tags;
+    private List<Integer> tags;
 
     public Builder() {
     }
@@ -75,13 +75,13 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
-    public Builder setTags(final List<NewTag> tags) {
+    public Builder setTags(final List<Integer> tags) {
       this.tags = tags;
       return this;
     }
 
-    public NewVertex build() {
-      NewVertex result = new NewVertex();
+    public DelTags build() {
+      DelTags result = new DelTags();
       result.setId(this.id);
       result.setTags(this.tags);
       return result;
@@ -95,7 +95,7 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public NewVertex(NewVertex other) {
+  public DelTags(DelTags other) {
     if (other.isSetId()) {
       this.id = TBaseHelper.deepCopy(other.id);
     }
@@ -104,15 +104,15 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public NewVertex deepCopy() {
-    return new NewVertex(this);
+  public DelTags deepCopy() {
+    return new DelTags(this);
   }
 
   public com.vesoft.nebula.Value getId() {
     return this.id;
   }
 
-  public NewVertex setId(com.vesoft.nebula.Value id) {
+  public DelTags setId(com.vesoft.nebula.Value id) {
     this.id = id;
     return this;
   }
@@ -132,11 +132,11 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public List<NewTag> getTags() {
+  public List<Integer> getTags() {
     return this.tags;
   }
 
-  public NewVertex setTags(List<NewTag> tags) {
+  public DelTags setTags(List<Integer> tags) {
     this.tags = tags;
     return this;
   }
@@ -171,7 +171,7 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
       if (__value == null) {
         unsetTags();
       } else {
-        setTags((List<NewTag>)__value);
+        setTags((List<Integer>)__value);
       }
       break;
 
@@ -199,9 +199,9 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof NewVertex))
+    if (!(_that instanceof DelTags))
       return false;
-    NewVertex that = (NewVertex)_that;
+    DelTags that = (DelTags)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetId(), that.isSetId(), this.id, that.id)) { return false; }
 
@@ -237,16 +237,15 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
         case TAGS:
           if (__field.type == TType.LIST) {
             {
-              TList _list83 = iprot.readListBegin();
-              this.tags = new ArrayList<NewTag>(Math.max(0, _list83.size));
-              for (int _i84 = 0; 
-                   (_list83.size < 0) ? iprot.peekList() : (_i84 < _list83.size); 
-                   ++_i84)
+              TList _list140 = iprot.readListBegin();
+              this.tags = new ArrayList<Integer>(Math.max(0, _list140.size));
+              for (int _i141 = 0; 
+                   (_list140.size < 0) ? iprot.peekList() : (_i141 < _list140.size); 
+                   ++_i141)
               {
-                NewTag _elem85;
-                _elem85 = new NewTag();
-                _elem85.read(iprot);
-                this.tags.add(_elem85);
+                int _elem142;
+                _elem142 = iprot.readI32();
+                this.tags.add(_elem142);
               }
               iprot.readListEnd();
             }
@@ -279,9 +278,9 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     if (this.tags != null) {
       oprot.writeFieldBegin(TAGS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.tags.size()));
-        for (NewTag _iter86 : this.tags)        {
-          _iter86.write(oprot);
+        oprot.writeListBegin(new TList(TType.I32, this.tags.size()));
+        for (int _iter143 : this.tags)        {
+          oprot.writeI32(_iter143);
         }
         oprot.writeListEnd();
       }
@@ -301,7 +300,7 @@ public class NewVertex implements TBase, java.io.Serializable, Cloneable {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("NewVertex");
+    StringBuilder sb = new StringBuilder("DelTags");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
