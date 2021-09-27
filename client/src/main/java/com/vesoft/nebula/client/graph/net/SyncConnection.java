@@ -13,6 +13,7 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
+import com.facebook.thrift.utils.StandardCharsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
@@ -102,6 +103,28 @@ public class SyncConnection extends Connection {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
                     || te.getMessage().contains("Read timed out")) {
+                    reopen();
+                    throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                }
+            }
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        }
+    }
+
+    public String executeJson(long sessionID, String stmt)
+            throws IOErrorException {
+        try {
+            byte[] result = client.executeJson(sessionID, stmt.getBytes());
+            return new String(result, StandardCharsets.UTF_8);
+        } catch (TException e) {
+            if (e instanceof TTransportException) {
+                TTransportException te = (TTransportException) e;
+                if (te.getType() == TTransportException.END_OF_FILE) {
+                    throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
+                } else if (te.getType() == TTransportException.NOT_OPEN) {
+                    throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
+                } else if (te.getType() == TTransportException.TIMED_OUT
+                        || te.getMessage().contains("Read timed out")) {
                     reopen();
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }
