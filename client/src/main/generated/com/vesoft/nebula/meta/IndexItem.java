@@ -35,7 +35,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
   public int index_id;
   public byte[] index_name;
-  public SchemaID schema_id;
+  public com.vesoft.nebula.SchemaID schema_id;
   public byte[] schema_name;
   public List<ColumnDef> fields;
   public byte[] comment;
@@ -59,7 +59,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     tmpMetaDataMap.put(INDEX_NAME, new FieldMetaData("index_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(SCHEMA_ID, new FieldMetaData("schema_id", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, SchemaID.class)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.SchemaID.class)));
     tmpMetaDataMap.put(SCHEMA_NAME, new FieldMetaData("schema_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
@@ -80,7 +80,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public IndexItem(
       int index_id,
       byte[] index_name,
-      SchemaID schema_id,
+      com.vesoft.nebula.SchemaID schema_id,
       byte[] schema_name,
       List<ColumnDef> fields) {
     this();
@@ -95,7 +95,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public IndexItem(
       int index_id,
       byte[] index_name,
-      SchemaID schema_id,
+      com.vesoft.nebula.SchemaID schema_id,
       byte[] schema_name,
       List<ColumnDef> fields,
       byte[] comment) {
@@ -112,7 +112,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public static class Builder {
     private int index_id;
     private byte[] index_name;
-    private SchemaID schema_id;
+    private com.vesoft.nebula.SchemaID schema_id;
     private byte[] schema_name;
     private List<ColumnDef> fields;
     private byte[] comment;
@@ -133,7 +133,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
-    public Builder setSchema_id(final SchemaID schema_id) {
+    public Builder setSchema_id(final com.vesoft.nebula.SchemaID schema_id) {
       this.schema_id = schema_id;
       return this;
     }
@@ -246,11 +246,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
-  public SchemaID getSchema_id() {
+  public com.vesoft.nebula.SchemaID getSchema_id() {
     return this.schema_id;
   }
 
-  public IndexItem setSchema_id(SchemaID schema_id) {
+  public IndexItem setSchema_id(com.vesoft.nebula.SchemaID schema_id) {
     this.schema_id = schema_id;
     return this;
   }
@@ -365,7 +365,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       if (__value == null) {
         unsetSchema_id();
       } else {
-        setSchema_id((SchemaID)__value);
+        setSchema_id((com.vesoft.nebula.SchemaID)__value);
       }
       break;
 
@@ -544,7 +544,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
           break;
         case SCHEMA_ID:
           if (__field.type == TType.STRUCT) {
-            this.schema_id = new SchemaID();
+            this.schema_id = new com.vesoft.nebula.SchemaID();
             this.schema_id.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);

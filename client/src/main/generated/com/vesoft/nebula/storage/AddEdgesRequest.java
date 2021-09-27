@@ -30,15 +30,18 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
   private static final TField PROP_NAMES_FIELD_DESC = new TField("prop_names", TType.LIST, (short)3);
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)5);
 
   public int space_id;
   public Map<Integer,List<NewEdge>> parts;
   public List<byte[]> prop_names;
   public boolean if_not_exists;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int PROP_NAMES = 3;
   public static final int IF_NOT_EXISTS = 4;
+  public static final int COMMON = 5;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -61,6 +64,8 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
             new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -85,11 +90,28 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     setIf_not_existsIsSet(true);
   }
 
+  public AddEdgesRequest(
+      int space_id,
+      Map<Integer,List<NewEdge>> parts,
+      List<byte[]> prop_names,
+      boolean if_not_exists,
+      RequestCommon common) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.prop_names = prop_names;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    this.common = common;
+  }
+
   public static class Builder {
     private int space_id;
     private Map<Integer,List<NewEdge>> parts;
     private List<byte[]> prop_names;
     private boolean if_not_exists;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -118,6 +140,11 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public AddEdgesRequest build() {
       AddEdgesRequest result = new AddEdgesRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -128,6 +155,7 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
         result.setIf_not_exists(this.if_not_exists);
       }
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -150,6 +178,9 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       this.prop_names = TBaseHelper.deepCopy(other.prop_names);
     }
     this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
+    }
   }
 
   public AddEdgesRequest deepCopy() {
@@ -250,6 +281,30 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public AddEdgesRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -285,6 +340,14 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -303,6 +366,9 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
 
     case IF_NOT_EXISTS:
       return new Boolean(isIf_not_exists());
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -327,12 +393,14 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -357,30 +425,30 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map104 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<NewEdge>>(Math.max(0, 2*_map104.size));
-              for (int _i105 = 0; 
-                   (_map104.size < 0) ? iprot.peekMap() : (_i105 < _map104.size); 
-                   ++_i105)
+              TMap _map109 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<NewEdge>>(Math.max(0, 2*_map109.size));
+              for (int _i110 = 0; 
+                   (_map109.size < 0) ? iprot.peekMap() : (_i110 < _map109.size); 
+                   ++_i110)
               {
-                int _key106;
-                List<NewEdge> _val107;
-                _key106 = iprot.readI32();
+                int _key111;
+                List<NewEdge> _val112;
+                _key111 = iprot.readI32();
                 {
-                  TList _list108 = iprot.readListBegin();
-                  _val107 = new ArrayList<NewEdge>(Math.max(0, _list108.size));
-                  for (int _i109 = 0; 
-                       (_list108.size < 0) ? iprot.peekList() : (_i109 < _list108.size); 
-                       ++_i109)
+                  TList _list113 = iprot.readListBegin();
+                  _val112 = new ArrayList<NewEdge>(Math.max(0, _list113.size));
+                  for (int _i114 = 0; 
+                       (_list113.size < 0) ? iprot.peekList() : (_i114 < _list113.size); 
+                       ++_i114)
                   {
-                    NewEdge _elem110;
-                    _elem110 = new NewEdge();
-                    _elem110.read(iprot);
-                    _val107.add(_elem110);
+                    NewEdge _elem115;
+                    _elem115 = new NewEdge();
+                    _elem115.read(iprot);
+                    _val112.add(_elem115);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key106, _val107);
+                this.parts.put(_key111, _val112);
               }
               iprot.readMapEnd();
             }
@@ -391,15 +459,15 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
         case PROP_NAMES:
           if (__field.type == TType.LIST) {
             {
-              TList _list111 = iprot.readListBegin();
-              this.prop_names = new ArrayList<byte[]>(Math.max(0, _list111.size));
-              for (int _i112 = 0; 
-                   (_list111.size < 0) ? iprot.peekList() : (_i112 < _list111.size); 
-                   ++_i112)
+              TList _list116 = iprot.readListBegin();
+              this.prop_names = new ArrayList<byte[]>(Math.max(0, _list116.size));
+              for (int _i117 = 0; 
+                   (_list116.size < 0) ? iprot.peekList() : (_i117 < _list116.size); 
+                   ++_i117)
               {
-                byte[] _elem113;
-                _elem113 = iprot.readBinary();
-                this.prop_names.add(_elem113);
+                byte[] _elem118;
+                _elem118 = iprot.readBinary();
+                this.prop_names.add(_elem118);
               }
               iprot.readListEnd();
             }
@@ -411,6 +479,14 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
           if (__field.type == TType.BOOL) {
             this.if_not_exists = iprot.readBool();
             setIf_not_existsIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -439,12 +515,12 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<NewEdge>> _iter114 : this.parts.entrySet())        {
-          oprot.writeI32(_iter114.getKey());
+        for (Map.Entry<Integer, List<NewEdge>> _iter119 : this.parts.entrySet())        {
+          oprot.writeI32(_iter119.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter114.getValue().size()));
-            for (NewEdge _iter115 : _iter114.getValue())            {
-              _iter115.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter119.getValue().size()));
+            for (NewEdge _iter120 : _iter119.getValue())            {
+              _iter120.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -457,8 +533,8 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PROP_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.prop_names.size()));
-        for (byte[] _iter116 : this.prop_names)        {
-          oprot.writeBinary(_iter116);
+        for (byte[] _iter121 : this.prop_names)        {
+          oprot.writeBinary(_iter121);
         }
         oprot.writeListEnd();
       }
@@ -467,6 +543,13 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
     oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -522,6 +605,20 @@ public class AddEdgesRequest implements TBase, java.io.Serializable, Cloneable {
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

@@ -24,8 +24,8 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class StatisItem implements TBase, java.io.Serializable, Cloneable, Comparable<StatisItem> {
-  private static final TStruct STRUCT_DESC = new TStruct("StatisItem");
+public class StatsItem implements TBase, java.io.Serializable, Cloneable, Comparable<StatsItem> {
+  private static final TStruct STRUCT_DESC = new TStruct("StatsItem");
   private static final TField TAG_VERTICES_FIELD_DESC = new TField("tag_vertices", TType.MAP, (short)1);
   private static final TField EDGES_FIELD_DESC = new TField("edges", TType.MAP, (short)2);
   private static final TField SPACE_VERTICES_FIELD_DESC = new TField("space_vertices", TType.I64, (short)3);
@@ -90,13 +90,13 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(StatisItem.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(StatsItem.class, metaDataMap);
   }
 
-  public StatisItem() {
+  public StatsItem() {
   }
 
-  public StatisItem(
+  public StatsItem(
       Map<byte[],Long> tag_vertices,
       Map<byte[],Long> edges,
       long space_vertices,
@@ -167,8 +167,8 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
-    public StatisItem build() {
-      StatisItem result = new StatisItem();
+    public StatsItem build() {
+      StatsItem result = new StatsItem();
       result.setTag_vertices(this.tag_vertices);
       result.setEdges(this.edges);
       if (__optional_isset.get(__SPACE_VERTICES_ISSET_ID)) {
@@ -191,7 +191,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public StatisItem(StatisItem other) {
+  public StatsItem(StatsItem other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetTag_vertices()) {
@@ -213,15 +213,15 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
-  public StatisItem deepCopy() {
-    return new StatisItem(this);
+  public StatsItem deepCopy() {
+    return new StatsItem(this);
   }
 
   public Map<byte[],Long> getTag_vertices() {
     return this.tag_vertices;
   }
 
-  public StatisItem setTag_vertices(Map<byte[],Long> tag_vertices) {
+  public StatsItem setTag_vertices(Map<byte[],Long> tag_vertices) {
     this.tag_vertices = tag_vertices;
     return this;
   }
@@ -245,7 +245,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.edges;
   }
 
-  public StatisItem setEdges(Map<byte[],Long> edges) {
+  public StatsItem setEdges(Map<byte[],Long> edges) {
     this.edges = edges;
     return this;
   }
@@ -269,7 +269,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.space_vertices;
   }
 
-  public StatisItem setSpace_vertices(long space_vertices) {
+  public StatsItem setSpace_vertices(long space_vertices) {
     this.space_vertices = space_vertices;
     setSpace_verticesIsSet(true);
     return this;
@@ -292,7 +292,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.space_edges;
   }
 
-  public StatisItem setSpace_edges(long space_edges) {
+  public StatsItem setSpace_edges(long space_edges) {
     this.space_edges = space_edges;
     setSpace_edgesIsSet(true);
     return this;
@@ -315,7 +315,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.positive_part_correlativity;
   }
 
-  public StatisItem setPositive_part_correlativity(Map<Integer,List<Correlativity>> positive_part_correlativity) {
+  public StatsItem setPositive_part_correlativity(Map<Integer,List<Correlativity>> positive_part_correlativity) {
     this.positive_part_correlativity = positive_part_correlativity;
     return this;
   }
@@ -339,7 +339,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     return this.negative_part_correlativity;
   }
 
-  public StatisItem setNegative_part_correlativity(Map<Integer,List<Correlativity>> negative_part_correlativity) {
+  public StatsItem setNegative_part_correlativity(Map<Integer,List<Correlativity>> negative_part_correlativity) {
     this.negative_part_correlativity = negative_part_correlativity;
     return this;
   }
@@ -371,7 +371,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
    * 
    * @see JobStatus
    */
-  public StatisItem setStatus(JobStatus status) {
+  public StatsItem setStatus(JobStatus status) {
     this.status = status;
     return this;
   }
@@ -489,9 +489,9 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof StatisItem))
+    if (!(_that instanceof StatsItem))
       return false;
-    StatisItem that = (StatisItem)_that;
+    StatsItem that = (StatsItem)_that;
 
     if (!TBaseHelper.equalsSlow(this.isSetTag_vertices(), that.isSetTag_vertices(), this.tag_vertices, that.tag_vertices)) { return false; }
 
@@ -516,7 +516,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   @Override
-  public int compareTo(StatisItem other) {
+  public int compareTo(StatsItem other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -832,7 +832,7 @@ public class StatisItem implements TBase, java.io.Serializable, Cloneable, Compa
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("StatisItem");
+    StringBuilder sb = new StringBuilder("StatsItem");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

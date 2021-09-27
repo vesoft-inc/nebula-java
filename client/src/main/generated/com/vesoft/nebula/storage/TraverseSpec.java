@@ -861,15 +861,15 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         case EDGE_TYPES:
           if (__field.type == TType.LIST) {
             {
-              TList _list12 = iprot.readListBegin();
-              this.edge_types = new ArrayList<Integer>(Math.max(0, _list12.size));
-              for (int _i13 = 0; 
-                   (_list12.size < 0) ? iprot.peekList() : (_i13 < _list12.size); 
-                   ++_i13)
+              TList _list17 = iprot.readListBegin();
+              this.edge_types = new ArrayList<Integer>(Math.max(0, _list17.size));
+              for (int _i18 = 0; 
+                   (_list17.size < 0) ? iprot.peekList() : (_i18 < _list17.size); 
+                   ++_i18)
               {
-                int _elem14;
-                _elem14 = iprot.readI32();
-                this.edge_types.add(_elem14);
+                int _elem19;
+                _elem19 = iprot.readI32();
+                this.edge_types.add(_elem19);
               }
               iprot.readListEnd();
             }
@@ -895,16 +895,16 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         case STAT_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list15 = iprot.readListBegin();
-              this.stat_props = new ArrayList<StatProp>(Math.max(0, _list15.size));
-              for (int _i16 = 0; 
-                   (_list15.size < 0) ? iprot.peekList() : (_i16 < _list15.size); 
-                   ++_i16)
+              TList _list20 = iprot.readListBegin();
+              this.stat_props = new ArrayList<StatProp>(Math.max(0, _list20.size));
+              for (int _i21 = 0; 
+                   (_list20.size < 0) ? iprot.peekList() : (_i21 < _list20.size); 
+                   ++_i21)
               {
-                StatProp _elem17;
-                _elem17 = new StatProp();
-                _elem17.read(iprot);
-                this.stat_props.add(_elem17);
+                StatProp _elem22;
+                _elem22 = new StatProp();
+                _elem22.read(iprot);
+                this.stat_props.add(_elem22);
               }
               iprot.readListEnd();
             }
@@ -915,16 +915,16 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         case VERTEX_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list18 = iprot.readListBegin();
-              this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list18.size));
-              for (int _i19 = 0; 
-                   (_list18.size < 0) ? iprot.peekList() : (_i19 < _list18.size); 
-                   ++_i19)
+              TList _list23 = iprot.readListBegin();
+              this.vertex_props = new ArrayList<VertexProp>(Math.max(0, _list23.size));
+              for (int _i24 = 0; 
+                   (_list23.size < 0) ? iprot.peekList() : (_i24 < _list23.size); 
+                   ++_i24)
               {
-                VertexProp _elem20;
-                _elem20 = new VertexProp();
-                _elem20.read(iprot);
-                this.vertex_props.add(_elem20);
+                VertexProp _elem25;
+                _elem25 = new VertexProp();
+                _elem25.read(iprot);
+                this.vertex_props.add(_elem25);
               }
               iprot.readListEnd();
             }
@@ -935,16 +935,16 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         case EDGE_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list21 = iprot.readListBegin();
-              this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list21.size));
-              for (int _i22 = 0; 
-                   (_list21.size < 0) ? iprot.peekList() : (_i22 < _list21.size); 
-                   ++_i22)
+              TList _list26 = iprot.readListBegin();
+              this.edge_props = new ArrayList<EdgeProp>(Math.max(0, _list26.size));
+              for (int _i27 = 0; 
+                   (_list26.size < 0) ? iprot.peekList() : (_i27 < _list26.size); 
+                   ++_i27)
               {
-                EdgeProp _elem23;
-                _elem23 = new EdgeProp();
-                _elem23.read(iprot);
-                this.edge_props.add(_elem23);
+                EdgeProp _elem28;
+                _elem28 = new EdgeProp();
+                _elem28.read(iprot);
+                this.edge_props.add(_elem28);
               }
               iprot.readListEnd();
             }
@@ -955,16 +955,16 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         case EXPRESSIONS:
           if (__field.type == TType.LIST) {
             {
-              TList _list24 = iprot.readListBegin();
-              this.expressions = new ArrayList<Expr>(Math.max(0, _list24.size));
-              for (int _i25 = 0; 
-                   (_list24.size < 0) ? iprot.peekList() : (_i25 < _list24.size); 
-                   ++_i25)
+              TList _list29 = iprot.readListBegin();
+              this.expressions = new ArrayList<Expr>(Math.max(0, _list29.size));
+              for (int _i30 = 0; 
+                   (_list29.size < 0) ? iprot.peekList() : (_i30 < _list29.size); 
+                   ++_i30)
               {
-                Expr _elem26;
-                _elem26 = new Expr();
-                _elem26.read(iprot);
-                this.expressions.add(_elem26);
+                Expr _elem31;
+                _elem31 = new Expr();
+                _elem31.read(iprot);
+                this.expressions.add(_elem31);
               }
               iprot.readListEnd();
             }
@@ -975,16 +975,16 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         case ORDER_BY:
           if (__field.type == TType.LIST) {
             {
-              TList _list27 = iprot.readListBegin();
-              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list27.size));
-              for (int _i28 = 0; 
-                   (_list27.size < 0) ? iprot.peekList() : (_i28 < _list27.size); 
-                   ++_i28)
+              TList _list32 = iprot.readListBegin();
+              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list32.size));
+              for (int _i33 = 0; 
+                   (_list32.size < 0) ? iprot.peekList() : (_i33 < _list32.size); 
+                   ++_i33)
               {
-                OrderBy _elem29;
-                _elem29 = new OrderBy();
-                _elem29.read(iprot);
-                this.order_by.add(_elem29);
+                OrderBy _elem34;
+                _elem34 = new OrderBy();
+                _elem34.read(iprot);
+                this.order_by.add(_elem34);
               }
               iprot.readListEnd();
             }
@@ -1036,8 +1036,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(EDGE_TYPES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.edge_types.size()));
-        for (int _iter30 : this.edge_types)        {
-          oprot.writeI32(_iter30);
+        for (int _iter35 : this.edge_types)        {
+          oprot.writeI32(_iter35);
         }
         oprot.writeListEnd();
       }
@@ -1056,8 +1056,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         oprot.writeFieldBegin(STAT_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.stat_props.size()));
-          for (StatProp _iter31 : this.stat_props)          {
-            _iter31.write(oprot);
+          for (StatProp _iter36 : this.stat_props)          {
+            _iter36.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1069,8 +1069,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         oprot.writeFieldBegin(VERTEX_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.vertex_props.size()));
-          for (VertexProp _iter32 : this.vertex_props)          {
-            _iter32.write(oprot);
+          for (VertexProp _iter37 : this.vertex_props)          {
+            _iter37.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1082,8 +1082,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         oprot.writeFieldBegin(EDGE_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.edge_props.size()));
-          for (EdgeProp _iter33 : this.edge_props)          {
-            _iter33.write(oprot);
+          for (EdgeProp _iter38 : this.edge_props)          {
+            _iter38.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1095,8 +1095,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         oprot.writeFieldBegin(EXPRESSIONS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.expressions.size()));
-          for (Expr _iter34 : this.expressions)          {
-            _iter34.write(oprot);
+          for (Expr _iter39 : this.expressions)          {
+            _iter39.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -1108,8 +1108,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         oprot.writeFieldBegin(ORDER_BY_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.order_by.size()));
-          for (OrderBy _iter35 : this.order_by)          {
-            _iter35.write(oprot);
+          for (OrderBy _iter40 : this.order_by)          {
+            _iter40.write(oprot);
           }
           oprot.writeListEnd();
         }
