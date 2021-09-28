@@ -34,6 +34,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   private static final TField INSERTABLE_FIELD_DESC = new TField("insertable", TType.BOOL, (short)6);
   private static final TField RETURN_PROPS_FIELD_DESC = new TField("return_props", TType.LIST, (short)7);
   private static final TField CONDITION_FIELD_DESC = new TField("condition", TType.STRING, (short)8);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)9);
 
   public int space_id;
   public int part_id;
@@ -43,6 +44,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   public boolean insertable;
   public List<byte[]> return_props;
   public byte[] condition;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int VERTEX_ID = 3;
@@ -51,6 +53,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
   public static final int INSERTABLE = 6;
   public static final int RETURN_PROPS = 7;
   public static final int CONDITION = 8;
+  public static final int COMMON = 9;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -81,6 +84,8 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
             new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(CONDITION, new FieldMetaData("condition", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -125,7 +130,8 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       List<UpdatedProp> updated_props,
       boolean insertable,
       List<byte[]> return_props,
-      byte[] condition) {
+      byte[] condition,
+      RequestCommon common) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -139,6 +145,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     setInsertableIsSet(true);
     this.return_props = return_props;
     this.condition = condition;
+    this.common = common;
   }
 
   public static class Builder {
@@ -150,6 +157,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     private boolean insertable;
     private List<byte[]> return_props;
     private byte[] condition;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(4);
 
@@ -200,6 +208,11 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public UpdateVertexRequest build() {
       UpdateVertexRequest result = new UpdateVertexRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -218,6 +231,7 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       }
       result.setReturn_props(this.return_props);
       result.setCondition(this.condition);
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -247,6 +261,9 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     }
     if (other.isSetCondition()) {
       this.condition = TBaseHelper.deepCopy(other.condition);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
@@ -442,6 +459,30 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public UpdateVertexRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -509,6 +550,14 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -539,6 +588,9 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
 
     case CONDITION:
       return getCondition();
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -571,12 +623,14 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
 
     if (!TBaseHelper.equalsSlow(this.isSetCondition(), that.isSetCondition(), this.condition, that.condition)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, vertex_id, tag_id, updated_props, insertable, return_props, condition});
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, vertex_id, tag_id, updated_props, insertable, return_props, condition, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -625,16 +679,16 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         case UPDATED_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list135 = iprot.readListBegin();
-              this.updated_props = new ArrayList<UpdatedProp>(Math.max(0, _list135.size));
-              for (int _i136 = 0; 
-                   (_list135.size < 0) ? iprot.peekList() : (_i136 < _list135.size); 
-                   ++_i136)
+              TList _list153 = iprot.readListBegin();
+              this.updated_props = new ArrayList<UpdatedProp>(Math.max(0, _list153.size));
+              for (int _i154 = 0; 
+                   (_list153.size < 0) ? iprot.peekList() : (_i154 < _list153.size); 
+                   ++_i154)
               {
-                UpdatedProp _elem137;
-                _elem137 = new UpdatedProp();
-                _elem137.read(iprot);
-                this.updated_props.add(_elem137);
+                UpdatedProp _elem155;
+                _elem155 = new UpdatedProp();
+                _elem155.read(iprot);
+                this.updated_props.add(_elem155);
               }
               iprot.readListEnd();
             }
@@ -653,15 +707,15 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         case RETURN_PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list138 = iprot.readListBegin();
-              this.return_props = new ArrayList<byte[]>(Math.max(0, _list138.size));
-              for (int _i139 = 0; 
-                   (_list138.size < 0) ? iprot.peekList() : (_i139 < _list138.size); 
-                   ++_i139)
+              TList _list156 = iprot.readListBegin();
+              this.return_props = new ArrayList<byte[]>(Math.max(0, _list156.size));
+              for (int _i157 = 0; 
+                   (_list156.size < 0) ? iprot.peekList() : (_i157 < _list156.size); 
+                   ++_i157)
               {
-                byte[] _elem140;
-                _elem140 = iprot.readBinary();
-                this.return_props.add(_elem140);
+                byte[] _elem158;
+                _elem158 = iprot.readBinary();
+                this.return_props.add(_elem158);
               }
               iprot.readListEnd();
             }
@@ -672,6 +726,14 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         case CONDITION:
           if (__field.type == TType.STRING) {
             this.condition = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -714,8 +776,8 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(UPDATED_PROPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.updated_props.size()));
-        for (UpdatedProp _iter141 : this.updated_props)        {
-          _iter141.write(oprot);
+        for (UpdatedProp _iter159 : this.updated_props)        {
+          _iter159.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -731,8 +793,8 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
         oprot.writeFieldBegin(RETURN_PROPS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.return_props.size()));
-          for (byte[] _iter142 : this.return_props)          {
-            oprot.writeBinary(_iter142);
+          for (byte[] _iter160 : this.return_props)          {
+            oprot.writeBinary(_iter160);
           }
           oprot.writeListEnd();
         }
@@ -743,6 +805,13 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
       if (isSetCondition()) {
         oprot.writeFieldBegin(CONDITION_FIELD_DESC);
         oprot.writeBinary(this.condition);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -848,6 +917,20 @@ public class UpdateVertexRequest implements TBase, java.io.Serializable, Cloneab
             sb.append(Integer.toHexString(this.getCondition()[i]).length() > 1 ? Integer.toHexString(this.getCondition()[i]).substring(Integer.toHexString(this.getCondition()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCondition()[i]).toUpperCase());
           }
           if (this.getCondition().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
       }
       first = false;
     }

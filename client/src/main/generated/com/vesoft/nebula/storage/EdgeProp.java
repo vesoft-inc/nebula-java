@@ -275,15 +275,15 @@ public class EdgeProp implements TBase, java.io.Serializable, Cloneable, Compara
         case PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list4 = iprot.readListBegin();
-              this.props = new ArrayList<byte[]>(Math.max(0, _list4.size));
-              for (int _i5 = 0; 
-                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
-                   ++_i5)
+              TList _list9 = iprot.readListBegin();
+              this.props = new ArrayList<byte[]>(Math.max(0, _list9.size));
+              for (int _i10 = 0; 
+                   (_list9.size < 0) ? iprot.peekList() : (_i10 < _list9.size); 
+                   ++_i10)
               {
-                byte[] _elem6;
-                _elem6 = iprot.readBinary();
-                this.props.add(_elem6);
+                byte[] _elem11;
+                _elem11 = iprot.readBinary();
+                this.props.add(_elem11);
               }
               iprot.readListEnd();
             }
@@ -315,8 +315,8 @@ public class EdgeProp implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(PROPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.props.size()));
-        for (byte[] _iter7 : this.props)        {
-          oprot.writeBinary(_iter7);
+        for (byte[] _iter12 : this.props)        {
+          oprot.writeBinary(_iter12);
         }
         oprot.writeListEnd();
       }

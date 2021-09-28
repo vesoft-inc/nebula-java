@@ -24,26 +24,22 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetUUIDReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("GetUUIDReq");
+public class DeleteTagsRequest implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("DeleteTagsRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
-  private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)3);
-  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)4);
+  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)3);
 
   public int space_id;
-  public int part_id;
-  public byte[] name;
+  public Map<Integer,List<DelTags>> parts;
   public RequestCommon common;
   public static final int SPACE_ID = 1;
-  public static final int PART_ID = 2;
-  public static final int NAME = 3;
-  public static final int COMMON = 4;
+  public static final int PARTS = 2;
+  public static final int COMMON = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private static final int __PART_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -51,55 +47,49 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PART_ID, new FieldMetaData("part_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new StructMetaData(TType.STRUCT, DelTags.class)))));
     tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
         new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(GetUUIDReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(DeleteTagsRequest.class, metaDataMap);
   }
 
-  public GetUUIDReq() {
+  public DeleteTagsRequest() {
   }
 
-  public GetUUIDReq(
+  public DeleteTagsRequest(
       int space_id,
-      int part_id,
-      byte[] name) {
+      Map<Integer,List<DelTags>> parts) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.part_id = part_id;
-    setPart_idIsSet(true);
-    this.name = name;
+    this.parts = parts;
   }
 
-  public GetUUIDReq(
+  public DeleteTagsRequest(
       int space_id,
-      int part_id,
-      byte[] name,
+      Map<Integer,List<DelTags>> parts,
       RequestCommon common) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.part_id = part_id;
-    setPart_idIsSet(true);
-    this.name = name;
+    this.parts = parts;
     this.common = common;
   }
 
   public static class Builder {
     private int space_id;
-    private int part_id;
-    private byte[] name;
+    private Map<Integer,List<DelTags>> parts;
     private RequestCommon common;
 
-    BitSet __optional_isset = new BitSet(2);
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -110,14 +100,8 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
-    public Builder setPart_id(final int part_id) {
-      this.part_id = part_id;
-      __optional_isset.set(__PART_ID_ISSET_ID, true);
-      return this;
-    }
-
-    public Builder setName(final byte[] name) {
-      this.name = name;
+    public Builder setParts(final Map<Integer,List<DelTags>> parts) {
+      this.parts = parts;
       return this;
     }
 
@@ -126,15 +110,12 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
-    public GetUUIDReq build() {
-      GetUUIDReq result = new GetUUIDReq();
+    public DeleteTagsRequest build() {
+      DeleteTagsRequest result = new DeleteTagsRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
-      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
-        result.setPart_id(this.part_id);
-      }
-      result.setName(this.name);
+      result.setParts(this.parts);
       result.setCommon(this.common);
       return result;
     }
@@ -147,28 +128,27 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public GetUUIDReq(GetUUIDReq other) {
+  public DeleteTagsRequest(DeleteTagsRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    this.part_id = TBaseHelper.deepCopy(other.part_id);
-    if (other.isSetName()) {
-      this.name = TBaseHelper.deepCopy(other.name);
+    if (other.isSetParts()) {
+      this.parts = TBaseHelper.deepCopy(other.parts);
     }
     if (other.isSetCommon()) {
       this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
-  public GetUUIDReq deepCopy() {
-    return new GetUUIDReq(this);
+  public DeleteTagsRequest deepCopy() {
+    return new DeleteTagsRequest(this);
   }
 
   public int getSpace_id() {
     return this.space_id;
   }
 
-  public GetUUIDReq setSpace_id(int space_id) {
+  public DeleteTagsRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -187,50 +167,27 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int getPart_id() {
-    return this.part_id;
+  public Map<Integer,List<DelTags>> getParts() {
+    return this.parts;
   }
 
-  public GetUUIDReq setPart_id(int part_id) {
-    this.part_id = part_id;
-    setPart_idIsSet(true);
+  public DeleteTagsRequest setParts(Map<Integer,List<DelTags>> parts) {
+    this.parts = parts;
     return this;
   }
 
-  public void unsetPart_id() {
-    __isset_bit_vector.clear(__PART_ID_ISSET_ID);
+  public void unsetParts() {
+    this.parts = null;
   }
 
-  // Returns true if field part_id is set (has been assigned a value) and false otherwise
-  public boolean isSetPart_id() {
-    return __isset_bit_vector.get(__PART_ID_ISSET_ID);
+  // Returns true if field parts is set (has been assigned a value) and false otherwise
+  public boolean isSetParts() {
+    return this.parts != null;
   }
 
-  public void setPart_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
-  }
-
-  public byte[] getName() {
-    return this.name;
-  }
-
-  public GetUUIDReq setName(byte[] name) {
-    this.name = name;
-    return this;
-  }
-
-  public void unsetName() {
-    this.name = null;
-  }
-
-  // Returns true if field name is set (has been assigned a value) and false otherwise
-  public boolean isSetName() {
-    return this.name != null;
-  }
-
-  public void setNameIsSet(boolean __value) {
+  public void setPartsIsSet(boolean __value) {
     if (!__value) {
-      this.name = null;
+      this.parts = null;
     }
   }
 
@@ -238,7 +195,7 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     return this.common;
   }
 
-  public GetUUIDReq setCommon(RequestCommon common) {
+  public DeleteTagsRequest setCommon(RequestCommon common) {
     this.common = common;
     return this;
   }
@@ -258,6 +215,7 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -268,19 +226,11 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
-    case PART_ID:
+    case PARTS:
       if (__value == null) {
-        unsetPart_id();
+        unsetParts();
       } else {
-        setPart_id((Integer)__value);
-      }
-      break;
-
-    case NAME:
-      if (__value == null) {
-        unsetName();
-      } else {
-        setName((byte[])__value);
+        setParts((Map<Integer,List<DelTags>>)__value);
       }
       break;
 
@@ -302,11 +252,8 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PART_ID:
-      return new Integer(getPart_id());
-
-    case NAME:
-      return getName();
+    case PARTS:
+      return getParts();
 
     case COMMON:
       return getCommon();
@@ -322,15 +269,13 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof GetUUIDReq))
+    if (!(_that instanceof DeleteTagsRequest))
       return false;
-    GetUUIDReq that = (GetUUIDReq)_that;
+    DeleteTagsRequest that = (DeleteTagsRequest)_that;
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
-
-    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
 
@@ -339,54 +284,7 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, name, common});
-  }
-
-  @Override
-  public int compareTo(GetUUIDReq other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetName()).compareTo(other.isSetName());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(name, other.name);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetCommon()).compareTo(other.isSetCommon());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(common, other.common);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    return 0;
+    return Arrays.deepHashCode(new Object[] {space_id, parts, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -408,17 +306,36 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PART_ID:
-          if (__field.type == TType.I32) {
-            this.part_id = iprot.readI32();
-            setPart_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case NAME:
-          if (__field.type == TType.STRING) {
-            this.name = iprot.readBinary();
+        case PARTS:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map144 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<DelTags>>(Math.max(0, 2*_map144.size));
+              for (int _i145 = 0; 
+                   (_map144.size < 0) ? iprot.peekMap() : (_i145 < _map144.size); 
+                   ++_i145)
+              {
+                int _key146;
+                List<DelTags> _val147;
+                _key146 = iprot.readI32();
+                {
+                  TList _list148 = iprot.readListBegin();
+                  _val147 = new ArrayList<DelTags>(Math.max(0, _list148.size));
+                  for (int _i149 = 0; 
+                       (_list148.size < 0) ? iprot.peekList() : (_i149 < _list148.size); 
+                       ++_i149)
+                  {
+                    DelTags _elem150;
+                    _elem150 = new DelTags();
+                    _elem150.read(iprot);
+                    _val147.add(_elem150);
+                  }
+                  iprot.readListEnd();
+                }
+                this.parts.put(_key146, _val147);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -451,12 +368,22 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(PART_ID_FIELD_DESC);
-    oprot.writeI32(this.part_id);
-    oprot.writeFieldEnd();
-    if (this.name != null) {
-      oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeBinary(this.name);
+    if (this.parts != null) {
+      oprot.writeFieldBegin(PARTS_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
+        for (Map.Entry<Integer, List<DelTags>> _iter151 : this.parts.entrySet())        {
+          oprot.writeI32(_iter151.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter151.getValue().size()));
+            for (DelTags _iter152 : _iter151.getValue())            {
+              _iter152.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+        }
+        oprot.writeMapEnd();
+      }
       oprot.writeFieldEnd();
     }
     if (this.common != null) {
@@ -480,7 +407,7 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("GetUUIDReq");
+    StringBuilder sb = new StringBuilder("DeleteTagsRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -494,25 +421,13 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("part_id");
+    sb.append("parts");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("name");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getName() == null) {
+    if (this.getParts() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this.getName().length, 128);
-        for (int i = 0; i < __name_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
-        }
-        if (this.getName().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
     if (isSetCommon())

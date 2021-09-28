@@ -36,6 +36,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)8);
   private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)9);
   private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)10);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)11);
 
   public int space_id;
   public int part_id;
@@ -47,6 +48,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public byte[] filter;
   public boolean only_latest_version;
   public boolean enable_read_from_follower;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int CURSOR = 3;
@@ -57,6 +59,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public static final int FILTER = 8;
   public static final int ONLY_LATEST_VERSION = 9;
   public static final int ENABLE_READ_FROM_FOLLOWER = 10;
+  public static final int COMMON = 11;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -92,6 +95,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(ENABLE_READ_FROM_FOLLOWER, new FieldMetaData("enable_read_from_follower", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -137,7 +142,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       long end_time,
       byte[] filter,
       boolean only_latest_version,
-      boolean enable_read_from_follower) {
+      boolean enable_read_from_follower,
+      RequestCommon common) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -156,6 +162,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     setOnly_latest_versionIsSet(true);
     this.enable_read_from_follower = enable_read_from_follower;
     setEnable_read_from_followerIsSet(true);
+    this.common = common;
   }
 
   public static class Builder {
@@ -169,6 +176,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     private byte[] filter;
     private boolean only_latest_version;
     private boolean enable_read_from_follower;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(7);
 
@@ -232,6 +240,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public ScanEdgeRequest build() {
       ScanEdgeRequest result = new ScanEdgeRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -258,6 +271,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       if (__optional_isset.get(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID)) {
         result.setEnable_read_from_follower(this.enable_read_from_follower);
       }
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -288,6 +302,9 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     }
     this.only_latest_version = TBaseHelper.deepCopy(other.only_latest_version);
     this.enable_read_from_follower = TBaseHelper.deepCopy(other.enable_read_from_follower);
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
+    }
   }
 
   public ScanEdgeRequest deepCopy() {
@@ -527,6 +544,30 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__ENABLE_READ_FROM_FOLLOWER_ISSET_ID, __value);
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public ScanEdgeRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -609,6 +650,14 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -646,6 +695,9 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     case ENABLE_READ_FROM_FOLLOWER:
       return new Boolean(isEnable_read_from_follower());
 
+    case COMMON:
+      return getCommon();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -681,12 +733,14 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
     if (!TBaseHelper.equalsNobinary(this.enable_read_from_follower, that.enable_read_from_follower)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, cursor, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower});
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, cursor, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower, common});
   }
 
   @Override
@@ -778,6 +832,14 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(enable_read_from_follower, other.enable_read_from_follower);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCommon()).compareTo(other.isSetCommon());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(common, other.common);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -873,6 +935,14 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -934,6 +1004,13 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldBegin(ENABLE_READ_FROM_FOLLOWER_FIELD_DESC);
     oprot.writeBool(this.enable_read_from_follower);
     oprot.writeFieldEnd();
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -1057,6 +1134,20 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.isEnable_read_from_follower(), indent + 1, prettyPrint));
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

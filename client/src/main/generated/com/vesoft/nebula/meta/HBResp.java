@@ -30,6 +30,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
   private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)3);
   private static final TField LAST_UPDATE_TIME_IN_MS_FIELD_DESC = new TField("last_update_time_in_ms", TType.I64, (short)4);
+  private static final TField META_VERSION_FIELD_DESC = new TField("meta_version", TType.I32, (short)5);
 
   /**
    * 
@@ -39,15 +40,18 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
   public com.vesoft.nebula.HostAddr leader;
   public long cluster_id;
   public long last_update_time_in_ms;
+  public int meta_version;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int CLUSTER_ID = 3;
   public static final int LAST_UPDATE_TIME_IN_MS = 4;
+  public static final int META_VERSION = 5;
 
   // isset id assignments
   private static final int __CLUSTER_ID_ISSET_ID = 0;
   private static final int __LAST_UPDATE_TIME_IN_MS_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __META_VERSION_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -61,6 +65,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(LAST_UPDATE_TIME_IN_MS, new FieldMetaData("last_update_time_in_ms", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(META_VERSION, new FieldMetaData("meta_version", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -75,7 +81,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
       long cluster_id,
-      long last_update_time_in_ms) {
+      long last_update_time_in_ms,
+      int meta_version) {
     this();
     this.code = code;
     this.leader = leader;
@@ -83,6 +90,8 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     setCluster_idIsSet(true);
     this.last_update_time_in_ms = last_update_time_in_ms;
     setLast_update_time_in_msIsSet(true);
+    this.meta_version = meta_version;
+    setMeta_versionIsSet(true);
   }
 
   public static class Builder {
@@ -90,8 +99,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     private com.vesoft.nebula.HostAddr leader;
     private long cluster_id;
     private long last_update_time_in_ms;
+    private int meta_version;
 
-    BitSet __optional_isset = new BitSet(2);
+    BitSet __optional_isset = new BitSet(3);
 
     public Builder() {
     }
@@ -118,6 +128,12 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       return this;
     }
 
+    public Builder setMeta_version(final int meta_version) {
+      this.meta_version = meta_version;
+      __optional_isset.set(__META_VERSION_ISSET_ID, true);
+      return this;
+    }
+
     public HBResp build() {
       HBResp result = new HBResp();
       result.setCode(this.code);
@@ -127,6 +143,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       }
       if (__optional_isset.get(__LAST_UPDATE_TIME_IN_MS_ISSET_ID)) {
         result.setLast_update_time_in_ms(this.last_update_time_in_ms);
+      }
+      if (__optional_isset.get(__META_VERSION_ISSET_ID)) {
+        result.setMeta_version(this.meta_version);
       }
       return result;
     }
@@ -150,6 +169,7 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     }
     this.cluster_id = TBaseHelper.deepCopy(other.cluster_id);
     this.last_update_time_in_ms = TBaseHelper.deepCopy(other.last_update_time_in_ms);
+    this.meta_version = TBaseHelper.deepCopy(other.meta_version);
   }
 
   public HBResp deepCopy() {
@@ -258,6 +278,29 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     __isset_bit_vector.set(__LAST_UPDATE_TIME_IN_MS_ISSET_ID, __value);
   }
 
+  public int getMeta_version() {
+    return this.meta_version;
+  }
+
+  public HBResp setMeta_version(int meta_version) {
+    this.meta_version = meta_version;
+    setMeta_versionIsSet(true);
+    return this;
+  }
+
+  public void unsetMeta_version() {
+    __isset_bit_vector.clear(__META_VERSION_ISSET_ID);
+  }
+
+  // Returns true if field meta_version is set (has been assigned a value) and false otherwise
+  public boolean isSetMeta_version() {
+    return __isset_bit_vector.get(__META_VERSION_ISSET_ID);
+  }
+
+  public void setMeta_versionIsSet(boolean __value) {
+    __isset_bit_vector.set(__META_VERSION_ISSET_ID, __value);
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
@@ -292,6 +335,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       }
       break;
 
+    case META_VERSION:
+      if (__value == null) {
+        unsetMeta_version();
+      } else {
+        setMeta_version((Integer)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -310,6 +361,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
 
     case LAST_UPDATE_TIME_IN_MS:
       return new Long(getLast_update_time_in_ms());
+
+    case META_VERSION:
+      return new Integer(getMeta_version());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -334,12 +388,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
 
     if (!TBaseHelper.equalsNobinary(this.last_update_time_in_ms, that.last_update_time_in_ms)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.meta_version, that.meta_version)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, cluster_id, last_update_time_in_ms});
+    return Arrays.deepHashCode(new Object[] {code, leader, cluster_id, last_update_time_in_ms, meta_version});
   }
 
   @Override
@@ -383,6 +439,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_update_time_in_ms, other.last_update_time_in_ms);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetMeta_version()).compareTo(other.isSetMeta_version());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(meta_version, other.meta_version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -431,6 +495,14 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case META_VERSION:
+          if (__field.type == TType.I32) {
+            this.meta_version = iprot.readI32();
+            setMeta_versionIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -463,6 +535,9 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(LAST_UPDATE_TIME_IN_MS_FIELD_DESC);
     oprot.writeI64(this.last_update_time_in_ms);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(META_VERSION_FIELD_DESC);
+    oprot.writeI32(this.meta_version);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -526,6 +601,13 @@ public class HBResp implements TBase, java.io.Serializable, Cloneable, Comparabl
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getLast_update_time_in_ms(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("meta_version");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getMeta_version(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

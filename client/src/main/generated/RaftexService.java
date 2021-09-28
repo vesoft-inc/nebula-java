@@ -4,8 +4,6 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.storage;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,25 +25,29 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GeneralStorageService {
+public class RaftexService {
 
   public interface Iface {
 
-    public KVGetResponse get(KVGetRequest req) throws TException;
+    public AskForVoteResponse askForVote(AskForVoteRequest req) throws TException;
 
-    public ExecResponse put(KVPutRequest req) throws TException;
+    public AppendLogResponse appendLog(AppendLogRequest req) throws TException;
 
-    public ExecResponse remove(KVRemoveRequest req) throws TException;
+    public SendSnapshotResponse sendSnapshot(SendSnapshotRequest req) throws TException;
+
+    public HeartbeatResponse heartbeat(HeartbeatRequest req) throws TException;
 
   }
 
   public interface AsyncIface {
 
-    public void get(KVGetRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void put(KVPutRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void remove(KVRemoveRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -78,139 +80,184 @@ public class GeneralStorageService {
       return this.oprot_;
     }
 
-    public KVGetResponse get(KVGetRequest req) throws TException
+    public AskForVoteResponse askForVote(AskForVoteRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("GeneralStorageService.get", null);
+      ContextStack ctx = getContextStack("RaftexService.askForVote", null);
       this.setContextStack(ctx);
-      send_get(req);
-      return recv_get();
+      send_askForVote(req);
+      return recv_askForVote();
     }
 
-    public void send_get(KVGetRequest req) throws TException
+    public void send_askForVote(AskForVoteRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GeneralStorageService.get", null);
-      oprot_.writeMessageBegin(new TMessage("get", TMessageType.CALL, seqid_));
-      get_args args = new get_args();
+      super.preWrite(ctx, "RaftexService.askForVote", null);
+      oprot_.writeMessageBegin(new TMessage("askForVote", TMessageType.CALL, seqid_));
+      askForVote_args args = new askForVote_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "GeneralStorageService.get", args);
+      super.postWrite(ctx, "RaftexService.askForVote", args);
       return;
     }
 
-    public KVGetResponse recv_get() throws TException
+    public AskForVoteResponse recv_askForVote() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "GeneralStorageService.get");
+      super.preRead(ctx, "RaftexService.askForVote");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      get_result result = new get_result();
+      askForVote_result result = new askForVote_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "GeneralStorageService.get", result);
+      super.postRead(ctx, "RaftexService.askForVote", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "get failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "askForVote failed: unknown result");
     }
 
-    public ExecResponse put(KVPutRequest req) throws TException
+    public AppendLogResponse appendLog(AppendLogRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("GeneralStorageService.put", null);
+      ContextStack ctx = getContextStack("RaftexService.appendLog", null);
       this.setContextStack(ctx);
-      send_put(req);
-      return recv_put();
+      send_appendLog(req);
+      return recv_appendLog();
     }
 
-    public void send_put(KVPutRequest req) throws TException
+    public void send_appendLog(AppendLogRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GeneralStorageService.put", null);
-      oprot_.writeMessageBegin(new TMessage("put", TMessageType.CALL, seqid_));
-      put_args args = new put_args();
+      super.preWrite(ctx, "RaftexService.appendLog", null);
+      oprot_.writeMessageBegin(new TMessage("appendLog", TMessageType.CALL, seqid_));
+      appendLog_args args = new appendLog_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "GeneralStorageService.put", args);
+      super.postWrite(ctx, "RaftexService.appendLog", args);
       return;
     }
 
-    public ExecResponse recv_put() throws TException
+    public AppendLogResponse recv_appendLog() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "GeneralStorageService.put");
+      super.preRead(ctx, "RaftexService.appendLog");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      put_result result = new put_result();
+      appendLog_result result = new appendLog_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "GeneralStorageService.put", result);
+      super.postRead(ctx, "RaftexService.appendLog", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "put failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "appendLog failed: unknown result");
     }
 
-    public ExecResponse remove(KVRemoveRequest req) throws TException
+    public SendSnapshotResponse sendSnapshot(SendSnapshotRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("GeneralStorageService.remove", null);
+      ContextStack ctx = getContextStack("RaftexService.sendSnapshot", null);
       this.setContextStack(ctx);
-      send_remove(req);
-      return recv_remove();
+      send_sendSnapshot(req);
+      return recv_sendSnapshot();
     }
 
-    public void send_remove(KVRemoveRequest req) throws TException
+    public void send_sendSnapshot(SendSnapshotRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GeneralStorageService.remove", null);
-      oprot_.writeMessageBegin(new TMessage("remove", TMessageType.CALL, seqid_));
-      remove_args args = new remove_args();
+      super.preWrite(ctx, "RaftexService.sendSnapshot", null);
+      oprot_.writeMessageBegin(new TMessage("sendSnapshot", TMessageType.CALL, seqid_));
+      sendSnapshot_args args = new sendSnapshot_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "GeneralStorageService.remove", args);
+      super.postWrite(ctx, "RaftexService.sendSnapshot", args);
       return;
     }
 
-    public ExecResponse recv_remove() throws TException
+    public SendSnapshotResponse recv_sendSnapshot() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "GeneralStorageService.remove");
+      super.preRead(ctx, "RaftexService.sendSnapshot");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      remove_result result = new remove_result();
+      sendSnapshot_result result = new sendSnapshot_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "GeneralStorageService.remove", result);
+      super.postRead(ctx, "RaftexService.sendSnapshot", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "remove failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "sendSnapshot failed: unknown result");
+    }
+
+    public HeartbeatResponse heartbeat(HeartbeatRequest req) throws TException
+    {
+      ContextStack ctx = getContextStack("RaftexService.heartbeat", null);
+      this.setContextStack(ctx);
+      send_heartbeat(req);
+      return recv_heartbeat();
+    }
+
+    public void send_heartbeat(HeartbeatRequest req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "RaftexService.heartbeat", null);
+      oprot_.writeMessageBegin(new TMessage("heartbeat", TMessageType.CALL, seqid_));
+      heartbeat_args args = new heartbeat_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "RaftexService.heartbeat", args);
+      return;
+    }
+
+    public HeartbeatResponse recv_heartbeat() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "RaftexService.heartbeat");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      heartbeat_result result = new heartbeat_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "RaftexService.heartbeat", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "heartbeat failed: unknown result");
     }
 
   }
@@ -231,99 +278,131 @@ public class GeneralStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void get(KVGetRequest req, AsyncMethodCallback resultHandler454) throws TException {
+    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler15) throws TException {
       checkReady();
-      get_call method_call = new get_call(req, resultHandler454, this, ___protocolFactory, ___transport);
+      askForVote_call method_call = new askForVote_call(req, resultHandler15, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class get_call extends TAsyncMethodCall {
-      private KVGetRequest req;
-      public get_call(KVGetRequest req, AsyncMethodCallback resultHandler455, TAsyncClient client451, TProtocolFactory protocolFactory452, TNonblockingTransport transport453) throws TException {
-        super(client451, protocolFactory452, transport453, resultHandler455, false);
+    public static class askForVote_call extends TAsyncMethodCall {
+      private AskForVoteRequest req;
+      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler16, TAsyncClient client12, TProtocolFactory protocolFactory13, TNonblockingTransport transport14) throws TException {
+        super(client12, protocolFactory13, transport14, resultHandler16, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("get", TMessageType.CALL, 0));
-        get_args args = new get_args();
+        prot.writeMessageBegin(new TMessage("askForVote", TMessageType.CALL, 0));
+        askForVote_args args = new askForVote_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public KVGetResponse getResult() throws TException {
+      public AskForVoteResponse getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_get();
+        return (new Client(prot)).recv_askForVote();
       }
     }
 
-    public void put(KVPutRequest req, AsyncMethodCallback resultHandler459) throws TException {
+    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler20) throws TException {
       checkReady();
-      put_call method_call = new put_call(req, resultHandler459, this, ___protocolFactory, ___transport);
+      appendLog_call method_call = new appendLog_call(req, resultHandler20, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class put_call extends TAsyncMethodCall {
-      private KVPutRequest req;
-      public put_call(KVPutRequest req, AsyncMethodCallback resultHandler460, TAsyncClient client456, TProtocolFactory protocolFactory457, TNonblockingTransport transport458) throws TException {
-        super(client456, protocolFactory457, transport458, resultHandler460, false);
+    public static class appendLog_call extends TAsyncMethodCall {
+      private AppendLogRequest req;
+      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler21, TAsyncClient client17, TProtocolFactory protocolFactory18, TNonblockingTransport transport19) throws TException {
+        super(client17, protocolFactory18, transport19, resultHandler21, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("put", TMessageType.CALL, 0));
-        put_args args = new put_args();
+        prot.writeMessageBegin(new TMessage("appendLog", TMessageType.CALL, 0));
+        appendLog_args args = new appendLog_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public ExecResponse getResult() throws TException {
+      public AppendLogResponse getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_put();
+        return (new Client(prot)).recv_appendLog();
       }
     }
 
-    public void remove(KVRemoveRequest req, AsyncMethodCallback resultHandler464) throws TException {
+    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler25) throws TException {
       checkReady();
-      remove_call method_call = new remove_call(req, resultHandler464, this, ___protocolFactory, ___transport);
+      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler25, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class remove_call extends TAsyncMethodCall {
-      private KVRemoveRequest req;
-      public remove_call(KVRemoveRequest req, AsyncMethodCallback resultHandler465, TAsyncClient client461, TProtocolFactory protocolFactory462, TNonblockingTransport transport463) throws TException {
-        super(client461, protocolFactory462, transport463, resultHandler465, false);
+    public static class sendSnapshot_call extends TAsyncMethodCall {
+      private SendSnapshotRequest req;
+      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler26, TAsyncClient client22, TProtocolFactory protocolFactory23, TNonblockingTransport transport24) throws TException {
+        super(client22, protocolFactory23, transport24, resultHandler26, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("remove", TMessageType.CALL, 0));
-        remove_args args = new remove_args();
+        prot.writeMessageBegin(new TMessage("sendSnapshot", TMessageType.CALL, 0));
+        sendSnapshot_args args = new sendSnapshot_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public ExecResponse getResult() throws TException {
+      public SendSnapshotResponse getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_remove();
+        return (new Client(prot)).recv_sendSnapshot();
+      }
+    }
+
+    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler30) throws TException {
+      checkReady();
+      heartbeat_call method_call = new heartbeat_call(req, resultHandler30, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class heartbeat_call extends TAsyncMethodCall {
+      private HeartbeatRequest req;
+      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler31, TAsyncClient client27, TProtocolFactory protocolFactory28, TNonblockingTransport transport29) throws TException {
+        super(client27, protocolFactory28, transport29, resultHandler31, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("heartbeat", TMessageType.CALL, 0));
+        heartbeat_args args = new heartbeat_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public HeartbeatResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_heartbeat();
       }
     }
 
@@ -335,9 +414,10 @@ public class GeneralStorageService {
     {
       iface_ = iface;
       event_handler_ = new TProcessorEventHandler(); // Empty handler
-      processMap_.put("get", new get());
-      processMap_.put("put", new put());
-      processMap_.put("remove", new remove());
+      processMap_.put("askForVote", new askForVote());
+      processMap_.put("appendLog", new appendLog());
+      processMap_.put("sendSnapshot", new sendSnapshot());
+      processMap_.put("heartbeat", new heartbeat());
     }
 
     protected static interface ProcessFunction {
@@ -370,76 +450,97 @@ public class GeneralStorageService {
       return true;
     }
 
-    private class get implements ProcessFunction {
+    private class askForVote implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("GeneralStorageService.get", server_ctx);
-        get_args args = new get_args();
-        event_handler_.preRead(handler_ctx, "GeneralStorageService.get");
+        Object handler_ctx = event_handler_.getContext("RaftexService.askForVote", server_ctx);
+        askForVote_args args = new askForVote_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.askForVote");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GeneralStorageService.get", args);
-        get_result result = new get_result();
-        result.success = iface_.get(args.req);
-        event_handler_.preWrite(handler_ctx, "GeneralStorageService.get", result);
-        oprot.writeMessageBegin(new TMessage("get", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "RaftexService.askForVote", args);
+        askForVote_result result = new askForVote_result();
+        result.success = iface_.askForVote(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.askForVote", result);
+        oprot.writeMessageBegin(new TMessage("askForVote", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GeneralStorageService.get", result);
+        event_handler_.postWrite(handler_ctx, "RaftexService.askForVote", result);
       }
 
     }
 
-    private class put implements ProcessFunction {
+    private class appendLog implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("GeneralStorageService.put", server_ctx);
-        put_args args = new put_args();
-        event_handler_.preRead(handler_ctx, "GeneralStorageService.put");
+        Object handler_ctx = event_handler_.getContext("RaftexService.appendLog", server_ctx);
+        appendLog_args args = new appendLog_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.appendLog");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GeneralStorageService.put", args);
-        put_result result = new put_result();
-        result.success = iface_.put(args.req);
-        event_handler_.preWrite(handler_ctx, "GeneralStorageService.put", result);
-        oprot.writeMessageBegin(new TMessage("put", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "RaftexService.appendLog", args);
+        appendLog_result result = new appendLog_result();
+        result.success = iface_.appendLog(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.appendLog", result);
+        oprot.writeMessageBegin(new TMessage("appendLog", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GeneralStorageService.put", result);
+        event_handler_.postWrite(handler_ctx, "RaftexService.appendLog", result);
       }
 
     }
 
-    private class remove implements ProcessFunction {
+    private class sendSnapshot implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("GeneralStorageService.remove", server_ctx);
-        remove_args args = new remove_args();
-        event_handler_.preRead(handler_ctx, "GeneralStorageService.remove");
+        Object handler_ctx = event_handler_.getContext("RaftexService.sendSnapshot", server_ctx);
+        sendSnapshot_args args = new sendSnapshot_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.sendSnapshot");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GeneralStorageService.remove", args);
-        remove_result result = new remove_result();
-        result.success = iface_.remove(args.req);
-        event_handler_.preWrite(handler_ctx, "GeneralStorageService.remove", result);
-        oprot.writeMessageBegin(new TMessage("remove", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "RaftexService.sendSnapshot", args);
+        sendSnapshot_result result = new sendSnapshot_result();
+        result.success = iface_.sendSnapshot(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.sendSnapshot", result);
+        oprot.writeMessageBegin(new TMessage("sendSnapshot", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GeneralStorageService.remove", result);
+        event_handler_.postWrite(handler_ctx, "RaftexService.sendSnapshot", result);
+      }
+
+    }
+
+    private class heartbeat implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("RaftexService.heartbeat", server_ctx);
+        heartbeat_args args = new heartbeat_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.heartbeat");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "RaftexService.heartbeat", args);
+        heartbeat_result result = new heartbeat_result();
+        result.success = iface_.heartbeat(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.heartbeat", result);
+        oprot.writeMessageBegin(new TMessage("heartbeat", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "RaftexService.heartbeat", result);
       }
 
     }
 
   }
 
-  public static class get_args implements TBase, java.io.Serializable, Cloneable, Comparable<get_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("get_args");
+  public static class askForVote_args implements TBase, java.io.Serializable, Cloneable, Comparable<askForVote_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("askForVote_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public KVGetRequest req;
+    public AskForVoteRequest req;
     public static final int REQ = 1;
 
     // isset id assignments
@@ -449,19 +550,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVGetRequest.class)));
+          new StructMetaData(TType.STRUCT, AskForVoteRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(get_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(askForVote_args.class, metaDataMap);
     }
 
-    public get_args() {
+    public askForVote_args() {
     }
 
-    public get_args(
-        KVGetRequest req) {
+    public askForVote_args(
+        AskForVoteRequest req) {
       this();
       this.req = req;
     }
@@ -469,21 +570,21 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public get_args(get_args other) {
+    public askForVote_args(askForVote_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public get_args deepCopy() {
-      return new get_args(this);
+    public askForVote_args deepCopy() {
+      return new askForVote_args(this);
     }
 
-    public KVGetRequest getReq() {
+    public AskForVoteRequest getReq() {
       return this.req;
     }
 
-    public get_args setReq(KVGetRequest req) {
+    public askForVote_args setReq(AskForVoteRequest req) {
       this.req = req;
       return this;
     }
@@ -509,7 +610,7 @@ public class GeneralStorageService {
         if (__value == null) {
           unsetReq();
         } else {
-          setReq((KVGetRequest)__value);
+          setReq((AskForVoteRequest)__value);
         }
         break;
 
@@ -534,9 +635,9 @@ public class GeneralStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof get_args))
+      if (!(_that instanceof askForVote_args))
         return false;
-      get_args that = (get_args)_that;
+      askForVote_args that = (askForVote_args)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
@@ -549,7 +650,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(get_args other) {
+    public int compareTo(askForVote_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -584,7 +685,7 @@ public class GeneralStorageService {
         {
           case REQ:
             if (__field.type == TType.STRUCT) {
-              this.req = new KVGetRequest();
+              this.req = new AskForVoteRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -626,7 +727,7 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("get_args");
+      StringBuilder sb = new StringBuilder("askForVote_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -653,11 +754,11 @@ public class GeneralStorageService {
 
   }
 
-  public static class get_result implements TBase, java.io.Serializable, Cloneable, Comparable<get_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("get_result");
+  public static class askForVote_result implements TBase, java.io.Serializable, Cloneable, Comparable<askForVote_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("askForVote_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public KVGetResponse success;
+    public AskForVoteResponse success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -667,19 +768,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVGetResponse.class)));
+          new StructMetaData(TType.STRUCT, AskForVoteResponse.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(get_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(askForVote_result.class, metaDataMap);
     }
 
-    public get_result() {
+    public askForVote_result() {
     }
 
-    public get_result(
-        KVGetResponse success) {
+    public askForVote_result(
+        AskForVoteResponse success) {
       this();
       this.success = success;
     }
@@ -687,21 +788,21 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public get_result(get_result other) {
+    public askForVote_result(askForVote_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public get_result deepCopy() {
-      return new get_result(this);
+    public askForVote_result deepCopy() {
+      return new askForVote_result(this);
     }
 
-    public KVGetResponse getSuccess() {
+    public AskForVoteResponse getSuccess() {
       return this.success;
     }
 
-    public get_result setSuccess(KVGetResponse success) {
+    public askForVote_result setSuccess(AskForVoteResponse success) {
       this.success = success;
       return this;
     }
@@ -727,7 +828,7 @@ public class GeneralStorageService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((KVGetResponse)__value);
+          setSuccess((AskForVoteResponse)__value);
         }
         break;
 
@@ -752,9 +853,9 @@ public class GeneralStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof get_result))
+      if (!(_that instanceof askForVote_result))
         return false;
-      get_result that = (get_result)_that;
+      askForVote_result that = (askForVote_result)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
@@ -767,7 +868,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(get_result other) {
+    public int compareTo(askForVote_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -802,7 +903,7 @@ public class GeneralStorageService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new KVGetResponse();
+              this.success = new AskForVoteResponse();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -843,7 +944,7 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("get_result");
+      StringBuilder sb = new StringBuilder("askForVote_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -870,11 +971,11 @@ public class GeneralStorageService {
 
   }
 
-  public static class put_args implements TBase, java.io.Serializable, Cloneable, Comparable<put_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("put_args");
+  public static class appendLog_args implements TBase, java.io.Serializable, Cloneable, Comparable<appendLog_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("appendLog_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public KVPutRequest req;
+    public AppendLogRequest req;
     public static final int REQ = 1;
 
     // isset id assignments
@@ -884,19 +985,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVPutRequest.class)));
+          new StructMetaData(TType.STRUCT, AppendLogRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(put_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(appendLog_args.class, metaDataMap);
     }
 
-    public put_args() {
+    public appendLog_args() {
     }
 
-    public put_args(
-        KVPutRequest req) {
+    public appendLog_args(
+        AppendLogRequest req) {
       this();
       this.req = req;
     }
@@ -904,21 +1005,21 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public put_args(put_args other) {
+    public appendLog_args(appendLog_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public put_args deepCopy() {
-      return new put_args(this);
+    public appendLog_args deepCopy() {
+      return new appendLog_args(this);
     }
 
-    public KVPutRequest getReq() {
+    public AppendLogRequest getReq() {
       return this.req;
     }
 
-    public put_args setReq(KVPutRequest req) {
+    public appendLog_args setReq(AppendLogRequest req) {
       this.req = req;
       return this;
     }
@@ -944,7 +1045,7 @@ public class GeneralStorageService {
         if (__value == null) {
           unsetReq();
         } else {
-          setReq((KVPutRequest)__value);
+          setReq((AppendLogRequest)__value);
         }
         break;
 
@@ -969,9 +1070,9 @@ public class GeneralStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof put_args))
+      if (!(_that instanceof appendLog_args))
         return false;
-      put_args that = (put_args)_that;
+      appendLog_args that = (appendLog_args)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
@@ -984,7 +1085,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(put_args other) {
+    public int compareTo(appendLog_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -1019,7 +1120,7 @@ public class GeneralStorageService {
         {
           case REQ:
             if (__field.type == TType.STRUCT) {
-              this.req = new KVPutRequest();
+              this.req = new AppendLogRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -1061,7 +1162,7 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("put_args");
+      StringBuilder sb = new StringBuilder("appendLog_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -1088,11 +1189,11 @@ public class GeneralStorageService {
 
   }
 
-  public static class put_result implements TBase, java.io.Serializable, Cloneable, Comparable<put_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("put_result");
+  public static class appendLog_result implements TBase, java.io.Serializable, Cloneable, Comparable<appendLog_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("appendLog_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public ExecResponse success;
+    public AppendLogResponse success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -1102,19 +1203,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, ExecResponse.class)));
+          new StructMetaData(TType.STRUCT, AppendLogResponse.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(put_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(appendLog_result.class, metaDataMap);
     }
 
-    public put_result() {
+    public appendLog_result() {
     }
 
-    public put_result(
-        ExecResponse success) {
+    public appendLog_result(
+        AppendLogResponse success) {
       this();
       this.success = success;
     }
@@ -1122,21 +1223,21 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public put_result(put_result other) {
+    public appendLog_result(appendLog_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public put_result deepCopy() {
-      return new put_result(this);
+    public appendLog_result deepCopy() {
+      return new appendLog_result(this);
     }
 
-    public ExecResponse getSuccess() {
+    public AppendLogResponse getSuccess() {
       return this.success;
     }
 
-    public put_result setSuccess(ExecResponse success) {
+    public appendLog_result setSuccess(AppendLogResponse success) {
       this.success = success;
       return this;
     }
@@ -1162,7 +1263,7 @@ public class GeneralStorageService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((ExecResponse)__value);
+          setSuccess((AppendLogResponse)__value);
         }
         break;
 
@@ -1187,9 +1288,9 @@ public class GeneralStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof put_result))
+      if (!(_that instanceof appendLog_result))
         return false;
-      put_result that = (put_result)_that;
+      appendLog_result that = (appendLog_result)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
@@ -1202,7 +1303,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(put_result other) {
+    public int compareTo(appendLog_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -1237,7 +1338,7 @@ public class GeneralStorageService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new ExecResponse();
+              this.success = new AppendLogResponse();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -1278,7 +1379,7 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("put_result");
+      StringBuilder sb = new StringBuilder("appendLog_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -1305,11 +1406,11 @@ public class GeneralStorageService {
 
   }
 
-  public static class remove_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("remove_args");
+  public static class sendSnapshot_args implements TBase, java.io.Serializable, Cloneable, Comparable<sendSnapshot_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("sendSnapshot_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public KVRemoveRequest req;
+    public SendSnapshotRequest req;
     public static final int REQ = 1;
 
     // isset id assignments
@@ -1319,19 +1420,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, KVRemoveRequest.class)));
+          new StructMetaData(TType.STRUCT, SendSnapshotRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(remove_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(sendSnapshot_args.class, metaDataMap);
     }
 
-    public remove_args() {
+    public sendSnapshot_args() {
     }
 
-    public remove_args(
-        KVRemoveRequest req) {
+    public sendSnapshot_args(
+        SendSnapshotRequest req) {
       this();
       this.req = req;
     }
@@ -1339,21 +1440,21 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public remove_args(remove_args other) {
+    public sendSnapshot_args(sendSnapshot_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public remove_args deepCopy() {
-      return new remove_args(this);
+    public sendSnapshot_args deepCopy() {
+      return new sendSnapshot_args(this);
     }
 
-    public KVRemoveRequest getReq() {
+    public SendSnapshotRequest getReq() {
       return this.req;
     }
 
-    public remove_args setReq(KVRemoveRequest req) {
+    public sendSnapshot_args setReq(SendSnapshotRequest req) {
       this.req = req;
       return this;
     }
@@ -1379,7 +1480,7 @@ public class GeneralStorageService {
         if (__value == null) {
           unsetReq();
         } else {
-          setReq((KVRemoveRequest)__value);
+          setReq((SendSnapshotRequest)__value);
         }
         break;
 
@@ -1404,9 +1505,9 @@ public class GeneralStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof remove_args))
+      if (!(_that instanceof sendSnapshot_args))
         return false;
-      remove_args that = (remove_args)_that;
+      sendSnapshot_args that = (sendSnapshot_args)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
@@ -1419,7 +1520,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(remove_args other) {
+    public int compareTo(sendSnapshot_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -1454,7 +1555,7 @@ public class GeneralStorageService {
         {
           case REQ:
             if (__field.type == TType.STRUCT) {
-              this.req = new KVRemoveRequest();
+              this.req = new SendSnapshotRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -1496,7 +1597,7 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("remove_args");
+      StringBuilder sb = new StringBuilder("sendSnapshot_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -1523,11 +1624,11 @@ public class GeneralStorageService {
 
   }
 
-  public static class remove_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("remove_result");
+  public static class sendSnapshot_result implements TBase, java.io.Serializable, Cloneable, Comparable<sendSnapshot_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("sendSnapshot_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public ExecResponse success;
+    public SendSnapshotResponse success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -1537,19 +1638,19 @@ public class GeneralStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, ExecResponse.class)));
+          new StructMetaData(TType.STRUCT, SendSnapshotResponse.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(remove_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(sendSnapshot_result.class, metaDataMap);
     }
 
-    public remove_result() {
+    public sendSnapshot_result() {
     }
 
-    public remove_result(
-        ExecResponse success) {
+    public sendSnapshot_result(
+        SendSnapshotResponse success) {
       this();
       this.success = success;
     }
@@ -1557,21 +1658,21 @@ public class GeneralStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public remove_result(remove_result other) {
+    public sendSnapshot_result(sendSnapshot_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public remove_result deepCopy() {
-      return new remove_result(this);
+    public sendSnapshot_result deepCopy() {
+      return new sendSnapshot_result(this);
     }
 
-    public ExecResponse getSuccess() {
+    public SendSnapshotResponse getSuccess() {
       return this.success;
     }
 
-    public remove_result setSuccess(ExecResponse success) {
+    public sendSnapshot_result setSuccess(SendSnapshotResponse success) {
       this.success = success;
       return this;
     }
@@ -1597,7 +1698,7 @@ public class GeneralStorageService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((ExecResponse)__value);
+          setSuccess((SendSnapshotResponse)__value);
         }
         break;
 
@@ -1622,9 +1723,9 @@ public class GeneralStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof remove_result))
+      if (!(_that instanceof sendSnapshot_result))
         return false;
-      remove_result that = (remove_result)_that;
+      sendSnapshot_result that = (sendSnapshot_result)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
@@ -1637,7 +1738,7 @@ public class GeneralStorageService {
     }
 
     @Override
-    public int compareTo(remove_result other) {
+    public int compareTo(sendSnapshot_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -1672,7 +1773,7 @@ public class GeneralStorageService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new ExecResponse();
+              this.success = new SendSnapshotResponse();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -1713,7 +1814,442 @@ public class GeneralStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("remove_result");
+      StringBuilder sb = new StringBuilder("sendSnapshot_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class heartbeat_args implements TBase, java.io.Serializable, Cloneable, Comparable<heartbeat_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("heartbeat_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public HeartbeatRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, HeartbeatRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(heartbeat_args.class, metaDataMap);
+    }
+
+    public heartbeat_args() {
+    }
+
+    public heartbeat_args(
+        HeartbeatRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public heartbeat_args(heartbeat_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public heartbeat_args deepCopy() {
+      return new heartbeat_args(this);
+    }
+
+    public HeartbeatRequest getReq() {
+      return this.req;
+    }
+
+    public heartbeat_args setReq(HeartbeatRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((HeartbeatRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof heartbeat_args))
+        return false;
+      heartbeat_args that = (heartbeat_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(heartbeat_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new HeartbeatRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("heartbeat_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class heartbeat_result implements TBase, java.io.Serializable, Cloneable, Comparable<heartbeat_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("heartbeat_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public HeartbeatResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, HeartbeatResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(heartbeat_result.class, metaDataMap);
+    }
+
+    public heartbeat_result() {
+    }
+
+    public heartbeat_result(
+        HeartbeatResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public heartbeat_result(heartbeat_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public heartbeat_result deepCopy() {
+      return new heartbeat_result(this);
+    }
+
+    public HeartbeatResponse getSuccess() {
+      return this.success;
+    }
+
+    public heartbeat_result setSuccess(HeartbeatResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((HeartbeatResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof heartbeat_result))
+        return false;
+      heartbeat_result that = (heartbeat_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(heartbeat_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new HeartbeatResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("heartbeat_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
