@@ -145,10 +145,12 @@ public class Session {
      *                     "optimize_time_in_us":0
      *                   },
      *                   "comment ":"",
-     *                   "errors":{
-     *                     "code":0,
-     *                     "message":""
-     *                   }
+     *                 }
+     *               ],
+     *              "errors":[
+     *                 {
+     *                   "code": 0,
+     *                   "message": ""
      *                 }
      *               ]
      *             }

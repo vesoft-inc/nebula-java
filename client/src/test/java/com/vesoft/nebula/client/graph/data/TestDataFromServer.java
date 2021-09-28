@@ -438,13 +438,11 @@ public class TestDataFromServer {
         try {
             String ngql = "MATCH (v:invalidTag {name: \"Bob\"}) RETURN v";
             JSONObject resp = JSON.parseObject(session.executeJson(ngql));
-            int code = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
-                    .getInteger("code");
-            String message = resp.getJSONArray("results").getJSONObject(0).getJSONObject("errors")
-                    .getString("message");
+            int code = resp.getJSONArray("errors").getJSONObject(0).getInteger("code");
+            String message = resp.getJSONArray("errors").getJSONObject(0).getString("message");
 
             // check error code
-            Assert.assertEquals(code, -1009);
+            Assert.assertEquals(code, ErrorCode.E_SEMANTIC_ERROR.getValue());
 
             // check error message
             Assert.assertEquals(message, "SemanticError: `invalidTag': Unknown tag");
