@@ -451,4 +451,93 @@ public class TestDataFromServer {
             assert false;
         }
     }
+
+    @Test
+    public void testSelfSignedSsl() {
+        Session sslSession = null;
+        NebulaPool sslPool = new NebulaPool();
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
+
+            // boot docker with ca signed yml
+            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
+                    .waitFor(15,TimeUnit.SECONDS);
+            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+            nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
+                    "/share/resources/selfsigned.pem",
+                    "/share/resources/selfsigned.key",
+                    "vesoft"));
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+                    nebulaSslPoolConfig));
+            sslSession = sslPool.getSession("root", "nebula", true);
+
+            String ngql = "YIELD 1";
+            JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
+            System.out.println(resp);
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1]";
+            Assert.assertEquals(rowData, exp);
+
+            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml down")
+                    .waitFor(15,TimeUnit.SECONDS);
+
+            runtime.exec("docker-compose up -d")
+                    .waitFor(10,TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (sslSession != null) {
+                sslSession.release();
+            }
+            sslPool.close();
+        }
+    }
+
+    @Test
+    public void testCASignedSsl() {
+        Session sslSession = null;
+        NebulaPool sslPool = new NebulaPool();
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
+
+            // boot docker with ca signed yml
+            runtime.exec("docker-compose -f docker-compose-casigned.yaml up -d")
+                    .waitFor(15,TimeUnit.SECONDS);
+            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+            nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
+                    "/share/resources/casigned.pem",
+                    "/share/resources/casigned.crt",
+                    "/share/resources/casigned.key"));
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+                    nebulaSslPoolConfig));
+            sslSession = sslPool.getSession("root", "nebula", true);
+
+            String ngql = "YIELD 1";
+            JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1]";
+            Assert.assertEquals(rowData, exp);
+
+            runtime.exec("docker-compose -f docker-compose-casigned.yaml down")
+                    .waitFor(15,TimeUnit.SECONDS);
+
+            runtime.exec("docker-compose up -d")
+                    .waitFor(10,TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (sslSession != null) {
+                sslSession.release();
+            }
+            sslPool.close();
+        }
+    }
 }

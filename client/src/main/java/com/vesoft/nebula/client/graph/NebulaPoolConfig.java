@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.client.graph;
 
+import com.vesoft.nebula.client.graph.data.SSLParam;
+
 public class NebulaPoolConfig {
     // The min connections in pool for all addresses
     private int minConnsSize = 0;
@@ -26,6 +28,28 @@ public class NebulaPoolConfig {
 
     // the wait time to get idle connection, unit ms
     private int waitTime = 0;
+
+    // set to true to turn on ssl encrypted traffic
+    private boolean enableSsl = false;
+
+    // ssl param is required if ssl is turned on
+    private SSLParam sslParam = null;
+
+    public boolean isEnableSsl() {
+        return enableSsl;
+    }
+
+    public void setEnableSsl(boolean enableSsl) {
+        this.enableSsl = enableSsl;
+    }
+
+    public SSLParam getSslParam() {
+        return sslParam;
+    }
+
+    public void setSslParam(SSLParam sslParam) {
+        this.sslParam = sslParam;
+    }
 
     public int getMinConnSize() {
         return minConnsSize;

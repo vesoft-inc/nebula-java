@@ -1,6 +1,7 @@
 package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +22,22 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private final AtomicInteger pos = new AtomicInteger(0);
     private final int delayTime = 60;  // unit seconds
     private final ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
+    private SSLParam sslParam;
+    private boolean enabledSsl;
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout) {
         this.timeout = timeout;
+        for (HostAddress addr : addresses) {
+            this.addresses.add(addr);
+            this.serversStatus.put(addr, S_BAD);
+        }
+        schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
+    }
+
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam) {
+        this.timeout = timeout;
+        this.sslParam = sslParam;
+        this.enabledSsl = true;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);
             this.serversStatus.put(addr, S_BAD);
@@ -63,7 +77,11 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     public boolean ping(HostAddress addr) {
         try {
             Connection connection = new SyncConnection();
-            connection.open(addr, this.timeout);
+            if (enabledSsl) {
+                connection.open(addr, this.timeout, sslParam);
+            } else {
+                connection.open(addr, this.timeout);
+            }
             connection.close();
             return true;
         } catch (IOErrorException e) {

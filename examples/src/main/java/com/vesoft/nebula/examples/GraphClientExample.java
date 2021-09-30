@@ -9,8 +9,10 @@ package com.vesoft.nebula.examples;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
@@ -79,7 +81,7 @@ public class GraphClientExample {
 
     public static void main(String[] args) {
         NebulaPool pool = new NebulaPool();
-        Session session = null;
+        Session session;
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(100);
@@ -146,22 +148,58 @@ public class GraphClientExample {
             {
                 String queryForJson = "YIELD 1";
                 String resp = session.executeJson(queryForJson);
-                JSONObject errors = JSON.parseObject(resp).getJSONArray("result").getJSONObject(0)
-                        .getJSONObject("errors");
-                if (!errors.getString("errorCode").equals("0")) {
+                JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
+                if (errors.getInteger("code") != 0) {
                     log.error(String.format("Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("errorMsg")));
+                            queryForJson, errors.getString("message")));
+                    System.exit(1);
+                }
+                System.out.println(resp);
+            }
+
+            {
+                NebulaPool sslPool = new NebulaPool();
+                NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+                nebulaSslPoolConfig.setMaxConnSize(100);
+                nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
+                        "examples/src/main/resources/ssl/casigned.pem",
+                        "examples/src/main/resources/ssl/casigned.crt",
+                        "examples/src/main/resources/ssl/casigned.key"));
+                sslPool.init(addresses, nebulaSslPoolConfig);
+                String queryForJson = "YIELD 1";
+                Session sslSession = sslPool.getSession("root", "nebula", false);
+                String resp = sslSession.executeJson(queryForJson);
+                JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
+                if (errors.getInteger("code") != 0) {
+                    log.error(String.format("Execute: `%s', failed: %s",
+                            queryForJson, errors.getString("message")));
+                    System.exit(1);
+                }
+                System.out.println(resp);
+            }
+
+            {
+                NebulaPool sslPool = new NebulaPool();
+                NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+                nebulaSslPoolConfig.setMaxConnSize(100);
+                nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
+                        "examples/src/main/resources/ssl/selfsigned.pem",
+                        "examples/src/main/resources/ssl/selfsigned.key",
+                        "vesoft"));
+                sslPool.init(addresses, nebulaSslPoolConfig);
+                String queryForJson = "YIELD 1";
+                Session sslSession = sslPool.getSession("root", "nebula", false);
+                String resp = sslSession.executeJson(queryForJson);
+                JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
+                if (errors.getInteger("code") != 0) {
+                    log.error(String.format("Execute: `%s', failed: %s",
+                            queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.release();
-            }
-            pool.close();
         }
     }
 }
