@@ -161,6 +161,7 @@ public class GraphClientExample {
                 NebulaPool sslPool = new NebulaPool();
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
+                nebulaSslPoolConfig.setEnableSsl(true);
                 nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
                         "examples/src/main/resources/ssl/casigned.pem",
                         "examples/src/main/resources/ssl/casigned.crt",
@@ -182,6 +183,7 @@ public class GraphClientExample {
                 NebulaPool sslPool = new NebulaPool();
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
+                nebulaSslPoolConfig.setEnableSsl(true);
                 nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
                         "examples/src/main/resources/ssl/selfsigned.pem",
                         "examples/src/main/resources/ssl/selfsigned.key",

@@ -465,6 +465,7 @@ public class TestDataFromServer {
                     .waitFor(15,TimeUnit.SECONDS);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
                     "/share/resources/selfsigned.pem",
                     "/share/resources/selfsigned.key",
@@ -510,6 +511,7 @@ public class TestDataFromServer {
                     .waitFor(15,TimeUnit.SECONDS);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
                     "/share/resources/casigned.pem",
                     "/share/resources/casigned.crt",

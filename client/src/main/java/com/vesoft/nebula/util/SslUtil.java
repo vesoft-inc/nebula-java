@@ -141,10 +141,18 @@ public class SslUtil {
             X509CertificateHolder certHolder = (X509CertificateHolder) reader.readObject();
             reader.close();
 
+            X509Certificate cert = certificateConverter.getCertificate(certHolder);
+            // CA certificate is used to authenticate server
+            KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            caKeyStore.load(null, null);
+            caKeyStore.setCertificateEntry("certificate", cert);
+
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(caKeyStore);
+
             // Client key and certificates are sent to server so it can authenticate the client
             KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            X509Certificate cert = certificateConverter.getCertificate(certHolder);
-
             clientKeyStore.load(null, null);
             clientKeyStore.setCertificateEntry("certificate", cert);
             clientKeyStore.setKeyEntry("private-key", key.getPrivate(), password.toCharArray(),
@@ -157,7 +165,7 @@ public class SslUtil {
             // Create SSL socket factory
             SSLContext context = SSLContext.getInstance("TLSv1.3");
             context.init(keyManagerFactory.getKeyManagers(),
-                    null, null);
+                    trustManagerFactory.getTrustManagers(), null);
 
             // Return the newly created socket factory object
             return context.getSocketFactory();
