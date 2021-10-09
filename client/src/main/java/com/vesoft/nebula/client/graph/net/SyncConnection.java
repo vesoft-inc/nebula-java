@@ -41,14 +41,10 @@ public class SyncConnection extends Connection {
         try {
             SSLSocketFactory sslSocketFactory;
 
-            this.sslParam = sslParam;
-            if (sslParam == null) {
-                open(address, timeout);
-                return;
-            }
             this.serverAddr = address;
             this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.enabledSsl = true;
+            this.sslParam = sslParam;
             if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
                 sslSocketFactory =
                         SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
@@ -192,7 +188,6 @@ public class SyncConnection extends Connection {
             execute(0, "YIELD 1;");
             return true;
         } catch (IOErrorException e) {
-            e.printStackTrace();
             return false;
         }
     }

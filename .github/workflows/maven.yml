@@ -39,8 +39,6 @@ jobs:
         git clone https://github.com/vesoft-inc/nebula-docker-compose.git
         pushd nebula-docker-compose/
         cp ../../client/src/test/resources/docker-compose.yaml .
-        cp ../../client/src/test/resources/docker-compose-casigned.yaml .
-        cp ../../client/src/test/resources/docker-compose-selfsigned.yaml .
         docker-compose up -d
         sleep 10
         popd

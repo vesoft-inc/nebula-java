@@ -86,8 +86,8 @@ public class NebulaPool {
         this.waitTime = config.getWaitTime();
         List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = config.isEnableSsl()
-                ? new RoundRobinLoadBalancer(newAddrs,config.getTimeout(), config.getSslParam())
-                : new RoundRobinLoadBalancer(newAddrs,config.getTimeout());
+                ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam())
+                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();

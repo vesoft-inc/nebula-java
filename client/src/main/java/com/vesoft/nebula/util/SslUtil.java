@@ -1,4 +1,4 @@
-/* Copyright (c) 2020 vesoft inc. All rights reserved.
+/* Copyright (c) 2021 vesoft inc. All rights reserved.
  *
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
@@ -27,8 +27,11 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SslUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SslUtil.class);
 
     public static SSLSocketFactory getSSLSocketFactoryWithCA(CASignedSSLParam param) {
         final String caCrtFile = param.getCaCrtFilePath();
@@ -100,7 +103,7 @@ public class SslUtil {
             return context.getSocketFactory();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return null;
@@ -132,7 +135,7 @@ public class SslUtil {
                 key = keyConverter.getKeyPair((PEMKeyPair) keyObject);
             }
 
-            // CA certificate is used to authenticate server
+            // certificate is used to authenticate server
             JcaX509CertificateConverter certificateConverter =
                     new JcaX509CertificateConverter().setProvider("BC");
 
@@ -141,10 +144,18 @@ public class SslUtil {
             X509CertificateHolder certHolder = (X509CertificateHolder) reader.readObject();
             reader.close();
 
+            X509Certificate cert = certificateConverter.getCertificate(certHolder);
+            // certificate is used to authenticate server
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null, null);
+            keyStore.setCertificateEntry("certificate", cert);
+
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+
             // Client key and certificates are sent to server so it can authenticate the client
             KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            X509Certificate cert = certificateConverter.getCertificate(certHolder);
-
             clientKeyStore.load(null, null);
             clientKeyStore.setCertificateEntry("certificate", cert);
             clientKeyStore.setKeyEntry("private-key", key.getPrivate(), password.toCharArray(),
@@ -157,12 +168,12 @@ public class SslUtil {
             // Create SSL socket factory
             SSLContext context = SSLContext.getInstance("TLSv1.3");
             context.init(keyManagerFactory.getKeyManagers(),
-                    null, null);
+                    trustManagerFactory.getTrustManagers(), null);
 
             // Return the newly created socket factory object
             return context.getSocketFactory();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return null;

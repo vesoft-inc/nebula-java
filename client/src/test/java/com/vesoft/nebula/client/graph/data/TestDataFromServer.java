@@ -458,34 +458,29 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                                    + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
 
-            // boot docker with ca signed yml
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
-                    .waitFor(15,TimeUnit.SECONDS);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
-                    "/share/resources/selfsigned.pem",
-                    "/share/resources/selfsigned.key",
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
-            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
 
             String ngql = "YIELD 1";
             JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
-            System.out.println(resp);
             String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
                     .getJSONObject(0).getJSONArray("row").toJSONString();
             String exp = "[1]";
             Assert.assertEquals(rowData, exp);
 
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml down")
-                    .waitFor(15,TimeUnit.SECONDS);
-
-            runtime.exec("docker-compose up -d")
-                    .waitFor(10,TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-selfsigned.yaml down").waitFor(60,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -503,18 +498,17 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-casigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
 
-            // boot docker with ca signed yml
-            runtime.exec("docker-compose -f docker-compose-casigned.yaml up -d")
-                    .waitFor(15,TimeUnit.SECONDS);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
-                    "/share/resources/casigned.pem",
-                    "/share/resources/casigned.crt",
-                    "/share/resources/casigned.key"));
-            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key"));
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
 
@@ -525,11 +519,8 @@ public class TestDataFromServer {
             String exp = "[1]";
             Assert.assertEquals(rowData, exp);
 
-            runtime.exec("docker-compose -f docker-compose-casigned.yaml down")
-                    .waitFor(15,TimeUnit.SECONDS);
-
-            runtime.exec("docker-compose up -d")
-                    .waitFor(10,TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-casigned.yaml down").waitFor(60,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
