@@ -334,7 +334,6 @@ services:
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
       - --ca_signed=true
-      - ./ssl:/share/resources:Z
     depends_on:
       - metad0
       - metad1
@@ -351,6 +350,7 @@ services:
       - 13002
     volumes:
       - ./logs/graph1:/logs:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.3.2
