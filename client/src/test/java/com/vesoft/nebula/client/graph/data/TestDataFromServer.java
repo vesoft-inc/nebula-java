@@ -462,7 +462,9 @@ public class TestDataFromServer {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
 
-            Thread.sleep(10000);
+            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
+                    .waitFor(15,TimeUnit.SECONDS);
+
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
