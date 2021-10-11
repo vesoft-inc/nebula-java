@@ -16,8 +16,6 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
