@@ -460,18 +460,8 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
 
-            // boot docker with ca signed yml
-            Process p = runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d");
-            BufferedReader stdInput = new BufferedReader(new
-                    InputStreamReader(p.getInputStream()));
-
-
-            System.out.println("Here is the standard output of the command:\n");
-            String s = null;
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-            }
             Thread.sleep(10000);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -480,7 +470,7 @@ public class TestDataFromServer {
                     "src/test/resources/ssl/selfsigned.pem",
                     "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
-            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
 
@@ -494,6 +484,9 @@ public class TestDataFromServer {
 
             runtime.exec("docker-compose -f docker-compose-selfsigned.yaml down")
                     .waitFor(15,TimeUnit.SECONDS);
+
+            runtime.exec("docker-compose up -d")
+                    .waitFor(10,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
