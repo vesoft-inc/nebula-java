@@ -463,7 +463,7 @@ public class TestDataFromServer {
 
 
             BufferedReader stdInput = new BufferedReader(new
-                    InputStreamReader(runtime.exec("pwd").getInputStream()));
+                    InputStreamReader(runtime.exec("ls src/test/resources/ssl").getInputStream()));
 
 
             System.out.println("Here is the standard output of the command:\n");
