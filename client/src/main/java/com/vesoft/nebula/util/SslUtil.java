@@ -18,6 +18,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
+import com.vesoft.nebula.client.storage.processor.EdgeProcessor;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -27,8 +28,11 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SslUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EdgeProcessor.class);
 
     public static SSLSocketFactory getSSLSocketFactoryWithCA(CASignedSSLParam param) {
         final String caCrtFile = param.getCaCrtFilePath();
@@ -100,7 +104,7 @@ public class SslUtil {
             return context.getSocketFactory();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return null;
@@ -170,7 +174,7 @@ public class SslUtil {
             // Return the newly created socket factory object
             return context.getSocketFactory();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return null;
