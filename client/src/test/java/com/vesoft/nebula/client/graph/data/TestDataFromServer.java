@@ -461,18 +461,6 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
 
-
-            BufferedReader stdInput = new BufferedReader(new
-                    InputStreamReader(runtime.exec("ls src/test/resources/ssl").getInputStream()));
-
-
-            System.out.println("Here is the standard output of the command:\n");
-            String s = null;
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-            }
-
-
             // boot docker with ca signed yml
             runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
                     .waitFor(15,TimeUnit.SECONDS);
@@ -480,8 +468,8 @@ public class TestDataFromServer {
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
-                    "/share/resources/selfsigned.pem",
-                    "/share/resources/selfsigned.key",
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
                     nebulaSslPoolConfig));
