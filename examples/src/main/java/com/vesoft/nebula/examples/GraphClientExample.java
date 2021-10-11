@@ -8,6 +8,7 @@ package com.vesoft.nebula.examples;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
@@ -171,7 +172,7 @@ public class GraphClientExample {
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
-                if (errors.getInteger("code") != 0) {
+                if (errors.getInteger("code") != ErrorCode.SUCCEEDED.getValue()) {
                     log.error(String.format("Execute: `%s', failed: %s",
                             queryForJson, errors.getString("message")));
                     System.exit(1);
@@ -193,7 +194,7 @@ public class GraphClientExample {
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
-                if (errors.getInteger("code") != 0) {
+                if (errors.getInteger("code") != ErrorCode.SUCCEEDED.getValue()) {
                     log.error(String.format("Execute: `%s', failed: %s",
                             queryForJson, errors.getString("message")));
                     System.exit(1);

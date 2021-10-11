@@ -1,4 +1,4 @@
-/* Copyright (c) 2020 vesoft inc. All rights reserved.
+/* Copyright (c) 2021 vesoft inc. All rights reserved.
  *
  * This source code is licensed under Apache 2.0 License,
  * attached with Common Clause Condition 1.0, found in the LICENSES directory.
@@ -132,7 +132,7 @@ public class SslUtil {
                 key = keyConverter.getKeyPair((PEMKeyPair) keyObject);
             }
 
-            // CA certificate is used to authenticate server
+            // certificate is used to authenticate server
             JcaX509CertificateConverter certificateConverter =
                     new JcaX509CertificateConverter().setProvider("BC");
 
@@ -142,14 +142,14 @@ public class SslUtil {
             reader.close();
 
             X509Certificate cert = certificateConverter.getCertificate(certHolder);
-            // CA certificate is used to authenticate server
-            KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            caKeyStore.load(null, null);
-            caKeyStore.setCertificateEntry("certificate", cert);
+            // certificate is used to authenticate server
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null, null);
+            keyStore.setCertificateEntry("certificate", cert);
 
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
                     TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init(caKeyStore);
+            trustManagerFactory.init(keyStore);
 
             // Client key and certificates are sent to server so it can authenticate the client
             KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());

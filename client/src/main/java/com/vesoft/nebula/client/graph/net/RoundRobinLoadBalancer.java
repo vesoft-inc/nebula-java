@@ -35,14 +35,9 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam) {
-        this.timeout = timeout;
+        this(addresses,timeout);
         this.sslParam = sslParam;
         this.enabledSsl = true;
-        for (HostAddress addr : addresses) {
-            this.addresses.add(addr);
-            this.serversStatus.put(addr, S_BAD);
-        }
-        schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
     }
 
     public void close() {

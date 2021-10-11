@@ -458,7 +458,6 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
 
             // boot docker with ca signed yml
             runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
@@ -470,7 +469,7 @@ public class TestDataFromServer {
                     "/share/resources/selfsigned.pem",
                     "/share/resources/selfsigned.key",
                     "vesoft"));
-            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
 
@@ -484,9 +483,6 @@ public class TestDataFromServer {
 
             runtime.exec("docker-compose -f docker-compose-selfsigned.yaml down")
                     .waitFor(15,TimeUnit.SECONDS);
-
-            runtime.exec("docker-compose up -d")
-                    .waitFor(10,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -504,7 +500,6 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
 
             // boot docker with ca signed yml
             runtime.exec("docker-compose -f docker-compose-casigned.yaml up -d")
@@ -516,7 +511,7 @@ public class TestDataFromServer {
                     "/share/resources/casigned.pem",
                     "/share/resources/casigned.crt",
                     "/share/resources/casigned.key"));
-            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
 
@@ -529,9 +524,6 @@ public class TestDataFromServer {
 
             runtime.exec("docker-compose -f docker-compose-casigned.yaml down")
                     .waitFor(15,TimeUnit.SECONDS);
-
-            runtime.exec("docker-compose up -d")
-                    .waitFor(10,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

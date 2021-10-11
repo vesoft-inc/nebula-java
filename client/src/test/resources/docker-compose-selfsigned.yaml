@@ -6,10 +6,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
       - --local_ip=172.28.1.1
       - --ws_ip=172.28.1.1
-      - --port=9559
+      - --port=8559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -29,7 +29,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9559:9559"
+      - "8559:8559"
       - 11000
       - 11002
     volumes:
@@ -49,10 +49,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
       - --local_ip=172.28.1.2
       - --ws_ip=172.28.1.2
-      - --port=9559
+      - --port=8559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -72,7 +72,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9560:9559"
+      - "8560:8559"
       - 11000
       - 11002
     volumes:
@@ -92,10 +92,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
       - --local_ip=172.28.1.3
       - --ws_ip=172.28.1.3
-      - --port=9559
+      - --port=8559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -115,7 +115,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9561:9559"
+      - "8561:8559"
       - 11000
       - 11002
     volumes:
@@ -135,10 +135,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
       - --local_ip=172.28.2.1
       - --ws_ip=172.28.2.1
-      - --port=9779
+      - --port=8779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -162,7 +162,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9779:9779"
+      - "8779:8779"
       - 12000
       - 12002
     volumes:
@@ -182,10 +182,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
       - --local_ip=172.28.2.2
       - --ws_ip=172.28.2.2
-      - --port=9779
+      - --port=8779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -209,7 +209,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9780:9779"
+      - "8780:8779"
       - 12000
       - 12002
     volumes:
@@ -229,10 +229,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
       - --local_ip=172.28.2.3
       - --ws_ip=172.28.2.3
-      - --port=9779
+      - --port=8779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -256,7 +256,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9781:9779"
+      - "8781:8779"
       - 12000
       - 12002
     volumes:
@@ -276,8 +276,8 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
-      - --port=9669
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --port=8669
       - --ws_ip=172.28.3.1
       - --log_dir=/logs
       - --v=0
@@ -301,7 +301,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9669:9669"
+      - "8669:8669"
       - 13000
       - 13002
     volumes:
@@ -320,8 +320,8 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
-      - --port=9669
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --port=8669
       - --ws_ip=172.28.3.2
       - --log_dir=/logs
       - --v=0
@@ -345,7 +345,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9670:9669"
+      - "8670:8669"
       - 13000
       - 13002
     volumes:
@@ -364,8 +364,8 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
-      - --port=9669
+      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --port=8669
       - --ws_ip=172.28.3.3
       - --log_dir=/logs
       - --v=0
@@ -389,7 +389,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9671:9669"
+      - "8671:8669"
       - 13000
       - 13002
     volumes:
