@@ -18,7 +18,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
-import com.vesoft.nebula.client.storage.processor.EdgeProcessor;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -32,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SslUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EdgeProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SslUtil.class);
 
     public static SSLSocketFactory getSSLSocketFactoryWithCA(CASignedSSLParam param) {
         final String caCrtFile = param.getCaCrtFilePath();
