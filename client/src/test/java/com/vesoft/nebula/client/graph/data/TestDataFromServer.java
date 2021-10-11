@@ -462,8 +462,17 @@ public class TestDataFromServer {
             Runtime runtime = Runtime.getRuntime();
 
             // boot docker with ca signed yml
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
-                    .waitFor(15,TimeUnit.SECONDS);
+            Process p = runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d");
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(p.getInputStream()));
+
+
+            System.out.println("Here is the standard output of the command:\n");
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+            Thread.sleep(10000);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
