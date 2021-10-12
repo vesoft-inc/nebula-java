@@ -495,7 +495,7 @@ public class TestDataFromServer {
                     "src/test/resources/ssl/selfsigned.pem",
                     "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
-            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
 
