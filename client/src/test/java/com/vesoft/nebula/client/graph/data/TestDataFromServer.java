@@ -16,6 +16,10 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -459,8 +463,29 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
 
-            runtime.exec("docker-compose -f src/test/resources/docker-compose-casigned.yaml"
-                         + " up -d").waitFor(60,TimeUnit.SECONDS);
+            Process process = runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                                    + "-selfsigned.yaml"
+                         + " up -d");
+
+            OutputStream stdin = process.getOutputStream();
+            InputStream stderr = process.getErrorStream();
+            InputStream stdout = process.getInputStream();
+            BufferedReader brCleanUp = new BufferedReader(new InputStreamReader(stdout));
+            String line;
+            while ((line = brCleanUp.readLine()) != null) {
+                System.out.println ("[Stdout] " + line);
+            }
+            brCleanUp.close();
+
+            // clean up if any output in stderr
+            brCleanUp =
+                    new BufferedReader (new InputStreamReader (stderr));
+            while ((line = brCleanUp.readLine ()) != null) {
+                System.out.println ("[Stderr] " + line);
+            }
+            brCleanUp.close();
+            process.waitFor(60,TimeUnit.SECONDS);
+
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
