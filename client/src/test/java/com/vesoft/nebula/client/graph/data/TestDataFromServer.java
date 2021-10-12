@@ -458,10 +458,9 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
-            runtime.exec("docker-compose down").waitFor(10, TimeUnit.SECONDS);
 
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
-                    .waitFor(15,TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f src/test/resources/docker-compose-casigned.yaml"
+                         + " up -d").waitFor(60,TimeUnit.SECONDS);
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -482,11 +481,8 @@ public class TestDataFromServer {
             String exp = "[1]";
             Assert.assertEquals(rowData, exp);
 
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml down")
-                    .waitFor(15,TimeUnit.SECONDS);
-
-            runtime.exec("docker-compose up -d")
-                    .waitFor(10,TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f ../../../tmp/nebula-docker-compose/docker-compose"
+                         + ".yaml up -d").waitFor(30,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

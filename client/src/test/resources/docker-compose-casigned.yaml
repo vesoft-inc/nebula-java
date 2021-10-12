@@ -6,10 +6,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
       - --local_ip=172.28.1.1
       - --ws_ip=172.28.1.1
-      - --port=8559
+      - --port=9559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -21,7 +21,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.28.1.1:11000/status"]
       interval: 30s
@@ -29,13 +28,13 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8559:8559"
+      - "9559:9559"
       - 11000
       - 11002
     volumes:
       - ./data/meta0:/data/meta:Z
       - ./logs/meta0:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.1.1
@@ -49,10 +48,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
       - --local_ip=172.28.1.2
       - --ws_ip=172.28.1.2
-      - --port=8559
+      - --port=9559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -64,7 +63,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.28.1.2:11000/status"]
       interval: 30s
@@ -72,13 +70,13 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8560:8559"
+      - "9560:9559"
       - 11000
       - 11002
     volumes:
       - ./data/meta1:/data/meta:Z
       - ./logs/meta1:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.1.2
@@ -92,10 +90,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
       - --local_ip=172.28.1.3
       - --ws_ip=172.28.1.3
-      - --port=8559
+      - --port=9559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -107,7 +105,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.28.1.3:11000/status"]
       interval: 30s
@@ -115,13 +112,13 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8561:8559"
+      - "9561:9559"
       - 11000
       - 11002
     volumes:
       - ./data/meta2:/data/meta:Z
       - ./logs/meta2:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.1.3
@@ -135,10 +132,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
       - --local_ip=172.28.2.1
       - --ws_ip=172.28.2.1
-      - --port=8779
+      - --port=9779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -150,7 +147,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     depends_on:
       - metad0
       - metad1
@@ -162,13 +158,13 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8779:8779"
+      - "9779:9779"
       - 12000
       - 12002
     volumes:
       - ./data/storage0:/data/storage:Z
       - ./logs/storage0:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.2.1
@@ -182,10 +178,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
       - --local_ip=172.28.2.2
       - --ws_ip=172.28.2.2
-      - --port=8779
+      - --port=9779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -197,7 +193,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     depends_on:
       - metad0
       - metad1
@@ -209,13 +204,13 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8780:8779"
+      - "9780:9779"
       - 12000
       - 12002
     volumes:
       - ./data/storage1:/data/storage:Z
       - ./logs/storage1:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.2.2
@@ -229,10 +224,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
       - --local_ip=172.28.2.3
       - --ws_ip=172.28.2.3
-      - --port=8779
+      - --port=9779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -244,7 +239,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     depends_on:
       - metad0
       - metad1
@@ -256,13 +250,13 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8781:8779"
+      - "9781:9779"
       - 12000
       - 12002
     volumes:
       - ./data/storage2:/data/storage:Z
       - ./logs/storage2:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.2.3
@@ -276,8 +270,8 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
-      - --port=8669
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --port=9669
       - --ws_ip=172.28.3.1
       - --log_dir=/logs
       - --v=0
@@ -289,7 +283,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     depends_on:
       - metad0
       - metad1
@@ -301,12 +294,12 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8669:8669"
+      - "9669:9669"
       - 13000
       - 13002
     volumes:
       - ./logs/graph0:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.3.1
@@ -320,8 +313,8 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
-      - --port=8669
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --port=9669
       - --ws_ip=172.28.3.2
       - --log_dir=/logs
       - --v=0
@@ -333,7 +326,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     depends_on:
       - metad0
       - metad1
@@ -345,12 +337,12 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8670:8669"
+      - "9670:9669"
       - 13000
       - 13002
     volumes:
       - ./logs/graph1:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.3.2
@@ -364,8 +356,8 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.28.1.1:8559,172.28.1.2:8559,172.28.1.3:8559
-      - --port=8669
+      - --meta_server_addrs=172.28.1.1:9559,172.28.1.2:9559,172.28.1.3:9559
+      - --port=9669
       - --ws_ip=172.28.3.3
       - --log_dir=/logs
       - --v=0
@@ -377,7 +369,6 @@ services:
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --enable_ssl=true
-      - --ca_signed=true
     depends_on:
       - metad0
       - metad1
@@ -389,12 +380,12 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8671:8669"
+      - "9671:9669"
       - 13000
       - 13002
     volumes:
       - ./logs/graph2:/logs:Z
-      - ./src/test/resources/ssl:/share/resources:Z
+      - ./ssl:/share/resources:Z
     networks:
       nebula-net:
         ipv4_address: 172.28.3.3
