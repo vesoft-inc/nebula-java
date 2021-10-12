@@ -473,15 +473,15 @@ public class TestDataFromServer {
             BufferedReader brCleanUp = new BufferedReader(new InputStreamReader(stdout));
             String line;
             while ((line = brCleanUp.readLine()) != null) {
-                System.out.println ("[Stdout] " + line);
+                System.out.println("[Stdout] " + line);
             }
             brCleanUp.close();
 
             // clean up if any output in stderr
             brCleanUp =
-                    new BufferedReader (new InputStreamReader (stderr));
-            while ((line = brCleanUp.readLine ()) != null) {
-                System.out.println ("[Stderr] " + line);
+                    new BufferedReader(new InputStreamReader(stderr));
+            while ((line = brCleanUp.readLine()) != null) {
+                System.out.println("[Stderr] " + line);
             }
             brCleanUp.close();
             process.waitFor(60,TimeUnit.SECONDS);
