@@ -462,28 +462,8 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
-            Process process = runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                                    + "-selfsigned.yaml up -d");
-
-            OutputStream stdin = process.getOutputStream();
-            InputStream stderr = process.getErrorStream();
-            InputStream stdout = process.getInputStream();
-            BufferedReader brCleanUp = new BufferedReader(new InputStreamReader(stdout));
-            String line;
-            while ((line = brCleanUp.readLine()) != null) {
-                System.out.println("[Stdout] " + line);
-            }
-            brCleanUp.close();
-
-            // clean up if any output in stderr
-            brCleanUp =
-                    new BufferedReader(new InputStreamReader(stderr));
-            while ((line = brCleanUp.readLine()) != null) {
-                System.out.println("[Stderr] " + line);
-            }
-            brCleanUp.close();
-            process.waitFor(60,TimeUnit.SECONDS);
-
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                                    + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -498,7 +478,6 @@ public class TestDataFromServer {
 
             String ngql = "YIELD 1";
             JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
-            System.out.println(resp);
             String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
                     .getJSONObject(0).getJSONArray("row").toJSONString();
             String exp = "[1]";
