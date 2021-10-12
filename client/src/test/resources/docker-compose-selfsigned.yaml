@@ -1,15 +1,15 @@
 version: '3.4'
 services:
-  metad0:
+  metad0-selfsigned:
     image: vesoft/nebula-metad:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
       - --local_ip=172.29.1.1
       - --ws_ip=172.29.1.1
-      - --port=9559
+      - --port=8559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -28,7 +28,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9559:9559"
+      - "8559:8559"
       - 11000
       - 11002
     volumes:
@@ -42,16 +42,16 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  metad1:
+  metad1-selfsigned:
     image: vesoft/nebula-metad:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
       - --local_ip=172.29.1.2
       - --ws_ip=172.29.1.2
-      - --port=9559
+      - --port=8559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -70,7 +70,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9560:9559"
+      - "8560:8559"
       - 11000
       - 11002
     volumes:
@@ -84,16 +84,16 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  metad2:
+  metad2-selfsigned:
     image: vesoft/nebula-metad:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
       - --local_ip=172.29.1.3
       - --ws_ip=172.29.1.3
-      - --port=9559
+      - --port=8559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -112,7 +112,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9561:9559"
+      - "8561:8559"
       - 11000
       - 11002
     volumes:
@@ -126,16 +126,16 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  storaged0:
+  storaged0-selfsigned:
     image: vesoft/nebula-storaged:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
       - --local_ip=172.29.2.1
       - --ws_ip=172.29.2.1
-      - --port=9779
+      - --port=8779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -148,9 +148,9 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     depends_on:
-      - metad0
-      - metad1
-      - metad2
+      - metad0-selfsigned
+      - metad1-selfsigned
+      - metad2-selfsigned
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.2.1:12000/status"]
       interval: 30s
@@ -158,7 +158,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9779:9779"
+      - "8779:8779"
       - 12000
       - 12002
     volumes:
@@ -172,16 +172,16 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  storaged1:
+  storaged1-selfsigned:
     image: vesoft/nebula-storaged:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
       - --local_ip=172.29.2.2
       - --ws_ip=172.29.2.2
-      - --port=9779
+      - --port=8779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -194,9 +194,9 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     depends_on:
-      - metad0
-      - metad1
-      - metad2
+      - metad0-selfsigned
+      - metad1-selfsigned
+      - metad2-selfsigned
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.2.2:12000/status"]
       interval: 30s
@@ -204,7 +204,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9780:9779"
+      - "8780:8779"
       - 12000
       - 12002
     volumes:
@@ -218,16 +218,16 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  storaged2:
+  storaged2-selfsigned:
     image: vesoft/nebula-storaged:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
       - --local_ip=172.29.2.3
       - --ws_ip=172.29.2.3
-      - --port=9779
+      - --port=8779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -240,9 +240,9 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     depends_on:
-      - metad0
-      - metad1
-      - metad2
+      - metad0-selfsigned
+      - metad1-selfsigned
+      - metad2-selfsigned
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.2.3:12000/status"]
       interval: 30s
@@ -250,7 +250,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9781:9779"
+      - "8781:8779"
       - 12000
       - 12002
     volumes:
@@ -264,14 +264,14 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  graphd0:
+  graphd0-selfsigned:
     image: vesoft/nebula-graphd:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
-      - --port=9669
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
+      - --port=8669
       - --ws_ip=172.29.3.1
       - --log_dir=/logs
       - --v=0
@@ -284,9 +284,9 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     depends_on:
-      - metad0
-      - metad1
-      - metad2
+      - metad0-selfsigned
+      - metad1-selfsigned
+      - metad2-selfsigned
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.3.1:13000/status"]
       interval: 30s
@@ -294,7 +294,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9669:9669"
+      - "8669:8669"
       - 13000
       - 13002
     volumes:
@@ -307,14 +307,14 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  graphd1:
+  graphd1-selfsigned:
     image: vesoft/nebula-graphd:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
-      - --port=9669
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
+      - --port=8669
       - --ws_ip=172.29.3.2
       - --log_dir=/logs
       - --v=0
@@ -327,9 +327,9 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     depends_on:
-      - metad0
-      - metad1
-      - metad2
+      - metad0-selfsigned
+      - metad1-selfsigned
+      - metad2-selfsigned
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.3.2:13000/status"]
       interval: 30s
@@ -337,7 +337,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9670:9669"
+      - "8670:8669"
       - 13000
       - 13002
     volumes:
@@ -350,14 +350,14 @@ services:
     cap_add:
       - SYS_PTRACE
 
-  graphd2:
+  graphd2-selfsigned:
     image: vesoft/nebula-graphd:nightly
     environment:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:9559,172.29.1.2:9559,172.29.1.3:9559
-      - --port=9669
+      - --meta_server_addrs=172.29.1.1:8559,172.29.1.2:8559,172.29.1.3:8559
+      - --port=8669
       - --ws_ip=172.29.3.3
       - --log_dir=/logs
       - --v=0
@@ -370,9 +370,9 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     depends_on:
-      - metad0
-      - metad1
-      - metad2
+      - metad0-selfsigned
+      - metad1-selfsigned
+      - metad2-selfsigned
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.3.3:13000/status"]
       interval: 30s
@@ -380,7 +380,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "9671:9669"
+      - "8671:8669"
       - 13000
       - 13002
     volumes:
