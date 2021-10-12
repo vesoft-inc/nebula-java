@@ -21,10 +21,10 @@ public class NebulaPoolConfig {
     // 0 means never delete
     private int idleTime = 0;
 
-    // The interval time to check idle connection, unit ms, -1 means no check
+    // the interval time to check idle connection, unit ms, -1 means no check
     private int intervalIdle = -1;
 
-    // The wait time to get idle connection, unit ms
+    // the wait time to get idle connection, unit ms
     private int waitTime = 0;
 
     // The minimum rate of healthy servers to all servers. if 1 it means all servers should be available on init.
