@@ -509,9 +509,9 @@ public class TestDataFromServer {
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
-                    "examples/src/main/resources/ssl/casigned.pem",
-                    "examples/src/main/resources/ssl/casigned.crt",
-                    "examples/src/main/resources/ssl/casigned.key"));
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key"));
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
