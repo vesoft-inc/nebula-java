@@ -31,17 +31,17 @@ public class InternalStorageService {
 
   public interface Iface {
 
-    public ExecResponse chainAddEdges(ChainAddEdgesRequest req) throws TException;
+    public GetValueResponse getValue(GetValueRequest req) throws TException;
 
-    public UpdateResponse chainUpdateEdge(ChainUpdateEdgeRequest req) throws TException;
+    public ExecResponse forwardTransaction(InternalTxnRequest req) throws TException;
 
   }
 
   public interface AsyncIface {
 
-    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void getValue(GetValueRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void forwardTransaction(InternalTxnRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -74,94 +74,94 @@ public class InternalStorageService {
       return this.oprot_;
     }
 
-    public ExecResponse chainAddEdges(ChainAddEdgesRequest req) throws TException
+    public GetValueResponse getValue(GetValueRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("InternalStorageService.chainAddEdges", null);
+      ContextStack ctx = getContextStack("InternalStorageService.getValue", null);
       this.setContextStack(ctx);
-      send_chainAddEdges(req);
-      return recv_chainAddEdges();
+      send_getValue(req);
+      return recv_getValue();
     }
 
-    public void send_chainAddEdges(ChainAddEdgesRequest req) throws TException
+    public void send_getValue(GetValueRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "InternalStorageService.chainAddEdges", null);
-      oprot_.writeMessageBegin(new TMessage("chainAddEdges", TMessageType.CALL, seqid_));
-      chainAddEdges_args args = new chainAddEdges_args();
+      super.preWrite(ctx, "InternalStorageService.getValue", null);
+      oprot_.writeMessageBegin(new TMessage("getValue", TMessageType.CALL, seqid_));
+      getValue_args args = new getValue_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "InternalStorageService.chainAddEdges", args);
+      super.postWrite(ctx, "InternalStorageService.getValue", args);
       return;
     }
 
-    public ExecResponse recv_chainAddEdges() throws TException
+    public GetValueResponse recv_getValue() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "InternalStorageService.chainAddEdges");
+      super.preRead(ctx, "InternalStorageService.getValue");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      chainAddEdges_result result = new chainAddEdges_result();
+      getValue_result result = new getValue_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "InternalStorageService.chainAddEdges", result);
+      super.postRead(ctx, "InternalStorageService.getValue", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainAddEdges failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getValue failed: unknown result");
     }
 
-    public UpdateResponse chainUpdateEdge(ChainUpdateEdgeRequest req) throws TException
+    public ExecResponse forwardTransaction(InternalTxnRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("InternalStorageService.chainUpdateEdge", null);
+      ContextStack ctx = getContextStack("InternalStorageService.forwardTransaction", null);
       this.setContextStack(ctx);
-      send_chainUpdateEdge(req);
-      return recv_chainUpdateEdge();
+      send_forwardTransaction(req);
+      return recv_forwardTransaction();
     }
 
-    public void send_chainUpdateEdge(ChainUpdateEdgeRequest req) throws TException
+    public void send_forwardTransaction(InternalTxnRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "InternalStorageService.chainUpdateEdge", null);
-      oprot_.writeMessageBegin(new TMessage("chainUpdateEdge", TMessageType.CALL, seqid_));
-      chainUpdateEdge_args args = new chainUpdateEdge_args();
+      super.preWrite(ctx, "InternalStorageService.forwardTransaction", null);
+      oprot_.writeMessageBegin(new TMessage("forwardTransaction", TMessageType.CALL, seqid_));
+      forwardTransaction_args args = new forwardTransaction_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "InternalStorageService.chainUpdateEdge", args);
+      super.postWrite(ctx, "InternalStorageService.forwardTransaction", args);
       return;
     }
 
-    public UpdateResponse recv_chainUpdateEdge() throws TException
+    public ExecResponse recv_forwardTransaction() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "InternalStorageService.chainUpdateEdge");
+      super.preRead(ctx, "InternalStorageService.forwardTransaction");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      chainUpdateEdge_result result = new chainUpdateEdge_result();
+      forwardTransaction_result result = new forwardTransaction_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "InternalStorageService.chainUpdateEdge", result);
+      super.postRead(ctx, "InternalStorageService.forwardTransaction", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainUpdateEdge failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "forwardTransaction failed: unknown result");
     }
 
   }
@@ -182,23 +182,55 @@ public class InternalStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler500) throws TException {
+    public void getValue(GetValueRequest req, AsyncMethodCallback resultHandler471) throws TException {
       checkReady();
-      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler500, this, ___protocolFactory, ___transport);
+      getValue_call method_call = new getValue_call(req, resultHandler471, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class chainAddEdges_call extends TAsyncMethodCall {
-      private ChainAddEdgesRequest req;
-      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler501, TAsyncClient client497, TProtocolFactory protocolFactory498, TNonblockingTransport transport499) throws TException {
-        super(client497, protocolFactory498, transport499, resultHandler501, false);
+    public static class getValue_call extends TAsyncMethodCall {
+      private GetValueRequest req;
+      public getValue_call(GetValueRequest req, AsyncMethodCallback resultHandler472, TAsyncClient client468, TProtocolFactory protocolFactory469, TNonblockingTransport transport470) throws TException {
+        super(client468, protocolFactory469, transport470, resultHandler472, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("chainAddEdges", TMessageType.CALL, 0));
-        chainAddEdges_args args = new chainAddEdges_args();
+        prot.writeMessageBegin(new TMessage("getValue", TMessageType.CALL, 0));
+        getValue_args args = new getValue_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public GetValueResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_getValue();
+      }
+    }
+
+    public void forwardTransaction(InternalTxnRequest req, AsyncMethodCallback resultHandler476) throws TException {
+      checkReady();
+      forwardTransaction_call method_call = new forwardTransaction_call(req, resultHandler476, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class forwardTransaction_call extends TAsyncMethodCall {
+      private InternalTxnRequest req;
+      public forwardTransaction_call(InternalTxnRequest req, AsyncMethodCallback resultHandler477, TAsyncClient client473, TProtocolFactory protocolFactory474, TNonblockingTransport transport475) throws TException {
+        super(client473, protocolFactory474, transport475, resultHandler477, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("forwardTransaction", TMessageType.CALL, 0));
+        forwardTransaction_args args = new forwardTransaction_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
@@ -210,39 +242,7 @@ public class InternalStorageService {
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_chainAddEdges();
-      }
-    }
-
-    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler505) throws TException {
-      checkReady();
-      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler505, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class chainUpdateEdge_call extends TAsyncMethodCall {
-      private ChainUpdateEdgeRequest req;
-      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler506, TAsyncClient client502, TProtocolFactory protocolFactory503, TNonblockingTransport transport504) throws TException {
-        super(client502, protocolFactory503, transport504, resultHandler506, false);
-        this.req = req;
-      }
-
-      public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("chainUpdateEdge", TMessageType.CALL, 0));
-        chainUpdateEdge_args args = new chainUpdateEdge_args();
-        args.setReq(req);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public UpdateResponse getResult() throws TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
-        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_chainUpdateEdge();
+        return (new Client(prot)).recv_forwardTransaction();
       }
     }
 
@@ -254,8 +254,8 @@ public class InternalStorageService {
     {
       iface_ = iface;
       event_handler_ = new TProcessorEventHandler(); // Empty handler
-      processMap_.put("chainAddEdges", new chainAddEdges());
-      processMap_.put("chainUpdateEdge", new chainUpdateEdge());
+      processMap_.put("getValue", new getValue());
+      processMap_.put("forwardTransaction", new forwardTransaction());
     }
 
     protected static interface ProcessFunction {
@@ -288,55 +288,55 @@ public class InternalStorageService {
       return true;
     }
 
-    private class chainAddEdges implements ProcessFunction {
+    private class getValue implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("InternalStorageService.chainAddEdges", server_ctx);
-        chainAddEdges_args args = new chainAddEdges_args();
-        event_handler_.preRead(handler_ctx, "InternalStorageService.chainAddEdges");
+        Object handler_ctx = event_handler_.getContext("InternalStorageService.getValue", server_ctx);
+        getValue_args args = new getValue_args();
+        event_handler_.preRead(handler_ctx, "InternalStorageService.getValue");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "InternalStorageService.chainAddEdges", args);
-        chainAddEdges_result result = new chainAddEdges_result();
-        result.success = iface_.chainAddEdges(args.req);
-        event_handler_.preWrite(handler_ctx, "InternalStorageService.chainAddEdges", result);
-        oprot.writeMessageBegin(new TMessage("chainAddEdges", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "InternalStorageService.getValue", args);
+        getValue_result result = new getValue_result();
+        result.success = iface_.getValue(args.req);
+        event_handler_.preWrite(handler_ctx, "InternalStorageService.getValue", result);
+        oprot.writeMessageBegin(new TMessage("getValue", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "InternalStorageService.chainAddEdges", result);
+        event_handler_.postWrite(handler_ctx, "InternalStorageService.getValue", result);
       }
 
     }
 
-    private class chainUpdateEdge implements ProcessFunction {
+    private class forwardTransaction implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("InternalStorageService.chainUpdateEdge", server_ctx);
-        chainUpdateEdge_args args = new chainUpdateEdge_args();
-        event_handler_.preRead(handler_ctx, "InternalStorageService.chainUpdateEdge");
+        Object handler_ctx = event_handler_.getContext("InternalStorageService.forwardTransaction", server_ctx);
+        forwardTransaction_args args = new forwardTransaction_args();
+        event_handler_.preRead(handler_ctx, "InternalStorageService.forwardTransaction");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "InternalStorageService.chainUpdateEdge", args);
-        chainUpdateEdge_result result = new chainUpdateEdge_result();
-        result.success = iface_.chainUpdateEdge(args.req);
-        event_handler_.preWrite(handler_ctx, "InternalStorageService.chainUpdateEdge", result);
-        oprot.writeMessageBegin(new TMessage("chainUpdateEdge", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "InternalStorageService.forwardTransaction", args);
+        forwardTransaction_result result = new forwardTransaction_result();
+        result.success = iface_.forwardTransaction(args.req);
+        event_handler_.preWrite(handler_ctx, "InternalStorageService.forwardTransaction", result);
+        oprot.writeMessageBegin(new TMessage("forwardTransaction", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "InternalStorageService.chainUpdateEdge", result);
+        event_handler_.postWrite(handler_ctx, "InternalStorageService.forwardTransaction", result);
       }
 
     }
 
   }
 
-  public static class chainAddEdges_args implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainAddEdges_args");
+  public static class getValue_args implements TBase, java.io.Serializable, Cloneable, Comparable<getValue_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getValue_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public ChainAddEdgesRequest req;
+    public GetValueRequest req;
     public static final int REQ = 1;
 
     // isset id assignments
@@ -346,19 +346,19 @@ public class InternalStorageService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, ChainAddEdgesRequest.class)));
+          new StructMetaData(TType.STRUCT, GetValueRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(chainAddEdges_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getValue_args.class, metaDataMap);
     }
 
-    public chainAddEdges_args() {
+    public getValue_args() {
     }
 
-    public chainAddEdges_args(
-        ChainAddEdgesRequest req) {
+    public getValue_args(
+        GetValueRequest req) {
       this();
       this.req = req;
     }
@@ -366,21 +366,21 @@ public class InternalStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public chainAddEdges_args(chainAddEdges_args other) {
+    public getValue_args(getValue_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public chainAddEdges_args deepCopy() {
-      return new chainAddEdges_args(this);
+    public getValue_args deepCopy() {
+      return new getValue_args(this);
     }
 
-    public ChainAddEdgesRequest getReq() {
+    public GetValueRequest getReq() {
       return this.req;
     }
 
-    public chainAddEdges_args setReq(ChainAddEdgesRequest req) {
+    public getValue_args setReq(GetValueRequest req) {
       this.req = req;
       return this;
     }
@@ -406,7 +406,7 @@ public class InternalStorageService {
         if (__value == null) {
           unsetReq();
         } else {
-          setReq((ChainAddEdgesRequest)__value);
+          setReq((GetValueRequest)__value);
         }
         break;
 
@@ -431,9 +431,9 @@ public class InternalStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof chainAddEdges_args))
+      if (!(_that instanceof getValue_args))
         return false;
-      chainAddEdges_args that = (chainAddEdges_args)_that;
+      getValue_args that = (getValue_args)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
@@ -443,6 +443,29 @@ public class InternalStorageService {
     @Override
     public int hashCode() {
       return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(getValue_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
     }
 
     public void read(TProtocol iprot) throws TException {
@@ -458,7 +481,7 @@ public class InternalStorageService {
         {
           case REQ:
             if (__field.type == TType.STRUCT) {
-              this.req = new ChainAddEdgesRequest();
+              this.req = new GetValueRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -500,7 +523,7 @@ public class InternalStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainAddEdges_args");
+      StringBuilder sb = new StringBuilder("getValue_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -527,8 +550,443 @@ public class InternalStorageService {
 
   }
 
-  public static class chainAddEdges_result implements TBase, java.io.Serializable, Cloneable, Comparable<chainAddEdges_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainAddEdges_result");
+  public static class getValue_result implements TBase, java.io.Serializable, Cloneable, Comparable<getValue_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getValue_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public GetValueResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, GetValueResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(getValue_result.class, metaDataMap);
+    }
+
+    public getValue_result() {
+    }
+
+    public getValue_result(
+        GetValueResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getValue_result(getValue_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public getValue_result deepCopy() {
+      return new getValue_result(this);
+    }
+
+    public GetValueResponse getSuccess() {
+      return this.success;
+    }
+
+    public getValue_result setSuccess(GetValueResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((GetValueResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof getValue_result))
+        return false;
+      getValue_result that = (getValue_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(getValue_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new GetValueResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("getValue_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class forwardTransaction_args implements TBase, java.io.Serializable, Cloneable, Comparable<forwardTransaction_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("forwardTransaction_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public InternalTxnRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, InternalTxnRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(forwardTransaction_args.class, metaDataMap);
+    }
+
+    public forwardTransaction_args() {
+    }
+
+    public forwardTransaction_args(
+        InternalTxnRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public forwardTransaction_args(forwardTransaction_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public forwardTransaction_args deepCopy() {
+      return new forwardTransaction_args(this);
+    }
+
+    public InternalTxnRequest getReq() {
+      return this.req;
+    }
+
+    public forwardTransaction_args setReq(InternalTxnRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((InternalTxnRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof forwardTransaction_args))
+        return false;
+      forwardTransaction_args that = (forwardTransaction_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(forwardTransaction_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new InternalTxnRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("forwardTransaction_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class forwardTransaction_result implements TBase, java.io.Serializable, Cloneable, Comparable<forwardTransaction_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("forwardTransaction_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
     public ExecResponse success;
@@ -546,13 +1004,13 @@ public class InternalStorageService {
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(chainAddEdges_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(forwardTransaction_result.class, metaDataMap);
     }
 
-    public chainAddEdges_result() {
+    public forwardTransaction_result() {
     }
 
-    public chainAddEdges_result(
+    public forwardTransaction_result(
         ExecResponse success) {
       this();
       this.success = success;
@@ -561,21 +1019,21 @@ public class InternalStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public chainAddEdges_result(chainAddEdges_result other) {
+    public forwardTransaction_result(forwardTransaction_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public chainAddEdges_result deepCopy() {
-      return new chainAddEdges_result(this);
+    public forwardTransaction_result deepCopy() {
+      return new forwardTransaction_result(this);
     }
 
     public ExecResponse getSuccess() {
       return this.success;
     }
 
-    public chainAddEdges_result setSuccess(ExecResponse success) {
+    public forwardTransaction_result setSuccess(ExecResponse success) {
       this.success = success;
       return this;
     }
@@ -626,9 +1084,9 @@ public class InternalStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof chainAddEdges_result))
+      if (!(_that instanceof forwardTransaction_result))
         return false;
-      chainAddEdges_result that = (chainAddEdges_result)_that;
+      forwardTransaction_result that = (forwardTransaction_result)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
@@ -641,7 +1099,7 @@ public class InternalStorageService {
     }
 
     @Override
-    public int compareTo(chainAddEdges_result other) {
+    public int compareTo(forwardTransaction_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -717,396 +1175,7 @@ public class InternalStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainAddEdges_result");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("success");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getSuccess() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class chainUpdateEdge_args implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainUpdateEdge_args");
-    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
-
-    public ChainUpdateEdgeRequest req;
-    public static final int REQ = 1;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, ChainUpdateEdgeRequest.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(chainUpdateEdge_args.class, metaDataMap);
-    }
-
-    public chainUpdateEdge_args() {
-    }
-
-    public chainUpdateEdge_args(
-        ChainUpdateEdgeRequest req) {
-      this();
-      this.req = req;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public chainUpdateEdge_args(chainUpdateEdge_args other) {
-      if (other.isSetReq()) {
-        this.req = TBaseHelper.deepCopy(other.req);
-      }
-    }
-
-    public chainUpdateEdge_args deepCopy() {
-      return new chainUpdateEdge_args(this);
-    }
-
-    public ChainUpdateEdgeRequest getReq() {
-      return this.req;
-    }
-
-    public chainUpdateEdge_args setReq(ChainUpdateEdgeRequest req) {
-      this.req = req;
-      return this;
-    }
-
-    public void unsetReq() {
-      this.req = null;
-    }
-
-    // Returns true if field req is set (has been assigned a value) and false otherwise
-    public boolean isSetReq() {
-      return this.req != null;
-    }
-
-    public void setReqIsSet(boolean __value) {
-      if (!__value) {
-        this.req = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case REQ:
-        if (__value == null) {
-          unsetReq();
-        } else {
-          setReq((ChainUpdateEdgeRequest)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return getReq();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof chainUpdateEdge_args))
-        return false;
-      chainUpdateEdge_args that = (chainUpdateEdge_args)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {req});
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case REQ:
-            if (__field.type == TType.STRUCT) {
-              this.req = new ChainUpdateEdgeRequest();
-              this.req.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      if (this.req != null) {
-        oprot.writeFieldBegin(REQ_FIELD_DESC);
-        this.req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainUpdateEdge_args");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getReq() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class chainUpdateEdge_result implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainUpdateEdge_result");
-    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-
-    public UpdateResponse success;
-    public static final int SUCCESS = 0;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, UpdateResponse.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(chainUpdateEdge_result.class, metaDataMap);
-    }
-
-    public chainUpdateEdge_result() {
-    }
-
-    public chainUpdateEdge_result(
-        UpdateResponse success) {
-      this();
-      this.success = success;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public chainUpdateEdge_result(chainUpdateEdge_result other) {
-      if (other.isSetSuccess()) {
-        this.success = TBaseHelper.deepCopy(other.success);
-      }
-    }
-
-    public chainUpdateEdge_result deepCopy() {
-      return new chainUpdateEdge_result(this);
-    }
-
-    public UpdateResponse getSuccess() {
-      return this.success;
-    }
-
-    public chainUpdateEdge_result setSuccess(UpdateResponse success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    // Returns true if field success is set (has been assigned a value) and false otherwise
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean __value) {
-      if (!__value) {
-        this.success = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case SUCCESS:
-        if (__value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((UpdateResponse)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return getSuccess();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof chainUpdateEdge_result))
-        return false;
-      chainUpdateEdge_result that = (chainUpdateEdge_result)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {success});
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case SUCCESS:
-            if (__field.type == TType.STRUCT) {
-              this.success = new UpdateResponse();
-              this.success.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      oprot.writeStructBegin(STRUCT_DESC);
-
-      if (this.isSetSuccess()) {
-        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-        this.success.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainUpdateEdge_result");
+      StringBuilder sb = new StringBuilder("forwardTransaction_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

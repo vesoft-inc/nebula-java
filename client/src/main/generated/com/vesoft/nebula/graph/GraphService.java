@@ -39,8 +39,6 @@ public class GraphService {
 
     public byte[] executeJson(long sessionId, byte[] stmt) throws TException;
 
-    public VerifyClientVersionResp verifyClientVersion(VerifyClientVersionReq req) throws TException;
-
   }
 
   public interface AsyncIface {
@@ -52,8 +50,6 @@ public class GraphService {
     public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
 
     public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
-
-    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -245,51 +241,6 @@ public class GraphService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeJson failed: unknown result");
     }
 
-    public VerifyClientVersionResp verifyClientVersion(VerifyClientVersionReq req) throws TException
-    {
-      ContextStack ctx = getContextStack("GraphService.verifyClientVersion", null);
-      this.setContextStack(ctx);
-      send_verifyClientVersion(req);
-      return recv_verifyClientVersion();
-    }
-
-    public void send_verifyClientVersion(VerifyClientVersionReq req) throws TException
-    {
-      ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GraphService.verifyClientVersion", null);
-      oprot_.writeMessageBegin(new TMessage("verifyClientVersion", TMessageType.CALL, seqid_));
-      verifyClientVersion_args args = new verifyClientVersion_args();
-      args.req = req;
-      args.write(oprot_);
-      oprot_.writeMessageEnd();
-      oprot_.getTransport().flush();
-      super.postWrite(ctx, "GraphService.verifyClientVersion", args);
-      return;
-    }
-
-    public VerifyClientVersionResp recv_verifyClientVersion() throws TException
-    {
-      ContextStack ctx = super.getContextStack();
-      long bytes;
-      TMessageType mtype;
-      super.preRead(ctx, "GraphService.verifyClientVersion");
-      TMessage msg = iprot_.readMessageBegin();
-      if (msg.type == TMessageType.EXCEPTION) {
-        TApplicationException x = TApplicationException.read(iprot_);
-        iprot_.readMessageEnd();
-        throw x;
-      }
-      verifyClientVersion_result result = new verifyClientVersion_result();
-      result.read(iprot_);
-      iprot_.readMessageEnd();
-      super.postRead(ctx, "GraphService.verifyClientVersion", result);
-
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "verifyClientVersion failed: unknown result");
-    }
-
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -308,9 +259,9 @@ public class GraphService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler34) throws TException {
+    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler33) throws TException {
       checkReady();
-      authenticate_call method_call = new authenticate_call(username, password, resultHandler34, this, ___protocolFactory, ___transport);
+      authenticate_call method_call = new authenticate_call(username, password, resultHandler33, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -318,8 +269,8 @@ public class GraphService {
     public static class authenticate_call extends TAsyncMethodCall {
       private byte[] username;
       private byte[] password;
-      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler35, TAsyncClient client31, TProtocolFactory protocolFactory32, TNonblockingTransport transport33) throws TException {
-        super(client31, protocolFactory32, transport33, resultHandler35, false);
+      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler34, TAsyncClient client30, TProtocolFactory protocolFactory31, TNonblockingTransport transport32) throws TException {
+        super(client30, protocolFactory31, transport32, resultHandler34, false);
         this.username = username;
         this.password = password;
       }
@@ -343,17 +294,17 @@ public class GraphService {
       }
     }
 
-    public void signout(long sessionId, AsyncMethodCallback resultHandler39) throws TException {
+    public void signout(long sessionId, AsyncMethodCallback resultHandler38) throws TException {
       checkReady();
-      signout_call method_call = new signout_call(sessionId, resultHandler39, this, ___protocolFactory, ___transport);
+      signout_call method_call = new signout_call(sessionId, resultHandler38, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class signout_call extends TAsyncMethodCall {
       private long sessionId;
-      public signout_call(long sessionId, AsyncMethodCallback resultHandler40, TAsyncClient client36, TProtocolFactory protocolFactory37, TNonblockingTransport transport38) throws TException {
-        super(client36, protocolFactory37, transport38, resultHandler40, true);
+      public signout_call(long sessionId, AsyncMethodCallback resultHandler39, TAsyncClient client35, TProtocolFactory protocolFactory36, TNonblockingTransport transport37) throws TException {
+        super(client35, protocolFactory36, transport37, resultHandler39, true);
         this.sessionId = sessionId;
       }
 
@@ -374,9 +325,9 @@ public class GraphService {
       }
     }
 
-    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler44) throws TException {
+    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler43) throws TException {
       checkReady();
-      execute_call method_call = new execute_call(sessionId, stmt, resultHandler44, this, ___protocolFactory, ___transport);
+      execute_call method_call = new execute_call(sessionId, stmt, resultHandler43, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -384,8 +335,8 @@ public class GraphService {
     public static class execute_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler45, TAsyncClient client41, TProtocolFactory protocolFactory42, TNonblockingTransport transport43) throws TException {
-        super(client41, protocolFactory42, transport43, resultHandler45, false);
+      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler44, TAsyncClient client40, TProtocolFactory protocolFactory41, TNonblockingTransport transport42) throws TException {
+        super(client40, protocolFactory41, transport42, resultHandler44, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -409,9 +360,9 @@ public class GraphService {
       }
     }
 
-    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler49) throws TException {
+    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler48) throws TException {
       checkReady();
-      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler49, this, ___protocolFactory, ___transport);
+      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler48, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -419,8 +370,8 @@ public class GraphService {
     public static class executeJson_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler50, TAsyncClient client46, TProtocolFactory protocolFactory47, TNonblockingTransport transport48) throws TException {
-        super(client46, protocolFactory47, transport48, resultHandler50, false);
+      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler49, TAsyncClient client45, TProtocolFactory protocolFactory46, TNonblockingTransport transport47) throws TException {
+        super(client45, protocolFactory46, transport47, resultHandler49, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -444,38 +395,6 @@ public class GraphService {
       }
     }
 
-    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler54) throws TException {
-      checkReady();
-      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler54, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class verifyClientVersion_call extends TAsyncMethodCall {
-      private VerifyClientVersionReq req;
-      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler55, TAsyncClient client51, TProtocolFactory protocolFactory52, TNonblockingTransport transport53) throws TException {
-        super(client51, protocolFactory52, transport53, resultHandler55, false);
-        this.req = req;
-      }
-
-      public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("verifyClientVersion", TMessageType.CALL, 0));
-        verifyClientVersion_args args = new verifyClientVersion_args();
-        args.setReq(req);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public VerifyClientVersionResp getResult() throws TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
-        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_verifyClientVersion();
-      }
-    }
-
   }
 
   public static class Processor implements TProcessor {
@@ -488,7 +407,6 @@ public class GraphService {
       processMap_.put("signout", new signout());
       processMap_.put("execute", new execute());
       processMap_.put("executeJson", new executeJson());
-      processMap_.put("verifyClientVersion", new verifyClientVersion());
     }
 
     protected static interface ProcessFunction {
@@ -594,27 +512,6 @@ public class GraphService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "GraphService.executeJson", result);
-      }
-
-    }
-
-    private class verifyClientVersion implements ProcessFunction {
-      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
-      {
-        Object handler_ctx = event_handler_.getContext("GraphService.verifyClientVersion", server_ctx);
-        verifyClientVersion_args args = new verifyClientVersion_args();
-        event_handler_.preRead(handler_ctx, "GraphService.verifyClientVersion");
-        args.read(iprot);
-        iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GraphService.verifyClientVersion", args);
-        verifyClientVersion_result result = new verifyClientVersion_result();
-        result.success = iface_.verifyClientVersion(args.req);
-        event_handler_.preWrite(handler_ctx, "GraphService.verifyClientVersion", result);
-        oprot.writeMessageBegin(new TMessage("verifyClientVersion", TMessageType.REPLY, seqid));
-        result.write(oprot);
-        oprot.writeMessageEnd();
-        oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GraphService.verifyClientVersion", result);
       }
 
     }
@@ -2353,441 +2250,6 @@ public class GraphService {
             sb.append(Integer.toHexString(this.getSuccess()[i]).length() > 1 ? Integer.toHexString(this.getSuccess()[i]).substring(Integer.toHexString(this.getSuccess()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSuccess()[i]).toUpperCase());
           }
           if (this.getSuccess().length > 128) sb.append(" ...");
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class verifyClientVersion_args implements TBase, java.io.Serializable, Cloneable, Comparable<verifyClientVersion_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("verifyClientVersion_args");
-    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
-
-    public VerifyClientVersionReq req;
-    public static final int REQ = 1;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, VerifyClientVersionReq.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(verifyClientVersion_args.class, metaDataMap);
-    }
-
-    public verifyClientVersion_args() {
-    }
-
-    public verifyClientVersion_args(
-        VerifyClientVersionReq req) {
-      this();
-      this.req = req;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public verifyClientVersion_args(verifyClientVersion_args other) {
-      if (other.isSetReq()) {
-        this.req = TBaseHelper.deepCopy(other.req);
-      }
-    }
-
-    public verifyClientVersion_args deepCopy() {
-      return new verifyClientVersion_args(this);
-    }
-
-    public VerifyClientVersionReq getReq() {
-      return this.req;
-    }
-
-    public verifyClientVersion_args setReq(VerifyClientVersionReq req) {
-      this.req = req;
-      return this;
-    }
-
-    public void unsetReq() {
-      this.req = null;
-    }
-
-    // Returns true if field req is set (has been assigned a value) and false otherwise
-    public boolean isSetReq() {
-      return this.req != null;
-    }
-
-    public void setReqIsSet(boolean __value) {
-      if (!__value) {
-        this.req = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case REQ:
-        if (__value == null) {
-          unsetReq();
-        } else {
-          setReq((VerifyClientVersionReq)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return getReq();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof verifyClientVersion_args))
-        return false;
-      verifyClientVersion_args that = (verifyClientVersion_args)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {req});
-    }
-
-    @Override
-    public int compareTo(verifyClientVersion_args other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) { 
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case REQ:
-            if (__field.type == TType.STRUCT) {
-              this.req = new VerifyClientVersionReq();
-              this.req.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      if (this.req != null) {
-        oprot.writeFieldBegin(REQ_FIELD_DESC);
-        this.req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("verifyClientVersion_args");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getReq() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class verifyClientVersion_result implements TBase, java.io.Serializable, Cloneable, Comparable<verifyClientVersion_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("verifyClientVersion_result");
-    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-
-    public VerifyClientVersionResp success;
-    public static final int SUCCESS = 0;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, VerifyClientVersionResp.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(verifyClientVersion_result.class, metaDataMap);
-    }
-
-    public verifyClientVersion_result() {
-    }
-
-    public verifyClientVersion_result(
-        VerifyClientVersionResp success) {
-      this();
-      this.success = success;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public verifyClientVersion_result(verifyClientVersion_result other) {
-      if (other.isSetSuccess()) {
-        this.success = TBaseHelper.deepCopy(other.success);
-      }
-    }
-
-    public verifyClientVersion_result deepCopy() {
-      return new verifyClientVersion_result(this);
-    }
-
-    public VerifyClientVersionResp getSuccess() {
-      return this.success;
-    }
-
-    public verifyClientVersion_result setSuccess(VerifyClientVersionResp success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    // Returns true if field success is set (has been assigned a value) and false otherwise
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean __value) {
-      if (!__value) {
-        this.success = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case SUCCESS:
-        if (__value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((VerifyClientVersionResp)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return getSuccess();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof verifyClientVersion_result))
-        return false;
-      verifyClientVersion_result that = (verifyClientVersion_result)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {success});
-    }
-
-    @Override
-    public int compareTo(verifyClientVersion_result other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) { 
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case SUCCESS:
-            if (__field.type == TType.STRUCT) {
-              this.success = new VerifyClientVersionResp();
-              this.success.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      oprot.writeStructBegin(STRUCT_DESC);
-
-      if (this.isSetSuccess()) {
-        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-        this.success.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("verifyClientVersion_result");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("success");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getSuccess() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
       }
       first = false;
       sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

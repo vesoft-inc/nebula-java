@@ -61,7 +61,7 @@ public class MetaCacheImplTest implements MetaCache {
             new ColumnTypeDef(PropertyType.STRING));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col09").getBytes(),
-            new ColumnTypeDef(PropertyType.FIXED_STRING, (short)12, null));
+            new ColumnTypeDef(PropertyType.FIXED_STRING, (short)12));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col10").getBytes(),
             new ColumnTypeDef(PropertyType.TIMESTAMP));
@@ -178,7 +178,7 @@ public class MetaCacheImplTest implements MetaCache {
                                             "utf-8".getBytes(),
                                             "utf-8".getBytes(),
                                             new ColumnTypeDef(
-                                                PropertyType.FIXED_STRING, (short)20, null));
+                                                PropertyType.FIXED_STRING, (short)20));
 
         this.spaceItem = spaceItem;
         this.spaceItem.properties = spaceDesc;

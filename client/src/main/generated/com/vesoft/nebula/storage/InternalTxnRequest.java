@@ -24,28 +24,31 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneable {
+public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneable, Comparable<InternalTxnRequest> {
   private static final TStruct STRUCT_DESC = new TStruct("InternalTxnRequest");
   private static final TField TXN_ID_FIELD_DESC = new TField("txn_id", TType.I64, (short)1);
-  private static final TField TERM_OF_PARTS_FIELD_DESC = new TField("term_of_parts", TType.MAP, (short)2);
-  private static final TField ADD_EDGE_REQ_FIELD_DESC = new TField("add_edge_req", TType.STRUCT, (short)3);
-  private static final TField UPD_EDGE_REQ_FIELD_DESC = new TField("upd_edge_req", TType.STRUCT, (short)4);
-  private static final TField EDGE_VER_FIELD_DESC = new TField("edge_ver", TType.MAP, (short)5);
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)2);
+  private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)3);
+  private static final TField POSITION_FIELD_DESC = new TField("position", TType.I32, (short)4);
+  private static final TField DATA_FIELD_DESC = new TField("data", TType.LIST, (short)5);
 
   public long txn_id;
-  public Map<Integer,Long> term_of_parts;
-  public AddEdgesRequest add_edge_req;
-  public UpdateEdgeRequest upd_edge_req;
-  public Map<Integer,List<Long>> edge_ver;
+  public int space_id;
+  public int part_id;
+  public int position;
+  public List<List<byte[]>> data;
   public static final int TXN_ID = 1;
-  public static final int TERM_OF_PARTS = 2;
-  public static final int ADD_EDGE_REQ = 3;
-  public static final int UPD_EDGE_REQ = 4;
-  public static final int EDGE_VER = 5;
+  public static final int SPACE_ID = 2;
+  public static final int PART_ID = 3;
+  public static final int POSITION = 4;
+  public static final int DATA = 5;
 
   // isset id assignments
   private static final int __TXN_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __SPACE_ID_ISSET_ID = 1;
+  private static final int __PART_ID_ISSET_ID = 2;
+  private static final int __POSITION_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -53,19 +56,16 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(TXN_ID, new FieldMetaData("txn_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(TERM_OF_PARTS, new FieldMetaData("term_of_parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new FieldValueMetaData(TType.I64))));
-    tmpMetaDataMap.put(ADD_EDGE_REQ, new FieldMetaData("add_edge_req", TFieldRequirementType.OPTIONAL, 
-        new StructMetaData(TType.STRUCT, AddEdgesRequest.class)));
-    tmpMetaDataMap.put(UPD_EDGE_REQ, new FieldMetaData("upd_edge_req", TFieldRequirementType.OPTIONAL, 
-        new StructMetaData(TType.STRUCT, UpdateEdgeRequest.class)));
-    tmpMetaDataMap.put(EDGE_VER, new FieldMetaData("edge_ver", TFieldRequirementType.OPTIONAL, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(PART_ID, new FieldMetaData("part_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(POSITION, new FieldMetaData("position", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
             new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.I64)))));
+                new FieldValueMetaData(TType.STRING)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -78,36 +78,30 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
 
   public InternalTxnRequest(
       long txn_id,
-      Map<Integer,Long> term_of_parts) {
+      int space_id,
+      int part_id,
+      int position,
+      List<List<byte[]>> data) {
     this();
     this.txn_id = txn_id;
     setTxn_idIsSet(true);
-    this.term_of_parts = term_of_parts;
-  }
-
-  public InternalTxnRequest(
-      long txn_id,
-      Map<Integer,Long> term_of_parts,
-      AddEdgesRequest add_edge_req,
-      UpdateEdgeRequest upd_edge_req,
-      Map<Integer,List<Long>> edge_ver) {
-    this();
-    this.txn_id = txn_id;
-    setTxn_idIsSet(true);
-    this.term_of_parts = term_of_parts;
-    this.add_edge_req = add_edge_req;
-    this.upd_edge_req = upd_edge_req;
-    this.edge_ver = edge_ver;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.part_id = part_id;
+    setPart_idIsSet(true);
+    this.position = position;
+    setPositionIsSet(true);
+    this.data = data;
   }
 
   public static class Builder {
     private long txn_id;
-    private Map<Integer,Long> term_of_parts;
-    private AddEdgesRequest add_edge_req;
-    private UpdateEdgeRequest upd_edge_req;
-    private Map<Integer,List<Long>> edge_ver;
+    private int space_id;
+    private int part_id;
+    private int position;
+    private List<List<byte[]>> data;
 
-    BitSet __optional_isset = new BitSet(1);
+    BitSet __optional_isset = new BitSet(4);
 
     public Builder() {
     }
@@ -118,23 +112,26 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
-    public Builder setTerm_of_parts(final Map<Integer,Long> term_of_parts) {
-      this.term_of_parts = term_of_parts;
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
       return this;
     }
 
-    public Builder setAdd_edge_req(final AddEdgesRequest add_edge_req) {
-      this.add_edge_req = add_edge_req;
+    public Builder setPart_id(final int part_id) {
+      this.part_id = part_id;
+      __optional_isset.set(__PART_ID_ISSET_ID, true);
       return this;
     }
 
-    public Builder setUpd_edge_req(final UpdateEdgeRequest upd_edge_req) {
-      this.upd_edge_req = upd_edge_req;
+    public Builder setPosition(final int position) {
+      this.position = position;
+      __optional_isset.set(__POSITION_ISSET_ID, true);
       return this;
     }
 
-    public Builder setEdge_ver(final Map<Integer,List<Long>> edge_ver) {
-      this.edge_ver = edge_ver;
+    public Builder setData(final List<List<byte[]>> data) {
+      this.data = data;
       return this;
     }
 
@@ -143,10 +140,16 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       if (__optional_isset.get(__TXN_ID_ISSET_ID)) {
         result.setTxn_id(this.txn_id);
       }
-      result.setTerm_of_parts(this.term_of_parts);
-      result.setAdd_edge_req(this.add_edge_req);
-      result.setUpd_edge_req(this.upd_edge_req);
-      result.setEdge_ver(this.edge_ver);
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
+        result.setPart_id(this.part_id);
+      }
+      if (__optional_isset.get(__POSITION_ISSET_ID)) {
+        result.setPosition(this.position);
+      }
+      result.setData(this.data);
       return result;
     }
   }
@@ -162,17 +165,11 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.txn_id = TBaseHelper.deepCopy(other.txn_id);
-    if (other.isSetTerm_of_parts()) {
-      this.term_of_parts = TBaseHelper.deepCopy(other.term_of_parts);
-    }
-    if (other.isSetAdd_edge_req()) {
-      this.add_edge_req = TBaseHelper.deepCopy(other.add_edge_req);
-    }
-    if (other.isSetUpd_edge_req()) {
-      this.upd_edge_req = TBaseHelper.deepCopy(other.upd_edge_req);
-    }
-    if (other.isSetEdge_ver()) {
-      this.edge_ver = TBaseHelper.deepCopy(other.edge_ver);
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
+    this.part_id = TBaseHelper.deepCopy(other.part_id);
+    this.position = TBaseHelper.deepCopy(other.position);
+    if (other.isSetData()) {
+      this.data = TBaseHelper.deepCopy(other.data);
     }
   }
 
@@ -203,99 +200,96 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__TXN_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,Long> getTerm_of_parts() {
-    return this.term_of_parts;
+  public int getSpace_id() {
+    return this.space_id;
   }
 
-  public InternalTxnRequest setTerm_of_parts(Map<Integer,Long> term_of_parts) {
-    this.term_of_parts = term_of_parts;
+  public InternalTxnRequest setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     return this;
   }
 
-  public void unsetTerm_of_parts() {
-    this.term_of_parts = null;
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
   }
 
-  // Returns true if field term_of_parts is set (has been assigned a value) and false otherwise
-  public boolean isSetTerm_of_parts() {
-    return this.term_of_parts != null;
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setTerm_of_partsIsSet(boolean __value) {
-    if (!__value) {
-      this.term_of_parts = null;
-    }
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public AddEdgesRequest getAdd_edge_req() {
-    return this.add_edge_req;
+  public int getPart_id() {
+    return this.part_id;
   }
 
-  public InternalTxnRequest setAdd_edge_req(AddEdgesRequest add_edge_req) {
-    this.add_edge_req = add_edge_req;
+  public InternalTxnRequest setPart_id(int part_id) {
+    this.part_id = part_id;
+    setPart_idIsSet(true);
     return this;
   }
 
-  public void unsetAdd_edge_req() {
-    this.add_edge_req = null;
+  public void unsetPart_id() {
+    __isset_bit_vector.clear(__PART_ID_ISSET_ID);
   }
 
-  // Returns true if field add_edge_req is set (has been assigned a value) and false otherwise
-  public boolean isSetAdd_edge_req() {
-    return this.add_edge_req != null;
+  // Returns true if field part_id is set (has been assigned a value) and false otherwise
+  public boolean isSetPart_id() {
+    return __isset_bit_vector.get(__PART_ID_ISSET_ID);
   }
 
-  public void setAdd_edge_reqIsSet(boolean __value) {
-    if (!__value) {
-      this.add_edge_req = null;
-    }
+  public void setPart_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public UpdateEdgeRequest getUpd_edge_req() {
-    return this.upd_edge_req;
+  public int getPosition() {
+    return this.position;
   }
 
-  public InternalTxnRequest setUpd_edge_req(UpdateEdgeRequest upd_edge_req) {
-    this.upd_edge_req = upd_edge_req;
+  public InternalTxnRequest setPosition(int position) {
+    this.position = position;
+    setPositionIsSet(true);
     return this;
   }
 
-  public void unsetUpd_edge_req() {
-    this.upd_edge_req = null;
+  public void unsetPosition() {
+    __isset_bit_vector.clear(__POSITION_ISSET_ID);
   }
 
-  // Returns true if field upd_edge_req is set (has been assigned a value) and false otherwise
-  public boolean isSetUpd_edge_req() {
-    return this.upd_edge_req != null;
+  // Returns true if field position is set (has been assigned a value) and false otherwise
+  public boolean isSetPosition() {
+    return __isset_bit_vector.get(__POSITION_ISSET_ID);
   }
 
-  public void setUpd_edge_reqIsSet(boolean __value) {
-    if (!__value) {
-      this.upd_edge_req = null;
-    }
+  public void setPositionIsSet(boolean __value) {
+    __isset_bit_vector.set(__POSITION_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<Long>> getEdge_ver() {
-    return this.edge_ver;
+  public List<List<byte[]>> getData() {
+    return this.data;
   }
 
-  public InternalTxnRequest setEdge_ver(Map<Integer,List<Long>> edge_ver) {
-    this.edge_ver = edge_ver;
+  public InternalTxnRequest setData(List<List<byte[]>> data) {
+    this.data = data;
     return this;
   }
 
-  public void unsetEdge_ver() {
-    this.edge_ver = null;
+  public void unsetData() {
+    this.data = null;
   }
 
-  // Returns true if field edge_ver is set (has been assigned a value) and false otherwise
-  public boolean isSetEdge_ver() {
-    return this.edge_ver != null;
+  // Returns true if field data is set (has been assigned a value) and false otherwise
+  public boolean isSetData() {
+    return this.data != null;
   }
 
-  public void setEdge_verIsSet(boolean __value) {
+  public void setDataIsSet(boolean __value) {
     if (!__value) {
-      this.edge_ver = null;
+      this.data = null;
     }
   }
 
@@ -310,35 +304,35 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case TERM_OF_PARTS:
+    case SPACE_ID:
       if (__value == null) {
-        unsetTerm_of_parts();
+        unsetSpace_id();
       } else {
-        setTerm_of_parts((Map<Integer,Long>)__value);
+        setSpace_id((Integer)__value);
       }
       break;
 
-    case ADD_EDGE_REQ:
+    case PART_ID:
       if (__value == null) {
-        unsetAdd_edge_req();
+        unsetPart_id();
       } else {
-        setAdd_edge_req((AddEdgesRequest)__value);
+        setPart_id((Integer)__value);
       }
       break;
 
-    case UPD_EDGE_REQ:
+    case POSITION:
       if (__value == null) {
-        unsetUpd_edge_req();
+        unsetPosition();
       } else {
-        setUpd_edge_req((UpdateEdgeRequest)__value);
+        setPosition((Integer)__value);
       }
       break;
 
-    case EDGE_VER:
+    case DATA:
       if (__value == null) {
-        unsetEdge_ver();
+        unsetData();
       } else {
-        setEdge_ver((Map<Integer,List<Long>>)__value);
+        setData((List<List<byte[]>>)__value);
       }
       break;
 
@@ -352,17 +346,17 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     case TXN_ID:
       return new Long(getTxn_id());
 
-    case TERM_OF_PARTS:
-      return getTerm_of_parts();
+    case SPACE_ID:
+      return new Integer(getSpace_id());
 
-    case ADD_EDGE_REQ:
-      return getAdd_edge_req();
+    case PART_ID:
+      return new Integer(getPart_id());
 
-    case UPD_EDGE_REQ:
-      return getUpd_edge_req();
+    case POSITION:
+      return new Integer(getPosition());
 
-    case EDGE_VER:
-      return getEdge_ver();
+    case DATA:
+      return getData();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -381,20 +375,75 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.txn_id, that.txn_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetTerm_of_parts(), that.isSetTerm_of_parts(), this.term_of_parts, that.term_of_parts)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetAdd_edge_req(), that.isSetAdd_edge_req(), this.add_edge_req, that.add_edge_req)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetUpd_edge_req(), that.isSetUpd_edge_req(), this.upd_edge_req, that.upd_edge_req)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.position, that.position)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetEdge_ver(), that.isSetEdge_ver(), this.edge_ver, that.edge_ver)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetData(), that.isSetData(), this.data, that.data)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {txn_id, term_of_parts, add_edge_req, upd_edge_req, edge_ver});
+    return Arrays.deepHashCode(new Object[] {txn_id, space_id, part_id, position, data});
+  }
+
+  @Override
+  public int compareTo(InternalTxnRequest other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetTxn_id()).compareTo(other.isSetTxn_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(txn_id, other.txn_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPosition()).compareTo(other.isSetPosition());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(position, other.position);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetData()).compareTo(other.isSetData());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(data, other.data);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -416,71 +465,56 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case TERM_OF_PARTS:
-          if (__field.type == TType.MAP) {
+        case SPACE_ID:
+          if (__field.type == TType.I32) {
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case PART_ID:
+          if (__field.type == TType.I32) {
+            this.part_id = iprot.readI32();
+            setPart_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case POSITION:
+          if (__field.type == TType.I32) {
+            this.position = iprot.readI32();
+            setPositionIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case DATA:
+          if (__field.type == TType.LIST) {
             {
-              TMap _map254 = iprot.readMapBegin();
-              this.term_of_parts = new HashMap<Integer,Long>(Math.max(0, 2*_map254.size));
+              TList _list254 = iprot.readListBegin();
+              this.data = new ArrayList<List<byte[]>>(Math.max(0, _list254.size));
               for (int _i255 = 0; 
-                   (_map254.size < 0) ? iprot.peekMap() : (_i255 < _map254.size); 
+                   (_list254.size < 0) ? iprot.peekList() : (_i255 < _list254.size); 
                    ++_i255)
               {
-                int _key256;
-                long _val257;
-                _key256 = iprot.readI32();
-                _val257 = iprot.readI64();
-                this.term_of_parts.put(_key256, _val257);
-              }
-              iprot.readMapEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case ADD_EDGE_REQ:
-          if (__field.type == TType.STRUCT) {
-            this.add_edge_req = new AddEdgesRequest();
-            this.add_edge_req.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case UPD_EDGE_REQ:
-          if (__field.type == TType.STRUCT) {
-            this.upd_edge_req = new UpdateEdgeRequest();
-            this.upd_edge_req.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case EDGE_VER:
-          if (__field.type == TType.MAP) {
-            {
-              TMap _map258 = iprot.readMapBegin();
-              this.edge_ver = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map258.size));
-              for (int _i259 = 0; 
-                   (_map258.size < 0) ? iprot.peekMap() : (_i259 < _map258.size); 
-                   ++_i259)
-              {
-                int _key260;
-                List<Long> _val261;
-                _key260 = iprot.readI32();
+                List<byte[]> _elem256;
                 {
-                  TList _list262 = iprot.readListBegin();
-                  _val261 = new ArrayList<Long>(Math.max(0, _list262.size));
-                  for (int _i263 = 0; 
-                       (_list262.size < 0) ? iprot.peekList() : (_i263 < _list262.size); 
-                       ++_i263)
+                  TList _list257 = iprot.readListBegin();
+                  _elem256 = new ArrayList<byte[]>(Math.max(0, _list257.size));
+                  for (int _i258 = 0; 
+                       (_list257.size < 0) ? iprot.peekList() : (_i258 < _list257.size); 
+                       ++_i258)
                   {
-                    long _elem264;
-                    _elem264 = iprot.readI64();
-                    _val261.add(_elem264);
+                    byte[] _elem259;
+                    _elem259 = iprot.readBinary();
+                    _elem256.add(_elem259);
                   }
                   iprot.readListEnd();
                 }
-                this.edge_ver.put(_key260, _val261);
+                this.data.add(_elem256);
               }
-              iprot.readMapEnd();
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -506,51 +540,31 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
     oprot.writeI64(this.txn_id);
     oprot.writeFieldEnd();
-    if (this.term_of_parts != null) {
-      oprot.writeFieldBegin(TERM_OF_PARTS_FIELD_DESC);
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(PART_ID_FIELD_DESC);
+    oprot.writeI32(this.part_id);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(POSITION_FIELD_DESC);
+    oprot.writeI32(this.position);
+    oprot.writeFieldEnd();
+    if (this.data != null) {
+      oprot.writeFieldBegin(DATA_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.I64, this.term_of_parts.size()));
-        for (Map.Entry<Integer, Long> _iter265 : this.term_of_parts.entrySet())        {
-          oprot.writeI32(_iter265.getKey());
-          oprot.writeI64(_iter265.getValue());
+        oprot.writeListBegin(new TList(TType.LIST, this.data.size()));
+        for (List<byte[]> _iter260 : this.data)        {
+          {
+            oprot.writeListBegin(new TList(TType.STRING, _iter260.size()));
+            for (byte[] _iter261 : _iter260)            {
+              oprot.writeBinary(_iter261);
+            }
+            oprot.writeListEnd();
+          }
         }
-        oprot.writeMapEnd();
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
-    }
-    if (this.add_edge_req != null) {
-      if (isSetAdd_edge_req()) {
-        oprot.writeFieldBegin(ADD_EDGE_REQ_FIELD_DESC);
-        this.add_edge_req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.upd_edge_req != null) {
-      if (isSetUpd_edge_req()) {
-        oprot.writeFieldBegin(UPD_EDGE_REQ_FIELD_DESC);
-        this.upd_edge_req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.edge_ver != null) {
-      if (isSetEdge_ver()) {
-        oprot.writeFieldBegin(EDGE_VER_FIELD_DESC);
-        {
-          oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.edge_ver.size()));
-          for (Map.Entry<Integer, List<Long>> _iter266 : this.edge_ver.entrySet())          {
-            oprot.writeI32(_iter266.getKey());
-            {
-              oprot.writeListBegin(new TList(TType.I64, _iter266.getValue().size()));
-              for (long _iter267 : _iter266.getValue())              {
-                oprot.writeI64(_iter267);
-              }
-              oprot.writeListEnd();
-            }
-          }
-          oprot.writeMapEnd();
-        }
-        oprot.writeFieldEnd();
-      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -580,57 +594,36 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("term_of_parts");
+    sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getTerm_of_parts() == null) {
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("part_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("position");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getPosition(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("data");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getData() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getTerm_of_parts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getData(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetAdd_edge_req())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("add_edge_req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getAdd_edge_req() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getAdd_edge_req(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetUpd_edge_req())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("upd_edge_req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getUpd_edge_req() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getUpd_edge_req(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetEdge_ver())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("edge_ver");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getEdge_ver() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getEdge_ver(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

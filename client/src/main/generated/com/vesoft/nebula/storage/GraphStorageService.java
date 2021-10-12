@@ -59,9 +59,7 @@ public class GraphStorageService {
 
     public GetNeighborsResponse lookupAndTraverse(LookupAndTraverseRequest req) throws TException;
 
-    public UpdateResponse chainUpdateEdge(UpdateEdgeRequest req) throws TException;
-
-    public ExecResponse chainAddEdges(AddEdgesRequest req) throws TException;
+    public ExecResponse addEdgesAtomic(AddEdgesRequest req) throws TException;
 
   }
 
@@ -95,9 +93,7 @@ public class GraphStorageService {
 
     public void lookupAndTraverse(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void chainUpdateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler) throws TException;
-
-    public void chainAddEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void addEdgesAtomic(AddEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -760,94 +756,49 @@ public class GraphStorageService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "lookupAndTraverse failed: unknown result");
     }
 
-    public UpdateResponse chainUpdateEdge(UpdateEdgeRequest req) throws TException
+    public ExecResponse addEdgesAtomic(AddEdgesRequest req) throws TException
     {
-      ContextStack ctx = getContextStack("GraphStorageService.chainUpdateEdge", null);
+      ContextStack ctx = getContextStack("GraphStorageService.addEdgesAtomic", null);
       this.setContextStack(ctx);
-      send_chainUpdateEdge(req);
-      return recv_chainUpdateEdge();
+      send_addEdgesAtomic(req);
+      return recv_addEdgesAtomic();
     }
 
-    public void send_chainUpdateEdge(UpdateEdgeRequest req) throws TException
+    public void send_addEdgesAtomic(AddEdgesRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GraphStorageService.chainUpdateEdge", null);
-      oprot_.writeMessageBegin(new TMessage("chainUpdateEdge", TMessageType.CALL, seqid_));
-      chainUpdateEdge_args args = new chainUpdateEdge_args();
+      super.preWrite(ctx, "GraphStorageService.addEdgesAtomic", null);
+      oprot_.writeMessageBegin(new TMessage("addEdgesAtomic", TMessageType.CALL, seqid_));
+      addEdgesAtomic_args args = new addEdgesAtomic_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "GraphStorageService.chainUpdateEdge", args);
+      super.postWrite(ctx, "GraphStorageService.addEdgesAtomic", args);
       return;
     }
 
-    public UpdateResponse recv_chainUpdateEdge() throws TException
+    public ExecResponse recv_addEdgesAtomic() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "GraphStorageService.chainUpdateEdge");
+      super.preRead(ctx, "GraphStorageService.addEdgesAtomic");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      chainUpdateEdge_result result = new chainUpdateEdge_result();
+      addEdgesAtomic_result result = new addEdgesAtomic_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "GraphStorageService.chainUpdateEdge", result);
+      super.postRead(ctx, "GraphStorageService.addEdgesAtomic", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainUpdateEdge failed: unknown result");
-    }
-
-    public ExecResponse chainAddEdges(AddEdgesRequest req) throws TException
-    {
-      ContextStack ctx = getContextStack("GraphStorageService.chainAddEdges", null);
-      this.setContextStack(ctx);
-      send_chainAddEdges(req);
-      return recv_chainAddEdges();
-    }
-
-    public void send_chainAddEdges(AddEdgesRequest req) throws TException
-    {
-      ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "GraphStorageService.chainAddEdges", null);
-      oprot_.writeMessageBegin(new TMessage("chainAddEdges", TMessageType.CALL, seqid_));
-      chainAddEdges_args args = new chainAddEdges_args();
-      args.req = req;
-      args.write(oprot_);
-      oprot_.writeMessageEnd();
-      oprot_.getTransport().flush();
-      super.postWrite(ctx, "GraphStorageService.chainAddEdges", args);
-      return;
-    }
-
-    public ExecResponse recv_chainAddEdges() throws TException
-    {
-      ContextStack ctx = super.getContextStack();
-      long bytes;
-      TMessageType mtype;
-      super.preRead(ctx, "GraphStorageService.chainAddEdges");
-      TMessage msg = iprot_.readMessageBegin();
-      if (msg.type == TMessageType.EXCEPTION) {
-        TApplicationException x = TApplicationException.read(iprot_);
-        iprot_.readMessageEnd();
-        throw x;
-      }
-      chainAddEdges_result result = new chainAddEdges_result();
-      result.read(iprot_);
-      iprot_.readMessageEnd();
-      super.postRead(ctx, "GraphStorageService.chainAddEdges", result);
-
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainAddEdges failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "addEdgesAtomic failed: unknown result");
     }
 
   }
@@ -868,17 +819,17 @@ public class GraphStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void getNeighbors(GetNeighborsRequest req, AsyncMethodCallback resultHandler304) throws TException {
+    public void getNeighbors(GetNeighborsRequest req, AsyncMethodCallback resultHandler280) throws TException {
       checkReady();
-      getNeighbors_call method_call = new getNeighbors_call(req, resultHandler304, this, ___protocolFactory, ___transport);
+      getNeighbors_call method_call = new getNeighbors_call(req, resultHandler280, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getNeighbors_call extends TAsyncMethodCall {
       private GetNeighborsRequest req;
-      public getNeighbors_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler305, TAsyncClient client301, TProtocolFactory protocolFactory302, TNonblockingTransport transport303) throws TException {
-        super(client301, protocolFactory302, transport303, resultHandler305, false);
+      public getNeighbors_call(GetNeighborsRequest req, AsyncMethodCallback resultHandler281, TAsyncClient client277, TProtocolFactory protocolFactory278, TNonblockingTransport transport279) throws TException {
+        super(client277, protocolFactory278, transport279, resultHandler281, false);
         this.req = req;
       }
 
@@ -900,17 +851,17 @@ public class GraphStorageService {
       }
     }
 
-    public void getProps(GetPropRequest req, AsyncMethodCallback resultHandler309) throws TException {
+    public void getProps(GetPropRequest req, AsyncMethodCallback resultHandler285) throws TException {
       checkReady();
-      getProps_call method_call = new getProps_call(req, resultHandler309, this, ___protocolFactory, ___transport);
+      getProps_call method_call = new getProps_call(req, resultHandler285, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getProps_call extends TAsyncMethodCall {
       private GetPropRequest req;
-      public getProps_call(GetPropRequest req, AsyncMethodCallback resultHandler310, TAsyncClient client306, TProtocolFactory protocolFactory307, TNonblockingTransport transport308) throws TException {
-        super(client306, protocolFactory307, transport308, resultHandler310, false);
+      public getProps_call(GetPropRequest req, AsyncMethodCallback resultHandler286, TAsyncClient client282, TProtocolFactory protocolFactory283, TNonblockingTransport transport284) throws TException {
+        super(client282, protocolFactory283, transport284, resultHandler286, false);
         this.req = req;
       }
 
@@ -932,17 +883,17 @@ public class GraphStorageService {
       }
     }
 
-    public void addVertices(AddVerticesRequest req, AsyncMethodCallback resultHandler314) throws TException {
+    public void addVertices(AddVerticesRequest req, AsyncMethodCallback resultHandler290) throws TException {
       checkReady();
-      addVertices_call method_call = new addVertices_call(req, resultHandler314, this, ___protocolFactory, ___transport);
+      addVertices_call method_call = new addVertices_call(req, resultHandler290, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addVertices_call extends TAsyncMethodCall {
       private AddVerticesRequest req;
-      public addVertices_call(AddVerticesRequest req, AsyncMethodCallback resultHandler315, TAsyncClient client311, TProtocolFactory protocolFactory312, TNonblockingTransport transport313) throws TException {
-        super(client311, protocolFactory312, transport313, resultHandler315, false);
+      public addVertices_call(AddVerticesRequest req, AsyncMethodCallback resultHandler291, TAsyncClient client287, TProtocolFactory protocolFactory288, TNonblockingTransport transport289) throws TException {
+        super(client287, protocolFactory288, transport289, resultHandler291, false);
         this.req = req;
       }
 
@@ -964,17 +915,17 @@ public class GraphStorageService {
       }
     }
 
-    public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler319) throws TException {
+    public void addEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler295) throws TException {
       checkReady();
-      addEdges_call method_call = new addEdges_call(req, resultHandler319, this, ___protocolFactory, ___transport);
+      addEdges_call method_call = new addEdges_call(req, resultHandler295, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addEdges_call extends TAsyncMethodCall {
       private AddEdgesRequest req;
-      public addEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler320, TAsyncClient client316, TProtocolFactory protocolFactory317, TNonblockingTransport transport318) throws TException {
-        super(client316, protocolFactory317, transport318, resultHandler320, false);
+      public addEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler296, TAsyncClient client292, TProtocolFactory protocolFactory293, TNonblockingTransport transport294) throws TException {
+        super(client292, protocolFactory293, transport294, resultHandler296, false);
         this.req = req;
       }
 
@@ -996,17 +947,17 @@ public class GraphStorageService {
       }
     }
 
-    public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler324) throws TException {
+    public void deleteEdges(DeleteEdgesRequest req, AsyncMethodCallback resultHandler300) throws TException {
       checkReady();
-      deleteEdges_call method_call = new deleteEdges_call(req, resultHandler324, this, ___protocolFactory, ___transport);
+      deleteEdges_call method_call = new deleteEdges_call(req, resultHandler300, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class deleteEdges_call extends TAsyncMethodCall {
       private DeleteEdgesRequest req;
-      public deleteEdges_call(DeleteEdgesRequest req, AsyncMethodCallback resultHandler325, TAsyncClient client321, TProtocolFactory protocolFactory322, TNonblockingTransport transport323) throws TException {
-        super(client321, protocolFactory322, transport323, resultHandler325, false);
+      public deleteEdges_call(DeleteEdgesRequest req, AsyncMethodCallback resultHandler301, TAsyncClient client297, TProtocolFactory protocolFactory298, TNonblockingTransport transport299) throws TException {
+        super(client297, protocolFactory298, transport299, resultHandler301, false);
         this.req = req;
       }
 
@@ -1028,17 +979,17 @@ public class GraphStorageService {
       }
     }
 
-    public void deleteVertices(DeleteVerticesRequest req, AsyncMethodCallback resultHandler329) throws TException {
+    public void deleteVertices(DeleteVerticesRequest req, AsyncMethodCallback resultHandler305) throws TException {
       checkReady();
-      deleteVertices_call method_call = new deleteVertices_call(req, resultHandler329, this, ___protocolFactory, ___transport);
+      deleteVertices_call method_call = new deleteVertices_call(req, resultHandler305, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class deleteVertices_call extends TAsyncMethodCall {
       private DeleteVerticesRequest req;
-      public deleteVertices_call(DeleteVerticesRequest req, AsyncMethodCallback resultHandler330, TAsyncClient client326, TProtocolFactory protocolFactory327, TNonblockingTransport transport328) throws TException {
-        super(client326, protocolFactory327, transport328, resultHandler330, false);
+      public deleteVertices_call(DeleteVerticesRequest req, AsyncMethodCallback resultHandler306, TAsyncClient client302, TProtocolFactory protocolFactory303, TNonblockingTransport transport304) throws TException {
+        super(client302, protocolFactory303, transport304, resultHandler306, false);
         this.req = req;
       }
 
@@ -1060,17 +1011,17 @@ public class GraphStorageService {
       }
     }
 
-    public void deleteTags(DeleteTagsRequest req, AsyncMethodCallback resultHandler334) throws TException {
+    public void deleteTags(DeleteTagsRequest req, AsyncMethodCallback resultHandler310) throws TException {
       checkReady();
-      deleteTags_call method_call = new deleteTags_call(req, resultHandler334, this, ___protocolFactory, ___transport);
+      deleteTags_call method_call = new deleteTags_call(req, resultHandler310, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class deleteTags_call extends TAsyncMethodCall {
       private DeleteTagsRequest req;
-      public deleteTags_call(DeleteTagsRequest req, AsyncMethodCallback resultHandler335, TAsyncClient client331, TProtocolFactory protocolFactory332, TNonblockingTransport transport333) throws TException {
-        super(client331, protocolFactory332, transport333, resultHandler335, false);
+      public deleteTags_call(DeleteTagsRequest req, AsyncMethodCallback resultHandler311, TAsyncClient client307, TProtocolFactory protocolFactory308, TNonblockingTransport transport309) throws TException {
+        super(client307, protocolFactory308, transport309, resultHandler311, false);
         this.req = req;
       }
 
@@ -1092,17 +1043,17 @@ public class GraphStorageService {
       }
     }
 
-    public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler339) throws TException {
+    public void updateVertex(UpdateVertexRequest req, AsyncMethodCallback resultHandler315) throws TException {
       checkReady();
-      updateVertex_call method_call = new updateVertex_call(req, resultHandler339, this, ___protocolFactory, ___transport);
+      updateVertex_call method_call = new updateVertex_call(req, resultHandler315, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class updateVertex_call extends TAsyncMethodCall {
       private UpdateVertexRequest req;
-      public updateVertex_call(UpdateVertexRequest req, AsyncMethodCallback resultHandler340, TAsyncClient client336, TProtocolFactory protocolFactory337, TNonblockingTransport transport338) throws TException {
-        super(client336, protocolFactory337, transport338, resultHandler340, false);
+      public updateVertex_call(UpdateVertexRequest req, AsyncMethodCallback resultHandler316, TAsyncClient client312, TProtocolFactory protocolFactory313, TNonblockingTransport transport314) throws TException {
+        super(client312, protocolFactory313, transport314, resultHandler316, false);
         this.req = req;
       }
 
@@ -1124,17 +1075,17 @@ public class GraphStorageService {
       }
     }
 
-    public void updateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler344) throws TException {
+    public void updateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler320) throws TException {
       checkReady();
-      updateEdge_call method_call = new updateEdge_call(req, resultHandler344, this, ___protocolFactory, ___transport);
+      updateEdge_call method_call = new updateEdge_call(req, resultHandler320, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class updateEdge_call extends TAsyncMethodCall {
       private UpdateEdgeRequest req;
-      public updateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler345, TAsyncClient client341, TProtocolFactory protocolFactory342, TNonblockingTransport transport343) throws TException {
-        super(client341, protocolFactory342, transport343, resultHandler345, false);
+      public updateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler321, TAsyncClient client317, TProtocolFactory protocolFactory318, TNonblockingTransport transport319) throws TException {
+        super(client317, protocolFactory318, transport319, resultHandler321, false);
         this.req = req;
       }
 
@@ -1156,17 +1107,17 @@ public class GraphStorageService {
       }
     }
 
-    public void scanVertex(ScanVertexRequest req, AsyncMethodCallback resultHandler349) throws TException {
+    public void scanVertex(ScanVertexRequest req, AsyncMethodCallback resultHandler325) throws TException {
       checkReady();
-      scanVertex_call method_call = new scanVertex_call(req, resultHandler349, this, ___protocolFactory, ___transport);
+      scanVertex_call method_call = new scanVertex_call(req, resultHandler325, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scanVertex_call extends TAsyncMethodCall {
       private ScanVertexRequest req;
-      public scanVertex_call(ScanVertexRequest req, AsyncMethodCallback resultHandler350, TAsyncClient client346, TProtocolFactory protocolFactory347, TNonblockingTransport transport348) throws TException {
-        super(client346, protocolFactory347, transport348, resultHandler350, false);
+      public scanVertex_call(ScanVertexRequest req, AsyncMethodCallback resultHandler326, TAsyncClient client322, TProtocolFactory protocolFactory323, TNonblockingTransport transport324) throws TException {
+        super(client322, protocolFactory323, transport324, resultHandler326, false);
         this.req = req;
       }
 
@@ -1188,17 +1139,17 @@ public class GraphStorageService {
       }
     }
 
-    public void scanEdge(ScanEdgeRequest req, AsyncMethodCallback resultHandler354) throws TException {
+    public void scanEdge(ScanEdgeRequest req, AsyncMethodCallback resultHandler330) throws TException {
       checkReady();
-      scanEdge_call method_call = new scanEdge_call(req, resultHandler354, this, ___protocolFactory, ___transport);
+      scanEdge_call method_call = new scanEdge_call(req, resultHandler330, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class scanEdge_call extends TAsyncMethodCall {
       private ScanEdgeRequest req;
-      public scanEdge_call(ScanEdgeRequest req, AsyncMethodCallback resultHandler355, TAsyncClient client351, TProtocolFactory protocolFactory352, TNonblockingTransport transport353) throws TException {
-        super(client351, protocolFactory352, transport353, resultHandler355, false);
+      public scanEdge_call(ScanEdgeRequest req, AsyncMethodCallback resultHandler331, TAsyncClient client327, TProtocolFactory protocolFactory328, TNonblockingTransport transport329) throws TException {
+        super(client327, protocolFactory328, transport329, resultHandler331, false);
         this.req = req;
       }
 
@@ -1220,17 +1171,17 @@ public class GraphStorageService {
       }
     }
 
-    public void getUUID(GetUUIDReq req, AsyncMethodCallback resultHandler359) throws TException {
+    public void getUUID(GetUUIDReq req, AsyncMethodCallback resultHandler335) throws TException {
       checkReady();
-      getUUID_call method_call = new getUUID_call(req, resultHandler359, this, ___protocolFactory, ___transport);
+      getUUID_call method_call = new getUUID_call(req, resultHandler335, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getUUID_call extends TAsyncMethodCall {
       private GetUUIDReq req;
-      public getUUID_call(GetUUIDReq req, AsyncMethodCallback resultHandler360, TAsyncClient client356, TProtocolFactory protocolFactory357, TNonblockingTransport transport358) throws TException {
-        super(client356, protocolFactory357, transport358, resultHandler360, false);
+      public getUUID_call(GetUUIDReq req, AsyncMethodCallback resultHandler336, TAsyncClient client332, TProtocolFactory protocolFactory333, TNonblockingTransport transport334) throws TException {
+        super(client332, protocolFactory333, transport334, resultHandler336, false);
         this.req = req;
       }
 
@@ -1252,17 +1203,17 @@ public class GraphStorageService {
       }
     }
 
-    public void lookupIndex(LookupIndexRequest req, AsyncMethodCallback resultHandler364) throws TException {
+    public void lookupIndex(LookupIndexRequest req, AsyncMethodCallback resultHandler340) throws TException {
       checkReady();
-      lookupIndex_call method_call = new lookupIndex_call(req, resultHandler364, this, ___protocolFactory, ___transport);
+      lookupIndex_call method_call = new lookupIndex_call(req, resultHandler340, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class lookupIndex_call extends TAsyncMethodCall {
       private LookupIndexRequest req;
-      public lookupIndex_call(LookupIndexRequest req, AsyncMethodCallback resultHandler365, TAsyncClient client361, TProtocolFactory protocolFactory362, TNonblockingTransport transport363) throws TException {
-        super(client361, protocolFactory362, transport363, resultHandler365, false);
+      public lookupIndex_call(LookupIndexRequest req, AsyncMethodCallback resultHandler341, TAsyncClient client337, TProtocolFactory protocolFactory338, TNonblockingTransport transport339) throws TException {
+        super(client337, protocolFactory338, transport339, resultHandler341, false);
         this.req = req;
       }
 
@@ -1284,17 +1235,17 @@ public class GraphStorageService {
       }
     }
 
-    public void lookupAndTraverse(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler369) throws TException {
+    public void lookupAndTraverse(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler345) throws TException {
       checkReady();
-      lookupAndTraverse_call method_call = new lookupAndTraverse_call(req, resultHandler369, this, ___protocolFactory, ___transport);
+      lookupAndTraverse_call method_call = new lookupAndTraverse_call(req, resultHandler345, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class lookupAndTraverse_call extends TAsyncMethodCall {
       private LookupAndTraverseRequest req;
-      public lookupAndTraverse_call(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler370, TAsyncClient client366, TProtocolFactory protocolFactory367, TNonblockingTransport transport368) throws TException {
-        super(client366, protocolFactory367, transport368, resultHandler370, false);
+      public lookupAndTraverse_call(LookupAndTraverseRequest req, AsyncMethodCallback resultHandler346, TAsyncClient client342, TProtocolFactory protocolFactory343, TNonblockingTransport transport344) throws TException {
+        super(client342, protocolFactory343, transport344, resultHandler346, false);
         this.req = req;
       }
 
@@ -1316,55 +1267,23 @@ public class GraphStorageService {
       }
     }
 
-    public void chainUpdateEdge(UpdateEdgeRequest req, AsyncMethodCallback resultHandler374) throws TException {
+    public void addEdgesAtomic(AddEdgesRequest req, AsyncMethodCallback resultHandler350) throws TException {
       checkReady();
-      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler374, this, ___protocolFactory, ___transport);
+      addEdgesAtomic_call method_call = new addEdgesAtomic_call(req, resultHandler350, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class chainUpdateEdge_call extends TAsyncMethodCall {
-      private UpdateEdgeRequest req;
-      public chainUpdateEdge_call(UpdateEdgeRequest req, AsyncMethodCallback resultHandler375, TAsyncClient client371, TProtocolFactory protocolFactory372, TNonblockingTransport transport373) throws TException {
-        super(client371, protocolFactory372, transport373, resultHandler375, false);
-        this.req = req;
-      }
-
-      public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("chainUpdateEdge", TMessageType.CALL, 0));
-        chainUpdateEdge_args args = new chainUpdateEdge_args();
-        args.setReq(req);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public UpdateResponse getResult() throws TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
-        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_chainUpdateEdge();
-      }
-    }
-
-    public void chainAddEdges(AddEdgesRequest req, AsyncMethodCallback resultHandler379) throws TException {
-      checkReady();
-      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler379, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class chainAddEdges_call extends TAsyncMethodCall {
+    public static class addEdgesAtomic_call extends TAsyncMethodCall {
       private AddEdgesRequest req;
-      public chainAddEdges_call(AddEdgesRequest req, AsyncMethodCallback resultHandler380, TAsyncClient client376, TProtocolFactory protocolFactory377, TNonblockingTransport transport378) throws TException {
-        super(client376, protocolFactory377, transport378, resultHandler380, false);
+      public addEdgesAtomic_call(AddEdgesRequest req, AsyncMethodCallback resultHandler351, TAsyncClient client347, TProtocolFactory protocolFactory348, TNonblockingTransport transport349) throws TException {
+        super(client347, protocolFactory348, transport349, resultHandler351, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("chainAddEdges", TMessageType.CALL, 0));
-        chainAddEdges_args args = new chainAddEdges_args();
+        prot.writeMessageBegin(new TMessage("addEdgesAtomic", TMessageType.CALL, 0));
+        addEdgesAtomic_args args = new addEdgesAtomic_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
@@ -1376,7 +1295,7 @@ public class GraphStorageService {
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_chainAddEdges();
+        return (new Client(prot)).recv_addEdgesAtomic();
       }
     }
 
@@ -1402,8 +1321,7 @@ public class GraphStorageService {
       processMap_.put("getUUID", new getUUID());
       processMap_.put("lookupIndex", new lookupIndex());
       processMap_.put("lookupAndTraverse", new lookupAndTraverse());
-      processMap_.put("chainUpdateEdge", new chainUpdateEdge());
-      processMap_.put("chainAddEdges", new chainAddEdges());
+      processMap_.put("addEdgesAtomic", new addEdgesAtomic());
     }
 
     protected static interface ProcessFunction {
@@ -1730,44 +1648,23 @@ public class GraphStorageService {
 
     }
 
-    private class chainUpdateEdge implements ProcessFunction {
+    private class addEdgesAtomic implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("GraphStorageService.chainUpdateEdge", server_ctx);
-        chainUpdateEdge_args args = new chainUpdateEdge_args();
-        event_handler_.preRead(handler_ctx, "GraphStorageService.chainUpdateEdge");
+        Object handler_ctx = event_handler_.getContext("GraphStorageService.addEdgesAtomic", server_ctx);
+        addEdgesAtomic_args args = new addEdgesAtomic_args();
+        event_handler_.preRead(handler_ctx, "GraphStorageService.addEdgesAtomic");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GraphStorageService.chainUpdateEdge", args);
-        chainUpdateEdge_result result = new chainUpdateEdge_result();
-        result.success = iface_.chainUpdateEdge(args.req);
-        event_handler_.preWrite(handler_ctx, "GraphStorageService.chainUpdateEdge", result);
-        oprot.writeMessageBegin(new TMessage("chainUpdateEdge", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "GraphStorageService.addEdgesAtomic", args);
+        addEdgesAtomic_result result = new addEdgesAtomic_result();
+        result.success = iface_.addEdgesAtomic(args.req);
+        event_handler_.preWrite(handler_ctx, "GraphStorageService.addEdgesAtomic", result);
+        oprot.writeMessageBegin(new TMessage("addEdgesAtomic", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GraphStorageService.chainUpdateEdge", result);
-      }
-
-    }
-
-    private class chainAddEdges implements ProcessFunction {
-      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
-      {
-        Object handler_ctx = event_handler_.getContext("GraphStorageService.chainAddEdges", server_ctx);
-        chainAddEdges_args args = new chainAddEdges_args();
-        event_handler_.preRead(handler_ctx, "GraphStorageService.chainAddEdges");
-        args.read(iprot);
-        iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "GraphStorageService.chainAddEdges", args);
-        chainAddEdges_result result = new chainAddEdges_result();
-        result.success = iface_.chainAddEdges(args.req);
-        event_handler_.preWrite(handler_ctx, "GraphStorageService.chainAddEdges", result);
-        oprot.writeMessageBegin(new TMessage("chainAddEdges", TMessageType.REPLY, seqid));
-        result.write(oprot);
-        oprot.writeMessageEnd();
-        oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "GraphStorageService.chainAddEdges", result);
+        event_handler_.postWrite(handler_ctx, "GraphStorageService.addEdgesAtomic", result);
       }
 
     }
@@ -7404,397 +7301,8 @@ public class GraphStorageService {
 
   }
 
-  public static class chainUpdateEdge_args implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainUpdateEdge_args");
-    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
-
-    public UpdateEdgeRequest req;
-    public static final int REQ = 1;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, UpdateEdgeRequest.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(chainUpdateEdge_args.class, metaDataMap);
-    }
-
-    public chainUpdateEdge_args() {
-    }
-
-    public chainUpdateEdge_args(
-        UpdateEdgeRequest req) {
-      this();
-      this.req = req;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public chainUpdateEdge_args(chainUpdateEdge_args other) {
-      if (other.isSetReq()) {
-        this.req = TBaseHelper.deepCopy(other.req);
-      }
-    }
-
-    public chainUpdateEdge_args deepCopy() {
-      return new chainUpdateEdge_args(this);
-    }
-
-    public UpdateEdgeRequest getReq() {
-      return this.req;
-    }
-
-    public chainUpdateEdge_args setReq(UpdateEdgeRequest req) {
-      this.req = req;
-      return this;
-    }
-
-    public void unsetReq() {
-      this.req = null;
-    }
-
-    // Returns true if field req is set (has been assigned a value) and false otherwise
-    public boolean isSetReq() {
-      return this.req != null;
-    }
-
-    public void setReqIsSet(boolean __value) {
-      if (!__value) {
-        this.req = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case REQ:
-        if (__value == null) {
-          unsetReq();
-        } else {
-          setReq((UpdateEdgeRequest)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return getReq();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof chainUpdateEdge_args))
-        return false;
-      chainUpdateEdge_args that = (chainUpdateEdge_args)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {req});
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case REQ:
-            if (__field.type == TType.STRUCT) {
-              this.req = new UpdateEdgeRequest();
-              this.req.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      if (this.req != null) {
-        oprot.writeFieldBegin(REQ_FIELD_DESC);
-        this.req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainUpdateEdge_args");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getReq() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class chainUpdateEdge_result implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainUpdateEdge_result");
-    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-
-    public UpdateResponse success;
-    public static final int SUCCESS = 0;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, UpdateResponse.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(chainUpdateEdge_result.class, metaDataMap);
-    }
-
-    public chainUpdateEdge_result() {
-    }
-
-    public chainUpdateEdge_result(
-        UpdateResponse success) {
-      this();
-      this.success = success;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public chainUpdateEdge_result(chainUpdateEdge_result other) {
-      if (other.isSetSuccess()) {
-        this.success = TBaseHelper.deepCopy(other.success);
-      }
-    }
-
-    public chainUpdateEdge_result deepCopy() {
-      return new chainUpdateEdge_result(this);
-    }
-
-    public UpdateResponse getSuccess() {
-      return this.success;
-    }
-
-    public chainUpdateEdge_result setSuccess(UpdateResponse success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    // Returns true if field success is set (has been assigned a value) and false otherwise
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean __value) {
-      if (!__value) {
-        this.success = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case SUCCESS:
-        if (__value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((UpdateResponse)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return getSuccess();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof chainUpdateEdge_result))
-        return false;
-      chainUpdateEdge_result that = (chainUpdateEdge_result)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {success});
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case SUCCESS:
-            if (__field.type == TType.STRUCT) {
-              this.success = new UpdateResponse();
-              this.success.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      oprot.writeStructBegin(STRUCT_DESC);
-
-      if (this.isSetSuccess()) {
-        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-        this.success.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainUpdateEdge_result");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("success");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getSuccess() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class chainAddEdges_args implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainAddEdges_args");
+  public static class addEdgesAtomic_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("addEdgesAtomic_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
     public AddEdgesRequest req;
@@ -7812,13 +7320,13 @@ public class GraphStorageService {
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(chainAddEdges_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(addEdgesAtomic_args.class, metaDataMap);
     }
 
-    public chainAddEdges_args() {
+    public addEdgesAtomic_args() {
     }
 
-    public chainAddEdges_args(
+    public addEdgesAtomic_args(
         AddEdgesRequest req) {
       this();
       this.req = req;
@@ -7827,21 +7335,21 @@ public class GraphStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public chainAddEdges_args(chainAddEdges_args other) {
+    public addEdgesAtomic_args(addEdgesAtomic_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public chainAddEdges_args deepCopy() {
-      return new chainAddEdges_args(this);
+    public addEdgesAtomic_args deepCopy() {
+      return new addEdgesAtomic_args(this);
     }
 
     public AddEdgesRequest getReq() {
       return this.req;
     }
 
-    public chainAddEdges_args setReq(AddEdgesRequest req) {
+    public addEdgesAtomic_args setReq(AddEdgesRequest req) {
       this.req = req;
       return this;
     }
@@ -7892,9 +7400,9 @@ public class GraphStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof chainAddEdges_args))
+      if (!(_that instanceof addEdgesAtomic_args))
         return false;
-      chainAddEdges_args that = (chainAddEdges_args)_that;
+      addEdgesAtomic_args that = (addEdgesAtomic_args)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
@@ -7961,7 +7469,7 @@ public class GraphStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainAddEdges_args");
+      StringBuilder sb = new StringBuilder("addEdgesAtomic_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -7988,8 +7496,8 @@ public class GraphStorageService {
 
   }
 
-  public static class chainAddEdges_result implements TBase, java.io.Serializable, Cloneable, Comparable<chainAddEdges_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("chainAddEdges_result");
+  public static class addEdgesAtomic_result implements TBase, java.io.Serializable, Cloneable, Comparable<addEdgesAtomic_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("addEdgesAtomic_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
     public ExecResponse success;
@@ -8007,13 +7515,13 @@ public class GraphStorageService {
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(chainAddEdges_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(addEdgesAtomic_result.class, metaDataMap);
     }
 
-    public chainAddEdges_result() {
+    public addEdgesAtomic_result() {
     }
 
-    public chainAddEdges_result(
+    public addEdgesAtomic_result(
         ExecResponse success) {
       this();
       this.success = success;
@@ -8022,21 +7530,21 @@ public class GraphStorageService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public chainAddEdges_result(chainAddEdges_result other) {
+    public addEdgesAtomic_result(addEdgesAtomic_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public chainAddEdges_result deepCopy() {
-      return new chainAddEdges_result(this);
+    public addEdgesAtomic_result deepCopy() {
+      return new addEdgesAtomic_result(this);
     }
 
     public ExecResponse getSuccess() {
       return this.success;
     }
 
-    public chainAddEdges_result setSuccess(ExecResponse success) {
+    public addEdgesAtomic_result setSuccess(ExecResponse success) {
       this.success = success;
       return this;
     }
@@ -8087,9 +7595,9 @@ public class GraphStorageService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof chainAddEdges_result))
+      if (!(_that instanceof addEdgesAtomic_result))
         return false;
-      chainAddEdges_result that = (chainAddEdges_result)_that;
+      addEdgesAtomic_result that = (addEdgesAtomic_result)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
@@ -8102,7 +7610,7 @@ public class GraphStorageService {
     }
 
     @Override
-    public int compareTo(chainAddEdges_result other) {
+    public int compareTo(addEdgesAtomic_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -8178,7 +7686,7 @@ public class GraphStorageService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("chainAddEdges_result");
+      StringBuilder sb = new StringBuilder("addEdgesAtomic_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

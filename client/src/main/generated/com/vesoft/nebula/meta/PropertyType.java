@@ -27,8 +27,7 @@ public enum PropertyType implements com.facebook.thrift.TEnum {
   TIMESTAMP(21),
   DATE(24),
   DATETIME(25),
-  TIME(26),
-  GEOGRAPHY(31);
+  TIME(26);
 
   private final int value;
 
@@ -79,8 +78,6 @@ public enum PropertyType implements com.facebook.thrift.TEnum {
         return DATETIME;
       case 26:
         return TIME;
-      case 31:
-        return GEOGRAPHY;
       default:
         return null;
     }

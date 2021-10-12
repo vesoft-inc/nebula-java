@@ -28,7 +28,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
   private static final TStruct STRUCT_DESC = new TStruct("ColumnTypeDef");
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
   private static final TField TYPE_LENGTH_FIELD_DESC = new TField("type_length", TType.I16, (short)2);
-  private static final TField GEO_SHAPE_FIELD_DESC = new TField("geo_shape", TType.I32, (short)3);
 
   /**
    * 
@@ -36,14 +35,8 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
    */
   public PropertyType type;
   public short type_length;
-  /**
-   * 
-   * @see GeoShape
-   */
-  public GeoShape geo_shape;
   public static final int TYPE = 1;
   public static final int TYPE_LENGTH = 2;
-  public static final int GEO_SHAPE = 3;
 
   // isset id assignments
   private static final int __TYPE_LENGTH_ISSET_ID = 0;
@@ -57,8 +50,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(TYPE_LENGTH, new FieldMetaData("type_length", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I16)));
-    tmpMetaDataMap.put(GEO_SHAPE, new FieldMetaData("geo_shape", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -79,19 +70,16 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
   public ColumnTypeDef(
       PropertyType type,
-      short type_length,
-      GeoShape geo_shape) {
+      short type_length) {
     this();
     this.type = type;
     this.type_length = type_length;
     setType_lengthIsSet(true);
-    this.geo_shape = geo_shape;
   }
 
   public static class Builder {
     private PropertyType type;
     private short type_length;
-    private GeoShape geo_shape;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -109,18 +97,12 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
-    public Builder setGeo_shape(final GeoShape geo_shape) {
-      this.geo_shape = geo_shape;
-      return this;
-    }
-
     public ColumnTypeDef build() {
       ColumnTypeDef result = new ColumnTypeDef();
       result.setType(this.type);
       if (__optional_isset.get(__TYPE_LENGTH_ISSET_ID)) {
         result.setType_length(this.type_length);
       }
-      result.setGeo_shape(this.geo_shape);
       return result;
     }
   }
@@ -139,9 +121,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       this.type = TBaseHelper.deepCopy(other.type);
     }
     this.type_length = TBaseHelper.deepCopy(other.type_length);
-    if (other.isSetGeo_shape()) {
-      this.geo_shape = TBaseHelper.deepCopy(other.geo_shape);
-    }
   }
 
   public ColumnTypeDef deepCopy() {
@@ -203,38 +182,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
     __isset_bit_vector.set(__TYPE_LENGTH_ISSET_ID, __value);
   }
 
-  /**
-   * 
-   * @see GeoShape
-   */
-  public GeoShape getGeo_shape() {
-    return this.geo_shape;
-  }
-
-  /**
-   * 
-   * @see GeoShape
-   */
-  public ColumnTypeDef setGeo_shape(GeoShape geo_shape) {
-    this.geo_shape = geo_shape;
-    return this;
-  }
-
-  public void unsetGeo_shape() {
-    this.geo_shape = null;
-  }
-
-  // Returns true if field geo_shape is set (has been assigned a value) and false otherwise
-  public boolean isSetGeo_shape() {
-    return this.geo_shape != null;
-  }
-
-  public void setGeo_shapeIsSet(boolean __value) {
-    if (!__value) {
-      this.geo_shape = null;
-    }
-  }
-
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case TYPE:
@@ -253,14 +200,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case GEO_SHAPE:
-      if (__value == null) {
-        unsetGeo_shape();
-      } else {
-        setGeo_shape((GeoShape)__value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -273,9 +212,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
     case TYPE_LENGTH:
       return new Short(getType_length());
-
-    case GEO_SHAPE:
-      return getGeo_shape();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -296,14 +232,12 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.isSetType_length(), that.isSetType_length(), this.type_length, that.type_length)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetGeo_shape(), that.isSetGeo_shape(), this.geo_shape, that.geo_shape)) { return false; }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {type, type_length, geo_shape});
+    return Arrays.deepHashCode(new Object[] {type, type_length});
   }
 
   @Override
@@ -331,14 +265,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(type_length, other.type_length);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetGeo_shape()).compareTo(other.isSetGeo_shape());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(geo_shape, other.geo_shape);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -371,13 +297,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case GEO_SHAPE:
-          if (__field.type == TType.I32) {
-            this.geo_shape = GeoShape.findByValue(iprot.readI32());
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -404,13 +323,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(TYPE_LENGTH_FIELD_DESC);
       oprot.writeI16(this.type_length);
       oprot.writeFieldEnd();
-    }
-    if (this.geo_shape != null) {
-      if (isSetGeo_shape()) {
-        oprot.writeFieldBegin(GEO_SHAPE_FIELD_DESC);
-        oprot.writeI32(this.geo_shape == null ? 0 : this.geo_shape.getValue());
-        oprot.writeFieldEnd();
-      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -458,28 +370,6 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this.getType_length(), indent + 1, prettyPrint));
-      first = false;
-    }
-    if (isSetGeo_shape())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("geo_shape");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getGeo_shape() == null) {
-        sb.append("null");
-      } else {
-        String geo_shape_name = this.getGeo_shape() == null ? "null" : this.getGeo_shape().name();
-        if (geo_shape_name != null) {
-          sb.append(geo_shape_name);
-          sb.append(" (");
-        }
-        sb.append(this.getGeo_shape());
-        if (geo_shape_name != null) {
-          sb.append(")");
-        }
-      }
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
