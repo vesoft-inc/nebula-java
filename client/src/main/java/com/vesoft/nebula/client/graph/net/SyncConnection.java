@@ -188,6 +188,7 @@ public class SyncConnection extends Connection {
             execute(0, "YIELD 1;");
             return true;
         } catch (IOErrorException e) {
+            e.printStackTrace();
             return false;
         }
     }

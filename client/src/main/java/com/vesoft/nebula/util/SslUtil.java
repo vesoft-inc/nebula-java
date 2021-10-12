@@ -43,9 +43,16 @@ public class SslUtil {
             Security.addProvider(new BouncyCastleProvider());
 
             // Load client private key
-            PEMParser reader = new PEMParser(new FileReader(keyFile));
-            Object keyObject = reader.readObject();
-            reader.close();
+            PEMParser reader = null;
+            Object keyObject;
+            try {
+                reader = new PEMParser(new FileReader(keyFile));
+                keyObject = reader.readObject();
+            } finally {
+                if (reader != null) {
+                    reader.close();
+                }
+            }
 
             PEMDecryptorProvider provider =
                     new JcePEMDecryptorProviderBuilder().build(password.toCharArray());
@@ -61,9 +68,15 @@ public class SslUtil {
             }
 
             // Load Certificate Authority (CA) certificate
-            reader = new PEMParser(new FileReader(caCrtFile));
-            X509CertificateHolder caCertHolder = (X509CertificateHolder) reader.readObject();
-            reader.close();
+            X509CertificateHolder caCertHolder;
+            try {
+                reader = new PEMParser(new FileReader(caCrtFile));
+                caCertHolder = (X509CertificateHolder) reader.readObject();
+            } finally {
+                if (reader != null) {
+                    reader.close();
+                }
+            }
 
             // CA certificate is used to authenticate server
             JcaX509CertificateConverter certificateConverter =
@@ -78,9 +91,15 @@ public class SslUtil {
             trustManagerFactory.init(caKeyStore);
 
             // Load client certificate
-            reader = new PEMParser(new FileReader(crtFile));
-            X509CertificateHolder certHolder = (X509CertificateHolder) reader.readObject();
-            reader.close();
+            X509CertificateHolder certHolder;
+            try {
+                reader = new PEMParser(new FileReader(crtFile));
+                certHolder = (X509CertificateHolder) reader.readObject();
+            } finally {
+                if (reader != null) {
+                    reader.close();
+                }
+            }
 
             // Client key and certificates are sent to server so it can authenticate the client
             KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -118,9 +137,16 @@ public class SslUtil {
             Security.addProvider(new BouncyCastleProvider());
 
             // Load client private key
-            PEMParser reader = new PEMParser(new FileReader(keyFile));
-            Object keyObject = reader.readObject();
-            reader.close();
+            PEMParser reader = null;
+            Object keyObject;
+            try {
+                reader = new PEMParser(new FileReader(keyFile));
+                keyObject = reader.readObject();
+            } finally {
+                if (reader != null) {
+                    reader.close();
+                }
+            }
 
             PEMDecryptorProvider provider =
                     new JcePEMDecryptorProviderBuilder().build(password.toCharArray());
@@ -140,9 +166,15 @@ public class SslUtil {
                     new JcaX509CertificateConverter().setProvider("BC");
 
             // Load client certificate
-            reader = new PEMParser(new FileReader(crtFile));
-            X509CertificateHolder certHolder = (X509CertificateHolder) reader.readObject();
-            reader.close();
+            X509CertificateHolder certHolder;
+            try {
+                reader = new PEMParser(new FileReader(crtFile));
+                certHolder = (X509CertificateHolder) reader.readObject();
+            } finally {
+                if (reader != null) {
+                    reader.close();
+                }
+            }
 
             X509Certificate cert = certificateConverter.getCertificate(certHolder);
             // certificate is used to authenticate server
