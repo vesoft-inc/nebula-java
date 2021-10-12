@@ -459,7 +459,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                         + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
+                                    + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -474,7 +474,6 @@ public class TestDataFromServer {
 
             String ngql = "YIELD 1";
             JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
-            System.out.println(resp);
             String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
                     .getJSONObject(0).getJSONArray("row").toJSONString();
             String exp = "[1]";
