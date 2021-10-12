@@ -159,7 +159,6 @@ public class GraphClientExample {
             }
 
             {
-                NebulaPool sslPool = new NebulaPool();
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
                 nebulaSslPoolConfig.setEnableSsl(true);
@@ -167,6 +166,7 @@ public class GraphClientExample {
                         "examples/src/main/resources/ssl/casigned.pem",
                         "examples/src/main/resources/ssl/casigned.crt",
                         "examples/src/main/resources/ssl/casigned.key"));
+                NebulaPool sslPool = new NebulaPool();
                 sslPool.init(addresses, nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
@@ -181,7 +181,6 @@ public class GraphClientExample {
             }
 
             {
-                NebulaPool sslPool = new NebulaPool();
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
                 nebulaSslPoolConfig.setEnableSsl(true);
@@ -189,6 +188,7 @@ public class GraphClientExample {
                         "examples/src/main/resources/ssl/selfsigned.pem",
                         "examples/src/main/resources/ssl/selfsigned.key",
                         "vesoft"));
+                NebulaPool sslPool = new NebulaPool();
                 sslPool.init(addresses, nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
