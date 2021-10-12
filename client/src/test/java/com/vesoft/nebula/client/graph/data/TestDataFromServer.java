@@ -458,10 +458,9 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
             Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
 
-            // boot docker with ca signed yml
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml up -d")
-                    .waitFor(15,TimeUnit.SECONDS);
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
@@ -481,8 +480,8 @@ public class TestDataFromServer {
             String exp = "[1]";
             Assert.assertEquals(rowData, exp);
 
-            runtime.exec("docker-compose -f docker-compose-selfsigned.yaml down")
-                    .waitFor(15,TimeUnit.SECONDS);
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-selfsigned.yaml down").waitFor(60,TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -502,6 +501,7 @@ public class TestDataFromServer {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
                          + "-casigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
+
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
