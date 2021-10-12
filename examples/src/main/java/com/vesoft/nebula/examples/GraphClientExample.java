@@ -159,7 +159,6 @@ public class GraphClientExample {
             }
 
             {
-                NebulaPool sslPool = new NebulaPool();
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
                 nebulaSslPoolConfig.setEnableSsl(true);
@@ -167,7 +166,9 @@ public class GraphClientExample {
                         "examples/src/main/resources/ssl/casigned.pem",
                         "examples/src/main/resources/ssl/casigned.crt",
                         "examples/src/main/resources/ssl/casigned.key"));
-                sslPool.init(addresses, nebulaSslPoolConfig);
+                NebulaPool sslPool = new NebulaPool();
+                sslPool.init(Arrays.asList(new HostAddress("192.168.8.123", 9669)),
+                        nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
@@ -181,7 +182,6 @@ public class GraphClientExample {
             }
 
             {
-                NebulaPool sslPool = new NebulaPool();
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
                 nebulaSslPoolConfig.setEnableSsl(true);
@@ -189,7 +189,9 @@ public class GraphClientExample {
                         "examples/src/main/resources/ssl/selfsigned.pem",
                         "examples/src/main/resources/ssl/selfsigned.key",
                         "vesoft"));
-                sslPool.init(addresses, nebulaSslPoolConfig);
+                NebulaPool sslPool = new NebulaPool();
+                sslPool.init(Arrays.asList(new HostAddress("192.168.8.123", 9669)),
+                        nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
