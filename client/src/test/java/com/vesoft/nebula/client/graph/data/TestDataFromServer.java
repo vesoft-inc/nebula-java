@@ -466,8 +466,8 @@ public class TestDataFromServer {
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
-                    "/share/resources/selfsigned.pem",
-                    "/share/resources/selfsigned.key",
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8670)),
                     nebulaSslPoolConfig));
