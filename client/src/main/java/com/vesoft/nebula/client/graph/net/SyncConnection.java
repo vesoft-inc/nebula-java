@@ -15,23 +15,64 @@ import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
 import com.facebook.thrift.utils.StandardCharsets;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
+import com.vesoft.nebula.util.SslUtil;
+import java.io.IOException;
+import javax.net.ssl.SSLSocketFactory;
 
 public class SyncConnection extends Connection {
     protected TTransport transport = null;
     protected TProtocol protocol = null;
     private GraphService.Client client = null;
     private int timeout = 0;
+    private SSLParam sslParam = null;
+    private boolean enabledSsl = false;
+
+    @Override
+    public void open(HostAddress address, int timeout, SSLParam sslParam) throws IOErrorException {
+        try {
+            SSLSocketFactory sslSocketFactory;
+
+            this.serverAddr = address;
+            this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
+            this.enabledSsl = true;
+            this.sslParam = sslParam;
+            if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
+                sslSocketFactory =
+                        SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
+            } else {
+                sslSocketFactory =
+                        SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
+            }
+            if (sslSocketFactory == null) {
+                throw new IOErrorException(IOErrorException.E_UNKNOWN,
+                        "SSL Socket Factory Creation failed");
+            }
+            this.transport = new TSocket(
+                    sslSocketFactory.createSocket(address.getHost(),
+                            address.getPort()), this.timeout, this.timeout);
+            this.protocol = new TCompactProtocol(transport);
+            client = new GraphService.Client(protocol);
+        } catch (TException e) {
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void open(HostAddress address, int timeout) throws IOErrorException {
-        this.serverAddr = address;
         try {
+            this.enabledSsl = false;
+            this.serverAddr = address;
             this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.transport = new TSocket(
                     address.getHost(), address.getPort(), this.timeout, this.timeout);
@@ -56,7 +97,11 @@ public class SyncConnection extends Connection {
     @Override
     public void reopen() throws IOErrorException {
         close();
-        open(serverAddr, timeout);
+        if (enabledSsl) {
+            open(serverAddr, timeout, sslParam);
+        } else {
+            open(serverAddr, timeout);
+        }
     }
 
     public AuthResult authenticate(String user, String password)
@@ -143,6 +188,7 @@ public class SyncConnection extends Connection {
             execute(0, "YIELD 1;");
             return true;
         } catch (IOErrorException e) {
+            e.printStackTrace();
             return false;
         }
     }
