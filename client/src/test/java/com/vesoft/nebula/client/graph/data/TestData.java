@@ -6,16 +6,21 @@
 
 package com.vesoft.nebula.client.graph.data;
 
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Edge;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Geography;
+import com.vesoft.nebula.LineString;
 import com.vesoft.nebula.NList;
 import com.vesoft.nebula.NMap;
 import com.vesoft.nebula.NSet;
 import com.vesoft.nebula.NullType;
 import com.vesoft.nebula.Path;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Step;
 import com.vesoft.nebula.Tag;
@@ -88,6 +93,8 @@ public class TestData {
         }
         return new Path(getVertex(startId), steps);
     }
+
+
 
     public Vertex getSimpleVertex() {
         Map<byte[], Value> props1 = new HashMap<>();
@@ -172,7 +179,17 @@ public class TestData {
                         (byte)10, (byte)10, (byte)30, (byte)0, 100)),
                 new Value(Value.VVAL, getVertex("Tom")),
                 new Value(Value.EVAL, getEdge("Tom", "Lily")),
-                new Value(Value.PVAL, getPath("Tom", 3))));
+                new Value(Value.PVAL, getPath("Tom", 3)),
+                new Value(Value.GGVAL, new Geography(Geography.PTVAL, new Point(new Coordinate(1.0,
+                        2.0)))),
+                new Value(Value.GGVAL, new Geography(Geography.PGVAL, new Polygon(Arrays.asList(
+                        Arrays.asList(new Coordinate(1.0, 2.0), new Coordinate(2.0, 4.0)),
+                        Arrays.asList(new Coordinate(3.0, 6.0), new Coordinate(4.0, 8.0))
+                    )))),
+                new Value(Value.GGVAL, new Geography(Geography.LSVAL, new LineString(Arrays.asList(
+                        new Coordinate(1.0, 2.0),
+                        new Coordinate(2.0, 4.0)
+                    ))))));
         final List<byte[]> columnNames = Arrays.asList(
             "col0_empty".getBytes(),
             "col1_null".getBytes(),
@@ -188,7 +205,10 @@ public class TestData {
             "col11_datetime".getBytes(),
             "col12_vertex".getBytes(),
             "col13_edge".getBytes(),
-            "col14_path".getBytes());
+            "col14_path".getBytes(),
+            "col15_point".getBytes(),
+            "col16_polygon".getBytes(),
+            "col17_linestring".getBytes());
         return new DataSet(columnNames, Collections.singletonList(row));
     }
 
@@ -268,7 +288,7 @@ public class TestData {
     }
 
     @Test
-    public void testPathWarpper() {
+    public void testPathWrapper() {
         try {
             Path path = getPath("Tom", 5);
             PathWrapper pathWrapper = new PathWrapper(path);
@@ -325,12 +345,13 @@ public class TestData {
             assert resultSet.getPlanDesc() != null;
             List<String> expectColNames = Arrays.asList(
                 "col0_empty", "col1_null", "col2_bool", "col3_int", "col4_double", "col5_string",
-                "col6_list", "col7_set", "col8_map", "col9_time", "col10_date",
-                "col11_datetime", "col12_vertex", "col13_edge", "col14_path");
+                "col6_list", "col7_set", "col8_map", "col9_time", "col10_date", "col11_datetime",
+                "col12_vertex", "col13_edge", "col14_path", "col15_point", "col16_polygon",
+                "col17_linestring");
             assert Objects.equals(resultSet.keys(), expectColNames);
             assert resultSet.getRows().size() == 1;
             ResultSet.Record record = resultSet.rowValues(0);
-            assert record.size() == 15;
+            assert record.size() == 18;
             assert record.get(0).isEmpty();
 
             assert record.get(1).isNull();
@@ -414,6 +435,24 @@ public class TestData {
             assert Objects.equals(record.get(14).asPath(),
                 new PathWrapper(getPath("Tom", 3)));
             assert resultSet.toString().length() > 100;
+
+            assert record.get(15).isGeography();
+            assert Objects.equals(record.get(15).asGeography().toString(),
+                new PointWrapper(new Point(new Coordinate(1.0, 2.0))).toString());
+
+            assert record.get(16).isGeography();
+            assert Objects.equals(record.get(16).asGeography().toString(),
+                    new PolygonWrapper(new Polygon(Arrays.asList(
+                            Arrays.asList(new Coordinate(1.0, 2.0), new Coordinate(2.0, 4.0)),
+                            Arrays.asList(new Coordinate(3.0, 6.0), new Coordinate(4.0, 8.0))
+                    ))).toString());
+
+            assert record.get(17).isGeography();
+            assert Objects.equals(record.get(17).asGeography().toString(),
+                    new LineStringWrapper(new LineString(Arrays.asList(
+                            new Coordinate(1.0, 2.0),
+                            new Coordinate(2.0, 4.0)
+                    ))).toString());
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
@@ -458,6 +497,29 @@ public class TestData {
                     + "(\"vertex1\" :tag1 {tag1_prop: 200})-[:classmate@10{edge2_prop: 200}]->"
                     + "(\"vertex2\" :tag2 {tag2_prop: 300})";
             Assert.assertEquals(expectString, valueWrapper.asPath().toString());
+
+            valueWrapper = new ValueWrapper(
+                new Value(Value.GGVAL, new Geography(Geography.PTVAL, new Point(new Coordinate(1.0,
+                        2.0)))), "utf-8", 28800);
+            expectString = "POINT(1.0 2.0)";
+            Assert.assertEquals(expectString, valueWrapper.asGeography().toString());
+
+            valueWrapper = new ValueWrapper(
+                    new Value(Value.GGVAL, new Geography(Geography.PGVAL, new Polygon(Arrays.asList(
+                            Arrays.asList(new Coordinate(1.0, 2.0), new Coordinate(2.0, 4.0)),
+                            Arrays.asList(new Coordinate(3.0, 6.0), new Coordinate(4.0, 8.0))
+                    )))), "utf-8", 28800);
+            expectString = "POLYGON((1.0 2.0,2.0 4.0),(3.0 6.0,4.0 8.0))";
+            Assert.assertEquals(expectString, valueWrapper.asGeography().toString());
+
+            valueWrapper = new ValueWrapper(
+                    new Value(Value.GGVAL, new Geography(Geography.LSVAL,
+                        new LineString(Arrays.asList(
+                            new Coordinate(1.0, 2.0),
+                            new Coordinate(2.0, 4.0)
+                    )))), "utf-8", 28800);
+            expectString = "LINESTRING(1.0 2.0,2.0 4.0)";
+            Assert.assertEquals(expectString, valueWrapper.asGeography().toString());
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);

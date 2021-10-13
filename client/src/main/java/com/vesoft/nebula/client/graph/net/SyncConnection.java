@@ -38,6 +38,7 @@ public class SyncConnection extends Connection {
             this.transport.open();
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
+
         } catch (TException e) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }

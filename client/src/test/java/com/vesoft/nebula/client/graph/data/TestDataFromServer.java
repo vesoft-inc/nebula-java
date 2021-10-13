@@ -8,9 +8,14 @@ package com.vesoft.nebula.client.graph.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Geography;
+import com.vesoft.nebula.LineString;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
@@ -53,7 +58,8 @@ public class TestDataFromServer {
                 + "CREATE TAG IF NOT EXISTS student(name string);"
                 + "CREATE EDGE IF NOT EXISTS like(likeness double);"
                 + "CREATE EDGE IF NOT EXISTS friend(start_year int, end_year int);"
-                + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));");
+                + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));"
+                + "CREATE TAG IF NOT EXISTS any_shape(geo geography);");
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
         TimeUnit.SECONDS.sleep(6);
         String insertVertexes = "INSERT VERTEX person(name, age, grade,friends, book_num, "
@@ -101,6 +107,18 @@ public class TestDataFromServer {
                 + "'Tom'->'Jerry'@100:(2018, 2020), "
                 + "'Bob'->'John'@100:(2018, 2020);";
         resp = session.execute(insertEdges);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(POINT(3 8));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(LINESTRING(3 8, 4.7 73.23));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(POLYGON((0 1, 1 2, 2 3, 0 1)));";
+        resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
 
@@ -171,6 +189,63 @@ public class TestDataFromServer {
             Assert.assertEquals(1111, properties.get("first_out_city").asLong());
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
                     properties.get("hobby").asNull().getNullType());
+
+            result = session.execute("FETCH PROP ON any_shape 'Point';");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            GeographyWrapper geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.PTVAL, new Point(new Coordinate(3, 8))));
+            Assert.assertEquals(geographyWrapper, result.rowValues(0).get(0).asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    result.rowValues(0).get(0).asGeography().toString());
+
+            result = session.execute("FETCH PROP ON any_shape 'LString';");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.LSVAL, new LineString(Arrays.asList(new Coordinate(3,
+                            8), new Coordinate(4.7, 73.23)))));
+            Assert.assertEquals(geographyWrapper, result.rowValues(0).get(0).asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    result.rowValues(0).get(0).asGeography().toString());
+
+
+            result = session.execute("FETCH PROP ON any_shape 'Polygon';");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.PGVAL,
+                        new Polygon(Arrays.asList(Arrays.asList(
+                                new Coordinate(1, 1),
+                                new Coordinate(1, 2),
+                                new Coordinate(2, 3),
+                                new Coordinate(0,1))
+                        ))));
+            Assert.assertEquals(geographyWrapper, result.rowValues(0).get(0).asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    result.rowValues(0).get(0).asGeography().toString());
+
 
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
