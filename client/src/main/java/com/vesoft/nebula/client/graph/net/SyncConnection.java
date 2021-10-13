@@ -14,16 +14,20 @@ import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
 import com.facebook.thrift.utils.StandardCharsets;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.AuthResponse;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
+import com.vesoft.nebula.graph.VerifyClientVersionReq;
+import com.vesoft.nebula.graph.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
 import javax.net.ssl.SSLSocketFactory;
@@ -37,7 +41,8 @@ public class SyncConnection extends Connection {
     private boolean enabledSsl = false;
 
     @Override
-    public void open(HostAddress address, int timeout, SSLParam sslParam) throws IOErrorException {
+    public void open(HostAddress address, int timeout, SSLParam sslParam)
+            throws IOErrorException, ClientServerIncompatibleException {
         try {
             SSLSocketFactory sslSocketFactory;
 
@@ -61,17 +66,24 @@ public class SyncConnection extends Connection {
                             address.getPort()), this.timeout, this.timeout);
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
-        } catch (TException e) {
+
+            // check if client version matches server version
+            VerifyClientVersionResp resp =
+                    client.verifyClientVersion(new VerifyClientVersionReq());
+            if (resp.error_code != ErrorCode.SUCCEEDED) {
+                client.getInputProtocol().getTransport().close();
+                throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
+                        Charsets.UTF_8));
+            }
+        } catch (TException | IOException e) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
-    public void open(HostAddress address, int timeout) throws IOErrorException {
+    public void open(HostAddress address, int timeout)
+            throws IOErrorException, ClientServerIncompatibleException {
         try {
-            this.enabledSsl = false;
             this.serverAddr = address;
             this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.transport = new TSocket(
@@ -79,6 +91,15 @@ public class SyncConnection extends Connection {
             this.transport.open();
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
+
+            // check if client version matches server version
+            VerifyClientVersionResp resp =
+                    client.verifyClientVersion(new VerifyClientVersionReq());
+            if (resp.error_code != ErrorCode.SUCCEEDED) {
+                client.getInputProtocol().getTransport().close();
+                throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
+                        Charsets.UTF_8));
+            }
         } catch (TException e) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
@@ -95,7 +116,7 @@ public class SyncConnection extends Connection {
      * @throws IOErrorException if io problem happen
      */
     @Override
-    public void reopen() throws IOErrorException {
+    public void reopen() throws IOErrorException, ClientServerIncompatibleException {
         close();
         if (enabledSsl) {
             open(serverAddr, timeout, sslParam);
@@ -105,7 +126,7 @@ public class SyncConnection extends Connection {
     }
 
     public AuthResult authenticate(String user, String password)
-        throws AuthFailedException, IOErrorException {
+            throws AuthFailedException, IOErrorException, ClientServerIncompatibleException {
         try {
             AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
@@ -136,7 +157,7 @@ public class SyncConnection extends Connection {
     }
 
     public ExecutionResponse execute(long sessionID, String stmt)
-            throws IOErrorException {
+            throws IOErrorException, ClientServerIncompatibleException {
         try {
             return client.execute(sessionID, stmt.getBytes());
         } catch (TException e) {
@@ -157,7 +178,7 @@ public class SyncConnection extends Connection {
     }
 
     public String executeJson(long sessionID, String stmt)
-            throws IOErrorException {
+            throws IOErrorException, ClientServerIncompatibleException {
         try {
             byte[] result = client.executeJson(sessionID, stmt.getBytes());
             return new String(result, StandardCharsets.UTF_8);
@@ -187,8 +208,7 @@ public class SyncConnection extends Connection {
         try {
             execute(0, "YIELD 1;");
             return true;
-        } catch (IOErrorException e) {
-            e.printStackTrace();
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
             return false;
         }
     }

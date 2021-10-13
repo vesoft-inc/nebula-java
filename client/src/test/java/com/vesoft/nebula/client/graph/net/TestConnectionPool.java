@@ -10,6 +10,7 @@ import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import java.net.UnknownHostException;
@@ -33,7 +34,7 @@ public class TestConnectionPool {
                 Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
                 config);
             assert false;
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientServerIncompatibleException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
         } catch (InvalidConfigException e) {
@@ -50,7 +51,7 @@ public class TestConnectionPool {
                 Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
                 config);
             assert false;
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientServerIncompatibleException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
         } catch (InvalidConfigException e) {
@@ -68,7 +69,7 @@ public class TestConnectionPool {
                 Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
                 config);
             assert false;
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientServerIncompatibleException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
         } catch (InvalidConfigException e) {
@@ -85,7 +86,7 @@ public class TestConnectionPool {
                 Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
                 config);
             assert false;
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientServerIncompatibleException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
         } catch (InvalidConfigException e) {
@@ -99,7 +100,7 @@ public class TestConnectionPool {
                 new HostAddress("hostname", 3888));
             NebulaPool pool = new NebulaPool();
             Assert.assertFalse(pool.init(addresses, new NebulaPoolConfig()));
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientServerIncompatibleException e) {
             System.out.println("We expect must reach here: init pool failed.");
             Assert.assertTrue(true);
         }

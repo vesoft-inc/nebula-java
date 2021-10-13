@@ -2,6 +2,7 @@ package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         return null;
     }
 
-    public void updateServersStatus() {
+    public void updateServersStatus() throws ClientServerIncompatibleException {
         for (HostAddress addr : addresses) {
             if (ping(addr)) {
                 serversStatus.put(addr, S_OK);
@@ -69,7 +70,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         }
     }
 
-    public boolean ping(HostAddress addr) {
+    public boolean ping(HostAddress addr) throws ClientServerIncompatibleException {
         try {
             Connection connection = new SyncConnection();
             if (enabledSsl) {
@@ -84,7 +85,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         }
     }
 
-    public boolean isServersOK() {
+    public boolean isServersOK() throws ClientServerIncompatibleException {
         this.updateServersStatus();
         for (HostAddress addr : addresses) {
             if (serversStatus.get(addr) == S_BAD) {
@@ -94,7 +95,11 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         return true;
     }
 
-    private void scheduleTask() {
-        updateServersStatus();
+    private void scheduleTask()  {
+        try {
+            updateServersStatus();
+        } catch (ClientServerIncompatibleException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
@@ -79,7 +80,7 @@ public class NebulaPool {
      * @throws InvalidConfigException if config is illegal
      */
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
-        throws UnknownHostException, InvalidConfigException {
+        throws UnknownHostException, InvalidConfigException, ClientServerIncompatibleException {
         checkInit();
         hasInit.set(true);
         checkConfig(config);
@@ -129,7 +130,8 @@ public class NebulaPool {
      * @throws AuthFailedException if authenticate failed
      */
     public Session getSession(String userName, String password, boolean reconnect)
-            throws NotValidConnectionException, IOErrorException, AuthFailedException {
+            throws NotValidConnectionException, IOErrorException, AuthFailedException,
+            ClientServerIncompatibleException {
         checkNoInitAndClosed();
         SyncConnection connection = null;
         try {
@@ -177,7 +179,7 @@ public class NebulaPool {
      * Update the services' status when the connection is broken,
      * it is called by Session and NebulaPool
      */
-    protected void updateServerStatus() {
+    protected void updateServerStatus() throws ClientServerIncompatibleException {
         checkNoInitAndClosed();
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();

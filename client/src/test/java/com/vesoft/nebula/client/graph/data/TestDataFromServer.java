@@ -13,6 +13,7 @@ import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
@@ -172,7 +173,8 @@ public class TestDataFromServer {
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
                     properties.get("hobby").asNull().getNullType());
 
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -193,7 +195,8 @@ public class TestDataFromServer {
             }
             Assert.assertEquals(names.stream().sorted().collect(Collectors.toList()),
                     listVal.stream().sorted().collect(Collectors.toList()));
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -219,7 +222,8 @@ public class TestDataFromServer {
             Assert.assertEquals(result.toString(),
                     "ColumnName: [{\"name\",\"name\",\"age\",\"birthday\"}], "
                             + "Rows: [[\"name\", \"birthday\", \"age\"]]");
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -244,7 +248,8 @@ public class TestDataFromServer {
             assert mapVals.containsKey("birthday");
             assert mapVals.get("birthday").isString();
             Assert.assertEquals("2010-10-10", mapVals.get("birthday").asString());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -270,7 +275,8 @@ public class TestDataFromServer {
                     node.keys("student").stream().sorted().collect(Collectors.toList()));
             Assert.assertEquals(14, node.properties("person").keySet().size());
             Assert.assertEquals(1, node.properties("student").keySet().size());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -307,7 +313,8 @@ public class TestDataFromServer {
             Assert.assertEquals(
                     "(\"Bob\")-[:friend@100{start_year: 2018, end_year: 2020}]->(\"Lily\")",
                     result2.rowValues(0).get(0).asRelationship().toString());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -336,7 +343,8 @@ public class TestDataFromServer {
             Assert.assertEquals("Bob", path.getStartNode().getId().asString());
             Assert.assertEquals("Jerry", path.getEndNode().getId().asString());
             Assert.assertEquals(2, path.length());
-        } catch (IOErrorException | UnsupportedEncodingException e) {
+        } catch (IOErrorException | UnsupportedEncodingException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -376,7 +384,8 @@ public class TestDataFromServer {
                     + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
                     + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
             Assert.assertEquals(expectString, result.toString());
-        } catch (IOErrorException | InterruptedException e) {
+        } catch (IOErrorException | InterruptedException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -387,7 +396,7 @@ public class TestDataFromServer {
         try {
             ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
             Assert.assertTrue(result.toString().contains("ExecutionResponse"));
-        } catch (IOErrorException e) {
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -407,7 +416,7 @@ public class TestDataFromServer {
             // check space name
             String spaceName = resp.getJSONArray("results").getJSONObject(0).getString("spaceName");
             Assert.assertEquals(spaceName, "test_data");
-        } catch (IOErrorException e) {
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -426,7 +435,7 @@ public class TestDataFromServer {
                 + "-09-10T02:08:02.0Z\",\"student.name\":\"Bob\",\"person.child_name\":\"Hello"
                 + " Worl\",\"person.property\":1000,\"person.morning\":\"23:10:00.000000Z\",\""
                 + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
-        } catch (IOErrorException e) {
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
@@ -446,7 +455,7 @@ public class TestDataFromServer {
 
             // check error message
             Assert.assertEquals(message, "SemanticError: `invalidTag': Unknown tag");
-        } catch (IOErrorException e) {
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert false;
         }
