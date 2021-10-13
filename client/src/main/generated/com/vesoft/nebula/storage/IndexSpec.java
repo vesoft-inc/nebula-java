@@ -27,20 +27,14 @@ import com.facebook.thrift.protocol.*;
 public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("IndexSpec");
   private static final TField CONTEXTS_FIELD_DESC = new TField("contexts", TType.LIST, (short)1);
-  private static final TField IS_EDGE_FIELD_DESC = new TField("is_edge", TType.BOOL, (short)2);
-  private static final TField TAG_OR_EDGE_ID_FIELD_DESC = new TField("tag_or_edge_id", TType.I32, (short)3);
+  private static final TField SCHEMA_ID_FIELD_DESC = new TField("schema_id", TType.STRUCT, (short)2);
 
   public List<IndexQueryContext> contexts;
-  public boolean is_edge;
-  public int tag_or_edge_id;
+  public com.vesoft.nebula.SchemaID schema_id;
   public static final int CONTEXTS = 1;
-  public static final int IS_EDGE = 2;
-  public static final int TAG_OR_EDGE_ID = 3;
+  public static final int SCHEMA_ID = 2;
 
   // isset id assignments
-  private static final int __IS_EDGE_ISSET_ID = 0;
-  private static final int __TAG_OR_EDGE_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -49,10 +43,8 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(CONTEXTS, new FieldMetaData("contexts", TFieldRequirementType.REQUIRED, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, IndexQueryContext.class))));
-    tmpMetaDataMap.put(IS_EDGE, new FieldMetaData("is_edge", TFieldRequirementType.REQUIRED, 
-        new FieldValueMetaData(TType.BOOL)));
-    tmpMetaDataMap.put(TAG_OR_EDGE_ID, new FieldMetaData("tag_or_edge_id", TFieldRequirementType.REQUIRED, 
-        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(SCHEMA_ID, new FieldMetaData("schema_id", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.SchemaID.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -64,23 +56,22 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
   }
 
   public IndexSpec(
-      List<IndexQueryContext> contexts,
-      boolean is_edge,
-      int tag_or_edge_id) {
+      List<IndexQueryContext> contexts) {
     this();
     this.contexts = contexts;
-    this.is_edge = is_edge;
-    setIs_edgeIsSet(true);
-    this.tag_or_edge_id = tag_or_edge_id;
-    setTag_or_edge_idIsSet(true);
+  }
+
+  public IndexSpec(
+      List<IndexQueryContext> contexts,
+      com.vesoft.nebula.SchemaID schema_id) {
+    this();
+    this.contexts = contexts;
+    this.schema_id = schema_id;
   }
 
   public static class Builder {
     private List<IndexQueryContext> contexts;
-    private boolean is_edge;
-    private int tag_or_edge_id;
-
-    BitSet __optional_isset = new BitSet(2);
+    private com.vesoft.nebula.SchemaID schema_id;
 
     public Builder() {
     }
@@ -90,27 +81,15 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
-    public Builder setIs_edge(final boolean is_edge) {
-      this.is_edge = is_edge;
-      __optional_isset.set(__IS_EDGE_ISSET_ID, true);
-      return this;
-    }
-
-    public Builder setTag_or_edge_id(final int tag_or_edge_id) {
-      this.tag_or_edge_id = tag_or_edge_id;
-      __optional_isset.set(__TAG_OR_EDGE_ID_ISSET_ID, true);
+    public Builder setSchema_id(final com.vesoft.nebula.SchemaID schema_id) {
+      this.schema_id = schema_id;
       return this;
     }
 
     public IndexSpec build() {
       IndexSpec result = new IndexSpec();
       result.setContexts(this.contexts);
-      if (__optional_isset.get(__IS_EDGE_ISSET_ID)) {
-        result.setIs_edge(this.is_edge);
-      }
-      if (__optional_isset.get(__TAG_OR_EDGE_ID_ISSET_ID)) {
-        result.setTag_or_edge_id(this.tag_or_edge_id);
-      }
+      result.setSchema_id(this.schema_id);
       return result;
     }
   }
@@ -123,13 +102,12 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
    * Performs a deep copy on <i>other</i>.
    */
   public IndexSpec(IndexSpec other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetContexts()) {
       this.contexts = TBaseHelper.deepCopy(other.contexts);
     }
-    this.is_edge = TBaseHelper.deepCopy(other.is_edge);
-    this.tag_or_edge_id = TBaseHelper.deepCopy(other.tag_or_edge_id);
+    if (other.isSetSchema_id()) {
+      this.schema_id = TBaseHelper.deepCopy(other.schema_id);
+    }
   }
 
   public IndexSpec deepCopy() {
@@ -160,50 +138,28 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public boolean isIs_edge() {
-    return this.is_edge;
+  public com.vesoft.nebula.SchemaID getSchema_id() {
+    return this.schema_id;
   }
 
-  public IndexSpec setIs_edge(boolean is_edge) {
-    this.is_edge = is_edge;
-    setIs_edgeIsSet(true);
+  public IndexSpec setSchema_id(com.vesoft.nebula.SchemaID schema_id) {
+    this.schema_id = schema_id;
     return this;
   }
 
-  public void unsetIs_edge() {
-    __isset_bit_vector.clear(__IS_EDGE_ISSET_ID);
+  public void unsetSchema_id() {
+    this.schema_id = null;
   }
 
-  // Returns true if field is_edge is set (has been assigned a value) and false otherwise
-  public boolean isSetIs_edge() {
-    return __isset_bit_vector.get(__IS_EDGE_ISSET_ID);
+  // Returns true if field schema_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSchema_id() {
+    return this.schema_id != null;
   }
 
-  public void setIs_edgeIsSet(boolean __value) {
-    __isset_bit_vector.set(__IS_EDGE_ISSET_ID, __value);
-  }
-
-  public int getTag_or_edge_id() {
-    return this.tag_or_edge_id;
-  }
-
-  public IndexSpec setTag_or_edge_id(int tag_or_edge_id) {
-    this.tag_or_edge_id = tag_or_edge_id;
-    setTag_or_edge_idIsSet(true);
-    return this;
-  }
-
-  public void unsetTag_or_edge_id() {
-    __isset_bit_vector.clear(__TAG_OR_EDGE_ID_ISSET_ID);
-  }
-
-  // Returns true if field tag_or_edge_id is set (has been assigned a value) and false otherwise
-  public boolean isSetTag_or_edge_id() {
-    return __isset_bit_vector.get(__TAG_OR_EDGE_ID_ISSET_ID);
-  }
-
-  public void setTag_or_edge_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__TAG_OR_EDGE_ID_ISSET_ID, __value);
+  public void setSchema_idIsSet(boolean __value) {
+    if (!__value) {
+      this.schema_id = null;
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -217,19 +173,11 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
-    case IS_EDGE:
+    case SCHEMA_ID:
       if (__value == null) {
-        unsetIs_edge();
+        unsetSchema_id();
       } else {
-        setIs_edge((Boolean)__value);
-      }
-      break;
-
-    case TAG_OR_EDGE_ID:
-      if (__value == null) {
-        unsetTag_or_edge_id();
-      } else {
-        setTag_or_edge_id((Integer)__value);
+        setSchema_id((com.vesoft.nebula.SchemaID)__value);
       }
       break;
 
@@ -243,11 +191,8 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     case CONTEXTS:
       return getContexts();
 
-    case IS_EDGE:
-      return new Boolean(isIs_edge());
-
-    case TAG_OR_EDGE_ID:
-      return new Integer(getTag_or_edge_id());
+    case SCHEMA_ID:
+      return getSchema_id();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -266,16 +211,14 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsNobinary(this.isSetContexts(), that.isSetContexts(), this.contexts, that.contexts)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.is_edge, that.is_edge)) { return false; }
-
-    if (!TBaseHelper.equalsNobinary(this.tag_or_edge_id, that.tag_or_edge_id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetSchema_id(), that.isSetSchema_id(), this.schema_id, that.schema_id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {contexts, is_edge, tag_or_edge_id});
+    return Arrays.deepHashCode(new Object[] {contexts, schema_id});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -292,16 +235,16 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
         case CONTEXTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list155 = iprot.readListBegin();
-              this.contexts = new ArrayList<IndexQueryContext>(Math.max(0, _list155.size));
-              for (int _i156 = 0; 
-                   (_list155.size < 0) ? iprot.peekList() : (_i156 < _list155.size); 
-                   ++_i156)
+              TList _list173 = iprot.readListBegin();
+              this.contexts = new ArrayList<IndexQueryContext>(Math.max(0, _list173.size));
+              for (int _i174 = 0; 
+                   (_list173.size < 0) ? iprot.peekList() : (_i174 < _list173.size); 
+                   ++_i174)
               {
-                IndexQueryContext _elem157;
-                _elem157 = new IndexQueryContext();
-                _elem157.read(iprot);
-                this.contexts.add(_elem157);
+                IndexQueryContext _elem175;
+                _elem175 = new IndexQueryContext();
+                _elem175.read(iprot);
+                this.contexts.add(_elem175);
               }
               iprot.readListEnd();
             }
@@ -309,18 +252,10 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case IS_EDGE:
-          if (__field.type == TType.BOOL) {
-            this.is_edge = iprot.readBool();
-            setIs_edgeIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case TAG_OR_EDGE_ID:
-          if (__field.type == TType.I32) {
-            this.tag_or_edge_id = iprot.readI32();
-            setTag_or_edge_idIsSet(true);
+        case SCHEMA_ID:
+          if (__field.type == TType.STRUCT) {
+            this.schema_id = new com.vesoft.nebula.SchemaID();
+            this.schema_id.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -335,12 +270,6 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
-    if (!isSetIs_edge()) {
-      throw new TProtocolException("Required field 'is_edge' was not found in serialized data! Struct: " + toString());
-    }
-    if (!isSetTag_or_edge_id()) {
-      throw new TProtocolException("Required field 'tag_or_edge_id' was not found in serialized data! Struct: " + toString());
-    }
     validate();
   }
 
@@ -352,19 +281,18 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CONTEXTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.contexts.size()));
-        for (IndexQueryContext _iter158 : this.contexts)        {
-          _iter158.write(oprot);
+        for (IndexQueryContext _iter176 : this.contexts)        {
+          _iter176.write(oprot);
         }
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(IS_EDGE_FIELD_DESC);
-    oprot.writeBool(this.is_edge);
-    oprot.writeFieldEnd();
-    oprot.writeFieldBegin(TAG_OR_EDGE_ID_FIELD_DESC);
-    oprot.writeI32(this.tag_or_edge_id);
-    oprot.writeFieldEnd();
+    if (this.schema_id != null) {
+      oprot.writeFieldBegin(SCHEMA_ID_FIELD_DESC);
+      this.schema_id.write(oprot);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -397,17 +325,14 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("is_edge");
+    sb.append("schema_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isIs_edge(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("tag_or_edge_id");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getTag_or_edge_id(), indent + 1, prettyPrint));
+    if (this.getSchema_id() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getSchema_id(), indent + 1, prettyPrint));
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
@@ -419,8 +344,6 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
     if (contexts == null) {
       throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'contexts' was not present! Struct: " + toString());
     }
-    // alas, we cannot check 'is_edge' because it's a primitive and you chose the non-beans generator.
-    // alas, we cannot check 'tag_or_edge_id' because it's a primitive and you chose the non-beans generator.
   }
 
 }

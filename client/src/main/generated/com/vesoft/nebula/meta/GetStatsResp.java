@@ -24,81 +24,65 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, Comparable<ResponseCommon> {
-  private static final TStruct STRUCT_DESC = new TStruct("ResponseCommon");
+public class GetStatsResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetStatsResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetStatsResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
-  private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)2);
-  private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)3);
+  private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
+  private static final TField STATS_FIELD_DESC = new TField("stats", TType.STRUCT, (short)3);
 
-  public int code;
-  public byte[] error_msg;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
+  public StatsItem stats;
   public static final int CODE = 1;
-  public static final int ERROR_MSG = 2;
-  public static final int LEADER = 3;
+  public static final int LEADER = 2;
+  public static final int STATS = 3;
 
   // isset id assignments
-  private static final int __CODE_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.REQUIRED, 
+    tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(ERROR_MSG, new FieldMetaData("error_msg", TFieldRequirementType.REQUIRED, 
-        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
+    tmpMetaDataMap.put(STATS, new FieldMetaData("stats", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, StatsItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ResponseCommon.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetStatsResp.class, metaDataMap);
   }
 
-  public ResponseCommon() {
+  public GetStatsResp() {
   }
 
-  public ResponseCommon(
-      int code,
-      byte[] error_msg) {
+  public GetStatsResp(
+      com.vesoft.nebula.ErrorCode code,
+      com.vesoft.nebula.HostAddr leader,
+      StatsItem stats) {
     this();
     this.code = code;
-    setCodeIsSet(true);
-    this.error_msg = error_msg;
-  }
-
-  public ResponseCommon(
-      int code,
-      byte[] error_msg,
-      com.vesoft.nebula.HostAddr leader) {
-    this();
-    this.code = code;
-    setCodeIsSet(true);
-    this.error_msg = error_msg;
     this.leader = leader;
+    this.stats = stats;
   }
 
   public static class Builder {
-    private int code;
-    private byte[] error_msg;
+    private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-
-    BitSet __optional_isset = new BitSet(1);
+    private StatsItem stats;
 
     public Builder() {
     }
 
-    public Builder setCode(final int code) {
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
-      __optional_isset.set(__CODE_ISSET_ID, true);
-      return this;
-    }
-
-    public Builder setError_msg(final byte[] error_msg) {
-      this.error_msg = error_msg;
       return this;
     }
 
@@ -107,13 +91,16 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return this;
     }
 
-    public ResponseCommon build() {
-      ResponseCommon result = new ResponseCommon();
-      if (__optional_isset.get(__CODE_ISSET_ID)) {
-        result.setCode(this.code);
-      }
-      result.setError_msg(this.error_msg);
+    public Builder setStats(final StatsItem stats) {
+      this.stats = stats;
+      return this;
+    }
+
+    public GetStatsResp build() {
+      GetStatsResp result = new GetStatsResp();
+      result.setCode(this.code);
       result.setLeader(this.leader);
+      result.setStats(this.stats);
       return result;
     }
   }
@@ -125,66 +112,51 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ResponseCommon(ResponseCommon other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.code = TBaseHelper.deepCopy(other.code);
-    if (other.isSetError_msg()) {
-      this.error_msg = TBaseHelper.deepCopy(other.error_msg);
+  public GetStatsResp(GetStatsResp other) {
+    if (other.isSetCode()) {
+      this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
+    if (other.isSetStats()) {
+      this.stats = TBaseHelper.deepCopy(other.stats);
+    }
   }
 
-  public ResponseCommon deepCopy() {
-    return new ResponseCommon(this);
+  public GetStatsResp deepCopy() {
+    return new GetStatsResp(this);
   }
 
-  public int getCode() {
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode getCode() {
     return this.code;
   }
 
-  public ResponseCommon setCode(int code) {
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public GetStatsResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
-    setCodeIsSet(true);
     return this;
   }
 
   public void unsetCode() {
-    __isset_bit_vector.clear(__CODE_ISSET_ID);
+    this.code = null;
   }
 
   // Returns true if field code is set (has been assigned a value) and false otherwise
   public boolean isSetCode() {
-    return __isset_bit_vector.get(__CODE_ISSET_ID);
+    return this.code != null;
   }
 
   public void setCodeIsSet(boolean __value) {
-    __isset_bit_vector.set(__CODE_ISSET_ID, __value);
-  }
-
-  public byte[] getError_msg() {
-    return this.error_msg;
-  }
-
-  public ResponseCommon setError_msg(byte[] error_msg) {
-    this.error_msg = error_msg;
-    return this;
-  }
-
-  public void unsetError_msg() {
-    this.error_msg = null;
-  }
-
-  // Returns true if field error_msg is set (has been assigned a value) and false otherwise
-  public boolean isSetError_msg() {
-    return this.error_msg != null;
-  }
-
-  public void setError_msgIsSet(boolean __value) {
     if (!__value) {
-      this.error_msg = null;
+      this.code = null;
     }
   }
 
@@ -192,7 +164,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     return this.leader;
   }
 
-  public ResponseCommon setLeader(com.vesoft.nebula.HostAddr leader) {
+  public GetStatsResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -212,21 +184,37 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
+  public StatsItem getStats() {
+    return this.stats;
+  }
+
+  public GetStatsResp setStats(StatsItem stats) {
+    this.stats = stats;
+    return this;
+  }
+
+  public void unsetStats() {
+    this.stats = null;
+  }
+
+  // Returns true if field stats is set (has been assigned a value) and false otherwise
+  public boolean isSetStats() {
+    return this.stats != null;
+  }
+
+  public void setStatsIsSet(boolean __value) {
+    if (!__value) {
+      this.stats = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
       if (__value == null) {
         unsetCode();
       } else {
-        setCode((Integer)__value);
-      }
-      break;
-
-    case ERROR_MSG:
-      if (__value == null) {
-        unsetError_msg();
-      } else {
-        setError_msg((byte[])__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -238,6 +226,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
+    case STATS:
+      if (__value == null) {
+        unsetStats();
+      } else {
+        setStats((StatsItem)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -246,13 +242,13 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
     case CODE:
-      return new Integer(getCode());
-
-    case ERROR_MSG:
-      return getError_msg();
+      return getCode();
 
     case LEADER:
       return getLeader();
+
+    case STATS:
+      return getStats();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -265,26 +261,26 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ResponseCommon))
+    if (!(_that instanceof GetStatsResp))
       return false;
-    ResponseCommon that = (ResponseCommon)_that;
+    GetStatsResp that = (GetStatsResp)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.code, that.code)) { return false; }
-
-    if (!TBaseHelper.equalsSlow(this.isSetError_msg(), that.isSetError_msg(), this.error_msg, that.error_msg)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetStats(), that.isSetStats(), this.stats, that.stats)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, error_msg, leader});
+    return Arrays.deepHashCode(new Object[] {code, leader, stats});
   }
 
   @Override
-  public int compareTo(ResponseCommon other) {
+  public int compareTo(GetStatsResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -303,19 +299,19 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetError_msg()).compareTo(other.isSetError_msg());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(error_msg, other.error_msg);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
     lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
     if (lastComparison != 0) {
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(leader, other.leader);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetStats()).compareTo(other.isSetStats());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(stats, other.stats);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -335,15 +331,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       {
         case CODE:
           if (__field.type == TType.I32) {
-            this.code = iprot.readI32();
-            setCodeIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case ERROR_MSG:
-          if (__field.type == TType.STRING) {
-            this.error_msg = iprot.readBinary();
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -352,6 +340,14 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
           if (__field.type == TType.STRUCT) {
             this.leader = new com.vesoft.nebula.HostAddr();
             this.leader.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case STATS:
+          if (__field.type == TType.STRUCT) {
+            this.stats = new StatsItem();
+            this.stats.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -366,9 +362,6 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
 
     // check for required fields of primitive type, which can't be checked in the validate method
-    if (!isSetCode()) {
-      throw new TProtocolException("Required field 'code' was not found in serialized data! Struct: " + toString());
-    }
     validate();
   }
 
@@ -376,17 +369,19 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(CODE_FIELD_DESC);
-    oprot.writeI32(this.code);
-    oprot.writeFieldEnd();
-    if (this.error_msg != null) {
-      oprot.writeFieldBegin(ERROR_MSG_FIELD_DESC);
-      oprot.writeBinary(this.error_msg);
+    if (this.code != null) {
+      oprot.writeFieldBegin(CODE_FIELD_DESC);
+      oprot.writeI32(this.code == null ? 0 : this.code.getValue());
       oprot.writeFieldEnd();
     }
     if (this.leader != null) {
       oprot.writeFieldBegin(LEADER_FIELD_DESC);
       this.leader.write(oprot);
+      oprot.writeFieldEnd();
+    }
+    if (this.stats != null) {
+      oprot.writeFieldBegin(STATS_FIELD_DESC);
+      this.stats.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -403,7 +398,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ResponseCommon");
+    StringBuilder sb = new StringBuilder("GetStatsResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -413,22 +408,18 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     sb.append("code");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getCode(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("error_msg");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getError_msg() == null) {
+    if (this.getCode() == null) {
       sb.append("null");
     } else {
-        int __error_msg_size = Math.min(this.getError_msg().length, 128);
-        for (int i = 0; i < __error_msg_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getError_msg()[i]).length() > 1 ? Integer.toHexString(this.getError_msg()[i]).substring(Integer.toHexString(this.getError_msg()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getError_msg()[i]).toUpperCase());
-        }
-        if (this.getError_msg().length > 128) sb.append(" ...");
+      String code_name = this.getCode() == null ? "null" : this.getCode().name();
+      if (code_name != null) {
+        sb.append(code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getCode());
+      if (code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -442,6 +433,17 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       sb.append(TBaseHelper.toString(this.getLeader(), indent + 1, prettyPrint));
     }
     first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("stats");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getStats() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getStats(), indent + 1, prettyPrint));
+    }
+    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
@@ -449,10 +451,6 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
   public void validate() throws TException {
     // check for required fields
-    // alas, we cannot check 'code' because it's a primitive and you chose the non-beans generator.
-    if (error_msg == null) {
-      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'error_msg' was not present! Struct: " + toString());
-    }
   }
 
 }

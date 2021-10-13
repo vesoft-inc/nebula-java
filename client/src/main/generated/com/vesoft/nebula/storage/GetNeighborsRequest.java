@@ -30,15 +30,18 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
   private static final TField COLUMN_NAMES_FIELD_DESC = new TField("column_names", TType.LIST, (short)2);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)3);
   private static final TField TRAVERSE_SPEC_FIELD_DESC = new TField("traverse_spec", TType.STRUCT, (short)4);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)5);
 
   public int space_id;
   public List<byte[]> column_names;
   public Map<Integer,List<com.vesoft.nebula.Row>> parts;
   public TraverseSpec traverse_spec;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int COLUMN_NAMES = 2;
   public static final int PARTS = 3;
   public static final int TRAVERSE_SPEC = 4;
+  public static final int COMMON = 5;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -60,6 +63,8 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
                 new StructMetaData(TType.STRUCT, com.vesoft.nebula.Row.class)))));
     tmpMetaDataMap.put(TRAVERSE_SPEC, new FieldMetaData("traverse_spec", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, TraverseSpec.class)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -83,11 +88,27 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     this.traverse_spec = traverse_spec;
   }
 
+  public GetNeighborsRequest(
+      int space_id,
+      List<byte[]> column_names,
+      Map<Integer,List<com.vesoft.nebula.Row>> parts,
+      TraverseSpec traverse_spec,
+      RequestCommon common) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.column_names = column_names;
+    this.parts = parts;
+    this.traverse_spec = traverse_spec;
+    this.common = common;
+  }
+
   public static class Builder {
     private int space_id;
     private List<byte[]> column_names;
     private Map<Integer,List<com.vesoft.nebula.Row>> parts;
     private TraverseSpec traverse_spec;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -115,6 +136,11 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public GetNeighborsRequest build() {
       GetNeighborsRequest result = new GetNeighborsRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -123,6 +149,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       result.setColumn_names(this.column_names);
       result.setParts(this.parts);
       result.setTraverse_spec(this.traverse_spec);
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -146,6 +173,9 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     }
     if (other.isSetTraverse_spec()) {
       this.traverse_spec = TBaseHelper.deepCopy(other.traverse_spec);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
@@ -248,6 +278,30 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public GetNeighborsRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -283,6 +337,14 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -301,6 +363,9 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
 
     case TRAVERSE_SPEC:
       return getTraverse_spec();
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -325,12 +390,14 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
 
     if (!TBaseHelper.equalsNobinary(this.isSetTraverse_spec(), that.isSetTraverse_spec(), this.traverse_spec, that.traverse_spec)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, column_names, parts, traverse_spec});
+    return Arrays.deepHashCode(new Object[] {space_id, column_names, parts, traverse_spec, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -355,15 +422,15 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         case COLUMN_NAMES:
           if (__field.type == TType.LIST) {
             {
-              TList _list36 = iprot.readListBegin();
-              this.column_names = new ArrayList<byte[]>(Math.max(0, _list36.size));
-              for (int _i37 = 0; 
-                   (_list36.size < 0) ? iprot.peekList() : (_i37 < _list36.size); 
-                   ++_i37)
+              TList _list41 = iprot.readListBegin();
+              this.column_names = new ArrayList<byte[]>(Math.max(0, _list41.size));
+              for (int _i42 = 0; 
+                   (_list41.size < 0) ? iprot.peekList() : (_i42 < _list41.size); 
+                   ++_i42)
               {
-                byte[] _elem38;
-                _elem38 = iprot.readBinary();
-                this.column_names.add(_elem38);
+                byte[] _elem43;
+                _elem43 = iprot.readBinary();
+                this.column_names.add(_elem43);
               }
               iprot.readListEnd();
             }
@@ -374,30 +441,30 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map39 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map39.size));
-              for (int _i40 = 0; 
-                   (_map39.size < 0) ? iprot.peekMap() : (_i40 < _map39.size); 
-                   ++_i40)
+              TMap _map44 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map44.size));
+              for (int _i45 = 0; 
+                   (_map44.size < 0) ? iprot.peekMap() : (_i45 < _map44.size); 
+                   ++_i45)
               {
-                int _key41;
-                List<com.vesoft.nebula.Row> _val42;
-                _key41 = iprot.readI32();
+                int _key46;
+                List<com.vesoft.nebula.Row> _val47;
+                _key46 = iprot.readI32();
                 {
-                  TList _list43 = iprot.readListBegin();
-                  _val42 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list43.size));
-                  for (int _i44 = 0; 
-                       (_list43.size < 0) ? iprot.peekList() : (_i44 < _list43.size); 
-                       ++_i44)
+                  TList _list48 = iprot.readListBegin();
+                  _val47 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list48.size));
+                  for (int _i49 = 0; 
+                       (_list48.size < 0) ? iprot.peekList() : (_i49 < _list48.size); 
+                       ++_i49)
                   {
-                    com.vesoft.nebula.Row _elem45;
-                    _elem45 = new com.vesoft.nebula.Row();
-                    _elem45.read(iprot);
-                    _val42.add(_elem45);
+                    com.vesoft.nebula.Row _elem50;
+                    _elem50 = new com.vesoft.nebula.Row();
+                    _elem50.read(iprot);
+                    _val47.add(_elem50);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key41, _val42);
+                this.parts.put(_key46, _val47);
               }
               iprot.readMapEnd();
             }
@@ -409,6 +476,14 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
           if (__field.type == TType.STRUCT) {
             this.traverse_spec = new TraverseSpec();
             this.traverse_spec.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -437,8 +512,8 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(COLUMN_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.column_names.size()));
-        for (byte[] _iter46 : this.column_names)        {
-          oprot.writeBinary(_iter46);
+        for (byte[] _iter51 : this.column_names)        {
+          oprot.writeBinary(_iter51);
         }
         oprot.writeListEnd();
       }
@@ -448,12 +523,12 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter47 : this.parts.entrySet())        {
-          oprot.writeI32(_iter47.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter52 : this.parts.entrySet())        {
+          oprot.writeI32(_iter52.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter47.getValue().size()));
-            for (com.vesoft.nebula.Row _iter48 : _iter47.getValue())            {
-              _iter48.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter52.getValue().size()));
+            for (com.vesoft.nebula.Row _iter53 : _iter52.getValue())            {
+              _iter53.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -466,6 +541,13 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(TRAVERSE_SPEC_FIELD_DESC);
       this.traverse_spec.write(oprot);
       oprot.writeFieldEnd();
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -526,6 +608,20 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       sb.append(TBaseHelper.toString(this.getTraverse_spec(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

@@ -29,7 +29,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)2);
   private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)3);
-  private static final TField STATIS_FIELD_DESC = new TField("statis", TType.STRUCT, (short)4);
+  private static final TField STATS_FIELD_DESC = new TField("stats", TType.STRUCT, (short)4);
 
   /**
    * 
@@ -38,11 +38,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
   public com.vesoft.nebula.ErrorCode code;
   public int job_id;
   public int task_id;
-  public StatisItem statis;
+  public StatsItem stats;
   public static final int CODE = 1;
   public static final int JOB_ID = 2;
   public static final int TASK_ID = 3;
-  public static final int STATIS = 4;
+  public static final int STATS = 4;
 
   // isset id assignments
   private static final int __JOB_ID_ISSET_ID = 0;
@@ -59,8 +59,8 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(TASK_ID, new FieldMetaData("task_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(STATIS, new FieldMetaData("statis", TFieldRequirementType.OPTIONAL, 
-        new StructMetaData(TType.STRUCT, StatisItem.class)));
+    tmpMetaDataMap.put(STATS, new FieldMetaData("stats", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, StatsItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -87,21 +87,21 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       com.vesoft.nebula.ErrorCode code,
       int job_id,
       int task_id,
-      StatisItem statis) {
+      StatsItem stats) {
     this();
     this.code = code;
     this.job_id = job_id;
     setJob_idIsSet(true);
     this.task_id = task_id;
     setTask_idIsSet(true);
-    this.statis = statis;
+    this.stats = stats;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private int job_id;
     private int task_id;
-    private StatisItem statis;
+    private StatsItem stats;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -125,8 +125,8 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
-    public Builder setStatis(final StatisItem statis) {
-      this.statis = statis;
+    public Builder setStats(final StatsItem stats) {
+      this.stats = stats;
       return this;
     }
 
@@ -139,7 +139,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       if (__optional_isset.get(__TASK_ID_ISSET_ID)) {
         result.setTask_id(this.task_id);
       }
-      result.setStatis(this.statis);
+      result.setStats(this.stats);
       return result;
     }
   }
@@ -159,8 +159,8 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     }
     this.job_id = TBaseHelper.deepCopy(other.job_id);
     this.task_id = TBaseHelper.deepCopy(other.task_id);
-    if (other.isSetStatis()) {
-      this.statis = TBaseHelper.deepCopy(other.statis);
+    if (other.isSetStats()) {
+      this.stats = TBaseHelper.deepCopy(other.stats);
     }
   }
 
@@ -246,27 +246,27 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     __isset_bit_vector.set(__TASK_ID_ISSET_ID, __value);
   }
 
-  public StatisItem getStatis() {
-    return this.statis;
+  public StatsItem getStats() {
+    return this.stats;
   }
 
-  public ReportTaskReq setStatis(StatisItem statis) {
-    this.statis = statis;
+  public ReportTaskReq setStats(StatsItem stats) {
+    this.stats = stats;
     return this;
   }
 
-  public void unsetStatis() {
-    this.statis = null;
+  public void unsetStats() {
+    this.stats = null;
   }
 
-  // Returns true if field statis is set (has been assigned a value) and false otherwise
-  public boolean isSetStatis() {
-    return this.statis != null;
+  // Returns true if field stats is set (has been assigned a value) and false otherwise
+  public boolean isSetStats() {
+    return this.stats != null;
   }
 
-  public void setStatisIsSet(boolean __value) {
+  public void setStatsIsSet(boolean __value) {
     if (!__value) {
-      this.statis = null;
+      this.stats = null;
     }
   }
 
@@ -296,11 +296,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case STATIS:
+    case STATS:
       if (__value == null) {
-        unsetStatis();
+        unsetStats();
       } else {
-        setStatis((StatisItem)__value);
+        setStats((StatsItem)__value);
       }
       break;
 
@@ -320,8 +320,8 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     case TASK_ID:
       return new Integer(getTask_id());
 
-    case STATIS:
-      return getStatis();
+    case STATS:
+      return getStats();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -344,14 +344,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetStatis(), that.isSetStatis(), this.statis, that.statis)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetStats(), that.isSetStats(), this.stats, that.stats)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, job_id, task_id, statis});
+    return Arrays.deepHashCode(new Object[] {code, job_id, task_id, stats});
   }
 
   @Override
@@ -390,11 +390,11 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetStatis()).compareTo(other.isSetStatis());
+    lastComparison = Boolean.valueOf(isSetStats()).compareTo(other.isSetStats());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(statis, other.statis);
+    lastComparison = TBaseHelper.compareTo(stats, other.stats);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -435,10 +435,10 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case STATIS:
+        case STATS:
           if (__field.type == TType.STRUCT) {
-            this.statis = new StatisItem();
-            this.statis.read(iprot);
+            this.stats = new StatsItem();
+            this.stats.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -471,10 +471,10 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     oprot.writeFieldBegin(TASK_ID_FIELD_DESC);
     oprot.writeI32(this.task_id);
     oprot.writeFieldEnd();
-    if (this.statis != null) {
-      if (isSetStatis()) {
-        oprot.writeFieldBegin(STATIS_FIELD_DESC);
-        this.statis.write(oprot);
+    if (this.stats != null) {
+      if (isSetStats()) {
+        oprot.writeFieldBegin(STATS_FIELD_DESC);
+        this.stats.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -530,17 +530,17 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getTask_id(), indent + 1, prettyPrint));
     first = false;
-    if (isSetStatis())
+    if (isSetStats())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("statis");
+      sb.append("stats");
       sb.append(space);
       sb.append(":").append(space);
-      if (this.getStatis() == null) {
+      if (this.getStats() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this.getStatis(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getStats(), indent + 1, prettyPrint));
       }
       first = false;
     }

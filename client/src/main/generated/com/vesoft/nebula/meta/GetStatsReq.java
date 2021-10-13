@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.storage;
+package com.vesoft.nebula.meta;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,15 +24,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Comparable<KVPutRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("KVPutRequest");
+public class GetStatsReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetStatsReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetStatsReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
 
   public int space_id;
-  public Map<Integer,List<com.vesoft.nebula.KeyValue>> parts;
   public static final int SPACE_ID = 1;
-  public static final int PARTS = 2;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -44,33 +41,25 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, com.vesoft.nebula.KeyValue.class)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(KVPutRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetStatsReq.class, metaDataMap);
   }
 
-  public KVPutRequest() {
+  public GetStatsReq() {
   }
 
-  public KVPutRequest(
-      int space_id,
-      Map<Integer,List<com.vesoft.nebula.KeyValue>> parts) {
+  public GetStatsReq(
+      int space_id) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.parts = parts;
   }
 
   public static class Builder {
     private int space_id;
-    private Map<Integer,List<com.vesoft.nebula.KeyValue>> parts;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -83,17 +72,11 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
-    public Builder setParts(final Map<Integer,List<com.vesoft.nebula.KeyValue>> parts) {
-      this.parts = parts;
-      return this;
-    }
-
-    public KVPutRequest build() {
-      KVPutRequest result = new KVPutRequest();
+    public GetStatsReq build() {
+      GetStatsReq result = new GetStatsReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
-      result.setParts(this.parts);
       return result;
     }
   }
@@ -105,24 +88,21 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public KVPutRequest(KVPutRequest other) {
+  public GetStatsReq(GetStatsReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    if (other.isSetParts()) {
-      this.parts = TBaseHelper.deepCopy(other.parts);
-    }
   }
 
-  public KVPutRequest deepCopy() {
-    return new KVPutRequest(this);
+  public GetStatsReq deepCopy() {
+    return new GetStatsReq(this);
   }
 
   public int getSpace_id() {
     return this.space_id;
   }
 
-  public KVPutRequest setSpace_id(int space_id) {
+  public GetStatsReq setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -141,31 +121,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<com.vesoft.nebula.KeyValue>> getParts() {
-    return this.parts;
-  }
-
-  public KVPutRequest setParts(Map<Integer,List<com.vesoft.nebula.KeyValue>> parts) {
-    this.parts = parts;
-    return this;
-  }
-
-  public void unsetParts() {
-    this.parts = null;
-  }
-
-  // Returns true if field parts is set (has been assigned a value) and false otherwise
-  public boolean isSetParts() {
-    return this.parts != null;
-  }
-
-  public void setPartsIsSet(boolean __value) {
-    if (!__value) {
-      this.parts = null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -173,14 +128,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
         unsetSpace_id();
       } else {
         setSpace_id((Integer)__value);
-      }
-      break;
-
-    case PARTS:
-      if (__value == null) {
-        unsetParts();
-      } else {
-        setParts((Map<Integer,List<com.vesoft.nebula.KeyValue>>)__value);
       }
       break;
 
@@ -194,9 +141,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PARTS:
-      return getParts();
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -208,24 +152,22 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof KVPutRequest))
+    if (!(_that instanceof GetStatsReq))
       return false;
-    KVPutRequest that = (KVPutRequest)_that;
+    GetStatsReq that = (GetStatsReq)_that;
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
-
-    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts});
+    return Arrays.deepHashCode(new Object[] {space_id});
   }
 
   @Override
-  public int compareTo(KVPutRequest other) {
+  public int compareTo(GetStatsReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -241,14 +183,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -274,40 +208,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PARTS:
-          if (__field.type == TType.MAP) {
-            {
-              TMap _map236 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.KeyValue>>(Math.max(0, 2*_map236.size));
-              for (int _i237 = 0; 
-                   (_map236.size < 0) ? iprot.peekMap() : (_i237 < _map236.size); 
-                   ++_i237)
-              {
-                int _key238;
-                List<com.vesoft.nebula.KeyValue> _val239;
-                _key238 = iprot.readI32();
-                {
-                  TList _list240 = iprot.readListBegin();
-                  _val239 = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list240.size));
-                  for (int _i241 = 0; 
-                       (_list240.size < 0) ? iprot.peekList() : (_i241 < _list240.size); 
-                       ++_i241)
-                  {
-                    com.vesoft.nebula.KeyValue _elem242;
-                    _elem242 = new com.vesoft.nebula.KeyValue();
-                    _elem242.read(iprot);
-                    _val239.add(_elem242);
-                  }
-                  iprot.readListEnd();
-                }
-                this.parts.put(_key238, _val239);
-              }
-              iprot.readMapEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -328,24 +228,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.parts != null) {
-      oprot.writeFieldBegin(PARTS_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.KeyValue>> _iter243 : this.parts.entrySet())        {
-          oprot.writeI32(_iter243.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter243.getValue().size()));
-            for (com.vesoft.nebula.KeyValue _iter244 : _iter243.getValue())            {
-              _iter244.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
-        }
-        oprot.writeMapEnd();
-      }
-      oprot.writeFieldEnd();
-    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -360,7 +242,7 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("KVPutRequest");
+    StringBuilder sb = new StringBuilder("GetStatsReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -371,17 +253,6 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("parts");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getParts() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
-    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

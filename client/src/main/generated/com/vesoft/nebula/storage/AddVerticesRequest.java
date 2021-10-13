@@ -30,15 +30,18 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
   private static final TField PROP_NAMES_FIELD_DESC = new TField("prop_names", TType.MAP, (short)3);
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)5);
 
   public int space_id;
   public Map<Integer,List<NewVertex>> parts;
   public Map<Integer,List<byte[]>> prop_names;
   public boolean if_not_exists;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int PROP_NAMES = 3;
   public static final int IF_NOT_EXISTS = 4;
+  public static final int COMMON = 5;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -63,6 +66,8 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
                 new FieldValueMetaData(TType.STRING)))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -87,11 +92,28 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     setIf_not_existsIsSet(true);
   }
 
+  public AddVerticesRequest(
+      int space_id,
+      Map<Integer,List<NewVertex>> parts,
+      Map<Integer,List<byte[]>> prop_names,
+      boolean if_not_exists,
+      RequestCommon common) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.prop_names = prop_names;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    this.common = common;
+  }
+
   public static class Builder {
     private int space_id;
     private Map<Integer,List<NewVertex>> parts;
     private Map<Integer,List<byte[]>> prop_names;
     private boolean if_not_exists;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -120,6 +142,11 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public AddVerticesRequest build() {
       AddVerticesRequest result = new AddVerticesRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -130,6 +157,7 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
         result.setIf_not_exists(this.if_not_exists);
       }
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -152,6 +180,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       this.prop_names = TBaseHelper.deepCopy(other.prop_names);
     }
     this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
+    }
   }
 
   public AddVerticesRequest deepCopy() {
@@ -252,6 +283,30 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public AddVerticesRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -287,6 +342,14 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -305,6 +368,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
 
     case IF_NOT_EXISTS:
       return new Boolean(isIf_not_exists());
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -329,12 +395,14 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -359,30 +427,30 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map86 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<NewVertex>>(Math.max(0, 2*_map86.size));
-              for (int _i87 = 0; 
-                   (_map86.size < 0) ? iprot.peekMap() : (_i87 < _map86.size); 
-                   ++_i87)
+              TMap _map91 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<NewVertex>>(Math.max(0, 2*_map91.size));
+              for (int _i92 = 0; 
+                   (_map91.size < 0) ? iprot.peekMap() : (_i92 < _map91.size); 
+                   ++_i92)
               {
-                int _key88;
-                List<NewVertex> _val89;
-                _key88 = iprot.readI32();
+                int _key93;
+                List<NewVertex> _val94;
+                _key93 = iprot.readI32();
                 {
-                  TList _list90 = iprot.readListBegin();
-                  _val89 = new ArrayList<NewVertex>(Math.max(0, _list90.size));
-                  for (int _i91 = 0; 
-                       (_list90.size < 0) ? iprot.peekList() : (_i91 < _list90.size); 
-                       ++_i91)
+                  TList _list95 = iprot.readListBegin();
+                  _val94 = new ArrayList<NewVertex>(Math.max(0, _list95.size));
+                  for (int _i96 = 0; 
+                       (_list95.size < 0) ? iprot.peekList() : (_i96 < _list95.size); 
+                       ++_i96)
                   {
-                    NewVertex _elem92;
-                    _elem92 = new NewVertex();
-                    _elem92.read(iprot);
-                    _val89.add(_elem92);
+                    NewVertex _elem97;
+                    _elem97 = new NewVertex();
+                    _elem97.read(iprot);
+                    _val94.add(_elem97);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key88, _val89);
+                this.parts.put(_key93, _val94);
               }
               iprot.readMapEnd();
             }
@@ -393,29 +461,29 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
         case PROP_NAMES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map93 = iprot.readMapBegin();
-              this.prop_names = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map93.size));
-              for (int _i94 = 0; 
-                   (_map93.size < 0) ? iprot.peekMap() : (_i94 < _map93.size); 
-                   ++_i94)
+              TMap _map98 = iprot.readMapBegin();
+              this.prop_names = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map98.size));
+              for (int _i99 = 0; 
+                   (_map98.size < 0) ? iprot.peekMap() : (_i99 < _map98.size); 
+                   ++_i99)
               {
-                int _key95;
-                List<byte[]> _val96;
-                _key95 = iprot.readI32();
+                int _key100;
+                List<byte[]> _val101;
+                _key100 = iprot.readI32();
                 {
-                  TList _list97 = iprot.readListBegin();
-                  _val96 = new ArrayList<byte[]>(Math.max(0, _list97.size));
-                  for (int _i98 = 0; 
-                       (_list97.size < 0) ? iprot.peekList() : (_i98 < _list97.size); 
-                       ++_i98)
+                  TList _list102 = iprot.readListBegin();
+                  _val101 = new ArrayList<byte[]>(Math.max(0, _list102.size));
+                  for (int _i103 = 0; 
+                       (_list102.size < 0) ? iprot.peekList() : (_i103 < _list102.size); 
+                       ++_i103)
                   {
-                    byte[] _elem99;
-                    _elem99 = iprot.readBinary();
-                    _val96.add(_elem99);
+                    byte[] _elem104;
+                    _elem104 = iprot.readBinary();
+                    _val101.add(_elem104);
                   }
                   iprot.readListEnd();
                 }
-                this.prop_names.put(_key95, _val96);
+                this.prop_names.put(_key100, _val101);
               }
               iprot.readMapEnd();
             }
@@ -427,6 +495,14 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
           if (__field.type == TType.BOOL) {
             this.if_not_exists = iprot.readBool();
             setIf_not_existsIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -455,12 +531,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<NewVertex>> _iter100 : this.parts.entrySet())        {
-          oprot.writeI32(_iter100.getKey());
+        for (Map.Entry<Integer, List<NewVertex>> _iter105 : this.parts.entrySet())        {
+          oprot.writeI32(_iter105.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter100.getValue().size()));
-            for (NewVertex _iter101 : _iter100.getValue())            {
-              _iter101.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter105.getValue().size()));
+            for (NewVertex _iter106 : _iter105.getValue())            {
+              _iter106.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -473,12 +549,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PROP_NAMES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.prop_names.size()));
-        for (Map.Entry<Integer, List<byte[]>> _iter102 : this.prop_names.entrySet())        {
-          oprot.writeI32(_iter102.getKey());
+        for (Map.Entry<Integer, List<byte[]>> _iter107 : this.prop_names.entrySet())        {
+          oprot.writeI32(_iter107.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRING, _iter102.getValue().size()));
-            for (byte[] _iter103 : _iter102.getValue())            {
-              oprot.writeBinary(_iter103);
+            oprot.writeListBegin(new TList(TType.STRING, _iter107.getValue().size()));
+            for (byte[] _iter108 : _iter107.getValue())            {
+              oprot.writeBinary(_iter108);
             }
             oprot.writeListEnd();
           }
@@ -490,6 +566,13 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
     oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -545,6 +628,20 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

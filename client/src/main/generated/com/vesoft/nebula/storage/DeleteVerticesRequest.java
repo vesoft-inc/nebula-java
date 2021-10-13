@@ -28,11 +28,14 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
   private static final TStruct STRUCT_DESC = new TStruct("DeleteVerticesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)3);
 
   public int space_id;
   public Map<Integer,List<com.vesoft.nebula.Value>> parts;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
+  public static final int COMMON = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -49,6 +52,8 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
                 new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)))));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -68,9 +73,21 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
     this.parts = parts;
   }
 
+  public DeleteVerticesRequest(
+      int space_id,
+      Map<Integer,List<com.vesoft.nebula.Value>> parts,
+      RequestCommon common) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.common = common;
+  }
+
   public static class Builder {
     private int space_id;
     private Map<Integer,List<com.vesoft.nebula.Value>> parts;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -88,12 +105,18 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public DeleteVerticesRequest build() {
       DeleteVerticesRequest result = new DeleteVerticesRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
       result.setParts(this.parts);
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -111,6 +134,9 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
@@ -165,6 +191,30 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public DeleteVerticesRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -184,6 +234,14 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -196,6 +254,9 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
 
     case PARTS:
       return getParts();
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -216,12 +277,14 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
 
     if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -246,33 +309,41 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map117 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Value>>(Math.max(0, 2*_map117.size));
-              for (int _i118 = 0; 
-                   (_map117.size < 0) ? iprot.peekMap() : (_i118 < _map117.size); 
-                   ++_i118)
+              TMap _map122 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Value>>(Math.max(0, 2*_map122.size));
+              for (int _i123 = 0; 
+                   (_map122.size < 0) ? iprot.peekMap() : (_i123 < _map122.size); 
+                   ++_i123)
               {
-                int _key119;
-                List<com.vesoft.nebula.Value> _val120;
-                _key119 = iprot.readI32();
+                int _key124;
+                List<com.vesoft.nebula.Value> _val125;
+                _key124 = iprot.readI32();
                 {
-                  TList _list121 = iprot.readListBegin();
-                  _val120 = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list121.size));
-                  for (int _i122 = 0; 
-                       (_list121.size < 0) ? iprot.peekList() : (_i122 < _list121.size); 
-                       ++_i122)
+                  TList _list126 = iprot.readListBegin();
+                  _val125 = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list126.size));
+                  for (int _i127 = 0; 
+                       (_list126.size < 0) ? iprot.peekList() : (_i127 < _list126.size); 
+                       ++_i127)
                   {
-                    com.vesoft.nebula.Value _elem123;
-                    _elem123 = new com.vesoft.nebula.Value();
-                    _elem123.read(iprot);
-                    _val120.add(_elem123);
+                    com.vesoft.nebula.Value _elem128;
+                    _elem128 = new com.vesoft.nebula.Value();
+                    _elem128.read(iprot);
+                    _val125.add(_elem128);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key119, _val120);
+                this.parts.put(_key124, _val125);
               }
               iprot.readMapEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -301,12 +372,12 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Value>> _iter124 : this.parts.entrySet())        {
-          oprot.writeI32(_iter124.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Value>> _iter129 : this.parts.entrySet())        {
+          oprot.writeI32(_iter129.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter124.getValue().size()));
-            for (com.vesoft.nebula.Value _iter125 : _iter124.getValue())            {
-              _iter125.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter129.getValue().size()));
+            for (com.vesoft.nebula.Value _iter130 : _iter129.getValue())            {
+              _iter130.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -314,6 +385,13 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
         oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -352,6 +430,20 @@ public class DeleteVerticesRequest implements TBase, java.io.Serializable, Clone
       sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

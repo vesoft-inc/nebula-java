@@ -6,6 +6,8 @@
 
 package com.vesoft.nebula.client.graph.data;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
@@ -141,24 +143,24 @@ public class TestDataFromServer {
             DateTimeWrapper dateTimeWrapper = (DateTimeWrapper) new DateTimeWrapper(
                     new DateTime((short) 2010, (byte) 9,
                             (byte) 10, (byte) 02, (byte) 8, (byte) 2, 0)).setTimezoneOffset(28800);
-            DateTimeWrapper resultDateTime =  properties.get("birthday").asDateTime();
+            DateTimeWrapper resultDateTime = properties.get("birthday").asDateTime();
             Assert.assertEquals(dateTimeWrapper, resultDateTime);
             Assert.assertEquals("utc datetime: 2010-09-10T02:08:02.000000, timezoneOffset: 28800",
-                resultDateTime.toString());
+                    resultDateTime.toString());
             Assert.assertEquals("2010-09-10T10:08:02.000000",
-                resultDateTime.getLocalDateTimeStr());
+                    resultDateTime.getLocalDateTimeStr());
             Assert.assertEquals("2010-09-10T02:08:02.000000",
-                resultDateTime.getUTCDateTimeStr());
+                    resultDateTime.getUTCDateTimeStr());
 
             DateWrapper dateWrapper = new DateWrapper(new Date((short) 2017, (byte) 9, (byte) 10));
             Assert.assertEquals(dateWrapper, properties.get("start_school").asDate());
 
             TimeWrapper timeWrapper = (TimeWrapper) new TimeWrapper(
-                new Time((byte) 23, (byte) 10, (byte) 0, 0)).setTimezoneOffset(28800);
+                    new Time((byte) 23, (byte) 10, (byte) 0, 0)).setTimezoneOffset(28800);
             TimeWrapper resultTime = properties.get("morning").asTime();
             Assert.assertEquals(timeWrapper, resultTime);
             Assert.assertEquals("utc time: 23:10:00.000000, timezoneOffset: 28800",
-                resultTime.toString());
+                    resultTime.toString());
             Assert.assertEquals("07:10:00.000000", resultTime.getLocalTimeStr());
             Assert.assertEquals("23:10:00.000000", resultTime.getUTCTimeStr());
 
@@ -344,35 +346,35 @@ public class TestDataFromServer {
     public void tesDataset() {
         try {
             ResultSet result = session.execute(
-                "CREATE TAG IF NOT EXISTS player(name string, age int);"
-                    + "CREATE EDGE IF NOT EXISTS like(likeness int);");
+                    "CREATE TAG IF NOT EXISTS player(name string, age int);"
+                            + "CREATE EDGE IF NOT EXISTS like(likeness int);");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             TimeUnit.SECONDS.sleep(6);
             result = session.execute(
-                "INSERT VERTEX player(name, age) values \"a\":(\"a\", 1); "
-                    + "INSERT VERTEX player(name, age) values \"b\":(\"b\", 2); "
-                    + "INSERT VERTEX player(name, age) values \"c\":(\"c\", 3); "
-                    + "INSERT VERTEX player(name, age) values \"d\":(\"d\", 4);"
-                    + "INSERT VERTEX player(name, age) values \"f\":(\"f\", 5);"
-                    + "INSERT VERTEX player(name, age) values \"g\":(\"g\", 6);"
-                    + "INSERT EDGE like(likeness) values \"d\" -> \"a\":(10); "
-                    + "INSERT EDGE like(likeness) values \"d\" -> \"c\":(10);"
-                    + "INSERT EDGE like(likeness) values \"b\" -> \"a\":(10); "
-                    + "INSERT EDGE like(likeness) values \"c\" -> \"b\":(10);"
-                    + "INSERT EDGE like(likeness) values \"a\" -> \"f\":(10); "
-                    + "INSERT EDGE like(likeness) values \"c\" -> \"f\":(10);"
-                    + "INSERT EDGE like(likeness) values \"a\" -> \"g\":(10); "
-                    + "INSERT EDGE like(likeness) values \"g\" -> \"c\":(10);");
+                    "INSERT VERTEX player(name, age) values \"a\":(\"a\", 1); "
+                            + "INSERT VERTEX player(name, age) values \"b\":(\"b\", 2); "
+                            + "INSERT VERTEX player(name, age) values \"c\":(\"c\", 3); "
+                            + "INSERT VERTEX player(name, age) values \"d\":(\"d\", 4);"
+                            + "INSERT VERTEX player(name, age) values \"f\":(\"f\", 5);"
+                            + "INSERT VERTEX player(name, age) values \"g\":(\"g\", 6);"
+                            + "INSERT EDGE like(likeness) values \"d\" -> \"a\":(10); "
+                            + "INSERT EDGE like(likeness) values \"d\" -> \"c\":(10);"
+                            + "INSERT EDGE like(likeness) values \"b\" -> \"a\":(10); "
+                            + "INSERT EDGE like(likeness) values \"c\" -> \"b\":(10);"
+                            + "INSERT EDGE like(likeness) values \"a\" -> \"f\":(10); "
+                            + "INSERT EDGE like(likeness) values \"c\" -> \"f\":(10);"
+                            + "INSERT EDGE like(likeness) values \"a\" -> \"g\":(10); "
+                            + "INSERT EDGE like(likeness) values \"g\" -> \"c\":(10);");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             result = session.execute(
-                "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS");
+                    "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(4, result.rowsSize());
             String expectString = "ColumnName: [path], "
-                + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
-                + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
-                + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
-                + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
+                    + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
+                    + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
+                    + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
+                    + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
             Assert.assertEquals(expectString, result.toString());
         } catch (IOErrorException | InterruptedException e) {
             e.printStackTrace();
@@ -385,6 +387,65 @@ public class TestDataFromServer {
         try {
             ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
             Assert.assertTrue(result.toString().contains("ExecutionResponse"));
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testBasicTypeForJson() {
+        try {
+            String ngql = "YIELD 1, 2.2, \"hello\", [1,2,\"abc\"], {key: \"value\"}, \"汉字\"";
+            JSONObject resp = JSON.parseObject(session.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1,2.2,\"hello\",[1,2,\"abc\"],{\"key\":\"value\"},\"汉字\"]";
+
+            // check row data
+            Assert.assertEquals(rowData, exp);
+            // check space name
+            String spaceName = resp.getJSONArray("results").getJSONObject(0).getString("spaceName");
+            Assert.assertEquals(spaceName, "test_data");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testComplexTypeForJson() {
+        try {
+            JSONObject resp = JSON.parseObject(session.executeJson("MATCH (v:person {name: "
+                    + "\"Bob\"}) RETURN v"));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            Assert.assertEquals(rowData, "[{\"person.first_out_city\":1111,\"person"
+                + ".book_num\":100,\"person.age\":10,\"person.expend\":100,\"person.is_girl\":"
+                + "false,\"person.name\":\"Bob\",\"person.grade\":3,\"person.birthday\":\"2010"
+                + "-09-10T02:08:02.0Z\",\"student.name\":\"Bob\",\"person.child_name\":\"Hello"
+                + " Worl\",\"person.property\":1000,\"person.morning\":\"23:10:00.000000Z\",\""
+                + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+
+    @Test
+    public void testErrorForJson() {
+        try {
+            String ngql = "MATCH (v:invalidTag {name: \"Bob\"}) RETURN v";
+            JSONObject resp = JSON.parseObject(session.executeJson(ngql));
+            int code = resp.getJSONArray("errors").getJSONObject(0).getInteger("code");
+            String message = resp.getJSONArray("errors").getJSONObject(0).getString("message");
+
+            // check error code
+            Assert.assertEquals(code, ErrorCode.E_SEMANTIC_ERROR.getValue());
+
+            // check error message
+            Assert.assertEquals(message, "SemanticError: `invalidTag': Unknown tag");
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
