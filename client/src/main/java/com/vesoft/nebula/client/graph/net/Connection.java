@@ -1,6 +1,7 @@
 package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 
 public abstract class Connection {
@@ -9,6 +10,9 @@ public abstract class Connection {
     public HostAddress getServerAddress() {
         return this.serverAddr;
     }
+
+    public abstract void open(HostAddress address, int timeout, SSLParam sslParam)
+            throws IOErrorException;
 
     public abstract void open(HostAddress address, int timeout) throws IOErrorException;
 

@@ -9,7 +9,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
     private final NebulaPoolConfig config;
-    private LoadBalancer loadBalancer;
+    private final LoadBalancer loadBalancer;
     private static final int retryTime = 3;
 
     public ConnObjectPool(LoadBalancer loadBalancer, NebulaPoolConfig config) {
@@ -28,7 +28,15 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
         SyncConnection conn = new SyncConnection();
         while (retry-- > 0) {
             try {
-                conn.open(address, config.getTimeout());
+                if (config.isEnableSsl()) {
+                    if (config.getSslParam() == null) {
+                        throw new IllegalArgumentException("SSL Param is required when enableSsl "
+                                                           + "is set to true");
+                    }
+                    conn.open(address, config.getTimeout(), config.getSslParam());
+                } else {
+                    conn.open(address, config.getTimeout());
+                }
                 return conn;
             } catch (IOErrorException e) {
                 if (retry == 0) {
