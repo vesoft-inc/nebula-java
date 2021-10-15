@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula;
+package com.vesoft.nebula.graph;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,12 +24,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<PartitionBackupInfo> {
-  private static final TStruct STRUCT_DESC = new TStruct("PartitionBackupInfo");
-  private static final TField INFO_FIELD_DESC = new TField("info", TType.MAP, (short)1);
+public class VerifyClientVersionReq implements TBase, java.io.Serializable, Cloneable, Comparable<VerifyClientVersionReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("VerifyClientVersionReq");
+  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)1);
 
-  public Map<Integer,LogInfo> info;
-  public static final int INFO = 1;
+  public byte[] version;
+  public static final int VERSION = 1;
 
   // isset id assignments
 
@@ -37,40 +37,40 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new StructMetaData(TType.STRUCT, LogInfo.class))));
+    tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.REQUIRED, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(PartitionBackupInfo.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(VerifyClientVersionReq.class, metaDataMap);
   }
 
-  public PartitionBackupInfo() {
+  public VerifyClientVersionReq() {
+    this.version = "2.6.0".getBytes();
+
   }
 
-  public PartitionBackupInfo(
-      Map<Integer,LogInfo> info) {
+  public VerifyClientVersionReq(
+      byte[] version) {
     this();
-    this.info = info;
+    this.version = version;
   }
 
   public static class Builder {
-    private Map<Integer,LogInfo> info;
+    private byte[] version;
 
     public Builder() {
     }
 
-    public Builder setInfo(final Map<Integer,LogInfo> info) {
-      this.info = info;
+    public Builder setVersion(final byte[] version) {
+      this.version = version;
       return this;
     }
 
-    public PartitionBackupInfo build() {
-      PartitionBackupInfo result = new PartitionBackupInfo();
-      result.setInfo(this.info);
+    public VerifyClientVersionReq build() {
+      VerifyClientVersionReq result = new VerifyClientVersionReq();
+      result.setVersion(this.version);
       return result;
     }
   }
@@ -82,48 +82,47 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public PartitionBackupInfo(PartitionBackupInfo other) {
-    if (other.isSetInfo()) {
-      this.info = TBaseHelper.deepCopy(other.info);
+  public VerifyClientVersionReq(VerifyClientVersionReq other) {
+    if (other.isSetVersion()) {
+      this.version = TBaseHelper.deepCopy(other.version);
     }
   }
 
-  public PartitionBackupInfo deepCopy() {
-    return new PartitionBackupInfo(this);
+  public VerifyClientVersionReq deepCopy() {
+    return new VerifyClientVersionReq(this);
   }
 
-  public Map<Integer,LogInfo> getInfo() {
-    return this.info;
+  public byte[] getVersion() {
+    return this.version;
   }
 
-  public PartitionBackupInfo setInfo(Map<Integer,LogInfo> info) {
-    this.info = info;
+  public VerifyClientVersionReq setVersion(byte[] version) {
+    this.version = version;
     return this;
   }
 
-  public void unsetInfo() {
-    this.info = null;
+  public void unsetVersion() {
+    this.version = null;
   }
 
-  // Returns true if field info is set (has been assigned a value) and false otherwise
-  public boolean isSetInfo() {
-    return this.info != null;
+  // Returns true if field version is set (has been assigned a value) and false otherwise
+  public boolean isSetVersion() {
+    return this.version != null;
   }
 
-  public void setInfoIsSet(boolean __value) {
+  public void setVersionIsSet(boolean __value) {
     if (!__value) {
-      this.info = null;
+      this.version = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case INFO:
+    case VERSION:
       if (__value == null) {
-        unsetInfo();
+        unsetVersion();
       } else {
-        setInfo((Map<Integer,LogInfo>)__value);
+        setVersion((byte[])__value);
       }
       break;
 
@@ -134,8 +133,8 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case INFO:
-      return getInfo();
+    case VERSION:
+      return getVersion();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -148,22 +147,22 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof PartitionBackupInfo))
+    if (!(_that instanceof VerifyClientVersionReq))
       return false;
-    PartitionBackupInfo that = (PartitionBackupInfo)_that;
+    VerifyClientVersionReq that = (VerifyClientVersionReq)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {info});
+    return Arrays.deepHashCode(new Object[] {version});
   }
 
   @Override
-  public int compareTo(PartitionBackupInfo other) {
+  public int compareTo(VerifyClientVersionReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -174,11 +173,11 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
+    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(info, other.info);
+    lastComparison = TBaseHelper.compareTo(version, other.version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -196,24 +195,9 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       }
       switch (__field.id)
       {
-        case INFO:
-          if (__field.type == TType.MAP) {
-            {
-              TMap _map64 = iprot.readMapBegin();
-              this.info = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map64.size));
-              for (int _i65 = 0; 
-                   (_map64.size < 0) ? iprot.peekMap() : (_i65 < _map64.size); 
-                   ++_i65)
-              {
-                int _key66;
-                LogInfo _val67;
-                _key66 = iprot.readI32();
-                _val67 = new LogInfo();
-                _val67.read(iprot);
-                this.info.put(_key66, _val67);
-              }
-              iprot.readMapEnd();
-            }
+        case VERSION:
+          if (__field.type == TType.STRING) {
+            this.version = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -235,16 +219,9 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.info != null) {
-      oprot.writeFieldBegin(INFO_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.info.size()));
-        for (Map.Entry<Integer, LogInfo> _iter68 : this.info.entrySet())        {
-          oprot.writeI32(_iter68.getKey());
-          _iter68.getValue().write(oprot);
-        }
-        oprot.writeMapEnd();
-      }
+    if (this.version != null) {
+      oprot.writeFieldBegin(VERSION_FIELD_DESC);
+      oprot.writeBinary(this.version);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -261,20 +238,25 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("PartitionBackupInfo");
+    StringBuilder sb = new StringBuilder("VerifyClientVersionReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("info");
+    sb.append("version");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getInfo() == null) {
+    if (this.getVersion() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getInfo(), indent + 1, prettyPrint));
+        int __version_size = Math.min(this.getVersion().length, 128);
+        for (int i = 0; i < __version_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
+        }
+        if (this.getVersion().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -284,6 +266,9 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   public void validate() throws TException {
     // check for required fields
+    if (version == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'version' was not present! Struct: " + toString());
+    }
   }
 
 }
