@@ -4,6 +4,8 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class RoundRobinLoadBalancer implements LoadBalancer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoundRobinLoadBalancer.class);
     private static final int S_OK = 0;
     private static final int S_BAD = 1;
     private final List<HostAddress> addresses = new ArrayList<>();
@@ -60,7 +63,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         return null;
     }
 
-    public void updateServersStatus() throws ClientServerIncompatibleException {
+    public void updateServersStatus() {
         for (HostAddress addr : addresses) {
             if (ping(addr)) {
                 serversStatus.put(addr, S_OK);
@@ -70,7 +73,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         }
     }
 
-    public boolean ping(HostAddress addr) throws ClientServerIncompatibleException {
+    public boolean ping(HostAddress addr) {
         try {
             Connection connection = new SyncConnection();
             if (enabledSsl) {
@@ -80,12 +83,13 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
             }
             connection.close();
             return true;
-        } catch (IOErrorException e) {
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
+            LOGGER.error("ping failed", e);
             return false;
         }
     }
 
-    public boolean isServersOK() throws ClientServerIncompatibleException {
+    public boolean isServersOK() {
         this.updateServersStatus();
         for (HostAddress addr : addresses) {
             if (serversStatus.get(addr) == S_BAD) {
@@ -96,10 +100,6 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     }
 
     private void scheduleTask()  {
-        try {
-            updateServersStatus();
-        } catch (ClientServerIncompatibleException e) {
-            e.printStackTrace();
-        }
+        updateServersStatus();
     }
 }

@@ -84,11 +84,11 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
         super.activateObject(p);
     }
 
-    public boolean init() throws ClientServerIncompatibleException {
+    public boolean init() {
         return loadBalancer.isServersOK();
     }
 
-    public void updateServerStatus() throws ClientServerIncompatibleException {
+    public void updateServerStatus() {
         loadBalancer.updateServersStatus();
     }
 }

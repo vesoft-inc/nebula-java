@@ -8,7 +8,7 @@ public interface LoadBalancer {
 
     void close();
 
-    void updateServersStatus() throws ClientServerIncompatibleException;
+    void updateServersStatus();
 
-    boolean isServersOK() throws ClientServerIncompatibleException;
+    boolean isServersOK();
 }

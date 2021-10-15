@@ -115,7 +115,7 @@ public class SessionsManager {
         isClose = true;
     }
 
-    private void init() throws RuntimeException, ClientServerIncompatibleException {
+    private void init() throws RuntimeException {
         try {
             pool = new NebulaPool();
             if (!pool.init(config.getAddresses(), config.getPoolConfig())) {

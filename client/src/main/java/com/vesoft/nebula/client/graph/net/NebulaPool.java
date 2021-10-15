@@ -80,7 +80,7 @@ public class NebulaPool {
      * @throws InvalidConfigException if config is illegal
      */
     public boolean init(List<HostAddress> addresses, NebulaPoolConfig config)
-        throws UnknownHostException, InvalidConfigException, ClientServerIncompatibleException {
+        throws UnknownHostException, InvalidConfigException {
         checkInit();
         hasInit.set(true);
         checkConfig(config);
@@ -179,7 +179,7 @@ public class NebulaPool {
      * Update the services' status when the connection is broken,
      * it is called by Session and NebulaPool
      */
-    protected void updateServerStatus() throws ClientServerIncompatibleException {
+    protected void updateServerStatus() {
         checkNoInitAndClosed();
         if (objectPool.getFactory() instanceof ConnObjectPool) {
             ((ConnObjectPool)objectPool.getFactory()).updateServerStatus();
