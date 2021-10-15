@@ -117,7 +117,8 @@ public class TestDataFromServer {
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(POLYGON((0 1, 1 2, 2 3, 0 1)));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(POLYGON((0 1, 1 2, 2 3,"
+                      + " 0 1)));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
