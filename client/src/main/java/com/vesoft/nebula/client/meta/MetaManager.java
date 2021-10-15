@@ -10,6 +10,7 @@ import com.facebook.thrift.TException;
 import com.google.common.collect.Maps;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
@@ -49,7 +50,8 @@ public class MetaManager implements MetaCache {
     /**
      * init the meta info cache
      */
-    public MetaManager(List<HostAddress> address) throws TException {
+    public MetaManager(List<HostAddress> address)
+            throws TException, ClientServerIncompatibleException {
         metaClient = new MetaClient(address);
         metaClient.connect();
         fillMetaInfo();
@@ -120,7 +122,7 @@ public class MetaManager implements MetaCache {
             } finally {
                 lock.writeLock().unlock();
             }
-        } catch (TException | ExecuteFailedException e) {
+        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
             LOGGER.error(e.getMessage());
         }
     }
@@ -330,7 +332,13 @@ public class MetaManager implements MetaCache {
      * get all storage addresses
      */
     public Set<HostAddr> listHosts() {
-        Set<HostAddr> hosts = metaClient.listHosts();
+        Set<HostAddr> hosts;
+        try {
+            hosts = metaClient.listHosts();
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error("client version does not match server version");
+            return new HashSet<>();
+        }
         if (hosts == null) {
             return new HashSet<>();
         }

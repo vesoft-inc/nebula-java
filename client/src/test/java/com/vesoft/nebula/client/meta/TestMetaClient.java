@@ -7,6 +7,7 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
@@ -40,7 +41,7 @@ public class TestMetaClient extends TestCase {
         metaClient = new MetaClient(address, port);
         try {
             metaClient.connect();
-        } catch (TException e) {
+        } catch (TException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -51,7 +52,7 @@ public class TestMetaClient extends TestCase {
         MetaClient client = new MetaClient(address, port);
         try {
             client.connect();
-        } catch (TException e) {
+        } catch (TException | ClientServerIncompatibleException e) {
             assert (true);
         }
     }
@@ -61,7 +62,7 @@ public class TestMetaClient extends TestCase {
             List<IdName> spaces = metaClient.getSpaces();
             assert (spaces.size() >= 1);
             assert (metaClient.getSpace("testMeta") != null);
-        } catch (TException | ExecuteFailedException e) {
+        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
             assert (false);
@@ -73,7 +74,7 @@ public class TestMetaClient extends TestCase {
             List<TagItem> tags = metaClient.getTags("testMeta");
             Assert.assertTrue(tags.size() >= 1);
             assert (metaClient.getTag("testMeta", "person") != null);
-        } catch (TException | ExecuteFailedException e) {
+        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -84,7 +85,7 @@ public class TestMetaClient extends TestCase {
             List<EdgeItem> edges = metaClient.getEdges("testMeta");
             Assert.assertTrue(edges.size() >= 1);
             assert (metaClient.getEdge("testMeta", "friend") != null);
-        } catch (TException | ExecuteFailedException e) {
+        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -93,13 +94,13 @@ public class TestMetaClient extends TestCase {
     public void testGetPartsAlloc() {
         try {
             assert (metaClient.getPartsAlloc("testMeta").size() == 10);
-        } catch (ExecuteFailedException | TException e) {
+        } catch (ExecuteFailedException | TException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert (false);
         }
     }
 
-    public void testListHosts() {
+    public void testListHosts() throws ClientServerIncompatibleException {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
@@ -122,7 +123,12 @@ public class TestMetaClient extends TestCase {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
-        assert (metaClient.listHosts().size() == 2);
+        try {
+            assert (metaClient.listHosts().size() == 2);
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error("client version does not match server version", e);
+            assert (false);
+        }
 
         try {
             runtime.exec("docker start nebula-docker-compose_storaged0_1")

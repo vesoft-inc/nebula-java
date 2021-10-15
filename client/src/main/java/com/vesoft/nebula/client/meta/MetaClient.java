@@ -10,9 +10,11 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.GetEdgeReq;
@@ -39,6 +41,8 @@ import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import com.vesoft.nebula.meta.VerifyClientVersionReq;
+import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -85,28 +89,41 @@ public class MetaClient extends AbstractMetaClient {
         this.addresses = addresses;
     }
 
-    public void connect() throws TException {
+    public void connect()
+            throws TException, ClientServerIncompatibleException {
         doConnect();
     }
 
     /**
      * connect nebula meta server
      */
-    private void doConnect() throws TTransportException {
+    private void doConnect()
+            throws TTransportException, ClientServerIncompatibleException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAddress address = addresses.get(position);
         getClient(address.getHost(), address.getPort());
     }
 
-    private void getClient(String host, int port) throws TTransportException {
+    private void getClient(String host, int port)
+            throws TTransportException, ClientServerIncompatibleException {
         transport = new TSocket(host, port, timeout, timeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
+
+        // check if client version matches server version
+        VerifyClientVersionResp resp =
+                client.verifyClientVersion(new VerifyClientVersionReq());
+        if (resp.getCode() != ErrorCode.SUCCEEDED) {
+            client.getInputProtocol().getTransport().close();
+            throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
+                    Charsets.UTF_8));
+        }
     }
 
-    private void freshClient(HostAddr leader) throws TTransportException {
+    private void freshClient(HostAddr leader)
+            throws TTransportException, ClientServerIncompatibleException {
         close();
         getClient(leader.getHost(), leader.getPort());
     }
@@ -125,7 +142,8 @@ public class MetaClient extends AbstractMetaClient {
      *
      * @return
      */
-    public synchronized List<IdName> getSpaces() throws TException, ExecuteFailedException {
+    public synchronized List<IdName> getSpaces()
+            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response = null;
@@ -158,7 +176,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return SpaceItem
      */
     public synchronized SpaceItem getSpace(String spaceName) throws TException,
-            ExecuteFailedException {
+            ExecuteFailedException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         GetSpaceReq request = new GetSpaceReq();
         request.setSpace_name(spaceName.getBytes());
@@ -192,7 +210,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return TagItem list
      */
     public synchronized List<TagItem> getTags(String spaceName)
-            throws TException, ExecuteFailedException {
+            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
 
         int spaceID = getSpace(spaceName).space_id;
@@ -229,7 +247,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return Schema
      */
     public synchronized Schema getTag(String spaceName, String tagName)
-            throws TException, ExecuteFailedException {
+            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         GetTagReq request = new GetTagReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -268,7 +286,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return EdgeItem list
      */
     public synchronized List<EdgeItem> getEdges(String spaceName)
-            throws TException, ExecuteFailedException {
+            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         int spaceID = getSpace(spaceName).getSpace_id();
         ListEdgesReq request = new ListEdgesReq(spaceID);
@@ -303,7 +321,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return Schema
      */
     public synchronized Schema getEdge(String spaceName, String edgeName)
-            throws TException, ExecuteFailedException {
+            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -343,7 +361,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return
      */
     public synchronized Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
-            throws ExecuteFailedException, TException {
+            throws ExecuteFailedException, TException, ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -375,7 +393,7 @@ public class MetaClient extends AbstractMetaClient {
     /**
      * get all Storaged servers
      */
-    public synchronized Set<HostAddr> listHosts() {
+    public synchronized Set<HostAddr> listHosts() throws ClientServerIncompatibleException {
         int retry = RETRY_TIMES;
         ListHostsReq request = new ListHostsReq();
         request.setType(ListHostType.STORAGE);
