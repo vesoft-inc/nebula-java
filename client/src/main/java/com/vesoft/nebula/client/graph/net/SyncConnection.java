@@ -157,7 +157,7 @@ public class SyncConnection extends Connection {
     }
 
     public ExecutionResponse execute(long sessionID, String stmt)
-            throws IOErrorException, ClientServerIncompatibleException {
+            throws IOErrorException {
         try {
             return client.execute(sessionID, stmt.getBytes());
         } catch (TException e) {
@@ -169,7 +169,11 @@ public class SyncConnection extends Connection {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
                     || te.getMessage().contains("Read timed out")) {
-                    reopen();
+                    try {
+                        reopen();
+                    } catch (ClientServerIncompatibleException ex) {
+                        throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                    }
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }
             }
@@ -178,7 +182,7 @@ public class SyncConnection extends Connection {
     }
 
     public String executeJson(long sessionID, String stmt)
-            throws IOErrorException, ClientServerIncompatibleException {
+            throws IOErrorException {
         try {
             byte[] result = client.executeJson(sessionID, stmt.getBytes());
             return new String(result, StandardCharsets.UTF_8);
@@ -191,7 +195,11 @@ public class SyncConnection extends Connection {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
                         || te.getMessage().contains("Read timed out")) {
-                    reopen();
+                    try {
+                        reopen();
+                    } catch (ClientServerIncompatibleException ex) {
+                        throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                    }
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }
             }
@@ -208,7 +216,7 @@ public class SyncConnection extends Connection {
         try {
             execute(0, "YIELD 1;");
             return true;
-        } catch (IOErrorException | ClientServerIncompatibleException e) {
+        } catch (IOErrorException e) {
             return false;
         }
     }

@@ -4,8 +4,6 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +12,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RoundRobinLoadBalancer implements LoadBalancer {
     private static final Logger LOGGER = LoggerFactory.getLogger(RoundRobinLoadBalancer.class);
