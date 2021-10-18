@@ -62,7 +62,7 @@ public class TestMetaClient extends TestCase {
             List<IdName> spaces = metaClient.getSpaces();
             assert (spaces.size() >= 1);
             assert (metaClient.getSpace("testMeta") != null);
-        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
+        } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
             assert (false);
@@ -74,7 +74,7 @@ public class TestMetaClient extends TestCase {
             List<TagItem> tags = metaClient.getTags("testMeta");
             Assert.assertTrue(tags.size() >= 1);
             assert (metaClient.getTag("testMeta", "person") != null);
-        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
+        } catch (TException | ExecuteFailedException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -85,7 +85,7 @@ public class TestMetaClient extends TestCase {
             List<EdgeItem> edges = metaClient.getEdges("testMeta");
             Assert.assertTrue(edges.size() >= 1);
             assert (metaClient.getEdge("testMeta", "friend") != null);
-        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
+        } catch (TException | ExecuteFailedException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -94,13 +94,13 @@ public class TestMetaClient extends TestCase {
     public void testGetPartsAlloc() {
         try {
             assert (metaClient.getPartsAlloc("testMeta").size() == 10);
-        } catch (ExecuteFailedException | TException | ClientServerIncompatibleException e) {
+        } catch (ExecuteFailedException | TException e) {
             e.printStackTrace();
             assert (false);
         }
     }
 
-    public void testListHosts() throws ClientServerIncompatibleException {
+    public void testListHosts() {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
@@ -123,12 +123,7 @@ public class TestMetaClient extends TestCase {
         if (metaClient == null) {
             metaClient = new MetaClient(address, port);
         }
-        try {
-            assert (metaClient.listHosts().size() == 2);
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error("client version does not match server version", e);
-            assert (false);
-        }
+        assert (metaClient.listHosts().size() == 2);
 
         try {
             runtime.exec("docker start nebula-docker-compose_storaged0_1")

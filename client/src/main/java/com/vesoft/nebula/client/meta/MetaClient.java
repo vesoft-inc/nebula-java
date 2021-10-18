@@ -142,8 +142,7 @@ public class MetaClient extends AbstractMetaClient {
      *
      * @return
      */
-    public synchronized List<IdName> getSpaces()
-            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
+    public synchronized List<IdName> getSpaces() throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
         ListSpacesReq request = new ListSpacesReq();
         ListSpacesResp response = null;
@@ -159,6 +158,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
             throw e;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSpaces();
@@ -176,7 +177,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return SpaceItem
      */
     public synchronized SpaceItem getSpace(String spaceName) throws TException,
-            ExecuteFailedException, ClientServerIncompatibleException {
+            ExecuteFailedException {
         int retry = RETRY_TIMES;
         GetSpaceReq request = new GetSpaceReq();
         request.setSpace_name(spaceName.getBytes());
@@ -193,6 +194,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Space Error: %s", e.getMessage()));
             throw e;
+        }  catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getItem();
@@ -210,7 +213,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return TagItem list
      */
     public synchronized List<TagItem> getTags(String spaceName)
-            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
+            throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
 
         int spaceID = getSpace(spaceName).space_id;
@@ -228,6 +231,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             throw e;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getTags();
@@ -247,7 +252,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return Schema
      */
     public synchronized Schema getTag(String spaceName, String tagName)
-            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
+            throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
         GetTagReq request = new GetTagReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -268,6 +273,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             throw e;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
@@ -286,7 +293,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return EdgeItem list
      */
     public synchronized List<EdgeItem> getEdges(String spaceName)
-            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
+            throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
         int spaceID = getSpace(spaceName).getSpace_id();
         ListEdgesReq request = new ListEdgesReq(spaceID);
@@ -303,6 +310,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             throw e;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getEdges();
@@ -321,7 +330,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return Schema
      */
     public synchronized Schema getEdge(String spaceName, String edgeName)
-            throws TException, ExecuteFailedException, ClientServerIncompatibleException {
+            throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
         GetEdgeReq request = new GetEdgeReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -342,6 +351,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             throw e;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
@@ -361,7 +372,7 @@ public class MetaClient extends AbstractMetaClient {
      * @return
      */
     public synchronized Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
-            throws ExecuteFailedException, TException, ClientServerIncompatibleException {
+            throws ExecuteFailedException, TException {
         int retry = RETRY_TIMES;
         GetPartsAllocReq request = new GetPartsAllocReq();
         int spaceID = getSpace(spaceName).getSpace_id();
@@ -380,6 +391,8 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Parts Error: %s", e.getMessage()));
             throw e;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getParts();
@@ -393,7 +406,7 @@ public class MetaClient extends AbstractMetaClient {
     /**
      * get all Storaged servers
      */
-    public synchronized Set<HostAddr> listHosts() throws ClientServerIncompatibleException {
+    public synchronized Set<HostAddr> listHosts() {
         int retry = RETRY_TIMES;
         ListHostsReq request = new ListHostsReq();
         request.setType(ListHostType.STORAGE);
@@ -407,7 +420,7 @@ public class MetaClient extends AbstractMetaClient {
                     break;
                 }
             }
-        } catch (TException e) {
+        } catch (TException | ClientServerIncompatibleException e) {
             LOGGER.error("listHosts error", e);
             return null;
         }

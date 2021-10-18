@@ -122,7 +122,7 @@ public class MetaManager implements MetaCache {
             } finally {
                 lock.writeLock().unlock();
             }
-        } catch (TException | ExecuteFailedException | ClientServerIncompatibleException e) {
+        } catch (TException | ExecuteFailedException e) {
             LOGGER.error(e.getMessage());
         }
     }
@@ -332,13 +332,7 @@ public class MetaManager implements MetaCache {
      * get all storage addresses
      */
     public Set<HostAddr> listHosts() {
-        Set<HostAddr> hosts;
-        try {
-            hosts = metaClient.listHosts();
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error("client version does not match server version");
-            return new HashSet<>();
-        }
+        Set<HostAddr> hosts = metaClient.listHosts();
         if (hosts == null) {
             return new HashSet<>();
         }
