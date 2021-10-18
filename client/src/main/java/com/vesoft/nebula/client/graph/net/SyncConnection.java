@@ -39,27 +39,25 @@ public class SyncConnection extends Connection {
     private int timeout = 0;
     private SSLParam sslParam = null;
     private boolean enabledSsl = false;
+    private SSLSocketFactory sslSocketFactory = null;
 
     @Override
     public void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
-            SSLSocketFactory sslSocketFactory;
 
             this.serverAddr = address;
             this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.enabledSsl = true;
             this.sslParam = sslParam;
-            if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
-                sslSocketFactory =
-                        SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
-            } else {
-                sslSocketFactory =
-                        SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
-            }
             if (sslSocketFactory == null) {
-                throw new IOErrorException(IOErrorException.E_UNKNOWN,
-                        "SSL Socket Factory Creation failed");
+                if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
+                    sslSocketFactory =
+                            SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
+                } else {
+                    sslSocketFactory =
+                            SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
+                }
             }
             this.transport = new TSocket(
                     sslSocketFactory.createSocket(address.getHost(),
