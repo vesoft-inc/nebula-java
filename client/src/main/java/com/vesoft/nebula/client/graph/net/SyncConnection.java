@@ -29,10 +29,16 @@ import com.vesoft.nebula.graph.GraphService;
 import com.vesoft.nebula.graph.VerifyClientVersionReq;
 import com.vesoft.nebula.graph.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class SyncConnection extends Connection {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SyncConnection.class);
+
     protected TTransport transport = null;
     protected TProtocol protocol = null;
     private GraphService.Client client = null;
@@ -170,7 +176,7 @@ public class SyncConnection extends Connection {
                     try {
                         reopen();
                     } catch (ClientServerIncompatibleException ex) {
-                        throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                        LOGGER.error(ex.getMessage());
                     }
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }
@@ -196,7 +202,7 @@ public class SyncConnection extends Connection {
                     try {
                         reopen();
                     } catch (ClientServerIncompatibleException ex) {
-                        throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                        LOGGER.error(ex.getMessage());
                     }
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }

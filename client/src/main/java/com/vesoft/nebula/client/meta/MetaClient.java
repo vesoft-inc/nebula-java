@@ -61,7 +61,6 @@ public class MetaClient extends AbstractMetaClient {
     private static final int DEFAULT_TIMEOUT_MS = 1000;
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
-
     private static final int RETRY_TIMES = 1;
 
     private MetaService.Client client;
@@ -123,9 +122,13 @@ public class MetaClient extends AbstractMetaClient {
     }
 
     private void freshClient(HostAddr leader)
-            throws TTransportException, ClientServerIncompatibleException {
+            throws TTransportException {
         close();
-        getClient(leader.getHost(), leader.getPort());
+        try {
+            getClient(leader.getHost(), leader.getPort());
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**
@@ -158,8 +161,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
             throw e;
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSpaces();
@@ -194,8 +195,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Space Error: %s", e.getMessage()));
             throw e;
-        }  catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getItem();
@@ -231,8 +230,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             throw e;
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getTags();
@@ -273,8 +270,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Tag Error: %s", e.getMessage()));
             throw e;
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
@@ -310,8 +305,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             throw e;
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getEdges();
@@ -351,8 +344,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Edge Error: %s", e.getMessage()));
             throw e;
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getSchema();
@@ -391,8 +382,6 @@ public class MetaClient extends AbstractMetaClient {
         } catch (TException e) {
             LOGGER.error(String.format("Get Parts Error: %s", e.getMessage()));
             throw e;
-        } catch (ClientServerIncompatibleException e) {
-            LOGGER.error(String.format("List Spaces Error: %s", e.getMessage()));
         }
         if (response.getCode() == ErrorCode.SUCCEEDED) {
             return response.getParts();
@@ -420,7 +409,7 @@ public class MetaClient extends AbstractMetaClient {
                     break;
                 }
             }
-        } catch (TException | ClientServerIncompatibleException e) {
+        } catch (TException e) {
             LOGGER.error("listHosts error", e);
             return null;
         }

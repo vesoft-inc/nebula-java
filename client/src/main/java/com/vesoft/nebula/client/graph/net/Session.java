@@ -8,7 +8,6 @@ package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ExecutionResponse;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -62,7 +61,7 @@ public class Session {
      * @return The ResultSet
      */
     public synchronized ResultSet execute(String stmt) throws
-            IOErrorException, ClientServerIncompatibleException {
+            IOErrorException {
         if (connection == null) {
             throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
                 "The session was released, couldn't use again.");
@@ -161,7 +160,7 @@ public class Session {
      * @return The JSON string
      */
     public synchronized String executeJson(String stmt) throws
-            IOErrorException, ClientServerIncompatibleException {
+            IOErrorException {
         if (connection == null) {
             throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
                     "The session was released, couldn't use again.");
