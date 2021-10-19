@@ -29,11 +29,10 @@ import com.vesoft.nebula.graph.GraphService;
 import com.vesoft.nebula.graph.VerifyClientVersionReq;
 import com.vesoft.nebula.graph.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import javax.net.ssl.SSLSocketFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SyncConnection extends Connection {
 
