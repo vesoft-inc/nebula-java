@@ -109,16 +109,18 @@ public class TestDataFromServer {
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(POINT(3 8));";
+        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText(POINT"
+                             + "(3 8)));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(LINESTRING(3 8, 4.7 73.23));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(ST_GeogFromText(LINESTRING"
+                      + "(3 8, 4.7 73.23)));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(POLYGON((0 1, 1 2, 2 3,"
-                      + " 0 1)));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(ST_GeogFromText(POLYGON((0 "
+                      + "1, 1 2, 2 3, 0 1))));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
@@ -535,7 +537,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                                    + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
+                                    + "-selfsigned.yaml up -d");
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -544,6 +546,7 @@ public class TestDataFromServer {
                     "src/test/resources/ssl/selfsigned.pem",
                     "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
+            TimeUnit.SECONDS.sleep(45);
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
@@ -575,7 +578,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                         + "-casigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
+                         + "-casigned.yaml up -d");
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -584,6 +587,7 @@ public class TestDataFromServer {
                     "src/test/resources/ssl/casigned.pem",
                     "src/test/resources/ssl/casigned.crt",
                     "src/test/resources/ssl/casigned.key"));
+            TimeUnit.SECONDS.sleep(45);
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);

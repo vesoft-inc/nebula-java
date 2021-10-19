@@ -2,6 +2,7 @@ package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -18,7 +19,7 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
     }
 
     @Override
-    public SyncConnection create() throws IOErrorException {
+    public SyncConnection create() throws IOErrorException, ClientServerIncompatibleException {
         HostAddress address = loadBalancer.getAddress();
         if (address == null) {
             throw new IOErrorException(IOErrorException.E_ALL_BROKEN,

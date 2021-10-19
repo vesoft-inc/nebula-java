@@ -494,18 +494,18 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
         case PROPS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map34 = iprot.readMapBegin();
-              this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map34.size));
-              for (int _i35 = 0; 
-                   (_map34.size < 0) ? iprot.peekMap() : (_i35 < _map34.size); 
-                   ++_i35)
+              TMap _map46 = iprot.readMapBegin();
+              this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map46.size));
+              for (int _i47 = 0; 
+                   (_map46.size < 0) ? iprot.peekMap() : (_i47 < _map46.size); 
+                   ++_i47)
               {
-                byte[] _key36;
-                Value _val37;
-                _key36 = iprot.readBinary();
-                _val37 = new Value();
-                _val37.read(iprot);
-                this.props.put(_key36, _val37);
+                byte[] _key48;
+                Value _val49;
+                _key48 = iprot.readBinary();
+                _val49 = new Value();
+                _val49.read(iprot);
+                this.props.put(_key48, _val49);
               }
               iprot.readMapEnd();
             }
@@ -555,9 +555,9 @@ public class Edge implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PROPS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.props.size()));
-        for (Map.Entry<byte[], Value> _iter38 : this.props.entrySet())        {
-          oprot.writeBinary(_iter38.getKey());
-          _iter38.getValue().write(oprot);
+        for (Map.Entry<byte[], Value> _iter50 : this.props.entrySet())        {
+          oprot.writeBinary(_iter50.getKey());
+          _iter50.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

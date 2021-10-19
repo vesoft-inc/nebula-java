@@ -8,6 +8,7 @@ package com.vesoft.nebula.client.meta;
 
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
@@ -97,7 +98,7 @@ public class TestMetaManager extends TestCase {
         Assert.assertEquals(hostAddr.port, 4400);
     }
 
-    public void testMultiVersionSchema() {
+    public void testMultiVersionSchema() throws ClientServerIncompatibleException {
         MockNebulaGraph.createMultiVersionTagAndEdge();
         metaManager.close();
         metaManager = new MetaManager(

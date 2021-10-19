@@ -10,9 +10,11 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.GetEdgeReq;
@@ -39,6 +41,8 @@ import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import com.vesoft.nebula.meta.VerifyClientVersionReq;
+import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -57,7 +61,6 @@ public class MetaClient extends AbstractMetaClient {
     private static final int DEFAULT_TIMEOUT_MS = 1000;
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
-
     private static final int RETRY_TIMES = 1;
 
     private MetaService.Client client;
@@ -85,30 +88,47 @@ public class MetaClient extends AbstractMetaClient {
         this.addresses = addresses;
     }
 
-    public void connect() throws TException {
+    public void connect()
+            throws TException, ClientServerIncompatibleException {
         doConnect();
     }
 
     /**
      * connect nebula meta server
      */
-    private void doConnect() throws TTransportException {
+    private void doConnect()
+            throws TTransportException, ClientServerIncompatibleException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAddress address = addresses.get(position);
         getClient(address.getHost(), address.getPort());
     }
 
-    private void getClient(String host, int port) throws TTransportException {
+    private void getClient(String host, int port)
+            throws TTransportException, ClientServerIncompatibleException {
         transport = new TSocket(host, port, timeout, timeout);
         transport.open();
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
+
+        // check if client version matches server version
+        VerifyClientVersionResp resp =
+                client.verifyClientVersion(new VerifyClientVersionReq());
+        if (resp.getCode() != ErrorCode.SUCCEEDED) {
+            client.getInputProtocol().getTransport().close();
+            throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
+                    Charsets.UTF_8));
+        }
     }
 
-    private void freshClient(HostAddr leader) throws TTransportException {
+    private void freshClient(HostAddr leader)
+            throws TTransportException {
         close();
-        getClient(leader.getHost(), leader.getPort());
+        try {
+            getClient(leader.getHost(), leader.getPort());
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**
