@@ -237,16 +237,16 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
         case TAGS:
           if (__field.type == TType.LIST) {
             {
-              TList _list30 = iprot.readListBegin();
-              this.tags = new ArrayList<Tag>(Math.max(0, _list30.size));
-              for (int _i31 = 0; 
-                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
-                   ++_i31)
+              TList _list42 = iprot.readListBegin();
+              this.tags = new ArrayList<Tag>(Math.max(0, _list42.size));
+              for (int _i43 = 0; 
+                   (_list42.size < 0) ? iprot.peekList() : (_i43 < _list42.size); 
+                   ++_i43)
               {
-                Tag _elem32;
-                _elem32 = new Tag();
-                _elem32.read(iprot);
-                this.tags.add(_elem32);
+                Tag _elem44;
+                _elem44 = new Tag();
+                _elem44.read(iprot);
+                this.tags.add(_elem44);
               }
               iprot.readListEnd();
             }
@@ -280,8 +280,8 @@ public class Vertex implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(TAGS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tags.size()));
-        for (Tag _iter33 : this.tags)        {
-          _iter33.write(oprot);
+        for (Tag _iter45 : this.tags)        {
+          _iter45.write(oprot);
         }
         oprot.writeListEnd();
       }

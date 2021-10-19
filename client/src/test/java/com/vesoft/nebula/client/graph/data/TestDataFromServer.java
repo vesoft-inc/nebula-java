@@ -13,6 +13,7 @@ import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
@@ -459,7 +460,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                                    + "-selfsigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
+                                    + "-selfsigned.yaml up -d");
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -468,6 +469,7 @@ public class TestDataFromServer {
                     "src/test/resources/ssl/selfsigned.pem",
                     "src/test/resources/ssl/selfsigned.key",
                     "vesoft"));
+            TimeUnit.SECONDS.sleep(45);
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
@@ -499,7 +501,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                         + "-casigned.yaml up -d").waitFor(20,TimeUnit.SECONDS);
+                         + "-casigned.yaml up -d");
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -508,6 +510,7 @@ public class TestDataFromServer {
                     "src/test/resources/ssl/casigned.pem",
                     "src/test/resources/ssl/casigned.crt",
                     "src/test/resources/ssl/casigned.key"));
+            TimeUnit.SECONDS.sleep(45);
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);

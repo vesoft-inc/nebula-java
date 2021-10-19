@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.SessionsManagerConfig;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.net.UnknownHostException;
@@ -44,7 +45,8 @@ public class SessionsManager {
      * @return SessionWrapper
      * @throws RuntimeException the exception when get SessionWrapper
      */
-    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException {
+    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException,
+            ClientServerIncompatibleException {
         checkClose();
         if (pool == null) {
             init();

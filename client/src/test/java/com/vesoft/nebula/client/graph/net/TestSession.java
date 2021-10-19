@@ -6,21 +6,17 @@
 
 package com.vesoft.nebula.client.graph.net;
 
-import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.util.ProcessUtil;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -110,7 +106,9 @@ public class TestSession {
                     new HostAddress("127.0.0.1", 9669),
                     new HostAddress("127.0.0.1", 9670),
                     new HostAddress("127.0.0.1", 9671));
+            TimeUnit.SECONDS.sleep(15);
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
+            TimeUnit.SECONDS.sleep(15);
             Session session = pool.getSession("root", "nebula", true);
             System.out.println("The address of session is " + session.getGraphHost());
 

@@ -10,6 +10,7 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
@@ -49,7 +50,7 @@ public class MockStorageData {
                 assert (false);
             }
         } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException e) {
+                | IOErrorException | AuthFailedException | ClientServerIncompatibleException e) {
             e.printStackTrace();
         } finally {
             pool.close();

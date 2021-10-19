@@ -11,6 +11,7 @@ import com.vesoft.nebula.client.graph.SessionsManagerConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.InvalidSessionException;
@@ -45,7 +46,8 @@ public class TestSessionsManager {
             } catch (UnknownHostException
                 | NotValidConnectionException
                 | AuthFailedException
-                | InterruptedException e) {
+                | InterruptedException
+                | ClientServerIncompatibleException e) {
                 Assert.assertFalse(e.getMessage(), false);
             }
 
@@ -120,7 +122,7 @@ public class TestSessionsManager {
                 assert false;
             }
 
-        } catch (InvalidConfigException | IOErrorException e) {
+        } catch (InvalidConfigException | IOErrorException | ClientServerIncompatibleException e) {
             Assert.fail();
         }
     }

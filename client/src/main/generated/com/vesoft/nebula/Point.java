@@ -24,12 +24,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<PartitionBackupInfo> {
-  private static final TStruct STRUCT_DESC = new TStruct("PartitionBackupInfo");
-  private static final TField INFO_FIELD_DESC = new TField("info", TType.MAP, (short)1);
+public class Point implements TBase, java.io.Serializable, Cloneable, Comparable<Point> {
+  private static final TStruct STRUCT_DESC = new TStruct("Point");
+  private static final TField COORD_FIELD_DESC = new TField("coord", TType.STRUCT, (short)1);
 
-  public Map<Integer,LogInfo> info;
-  public static final int INFO = 1;
+  public Coordinate coord;
+  public static final int COORD = 1;
 
   // isset id assignments
 
@@ -37,40 +37,38 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
-        new MapMetaData(TType.MAP, 
-            new FieldValueMetaData(TType.I32), 
-            new StructMetaData(TType.STRUCT, LogInfo.class))));
+    tmpMetaDataMap.put(COORD, new FieldMetaData("coord", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, Coordinate.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(PartitionBackupInfo.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(Point.class, metaDataMap);
   }
 
-  public PartitionBackupInfo() {
+  public Point() {
   }
 
-  public PartitionBackupInfo(
-      Map<Integer,LogInfo> info) {
+  public Point(
+      Coordinate coord) {
     this();
-    this.info = info;
+    this.coord = coord;
   }
 
   public static class Builder {
-    private Map<Integer,LogInfo> info;
+    private Coordinate coord;
 
     public Builder() {
     }
 
-    public Builder setInfo(final Map<Integer,LogInfo> info) {
-      this.info = info;
+    public Builder setCoord(final Coordinate coord) {
+      this.coord = coord;
       return this;
     }
 
-    public PartitionBackupInfo build() {
-      PartitionBackupInfo result = new PartitionBackupInfo();
-      result.setInfo(this.info);
+    public Point build() {
+      Point result = new Point();
+      result.setCoord(this.coord);
       return result;
     }
   }
@@ -82,48 +80,47 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public PartitionBackupInfo(PartitionBackupInfo other) {
-    if (other.isSetInfo()) {
-      this.info = TBaseHelper.deepCopy(other.info);
+  public Point(Point other) {
+    if (other.isSetCoord()) {
+      this.coord = TBaseHelper.deepCopy(other.coord);
     }
   }
 
-  public PartitionBackupInfo deepCopy() {
-    return new PartitionBackupInfo(this);
+  public Point deepCopy() {
+    return new Point(this);
   }
 
-  public Map<Integer,LogInfo> getInfo() {
-    return this.info;
+  public Coordinate getCoord() {
+    return this.coord;
   }
 
-  public PartitionBackupInfo setInfo(Map<Integer,LogInfo> info) {
-    this.info = info;
+  public Point setCoord(Coordinate coord) {
+    this.coord = coord;
     return this;
   }
 
-  public void unsetInfo() {
-    this.info = null;
+  public void unsetCoord() {
+    this.coord = null;
   }
 
-  // Returns true if field info is set (has been assigned a value) and false otherwise
-  public boolean isSetInfo() {
-    return this.info != null;
+  // Returns true if field coord is set (has been assigned a value) and false otherwise
+  public boolean isSetCoord() {
+    return this.coord != null;
   }
 
-  public void setInfoIsSet(boolean __value) {
+  public void setCoordIsSet(boolean __value) {
     if (!__value) {
-      this.info = null;
+      this.coord = null;
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case INFO:
+    case COORD:
       if (__value == null) {
-        unsetInfo();
+        unsetCoord();
       } else {
-        setInfo((Map<Integer,LogInfo>)__value);
+        setCoord((Coordinate)__value);
       }
       break;
 
@@ -134,8 +131,8 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case INFO:
-      return getInfo();
+    case COORD:
+      return getCoord();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -148,22 +145,22 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof PartitionBackupInfo))
+    if (!(_that instanceof Point))
       return false;
-    PartitionBackupInfo that = (PartitionBackupInfo)_that;
+    Point that = (Point)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetCoord(), that.isSetCoord(), this.coord, that.coord)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {info});
+    return Arrays.deepHashCode(new Object[] {coord});
   }
 
   @Override
-  public int compareTo(PartitionBackupInfo other) {
+  public int compareTo(Point other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -174,11 +171,11 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
+    lastComparison = Boolean.valueOf(isSetCoord()).compareTo(other.isSetCoord());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(info, other.info);
+    lastComparison = TBaseHelper.compareTo(coord, other.coord);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -196,24 +193,10 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       }
       switch (__field.id)
       {
-        case INFO:
-          if (__field.type == TType.MAP) {
-            {
-              TMap _map64 = iprot.readMapBegin();
-              this.info = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map64.size));
-              for (int _i65 = 0; 
-                   (_map64.size < 0) ? iprot.peekMap() : (_i65 < _map64.size); 
-                   ++_i65)
-              {
-                int _key66;
-                LogInfo _val67;
-                _key66 = iprot.readI32();
-                _val67 = new LogInfo();
-                _val67.read(iprot);
-                this.info.put(_key66, _val67);
-              }
-              iprot.readMapEnd();
-            }
+        case COORD:
+          if (__field.type == TType.STRUCT) {
+            this.coord = new Coordinate();
+            this.coord.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -235,16 +218,9 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.info != null) {
-      oprot.writeFieldBegin(INFO_FIELD_DESC);
-      {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.info.size()));
-        for (Map.Entry<Integer, LogInfo> _iter68 : this.info.entrySet())        {
-          oprot.writeI32(_iter68.getKey());
-          _iter68.getValue().write(oprot);
-        }
-        oprot.writeMapEnd();
-      }
+    if (this.coord != null) {
+      oprot.writeFieldBegin(COORD_FIELD_DESC);
+      this.coord.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -261,20 +237,20 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("PartitionBackupInfo");
+    StringBuilder sb = new StringBuilder("Point");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("info");
+    sb.append("coord");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getInfo() == null) {
+    if (this.getCoord() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getInfo(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getCoord(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

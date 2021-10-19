@@ -128,6 +128,11 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_USER_CANCEL(-3052),
   E_TASK_EXECUTION_FAILED(-3053),
   E_PLAN_IS_KILLED(-3060),
+  E_NO_TERM(-3070),
+  E_OUTDATED_TERM(-3071),
+  E_OUTDATED_EDGE(-3072),
+  E_WRITE_WRITE_CONFLICT(-3073),
+  E_CLIENT_SERVER_INCOMPATIBLE(-3061),
   E_UNKNOWN(-8000);
 
   private static final Map<Integer, ErrorCode> INDEXED_VALUES = new HashMap<Integer, ErrorCode>();

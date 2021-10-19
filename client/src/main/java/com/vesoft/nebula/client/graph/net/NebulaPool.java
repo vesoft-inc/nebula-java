@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
@@ -129,7 +130,8 @@ public class NebulaPool {
      * @throws AuthFailedException if authenticate failed
      */
     public Session getSession(String userName, String password, boolean reconnect)
-            throws NotValidConnectionException, IOErrorException, AuthFailedException {
+            throws NotValidConnectionException, IOErrorException, AuthFailedException,
+            ClientServerIncompatibleException {
         checkNoInitAndClosed();
         SyncConnection connection = null;
         try {

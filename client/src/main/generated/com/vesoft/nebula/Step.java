@@ -432,18 +432,18 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
         case PROPS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map39 = iprot.readMapBegin();
-              this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map39.size));
-              for (int _i40 = 0; 
-                   (_map39.size < 0) ? iprot.peekMap() : (_i40 < _map39.size); 
-                   ++_i40)
+              TMap _map51 = iprot.readMapBegin();
+              this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map51.size));
+              for (int _i52 = 0; 
+                   (_map51.size < 0) ? iprot.peekMap() : (_i52 < _map51.size); 
+                   ++_i52)
               {
-                byte[] _key41;
-                Value _val42;
-                _key41 = iprot.readBinary();
-                _val42 = new Value();
-                _val42.read(iprot);
-                this.props.put(_key41, _val42);
+                byte[] _key53;
+                Value _val54;
+                _key53 = iprot.readBinary();
+                _val54 = new Value();
+                _val54.read(iprot);
+                this.props.put(_key53, _val54);
               }
               iprot.readMapEnd();
             }
@@ -488,9 +488,9 @@ public class Step implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PROPS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.props.size()));
-        for (Map.Entry<byte[], Value> _iter43 : this.props.entrySet())        {
-          oprot.writeBinary(_iter43.getKey());
-          _iter43.getValue().write(oprot);
+        for (Map.Entry<byte[], Value> _iter55 : this.props.entrySet())        {
+          oprot.writeBinary(_iter55.getKey());
+          _iter55.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
