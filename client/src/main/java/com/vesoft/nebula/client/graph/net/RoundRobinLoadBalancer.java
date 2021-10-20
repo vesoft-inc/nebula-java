@@ -83,6 +83,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
             connection.close();
             return true;
         } catch (IOErrorException | ClientServerIncompatibleException e) {
+            LOGGER.error("ping failed", e);
             return false;
         }
     }
