@@ -109,18 +109,18 @@ public class TestDataFromServer {
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText(POINT"
-                             + "(3 8)));";
+        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT"
+                             + "(3 8)'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(ST_GeogFromText(LINESTRING"
-                      + "(3 8, 4.7 73.23)));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(ST_GeogFromText('LINESTRING"
+                      + "(3 8, 4.7 73.23)'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(ST_GeogFromText(POLYGON((0 "
-                      + "1, 1 2, 2 3, 0 1))));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(ST_GeogFromText('POLYGON((0 "
+                      + "1, 1 2, 2 3, 0 1))'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
@@ -203,11 +203,16 @@ public class TestDataFromServer {
             Assert.assertFalse(result.isEmpty());
             Assert.assertEquals(1, result.rowsSize());
 
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Point", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
             GeographyWrapper geographyWrapper = new GeographyWrapper(
                     new Geography(Geography.PTVAL, new Point(new Coordinate(3, 8))));
-            Assert.assertEquals(geographyWrapper, result.rowValues(0).get(0).asGeography());
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
             Assert.assertEquals(geographyWrapper.toString(),
-                    result.rowValues(0).get(0).asGeography().toString());
+                    properties.get("geo").asGeography().toString());
 
             result = session.execute("FETCH PROP ON any_shape 'LString';");
             Assert.assertTrue(result.isSucceeded());
@@ -219,12 +224,17 @@ public class TestDataFromServer {
             Assert.assertFalse(result.isEmpty());
             Assert.assertEquals(1, result.rowsSize());
 
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("LString", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
             geographyWrapper = new GeographyWrapper(
                     new Geography(Geography.LSVAL, new LineString(Arrays.asList(new Coordinate(3,
                             8), new Coordinate(4.7, 73.23)))));
-            Assert.assertEquals(geographyWrapper, result.rowValues(0).get(0).asGeography());
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
             Assert.assertEquals(geographyWrapper.toString(),
-                    result.rowValues(0).get(0).asGeography().toString());
+                    properties.get("geo").asGeography().toString());
 
 
             result = session.execute("FETCH PROP ON any_shape 'Polygon';");
@@ -237,17 +247,22 @@ public class TestDataFromServer {
             Assert.assertFalse(result.isEmpty());
             Assert.assertEquals(1, result.rowsSize());
 
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Polygon", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
             geographyWrapper = new GeographyWrapper(
                     new Geography(Geography.PGVAL,
                         new Polygon(Arrays.asList(Arrays.asList(
-                                new Coordinate(1, 1),
+                                new Coordinate(0, 1),
                                 new Coordinate(1, 2),
                                 new Coordinate(2, 3),
                                 new Coordinate(0,1))
                         ))));
-            Assert.assertEquals(geographyWrapper, result.rowValues(0).get(0).asGeography());
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
             Assert.assertEquals(geographyWrapper.toString(),
-                    result.rowValues(0).get(0).asGeography().toString());
+                    properties.get("geo").asGeography().toString());
 
 
         } catch (IOErrorException | UnsupportedEncodingException e) {
