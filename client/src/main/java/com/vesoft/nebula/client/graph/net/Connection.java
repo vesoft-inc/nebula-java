@@ -15,6 +15,7 @@ public abstract class Connection {
     public abstract void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException;
 
+
     public abstract void open(HostAddress address, int timeout) throws IOErrorException,
             ClientServerIncompatibleException;
 

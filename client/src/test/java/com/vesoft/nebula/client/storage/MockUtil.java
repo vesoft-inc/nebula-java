@@ -6,9 +6,13 @@
 
 package com.vesoft.nebula.client.storage;
 
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Geography;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
@@ -26,7 +30,8 @@ public class MockUtil {
         columnNames.add("person.double_col3".getBytes());
         columnNames.add("person.date_col4".getBytes());
         columnNames.add("person.time_col5".getBytes());
-        columnNames.add("person.datetime_col5".getBytes());
+        columnNames.add("person.datetime_col6".getBytes());
+        columnNames.add("person.geography_col7".getBytes());
 
         // row 1
         List<Value> values1 = new ArrayList<>();
@@ -38,6 +43,8 @@ public class MockUtil {
         values1.add(Value.tVal(new Time((byte) 12, (byte) 1, (byte) 1, 100)));
         values1.add(Value.dtVal(new DateTime((short) 2020, (byte) 1, (byte) 1, (byte) 12,
                 (byte) 10, (byte) 30, 100)));
+        values1.add(Value.ggVal(new Geography(Geography.PTVAL,
+                new Point(new Coordinate(1.0,1.5)))));
 
         List<Row> rows = new ArrayList<>();
         rows.add(new Row(values1));

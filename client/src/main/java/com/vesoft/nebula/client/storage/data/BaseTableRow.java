@@ -8,6 +8,7 @@ package com.vesoft.nebula.client.storage.data;
 
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
+import com.vesoft.nebula.client.graph.data.GeographyWrapper;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import java.io.UnsupportedEncodingException;
@@ -60,7 +61,6 @@ public class BaseTableRow {
         return values.get(i).asDate();
     }
 
-
     public TimeWrapper getTime(int i) {
         return values.get(i).asTime();
     }
@@ -69,9 +69,14 @@ public class BaseTableRow {
         return values.get(i).asDateTime();
     }
 
+    public GeographyWrapper getGeography(int i) {
+        return values.get(i).asGeography();
+    }
+
     public List<ValueWrapper> getValues() {
         return values;
     }
+
 
     /**
      * Displays all elements of this vertexTableRow in a string using a separator string.
