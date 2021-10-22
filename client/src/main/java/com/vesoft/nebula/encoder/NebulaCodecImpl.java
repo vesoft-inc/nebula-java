@@ -199,7 +199,7 @@ public class NebulaCodecImpl implements NebulaCodec {
         SchemaProviderImpl schemaProvider = new SchemaProviderImpl(ver);
         for (ColumnDef col : schema.getColumns()) {
             ColumnTypeDef type = col.getType();
-            boolean nullable = col.isSetNullable();
+            boolean nullable = col.isSetNullable() && col.isNullable();
             boolean hasDefault = col.isSetDefault_value();
             int len = type.isSetType_length() ? type.getType_length() : 0;
             schemaProvider.addField(new String(col.getName()),

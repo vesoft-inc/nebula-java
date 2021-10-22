@@ -831,6 +831,7 @@ public class RowWriterImpl implements RowWriter {
                 // Set the new offset and length
                 temp.putInt(offset, 0);
                 temp.putInt(offset + Integer.BYTES, 0);
+                continue;
             } else {
                 // Out of space string
                 if (strNum >= strList.size()) {
