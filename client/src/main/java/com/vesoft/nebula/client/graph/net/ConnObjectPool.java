@@ -2,6 +2,7 @@ package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -9,7 +10,7 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
     private final NebulaPoolConfig config;
-    private LoadBalancer loadBalancer;
+    private final LoadBalancer loadBalancer;
     private static final int retryTime = 3;
 
     public ConnObjectPool(LoadBalancer loadBalancer, NebulaPoolConfig config) {
@@ -18,7 +19,7 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
     }
 
     @Override
-    public SyncConnection create() throws IOErrorException {
+    public SyncConnection create() throws IOErrorException, ClientServerIncompatibleException {
         HostAddress address = loadBalancer.getAddress();
         if (address == null) {
             throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
@@ -28,7 +29,15 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
         SyncConnection conn = new SyncConnection();
         while (retry-- > 0) {
             try {
-                conn.open(address, config.getTimeout());
+                if (config.isEnableSsl()) {
+                    if (config.getSslParam() == null) {
+                        throw new IllegalArgumentException("SSL Param is required when enableSsl "
+                                                           + "is set to true");
+                    }
+                    conn.open(address, config.getTimeout(), config.getSslParam());
+                } else {
+                    conn.open(address, config.getTimeout());
+                }
                 return conn;
             } catch (IOErrorException e) {
                 if (retry == 0) {

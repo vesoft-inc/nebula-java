@@ -7,6 +7,7 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
@@ -40,7 +41,7 @@ public class TestMetaClient extends TestCase {
         metaClient = new MetaClient(address, port);
         try {
             metaClient.connect();
-        } catch (TException e) {
+        } catch (TException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -51,7 +52,7 @@ public class TestMetaClient extends TestCase {
         MetaClient client = new MetaClient(address, port);
         try {
             client.connect();
-        } catch (TException e) {
+        } catch (TException | ClientServerIncompatibleException e) {
             assert (true);
         }
     }

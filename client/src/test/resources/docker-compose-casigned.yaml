@@ -1,0 +1,135 @@
+version: '3.4'
+services:
+  metad-casigned:
+    image: vesoft/nebula-metad:nightly
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+    command:
+      - --meta_server_addrs=172.29.1.1:8559
+      - --local_ip=172.29.1.1
+      - --ws_ip=172.29.1.1
+      - --port=8559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+      - --heartbeat_interval_secs=2
+      - --expired_time_factor=2
+      - --ws_h2_port=11000
+      - --cert_path=/share/resources/test.derive.crt
+      - --key_path=/share/resources/test.derive.key
+      - --password_path=/share/resources/test.ca.password
+      - --enable_ssl=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://172.29.1.1:11000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "8559:8559"
+      - 11000
+      - 11002
+    volumes:
+      - ./data/meta:/data/meta:Z
+      - ./logs/meta:/logs:Z
+      - ./ssl:/share/resources:Z
+    networks:
+      nebula-net-casigned:
+        ipv4_address: 172.29.1.1
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+
+  storaged-casigned:
+    image: vesoft/nebula-storaged:nightly
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+    command:
+      - --meta_server_addrs=172.29.1.1:8559
+      - --local_ip=172.29.2.1
+      - --ws_ip=172.29.2.1
+      - --port=8779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+      - --heartbeat_interval_secs=2
+      - --timezone_name=+08:00:00
+      - --ws_h2_port=12000
+      - --cert_path=/share/resources/test.derive.crt
+      - --key_path=/share/resources/test.derive.key
+      - --password_path=/share/resources/test.ca.password
+      - --enable_ssl=true
+    depends_on:
+      - metad-casigned
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://172.29.2.1:12000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "8779:8779"
+      - 12000
+      - 12002
+    volumes:
+      - ./data/storage:/data/storage:Z
+      - ./logs/storage:/logs:Z
+      - ./ssl:/share/resources:Z
+    networks:
+      nebula-net-casigned:
+        ipv4_address: 172.29.2.1
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+
+  graphd-casigned:
+    image: vesoft/nebula-graphd:nightly
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+    command:
+      - --meta_server_addrs=172.29.1.1:8559
+      - --port=8669
+      - --ws_ip=172.29.3.1
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+      - --heartbeat_interval_secs=2
+      - --timezone_name=+08:00:00
+      - --ws_h2_port=13000
+      - --cert_path=/share/resources/test.derive.crt
+      - --key_path=/share/resources/test.derive.key
+      - --password_path=/share/resources/test.ca.password
+      - --enable_ssl=true
+    depends_on:
+      - metad-casigned
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://172.29.3.1:13000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "8669:8669"
+      - 13000
+      - 13002
+    volumes:
+      - ./logs/graph:/logs:Z
+      - ./ssl:/share/resources:Z
+    networks:
+      nebula-net-casigned:
+        ipv4_address: 172.29.3.1
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+
+networks:
+  nebula-net-casigned:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.29.0.0/16

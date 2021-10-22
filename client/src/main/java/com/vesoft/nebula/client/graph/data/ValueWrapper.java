@@ -87,6 +87,8 @@ public class ValueWrapper {
                 return "SET";
             case Value.GVAL:
                 return "DATASET";
+            case Value.GGVAL:
+                return "GEOGRAPHY";
             default:
                 throw new IllegalArgumentException("Unknown field id " + value.getSetField());
         }
@@ -241,6 +243,14 @@ public class ValueWrapper {
      */
     public boolean isPath() {
         return value.getSetField() == Value.PVAL;
+    }
+
+    /**
+     * judge the Value is Geography type, the Geography type is the nebula's type
+     * @return boolean
+     */
+    public boolean isGeography() {
+        return value.getSetField() == Value.GGVAL;
     }
 
     /**
@@ -442,7 +452,7 @@ public class ValueWrapper {
 
     /**
      * Convert the original data type Value to Path
-     * @return Path
+     * @return PathWrapper
      * @throws InvalidValueException if the value type is not path
      * @throws UnsupportedEncodingException if decode bianry failed
      */
@@ -454,6 +464,21 @@ public class ValueWrapper {
         }
         throw new InvalidValueException(
                 "Cannot get field PathWrapper because value's type is " + descType());
+    }
+
+    /**
+     * Convert the original data type Value to geography
+     * @return GeographyWrapper
+     * @throws InvalidValueException if the value type is not geography
+     */
+    public GeographyWrapper asGeography() throws InvalidValueException {
+        if (value.getSetField() == Value.GGVAL) {
+            return (GeographyWrapper) new GeographyWrapper(value.getGgVal())
+                    .setDecodeType(decodeType)
+                    .setTimezoneOffset(timezoneOffset);
+        }
+        throw new InvalidValueException(
+                "Cannot get field GeographyWrapper because value's type is " + descType());
     }
 
     @Override
@@ -511,6 +536,8 @@ public class ValueWrapper {
                 return asRelationship().toString();
             } else if (isPath()) {
                 return asPath().toString();
+            } else if (isGeography()) {
+                return asGeography().toString();
             }
             return "Unknown type: " + descType();
         } catch (UnsupportedEncodingException e) {

@@ -199,18 +199,18 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
         case INFO:
           if (__field.type == TType.MAP) {
             {
-              TMap _map52 = iprot.readMapBegin();
-              this.info = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map52.size));
-              for (int _i53 = 0; 
-                   (_map52.size < 0) ? iprot.peekMap() : (_i53 < _map52.size); 
-                   ++_i53)
+              TMap _map64 = iprot.readMapBegin();
+              this.info = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map64.size));
+              for (int _i65 = 0; 
+                   (_map64.size < 0) ? iprot.peekMap() : (_i65 < _map64.size); 
+                   ++_i65)
               {
-                int _key54;
-                LogInfo _val55;
-                _key54 = iprot.readI32();
-                _val55 = new LogInfo();
-                _val55.read(iprot);
-                this.info.put(_key54, _val55);
+                int _key66;
+                LogInfo _val67;
+                _key66 = iprot.readI32();
+                _val67 = new LogInfo();
+                _val67.read(iprot);
+                this.info.put(_key66, _val67);
               }
               iprot.readMapEnd();
             }
@@ -239,9 +239,9 @@ public class PartitionBackupInfo implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(INFO_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.info.size()));
-        for (Map.Entry<Integer, LogInfo> _iter56 : this.info.entrySet())        {
-          oprot.writeI32(_iter56.getKey());
-          _iter56.getValue().write(oprot);
+        for (Map.Entry<Integer, LogInfo> _iter68 : this.info.entrySet())        {
+          oprot.writeI32(_iter68.getKey());
+          _iter68.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

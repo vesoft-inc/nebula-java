@@ -10,6 +10,7 @@ import com.facebook.thrift.TException;
 import com.google.common.collect.Maps;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
@@ -49,7 +50,8 @@ public class MetaManager implements MetaCache {
     /**
      * init the meta info cache
      */
-    public MetaManager(List<HostAddress> address) throws TException {
+    public MetaManager(List<HostAddress> address)
+            throws TException, ClientServerIncompatibleException {
         metaClient = new MetaClient(address);
         metaClient.connect();
         fillMetaInfo();

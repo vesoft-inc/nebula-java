@@ -237,18 +237,18 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
         case PROPS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map25 = iprot.readMapBegin();
-              this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map25.size));
-              for (int _i26 = 0; 
-                   (_map25.size < 0) ? iprot.peekMap() : (_i26 < _map25.size); 
-                   ++_i26)
+              TMap _map37 = iprot.readMapBegin();
+              this.props = new HashMap<byte[],Value>(Math.max(0, 2*_map37.size));
+              for (int _i38 = 0; 
+                   (_map37.size < 0) ? iprot.peekMap() : (_i38 < _map37.size); 
+                   ++_i38)
               {
-                byte[] _key27;
-                Value _val28;
-                _key27 = iprot.readBinary();
-                _val28 = new Value();
-                _val28.read(iprot);
-                this.props.put(_key27, _val28);
+                byte[] _key39;
+                Value _val40;
+                _key39 = iprot.readBinary();
+                _val40 = new Value();
+                _val40.read(iprot);
+                this.props.put(_key39, _val40);
               }
               iprot.readMapEnd();
             }
@@ -282,9 +282,9 @@ public class Tag implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(PROPS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.props.size()));
-        for (Map.Entry<byte[], Value> _iter29 : this.props.entrySet())        {
-          oprot.writeBinary(_iter29.getKey());
-          _iter29.getValue().write(oprot);
+        for (Map.Entry<byte[], Value> _iter41 : this.props.entrySet())        {
+          oprot.writeBinary(_iter41.getKey());
+          _iter41.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

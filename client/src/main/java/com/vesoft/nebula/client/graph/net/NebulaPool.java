@@ -9,6 +9,7 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
@@ -85,7 +86,9 @@ public class NebulaPool {
         checkConfig(config);
         this.waitTime = config.getWaitTime();
         List<HostAddress> newAddrs = hostToIp(addresses);
-        this.loadBalancer = new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
+        this.loadBalancer = config.isEnableSsl()
+                ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam())
+                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
@@ -127,7 +130,8 @@ public class NebulaPool {
      * @throws AuthFailedException if authenticate failed
      */
     public Session getSession(String userName, String password, boolean reconnect)
-            throws NotValidConnectionException, IOErrorException, AuthFailedException {
+            throws NotValidConnectionException, IOErrorException, AuthFailedException,
+            ClientServerIncompatibleException {
         checkNoInitAndClosed();
         SyncConnection connection = null;
         try {

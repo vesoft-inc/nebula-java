@@ -60,7 +60,8 @@ public class Session {
      *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
      * @return The ResultSet
      */
-    public synchronized ResultSet execute(String stmt) throws IOErrorException {
+    public synchronized ResultSet execute(String stmt) throws
+            IOErrorException {
         if (connection == null) {
             throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
                 "The session was released, couldn't use again.");
@@ -158,7 +159,8 @@ public class Session {
      *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
      * @return The JSON string
      */
-    public synchronized String executeJson(String stmt) throws IOErrorException {
+    public synchronized String executeJson(String stmt) throws
+            IOErrorException {
         if (connection == null) {
             throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
                     "The session was released, couldn't use again.");

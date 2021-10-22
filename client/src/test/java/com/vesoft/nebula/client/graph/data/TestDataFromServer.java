@@ -8,9 +8,14 @@ package com.vesoft.nebula.client.graph.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Geography;
+import com.vesoft.nebula.LineString;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
@@ -53,7 +58,8 @@ public class TestDataFromServer {
                 + "CREATE TAG IF NOT EXISTS student(name string);"
                 + "CREATE EDGE IF NOT EXISTS like(likeness double);"
                 + "CREATE EDGE IF NOT EXISTS friend(start_year int, end_year int);"
-                + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));");
+                + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));"
+                + "CREATE TAG IF NOT EXISTS any_shape(geo geography);");
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
         TimeUnit.SECONDS.sleep(6);
         String insertVertexes = "INSERT VERTEX person(name, age, grade,friends, book_num, "
@@ -101,6 +107,21 @@ public class TestDataFromServer {
                 + "'Tom'->'Jerry'@100:(2018, 2020), "
                 + "'Bob'->'John'@100:(2018, 2020);";
         resp = session.execute(insertEdges);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT"
+                             + "(3 8)'));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(ST_GeogFromText('LINESTRING"
+                      + "(3 8, 4.7 73.23)'));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(ST_GeogFromText('POLYGON((0 "
+                      + "1, 1 2, 2 3, 0 1))'));";
+        resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
 
@@ -171,6 +192,78 @@ public class TestDataFromServer {
             Assert.assertEquals(1111, properties.get("first_out_city").asLong());
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
                     properties.get("hobby").asNull().getNullType());
+
+            result = session.execute("FETCH PROP ON any_shape 'Point';");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Point", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
+            GeographyWrapper geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.PTVAL, new Point(new Coordinate(3, 8))));
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    properties.get("geo").asGeography().toString());
+
+            result = session.execute("FETCH PROP ON any_shape 'LString';");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("LString", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
+            geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.LSVAL, new LineString(Arrays.asList(new Coordinate(3,
+                            8), new Coordinate(4.7, 73.23)))));
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    properties.get("geo").asGeography().toString());
+
+
+            result = session.execute("FETCH PROP ON any_shape 'Polygon';");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Polygon", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
+            geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.PGVAL,
+                        new Polygon(Arrays.asList(Arrays.asList(
+                                new Coordinate(0, 1),
+                                new Coordinate(1, 2),
+                                new Coordinate(2, 3),
+                                new Coordinate(0,1))
+                        ))));
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    properties.get("geo").asGeography().toString());
+
 
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -449,6 +542,88 @@ public class TestDataFromServer {
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
+        }
+    }
+
+    @Test
+    public void testSelfSignedSsl() {
+        Session sslSession = null;
+        NebulaPool sslPool = new NebulaPool();
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                                    + "-selfsigned.yaml up -d");
+
+            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+            nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
+            nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
+                    "vesoft"));
+            TimeUnit.SECONDS.sleep(45);
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
+                    nebulaSslPoolConfig));
+            sslSession = sslPool.getSession("root", "nebula", true);
+
+            String ngql = "YIELD 1";
+            JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1]";
+            Assert.assertEquals(rowData, exp);
+
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-selfsigned.yaml down").waitFor(60,TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (sslSession != null) {
+                sslSession.release();
+            }
+            sslPool.close();
+        }
+    }
+
+    @Test
+    public void testCASignedSsl() {
+        Session sslSession = null;
+        NebulaPool sslPool = new NebulaPool();
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-casigned.yaml up -d");
+
+            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+            nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
+            nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key"));
+            TimeUnit.SECONDS.sleep(45);
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
+                    nebulaSslPoolConfig));
+            sslSession = sslPool.getSession("root", "nebula", true);
+
+            String ngql = "YIELD 1";
+            JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1]";
+            Assert.assertEquals(rowData, exp);
+
+            runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                         + "-casigned.yaml down").waitFor(60,TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (sslSession != null) {
+                sslSession.release();
+            }
+            sslPool.close();
         }
     }
 }
