@@ -109,18 +109,18 @@ public class TestDataFromServer {
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        String insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT"
-                             + "(3 8)'));";
+        String insertShape =
+                "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT(3 8)'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':(ST_GeogFromText('LINESTRING"
-                      + "(3 8, 4.7 73.23)'));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':"
+                + "(ST_GeogFromText('LINESTRING(3 8, 4.7 73.23)'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':(ST_GeogFromText('POLYGON((0 "
-                      + "1, 1 2, 2 3, 0 1))'));";
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':"
+                + "(ST_GeogFromText('POLYGON((0 1, 1 2, 2 3, 0 1))'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
@@ -136,7 +136,8 @@ public class TestDataFromServer {
     @Test
     public void testAllSchemaType() {
         try {
-            ResultSet result = session.execute("FETCH PROP ON person 'Bob';");
+            ResultSet result = session.execute(
+                    "FETCH PROP ON person 'Bob' yield vertex as vertices_;");
             Assert.assertTrue(result.isSucceeded());
             Assert.assertEquals("", result.getErrorMessage());
             Assert.assertFalse(result.getLatency() <= 0);
@@ -193,7 +194,8 @@ public class TestDataFromServer {
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
                     properties.get("hobby").asNull().getNullType());
 
-            result = session.execute("FETCH PROP ON any_shape 'Point';");
+            result = session.execute(
+                    "FETCH PROP ON any_shape 'Point' yield vertex as vertices_;");
             Assert.assertTrue(result.isSucceeded());
             Assert.assertEquals("", result.getErrorMessage());
             Assert.assertFalse(result.getLatency() <= 0);
@@ -214,7 +216,8 @@ public class TestDataFromServer {
             Assert.assertEquals(geographyWrapper.toString(),
                     properties.get("geo").asGeography().toString());
 
-            result = session.execute("FETCH PROP ON any_shape 'LString';");
+            result = session.execute(
+                    "FETCH PROP ON any_shape 'LString' yield vertex as vertices_;");
             Assert.assertTrue(result.isSucceeded());
             Assert.assertEquals("", result.getErrorMessage());
             Assert.assertFalse(result.getLatency() <= 0);
@@ -237,7 +240,8 @@ public class TestDataFromServer {
                     properties.get("geo").asGeography().toString());
 
 
-            result = session.execute("FETCH PROP ON any_shape 'Polygon';");
+            result = session.execute(
+                    "FETCH PROP ON any_shape 'Polygon' yield vertex as vertices_;");
             Assert.assertTrue(result.isSucceeded());
             Assert.assertEquals("", result.getErrorMessage());
             Assert.assertFalse(result.getLatency() <= 0);
@@ -254,12 +258,12 @@ public class TestDataFromServer {
             properties = node.properties("any_shape");
             geographyWrapper = new GeographyWrapper(
                     new Geography(Geography.PGVAL,
-                        new Polygon(Arrays.asList(Arrays.asList(
-                                new Coordinate(0, 1),
-                                new Coordinate(1, 2),
-                                new Coordinate(2, 3),
-                                new Coordinate(0,1))
-                        ))));
+                            new Polygon(Arrays.asList(Arrays.asList(
+                                    new Coordinate(0, 1),
+                                    new Coordinate(1, 2),
+                                    new Coordinate(2, 3),
+                                    new Coordinate(0, 1))
+                            ))));
             Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
             Assert.assertEquals(geographyWrapper.toString(),
                     properties.get("geo").asGeography().toString());
@@ -478,7 +482,8 @@ public class TestDataFromServer {
     @Test
     public void testErrorResult() {
         try {
-            ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
+            ResultSet result = session.execute(
+                    "FETCH PROP ON no_exist_tag \"nobody\" yield vertex as vertices_");
             Assert.assertTrue(result.toString().contains("ExecutionResponse"));
         } catch (IOErrorException e) {
             e.printStackTrace();
@@ -514,11 +519,11 @@ public class TestDataFromServer {
             String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
                     .getJSONObject(0).getJSONArray("row").toJSONString();
             Assert.assertEquals(rowData, "[{\"person.first_out_city\":1111,\"person"
-                + ".book_num\":100,\"person.age\":10,\"person.expend\":100,\"person.is_girl\":"
-                + "false,\"person.name\":\"Bob\",\"person.grade\":3,\"person.birthday\":\"2010"
-                + "-09-10T02:08:02.0Z\",\"student.name\":\"Bob\",\"person.child_name\":\"Hello"
-                + " Worl\",\"person.property\":1000,\"person.morning\":\"23:10:00.000000Z\",\""
-                + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
+                    + ".book_num\":100,\"person.age\":10,\"person.expend\":100,\"person.is_girl\":"
+                    + "false,\"person.name\":\"Bob\",\"person.grade\":3,\"person.birthday\":\"2010"
+                    + "-09-10T02:08:02.0Z\",\"student.name\":\"Bob\",\"person.child_name\":\"Hello"
+                    + " Worl\",\"person.property\":1000,\"person.morning\":\"23:10:00.000000Z\",\""
+                    + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
@@ -552,7 +557,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                                    + "-selfsigned.yaml up -d");
+                    + "-selfsigned.yaml up -d");
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -574,7 +579,7 @@ public class TestDataFromServer {
             Assert.assertEquals(rowData, exp);
 
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                         + "-selfsigned.yaml down").waitFor(60,TimeUnit.SECONDS);
+                    + "-selfsigned.yaml down").waitFor(60, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -593,7 +598,7 @@ public class TestDataFromServer {
         try {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                         + "-casigned.yaml up -d");
+                    + "-casigned.yaml up -d");
 
             NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
             nebulaSslPoolConfig.setMaxConnSize(100);
@@ -615,7 +620,7 @@ public class TestDataFromServer {
             Assert.assertEquals(rowData, exp);
 
             runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                         + "-casigned.yaml down").waitFor(60,TimeUnit.SECONDS);
+                    + "-casigned.yaml down").waitFor(60, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
