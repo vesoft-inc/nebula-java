@@ -63,7 +63,8 @@ There are the version correspondence between client and Nebula:
 |    2.0.0-beta  |      2.0.0-beta     |
 |    2.0.0-rc1   |       2.0.0-rc1     |
 |  2.0.0/2.0.1   |    2.0.0/2.0.1      |
-|    2.5.0       |      >= 2.5.0       |
+|    2.5.0       |        2.5.0        |
+|    2.6.0       |        2.6.0        |
 |  2.0.0-SNAPSHOT|    2.0.0-nightly    |
 
 ## Graph client example
