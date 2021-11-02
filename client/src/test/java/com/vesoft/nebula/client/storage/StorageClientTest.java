@@ -6,7 +6,10 @@
 
 package com.vesoft.nebula.client.storage;
 
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import com.vesoft.nebula.client.storage.data.VertexRow;
@@ -15,9 +18,11 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -358,6 +363,182 @@ public class StorageClientTest {
             assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
                     .contains(result.getPropNames().get(3)));
             assert (result.isAllSuccess());
+        }
+    }
+
+    @Test
+    public void testCASignedSSL() {
+        String startCmd = "docker-compose -f src/test/resources/docker-compose-casigned.yaml up -d";
+        String stopCmd = "docker-compose -f src/test/resources/docker-compose-casigned.yaml down";
+        // start nebula service with ssl enable
+        List<HostAddress> address = null;
+        StorageClient sslClient = null;
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec(startCmd).waitFor(60, TimeUnit.SECONDS);
+            address = Arrays.asList(new HostAddress(ip, 8559));
+
+            // mock graph data
+            MockStorageData.mockCASslData();
+
+            SSLParam sslParam = new CASignedSSLParam(
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key");
+            sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
+            sslClient.connect();
+
+            ScanVertexResultIterator resultIterator = sslClient.scanVertex(
+                    "testStorage",
+                    "person");
+            while (resultIterator.hasNext()) {
+                ScanVertexResult result = null;
+                try {
+                    result = resultIterator.next();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
+                if (result.isEmpty()) {
+                    continue;
+                }
+                Assert.assertEquals(1, result.getPropNames().size());
+                assert (result.getPropNames().get(0).equals("_vid"));
+                assert (result.isAllSuccess());
+
+                List<VertexRow> rows = result.getVertices();
+                for (VertexRow row : rows) {
+                    try {
+                        assert (Arrays.asList("1", "2", "3", "4", "5")
+                                .contains(row.getVid().asString()));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        assert (false);
+                    }
+                    assert (row.getProps().size() == 0);
+                }
+
+                List<VertexTableRow> tableRows = result.getVertexTableRows();
+                for (VertexTableRow tableRow : tableRows) {
+                    try {
+                        assert (Arrays.asList("1", "2", "3", "4", "5")
+                                .contains(tableRow.getVid().asString()));
+                        assert (Arrays.asList("1", "2", "3", "4", "5")
+                                .contains(tableRow.getString(0)));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        assert (false);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (false);
+        } finally {
+            if (sslClient != null) {
+                try {
+                    sslClient.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // stop nebula service
+        try {
+            runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void testSelfSignedSSL() {
+        String startCmd =
+                "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml up -d";
+        String stopCmd = "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml down";
+        // start nebula service with ssl enable
+        List<HostAddress> address = null;
+        StorageClient sslClient = null;
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec(startCmd).waitFor(60, TimeUnit.SECONDS);
+            address = Arrays.asList(new HostAddress(ip, 8559));
+
+            // mock graph data
+            MockStorageData.mockSelfSslData();
+
+            SSLParam sslParam = new SelfSignedSSLParam(
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
+                    "vesoft");
+            sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
+            sslClient.connect();
+
+            ScanVertexResultIterator resultIterator = sslClient.scanVertex(
+                    "testStorage",
+                    "person");
+            assertIterator(resultIterator);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (false);
+        } finally {
+            if (sslClient != null) {
+                try {
+                    sslClient.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    // stop nebula service
+                    runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void assertIterator(ScanVertexResultIterator resultIterator) {
+        while (resultIterator.hasNext()) {
+            ScanVertexResult result = null;
+            try {
+                result = resultIterator.next();
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert (false);
+            }
+            if (result.isEmpty()) {
+                continue;
+            }
+            Assert.assertEquals(1, result.getPropNames().size());
+            assert (result.getPropNames().get(0).equals("_vid"));
+            assert (result.isAllSuccess());
+
+            List<VertexRow> rows = result.getVertices();
+            for (VertexRow row : rows) {
+                try {
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(row.getVid().asString()));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
+                assert (row.getProps().size() == 0);
+            }
+
+            List<VertexTableRow> tableRows = result.getVertexTableRows();
+            for (VertexTableRow tableRow : tableRows) {
+                try {
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getVid().asString()));
+                    assert (Arrays.asList("1", "2", "3", "4", "5")
+                            .contains(tableRow.getString(0)));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    assert (false);
+                }
+            }
         }
     }
 }

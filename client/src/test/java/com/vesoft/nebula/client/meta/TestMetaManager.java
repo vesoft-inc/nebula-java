@@ -7,14 +7,20 @@
 package com.vesoft.nebula.client.meta;
 
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
@@ -110,5 +116,101 @@ public class TestMetaManager extends TestCase {
         EdgeItem edgeItem = metaManager.getEdge("testMeta", "couples");
         assert (edgeItem.getVersion() == 1);
         assert (edgeItem.schema.getColumns().size() == 1);
+    }
+
+
+    public void testCASignedSSLMetaManager() {
+        Runtime runtime = Runtime.getRuntime();
+        MetaManager metaManager = null;
+        try {
+            runtime.exec(
+                    "docker-compose -f src/test/resources/docker-compose-casigned.yaml up -d")
+                    .waitFor(45, TimeUnit.SECONDS);
+
+            // mock data with CA ssl
+            MockNebulaGraph.createSpaceWithCASSL();
+
+            SSLParam sslParam = new CASignedSSLParam(
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key");
+
+            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1",
+                    8559)), 3000, 1, 1, true, sslParam);
+
+
+            assert (metaManager.getSpaceId("testMeta") > 0);
+            SpaceItem spaceItem = metaManager.getSpace("testMeta");
+            assert Objects.equals("testMeta", new String(spaceItem.properties.getSpace_name()));
+            Assert.assertEquals(8, spaceItem.properties.getVid_type().getType_length());
+            Assert.assertEquals(10, spaceItem.properties.getPartition_num());
+
+            // test get not existed space
+            try {
+                metaManager.getSpace("not_existed");
+                Assert.fail();
+            } catch (IllegalArgumentException e) {
+                Assert.assertTrue("We expected here", true);
+            }
+        } catch (Exception e) {
+            Assert.fail();
+        } finally {
+            if (metaManager != null) {
+                metaManager.close();
+            }
+            try {
+                runtime.exec("docker-compose -f src/test/resources/docker-compose"
+                        + "-casigned.yaml down").waitFor(60, TimeUnit.SECONDS);
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void testSelfSignedSSLMetaClient() {
+        String startCmd =
+                "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml up -d";
+        String stopCmd = "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml down";
+        Runtime runtime = Runtime.getRuntime();
+        MetaManager metaManager = null;
+        try {
+            runtime.exec(startCmd).waitFor(45, TimeUnit.SECONDS);
+
+            // mock data with Self ssl
+            MockNebulaGraph.createSpaceWithSelfSSL();
+
+            SSLParam sslParam = new SelfSignedSSLParam(
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
+                    "vesoft");
+            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1", 8559)),
+                    3000, 1, 1, true, sslParam);
+
+            assert (metaManager.getSpaceId("testMeta") > 0);
+            SpaceItem spaceItem = metaManager.getSpace("testMeta");
+            assert Objects.equals("testMeta", new String(spaceItem.properties.getSpace_name()));
+            Assert.assertEquals(8, spaceItem.properties.getVid_type().getType_length());
+            Assert.assertEquals(10, spaceItem.properties.getPartition_num());
+
+            // test get not existed space
+            try {
+                metaManager.getSpace("not_existed");
+                Assert.fail();
+            } catch (IllegalArgumentException e) {
+                Assert.assertTrue("We expected here", true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        } finally {
+            if (metaManager != null) {
+                metaManager.close();
+            }
+            try {
+                runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

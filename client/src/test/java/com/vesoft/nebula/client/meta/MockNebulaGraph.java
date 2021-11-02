@@ -7,8 +7,10 @@
 package com.vesoft.nebula.client.meta;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
@@ -96,6 +98,70 @@ public class MockNebulaGraph {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            pool.close();
+        }
+    }
+
+    public static void createSpaceWithCASSL() {
+        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+        nebulaPoolConfig.setMaxConnSize(100);
+        nebulaPoolConfig.setEnableSsl(true);
+        nebulaPoolConfig.setSslParam(new CASignedSSLParam(
+                "src/test/resources/ssl/casigned.pem",
+                "src/test/resources/ssl/casigned.crt",
+                "src/test/resources/ssl/casigned.key"));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
+        NebulaPool pool = new NebulaPool();
+        Session session = null;
+        try {
+            pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", true);
+
+            ResultSet resp = session.execute(createSpace());
+            if (!resp.isSucceeded()) {
+                LOGGER.error("create space failed, {}", resp.getErrorMessage());
+                assert (false);
+            }
+            Thread.sleep(5000);
+
+        } catch (Exception e) {
+            LOGGER.error("create space with CA ssl error, ", e);
+            assert (false);
+        } finally {
+            if (session != null) {
+                session.release();
+            }
+            pool.close();
+        }
+    }
+
+    public static void createSpaceWithSelfSSL() {
+        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+        nebulaPoolConfig.setMaxConnSize(100);
+        nebulaPoolConfig.setEnableSsl(true);
+        nebulaPoolConfig.setSslParam(new SelfSignedSSLParam(
+                "src/test/resources/ssl/selfsigned.pem",
+                "src/test/resources/ssl/selfsigned.key",
+                "vesoft"));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
+        NebulaPool pool = new NebulaPool();
+        Session session = null;
+        try {
+            pool.init(addresses, nebulaPoolConfig);
+            session = pool.getSession("root", "nebula", true);
+            ResultSet resp = session.execute(createSpace());
+            if (!resp.isSucceeded()) {
+                LOGGER.error("create space failed, {}", resp.getErrorMessage());
+                assert (false);
+            }
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            LOGGER.error("create space with Self ssl error, ", e);
+            assert (false);
+        } finally {
+            if (session != null) {
+                session.release();
+            }
             pool.close();
         }
     }
