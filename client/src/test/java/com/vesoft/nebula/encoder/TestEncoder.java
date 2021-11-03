@@ -5,10 +5,15 @@
 
 package test.java.com.vesoft.nebula.encoder;
 
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.LineString;
 import com.vesoft.nebula.NullType;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.encoder.MetaCacheImplTest;
@@ -34,11 +39,19 @@ public class TestEncoder {
     final String allTypeValueExpectResult = "090cc001081000200000004000000000000000db0f494069"
         + "57148b0abf05405d0000000c0000004e6562756c61204772617068bb334e5e000000"
         + "00e40702140a1e2d00000000e40702140a1e2d00000000000000000000000000000000"
-        + "48656c6c6f20776f726c6421";
+        + "48656c6c6f20776f726c6421010100000000000000006066409a999999997956400102"
+        + "000000030000000000000000000000000000000000f03f000000000000f03f00000000"
+        + "0000004000000000000008400000000000001c4001030000000200000004000000cdcc"
+        + "cccccc2c5bc0000000000080414000000000000059c00000000000404740cdcccccccc"
+        + "ac56c03333333333734140cdcccccccc2c5bc000000000008041400400000066666666"
+        + "660659c03333333333b344409a99999999b959c0cdcccccccccc424033333333333358"
+        + "c00000000000c0424066666666660659c03333333333b34440fe148c1853d00500";
 
     private List<String> getCols() {
         return Arrays.asList("Col01","Col02", "Col03", "Col04", "Col05", "Col06",
-            "Col07","Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14");
+            "Col07","Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14",
+            // Purposely skip the col15
+            "Col16", "Col17", "Col18");
     }
 
     private List<Object> getValues() {
@@ -61,8 +74,39 @@ public class TestEncoder {
         dateValue.setDVal(new Date((short)2020, (byte)2, (byte)20));
         final Value nullVal = new Value();
         nullVal.setNVal(NullType.__NULL__);
+        // geograph point
+        // POINT(179.0 89.9)
+        final Value geogPointVal = new Value();
+        geogPointVal.setGgVal(Geography.ptVal(new Point(new Coordinate(179.0, 89.9))));
+        // geography linestring
+        // LINESTRING(0 1, 1 2, 3 7)
+        final Value geogLineStringVal = new Value();
+        List<Coordinate> line = new ArrayList<>();
+        line.add(new Coordinate(0, 1));
+        line.add(new Coordinate(1, 2));
+        line.add(new Coordinate(3, 7));
+        geogLineStringVal.setGgVal(Geography.lsVal(new LineString(line)));
+        // geography polygon
+        // POLYGON((-108.7 35.0, -100.0 46.5, -90.7 34.9, -108.7 35.0),
+        // (-100.1 41.4, -102.9 37.6, -96.8 37.5, -100.1 41.4))
+        final Value geogPolygonVal = new Value();
+        List<Coordinate> shell = new ArrayList<>();
+        shell.add(new Coordinate(-108.7, 35.0));
+        shell.add(new Coordinate(-100.0, 46.5));
+        shell.add(new Coordinate(-90.7, 34.9));
+        shell.add(new Coordinate(-108.7, 35.0));
+        List<Coordinate> hole = new ArrayList<>();
+        hole.add(new Coordinate(-100.1, 41.4));
+        hole.add(new Coordinate(-102.9, 37.6));
+        hole.add(new Coordinate(-96.8, 37.5));
+        hole.add(new Coordinate(-100.1, 41.4));
+        List<List<Coordinate>> rings = new ArrayList<List<Coordinate>>();
+        rings.add(shell);
+        rings.add(hole);
+        geogPolygonVal.setGgVal(Geography.pgVal(new Polygon(rings)));
         return Arrays.asList(true, 8, 16, 32, intVal, pi, e, strVal, fixVal,
-            timestampVal, dateValue, timeVal, datetimeValue, nullVal);
+            timestampVal, dateValue, timeVal, datetimeValue, nullVal,
+            geogPointVal, geogLineStringVal, geogPolygonVal);
     }
 
     public int getSpaceVidLen(String spaceName) throws RuntimeException {
@@ -227,6 +271,10 @@ public class TestEncoder {
             // File file = new File("encode_java.txt");
             // FileOutputStream fileOutputStream = new FileOutputStream(file);
             // fileOutputStream.write(encodeStr);
+            System.out.println("hex vs expect");
+            System.out.println(hexStr);
+            System.out.println("***********");
+            System.out.println(allTypeValueExpectResult);
             Assert.assertArrayEquals(allTypeValueExpectResult.getBytes(),
                 hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {

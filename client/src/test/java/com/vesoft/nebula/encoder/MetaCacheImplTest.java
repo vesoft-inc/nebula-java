@@ -82,6 +82,15 @@ public class MetaCacheImplTest implements MetaCache {
             new ColumnTypeDef(PropertyType.INT32));
         columnDef.setNullable(true);
         columns.add(columnDef);
+        columnDef = new ColumnDef(("Col16").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY));
+        columns.add(columnDef);
+        columnDef = new ColumnDef(("Col17").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY));
+        columns.add(columnDef);
+        columnDef = new ColumnDef(("Col18").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY));
+        columns.add(columnDef);
         return new Schema(columns, null);
     }
 
