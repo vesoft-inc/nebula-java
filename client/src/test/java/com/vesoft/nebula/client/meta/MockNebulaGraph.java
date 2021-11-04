@@ -63,6 +63,24 @@ public class MockNebulaGraph {
         return exec;
     }
 
+    public static String createSpaceCA() {
+        String exec = "CREATE SPACE IF NOT EXISTS testMetaCA(partition_num=10, "
+                + "vid_type=fixed_string(8));"
+                + "USE testMetaCA;"
+                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        return exec;
+    }
+
+    public static String createSpaceSelf() {
+        String exec = "CREATE SPACE IF NOT EXISTS testMetaSelf(partition_num=10, "
+                + "vid_type=fixed_string(8));"
+                + "USE testMetaSelf;"
+                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        return exec;
+    }
+
     public static void createMultiVersionTagAndEdge() {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
@@ -117,7 +135,7 @@ public class MockNebulaGraph {
             pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", true);
 
-            ResultSet resp = session.execute(createSpace());
+            ResultSet resp = session.execute(createSpaceCA());
             if (!resp.isSucceeded()) {
                 LOGGER.error("create space failed, {}", resp.getErrorMessage());
                 assert (false);
@@ -143,13 +161,13 @@ public class MockNebulaGraph {
                 "src/test/resources/ssl/selfsigned.pem",
                 "src/test/resources/ssl/selfsigned.key",
                 "vesoft"));
-        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 7669));
         NebulaPool pool = new NebulaPool();
         Session session = null;
         try {
             pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", true);
-            ResultSet resp = session.execute(createSpace());
+            ResultSet resp = session.execute(createSpaceSelf());
             if (!resp.isSucceeded()) {
                 LOGGER.error("create space failed, {}", resp.getErrorMessage());
                 assert (false);

@@ -68,6 +68,24 @@ public class MockStorageData {
         return exec;
     }
 
+    public static String createSpaceCa() {
+        String exec = "CREATE SPACE IF NOT EXISTS testStorageCA(partition_num=10,"
+                + "vid_type=fixed_string(8));"
+                + "USE testStorageCA;"
+                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        return exec;
+    }
+
+    public static String createSpaceSelf() {
+        String exec = "CREATE SPACE IF NOT EXISTS testStorageSelf(partition_num=10,"
+                + "vid_type=fixed_string(8));"
+                + "USE testStorageSelf;"
+                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        return exec;
+    }
+
     public static String insertData() {
         String exec = "INSERT VERTEX person(name, age) VALUES "
                 + "\"1\":(\"Tom\", 18), "
@@ -100,7 +118,7 @@ public class MockStorageData {
             pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", true);
 
-            ResultSet resp = session.execute(createSpace());
+            ResultSet resp = session.execute(createSpaceCa());
             try {
                 Thread.sleep(6000);
             } catch (InterruptedException e) {
@@ -140,7 +158,7 @@ public class MockStorageData {
             pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", true);
 
-            ResultSet resp = session.execute(createSpace());
+            ResultSet resp = session.execute(createSpaceSelf());
 
             try {
                 Thread.sleep(5000);

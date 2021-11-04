@@ -18,6 +18,7 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -368,14 +369,10 @@ public class StorageClientTest {
 
     @Test
     public void testCASignedSSL() {
-        String startCmd = "docker-compose -f src/test/resources/docker-compose-casigned.yaml up -d";
-        String stopCmd = "docker-compose -f src/test/resources/docker-compose-casigned.yaml down";
         // start nebula service with ssl enable
         List<HostAddress> address = null;
         StorageClient sslClient = null;
-        Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(startCmd).waitFor(60, TimeUnit.SECONDS);
             address = Arrays.asList(new HostAddress(ip, 8559));
 
             // mock graph data
@@ -389,7 +386,7 @@ public class StorageClientTest {
             sslClient.connect();
 
             ScanVertexResultIterator resultIterator = sslClient.scanVertex(
-                    "testStorage",
+                    "testStorageCA",
                     "person");
             while (resultIterator.hasNext()) {
                 ScanVertexResult result = null;
@@ -443,26 +440,17 @@ public class StorageClientTest {
                 }
             }
         }
-        // stop nebula service
-        try {
-            runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
     @Test
     public void testSelfSignedSSL() {
-        String startCmd =
-                "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml up -d";
-        String stopCmd = "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml down";
         // start nebula service with ssl enable
         List<HostAddress> address = null;
         StorageClient sslClient = null;
         Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(startCmd).waitFor(60, TimeUnit.SECONDS);
+
             address = Arrays.asList(new HostAddress(ip, 8559));
 
             // mock graph data
@@ -476,7 +464,7 @@ public class StorageClientTest {
             sslClient.connect();
 
             ScanVertexResultIterator resultIterator = sslClient.scanVertex(
-                    "testStorage",
+                    "testStorageSelf",
                     "person");
             assertIterator(resultIterator);
         } catch (Exception e) {
@@ -486,12 +474,6 @@ public class StorageClientTest {
             if (sslClient != null) {
                 try {
                     sslClient.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    // stop nebula service
-                    runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

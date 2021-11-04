@@ -142,12 +142,8 @@ public class TestMetaClient extends TestCase {
     }
 
     public void testCASignedSSLMetaClient() {
-        String startCmd = "docker-compose -f src/test/resources/docker-compose-casigned.yaml up -d";
-        String stopCmd = "docker-compose -f src/test/resources/docker-compose-casigned.yaml down";
-        Runtime runtime = Runtime.getRuntime();
         MetaClient metaClient = null;
         try {
-            runtime.exec(startCmd).waitFor(60, TimeUnit.SECONDS);
 
             // mock data with CA ssl
             MockNebulaGraph.createSpaceWithCASSL();
@@ -161,9 +157,9 @@ public class TestMetaClient extends TestCase {
                     3000, 1, 1, true, sslParam);
             metaClient.connect();
 
-            List<TagItem> tags = metaClient.getTags("testMeta");
+            List<TagItem> tags = metaClient.getTags("testMetaCA");
             Assert.assertTrue(tags.size() >= 1);
-            assert (metaClient.getTag("testMeta", "person") != null);
+            assert (metaClient.getTag("testMetaCA", "person") != null);
         } catch (Exception e) {
             LOGGER.error("test CA signed ssl meta client failed, ", e);
             assert (false);
@@ -171,23 +167,12 @@ public class TestMetaClient extends TestCase {
             if (metaClient != null) {
                 metaClient.close();
             }
-            try {
-                runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
     public void testSelfSignedSSLMetaClient() {
-        String startCmd =
-                "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml up -d";
-        String stopCmd = "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml down";
-
         MetaClient metaClient = null;
-        Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec(startCmd).waitFor(60, TimeUnit.SECONDS);
 
             // mock data with Self ssl
             MockNebulaGraph.createSpaceWithSelfSSL();
@@ -196,24 +181,19 @@ public class TestMetaClient extends TestCase {
                     "src/test/resources/ssl/selfsigned.pem",
                     "src/test/resources/ssl/selfsigned.key",
                     "vesoft");
-            metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 8559)),
+            metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 7559)),
                     3000, 1, 1, true, sslParam);
             metaClient.connect();
 
-            List<TagItem> tags = metaClient.getTags("testMeta");
+            List<TagItem> tags = metaClient.getTags("testMetaSelf");
             Assert.assertTrue(tags.size() >= 1);
-            assert (metaClient.getTag("testMeta", "person") != null);
+            assert (metaClient.getTag("testMetaSelf", "person") != null);
         } catch (Exception e) {
             LOGGER.error("test Self signed ssl meta client failed, ", e);
             assert (false);
         } finally {
             if (metaClient != null) {
                 metaClient.close();
-            }
-            try {
-                runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

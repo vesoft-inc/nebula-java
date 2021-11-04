@@ -12,6 +12,7 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
@@ -120,12 +121,8 @@ public class TestMetaManager extends TestCase {
 
 
     public void testCASignedSSLMetaManager() {
-        Runtime runtime = Runtime.getRuntime();
         MetaManager metaManager = null;
         try {
-            runtime.exec(
-                    "docker-compose -f src/test/resources/docker-compose-casigned.yaml up -d")
-                    .waitFor(45, TimeUnit.SECONDS);
 
             // mock data with CA ssl
             MockNebulaGraph.createSpaceWithCASSL();
@@ -139,9 +136,9 @@ public class TestMetaManager extends TestCase {
                     8559)), 3000, 1, 1, true, sslParam);
 
 
-            assert (metaManager.getSpaceId("testMeta") > 0);
-            SpaceItem spaceItem = metaManager.getSpace("testMeta");
-            assert Objects.equals("testMeta", new String(spaceItem.properties.getSpace_name()));
+            assert (metaManager.getSpaceId("testMetaCA") > 0);
+            SpaceItem spaceItem = metaManager.getSpace("testMetaCA");
+            assert Objects.equals("testMetaCA", new String(spaceItem.properties.getSpace_name()));
             Assert.assertEquals(8, spaceItem.properties.getVid_type().getType_length());
             Assert.assertEquals(10, spaceItem.properties.getPartition_num());
 
@@ -158,23 +155,12 @@ public class TestMetaManager extends TestCase {
             if (metaManager != null) {
                 metaManager.close();
             }
-            try {
-                runtime.exec("docker-compose -f src/test/resources/docker-compose"
-                        + "-casigned.yaml down").waitFor(60, TimeUnit.SECONDS);
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
     public void testSelfSignedSSLMetaClient() {
-        String startCmd =
-                "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml up -d";
-        String stopCmd = "docker-compose -f src/test/resources/docker-compose-selfsigned.yaml down";
-        Runtime runtime = Runtime.getRuntime();
         MetaManager metaManager = null;
         try {
-            runtime.exec(startCmd).waitFor(45, TimeUnit.SECONDS);
 
             // mock data with Self ssl
             MockNebulaGraph.createSpaceWithSelfSSL();
@@ -183,12 +169,12 @@ public class TestMetaManager extends TestCase {
                     "src/test/resources/ssl/selfsigned.pem",
                     "src/test/resources/ssl/selfsigned.key",
                     "vesoft");
-            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1", 8559)),
+            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1", 7559)),
                     3000, 1, 1, true, sslParam);
 
-            assert (metaManager.getSpaceId("testMeta") > 0);
-            SpaceItem spaceItem = metaManager.getSpace("testMeta");
-            assert Objects.equals("testMeta", new String(spaceItem.properties.getSpace_name()));
+            assert (metaManager.getSpaceId("testMetaSelf") > 0);
+            SpaceItem spaceItem = metaManager.getSpace("testMetaSelf");
+            assert Objects.equals("testMetaSelf", new String(spaceItem.properties.getSpace_name()));
             Assert.assertEquals(8, spaceItem.properties.getVid_type().getType_length());
             Assert.assertEquals(10, spaceItem.properties.getPartition_num());
 
@@ -205,11 +191,6 @@ public class TestMetaManager extends TestCase {
         } finally {
             if (metaManager != null) {
                 metaManager.close();
-            }
-            try {
-                runtime.exec(stopCmd).waitFor(60, TimeUnit.SECONDS);
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
             }
         }
     }
