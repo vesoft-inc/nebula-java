@@ -88,7 +88,7 @@ public class StorageClient {
         this.enableSSL = enableSSL;
         this.sslParam = sslParam;
         if (enableSSL && sslParam == null) {
-            throw new IllegalArgumentException("SSL is enable, but SSLParam is nul.");
+            throw new IllegalArgumentException("SSL is enabled, but SSLParam is nul.");
         }
     }
 

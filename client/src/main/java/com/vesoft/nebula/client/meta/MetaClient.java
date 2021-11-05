@@ -105,7 +105,7 @@ public class MetaClient extends AbstractMetaClient {
         this.enableSSL = enableSSL;
         this.sslParam = sslParam;
         if (enableSSL && sslParam == null) {
-            throw new IllegalArgumentException("SSL is enable, but SSLParam is null.");
+            throw new IllegalArgumentException("SSL is enabled, but SSLParam is null.");
         }
     }
 
