@@ -56,7 +56,11 @@ public class StorageConnPoolFactory
     public void activateObject(HostAddress address,
                                PooledObject<GraphStorageConnection> pooledObject)
             throws Exception {
-        pooledObject.getObject().open(address, config.getTimeout());
+        pooledObject.getObject().open(
+                address,
+                config.getTimeout(),
+                config.isEnableSSL(),
+                config.getSslParam());
     }
 
     @Override

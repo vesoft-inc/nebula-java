@@ -6,10 +6,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:8559
-      - --local_ip=172.29.1.1
-      - --ws_ip=172.29.1.1
-      - --port=8559
+      - --meta_server_addrs=172.30.1.1:9559
+      - --local_ip=172.30.1.1
+      - --ws_ip=172.30.1.1
+      - --port=9559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -22,22 +22,22 @@ services:
       - --password_path=/share/resources/test.ca.password
       - --enable_ssl=true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.1.1:11000/status"]
+      test: ["CMD", "curl", "-f", "http://172.30.1.1:11000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
-      - "8559:8559"
+      - "7559:9559"
       - 11000
       - 11002
     volumes:
-      - ./data/meta:/data/meta:Z
+      - ./data/meta_self:/data/meta:Z
       - ./logs/meta:/logs:Z
       - ./ssl:/share/resources:Z
     networks:
       nebula-net-selfsigned:
-        ipv4_address: 172.29.1.1
+        ipv4_address: 172.30.1.1
     restart: on-failure
     cap_add:
       - SYS_PTRACE
@@ -48,10 +48,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:8559
-      - --local_ip=172.29.2.1
-      - --ws_ip=172.29.2.1
-      - --port=8779
+      - --meta_server_addrs=172.30.1.1:9559
+      - --local_ip=172.30.2.1
+      - --ws_ip=172.30.2.1
+      - --port=9779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -66,22 +66,22 @@ services:
     depends_on:
       - metad-selfsigned
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.2.1:12000/status"]
+      test: ["CMD", "curl", "-f", "http://172.30.2.1:12000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
-      - "8779:8779"
+      - "7779:9779"
       - 12000
       - 12002
     volumes:
-      - ./data/storage:/data/storage:Z
+      - ./data/storage_self:/data/storage:Z
       - ./logs/storage:/logs:Z
       - ./ssl:/share/resources:Z
     networks:
       nebula-net-selfsigned:
-        ipv4_address: 172.29.2.1
+        ipv4_address: 172.30.2.1
     restart: on-failure
     cap_add:
       - SYS_PTRACE
@@ -92,9 +92,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:8559
-      - --port=8669
-      - --ws_ip=172.29.3.1
+      - --meta_server_addrs=172.30.1.1:9559
+      - --port=9669
+      - --ws_ip=172.30.3.1
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
@@ -108,21 +108,22 @@ services:
     depends_on:
       - metad-selfsigned
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.3.1:13000/status"]
+      test: ["CMD", "curl", "-f", "http://172.30.3.1:13000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
     ports:
-      - "8669:8669"
+      - "7669:9669"
       - 13000
       - 13002
     volumes:
+      - ./data/graph_self:/data/graph:Z
       - ./logs/graph:/logs:Z
       - ./ssl:/share/resources:Z
     networks:
       nebula-net-selfsigned:
-        ipv4_address: 172.29.3.1
+        ipv4_address: 172.30.3.1
     restart: on-failure
     cap_add:
       - SYS_PTRACE
@@ -132,4 +133,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.29.0.0/16
+        - subnet: 172.30.0.0/16
