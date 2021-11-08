@@ -8,6 +8,7 @@ package com.vesoft.nebula.client.storage;
 
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.scan.PartScanInfo;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
@@ -34,6 +35,11 @@ public class StorageClient {
     private MetaManager metaManager;
     private final List<HostAddress> addresses;
     private int timeout = 10000; // ms
+    private int connectionRetry = 3;
+    private int executionRetry = 1;
+
+    private boolean enableSSL = false;
+    private SSLParam sslParam = null;
 
     /**
      * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
@@ -71,15 +77,34 @@ public class StorageClient {
     }
 
     /**
+     * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
+     * multi servers' hosts, timeout and ssl config.
+     */
+    public StorageClient(List<HostAddress> addresses, int timeout, int connectionRetry,
+                         int executionRetry, boolean enableSSL, SSLParam sslParam) {
+        this(addresses, timeout);
+        this.connectionRetry = connectionRetry;
+        this.executionRetry = executionRetry;
+        this.enableSSL = enableSSL;
+        this.sslParam = sslParam;
+        if (enableSSL && sslParam == null) {
+            throw new IllegalArgumentException("SSL is enabled, but SSLParam is nul.");
+        }
+    }
+
+    /**
      * Connect to Nebula Storage server.
      *
      * @return true if connect successfully.
      */
     public boolean connect() throws Exception {
-        connection.open(addresses.get(0), timeout);
+        connection.open(addresses.get(0), timeout, enableSSL, sslParam);
         StoragePoolConfig config = new StoragePoolConfig();
+        config.setEnableSSL(enableSSL);
+        config.setSslParam(sslParam);
         pool = new StorageConnPool(config);
-        metaManager = new MetaManager(addresses);
+        metaManager = new MetaManager(addresses, timeout, connectionRetry, executionRetry,
+                enableSSL, sslParam);
         return true;
     }
 

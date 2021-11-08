@@ -10,6 +10,7 @@ import com.facebook.thrift.TException;
 import com.google.common.collect.Maps;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
@@ -47,12 +48,28 @@ public class MetaManager implements MetaCache {
     private MetaClient metaClient;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
+    private static final int DEFAULT_TIMEOUT_MS = 1000;
+    private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
+    private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
+
     /**
      * init the meta info cache
      */
     public MetaManager(List<HostAddress> address)
             throws TException, ClientServerIncompatibleException {
         metaClient = new MetaClient(address);
+        metaClient.connect();
+        fillMetaInfo();
+    }
+
+    /**
+     * init the meta info cache with more config
+     */
+    public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
+                       int executionRetry, boolean enableSSL, SSLParam sslParam)
+            throws TException, ClientServerIncompatibleException {
+        metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
+                sslParam);
         metaClient.connect();
         fillMetaInfo();
     }

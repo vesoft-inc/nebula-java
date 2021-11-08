@@ -13,8 +13,12 @@ import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.GetEdgeReq;
@@ -43,12 +47,15 @@ import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
+import com.vesoft.nebula.util.SslUtil;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import javax.net.ssl.SSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +69,9 @@ public class MetaClient extends AbstractMetaClient {
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
     private static final int RETRY_TIMES = 1;
+
+    private boolean enableSSL = false;
+    private SSLParam sslParam = null;
 
     private MetaService.Client client;
     private final List<HostAddress> addresses;
@@ -88,6 +98,17 @@ public class MetaClient extends AbstractMetaClient {
         this.addresses = addresses;
     }
 
+    public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
+                      int executionRetry, boolean enableSSL, SSLParam sslParam) {
+        super(addresses, timeout, connectionRetry, executionRetry);
+        this.addresses = addresses;
+        this.enableSSL = enableSSL;
+        this.sslParam = sslParam;
+        if (enableSSL && sslParam == null) {
+            throw new IllegalArgumentException("SSL is enabled, but SSLParam is null.");
+        }
+    }
+
     public void connect()
             throws TException, ClientServerIncompatibleException {
         doConnect();
@@ -106,8 +127,25 @@ public class MetaClient extends AbstractMetaClient {
 
     private void getClient(String host, int port)
             throws TTransportException, ClientServerIncompatibleException {
-        transport = new TSocket(host, port, timeout, timeout);
-        transport.open();
+        if (enableSSL) {
+            SSLSocketFactory sslSocketFactory;
+            if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
+                sslSocketFactory = SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
+            } else {
+                sslSocketFactory =
+                        SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
+            }
+            try {
+                transport = new TSocket(sslSocketFactory.createSocket(host, port), timeout,
+                        timeout);
+            } catch (IOException e) {
+                throw new TTransportException(IOErrorException.E_UNKNOWN, e);
+            }
+        } else {
+            transport = new TSocket(host, port, timeout, timeout);
+            transport.open();
+        }
+
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
 

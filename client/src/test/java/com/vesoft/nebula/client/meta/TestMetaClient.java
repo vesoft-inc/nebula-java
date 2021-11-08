@@ -7,12 +7,18 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
@@ -132,6 +138,63 @@ public class TestMetaClient extends TestCase {
         } catch (Exception e) {
             LOGGER.error("start docker service error,", e);
             assert (false);
+        }
+    }
+
+    public void testCASignedSSLMetaClient() {
+        MetaClient metaClient = null;
+        try {
+
+            // mock data with CA ssl
+            MockNebulaGraph.createSpaceWithCASSL();
+
+            SSLParam sslParam = new CASignedSSLParam(
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key");
+
+            metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 8559)),
+                    3000, 1, 1, true, sslParam);
+            metaClient.connect();
+
+            List<TagItem> tags = metaClient.getTags("testMetaCA");
+            Assert.assertTrue(tags.size() >= 1);
+            assert (metaClient.getTag("testMetaCA", "person") != null);
+        } catch (Exception e) {
+            LOGGER.error("test CA signed ssl meta client failed, ", e);
+            assert (false);
+        } finally {
+            if (metaClient != null) {
+                metaClient.close();
+            }
+        }
+    }
+
+    public void testSelfSignedSSLMetaClient() {
+        MetaClient metaClient = null;
+        try {
+
+            // mock data with Self ssl
+            MockNebulaGraph.createSpaceWithSelfSSL();
+
+            SSLParam sslParam = new SelfSignedSSLParam(
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
+                    "vesoft");
+            metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 7559)),
+                    3000, 1, 1, true, sslParam);
+            metaClient.connect();
+
+            List<TagItem> tags = metaClient.getTags("testMetaSelf");
+            Assert.assertTrue(tags.size() >= 1);
+            assert (metaClient.getTag("testMetaSelf", "person") != null);
+        } catch (Exception e) {
+            LOGGER.error("test Self signed ssl meta client failed, ", e);
+            assert (false);
+        } finally {
+            if (metaClient != null) {
+                metaClient.close();
+            }
         }
     }
 }

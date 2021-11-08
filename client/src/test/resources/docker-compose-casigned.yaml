@@ -6,10 +6,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:8559
+      - --meta_server_addrs=172.29.1.1:9559
       - --local_ip=172.29.1.1
       - --ws_ip=172.29.1.1
-      - --port=8559
+      - --port=9559
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
@@ -19,7 +19,7 @@ services:
       - --ws_h2_port=11000
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
-      - --password_path=/share/resources/test.ca.password
+      - --ca_path=/share/resources/test.ca.pem
       - --enable_ssl=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.1.1:11000/status"]
@@ -28,7 +28,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8559:8559"
+      - "8559:9559"
       - 11000
       - 11002
     volumes:
@@ -48,10 +48,10 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:8559
+      - --meta_server_addrs=172.29.1.1:9559
       - --local_ip=172.29.2.1
       - --ws_ip=172.29.2.1
-      - --port=8779
+      - --port=9779
       - --data_path=/data/storage
       - --log_dir=/logs
       - --v=0
@@ -61,7 +61,7 @@ services:
       - --ws_h2_port=12000
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
-      - --password_path=/share/resources/test.ca.password
+      - --ca_path=/share/resources/test.ca.pem
       - --enable_ssl=true
     depends_on:
       - metad-casigned
@@ -72,7 +72,7 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8779:8779"
+      - "8779:9779"
       - 12000
       - 12002
     volumes:
@@ -92,8 +92,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:8559
-      - --port=8669
+      - --meta_server_addrs=172.29.1.1:9559
+      - --port=9669
+      - --local_ip=172.29.3.1
       - --ws_ip=172.29.3.1
       - --log_dir=/logs
       - --v=0
@@ -103,7 +104,7 @@ services:
       - --ws_h2_port=13000
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
-      - --password_path=/share/resources/test.ca.password
+      - --ca_path=/share/resources/test.ca.pem
       - --enable_ssl=true
     depends_on:
       - metad-casigned
@@ -114,10 +115,11 @@ services:
       retries: 3
       start_period: 20s
     ports:
-      - "8669:8669"
+      - "8669:9669"
       - 13000
       - 13002
     volumes:
+      - ./data/graph:/data/graph:Z
       - ./logs/graph:/logs:Z
       - ./ssl:/share/resources:Z
     networks:

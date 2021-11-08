@@ -7,14 +7,21 @@
 package com.vesoft.nebula.client.meta;
 
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
@@ -110,5 +117,81 @@ public class TestMetaManager extends TestCase {
         EdgeItem edgeItem = metaManager.getEdge("testMeta", "couples");
         assert (edgeItem.getVersion() == 1);
         assert (edgeItem.schema.getColumns().size() == 1);
+    }
+
+
+    public void testCASignedSSLMetaManager() {
+        MetaManager metaManager = null;
+        try {
+
+            // mock data with CA ssl
+            MockNebulaGraph.createSpaceWithCASSL();
+
+            SSLParam sslParam = new CASignedSSLParam(
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key");
+
+            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1",
+                    8559)), 3000, 1, 1, true, sslParam);
+
+
+            assert (metaManager.getSpaceId("testMetaCA") > 0);
+            SpaceItem spaceItem = metaManager.getSpace("testMetaCA");
+            assert Objects.equals("testMetaCA", new String(spaceItem.properties.getSpace_name()));
+            Assert.assertEquals(8, spaceItem.properties.getVid_type().getType_length());
+            Assert.assertEquals(10, spaceItem.properties.getPartition_num());
+
+            // test get not existed space
+            try {
+                metaManager.getSpace("not_existed");
+                Assert.fail();
+            } catch (IllegalArgumentException e) {
+                Assert.assertTrue("We expected here", true);
+            }
+        } catch (Exception e) {
+            Assert.fail();
+        } finally {
+            if (metaManager != null) {
+                metaManager.close();
+            }
+        }
+    }
+
+    public void testSelfSignedSSLMetaClient() {
+        MetaManager metaManager = null;
+        try {
+
+            // mock data with Self ssl
+            MockNebulaGraph.createSpaceWithSelfSSL();
+
+            SSLParam sslParam = new SelfSignedSSLParam(
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
+                    "vesoft");
+            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1", 7559)),
+                    3000, 1, 1, true, sslParam);
+
+            assert (metaManager.getSpaceId("testMetaSelf") > 0);
+            SpaceItem spaceItem = metaManager.getSpace("testMetaSelf");
+            assert Objects.equals("testMetaSelf", new String(spaceItem.properties.getSpace_name()));
+            Assert.assertEquals(8, spaceItem.properties.getVid_type().getType_length());
+            Assert.assertEquals(10, spaceItem.properties.getPartition_num());
+
+            // test get not existed space
+            try {
+                metaManager.getSpace("not_existed");
+                Assert.fail();
+            } catch (IllegalArgumentException e) {
+                Assert.assertTrue("We expected here", true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail();
+        } finally {
+            if (metaManager != null) {
+                metaManager.close();
+            }
+        }
     }
 }
