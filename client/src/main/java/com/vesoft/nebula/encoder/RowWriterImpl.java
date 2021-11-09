@@ -637,7 +637,6 @@ public class RowWriterImpl implements RowWriter {
 
     @Override
     public void write(int index, Geography v) {
-        System.out.println("write(index, geography), " + index);
         SchemaProvider.Field field = schema.field(index);
         PropertyType typeEnum = PropertyType.findByValue(field.type());
         if (typeEnum == null) {
@@ -657,11 +656,6 @@ public class RowWriterImpl implements RowWriter {
                          .WKBWriter(2, ByteOrderValues.LITTLE_ENDIAN)
                          .write(jtsGeom);
         write(index, wkb);
-        String hexedWKb = Hex.encodeHexString(wkb);
-        System.out.println("write(index, geography), wkb.size()=" + wkb.length
-                           + ", wkb.content=" + wkb);
-        System.out.println("write(index, geography), hexedWKb.size()=" + hexedWKb.length()
-                           + ", hexedWKb.content=" + hexedWKb);
     }
 
     @Override
@@ -706,7 +700,6 @@ public class RowWriterImpl implements RowWriter {
         } else if (value instanceof DateTime) {
             write(index, (DateTime)value);
         } else if (value instanceof Geography) {
-            System.out.println("jie, " + index + ", setValue(index, Object) for geography");
             write(index, (Geography)value);
         } else {
             throw new RuntimeException("Unsupported value object `" + value.getClass() + "\"");
@@ -751,7 +744,6 @@ public class RowWriterImpl implements RowWriter {
                 write(index, value.getDtVal());
                 break;
             case Value.GGVAL:
-                System.out.println("jie, " + index + ", setValue(index, value) for geography");
                 write(index, value.getGgVal());
                 break;
             default:

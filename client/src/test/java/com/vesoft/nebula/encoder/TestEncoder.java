@@ -272,10 +272,6 @@ public class TestEncoder {
             // File file = new File("encode_java.txt");
             // FileOutputStream fileOutputStream = new FileOutputStream(file);
             // fileOutputStream.write(encodeStr);
-            System.out.println("hex vs expect");
-            System.out.println(hexStr);
-            System.out.println("***********");
-            System.out.println(allTypeValueExpectResult);
             Assert.assertArrayEquals(allTypeValueExpectResult.getBytes(),
                 hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
