@@ -20,7 +20,9 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.codec.binary.Hex;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ByteOrderValues;
 import org.locationtech.jts.io.WKBWriter;
 
 public class RowWriterImpl implements RowWriter {
@@ -635,6 +637,7 @@ public class RowWriterImpl implements RowWriter {
 
     @Override
     public void write(int index, Geography v) {
+        System.out.println("write(index, geography), " + index);
         SchemaProvider.Field field = schema.field(index);
         PropertyType typeEnum = PropertyType.findByValue(field.type());
         if (typeEnum == null) {
@@ -650,8 +653,15 @@ public class RowWriterImpl implements RowWriter {
             throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
         org.locationtech.jts.geom.Geometry jtsGeom = convertGeographyToJTSGeometry(v);
-        byte[] wkb = new org.locationtech.jts.io.WKBWriter().write(jtsGeom);
+        byte[] wkb = new org.locationtech.jts.io
+                         .WKBWriter(2, ByteOrderValues.LITTLE_ENDIAN)
+                         .write(jtsGeom);
         write(index, wkb);
+        String hexedWKb = Hex.encodeHexString(wkb);
+        System.out.println("write(index, geography), wkb.size()=" + wkb.length
+                           + ", wkb.content=" + wkb);
+        System.out.println("write(index, geography), hexedWKb.size()=" + hexedWKb.length()
+                           + ", hexedWKb.content=" + hexedWKb);
     }
 
     @Override
@@ -696,6 +706,7 @@ public class RowWriterImpl implements RowWriter {
         } else if (value instanceof DateTime) {
             write(index, (DateTime)value);
         } else if (value instanceof Geography) {
+            System.out.println("jie, " + index + ", setValue(index, Object) for geography");
             write(index, (Geography)value);
         } else {
             throw new RuntimeException("Unsupported value object `" + value.getClass() + "\"");
@@ -740,6 +751,7 @@ public class RowWriterImpl implements RowWriter {
                 write(index, value.getDtVal());
                 break;
             case Value.GGVAL:
+                System.out.println("jie, " + index + ", setValue(index, value) for geography");
                 write(index, value.getGgVal());
                 break;
             default:
@@ -858,7 +870,8 @@ public class RowWriterImpl implements RowWriter {
             if (typeEnum == null) {
                 throw new RuntimeException("Incorrect field type " + field.type());
             }
-            if (typeEnum != PropertyType.STRING) {
+            if (typeEnum != PropertyType.STRING
+                && typeEnum != PropertyType.GEOGRAPHY) {
                 continue;
             }
             int offset = headerLen + numNullBytes + field.offset();
