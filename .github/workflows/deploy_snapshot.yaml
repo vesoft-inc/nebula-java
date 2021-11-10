@@ -27,8 +27,36 @@ jobs:
           cp ../../client/src/test/resources/docker-compose.yaml .
           docker-compose up -d
           sleep 10
+          docker-compose ps
           popd
           popd
+
+      - name: Install nebula-graph with CA SSL
+        run: |
+          pushd tmp
+          mkdir ca
+          pushd ca
+          cp -r ../../client/src/test/resources/ssl .
+          cp ../../client/src/test/resources/docker-compose-casigned.yaml .
+          docker-compose -f docker-compose-casigned.yaml up -d
+          sleep 30
+          docker-compose -f docker-compose-casigned.yaml ps
+          popd
+          popd
+
+      - name: Install nebula-graph with Self SSL
+        run: |
+          pushd tmp
+          mkdir self
+          pushd self
+          cp -r ../../client/src/test/resources/ssl .
+          cp ../../client/src/test/resources/docker-compose-selfsigned.yaml .
+          docker-compose -f docker-compose-selfsigned.yaml up -d
+          sleep 30
+          docker-compose -f docker-compose-selfsigned.yaml ps
+          popd
+          popd
+
       - name: Deploy Snapshot to Maven package
         uses: samuelmeuli/action-maven-publish@v1
         with:
