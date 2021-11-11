@@ -36,10 +36,10 @@ public class TestEncoder {
     private final MetaCacheImplTest cacheImplTest = new MetaCacheImplTest();
     private final NebulaCodecImpl codec = new NebulaCodecImpl();
 
-    final String allTypeValueExpectResult = "090cc001081000200000004000000000000000db0f494069"
-        + "57148b0abf0540750000000c0000004e6562756c61204772617068bb334e5e000000"
+    final String allTypeValueExpectResult = "090ce001081000200000004000000000000000db0f494069"
+        + "57148b0abf05407d0000000c0000004e6562756c61204772617068bb334e5e000000"
         + "00e40702140a1e2d00000000e40702140a1e2d00000000000000000000000000000000"
-        + "81000000150000009600000039000000cf0000009100000048656c6c6f20776f726c6421"
+        + "89000000150000009e00000039000000d700000091000000000000000000000048656c6c6f20776f726c6421"
         + "010100000000000000006066409a99999999795640010200000003000000000000000000"
         + "0000000000000000f03f000000000000f03f000000000000004000000000000008400000"
         + "000000001c4001030000000200000004000000cdcccccccc2c5bc0000000000080414000"
@@ -272,6 +272,10 @@ public class TestEncoder {
             // File file = new File("encode_java.txt");
             // FileOutputStream fileOutputStream = new FileOutputStream(file);
             // fileOutputStream.write(encodeStr);
+            System.out.println("got vs expect:");
+            System.out.println(hexStr);
+            System.out.println("**************");
+            System.out.println(allTypeValueExpectResult);
             Assert.assertArrayEquals(allTypeValueExpectResult.getBytes(),
                 hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
