@@ -653,7 +653,9 @@ public class RowWriterImpl implements RowWriter {
         }
         org.locationtech.jts.geom.Geometry jtsGeom = convertGeographyToJTSGeometry(v);
         byte[] wkb = new org.locationtech.jts.io
-                         .WKBWriter(2, ByteOrderValues.LITTLE_ENDIAN)
+                         .WKBWriter(2, this.byteOrder == ByteOrder.BIG_ENDIAN
+                                           ? ByteOrderValues.BIG_ENDIAN
+                                           : ByteOrderValues.LITTLE_ENDIAN)
                          .write(jtsGeom);
         write(index, wkb);
     }
