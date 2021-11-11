@@ -52,7 +52,7 @@ public class TestEncoder {
         return Arrays.asList("Col01","Col02", "Col03", "Col04", "Col05", "Col06",
             "Col07","Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14",
             // Purposely skip the col15
-            "Col16", "Col17", "Col18");
+            "Col16", "Col17", "Col18", "Col19");
     }
 
     private List<Object> getValues() {
@@ -107,7 +107,7 @@ public class TestEncoder {
         geogPolygonVal.setGgVal(Geography.pgVal(new Polygon(rings)));
         return Arrays.asList(true, 8, 16, 32, intVal, pi, e, strVal, fixVal,
             timestampVal, dateValue, timeVal, datetimeValue, nullVal,
-            geogPointVal, geogLineStringVal, geogPolygonVal);
+            geogPointVal, geogLineStringVal, geogPolygonVal, nullVal);
     }
 
     public int getSpaceVidLen(String spaceName) throws RuntimeException {
