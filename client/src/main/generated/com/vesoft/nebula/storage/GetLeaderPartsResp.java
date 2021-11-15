@@ -276,29 +276,29 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
         case LEADER_PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map201 = iprot.readMapBegin();
-              this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map201.size));
-              for (int _i202 = 0; 
-                   (_map201.size < 0) ? iprot.peekMap() : (_i202 < _map201.size); 
-                   ++_i202)
+              TMap _map225 = iprot.readMapBegin();
+              this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map225.size));
+              for (int _i226 = 0; 
+                   (_map225.size < 0) ? iprot.peekMap() : (_i226 < _map225.size); 
+                   ++_i226)
               {
-                int _key203;
-                List<Integer> _val204;
-                _key203 = iprot.readI32();
+                int _key227;
+                List<Integer> _val228;
+                _key227 = iprot.readI32();
                 {
-                  TList _list205 = iprot.readListBegin();
-                  _val204 = new ArrayList<Integer>(Math.max(0, _list205.size));
-                  for (int _i206 = 0; 
-                       (_list205.size < 0) ? iprot.peekList() : (_i206 < _list205.size); 
-                       ++_i206)
+                  TList _list229 = iprot.readListBegin();
+                  _val228 = new ArrayList<Integer>(Math.max(0, _list229.size));
+                  for (int _i230 = 0; 
+                       (_list229.size < 0) ? iprot.peekList() : (_i230 < _list229.size); 
+                       ++_i230)
                   {
-                    int _elem207;
-                    _elem207 = iprot.readI32();
-                    _val204.add(_elem207);
+                    int _elem231;
+                    _elem231 = iprot.readI32();
+                    _val228.add(_elem231);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_parts.put(_key203, _val204);
+                this.leader_parts.put(_key227, _val228);
               }
               iprot.readMapEnd();
             }
@@ -332,12 +332,12 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_parts.size()));
-        for (Map.Entry<Integer, List<Integer>> _iter208 : this.leader_parts.entrySet())        {
-          oprot.writeI32(_iter208.getKey());
+        for (Map.Entry<Integer, List<Integer>> _iter232 : this.leader_parts.entrySet())        {
+          oprot.writeI32(_iter232.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter208.getValue().size()));
-            for (int _iter209 : _iter208.getValue())            {
-              oprot.writeI32(_iter209);
+            oprot.writeListBegin(new TList(TType.I32, _iter232.getValue().size()));
+            for (int _iter233 : _iter232.getValue())            {
+              oprot.writeI32(_iter233);
             }
             oprot.writeListEnd();
           }

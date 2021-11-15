@@ -32,9 +32,9 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
   /**
    * 
-   * @see PropertyType
+   * @see com.vesoft.nebula.PropertyType
    */
-  public PropertyType type;
+  public com.vesoft.nebula.PropertyType type;
   public short type_length;
   /**
    * 
@@ -72,13 +72,13 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public ColumnTypeDef(
-      PropertyType type) {
+      com.vesoft.nebula.PropertyType type) {
     this();
     this.type = type;
   }
 
   public ColumnTypeDef(
-      PropertyType type,
+      com.vesoft.nebula.PropertyType type,
       short type_length,
       GeoShape geo_shape) {
     this();
@@ -89,7 +89,7 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public static class Builder {
-    private PropertyType type;
+    private com.vesoft.nebula.PropertyType type;
     private short type_length;
     private GeoShape geo_shape;
 
@@ -98,7 +98,7 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
     public Builder() {
     }
 
-    public Builder setType(final PropertyType type) {
+    public Builder setType(final com.vesoft.nebula.PropertyType type) {
       this.type = type;
       return this;
     }
@@ -150,17 +150,17 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
 
   /**
    * 
-   * @see PropertyType
+   * @see com.vesoft.nebula.PropertyType
    */
-  public PropertyType getType() {
+  public com.vesoft.nebula.PropertyType getType() {
     return this.type;
   }
 
   /**
    * 
-   * @see PropertyType
+   * @see com.vesoft.nebula.PropertyType
    */
-  public ColumnTypeDef setType(PropertyType type) {
+  public ColumnTypeDef setType(com.vesoft.nebula.PropertyType type) {
     this.type = type;
     return this;
   }
@@ -241,7 +241,7 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       if (__value == null) {
         unsetType();
       } else {
-        setType((PropertyType)__value);
+        setType((com.vesoft.nebula.PropertyType)__value);
       }
       break;
 
@@ -358,7 +358,7 @@ public class ColumnTypeDef implements TBase, java.io.Serializable, Cloneable, Co
       {
         case TYPE:
           if (__field.type == TType.I32) {
-            this.type = PropertyType.findByValue(iprot.readI32());
+            this.type = com.vesoft.nebula.PropertyType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
