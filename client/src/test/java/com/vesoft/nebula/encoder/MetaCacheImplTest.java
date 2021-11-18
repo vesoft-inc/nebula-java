@@ -6,13 +6,12 @@
 package com.vesoft.nebula.encoder;
 
 import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.PropertyType;
 import com.vesoft.nebula.client.meta.MetaCache;
 import com.vesoft.nebula.meta.ColumnDef;
 import com.vesoft.nebula.meta.ColumnTypeDef;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.GeoShape;
-import com.vesoft.nebula.meta.PropertyType;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.SpaceDesc;
 import com.vesoft.nebula.meta.SpaceItem;
