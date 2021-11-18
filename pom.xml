@@ -9,6 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jts.version>1.16.1</jts.version>
     </properties>
 
     <!-- More Project Information -->
@@ -157,4 +158,13 @@
             </plugin>
         </plugins>
     </build>
+
+<dependencies>
+    <dependency>
+        <groupId>org.locationtech.jts</groupId>
+        <artifactId>jts-core</artifactId>
+        <version>1.16.1</version>
+    </dependency>
+</dependencies>
+
 </project>

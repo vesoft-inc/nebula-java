@@ -5,8 +5,13 @@
 
 package com.vesoft.nebula.encoder;
 
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Geography;
+import com.vesoft.nebula.LineString;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.meta.PropertyType;
@@ -15,6 +20,10 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.codec.binary.Hex;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ByteOrderValues;
+import org.locationtech.jts.io.WKBWriter;
 
 public class RowWriterImpl implements RowWriter {
     private final SchemaProviderImpl schema;
@@ -509,6 +518,7 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
+            case GEOGRAPHY:
             case STRING: {
                 strList.add(v);
                 outOfSpaceStr = true;
@@ -626,6 +636,31 @@ public class RowWriterImpl implements RowWriter {
     }
 
     @Override
+    public void write(int index, Geography v) {
+        SchemaProvider.Field field = schema.field(index);
+        PropertyType typeEnum = PropertyType.findByValue(field.type());
+        if (typeEnum == null) {
+            throw new RuntimeException("Incorrect field type " + field.type());
+        }
+        if (typeEnum == PropertyType.GEOGRAPHY) {
+            if (field.geoShape() != 0 && field.geoShape() != v.getSetField()) {
+                throw new RuntimeException("Incorrect geo shape, expect "
+                        + field.geoShape() + ", got "
+                        + v.getSetField());
+            }
+        } else {
+            throw new RuntimeException("Value: " + v + "'s type is unexpected");
+        }
+        org.locationtech.jts.geom.Geometry jtsGeom = convertGeographyToJTSGeometry(v);
+        byte[] wkb = new org.locationtech.jts.io
+                         .WKBWriter(2, this.byteOrder == ByteOrder.BIG_ENDIAN
+                                           ? ByteOrderValues.BIG_ENDIAN
+                                           : ByteOrderValues.LITTLE_ENDIAN)
+                         .write(jtsGeom);
+        write(index, wkb);
+    }
+
+    @Override
     public byte[] encodeStr() {
         return buf.array();
     }
@@ -666,6 +701,8 @@ public class RowWriterImpl implements RowWriter {
             write(index, (Date)value);
         } else if (value instanceof DateTime) {
             write(index, (DateTime)value);
+        } else if (value instanceof Geography) {
+            write(index, (Geography)value);
         } else {
             throw new RuntimeException("Unsupported value object `" + value.getClass() + "\"");
         }
@@ -707,6 +744,9 @@ public class RowWriterImpl implements RowWriter {
                 break;
             case Value.DTVAL:
                 write(index, value.getDtVal());
+                break;
+            case Value.GGVAL:
+                write(index, value.getGgVal());
                 break;
             default:
                 throw new RuntimeException(
@@ -790,6 +830,9 @@ public class RowWriterImpl implements RowWriter {
                     //     case Value.DTVAL:
                     //         write(i, defVal.getDtVal());
                     //         break;
+                    //     case Value.GGVAL:
+                    //         write(i, defVal.getGgVal());
+                    //         break;
                     //     default:
                     //         throw new RuntimeException("Unsupported default value type");
                     // }
@@ -821,7 +864,8 @@ public class RowWriterImpl implements RowWriter {
             if (typeEnum == null) {
                 throw new RuntimeException("Incorrect field type " + field.type());
             }
-            if (typeEnum != PropertyType.STRING) {
+            if (typeEnum != PropertyType.STRING
+                && typeEnum != PropertyType.GEOGRAPHY) {
                 continue;
             }
             int offset = headerLen + numNullBytes + field.offset();
@@ -866,5 +910,67 @@ public class RowWriterImpl implements RowWriter {
         long curTime = System.currentTimeMillis() * 1000;
         long nanoTime = System.nanoTime();
         return curTime + (nanoTime - nanoTime / 1000000 * 1000000) / 1000;
+    }
+
+    public org.locationtech.jts.geom.Geometry
+        convertGeographyToJTSGeometry(Geography geog) {
+        GeometryFactory geomFactory = new GeometryFactory();
+        switch (geog.getSetField()) {
+            case Geography.PTVAL: {
+                Point point = geog.getPtVal();
+                Coordinate coord = point.getCoord();
+                return geomFactory.createPoint(
+                        new org.locationtech.jts.geom.Coordinate(coord.x, coord.y));
+            }
+            case Geography.LSVAL: {
+                LineString line = geog.getLsVal();
+                List<Coordinate> coordList = line.getCoordList();
+
+                List<org.locationtech.jts.geom.Coordinate> jtsCoordList =
+                        new ArrayList<>();
+                for (int i = 0; i < coordList.size(); ++i) {
+                    jtsCoordList.add(new org.locationtech.jts.geom.Coordinate(
+                            coordList.get(i).x, coordList.get(i).y));
+                }
+                org.locationtech.jts.geom.Coordinate[] jtsCoordArray =
+                        new org.locationtech.jts.geom.Coordinate[jtsCoordList.size()];
+                return geomFactory.createLineString(
+                        jtsCoordList.toArray(jtsCoordArray));
+            }
+            case Geography.PGVAL: {
+                Polygon polygon = geog.getPgVal();
+                List<List<Coordinate>> coordListList = polygon.getCoordListList();
+                if (coordListList.isEmpty()) {
+                    throw new RuntimeException("Polygon must at least contain one loop");
+                }
+            
+                List<org.locationtech.jts.geom.LinearRing> rings = new ArrayList<>();
+                for (int i = 0; i < coordListList.size(); ++i) {
+                    List<Coordinate> coordList = coordListList.get(i);
+                    List<org.locationtech.jts.geom.Coordinate> jtsCoordList =
+                            new ArrayList<>();
+                    for (int j = 0; j < coordList.size(); ++j) {
+                        jtsCoordList.add(new org.locationtech.jts.geom.Coordinate(
+                                coordList.get(j).x, coordList.get(j).y));
+                    }
+                    org.locationtech.jts.geom.Coordinate[] jtsCoordArray =
+                            new org.locationtech.jts.geom.Coordinate[jtsCoordList.size()];
+                    rings.add(geomFactory.createLinearRing(
+                            jtsCoordList.toArray(jtsCoordArray)));
+                }
+                org.locationtech.jts.geom.LinearRing shell = rings.get(0);
+                if (rings.size() == 1) {
+                    return geomFactory.createPolygon(shell);
+                } else {
+                    rings.remove(0);
+                    org.locationtech.jts.geom.LinearRing[] holesArrary =
+                        new org.locationtech.jts.geom.LinearRing[rings.size() - 1];
+                    return geomFactory.createPolygon(shell, rings.toArray(holesArrary));   
+                }
+            }
+            default:
+                throw new RuntimeException("Unknown geography: "
+                        + geog.getFieldValue().getClass());
+        }
     }
 }

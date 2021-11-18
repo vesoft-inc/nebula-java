@@ -22,6 +22,8 @@ public interface SchemaProvider {
         public int offset();
 
         public int nullFlagPos();
+
+        public int geoShape();
     }
 
     public long getVersion();

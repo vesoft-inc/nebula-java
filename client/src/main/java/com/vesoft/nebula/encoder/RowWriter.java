@@ -7,6 +7,7 @@ package com.vesoft.nebula.encoder;
 
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.Time;
 
 public interface RowWriter {
@@ -32,6 +33,8 @@ public interface RowWriter {
     void write(int index, Date v);
 
     void write(int index, DateTime v);
+
+    void write(int index, Geography v);
 
     byte[] encodeStr();
 }
