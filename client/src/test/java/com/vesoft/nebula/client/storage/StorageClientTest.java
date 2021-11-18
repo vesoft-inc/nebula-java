@@ -64,6 +64,7 @@ public class StorageClientTest {
         ScanVertexResultIterator resultIterator = client.scanVertex(
                 "testStorage",
                 "person");
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -75,6 +76,7 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getVertices().size();
             Assert.assertEquals(1, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.isAllSuccess());
@@ -104,6 +106,7 @@ public class StorageClientTest {
                 }
             }
         }
+        assert (count == 5);
     }
 
     @Test
@@ -118,6 +121,7 @@ public class StorageClientTest {
                 "testStorage",
                 "person",
                 Arrays.asList("name", "age"));
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -129,12 +133,12 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getVertices().size();
             Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.getPropNames().get(1).equals("name"));
             assert (result.getPropNames().get(2).equals("age"));
             assert (result.isAllSuccess());
-
 
             List<VertexRow> rows = result.getVertices();
             for (VertexRow row : rows) {
@@ -168,6 +172,7 @@ public class StorageClientTest {
                 assert (Arrays.asList(18L, 20L, 23L, 15L, 25L).contains(tableRow.getLong(2)));
             }
         }
+        assert (count == 5);
     }
 
     @Test
@@ -182,6 +187,7 @@ public class StorageClientTest {
                 "testStorage",
                 "person",
                 Arrays.asList());
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -193,12 +199,14 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getVertices().size();
             Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (Arrays.asList("name", "age").contains(result.getPropNames().get(1)));
             assert (Arrays.asList("name", "age").contains(result.getPropNames().get(2)));
             assert (result.isAllSuccess());
         }
+        assert (count == 5);
     }
 
     @Test
@@ -212,6 +220,7 @@ public class StorageClientTest {
         ScanEdgeResultIterator resultIterator = client.scanEdge(
                 "testStorage",
                 "friend");
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanEdgeResult result = null;
             try {
@@ -223,6 +232,7 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getEdges().size();
             Assert.assertEquals(3, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_src"));
             assert (result.getPropNames().get(1).equals("_dst"));
@@ -260,6 +270,7 @@ public class StorageClientTest {
                 }
             }
         }
+        assert (count == 5);
     }
 
     @Test
@@ -274,6 +285,7 @@ public class StorageClientTest {
                 "testStorage",
                 "friend",
                 Arrays.asList("likeness"));
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanEdgeResult result = null;
             try {
@@ -285,6 +297,7 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getEdges().size();
             Assert.assertEquals(4, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_src"));
             assert (result.getPropNames().get(1).equals("_dst"));
@@ -328,6 +341,7 @@ public class StorageClientTest {
                 assert (Arrays.asList(1.0, 2.1, 3.2, 4.5, 5.9).contains(tableRow.getDouble(3)));
             }
         }
+        assert (count == 5);
     }
 
     @Test
@@ -342,6 +356,7 @@ public class StorageClientTest {
                 "testStorage",
                 "friend",
                 Arrays.asList());
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanEdgeResult result = null;
             try {
@@ -353,6 +368,7 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getEdges().size();
             Assert.assertEquals(4, result.getPropNames().size());
             assert (Arrays.asList("_src", "_dst", "_rank", "likeness")
                     .contains(result.getPropNames().get(0)));
@@ -364,6 +380,7 @@ public class StorageClientTest {
                     .contains(result.getPropNames().get(3)));
             assert (result.isAllSuccess());
         }
+        assert (count == 5);
     }
 
     @Test
@@ -387,46 +404,7 @@ public class StorageClientTest {
             ScanVertexResultIterator resultIterator = sslClient.scanVertex(
                     "testStorageCA",
                     "person");
-            while (resultIterator.hasNext()) {
-                ScanVertexResult result = null;
-                try {
-                    result = resultIterator.next();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    assert (false);
-                }
-                if (result.isEmpty()) {
-                    continue;
-                }
-                Assert.assertEquals(1, result.getPropNames().size());
-                assert (result.getPropNames().get(0).equals("_vid"));
-                assert (result.isAllSuccess());
-
-                List<VertexRow> rows = result.getVertices();
-                for (VertexRow row : rows) {
-                    try {
-                        assert (Arrays.asList("1", "2", "3", "4", "5")
-                                .contains(row.getVid().asString()));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                        assert (false);
-                    }
-                    assert (row.getProps().size() == 0);
-                }
-
-                List<VertexTableRow> tableRows = result.getVertexTableRows();
-                for (VertexTableRow tableRow : tableRows) {
-                    try {
-                        assert (Arrays.asList("1", "2", "3", "4", "5")
-                                .contains(tableRow.getVid().asString()));
-                        assert (Arrays.asList("1", "2", "3", "4", "5")
-                                .contains(tableRow.getString(0)));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                        assert (false);
-                    }
-                }
-            }
+            assertIterator(resultIterator);
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
@@ -481,6 +459,7 @@ public class StorageClientTest {
     }
 
     private void assertIterator(ScanVertexResultIterator resultIterator) {
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -492,6 +471,7 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getVertices().size();
             Assert.assertEquals(1, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.isAllSuccess());
@@ -521,5 +501,6 @@ public class StorageClientTest {
                 }
             }
         }
+        assert (count == 5);
     }
 }
