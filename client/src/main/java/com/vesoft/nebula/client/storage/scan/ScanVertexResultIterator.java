@@ -14,11 +14,14 @@ import com.vesoft.nebula.client.storage.GraphStorageConnection;
 import com.vesoft.nebula.client.storage.StorageConnPool;
 import com.vesoft.nebula.client.storage.data.ScanStatus;
 import com.vesoft.nebula.storage.PartitionResult;
+import com.vesoft.nebula.storage.ScanCursor;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -73,7 +76,6 @@ public class ScanVertexResultIterator extends ScanResultIterator {
 
         for (HostAddress addr : addresses) {
             threadPool.submit(() -> {
-                ScanVertexRequest partRequest = new ScanVertexRequest(request);
                 ScanVertexResponse response;
                 PartScanInfo partInfo = partScanQueue.getPart(addr);
                 // no part need to scan
@@ -93,8 +95,10 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                     return;
                 }
 
-                partRequest.setPart_id(partInfo.getPart());
-                partRequest.setCursor(partInfo.getCursor());
+                Map<Integer, ScanCursor> cursorMap = new HashMap<>();
+                cursorMap.put(partInfo.getPart(), partInfo.getCursor());
+                ScanVertexRequest partRequest = new ScanVertexRequest(request);
+                partRequest.setParts(cursorMap);
                 try {
                     response = connection.scanVertex(partRequest);
                 } catch (TException e) {
@@ -163,10 +167,10 @@ public class ScanVertexResultIterator extends ScanResultIterator {
     private void handleSucceedResult(AtomicInteger existSuccess, ScanVertexResponse response,
                                      PartScanInfo partInfo) {
         existSuccess.addAndGet(1);
-        if (!response.has_next) {
+        if (!response.getCursors().get(partInfo.getPart()).has_next) {
             partScanQueue.dropPart(partInfo);
         } else {
-            partInfo.setCursor(response.getNext_cursor());
+            partInfo.setCursor(response.getCursors().get(partInfo.getPart()));
         }
     }
 

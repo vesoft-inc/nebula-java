@@ -14,11 +14,14 @@ import com.vesoft.nebula.client.storage.GraphStorageConnection;
 import com.vesoft.nebula.client.storage.StorageConnPool;
 import com.vesoft.nebula.client.storage.data.ScanStatus;
 import com.vesoft.nebula.storage.PartitionResult;
+import com.vesoft.nebula.storage.ScanCursor;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -70,7 +73,6 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         threadPool = Executors.newFixedThreadPool(addresses.size());
         for (HostAddress addr : addresses) {
             threadPool.submit(() -> {
-                ScanEdgeRequest partRequest = new ScanEdgeRequest(request);
                 ScanEdgeResponse response;
                 PartScanInfo partInfo = partScanQueue.getPart(addr);
                 // no part need to scan
@@ -91,8 +93,10 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                     return;
                 }
 
-                partRequest.setPart_id(partInfo.getPart());
-                partRequest.setCursor(partInfo.getCursor());
+                Map<Integer, ScanCursor> cursorMap = new HashMap<>();
+                cursorMap.put(partInfo.getPart(), partInfo.getCursor());
+                ScanEdgeRequest partRequest = new ScanEdgeRequest(request);
+                partRequest.setParts(cursorMap);
                 try {
                     response = connection.scanEdge(partRequest);
                 } catch (TException e) {
@@ -162,10 +166,10 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
     private void handleSucceedResult(AtomicInteger existSuccess, ScanEdgeResponse response,
                                      PartScanInfo partInfo) {
         existSuccess.addAndGet(1);
-        if (!response.has_next) {
+        if (!response.getCursors().get(partInfo.getPart()).has_next) {
             partScanQueue.dropPart(partInfo);
         } else {
-            partInfo.setCursor(response.getNext_cursor());
+            partInfo.setCursor(response.getCursors().get(partInfo.getPart()));
         }
     }
 
