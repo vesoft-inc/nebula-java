@@ -100,7 +100,7 @@ public class Session {
                 if (retryConnect) {
                     if (retryConnect()) {
                         connectionIsBroken.set(false);
-                        ExecutionResponse resp = connection.execute(sessionID, stmt,Integer.MAX_VALUE);
+                        ExecutionResponse resp = connection.execute(sessionID, stmt,timeout);
                         return new ResultSet(resp, timezoneOffset);
                     } else {
                         connectionIsBroken.set(true);
