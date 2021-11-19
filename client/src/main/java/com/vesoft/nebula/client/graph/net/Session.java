@@ -81,7 +81,7 @@ public class Session {
 
         if (connectionIsBroken.get() && retryConnect) {
             if (retryConnect()) {
-                ExecutionResponse resp = connection.execute(sessionID, stmt);
+                ExecutionResponse resp = connection.execute(sessionID, stmt,timeout);
                 return new ResultSet(resp, timezoneOffset);
             } else {
                 throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
