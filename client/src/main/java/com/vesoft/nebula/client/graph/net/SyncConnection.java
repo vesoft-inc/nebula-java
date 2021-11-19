@@ -100,7 +100,7 @@ public class SyncConnection extends Connection {
             throw new AuthFailedException(String.format("Authenticate failed: %s", e.getMessage()));
         }finally {
             if (timeout>0) {
-                transport.setTimeout(timeout);
+                transport.setTimeout(this.timeout);
             }
         }
     }
