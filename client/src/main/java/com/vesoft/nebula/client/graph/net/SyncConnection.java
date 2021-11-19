@@ -22,7 +22,7 @@ import com.vesoft.nebula.graph.ExecutionResponse;
 import com.vesoft.nebula.graph.GraphService;
 
 public class SyncConnection extends Connection {
-    protected TTransport transport = null;
+    protected TSocket transport = null;
     protected TProtocol protocol = null;
     private GraphService.Client client = null;
     private int timeout = 0;
@@ -58,9 +58,21 @@ public class SyncConnection extends Connection {
         open(serverAddr, timeout);
     }
 
-    public AuthResult authenticate(String user, String password)
+    /**
+     *
+     * @param user
+     * @param password
+     * @param timeout temporary setting timeout
+     * @return
+     * @throws AuthFailedException
+     * @throws IOErrorException
+     */
+    public AuthResult authenticate(String user, String password,int timeout)
         throws AuthFailedException, IOErrorException {
         try {
+            if (timeout>0) {
+                transport.setTimeout(timeout);
+            }
             AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 if (resp.error_msg != null) {
@@ -86,12 +98,34 @@ public class SyncConnection extends Connection {
                 }
             }
             throw new AuthFailedException(String.format("Authenticate failed: %s", e.getMessage()));
+        }finally {
+            if (timeout>0) {
+                transport.setTimeout(timeout);
+            }
         }
     }
 
-    public ExecutionResponse execute(long sessionID, String stmt)
+
+    public AuthResult authenticate(String user, String password)
+            throws AuthFailedException, IOErrorException {
+        return authenticate(user,password,0);
+    }
+
+
+    /**
+     *
+     * @param sessionID
+     * @param stmt
+     * @param timeout temporary setting timeout
+     * @return
+     * @throws IOErrorException
+     */
+    public ExecutionResponse execute(long sessionID, String stmt,int timeout)
             throws IOErrorException {
         try {
+            if (timeout>0) {
+                transport.setTimeout(timeout);
+            }
             return client.execute(sessionID, stmt.getBytes());
         } catch (TException e) {
             if (e instanceof TTransportException) {
@@ -101,13 +135,23 @@ public class SyncConnection extends Connection {
                 } else if (te.getType() == TTransportException.NOT_OPEN) {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
-                    || te.getMessage().contains("Read timed out")) {
+                        || te.getMessage().contains("Read timed out")) {
                     reopen();
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 }
             }
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        }finally {
+            if (timeout>0) {
+                transport.setTimeout(this.timeout);
+            }
         }
+    }
+
+
+    public ExecutionResponse execute(long sessionID, String stmt)
+            throws IOErrorException {
+        return execute(sessionID,stmt,0);
     }
 
     public void signout(long sessionId) {

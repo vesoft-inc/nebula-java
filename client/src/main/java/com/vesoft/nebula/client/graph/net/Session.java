@@ -61,9 +61,22 @@ public class Session {
      * @return The ResultSet
      */
     public synchronized ResultSet execute(String stmt) throws IOErrorException {
+        return execute(stmt,0);
+    }
+
+
+    /**
+     * Execute the nGql sentence.
+     *
+     * @param stmt The nGql sentence.
+     *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
+     * @param timeout temporary setting timeout
+     * @return The ResultSet
+     */
+    public synchronized ResultSet execute(String stmt,int timeout) throws IOErrorException {
         if (connection == null) {
             throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
-                "The session was released, couldn't use again.");
+                    "The session was released, couldn't use again.");
         }
 
         if (connectionIsBroken.get() && retryConnect) {
@@ -72,12 +85,12 @@ public class Session {
                 return new ResultSet(resp, timezoneOffset);
             } else {
                 throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
-                    "All servers are broken.");
+                        "All servers are broken.");
             }
         }
 
         try {
-            ExecutionResponse resp = connection.execute(sessionID, stmt);
+            ExecutionResponse resp = connection.execute(sessionID, stmt,timeout);
             return new ResultSet(resp, timezoneOffset);
         } catch (IOErrorException ie) {
             if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
@@ -87,7 +100,7 @@ public class Session {
                 if (retryConnect) {
                     if (retryConnect()) {
                         connectionIsBroken.set(false);
-                        ExecutionResponse resp = connection.execute(sessionID, stmt);
+                        ExecutionResponse resp = connection.execute(sessionID, stmt,Integer.MAX_VALUE);
                         return new ResultSet(resp, timezoneOffset);
                     } else {
                         connectionIsBroken.set(true);
@@ -99,6 +112,7 @@ public class Session {
             throw ie;
         }
     }
+
 
     /**
      * Check current connection is ok
