@@ -11,6 +11,7 @@ import com.facebook.thrift.transport.TTransport;
 import com.google.common.base.Preconditions;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+
 import java.util.List;
 
 public class AbstractMetaClient {
@@ -30,11 +31,10 @@ public class AbstractMetaClient {
         for (HostAddress address : addresses) {
             String host = address.getHost();
             int port = address.getPort();
+
             // check if the address is a valid ip address or uri address and port is valid
-            if ((!InetAddresses.isInetAddress(host) || !InetAddresses.isUriInetAddress(host))
-                || (port <= 0 || port >= 65535)) {
-                throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
-                        host, port));
+            if (host.isEmpty() || (port <= 0 || port >= 65535)) {
+                throw new IllegalArgumentException(String.format("%s:%d is not a valid address", host, port));
             }
         }
 
