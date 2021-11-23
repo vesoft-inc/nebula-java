@@ -175,16 +175,16 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
         case ITEMS:
           if (__field.type == TType.LIST) {
             {
-              TList _list182 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list182.size));
-              for (int _i183 = 0; 
-                   (_list182.size < 0) ? iprot.peekList() : (_i183 < _list182.size); 
-                   ++_i183)
+              TList _list174 = iprot.readListBegin();
+              this.items = new ArrayList<ConfigItem>(Math.max(0, _list174.size));
+              for (int _i175 = 0; 
+                   (_list174.size < 0) ? iprot.peekList() : (_i175 < _list174.size); 
+                   ++_i175)
               {
-                ConfigItem _elem184;
-                _elem184 = new ConfigItem();
-                _elem184.read(iprot);
-                this.items.add(_elem184);
+                ConfigItem _elem176;
+                _elem176 = new ConfigItem();
+                _elem176.read(iprot);
+                this.items.add(_elem176);
               }
               iprot.readListEnd();
             }
@@ -213,8 +213,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter185 : this.items)        {
-          _iter185.write(oprot);
+        for (ConfigItem _iter177 : this.items)        {
+          _iter177.write(oprot);
         }
         oprot.writeListEnd();
       }

@@ -267,16 +267,16 @@ public class AddZoneReq implements TBase, java.io.Serializable, Cloneable, Compa
         case NODES:
           if (__field.type == TType.LIST) {
             {
-              TList _list202 = iprot.readListBegin();
-              this.nodes = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list202.size));
-              for (int _i203 = 0; 
-                   (_list202.size < 0) ? iprot.peekList() : (_i203 < _list202.size); 
-                   ++_i203)
+              TList _list194 = iprot.readListBegin();
+              this.nodes = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list194.size));
+              for (int _i195 = 0; 
+                   (_list194.size < 0) ? iprot.peekList() : (_i195 < _list194.size); 
+                   ++_i195)
               {
-                com.vesoft.nebula.HostAddr _elem204;
-                _elem204 = new com.vesoft.nebula.HostAddr();
-                _elem204.read(iprot);
-                this.nodes.add(_elem204);
+                com.vesoft.nebula.HostAddr _elem196;
+                _elem196 = new com.vesoft.nebula.HostAddr();
+                _elem196.read(iprot);
+                this.nodes.add(_elem196);
               }
               iprot.readListEnd();
             }
@@ -310,8 +310,8 @@ public class AddZoneReq implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(NODES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.nodes.size()));
-        for (com.vesoft.nebula.HostAddr _iter205 : this.nodes)        {
-          _iter205.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter197 : this.nodes)        {
+          _iter197.write(oprot);
         }
         oprot.writeListEnd();
       }

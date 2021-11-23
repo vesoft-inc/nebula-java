@@ -349,16 +349,16 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
         case ZONES:
           if (__field.type == TType.LIST) {
             {
-              TList _list214 = iprot.readListBegin();
-              this.zones = new ArrayList<Zone>(Math.max(0, _list214.size));
-              for (int _i215 = 0; 
-                   (_list214.size < 0) ? iprot.peekList() : (_i215 < _list214.size); 
-                   ++_i215)
+              TList _list206 = iprot.readListBegin();
+              this.zones = new ArrayList<Zone>(Math.max(0, _list206.size));
+              for (int _i207 = 0; 
+                   (_list206.size < 0) ? iprot.peekList() : (_i207 < _list206.size); 
+                   ++_i207)
               {
-                Zone _elem216;
-                _elem216 = new Zone();
-                _elem216.read(iprot);
-                this.zones.add(_elem216);
+                Zone _elem208;
+                _elem208 = new Zone();
+                _elem208.read(iprot);
+                this.zones.add(_elem208);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListZonesResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(ZONES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.zones.size()));
-        for (Zone _iter217 : this.zones)        {
-          _iter217.write(oprot);
+        for (Zone _iter209 : this.zones)        {
+          _iter209.write(oprot);
         }
         oprot.writeListEnd();
       }
