@@ -5,7 +5,7 @@
 
 package com.vesoft.nebula.encoder;
 
-import com.vesoft.nebula.meta.PropertyType;
+import com.vesoft.nebula.PropertyType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

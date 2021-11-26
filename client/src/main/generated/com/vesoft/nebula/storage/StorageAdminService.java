@@ -868,17 +868,17 @@ public class StorageAdminService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler400) throws TException {
+    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler424) throws TException {
       checkReady();
-      transLeader_call method_call = new transLeader_call(req, resultHandler400, this, ___protocolFactory, ___transport);
+      transLeader_call method_call = new transLeader_call(req, resultHandler424, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class transLeader_call extends TAsyncMethodCall {
       private TransLeaderReq req;
-      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler401, TAsyncClient client397, TProtocolFactory protocolFactory398, TNonblockingTransport transport399) throws TException {
-        super(client397, protocolFactory398, transport399, resultHandler401, false);
+      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler425, TAsyncClient client421, TProtocolFactory protocolFactory422, TNonblockingTransport transport423) throws TException {
+        super(client421, protocolFactory422, transport423, resultHandler425, false);
         this.req = req;
       }
 
@@ -900,17 +900,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler405) throws TException {
+    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler429) throws TException {
       checkReady();
-      addPart_call method_call = new addPart_call(req, resultHandler405, this, ___protocolFactory, ___transport);
+      addPart_call method_call = new addPart_call(req, resultHandler429, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addPart_call extends TAsyncMethodCall {
       private AddPartReq req;
-      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler406, TAsyncClient client402, TProtocolFactory protocolFactory403, TNonblockingTransport transport404) throws TException {
-        super(client402, protocolFactory403, transport404, resultHandler406, false);
+      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler430, TAsyncClient client426, TProtocolFactory protocolFactory427, TNonblockingTransport transport428) throws TException {
+        super(client426, protocolFactory427, transport428, resultHandler430, false);
         this.req = req;
       }
 
@@ -932,17 +932,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler410) throws TException {
+    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler434) throws TException {
       checkReady();
-      addLearner_call method_call = new addLearner_call(req, resultHandler410, this, ___protocolFactory, ___transport);
+      addLearner_call method_call = new addLearner_call(req, resultHandler434, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addLearner_call extends TAsyncMethodCall {
       private AddLearnerReq req;
-      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler411, TAsyncClient client407, TProtocolFactory protocolFactory408, TNonblockingTransport transport409) throws TException {
-        super(client407, protocolFactory408, transport409, resultHandler411, false);
+      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler435, TAsyncClient client431, TProtocolFactory protocolFactory432, TNonblockingTransport transport433) throws TException {
+        super(client431, protocolFactory432, transport433, resultHandler435, false);
         this.req = req;
       }
 
@@ -964,17 +964,17 @@ public class StorageAdminService {
       }
     }
 
-    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler415) throws TException {
+    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler439) throws TException {
       checkReady();
-      removePart_call method_call = new removePart_call(req, resultHandler415, this, ___protocolFactory, ___transport);
+      removePart_call method_call = new removePart_call(req, resultHandler439, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class removePart_call extends TAsyncMethodCall {
       private RemovePartReq req;
-      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler416, TAsyncClient client412, TProtocolFactory protocolFactory413, TNonblockingTransport transport414) throws TException {
-        super(client412, protocolFactory413, transport414, resultHandler416, false);
+      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler440, TAsyncClient client436, TProtocolFactory protocolFactory437, TNonblockingTransport transport438) throws TException {
+        super(client436, protocolFactory437, transport438, resultHandler440, false);
         this.req = req;
       }
 
@@ -996,17 +996,17 @@ public class StorageAdminService {
       }
     }
 
-    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler420) throws TException {
+    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler444) throws TException {
       checkReady();
-      memberChange_call method_call = new memberChange_call(req, resultHandler420, this, ___protocolFactory, ___transport);
+      memberChange_call method_call = new memberChange_call(req, resultHandler444, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class memberChange_call extends TAsyncMethodCall {
       private MemberChangeReq req;
-      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler421, TAsyncClient client417, TProtocolFactory protocolFactory418, TNonblockingTransport transport419) throws TException {
-        super(client417, protocolFactory418, transport419, resultHandler421, false);
+      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler445, TAsyncClient client441, TProtocolFactory protocolFactory442, TNonblockingTransport transport443) throws TException {
+        super(client441, protocolFactory442, transport443, resultHandler445, false);
         this.req = req;
       }
 
@@ -1028,17 +1028,17 @@ public class StorageAdminService {
       }
     }
 
-    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler425) throws TException {
+    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler449) throws TException {
       checkReady();
-      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler425, this, ___protocolFactory, ___transport);
+      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler449, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class waitingForCatchUpData_call extends TAsyncMethodCall {
       private CatchUpDataReq req;
-      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler426, TAsyncClient client422, TProtocolFactory protocolFactory423, TNonblockingTransport transport424) throws TException {
-        super(client422, protocolFactory423, transport424, resultHandler426, false);
+      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler450, TAsyncClient client446, TProtocolFactory protocolFactory447, TNonblockingTransport transport448) throws TException {
+        super(client446, protocolFactory447, transport448, resultHandler450, false);
         this.req = req;
       }
 
@@ -1060,17 +1060,17 @@ public class StorageAdminService {
       }
     }
 
-    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler430) throws TException {
+    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler454) throws TException {
       checkReady();
-      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler430, this, ___protocolFactory, ___transport);
+      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler454, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createCheckpoint_call extends TAsyncMethodCall {
       private CreateCPRequest req;
-      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler431, TAsyncClient client427, TProtocolFactory protocolFactory428, TNonblockingTransport transport429) throws TException {
-        super(client427, protocolFactory428, transport429, resultHandler431, false);
+      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler455, TAsyncClient client451, TProtocolFactory protocolFactory452, TNonblockingTransport transport453) throws TException {
+        super(client451, protocolFactory452, transport453, resultHandler455, false);
         this.req = req;
       }
 
@@ -1092,17 +1092,17 @@ public class StorageAdminService {
       }
     }
 
-    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler435) throws TException {
+    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler459) throws TException {
       checkReady();
-      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler435, this, ___protocolFactory, ___transport);
+      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler459, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropCheckpoint_call extends TAsyncMethodCall {
       private DropCPRequest req;
-      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler436, TAsyncClient client432, TProtocolFactory protocolFactory433, TNonblockingTransport transport434) throws TException {
-        super(client432, protocolFactory433, transport434, resultHandler436, false);
+      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler460, TAsyncClient client456, TProtocolFactory protocolFactory457, TNonblockingTransport transport458) throws TException {
+        super(client456, protocolFactory457, transport458, resultHandler460, false);
         this.req = req;
       }
 
@@ -1124,17 +1124,17 @@ public class StorageAdminService {
       }
     }
 
-    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler440) throws TException {
+    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler464) throws TException {
       checkReady();
-      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler440, this, ___protocolFactory, ___transport);
+      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler464, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class blockingWrites_call extends TAsyncMethodCall {
       private BlockingSignRequest req;
-      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler441, TAsyncClient client437, TProtocolFactory protocolFactory438, TNonblockingTransport transport439) throws TException {
-        super(client437, protocolFactory438, transport439, resultHandler441, false);
+      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler465, TAsyncClient client461, TProtocolFactory protocolFactory462, TNonblockingTransport transport463) throws TException {
+        super(client461, protocolFactory462, transport463, resultHandler465, false);
         this.req = req;
       }
 
@@ -1156,17 +1156,17 @@ public class StorageAdminService {
       }
     }
 
-    public void rebuildTagIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler445) throws TException {
+    public void rebuildTagIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler469) throws TException {
       checkReady();
-      rebuildTagIndex_call method_call = new rebuildTagIndex_call(req, resultHandler445, this, ___protocolFactory, ___transport);
+      rebuildTagIndex_call method_call = new rebuildTagIndex_call(req, resultHandler469, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class rebuildTagIndex_call extends TAsyncMethodCall {
       private RebuildIndexRequest req;
-      public rebuildTagIndex_call(RebuildIndexRequest req, AsyncMethodCallback resultHandler446, TAsyncClient client442, TProtocolFactory protocolFactory443, TNonblockingTransport transport444) throws TException {
-        super(client442, protocolFactory443, transport444, resultHandler446, false);
+      public rebuildTagIndex_call(RebuildIndexRequest req, AsyncMethodCallback resultHandler470, TAsyncClient client466, TProtocolFactory protocolFactory467, TNonblockingTransport transport468) throws TException {
+        super(client466, protocolFactory467, transport468, resultHandler470, false);
         this.req = req;
       }
 
@@ -1188,17 +1188,17 @@ public class StorageAdminService {
       }
     }
 
-    public void rebuildEdgeIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler450) throws TException {
+    public void rebuildEdgeIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler474) throws TException {
       checkReady();
-      rebuildEdgeIndex_call method_call = new rebuildEdgeIndex_call(req, resultHandler450, this, ___protocolFactory, ___transport);
+      rebuildEdgeIndex_call method_call = new rebuildEdgeIndex_call(req, resultHandler474, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class rebuildEdgeIndex_call extends TAsyncMethodCall {
       private RebuildIndexRequest req;
-      public rebuildEdgeIndex_call(RebuildIndexRequest req, AsyncMethodCallback resultHandler451, TAsyncClient client447, TProtocolFactory protocolFactory448, TNonblockingTransport transport449) throws TException {
-        super(client447, protocolFactory448, transport449, resultHandler451, false);
+      public rebuildEdgeIndex_call(RebuildIndexRequest req, AsyncMethodCallback resultHandler475, TAsyncClient client471, TProtocolFactory protocolFactory472, TNonblockingTransport transport473) throws TException {
+        super(client471, protocolFactory472, transport473, resultHandler475, false);
         this.req = req;
       }
 
@@ -1220,17 +1220,17 @@ public class StorageAdminService {
       }
     }
 
-    public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler455) throws TException {
+    public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler479) throws TException {
       checkReady();
-      getLeaderParts_call method_call = new getLeaderParts_call(req, resultHandler455, this, ___protocolFactory, ___transport);
+      getLeaderParts_call method_call = new getLeaderParts_call(req, resultHandler479, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getLeaderParts_call extends TAsyncMethodCall {
       private GetLeaderReq req;
-      public getLeaderParts_call(GetLeaderReq req, AsyncMethodCallback resultHandler456, TAsyncClient client452, TProtocolFactory protocolFactory453, TNonblockingTransport transport454) throws TException {
-        super(client452, protocolFactory453, transport454, resultHandler456, false);
+      public getLeaderParts_call(GetLeaderReq req, AsyncMethodCallback resultHandler480, TAsyncClient client476, TProtocolFactory protocolFactory477, TNonblockingTransport transport478) throws TException {
+        super(client476, protocolFactory477, transport478, resultHandler480, false);
         this.req = req;
       }
 
@@ -1252,17 +1252,17 @@ public class StorageAdminService {
       }
     }
 
-    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler460) throws TException {
+    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler484) throws TException {
       checkReady();
-      checkPeers_call method_call = new checkPeers_call(req, resultHandler460, this, ___protocolFactory, ___transport);
+      checkPeers_call method_call = new checkPeers_call(req, resultHandler484, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class checkPeers_call extends TAsyncMethodCall {
       private CheckPeersReq req;
-      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler461, TAsyncClient client457, TProtocolFactory protocolFactory458, TNonblockingTransport transport459) throws TException {
-        super(client457, protocolFactory458, transport459, resultHandler461, false);
+      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler485, TAsyncClient client481, TProtocolFactory protocolFactory482, TNonblockingTransport transport483) throws TException {
+        super(client481, protocolFactory482, transport483, resultHandler485, false);
         this.req = req;
       }
 
@@ -1284,17 +1284,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addAdminTask(AddAdminTaskRequest req, AsyncMethodCallback resultHandler465) throws TException {
+    public void addAdminTask(AddAdminTaskRequest req, AsyncMethodCallback resultHandler489) throws TException {
       checkReady();
-      addAdminTask_call method_call = new addAdminTask_call(req, resultHandler465, this, ___protocolFactory, ___transport);
+      addAdminTask_call method_call = new addAdminTask_call(req, resultHandler489, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addAdminTask_call extends TAsyncMethodCall {
       private AddAdminTaskRequest req;
-      public addAdminTask_call(AddAdminTaskRequest req, AsyncMethodCallback resultHandler466, TAsyncClient client462, TProtocolFactory protocolFactory463, TNonblockingTransport transport464) throws TException {
-        super(client462, protocolFactory463, transport464, resultHandler466, false);
+      public addAdminTask_call(AddAdminTaskRequest req, AsyncMethodCallback resultHandler490, TAsyncClient client486, TProtocolFactory protocolFactory487, TNonblockingTransport transport488) throws TException {
+        super(client486, protocolFactory487, transport488, resultHandler490, false);
         this.req = req;
       }
 
@@ -1316,17 +1316,17 @@ public class StorageAdminService {
       }
     }
 
-    public void stopAdminTask(StopAdminTaskRequest req, AsyncMethodCallback resultHandler470) throws TException {
+    public void stopAdminTask(StopAdminTaskRequest req, AsyncMethodCallback resultHandler494) throws TException {
       checkReady();
-      stopAdminTask_call method_call = new stopAdminTask_call(req, resultHandler470, this, ___protocolFactory, ___transport);
+      stopAdminTask_call method_call = new stopAdminTask_call(req, resultHandler494, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class stopAdminTask_call extends TAsyncMethodCall {
       private StopAdminTaskRequest req;
-      public stopAdminTask_call(StopAdminTaskRequest req, AsyncMethodCallback resultHandler471, TAsyncClient client467, TProtocolFactory protocolFactory468, TNonblockingTransport transport469) throws TException {
-        super(client467, protocolFactory468, transport469, resultHandler471, false);
+      public stopAdminTask_call(StopAdminTaskRequest req, AsyncMethodCallback resultHandler495, TAsyncClient client491, TProtocolFactory protocolFactory492, TNonblockingTransport transport493) throws TException {
+        super(client491, protocolFactory492, transport493, resultHandler495, false);
         this.req = req;
       }
 
@@ -1348,17 +1348,17 @@ public class StorageAdminService {
       }
     }
 
-    public void listClusterInfo(ListClusterInfoReq req, AsyncMethodCallback resultHandler475) throws TException {
+    public void listClusterInfo(ListClusterInfoReq req, AsyncMethodCallback resultHandler499) throws TException {
       checkReady();
-      listClusterInfo_call method_call = new listClusterInfo_call(req, resultHandler475, this, ___protocolFactory, ___transport);
+      listClusterInfo_call method_call = new listClusterInfo_call(req, resultHandler499, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class listClusterInfo_call extends TAsyncMethodCall {
       private ListClusterInfoReq req;
-      public listClusterInfo_call(ListClusterInfoReq req, AsyncMethodCallback resultHandler476, TAsyncClient client472, TProtocolFactory protocolFactory473, TNonblockingTransport transport474) throws TException {
-        super(client472, protocolFactory473, transport474, resultHandler476, false);
+      public listClusterInfo_call(ListClusterInfoReq req, AsyncMethodCallback resultHandler500, TAsyncClient client496, TProtocolFactory protocolFactory497, TNonblockingTransport transport498) throws TException {
+        super(client496, protocolFactory497, transport498, resultHandler500, false);
         this.req = req;
       }
 

@@ -3,7 +3,7 @@
  * This source code is licensed under Apache 2.0 License.
  */
 
-package test.java.com.vesoft.nebula.encoder;
+package com.vesoft.nebula.encoder;
 
 import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
@@ -14,12 +14,12 @@ import com.vesoft.nebula.LineString;
 import com.vesoft.nebula.NullType;
 import com.vesoft.nebula.Point;
 import com.vesoft.nebula.Polygon;
+import com.vesoft.nebula.PropertyType;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.encoder.MetaCacheImplTest;
 import com.vesoft.nebula.encoder.NebulaCodecImpl;
 import com.vesoft.nebula.meta.EdgeItem;
-import com.vesoft.nebula.meta.PropertyType;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.ArrayList;

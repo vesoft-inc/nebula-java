@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
+package com.vesoft.nebula;
 
 
 import com.facebook.thrift.IntRangeSet;

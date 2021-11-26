@@ -99,7 +99,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.replica_factor = 0;
 
     this.vid_type = new ColumnTypeDef();
-    this.vid_type.setType(com.vesoft.nebula.meta.PropertyType.FIXED_STRING);
+    this.vid_type.setType(com.vesoft.nebula.PropertyType.FIXED_STRING);
     this.vid_type.setType_length((short)8);
 
   }

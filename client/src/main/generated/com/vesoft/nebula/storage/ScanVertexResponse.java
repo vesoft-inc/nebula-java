@@ -28,21 +28,16 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
   private static final TStruct STRUCT_DESC = new TStruct("ScanVertexResponse");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
   private static final TField VERTEX_DATA_FIELD_DESC = new TField("vertex_data", TType.STRUCT, (short)2);
-  private static final TField HAS_NEXT_FIELD_DESC = new TField("has_next", TType.BOOL, (short)3);
-  private static final TField NEXT_CURSOR_FIELD_DESC = new TField("next_cursor", TType.STRING, (short)4);
+  private static final TField CURSORS_FIELD_DESC = new TField("cursors", TType.MAP, (short)3);
 
   public ResponseCommon result;
   public com.vesoft.nebula.DataSet vertex_data;
-  public boolean has_next;
-  public byte[] next_cursor;
+  public Map<Integer,ScanCursor> cursors;
   public static final int RESULT = 1;
   public static final int VERTEX_DATA = 2;
-  public static final int HAS_NEXT = 3;
-  public static final int NEXT_CURSOR = 4;
+  public static final int CURSORS = 3;
 
   // isset id assignments
-  private static final int __HAS_NEXT_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -52,10 +47,10 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
     tmpMetaDataMap.put(VERTEX_DATA, new FieldMetaData("vertex_data", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
-    tmpMetaDataMap.put(HAS_NEXT, new FieldMetaData("has_next", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
-    tmpMetaDataMap.put(NEXT_CURSOR, new FieldMetaData("next_cursor", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(CURSORS, new FieldMetaData("cursors", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new StructMetaData(TType.STRUCT, ScanCursor.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -75,34 +70,17 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
   public ScanVertexResponse(
       ResponseCommon result,
       com.vesoft.nebula.DataSet vertex_data,
-      boolean has_next) {
+      Map<Integer,ScanCursor> cursors) {
     this();
     this.result = result;
     this.vertex_data = vertex_data;
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
-  }
-
-  public ScanVertexResponse(
-      ResponseCommon result,
-      com.vesoft.nebula.DataSet vertex_data,
-      boolean has_next,
-      byte[] next_cursor) {
-    this();
-    this.result = result;
-    this.vertex_data = vertex_data;
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
-    this.next_cursor = next_cursor;
+    this.cursors = cursors;
   }
 
   public static class Builder {
     private ResponseCommon result;
     private com.vesoft.nebula.DataSet vertex_data;
-    private boolean has_next;
-    private byte[] next_cursor;
-
-    BitSet __optional_isset = new BitSet(1);
+    private Map<Integer,ScanCursor> cursors;
 
     public Builder() {
     }
@@ -117,14 +95,8 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
-    public Builder setHas_next(final boolean has_next) {
-      this.has_next = has_next;
-      __optional_isset.set(__HAS_NEXT_ISSET_ID, true);
-      return this;
-    }
-
-    public Builder setNext_cursor(final byte[] next_cursor) {
-      this.next_cursor = next_cursor;
+    public Builder setCursors(final Map<Integer,ScanCursor> cursors) {
+      this.cursors = cursors;
       return this;
     }
 
@@ -132,10 +104,7 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       ScanVertexResponse result = new ScanVertexResponse();
       result.setResult(this.result);
       result.setVertex_data(this.vertex_data);
-      if (__optional_isset.get(__HAS_NEXT_ISSET_ID)) {
-        result.setHas_next(this.has_next);
-      }
-      result.setNext_cursor(this.next_cursor);
+      result.setCursors(this.cursors);
       return result;
     }
   }
@@ -148,17 +117,14 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
    * Performs a deep copy on <i>other</i>.
    */
   public ScanVertexResponse(ScanVertexResponse other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
     if (other.isSetVertex_data()) {
       this.vertex_data = TBaseHelper.deepCopy(other.vertex_data);
     }
-    this.has_next = TBaseHelper.deepCopy(other.has_next);
-    if (other.isSetNext_cursor()) {
-      this.next_cursor = TBaseHelper.deepCopy(other.next_cursor);
+    if (other.isSetCursors()) {
+      this.cursors = TBaseHelper.deepCopy(other.cursors);
     }
   }
 
@@ -214,53 +180,31 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public boolean isHas_next() {
-    return this.has_next;
+  public Map<Integer,ScanCursor> getCursors() {
+    return this.cursors;
   }
 
-  public ScanVertexResponse setHas_next(boolean has_next) {
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
+  public ScanVertexResponse setCursors(Map<Integer,ScanCursor> cursors) {
+    this.cursors = cursors;
     return this;
   }
 
-  public void unsetHas_next() {
-    __isset_bit_vector.clear(__HAS_NEXT_ISSET_ID);
+  public void unsetCursors() {
+    this.cursors = null;
   }
 
-  // Returns true if field has_next is set (has been assigned a value) and false otherwise
-  public boolean isSetHas_next() {
-    return __isset_bit_vector.get(__HAS_NEXT_ISSET_ID);
+  // Returns true if field cursors is set (has been assigned a value) and false otherwise
+  public boolean isSetCursors() {
+    return this.cursors != null;
   }
 
-  public void setHas_nextIsSet(boolean __value) {
-    __isset_bit_vector.set(__HAS_NEXT_ISSET_ID, __value);
-  }
-
-  public byte[] getNext_cursor() {
-    return this.next_cursor;
-  }
-
-  public ScanVertexResponse setNext_cursor(byte[] next_cursor) {
-    this.next_cursor = next_cursor;
-    return this;
-  }
-
-  public void unsetNext_cursor() {
-    this.next_cursor = null;
-  }
-
-  // Returns true if field next_cursor is set (has been assigned a value) and false otherwise
-  public boolean isSetNext_cursor() {
-    return this.next_cursor != null;
-  }
-
-  public void setNext_cursorIsSet(boolean __value) {
+  public void setCursorsIsSet(boolean __value) {
     if (!__value) {
-      this.next_cursor = null;
+      this.cursors = null;
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
@@ -279,19 +223,11 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case HAS_NEXT:
+    case CURSORS:
       if (__value == null) {
-        unsetHas_next();
+        unsetCursors();
       } else {
-        setHas_next((Boolean)__value);
-      }
-      break;
-
-    case NEXT_CURSOR:
-      if (__value == null) {
-        unsetNext_cursor();
-      } else {
-        setNext_cursor((byte[])__value);
+        setCursors((Map<Integer,ScanCursor>)__value);
       }
       break;
 
@@ -308,11 +244,8 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     case VERTEX_DATA:
       return getVertex_data();
 
-    case HAS_NEXT:
-      return new Boolean(isHas_next());
-
-    case NEXT_CURSOR:
-      return getNext_cursor();
+    case CURSORS:
+      return getCursors();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -333,16 +266,14 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.isSetVertex_data(), that.isSetVertex_data(), this.vertex_data, that.vertex_data)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.has_next, that.has_next)) { return false; }
-
-    if (!TBaseHelper.equalsSlow(this.isSetNext_cursor(), that.isSetNext_cursor(), this.next_cursor, that.next_cursor)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetCursors(), that.isSetCursors(), this.cursors, that.cursors)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, vertex_data, has_next, next_cursor});
+    return Arrays.deepHashCode(new Object[] {result, vertex_data, cursors});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -372,17 +303,24 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case HAS_NEXT:
-          if (__field.type == TType.BOOL) {
-            this.has_next = iprot.readBool();
-            setHas_nextIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case NEXT_CURSOR:
-          if (__field.type == TType.STRING) {
-            this.next_cursor = iprot.readBinary();
+        case CURSORS:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map198 = iprot.readMapBegin();
+              this.cursors = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map198.size));
+              for (int _i199 = 0; 
+                   (_map198.size < 0) ? iprot.peekMap() : (_i199 < _map198.size); 
+                   ++_i199)
+              {
+                int _key200;
+                ScanCursor _val201;
+                _key200 = iprot.readI32();
+                _val201 = new ScanCursor();
+                _val201.read(iprot);
+                this.cursors.put(_key200, _val201);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -414,15 +352,17 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
       this.vertex_data.write(oprot);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(HAS_NEXT_FIELD_DESC);
-    oprot.writeBool(this.has_next);
-    oprot.writeFieldEnd();
-    if (this.next_cursor != null) {
-      if (isSetNext_cursor()) {
-        oprot.writeFieldBegin(NEXT_CURSOR_FIELD_DESC);
-        oprot.writeBinary(this.next_cursor);
-        oprot.writeFieldEnd();
+    if (this.cursors != null) {
+      oprot.writeFieldBegin(CURSORS_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.cursors.size()));
+        for (Map.Entry<Integer, ScanCursor> _iter202 : this.cursors.entrySet())        {
+          oprot.writeI32(_iter202.getKey());
+          _iter202.getValue().write(oprot);
+        }
+        oprot.writeMapEnd();
       }
+      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -467,30 +407,15 @@ public class ScanVertexResponse implements TBase, java.io.Serializable, Cloneabl
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("has_next");
+    sb.append("cursors");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isHas_next(), indent + 1, prettyPrint));
-    first = false;
-    if (isSetNext_cursor())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("next_cursor");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getNext_cursor() == null) {
-        sb.append("null");
-      } else {
-          int __next_cursor_size = Math.min(this.getNext_cursor().length, 128);
-          for (int i = 0; i < __next_cursor_size; i++) {
-            if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this.getNext_cursor()[i]).length() > 1 ? Integer.toHexString(this.getNext_cursor()[i]).substring(Integer.toHexString(this.getNext_cursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getNext_cursor()[i]).toUpperCase());
-          }
-          if (this.getNext_cursor().length > 128) sb.append(" ...");
-      }
-      first = false;
+    if (this.getCursors() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getCursors(), indent + 1, prettyPrint));
     }
+    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
