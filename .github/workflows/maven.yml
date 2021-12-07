@@ -40,7 +40,7 @@ jobs:
         pushd nebula-docker-compose/
         cp ../../client/src/test/resources/docker-compose.yaml .
         docker-compose up -d
-        sleep 10
+        sleep 180
         docker-compose ps
         popd
         popd
