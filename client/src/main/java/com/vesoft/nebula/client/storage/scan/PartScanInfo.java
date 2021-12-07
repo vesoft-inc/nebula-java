@@ -15,11 +15,12 @@ public class PartScanInfo implements Serializable {
 
     private int part;
     private HostAddress leader;
-    private ScanCursor cursor = null;
+    private ScanCursor cursor;
 
     public PartScanInfo(int part, HostAddress leader) {
         this.part = part;
         this.leader = leader;
+        cursor = new ScanCursor(true, "".getBytes());
     }
 
     public int getPart() {
