@@ -17,6 +17,7 @@ import com.vesoft.nebula.storage.PartitionResult;
 import com.vesoft.nebula.storage.ScanCursor;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
+import com.vesoft.nebula.storage.ScanResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         threadPool = Executors.newFixedThreadPool(addresses.size());
         for (HostAddress addr : addresses) {
             threadPool.submit(() -> {
-                ScanEdgeResponse response;
+                ScanResponse response;
                 PartScanInfo partInfo = partScanQueue.getPart(addr);
                 // no part need to scan
                 if (partInfo == null) {
@@ -115,7 +116,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
                 if (isSuccessful(response)) {
                     handleSucceedResult(existSuccess, response, partInfo);
-                    results.add(response.getEdge_data());
+                    results.add(response.getProps());
                 }
 
                 if (response.getResult() != null) {
@@ -155,36 +156,6 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             boolean success = (existSuccess.get() == addresses.size());
             List<DataSet> finalResults = success ? results : null;
             return new ScanEdgeResult(finalResults, ScanStatus.ALL_SUCCESS);
-        }
-    }
-
-
-    private boolean isSuccessful(ScanEdgeResponse response) {
-        return response.result.failed_parts.size() == 0;
-    }
-
-    private void handleSucceedResult(AtomicInteger existSuccess, ScanEdgeResponse response,
-                                     PartScanInfo partInfo) {
-        existSuccess.addAndGet(1);
-        if (!response.getCursors().get(partInfo.getPart()).has_next) {
-            partScanQueue.dropPart(partInfo);
-        } else {
-            partInfo.setCursor(response.getCursors().get(partInfo.getPart()));
-        }
-    }
-
-    private void handleFailedResult(ScanEdgeResponse response, PartScanInfo partInfo,
-                                    List<Exception> exceptions) {
-        for (PartitionResult partResult : response.getResult().getFailed_parts()) {
-            if (partResult.code == ErrorCode.E_LEADER_CHANGED) {
-                freshLeader(spaceName, partInfo.getPart(), partResult.getLeader());
-                partInfo.setLeader(getLeader(partResult.getLeader()));
-            } else {
-                int code = partResult.getCode().getValue();
-                LOGGER.error(String.format("part scan failed, error code=%d", code));
-                partScanQueue.dropPart(partInfo);
-                exceptions.add(new Exception(String.format("part scan, error code=%d", code)));
-            }
         }
     }
 
