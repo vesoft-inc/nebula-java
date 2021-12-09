@@ -4,8 +4,6 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,66 +22,78 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<SpaceBackupInfo> {
-  private static final TStruct STRUCT_DESC = new TStruct("SpaceBackupInfo");
-  private static final TField SPACE_FIELD_DESC = new TField("space", TType.STRUCT, (short)1);
-  private static final TField INFO_FIELD_DESC = new TField("info", TType.LIST, (short)2);
+public class GetStateRequest implements TBase, java.io.Serializable, Cloneable, Comparable<GetStateRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetStateRequest");
+  private static final TField SPACE_FIELD_DESC = new TField("space", TType.I32, (short)1);
+  private static final TField PART_FIELD_DESC = new TField("part", TType.I32, (short)2);
 
-  public SpaceDesc space;
-  public List<BackupInfo> info;
+  public int space;
+  public int part;
   public static final int SPACE = 1;
-  public static final int INFO = 2;
+  public static final int PART = 2;
 
   // isset id assignments
+  private static final int __SPACE_ISSET_ID = 0;
+  private static final int __PART_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, SpaceDesc.class)));
-    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, BackupInfo.class))));
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(PART, new FieldMetaData("part", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(SpaceBackupInfo.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetStateRequest.class, metaDataMap);
   }
 
-  public SpaceBackupInfo() {
+  public GetStateRequest() {
   }
 
-  public SpaceBackupInfo(
-      SpaceDesc space,
-      List<BackupInfo> info) {
+  public GetStateRequest(
+      int space,
+      int part) {
     this();
     this.space = space;
-    this.info = info;
+    setSpaceIsSet(true);
+    this.part = part;
+    setPartIsSet(true);
   }
 
   public static class Builder {
-    private SpaceDesc space;
-    private List<BackupInfo> info;
+    private int space;
+    private int part;
+
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
 
-    public Builder setSpace(final SpaceDesc space) {
+    public Builder setSpace(final int space) {
       this.space = space;
+      __optional_isset.set(__SPACE_ISSET_ID, true);
       return this;
     }
 
-    public Builder setInfo(final List<BackupInfo> info) {
-      this.info = info;
+    public Builder setPart(final int part) {
+      this.part = part;
+      __optional_isset.set(__PART_ISSET_ID, true);
       return this;
     }
 
-    public SpaceBackupInfo build() {
-      SpaceBackupInfo result = new SpaceBackupInfo();
-      result.setSpace(this.space);
-      result.setInfo(this.info);
+    public GetStateRequest build() {
+      GetStateRequest result = new GetStateRequest();
+      if (__optional_isset.get(__SPACE_ISSET_ID)) {
+        result.setSpace(this.space);
+      }
+      if (__optional_isset.get(__PART_ISSET_ID)) {
+        result.setPart(this.part);
+      }
       return result;
     }
   }
@@ -95,83 +105,78 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public SpaceBackupInfo(SpaceBackupInfo other) {
-    if (other.isSetSpace()) {
-      this.space = TBaseHelper.deepCopy(other.space);
-    }
-    if (other.isSetInfo()) {
-      this.info = TBaseHelper.deepCopy(other.info);
-    }
+  public GetStateRequest(GetStateRequest other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.space = TBaseHelper.deepCopy(other.space);
+    this.part = TBaseHelper.deepCopy(other.part);
   }
 
-  public SpaceBackupInfo deepCopy() {
-    return new SpaceBackupInfo(this);
+  public GetStateRequest deepCopy() {
+    return new GetStateRequest(this);
   }
 
-  public SpaceDesc getSpace() {
+  public int getSpace() {
     return this.space;
   }
 
-  public SpaceBackupInfo setSpace(SpaceDesc space) {
+  public GetStateRequest setSpace(int space) {
     this.space = space;
+    setSpaceIsSet(true);
     return this;
   }
 
   public void unsetSpace() {
-    this.space = null;
+    __isset_bit_vector.clear(__SPACE_ISSET_ID);
   }
 
   // Returns true if field space is set (has been assigned a value) and false otherwise
   public boolean isSetSpace() {
-    return this.space != null;
+    return __isset_bit_vector.get(__SPACE_ISSET_ID);
   }
 
   public void setSpaceIsSet(boolean __value) {
-    if (!__value) {
-      this.space = null;
-    }
+    __isset_bit_vector.set(__SPACE_ISSET_ID, __value);
   }
 
-  public List<BackupInfo> getInfo() {
-    return this.info;
+  public int getPart() {
+    return this.part;
   }
 
-  public SpaceBackupInfo setInfo(List<BackupInfo> info) {
-    this.info = info;
+  public GetStateRequest setPart(int part) {
+    this.part = part;
+    setPartIsSet(true);
     return this;
   }
 
-  public void unsetInfo() {
-    this.info = null;
+  public void unsetPart() {
+    __isset_bit_vector.clear(__PART_ISSET_ID);
   }
 
-  // Returns true if field info is set (has been assigned a value) and false otherwise
-  public boolean isSetInfo() {
-    return this.info != null;
+  // Returns true if field part is set (has been assigned a value) and false otherwise
+  public boolean isSetPart() {
+    return __isset_bit_vector.get(__PART_ISSET_ID);
   }
 
-  public void setInfoIsSet(boolean __value) {
-    if (!__value) {
-      this.info = null;
-    }
+  public void setPartIsSet(boolean __value) {
+    __isset_bit_vector.set(__PART_ISSET_ID, __value);
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
       if (__value == null) {
         unsetSpace();
       } else {
-        setSpace((SpaceDesc)__value);
+        setSpace((Integer)__value);
       }
       break;
 
-    case INFO:
+    case PART:
       if (__value == null) {
-        unsetInfo();
+        unsetPart();
       } else {
-        setInfo((List<BackupInfo>)__value);
+        setPart((Integer)__value);
       }
       break;
 
@@ -183,10 +188,10 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
     case SPACE:
-      return getSpace();
+      return new Integer(getSpace());
 
-    case INFO:
-      return getInfo();
+    case PART:
+      return new Integer(getPart());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -199,24 +204,24 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof SpaceBackupInfo))
+    if (!(_that instanceof GetStateRequest))
       return false;
-    SpaceBackupInfo that = (SpaceBackupInfo)_that;
+    GetStateRequest that = (GetStateRequest)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetSpace(), that.isSetSpace(), this.space, that.space)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.space, that.space)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.part, that.part)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, info});
+    return Arrays.deepHashCode(new Object[] {space, part});
   }
 
   @Override
-  public int compareTo(SpaceBackupInfo other) {
+  public int compareTo(GetStateRequest other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -235,11 +240,11 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
+    lastComparison = Boolean.valueOf(isSetPart()).compareTo(other.isSetPart());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(info, other.info);
+    lastComparison = TBaseHelper.compareTo(part, other.part);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -258,29 +263,17 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       switch (__field.id)
       {
         case SPACE:
-          if (__field.type == TType.STRUCT) {
-            this.space = new SpaceDesc();
-            this.space.read(iprot);
+          if (__field.type == TType.I32) {
+            this.space = iprot.readI32();
+            setSpaceIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case INFO:
-          if (__field.type == TType.LIST) {
-            {
-              TList _list236 = iprot.readListBegin();
-              this.info = new ArrayList<BackupInfo>(Math.max(0, _list236.size));
-              for (int _i237 = 0; 
-                   (_list236.size < 0) ? iprot.peekList() : (_i237 < _list236.size); 
-                   ++_i237)
-              {
-                BackupInfo _elem238;
-                _elem238 = new BackupInfo();
-                _elem238.read(iprot);
-                this.info.add(_elem238);
-              }
-              iprot.readListEnd();
-            }
+        case PART:
+          if (__field.type == TType.I32) {
+            this.part = iprot.readI32();
+            setPartIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -302,22 +295,12 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.space != null) {
-      oprot.writeFieldBegin(SPACE_FIELD_DESC);
-      this.space.write(oprot);
-      oprot.writeFieldEnd();
-    }
-    if (this.info != null) {
-      oprot.writeFieldBegin(INFO_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
-        for (BackupInfo _iter239 : this.info)        {
-          _iter239.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(SPACE_FIELD_DESC);
+    oprot.writeI32(this.space);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(PART_FIELD_DESC);
+    oprot.writeI32(this.part);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -332,7 +315,7 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("SpaceBackupInfo");
+    StringBuilder sb = new StringBuilder("GetStateRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -342,22 +325,14 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     sb.append("space");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getSpace() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getSpace(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this.getSpace(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("info");
+    sb.append("part");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getInfo() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getInfo(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this.getPart(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

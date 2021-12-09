@@ -200,29 +200,29 @@ public class KillQueryReq implements TBase, java.io.Serializable, Cloneable, Com
         case KILL_QUERIES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map308 = iprot.readMapBegin();
-              this.kill_queries = new HashMap<Long,Set<Long>>(Math.max(0, 2*_map308.size));
-              for (int _i309 = 0; 
-                   (_map308.size < 0) ? iprot.peekMap() : (_i309 < _map308.size); 
-                   ++_i309)
+              TMap _map306 = iprot.readMapBegin();
+              this.kill_queries = new HashMap<Long,Set<Long>>(Math.max(0, 2*_map306.size));
+              for (int _i307 = 0; 
+                   (_map306.size < 0) ? iprot.peekMap() : (_i307 < _map306.size); 
+                   ++_i307)
               {
-                long _key310;
-                Set<Long> _val311;
-                _key310 = iprot.readI64();
+                long _key308;
+                Set<Long> _val309;
+                _key308 = iprot.readI64();
                 {
-                  TSet _set312 = iprot.readSetBegin();
-                  _val311 = new HashSet<Long>(Math.max(0, 2*_set312.size));
-                  for (int _i313 = 0; 
-                       (_set312.size < 0) ? iprot.peekSet() : (_i313 < _set312.size); 
-                       ++_i313)
+                  TSet _set310 = iprot.readSetBegin();
+                  _val309 = new HashSet<Long>(Math.max(0, 2*_set310.size));
+                  for (int _i311 = 0; 
+                       (_set310.size < 0) ? iprot.peekSet() : (_i311 < _set310.size); 
+                       ++_i311)
                   {
-                    long _elem314;
-                    _elem314 = iprot.readI64();
-                    _val311.add(_elem314);
+                    long _elem312;
+                    _elem312 = iprot.readI64();
+                    _val309.add(_elem312);
                   }
                   iprot.readSetEnd();
                 }
-                this.kill_queries.put(_key310, _val311);
+                this.kill_queries.put(_key308, _val309);
               }
               iprot.readMapEnd();
             }
@@ -251,12 +251,12 @@ public class KillQueryReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(KILL_QUERIES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I64, TType.SET, this.kill_queries.size()));
-        for (Map.Entry<Long, Set<Long>> _iter315 : this.kill_queries.entrySet())        {
-          oprot.writeI64(_iter315.getKey());
+        for (Map.Entry<Long, Set<Long>> _iter313 : this.kill_queries.entrySet())        {
+          oprot.writeI64(_iter313.getKey());
           {
-            oprot.writeSetBegin(new TSet(TType.I64, _iter315.getValue().size()));
-            for (long _iter316 : _iter315.getValue())            {
-              oprot.writeI64(_iter316);
+            oprot.writeSetBegin(new TSet(TType.I64, _iter313.getValue().size()));
+            for (long _iter314 : _iter313.getValue())            {
+              oprot.writeI64(_iter314);
             }
             oprot.writeSetEnd();
           }

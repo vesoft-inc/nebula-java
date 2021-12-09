@@ -345,15 +345,15 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list271 = iprot.readListBegin();
-              this.fields = new ArrayList<byte[]>(Math.max(0, _list271.size));
-              for (int _i272 = 0; 
-                   (_list271.size < 0) ? iprot.peekList() : (_i272 < _list271.size); 
-                   ++_i272)
+              TList _list269 = iprot.readListBegin();
+              this.fields = new ArrayList<byte[]>(Math.max(0, _list269.size));
+              for (int _i270 = 0; 
+                   (_list269.size < 0) ? iprot.peekList() : (_i270 < _list269.size); 
+                   ++_i270)
               {
-                byte[] _elem273;
-                _elem273 = iprot.readBinary();
-                this.fields.add(_elem273);
+                byte[] _elem271;
+                _elem271 = iprot.readBinary();
+                this.fields.add(_elem271);
               }
               iprot.readListEnd();
             }
@@ -390,8 +390,8 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (byte[] _iter274 : this.fields)        {
-          oprot.writeBinary(_iter274);
+        for (byte[] _iter272 : this.fields)        {
+          oprot.writeBinary(_iter272);
         }
         oprot.writeListEnd();
       }

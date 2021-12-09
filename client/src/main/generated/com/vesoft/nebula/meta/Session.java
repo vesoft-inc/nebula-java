@@ -738,18 +738,18 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
         case CONFIGS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map280 = iprot.readMapBegin();
-              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map280.size));
-              for (int _i281 = 0; 
-                   (_map280.size < 0) ? iprot.peekMap() : (_i281 < _map280.size); 
-                   ++_i281)
+              TMap _map278 = iprot.readMapBegin();
+              this.configs = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map278.size));
+              for (int _i279 = 0; 
+                   (_map278.size < 0) ? iprot.peekMap() : (_i279 < _map278.size); 
+                   ++_i279)
               {
-                byte[] _key282;
-                com.vesoft.nebula.Value _val283;
-                _key282 = iprot.readBinary();
-                _val283 = new com.vesoft.nebula.Value();
-                _val283.read(iprot);
-                this.configs.put(_key282, _val283);
+                byte[] _key280;
+                com.vesoft.nebula.Value _val281;
+                _key280 = iprot.readBinary();
+                _val281 = new com.vesoft.nebula.Value();
+                _val281.read(iprot);
+                this.configs.put(_key280, _val281);
               }
               iprot.readMapEnd();
             }
@@ -760,18 +760,18 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
         case QUERIES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map284 = iprot.readMapBegin();
-              this.queries = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map284.size));
-              for (int _i285 = 0; 
-                   (_map284.size < 0) ? iprot.peekMap() : (_i285 < _map284.size); 
-                   ++_i285)
+              TMap _map282 = iprot.readMapBegin();
+              this.queries = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map282.size));
+              for (int _i283 = 0; 
+                   (_map282.size < 0) ? iprot.peekMap() : (_i283 < _map282.size); 
+                   ++_i283)
               {
-                long _key286;
-                QueryDesc _val287;
-                _key286 = iprot.readI64();
-                _val287 = new QueryDesc();
-                _val287.read(iprot);
-                this.queries.put(_key286, _val287);
+                long _key284;
+                QueryDesc _val285;
+                _key284 = iprot.readI64();
+                _val285 = new QueryDesc();
+                _val285.read(iprot);
+                this.queries.put(_key284, _val285);
               }
               iprot.readMapEnd();
             }
@@ -832,9 +832,9 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CONFIGS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.configs.size()));
-        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter288 : this.configs.entrySet())        {
-          oprot.writeBinary(_iter288.getKey());
-          _iter288.getValue().write(oprot);
+        for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter286 : this.configs.entrySet())        {
+          oprot.writeBinary(_iter286.getKey());
+          _iter286.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -844,9 +844,9 @@ public class Session implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(QUERIES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, this.queries.size()));
-        for (Map.Entry<Long, QueryDesc> _iter289 : this.queries.entrySet())        {
-          oprot.writeI64(_iter289.getKey());
-          _iter289.getValue().write(oprot);
+        for (Map.Entry<Long, QueryDesc> _iter287 : this.queries.entrySet())        {
+          oprot.writeI64(_iter287.getKey());
+          _iter287.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

@@ -352,32 +352,32 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
         case KILLED_QUERIES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map294 = iprot.readMapBegin();
-              this.killed_queries = new HashMap<Long,Map<Long,QueryDesc>>(Math.max(0, 2*_map294.size));
-              for (int _i295 = 0; 
-                   (_map294.size < 0) ? iprot.peekMap() : (_i295 < _map294.size); 
-                   ++_i295)
+              TMap _map292 = iprot.readMapBegin();
+              this.killed_queries = new HashMap<Long,Map<Long,QueryDesc>>(Math.max(0, 2*_map292.size));
+              for (int _i293 = 0; 
+                   (_map292.size < 0) ? iprot.peekMap() : (_i293 < _map292.size); 
+                   ++_i293)
               {
-                long _key296;
-                Map<Long,QueryDesc> _val297;
-                _key296 = iprot.readI64();
+                long _key294;
+                Map<Long,QueryDesc> _val295;
+                _key294 = iprot.readI64();
                 {
-                  TMap _map298 = iprot.readMapBegin();
-                  _val297 = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map298.size));
-                  for (int _i299 = 0; 
-                       (_map298.size < 0) ? iprot.peekMap() : (_i299 < _map298.size); 
-                       ++_i299)
+                  TMap _map296 = iprot.readMapBegin();
+                  _val295 = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map296.size));
+                  for (int _i297 = 0; 
+                       (_map296.size < 0) ? iprot.peekMap() : (_i297 < _map296.size); 
+                       ++_i297)
                   {
-                    long _key300;
-                    QueryDesc _val301;
-                    _key300 = iprot.readI64();
-                    _val301 = new QueryDesc();
-                    _val301.read(iprot);
-                    _val297.put(_key300, _val301);
+                    long _key298;
+                    QueryDesc _val299;
+                    _key298 = iprot.readI64();
+                    _val299 = new QueryDesc();
+                    _val299.read(iprot);
+                    _val295.put(_key298, _val299);
                   }
                   iprot.readMapEnd();
                 }
-                this.killed_queries.put(_key296, _val297);
+                this.killed_queries.put(_key294, _val295);
               }
               iprot.readMapEnd();
             }
@@ -416,13 +416,13 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(KILLED_QUERIES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I64, TType.MAP, this.killed_queries.size()));
-        for (Map.Entry<Long, Map<Long,QueryDesc>> _iter302 : this.killed_queries.entrySet())        {
-          oprot.writeI64(_iter302.getKey());
+        for (Map.Entry<Long, Map<Long,QueryDesc>> _iter300 : this.killed_queries.entrySet())        {
+          oprot.writeI64(_iter300.getKey());
           {
-            oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, _iter302.getValue().size()));
-            for (Map.Entry<Long, QueryDesc> _iter303 : _iter302.getValue().entrySet())            {
-              oprot.writeI64(_iter303.getKey());
-              _iter303.getValue().write(oprot);
+            oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, _iter300.getValue().size()));
+            for (Map.Entry<Long, QueryDesc> _iter301 : _iter300.getValue().entrySet())            {
+              oprot.writeI64(_iter301.getKey());
+              _iter301.getValue().write(oprot);
             }
             oprot.writeMapEnd();
           }
