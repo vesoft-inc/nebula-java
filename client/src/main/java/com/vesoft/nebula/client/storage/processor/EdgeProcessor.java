@@ -31,13 +31,25 @@ public class EdgeProcessor {
                 if (values.size() < 3) {
                     LOGGER.error("values size error for row: " + row.toString());
                 } else {
-                    Value srcId = values.get(0);
-                    Value dstId = values.get(1);
-                    Value rank = values.get(2);
+                    Value srcId = null;
+                    Value dstId = null;
+                    Value rank = null;
                     Map<String, ValueWrapper> props = Maps.newHashMap();
-                    for (int i = 3; i < values.size(); i++) {
-                        String colName = new String(colNames.get(i)).split("\\.")[1];
-                        props.put(colName, new ValueWrapper(values.get(i), decodeType));
+                    for (int i = 0; i < values.size(); i++) {
+                        String colName = new String(colNames.get(i));
+                        if (!colName.contains(".")) {
+                            continue;
+                        }
+                        if ("_src".equals(colName.split("\\.")[1])) {
+                            srcId = values.get(i);
+                        } else if ("_dst".equals(colName.split("\\.")[1])) {
+                            dstId = values.get(i);
+                        } else if ("_rank".equals(colName.split("\\.")[1])) {
+                            rank = values.get(i);
+                        } else {
+                            props.put(colName.split("\\.")[1],
+                                    new ValueWrapper(values.get(i), decodeType));
+                        }
                     }
                     EdgeRow edgeRow = new EdgeRow(new ValueWrapper(srcId, decodeType),
                             new ValueWrapper(dstId, decodeType), rank.getIVal(), props);

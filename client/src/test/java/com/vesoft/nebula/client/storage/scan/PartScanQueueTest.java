@@ -31,7 +31,7 @@ public class PartScanQueueTest {
         // test validate leader
         HostAddress rightAddr = new HostAddress("127.0.0.1", 1);
         assert (queue.getPart(rightAddr).getLeader().getPort() == 1);
-        assert (queue.getPart(rightAddr).getCursor() == null);
+        assert ("".equals(new String(queue.getPart(rightAddr).getCursor().next_cursor)));
 
         // test cursor
         HostAddress addr = new HostAddress("127.0.0.1", 3);

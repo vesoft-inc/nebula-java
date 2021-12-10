@@ -463,10 +463,11 @@ public class TestDataFromServer {
                             + "INSERT EDGE like(likeness) values \"g\" -> \"c\":(10);");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             result = session.execute(
-                    "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS");
+                    "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS "
+                            + "YIELD path as p");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(4, result.rowsSize());
-            String expectString = "ColumnName: [path], "
+            String expectString = "ColumnName: [p], "
                     + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
                     + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
                     + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
