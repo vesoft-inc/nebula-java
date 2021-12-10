@@ -60,7 +60,7 @@ public class TestDataFromServer {
                 + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));"
                 + "CREATE TAG IF NOT EXISTS any_shape(geo geography);");
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
-        TimeUnit.SECONDS.sleep(6);
+        TimeUnit.SECONDS.sleep(10);
         String insertVertexes = "INSERT VERTEX person(name, age, grade,friends, book_num, "
                 + "birthday, start_school, morning, property,"
                 + "is_girl, child_name, expend, first_out_city) VALUES "
@@ -445,7 +445,7 @@ public class TestDataFromServer {
                     "CREATE TAG IF NOT EXISTS player(name string, age int);"
                             + "CREATE EDGE IF NOT EXISTS like(likeness int);");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
-            TimeUnit.SECONDS.sleep(6);
+            TimeUnit.SECONDS.sleep(10);
             result = session.execute(
                     "INSERT VERTEX player(name, age) values \"a\":(\"a\", 1); "
                             + "INSERT VERTEX player(name, age) values \"b\":(\"b\", 2); "
