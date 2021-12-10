@@ -85,19 +85,18 @@ public class GraphClientExample {
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(100);
-            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669),
-                    new HostAddress("127.0.0.1", 9670));
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
             pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", false);
             {
-                String createSchema = "CREATE SPACE IF NOT EXISTS test; "
-                                      + "USE test;"
-                                      + "CREATE TAG IF NOT EXISTS person(name string, age int);"
-                                      + "CREATE EDGE IF NOT EXISTS like(likeness double)";
+                String createSchema = "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20)); "
+                        + "USE test;"
+                        + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                        + "CREATE EDGE IF NOT EXISTS like(likeness double)";
                 ResultSet resp = session.execute(createSchema);
                 if (!resp.isSucceeded()) {
                     log.error(String.format("Execute: `%s', failed: %s",
-                        createSchema, resp.getErrorMessage()));
+                            createSchema, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
@@ -105,41 +104,41 @@ public class GraphClientExample {
             TimeUnit.SECONDS.sleep(5);
             {
                 String insertVertexes = "INSERT VERTEX person(name, age) VALUES "
-                    + "'Bob':('Bob', 10), "
-                    + "'Lily':('Lily', 9), "
-                    + "'Tom':('Tom', 10), "
-                    + "'Jerry':('Jerry', 13), "
-                    + "'John':('John', 11);";
+                        + "'Bob':('Bob', 10), "
+                        + "'Lily':('Lily', 9), "
+                        + "'Tom':('Tom', 10), "
+                        + "'Jerry':('Jerry', 13), "
+                        + "'John':('John', 11);";
                 ResultSet resp = session.execute(insertVertexes);
                 if (!resp.isSucceeded()) {
                     log.error(String.format("Execute: `%s', failed: %s",
-                        insertVertexes, resp.getErrorMessage()));
+                            insertVertexes, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             {
                 String insertEdges = "INSERT EDGE like(likeness) VALUES "
-                    + "'Bob'->'Lily':(80.0), "
-                    + "'Bob'->'Tom':(70.0), "
-                    + "'Lily'->'Jerry':(84.0), "
-                    + "'Tom'->'Jerry':(68.3), "
-                    + "'Bob'->'John':(97.2);";
+                        + "'Bob'->'Lily':(80.0), "
+                        + "'Bob'->'Tom':(70.0), "
+                        + "'Lily'->'Jerry':(84.0), "
+                        + "'Tom'->'Jerry':(68.3), "
+                        + "'Bob'->'John':(97.2);";
                 ResultSet resp = session.execute(insertEdges);
                 if (!resp.isSucceeded()) {
                     log.error(String.format("Execute: `%s', failed: %s",
-                        insertEdges, resp.getErrorMessage()));
+                            insertEdges, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             {
                 String query = "GO FROM \"Bob\" OVER like "
-                    + "YIELD $^.person.name, $^.person.age, like.likeness";
+                        + "YIELD $^.person.name, $^.person.age, like.likeness";
                 ResultSet resp = session.execute(query);
                 if (!resp.isSucceeded()) {
                     log.error(String.format("Execute: `%s', failed: %s",
-                        query, resp.getErrorMessage()));
+                            query, resp.getErrorMessage()));
                     System.exit(1);
                 }
                 printResult(resp);
@@ -166,7 +165,7 @@ public class GraphClientExample {
                         "examples/src/main/resources/ssl/casigned.crt",
                         "examples/src/main/resources/ssl/casigned.key"));
                 NebulaPool sslPool = new NebulaPool();
-                sslPool.init(Arrays.asList(new HostAddress("192.168.8.123", 9669)),
+                sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9669)),
                         nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
@@ -189,7 +188,7 @@ public class GraphClientExample {
                         "examples/src/main/resources/ssl/selfsigned.key",
                         "vesoft"));
                 NebulaPool sslPool = new NebulaPool();
-                sslPool.init(Arrays.asList(new HostAddress("192.168.8.123", 9669)),
+                sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9669)),
                         nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
