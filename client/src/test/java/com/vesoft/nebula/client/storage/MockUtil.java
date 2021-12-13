@@ -23,6 +23,7 @@ public class MockUtil {
     public static List<DataSet> mockVertexDataSets() {
 
         List<byte[]> columnNames = new ArrayList<>();
+        columnNames.add("_vid".getBytes());
         columnNames.add("person._vid".getBytes());
         columnNames.add("person.boolean_col1".getBytes());
         columnNames.add("person.long_col2".getBytes());
@@ -35,6 +36,7 @@ public class MockUtil {
         // row 1
         List<Value> values1 = new ArrayList<>();
         values1.add(Value.sVal("Tom".getBytes()));
+        values1.add(Value.sVal("Tom".getBytes()));
         values1.add(Value.bVal(true));
         values1.add(Value.iVal(12));
         values1.add(Value.fVal(1.0));
@@ -43,7 +45,7 @@ public class MockUtil {
         values1.add(Value.dtVal(new DateTime((short) 2020, (byte) 1, (byte) 1, (byte) 12,
                 (byte) 10, (byte) 30, 100)));
         values1.add(Value.ggVal(new Geography(Geography.PTVAL,
-                new Point(new Coordinate(1.0,1.5)))));
+                new Point(new Coordinate(1.0, 1.5)))));
 
         List<Row> rows = new ArrayList<>();
         rows.add(new Row(values1));
