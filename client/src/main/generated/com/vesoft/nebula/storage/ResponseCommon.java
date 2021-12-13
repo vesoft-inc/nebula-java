@@ -27,11 +27,11 @@ import com.facebook.thrift.protocol.*;
 public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, Comparable<ResponseCommon> {
   private static final TStruct STRUCT_DESC = new TStruct("ResponseCommon");
   private static final TField FAILED_PARTS_FIELD_DESC = new TField("failed_parts", TType.LIST, (short)1);
-  private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I32, (short)2);
+  private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I64, (short)2);
   private static final TField LATENCY_DETAIL_US_FIELD_DESC = new TField("latency_detail_us", TType.MAP, (short)3);
 
   public List<PartitionResult> failed_parts;
-  public int latency_in_us;
+  public long latency_in_us;
   public Map<String,Integer> latency_detail_us;
   public static final int FAILED_PARTS = 1;
   public static final int LATENCY_IN_US = 2;
@@ -49,7 +49,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, PartitionResult.class))));
     tmpMetaDataMap.put(LATENCY_IN_US, new FieldMetaData("latency_in_us", TFieldRequirementType.REQUIRED, 
-        new FieldValueMetaData(TType.I32)));
+        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(LATENCY_DETAIL_US, new FieldMetaData("latency_detail_us", TFieldRequirementType.OPTIONAL, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.STRING), 
@@ -66,7 +66,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
   public ResponseCommon(
       List<PartitionResult> failed_parts,
-      int latency_in_us) {
+      long latency_in_us) {
     this();
     this.failed_parts = failed_parts;
     this.latency_in_us = latency_in_us;
@@ -75,7 +75,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
   public ResponseCommon(
       List<PartitionResult> failed_parts,
-      int latency_in_us,
+      long latency_in_us,
       Map<String,Integer> latency_detail_us) {
     this();
     this.failed_parts = failed_parts;
@@ -86,7 +86,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
 
   public static class Builder {
     private List<PartitionResult> failed_parts;
-    private int latency_in_us;
+    private long latency_in_us;
     private Map<String,Integer> latency_detail_us;
 
     BitSet __optional_isset = new BitSet(1);
@@ -99,7 +99,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return this;
     }
 
-    public Builder setLatency_in_us(final int latency_in_us) {
+    public Builder setLatency_in_us(final long latency_in_us) {
       this.latency_in_us = latency_in_us;
       __optional_isset.set(__LATENCY_IN_US_ISSET_ID, true);
       return this;
@@ -168,11 +168,11 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public int getLatency_in_us() {
+  public long getLatency_in_us() {
     return this.latency_in_us;
   }
 
-  public ResponseCommon setLatency_in_us(int latency_in_us) {
+  public ResponseCommon setLatency_in_us(long latency_in_us) {
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
     return this;
@@ -230,7 +230,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       if (__value == null) {
         unsetLatency_in_us();
       } else {
-        setLatency_in_us((Integer)__value);
+        setLatency_in_us((Long)__value);
       }
       break;
 
@@ -253,7 +253,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       return getFailed_parts();
 
     case LATENCY_IN_US:
-      return new Integer(getLatency_in_us());
+      return new Long(getLatency_in_us());
 
     case LATENCY_DETAIL_US:
       return getLatency_detail_us();
@@ -358,8 +358,8 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
           }
           break;
         case LATENCY_IN_US:
-          if (__field.type == TType.I32) {
-            this.latency_in_us = iprot.readI32();
+          if (__field.type == TType.I64) {
+            this.latency_in_us = iprot.readI64();
             setLatency_in_usIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -418,7 +418,7 @@ public class ResponseCommon implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(LATENCY_IN_US_FIELD_DESC);
-    oprot.writeI32(this.latency_in_us);
+    oprot.writeI64(this.latency_in_us);
     oprot.writeFieldEnd();
     if (this.latency_detail_us != null) {
       if (isSetLatency_detail_us()) {

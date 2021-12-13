@@ -27,9 +27,12 @@ import com.facebook.thrift.protocol.*;
 public class VerifyClientVersionReq implements TBase, java.io.Serializable, Cloneable, Comparable<VerifyClientVersionReq> {
   private static final TStruct STRUCT_DESC = new TStruct("VerifyClientVersionReq");
   private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)1);
+  private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)2);
 
   public byte[] version;
+  public com.vesoft.nebula.HostAddr host;
   public static final int VERSION = 1;
+  public static final int HOST = 2;
 
   // isset id assignments
 
@@ -39,6 +42,8 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -57,8 +62,17 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     this.version = version;
   }
 
+  public VerifyClientVersionReq(
+      byte[] version,
+      com.vesoft.nebula.HostAddr host) {
+    this();
+    this.version = version;
+    this.host = host;
+  }
+
   public static class Builder {
     private byte[] version;
+    private com.vesoft.nebula.HostAddr host;
 
     public Builder() {
     }
@@ -68,9 +82,15 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       return this;
     }
 
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
+      this.host = host;
+      return this;
+    }
+
     public VerifyClientVersionReq build() {
       VerifyClientVersionReq result = new VerifyClientVersionReq();
       result.setVersion(this.version);
+      result.setHost(this.host);
       return result;
     }
   }
@@ -85,6 +105,9 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
   public VerifyClientVersionReq(VerifyClientVersionReq other) {
     if (other.isSetVersion()) {
       this.version = TBaseHelper.deepCopy(other.version);
+    }
+    if (other.isSetHost()) {
+      this.host = TBaseHelper.deepCopy(other.host);
     }
   }
 
@@ -116,6 +139,30 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     }
   }
 
+  public com.vesoft.nebula.HostAddr getHost() {
+    return this.host;
+  }
+
+  public VerifyClientVersionReq setHost(com.vesoft.nebula.HostAddr host) {
+    this.host = host;
+    return this;
+  }
+
+  public void unsetHost() {
+    this.host = null;
+  }
+
+  // Returns true if field host is set (has been assigned a value) and false otherwise
+  public boolean isSetHost() {
+    return this.host != null;
+  }
+
+  public void setHostIsSet(boolean __value) {
+    if (!__value) {
+      this.host = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case VERSION:
@@ -123,6 +170,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
         unsetVersion();
       } else {
         setVersion((byte[])__value);
+      }
+      break;
+
+    case HOST:
+      if (__value == null) {
+        unsetHost();
+      } else {
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
@@ -135,6 +190,9 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     switch (fieldID) {
     case VERSION:
       return getVersion();
+
+    case HOST:
+      return getHost();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -153,12 +211,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
     if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {version});
+    return Arrays.deepHashCode(new Object[] {version, host});
   }
 
   @Override
@@ -178,6 +238,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(version, other.version);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetHost()).compareTo(other.isSetHost());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(host, other.host);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -202,6 +270,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case HOST:
+          if (__field.type == TType.STRUCT) {
+            this.host = new com.vesoft.nebula.HostAddr();
+            this.host.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -222,6 +298,11 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     if (this.version != null) {
       oprot.writeFieldBegin(VERSION_FIELD_DESC);
       oprot.writeBinary(this.version);
+      oprot.writeFieldEnd();
+    }
+    if (this.host != null) {
+      oprot.writeFieldBegin(HOST_FIELD_DESC);
+      this.host.write(oprot);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -257,6 +338,17 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
           sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
         }
         if (this.getVersion().length > 128) sb.append(" ...");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("host");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getHost() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

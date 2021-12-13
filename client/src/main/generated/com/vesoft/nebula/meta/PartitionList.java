@@ -24,12 +24,12 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("RegConfigReq");
-  private static final TField ITEMS_FIELD_DESC = new TField("items", TType.LIST, (short)1);
+public class PartitionList implements TBase, java.io.Serializable, Cloneable, Comparable<PartitionList> {
+  private static final TStruct STRUCT_DESC = new TStruct("PartitionList");
+  private static final TField PART_LIST_FIELD_DESC = new TField("part_list", TType.LIST, (short)1);
 
-  public List<ConfigItem> items;
-  public static final int ITEMS = 1;
+  public List<Integer> part_list;
+  public static final int PART_LIST = 1;
 
   // isset id assignments
 
@@ -37,39 +37,39 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ITEMS, new FieldMetaData("items", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(PART_LIST, new FieldMetaData("part_list", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ConfigItem.class))));
+            new FieldValueMetaData(TType.I32))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(RegConfigReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(PartitionList.class, metaDataMap);
   }
 
-  public RegConfigReq() {
+  public PartitionList() {
   }
 
-  public RegConfigReq(
-      List<ConfigItem> items) {
+  public PartitionList(
+      List<Integer> part_list) {
     this();
-    this.items = items;
+    this.part_list = part_list;
   }
 
   public static class Builder {
-    private List<ConfigItem> items;
+    private List<Integer> part_list;
 
     public Builder() {
     }
 
-    public Builder setItems(final List<ConfigItem> items) {
-      this.items = items;
+    public Builder setPart_list(final List<Integer> part_list) {
+      this.part_list = part_list;
       return this;
     }
 
-    public RegConfigReq build() {
-      RegConfigReq result = new RegConfigReq();
-      result.setItems(this.items);
+    public PartitionList build() {
+      PartitionList result = new PartitionList();
+      result.setPart_list(this.part_list);
       return result;
     }
   }
@@ -81,48 +81,48 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public RegConfigReq(RegConfigReq other) {
-    if (other.isSetItems()) {
-      this.items = TBaseHelper.deepCopy(other.items);
+  public PartitionList(PartitionList other) {
+    if (other.isSetPart_list()) {
+      this.part_list = TBaseHelper.deepCopy(other.part_list);
     }
   }
 
-  public RegConfigReq deepCopy() {
-    return new RegConfigReq(this);
+  public PartitionList deepCopy() {
+    return new PartitionList(this);
   }
 
-  public List<ConfigItem> getItems() {
-    return this.items;
+  public List<Integer> getPart_list() {
+    return this.part_list;
   }
 
-  public RegConfigReq setItems(List<ConfigItem> items) {
-    this.items = items;
+  public PartitionList setPart_list(List<Integer> part_list) {
+    this.part_list = part_list;
     return this;
   }
 
-  public void unsetItems() {
-    this.items = null;
+  public void unsetPart_list() {
+    this.part_list = null;
   }
 
-  // Returns true if field items is set (has been assigned a value) and false otherwise
-  public boolean isSetItems() {
-    return this.items != null;
+  // Returns true if field part_list is set (has been assigned a value) and false otherwise
+  public boolean isSetPart_list() {
+    return this.part_list != null;
   }
 
-  public void setItemsIsSet(boolean __value) {
+  public void setPart_listIsSet(boolean __value) {
     if (!__value) {
-      this.items = null;
+      this.part_list = null;
     }
   }
 
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case ITEMS:
+    case PART_LIST:
       if (__value == null) {
-        unsetItems();
+        unsetPart_list();
       } else {
-        setItems((List<ConfigItem>)__value);
+        setPart_list((List<Integer>)__value);
       }
       break;
 
@@ -133,8 +133,8 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ITEMS:
-      return getItems();
+    case PART_LIST:
+      return getPart_list();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -147,18 +147,41 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof RegConfigReq))
+    if (!(_that instanceof PartitionList))
       return false;
-    RegConfigReq that = (RegConfigReq)_that;
+    PartitionList that = (PartitionList)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetItems(), that.isSetItems(), this.items, that.items)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetPart_list(), that.isSetPart_list(), this.part_list, that.part_list)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {items});
+    return Arrays.deepHashCode(new Object[] {part_list});
+  }
+
+  @Override
+  public int compareTo(PartitionList other) {
+    if (other == null) {
+      // See java.lang.Comparable docs
+      throw new NullPointerException();
+    }
+
+    if (other == this) {
+      return 0;
+    }
+    int lastComparison = 0;
+
+    lastComparison = Boolean.valueOf(isSetPart_list()).compareTo(other.isSetPart_list());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(part_list, other.part_list);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    return 0;
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -172,19 +195,18 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
       }
       switch (__field.id)
       {
-        case ITEMS:
+        case PART_LIST:
           if (__field.type == TType.LIST) {
             {
-              TList _list188 = iprot.readListBegin();
-              this.items = new ArrayList<ConfigItem>(Math.max(0, _list188.size));
-              for (int _i189 = 0; 
-                   (_list188.size < 0) ? iprot.peekList() : (_i189 < _list188.size); 
-                   ++_i189)
+              TList _list140 = iprot.readListBegin();
+              this.part_list = new ArrayList<Integer>(Math.max(0, _list140.size));
+              for (int _i141 = 0; 
+                   (_list140.size < 0) ? iprot.peekList() : (_i141 < _list140.size); 
+                   ++_i141)
               {
-                ConfigItem _elem190;
-                _elem190 = new ConfigItem();
-                _elem190.read(iprot);
-                this.items.add(_elem190);
+                int _elem142;
+                _elem142 = iprot.readI32();
+                this.part_list.add(_elem142);
               }
               iprot.readListEnd();
             }
@@ -209,12 +231,12 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.items != null) {
-      oprot.writeFieldBegin(ITEMS_FIELD_DESC);
+    if (this.part_list != null) {
+      oprot.writeFieldBegin(PART_LIST_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (ConfigItem _iter191 : this.items)        {
-          _iter191.write(oprot);
+        oprot.writeListBegin(new TList(TType.I32, this.part_list.size()));
+        for (int _iter143 : this.part_list)        {
+          oprot.writeI32(_iter143);
         }
         oprot.writeListEnd();
       }
@@ -234,20 +256,20 @@ public class RegConfigReq implements TBase, java.io.Serializable, Cloneable {
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("RegConfigReq");
+    StringBuilder sb = new StringBuilder("PartitionList");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("items");
+    sb.append("part_list");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getItems() == null) {
+    if (this.getPart_list() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getItems(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPart_list(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

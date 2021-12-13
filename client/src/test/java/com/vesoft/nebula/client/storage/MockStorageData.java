@@ -29,7 +29,7 @@ public class MockStorageData {
 
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
-        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9671));
+        List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
         NebulaPool pool = new NebulaPool();
         Session session = null;
         try {
@@ -39,7 +39,7 @@ public class MockStorageData {
             ResultSet resp = session.execute(createSpace());
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -119,7 +119,7 @@ public class MockStorageData {
 
             ResultSet resp = session.execute(createSpaceCa());
             try {
-                Thread.sleep(6000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -160,7 +160,7 @@ public class MockStorageData {
             ResultSet resp = session.execute(createSpaceSelf());
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

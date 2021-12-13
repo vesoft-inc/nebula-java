@@ -35,7 +35,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   private static final TField LAST_LOG_ID_SENT_FIELD_DESC = new TField("last_log_id_sent", TType.I64, (short)9);
   private static final TField LOG_TERM_FIELD_DESC = new TField("log_term", TType.I64, (short)10);
   private static final TField LOG_STR_LIST_FIELD_DESC = new TField("log_str_list", TType.LIST, (short)11);
-  private static final TField SENDING_SNAPSHOT_FIELD_DESC = new TField("sending_snapshot", TType.BOOL, (short)12);
 
   public int space;
   public int part;
@@ -47,8 +46,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   public long last_log_term_sent;
   public long last_log_id_sent;
   public long log_term;
-  public List<LogEntry> log_str_list;
-  public boolean sending_snapshot;
+  public List<com.vesoft.nebula.LogEntry> log_str_list;
   public static final int SPACE = 1;
   public static final int PART = 2;
   public static final int CURRENT_TERM = 3;
@@ -60,7 +58,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   public static final int LAST_LOG_ID_SENT = 9;
   public static final int LOG_TERM = 10;
   public static final int LOG_STR_LIST = 11;
-  public static final int SENDING_SNAPSHOT = 12;
 
   // isset id assignments
   private static final int __SPACE_ISSET_ID = 0;
@@ -72,8 +69,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
   private static final int __LAST_LOG_TERM_SENT_ISSET_ID = 6;
   private static final int __LAST_LOG_ID_SENT_ISSET_ID = 7;
   private static final int __LOG_TERM_ISSET_ID = 8;
-  private static final int __SENDING_SNAPSHOT_ISSET_ID = 9;
-  private BitSet __isset_bit_vector = new BitSet(10);
+  private BitSet __isset_bit_vector = new BitSet(9);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -101,9 +97,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(LOG_STR_LIST, new FieldMetaData("log_str_list", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, LogEntry.class))));
-    tmpMetaDataMap.put(SENDING_SNAPSHOT, new FieldMetaData("sending_snapshot", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.LogEntry.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -125,8 +119,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       long last_log_term_sent,
       long last_log_id_sent,
       long log_term,
-      List<LogEntry> log_str_list,
-      boolean sending_snapshot) {
+      List<com.vesoft.nebula.LogEntry> log_str_list) {
     this();
     this.space = space;
     setSpaceIsSet(true);
@@ -148,8 +141,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     this.log_term = log_term;
     setLog_termIsSet(true);
     this.log_str_list = log_str_list;
-    this.sending_snapshot = sending_snapshot;
-    setSending_snapshotIsSet(true);
   }
 
   public static class Builder {
@@ -163,10 +154,9 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     private long last_log_term_sent;
     private long last_log_id_sent;
     private long log_term;
-    private List<LogEntry> log_str_list;
-    private boolean sending_snapshot;
+    private List<com.vesoft.nebula.LogEntry> log_str_list;
 
-    BitSet __optional_isset = new BitSet(10);
+    BitSet __optional_isset = new BitSet(9);
 
     public Builder() {
     }
@@ -230,14 +220,8 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       return this;
     }
 
-    public Builder setLog_str_list(final List<LogEntry> log_str_list) {
+    public Builder setLog_str_list(final List<com.vesoft.nebula.LogEntry> log_str_list) {
       this.log_str_list = log_str_list;
-      return this;
-    }
-
-    public Builder setSending_snapshot(final boolean sending_snapshot) {
-      this.sending_snapshot = sending_snapshot;
-      __optional_isset.set(__SENDING_SNAPSHOT_ISSET_ID, true);
       return this;
     }
 
@@ -272,9 +256,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
         result.setLog_term(this.log_term);
       }
       result.setLog_str_list(this.log_str_list);
-      if (__optional_isset.get(__SENDING_SNAPSHOT_ISSET_ID)) {
-        result.setSending_snapshot(this.sending_snapshot);
-      }
       return result;
     }
   }
@@ -304,7 +285,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     if (other.isSetLog_str_list()) {
       this.log_str_list = TBaseHelper.deepCopy(other.log_str_list);
     }
-    this.sending_snapshot = TBaseHelper.deepCopy(other.sending_snapshot);
   }
 
   public AppendLogRequest deepCopy() {
@@ -542,11 +522,11 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     __isset_bit_vector.set(__LOG_TERM_ISSET_ID, __value);
   }
 
-  public List<LogEntry> getLog_str_list() {
+  public List<com.vesoft.nebula.LogEntry> getLog_str_list() {
     return this.log_str_list;
   }
 
-  public AppendLogRequest setLog_str_list(List<LogEntry> log_str_list) {
+  public AppendLogRequest setLog_str_list(List<com.vesoft.nebula.LogEntry> log_str_list) {
     this.log_str_list = log_str_list;
     return this;
   }
@@ -564,29 +544,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     if (!__value) {
       this.log_str_list = null;
     }
-  }
-
-  public boolean isSending_snapshot() {
-    return this.sending_snapshot;
-  }
-
-  public AppendLogRequest setSending_snapshot(boolean sending_snapshot) {
-    this.sending_snapshot = sending_snapshot;
-    setSending_snapshotIsSet(true);
-    return this;
-  }
-
-  public void unsetSending_snapshot() {
-    __isset_bit_vector.clear(__SENDING_SNAPSHOT_ISSET_ID);
-  }
-
-  // Returns true if field sending_snapshot is set (has been assigned a value) and false otherwise
-  public boolean isSetSending_snapshot() {
-    return __isset_bit_vector.get(__SENDING_SNAPSHOT_ISSET_ID);
-  }
-
-  public void setSending_snapshotIsSet(boolean __value) {
-    __isset_bit_vector.set(__SENDING_SNAPSHOT_ISSET_ID, __value);
   }
 
   @SuppressWarnings("unchecked")
@@ -676,15 +633,7 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       if (__value == null) {
         unsetLog_str_list();
       } else {
-        setLog_str_list((List<LogEntry>)__value);
-      }
-      break;
-
-    case SENDING_SNAPSHOT:
-      if (__value == null) {
-        unsetSending_snapshot();
-      } else {
-        setSending_snapshot((Boolean)__value);
+        setLog_str_list((List<com.vesoft.nebula.LogEntry>)__value);
       }
       break;
 
@@ -728,9 +677,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     case LOG_STR_LIST:
       return getLog_str_list();
 
-    case SENDING_SNAPSHOT:
-      return new Boolean(isSending_snapshot());
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -768,14 +714,12 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
 
     if (!TBaseHelper.equalsNobinary(this.isSetLog_str_list(), that.isSetLog_str_list(), this.log_str_list, that.log_str_list)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.sending_snapshot, that.sending_snapshot)) { return false; }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, part, current_term, last_log_id, committed_log_id, leader_addr, leader_port, last_log_term_sent, last_log_id_sent, log_term, log_str_list, sending_snapshot});
+    return Arrays.deepHashCode(new Object[] {space, part, current_term, last_log_id, committed_log_id, leader_addr, leader_port, last_log_term_sent, last_log_id_sent, log_term, log_str_list});
   }
 
   @Override
@@ -878,14 +822,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetSending_snapshot()).compareTo(other.isSetSending_snapshot());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(sending_snapshot, other.sending_snapshot);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
     return 0;
   }
 
@@ -983,26 +919,18 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
           if (__field.type == TType.LIST) {
             {
               TList _list0 = iprot.readListBegin();
-              this.log_str_list = new ArrayList<LogEntry>(Math.max(0, _list0.size));
+              this.log_str_list = new ArrayList<com.vesoft.nebula.LogEntry>(Math.max(0, _list0.size));
               for (int _i1 = 0; 
                    (_list0.size < 0) ? iprot.peekList() : (_i1 < _list0.size); 
                    ++_i1)
               {
-                LogEntry _elem2;
-                _elem2 = new LogEntry();
+                com.vesoft.nebula.LogEntry _elem2;
+                _elem2 = new com.vesoft.nebula.LogEntry();
                 _elem2.read(iprot);
                 this.log_str_list.add(_elem2);
               }
               iprot.readListEnd();
             }
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case SENDING_SNAPSHOT:
-          if (__field.type == TType.BOOL) {
-            this.sending_snapshot = iprot.readBool();
-            setSending_snapshotIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -1060,16 +988,13 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
       oprot.writeFieldBegin(LOG_STR_LIST_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.log_str_list.size()));
-        for (LogEntry _iter3 : this.log_str_list)        {
+        for (com.vesoft.nebula.LogEntry _iter3 : this.log_str_list)        {
           _iter3.write(oprot);
         }
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(SENDING_SNAPSHOT_FIELD_DESC);
-    oprot.writeBool(this.sending_snapshot);
-    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -1173,13 +1098,6 @@ public class AppendLogRequest implements TBase, java.io.Serializable, Cloneable,
     } else {
       sb.append(TBaseHelper.toString(this.getLog_str_list(), indent + 1, prettyPrint));
     }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("sending_snapshot");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isSending_snapshot(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

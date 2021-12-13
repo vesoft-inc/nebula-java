@@ -349,16 +349,16 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
         case GROUPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list230 = iprot.readListBegin();
-              this.groups = new ArrayList<Group>(Math.max(0, _list230.size));
-              for (int _i231 = 0; 
-                   (_list230.size < 0) ? iprot.peekList() : (_i231 < _list230.size); 
-                   ++_i231)
+              TList _list222 = iprot.readListBegin();
+              this.groups = new ArrayList<Group>(Math.max(0, _list222.size));
+              for (int _i223 = 0; 
+                   (_list222.size < 0) ? iprot.peekList() : (_i223 < _list222.size); 
+                   ++_i223)
               {
-                Group _elem232;
-                _elem232 = new Group();
-                _elem232.read(iprot);
-                this.groups.add(_elem232);
+                Group _elem224;
+                _elem224 = new Group();
+                _elem224.read(iprot);
+                this.groups.add(_elem224);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListGroupsResp implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(GROUPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.groups.size()));
-        for (Group _iter233 : this.groups)        {
-          _iter233.write(oprot);
+        for (Group _iter225 : this.groups)        {
+          _iter225.write(oprot);
         }
         oprot.writeListEnd();
       }

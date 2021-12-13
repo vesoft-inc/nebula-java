@@ -28,7 +28,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   private static final TStruct STRUCT_DESC = new TStruct("ScanEdgeRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.STRUCT, (short)3);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)3);
   private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)4);
   private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)5);
   private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)6);
@@ -39,7 +39,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
   public int space_id;
   public Map<Integer,ScanCursor> parts;
-  public EdgeProp return_columns;
+  public List<EdgeProp> return_columns;
   public long limit;
   public long start_time;
   public long end_time;
@@ -78,7 +78,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
             new FieldValueMetaData(TType.I32), 
             new StructMetaData(TType.STRUCT, ScanCursor.class))));
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, EdgeProp.class)));
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, EdgeProp.class))));
     tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.OPTIONAL, 
@@ -110,7 +111,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public ScanEdgeRequest(
       int space_id,
       Map<Integer,ScanCursor> parts,
-      EdgeProp return_columns,
+      List<EdgeProp> return_columns,
       long limit,
       boolean only_latest_version,
       boolean enable_read_from_follower) {
@@ -130,7 +131,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public ScanEdgeRequest(
       int space_id,
       Map<Integer,ScanCursor> parts,
-      EdgeProp return_columns,
+      List<EdgeProp> return_columns,
       long limit,
       long start_time,
       long end_time,
@@ -160,7 +161,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public static class Builder {
     private int space_id;
     private Map<Integer,ScanCursor> parts;
-    private EdgeProp return_columns;
+    private List<EdgeProp> return_columns;
     private long limit;
     private long start_time;
     private long end_time;
@@ -185,7 +186,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public Builder setReturn_columns(final EdgeProp return_columns) {
+    public Builder setReturn_columns(final List<EdgeProp> return_columns) {
       this.return_columns = return_columns;
       return this;
     }
@@ -339,11 +340,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  public EdgeProp getReturn_columns() {
+  public List<EdgeProp> getReturn_columns() {
     return this.return_columns;
   }
 
-  public ScanEdgeRequest setReturn_columns(EdgeProp return_columns) {
+  public ScanEdgeRequest setReturn_columns(List<EdgeProp> return_columns) {
     this.return_columns = return_columns;
     return this;
   }
@@ -549,7 +550,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       if (__value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((EdgeProp)__value);
+        setReturn_columns((List<EdgeProp>)__value);
       }
       break;
 
@@ -806,18 +807,18 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map203 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map203.size));
-              for (int _i204 = 0; 
-                   (_map203.size < 0) ? iprot.peekMap() : (_i204 < _map203.size); 
-                   ++_i204)
+              TMap _map198 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map198.size));
+              for (int _i199 = 0; 
+                   (_map198.size < 0) ? iprot.peekMap() : (_i199 < _map198.size); 
+                   ++_i199)
               {
-                int _key205;
-                ScanCursor _val206;
-                _key205 = iprot.readI32();
-                _val206 = new ScanCursor();
-                _val206.read(iprot);
-                this.parts.put(_key205, _val206);
+                int _key200;
+                ScanCursor _val201;
+                _key200 = iprot.readI32();
+                _val201 = new ScanCursor();
+                _val201.read(iprot);
+                this.parts.put(_key200, _val201);
               }
               iprot.readMapEnd();
             }
@@ -826,9 +827,21 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
           }
           break;
         case RETURN_COLUMNS:
-          if (__field.type == TType.STRUCT) {
-            this.return_columns = new EdgeProp();
-            this.return_columns.read(iprot);
+          if (__field.type == TType.LIST) {
+            {
+              TList _list202 = iprot.readListBegin();
+              this.return_columns = new ArrayList<EdgeProp>(Math.max(0, _list202.size));
+              for (int _i203 = 0; 
+                   (_list202.size < 0) ? iprot.peekList() : (_i203 < _list202.size); 
+                   ++_i203)
+              {
+                EdgeProp _elem204;
+                _elem204 = new EdgeProp();
+                _elem204.read(iprot);
+                this.return_columns.add(_elem204);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -912,9 +925,9 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.parts.size()));
-        for (Map.Entry<Integer, ScanCursor> _iter207 : this.parts.entrySet())        {
-          oprot.writeI32(_iter207.getKey());
-          _iter207.getValue().write(oprot);
+        for (Map.Entry<Integer, ScanCursor> _iter205 : this.parts.entrySet())        {
+          oprot.writeI32(_iter205.getKey());
+          _iter205.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -922,7 +935,13 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     }
     if (this.return_columns != null) {
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
-      this.return_columns.write(oprot);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
+        for (EdgeProp _iter206 : this.return_columns)        {
+          _iter206.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(LIMIT_FIELD_DESC);

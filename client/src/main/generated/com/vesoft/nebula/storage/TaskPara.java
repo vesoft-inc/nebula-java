@@ -28,14 +28,14 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
   private static final TStruct STRUCT_DESC = new TStruct("TaskPara");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.LIST, (short)2);
-  private static final TField TASK_SPECFIC_PARAS_FIELD_DESC = new TField("task_specfic_paras", TType.LIST, (short)3);
+  private static final TField TASK_SPECIFIC_PARAS_FIELD_DESC = new TField("task_specific_paras", TType.LIST, (short)3);
 
   public int space_id;
   public List<Integer> parts;
-  public List<byte[]> task_specfic_paras;
+  public List<byte[]> task_specific_paras;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
-  public static final int TASK_SPECFIC_PARAS = 3;
+  public static final int TASK_SPECIFIC_PARAS = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -50,7 +50,7 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.I32))));
-    tmpMetaDataMap.put(TASK_SPECFIC_PARAS, new FieldMetaData("task_specfic_paras", TFieldRequirementType.OPTIONAL, 
+    tmpMetaDataMap.put(TASK_SPECIFIC_PARAS, new FieldMetaData("task_specific_paras", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -73,18 +73,18 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
   public TaskPara(
       int space_id,
       List<Integer> parts,
-      List<byte[]> task_specfic_paras) {
+      List<byte[]> task_specific_paras) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
-    this.task_specfic_paras = task_specfic_paras;
+    this.task_specific_paras = task_specific_paras;
   }
 
   public static class Builder {
     private int space_id;
     private List<Integer> parts;
-    private List<byte[]> task_specfic_paras;
+    private List<byte[]> task_specific_paras;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -102,8 +102,8 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
       return this;
     }
 
-    public Builder setTask_specfic_paras(final List<byte[]> task_specfic_paras) {
-      this.task_specfic_paras = task_specfic_paras;
+    public Builder setTask_specific_paras(final List<byte[]> task_specific_paras) {
+      this.task_specific_paras = task_specific_paras;
       return this;
     }
 
@@ -113,7 +113,7 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         result.setSpace_id(this.space_id);
       }
       result.setParts(this.parts);
-      result.setTask_specfic_paras(this.task_specfic_paras);
+      result.setTask_specific_paras(this.task_specific_paras);
       return result;
     }
   }
@@ -132,8 +132,8 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
-    if (other.isSetTask_specfic_paras()) {
-      this.task_specfic_paras = TBaseHelper.deepCopy(other.task_specfic_paras);
+    if (other.isSetTask_specific_paras()) {
+      this.task_specific_paras = TBaseHelper.deepCopy(other.task_specific_paras);
     }
   }
 
@@ -188,27 +188,27 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public List<byte[]> getTask_specfic_paras() {
-    return this.task_specfic_paras;
+  public List<byte[]> getTask_specific_paras() {
+    return this.task_specific_paras;
   }
 
-  public TaskPara setTask_specfic_paras(List<byte[]> task_specfic_paras) {
-    this.task_specfic_paras = task_specfic_paras;
+  public TaskPara setTask_specific_paras(List<byte[]> task_specific_paras) {
+    this.task_specific_paras = task_specific_paras;
     return this;
   }
 
-  public void unsetTask_specfic_paras() {
-    this.task_specfic_paras = null;
+  public void unsetTask_specific_paras() {
+    this.task_specific_paras = null;
   }
 
-  // Returns true if field task_specfic_paras is set (has been assigned a value) and false otherwise
-  public boolean isSetTask_specfic_paras() {
-    return this.task_specfic_paras != null;
+  // Returns true if field task_specific_paras is set (has been assigned a value) and false otherwise
+  public boolean isSetTask_specific_paras() {
+    return this.task_specific_paras != null;
   }
 
-  public void setTask_specfic_parasIsSet(boolean __value) {
+  public void setTask_specific_parasIsSet(boolean __value) {
     if (!__value) {
-      this.task_specfic_paras = null;
+      this.task_specific_paras = null;
     }
   }
 
@@ -231,11 +231,11 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
-    case TASK_SPECFIC_PARAS:
+    case TASK_SPECIFIC_PARAS:
       if (__value == null) {
-        unsetTask_specfic_paras();
+        unsetTask_specific_paras();
       } else {
-        setTask_specfic_paras((List<byte[]>)__value);
+        setTask_specific_paras((List<byte[]>)__value);
       }
       break;
 
@@ -252,8 +252,8 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     case PARTS:
       return getParts();
 
-    case TASK_SPECFIC_PARAS:
-      return getTask_specfic_paras();
+    case TASK_SPECIFIC_PARAS:
+      return getTask_specific_paras();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -274,14 +274,14 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
 
     if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetTask_specfic_paras(), that.isSetTask_specfic_paras(), this.task_specfic_paras, that.task_specfic_paras)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetTask_specific_paras(), that.isSetTask_specific_paras(), this.task_specific_paras, that.task_specific_paras)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, task_specfic_paras});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, task_specific_paras});
   }
 
   @Override
@@ -312,11 +312,11 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetTask_specfic_paras()).compareTo(other.isSetTask_specfic_paras());
+    lastComparison = Boolean.valueOf(isSetTask_specific_paras()).compareTo(other.isSetTask_specific_paras());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(task_specfic_paras, other.task_specfic_paras);
+    lastComparison = TBaseHelper.compareTo(task_specific_paras, other.task_specific_paras);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -345,15 +345,15 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         case PARTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list213 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list213.size));
-              for (int _i214 = 0; 
-                   (_list213.size < 0) ? iprot.peekList() : (_i214 < _list213.size); 
-                   ++_i214)
+              TList _list212 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list212.size));
+              for (int _i213 = 0; 
+                   (_list212.size < 0) ? iprot.peekList() : (_i213 < _list212.size); 
+                   ++_i213)
               {
-                int _elem215;
-                _elem215 = iprot.readI32();
-                this.parts.add(_elem215);
+                int _elem214;
+                _elem214 = iprot.readI32();
+                this.parts.add(_elem214);
               }
               iprot.readListEnd();
             }
@@ -361,18 +361,18 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case TASK_SPECFIC_PARAS:
+        case TASK_SPECIFIC_PARAS:
           if (__field.type == TType.LIST) {
             {
-              TList _list216 = iprot.readListBegin();
-              this.task_specfic_paras = new ArrayList<byte[]>(Math.max(0, _list216.size));
-              for (int _i217 = 0; 
-                   (_list216.size < 0) ? iprot.peekList() : (_i217 < _list216.size); 
-                   ++_i217)
+              TList _list215 = iprot.readListBegin();
+              this.task_specific_paras = new ArrayList<byte[]>(Math.max(0, _list215.size));
+              for (int _i216 = 0; 
+                   (_list215.size < 0) ? iprot.peekList() : (_i216 < _list215.size); 
+                   ++_i216)
               {
-                byte[] _elem218;
-                _elem218 = iprot.readBinary();
-                this.task_specfic_paras.add(_elem218);
+                byte[] _elem217;
+                _elem217 = iprot.readBinary();
+                this.task_specific_paras.add(_elem217);
               }
               iprot.readListEnd();
             }
@@ -405,21 +405,21 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         oprot.writeFieldBegin(PARTS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-          for (int _iter219 : this.parts)          {
-            oprot.writeI32(_iter219);
+          for (int _iter218 : this.parts)          {
+            oprot.writeI32(_iter218);
           }
           oprot.writeListEnd();
         }
         oprot.writeFieldEnd();
       }
     }
-    if (this.task_specfic_paras != null) {
-      if (isSetTask_specfic_paras()) {
-        oprot.writeFieldBegin(TASK_SPECFIC_PARAS_FIELD_DESC);
+    if (this.task_specific_paras != null) {
+      if (isSetTask_specific_paras()) {
+        oprot.writeFieldBegin(TASK_SPECIFIC_PARAS_FIELD_DESC);
         {
-          oprot.writeListBegin(new TList(TType.STRING, this.task_specfic_paras.size()));
-          for (byte[] _iter220 : this.task_specfic_paras)          {
-            oprot.writeBinary(_iter220);
+          oprot.writeListBegin(new TList(TType.STRING, this.task_specific_paras.size()));
+          for (byte[] _iter219 : this.task_specific_paras)          {
+            oprot.writeBinary(_iter219);
           }
           oprot.writeListEnd();
         }
@@ -466,17 +466,17 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
       }
       first = false;
     }
-    if (isSetTask_specfic_paras())
+    if (isSetTask_specific_paras())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("task_specfic_paras");
+      sb.append("task_specific_paras");
       sb.append(space);
       sb.append(":").append(space);
-      if (this.getTask_specfic_paras() == null) {
+      if (this.getTask_specific_paras() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this.getTask_specfic_paras(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getTask_specific_paras(), indent + 1, prettyPrint));
       }
       first = false;
     }

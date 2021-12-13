@@ -19,6 +19,7 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.storage.GraphStorageService;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanEdgeResponse;
+import com.vesoft.nebula.storage.ScanResponse;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.storage.ScanVertexResponse;
 import com.vesoft.nebula.util.SslUtil;
@@ -73,11 +74,11 @@ public class GraphStorageConnection {
     }
 
 
-    public ScanVertexResponse scanVertex(ScanVertexRequest request) throws TException {
+    public ScanResponse scanVertex(ScanVertexRequest request) throws TException {
         return client.scanVertex(request);
     }
 
-    public ScanEdgeResponse scanEdge(ScanEdgeRequest request) throws TException {
+    public ScanResponse scanEdge(ScanEdgeRequest request) throws TException {
         return client.scanEdge(request);
     }
 

@@ -24,15 +24,18 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetLeaderPartsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("GetLeaderPartsResp");
+public class ScanResponse implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("ScanResponse");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField LEADER_PARTS_FIELD_DESC = new TField("leader_parts", TType.MAP, (short)2);
+  private static final TField PROPS_FIELD_DESC = new TField("props", TType.STRUCT, (short)2);
+  private static final TField CURSORS_FIELD_DESC = new TField("cursors", TType.MAP, (short)3);
 
   public ResponseCommon result;
-  public Map<Integer,List<Integer>> leader_parts;
+  public com.vesoft.nebula.DataSet props;
+  public Map<Integer,ScanCursor> cursors;
   public static final int RESULT = 1;
-  public static final int LEADER_PARTS = 2;
+  public static final int PROPS = 2;
+  public static final int CURSORS = 3;
 
   // isset id assignments
 
@@ -42,38 +45,50 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(LEADER_PARTS, new FieldMetaData("leader_parts", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(PROPS, new FieldMetaData("props", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
+    tmpMetaDataMap.put(CURSORS, new FieldMetaData("cursors", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
-            new ListMetaData(TType.LIST, 
-                new FieldValueMetaData(TType.I32)))));
+            new StructMetaData(TType.STRUCT, ScanCursor.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(GetLeaderPartsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ScanResponse.class, metaDataMap);
   }
 
-  public GetLeaderPartsResp() {
+  public ScanResponse() {
   }
 
-  public GetLeaderPartsResp(
+  public ScanResponse(
       ResponseCommon result) {
     this();
     this.result = result;
   }
 
-  public GetLeaderPartsResp(
+  public ScanResponse(
       ResponseCommon result,
-      Map<Integer,List<Integer>> leader_parts) {
+      Map<Integer,ScanCursor> cursors) {
     this();
     this.result = result;
-    this.leader_parts = leader_parts;
+    this.cursors = cursors;
+  }
+
+  public ScanResponse(
+      ResponseCommon result,
+      com.vesoft.nebula.DataSet props,
+      Map<Integer,ScanCursor> cursors) {
+    this();
+    this.result = result;
+    this.props = props;
+    this.cursors = cursors;
   }
 
   public static class Builder {
     private ResponseCommon result;
-    private Map<Integer,List<Integer>> leader_parts;
+    private com.vesoft.nebula.DataSet props;
+    private Map<Integer,ScanCursor> cursors;
 
     public Builder() {
     }
@@ -83,15 +98,21 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
-    public Builder setLeader_parts(final Map<Integer,List<Integer>> leader_parts) {
-      this.leader_parts = leader_parts;
+    public Builder setProps(final com.vesoft.nebula.DataSet props) {
+      this.props = props;
       return this;
     }
 
-    public GetLeaderPartsResp build() {
-      GetLeaderPartsResp result = new GetLeaderPartsResp();
+    public Builder setCursors(final Map<Integer,ScanCursor> cursors) {
+      this.cursors = cursors;
+      return this;
+    }
+
+    public ScanResponse build() {
+      ScanResponse result = new ScanResponse();
       result.setResult(this.result);
-      result.setLeader_parts(this.leader_parts);
+      result.setProps(this.props);
+      result.setCursors(this.cursors);
       return result;
     }
   }
@@ -103,24 +124,27 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public GetLeaderPartsResp(GetLeaderPartsResp other) {
+  public ScanResponse(ScanResponse other) {
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetLeader_parts()) {
-      this.leader_parts = TBaseHelper.deepCopy(other.leader_parts);
+    if (other.isSetProps()) {
+      this.props = TBaseHelper.deepCopy(other.props);
+    }
+    if (other.isSetCursors()) {
+      this.cursors = TBaseHelper.deepCopy(other.cursors);
     }
   }
 
-  public GetLeaderPartsResp deepCopy() {
-    return new GetLeaderPartsResp(this);
+  public ScanResponse deepCopy() {
+    return new ScanResponse(this);
   }
 
   public ResponseCommon getResult() {
     return this.result;
   }
 
-  public GetLeaderPartsResp setResult(ResponseCommon result) {
+  public ScanResponse setResult(ResponseCommon result) {
     this.result = result;
     return this;
   }
@@ -140,27 +164,51 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public Map<Integer,List<Integer>> getLeader_parts() {
-    return this.leader_parts;
+  public com.vesoft.nebula.DataSet getProps() {
+    return this.props;
   }
 
-  public GetLeaderPartsResp setLeader_parts(Map<Integer,List<Integer>> leader_parts) {
-    this.leader_parts = leader_parts;
+  public ScanResponse setProps(com.vesoft.nebula.DataSet props) {
+    this.props = props;
     return this;
   }
 
-  public void unsetLeader_parts() {
-    this.leader_parts = null;
+  public void unsetProps() {
+    this.props = null;
   }
 
-  // Returns true if field leader_parts is set (has been assigned a value) and false otherwise
-  public boolean isSetLeader_parts() {
-    return this.leader_parts != null;
+  // Returns true if field props is set (has been assigned a value) and false otherwise
+  public boolean isSetProps() {
+    return this.props != null;
   }
 
-  public void setLeader_partsIsSet(boolean __value) {
+  public void setPropsIsSet(boolean __value) {
     if (!__value) {
-      this.leader_parts = null;
+      this.props = null;
+    }
+  }
+
+  public Map<Integer,ScanCursor> getCursors() {
+    return this.cursors;
+  }
+
+  public ScanResponse setCursors(Map<Integer,ScanCursor> cursors) {
+    this.cursors = cursors;
+    return this;
+  }
+
+  public void unsetCursors() {
+    this.cursors = null;
+  }
+
+  // Returns true if field cursors is set (has been assigned a value) and false otherwise
+  public boolean isSetCursors() {
+    return this.cursors != null;
+  }
+
+  public void setCursorsIsSet(boolean __value) {
+    if (!__value) {
+      this.cursors = null;
     }
   }
 
@@ -175,11 +223,19 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case LEADER_PARTS:
+    case PROPS:
       if (__value == null) {
-        unsetLeader_parts();
+        unsetProps();
       } else {
-        setLeader_parts((Map<Integer,List<Integer>>)__value);
+        setProps((com.vesoft.nebula.DataSet)__value);
+      }
+      break;
+
+    case CURSORS:
+      if (__value == null) {
+        unsetCursors();
+      } else {
+        setCursors((Map<Integer,ScanCursor>)__value);
       }
       break;
 
@@ -193,8 +249,11 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     case RESULT:
       return getResult();
 
-    case LEADER_PARTS:
-      return getLeader_parts();
+    case PROPS:
+      return getProps();
+
+    case CURSORS:
+      return getCursors();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -207,51 +266,22 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof GetLeaderPartsResp))
+    if (!(_that instanceof ScanResponse))
       return false;
-    GetLeaderPartsResp that = (GetLeaderPartsResp)_that;
+    ScanResponse that = (ScanResponse)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetLeader_parts(), that.isSetLeader_parts(), this.leader_parts, that.leader_parts)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetProps(), that.isSetProps(), this.props, that.props)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetCursors(), that.isSetCursors(), this.cursors, that.cursors)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, leader_parts});
-  }
-
-  @Override
-  public int compareTo(GetLeaderPartsResp other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetResult()).compareTo(other.isSetResult());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(result, other.result);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetLeader_parts()).compareTo(other.isSetLeader_parts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(leader_parts, other.leader_parts);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    return 0;
+    return Arrays.deepHashCode(new Object[] {result, props, cursors});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -273,32 +303,29 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case LEADER_PARTS:
+        case PROPS:
+          if (__field.type == TType.STRUCT) {
+            this.props = new com.vesoft.nebula.DataSet();
+            this.props.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case CURSORS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map256 = iprot.readMapBegin();
-              this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map256.size));
-              for (int _i257 = 0; 
-                   (_map256.size < 0) ? iprot.peekMap() : (_i257 < _map256.size); 
-                   ++_i257)
+              TMap _map207 = iprot.readMapBegin();
+              this.cursors = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map207.size));
+              for (int _i208 = 0; 
+                   (_map207.size < 0) ? iprot.peekMap() : (_i208 < _map207.size); 
+                   ++_i208)
               {
-                int _key258;
-                List<Integer> _val259;
-                _key258 = iprot.readI32();
-                {
-                  TList _list260 = iprot.readListBegin();
-                  _val259 = new ArrayList<Integer>(Math.max(0, _list260.size));
-                  for (int _i261 = 0; 
-                       (_list260.size < 0) ? iprot.peekList() : (_i261 < _list260.size); 
-                       ++_i261)
-                  {
-                    int _elem262;
-                    _elem262 = iprot.readI32();
-                    _val259.add(_elem262);
-                  }
-                  iprot.readListEnd();
-                }
-                this.leader_parts.put(_key258, _val259);
+                int _key209;
+                ScanCursor _val210;
+                _key209 = iprot.readI32();
+                _val210 = new ScanCursor();
+                _val210.read(iprot);
+                this.cursors.put(_key209, _val210);
               }
               iprot.readMapEnd();
             }
@@ -328,19 +355,20 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.leader_parts != null) {
-      oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
+    if (this.props != null) {
+      if (isSetProps()) {
+        oprot.writeFieldBegin(PROPS_FIELD_DESC);
+        this.props.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.cursors != null) {
+      oprot.writeFieldBegin(CURSORS_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_parts.size()));
-        for (Map.Entry<Integer, List<Integer>> _iter263 : this.leader_parts.entrySet())        {
-          oprot.writeI32(_iter263.getKey());
-          {
-            oprot.writeListBegin(new TList(TType.I32, _iter263.getValue().size()));
-            for (int _iter264 : _iter263.getValue())            {
-              oprot.writeI32(_iter264);
-            }
-            oprot.writeListEnd();
-          }
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.cursors.size()));
+        for (Map.Entry<Integer, ScanCursor> _iter211 : this.cursors.entrySet())        {
+          oprot.writeI32(_iter211.getKey());
+          _iter211.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -360,7 +388,7 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("GetLeaderPartsResp");
+    StringBuilder sb = new StringBuilder("ScanResponse");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -376,15 +404,29 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetProps())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("props");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getProps() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getProps(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("leader_parts");
+    sb.append("cursors");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getLeader_parts() == null) {
+    if (this.getCursors() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getLeader_parts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getCursors(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -37,6 +37,8 @@ public class RaftexService {
 
     public HeartbeatResponse heartbeat(HeartbeatRequest req) throws TException;
 
+    public GetStateResponse getState(GetStateRequest req) throws TException;
+
   }
 
   public interface AsyncIface {
@@ -48,6 +50,8 @@ public class RaftexService {
     public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void getState(GetStateRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -260,6 +264,51 @@ public class RaftexService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "heartbeat failed: unknown result");
     }
 
+    public GetStateResponse getState(GetStateRequest req) throws TException
+    {
+      ContextStack ctx = getContextStack("RaftexService.getState", null);
+      this.setContextStack(ctx);
+      send_getState(req);
+      return recv_getState();
+    }
+
+    public void send_getState(GetStateRequest req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "RaftexService.getState", null);
+      oprot_.writeMessageBegin(new TMessage("getState", TMessageType.CALL, seqid_));
+      getState_args args = new getState_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "RaftexService.getState", args);
+      return;
+    }
+
+    public GetStateResponse recv_getState() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "RaftexService.getState");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      getState_result result = new getState_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "RaftexService.getState", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getState failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -278,17 +327,17 @@ public class RaftexService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler15) throws TException {
+    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler16) throws TException {
       checkReady();
-      askForVote_call method_call = new askForVote_call(req, resultHandler15, this, ___protocolFactory, ___transport);
+      askForVote_call method_call = new askForVote_call(req, resultHandler16, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class askForVote_call extends TAsyncMethodCall {
       private AskForVoteRequest req;
-      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler16, TAsyncClient client12, TProtocolFactory protocolFactory13, TNonblockingTransport transport14) throws TException {
-        super(client12, protocolFactory13, transport14, resultHandler16, false);
+      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler17, TAsyncClient client13, TProtocolFactory protocolFactory14, TNonblockingTransport transport15) throws TException {
+        super(client13, protocolFactory14, transport15, resultHandler17, false);
         this.req = req;
       }
 
@@ -310,17 +359,17 @@ public class RaftexService {
       }
     }
 
-    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler20) throws TException {
+    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler21) throws TException {
       checkReady();
-      appendLog_call method_call = new appendLog_call(req, resultHandler20, this, ___protocolFactory, ___transport);
+      appendLog_call method_call = new appendLog_call(req, resultHandler21, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class appendLog_call extends TAsyncMethodCall {
       private AppendLogRequest req;
-      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler21, TAsyncClient client17, TProtocolFactory protocolFactory18, TNonblockingTransport transport19) throws TException {
-        super(client17, protocolFactory18, transport19, resultHandler21, false);
+      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler22, TAsyncClient client18, TProtocolFactory protocolFactory19, TNonblockingTransport transport20) throws TException {
+        super(client18, protocolFactory19, transport20, resultHandler22, false);
         this.req = req;
       }
 
@@ -342,17 +391,17 @@ public class RaftexService {
       }
     }
 
-    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler25) throws TException {
+    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler26) throws TException {
       checkReady();
-      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler25, this, ___protocolFactory, ___transport);
+      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler26, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class sendSnapshot_call extends TAsyncMethodCall {
       private SendSnapshotRequest req;
-      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler26, TAsyncClient client22, TProtocolFactory protocolFactory23, TNonblockingTransport transport24) throws TException {
-        super(client22, protocolFactory23, transport24, resultHandler26, false);
+      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler27, TAsyncClient client23, TProtocolFactory protocolFactory24, TNonblockingTransport transport25) throws TException {
+        super(client23, protocolFactory24, transport25, resultHandler27, false);
         this.req = req;
       }
 
@@ -374,17 +423,17 @@ public class RaftexService {
       }
     }
 
-    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler30) throws TException {
+    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler31) throws TException {
       checkReady();
-      heartbeat_call method_call = new heartbeat_call(req, resultHandler30, this, ___protocolFactory, ___transport);
+      heartbeat_call method_call = new heartbeat_call(req, resultHandler31, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class heartbeat_call extends TAsyncMethodCall {
       private HeartbeatRequest req;
-      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler31, TAsyncClient client27, TProtocolFactory protocolFactory28, TNonblockingTransport transport29) throws TException {
-        super(client27, protocolFactory28, transport29, resultHandler31, false);
+      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler32, TAsyncClient client28, TProtocolFactory protocolFactory29, TNonblockingTransport transport30) throws TException {
+        super(client28, protocolFactory29, transport30, resultHandler32, false);
         this.req = req;
       }
 
@@ -406,6 +455,38 @@ public class RaftexService {
       }
     }
 
+    public void getState(GetStateRequest req, AsyncMethodCallback resultHandler36) throws TException {
+      checkReady();
+      getState_call method_call = new getState_call(req, resultHandler36, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class getState_call extends TAsyncMethodCall {
+      private GetStateRequest req;
+      public getState_call(GetStateRequest req, AsyncMethodCallback resultHandler37, TAsyncClient client33, TProtocolFactory protocolFactory34, TNonblockingTransport transport35) throws TException {
+        super(client33, protocolFactory34, transport35, resultHandler37, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("getState", TMessageType.CALL, 0));
+        getState_args args = new getState_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public GetStateResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_getState();
+      }
+    }
+
   }
 
   public static class Processor implements TProcessor {
@@ -418,6 +499,7 @@ public class RaftexService {
       processMap_.put("appendLog", new appendLog());
       processMap_.put("sendSnapshot", new sendSnapshot());
       processMap_.put("heartbeat", new heartbeat());
+      processMap_.put("getState", new getState());
     }
 
     protected static interface ProcessFunction {
@@ -530,6 +612,27 @@ public class RaftexService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "RaftexService.heartbeat", result);
+      }
+
+    }
+
+    private class getState implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("RaftexService.getState", server_ctx);
+        getState_args args = new getState_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.getState");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "RaftexService.getState", args);
+        getState_result result = new getState_result();
+        result.success = iface_.getState(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.getState", result);
+        oprot.writeMessageBegin(new TMessage("getState", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "RaftexService.getState", result);
       }
 
     }
@@ -2250,6 +2353,441 @@ public class RaftexService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("heartbeat_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class getState_args implements TBase, java.io.Serializable, Cloneable, Comparable<getState_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getState_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public GetStateRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, GetStateRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(getState_args.class, metaDataMap);
+    }
+
+    public getState_args() {
+    }
+
+    public getState_args(
+        GetStateRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getState_args(getState_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public getState_args deepCopy() {
+      return new getState_args(this);
+    }
+
+    public GetStateRequest getReq() {
+      return this.req;
+    }
+
+    public getState_args setReq(GetStateRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((GetStateRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof getState_args))
+        return false;
+      getState_args that = (getState_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(getState_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new GetStateRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("getState_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class getState_result implements TBase, java.io.Serializable, Cloneable, Comparable<getState_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getState_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public GetStateResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, GetStateResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(getState_result.class, metaDataMap);
+    }
+
+    public getState_result() {
+    }
+
+    public getState_result(
+        GetStateResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getState_result(getState_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public getState_result deepCopy() {
+      return new getState_result(this);
+    }
+
+    public GetStateResponse getSuccess() {
+      return this.success;
+    }
+
+    public getState_result setSuccess(GetStateResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((GetStateResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof getState_result))
+        return false;
+      getState_result that = (getState_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(getState_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new GetStateResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("getState_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
