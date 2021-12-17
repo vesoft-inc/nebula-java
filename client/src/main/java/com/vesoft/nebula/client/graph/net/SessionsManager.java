@@ -67,7 +67,7 @@ public class SessionsManager {
         try {
             Session session = pool.getSession(
                 config.getUserName(), config.getPassword(), config.getReconnect());
-            ResultSet resultSet = session.execute("USE " + config.getSpaceName());
+            ResultSet resultSet = session.execute("USE " + config.getSpaceName(),Integer.MAX_VALUE);
             if (!resultSet.isSucceeded()) {
                 throw new RuntimeException(
                     "Switch space `"

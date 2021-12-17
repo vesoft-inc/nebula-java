@@ -135,7 +135,7 @@ public class NebulaPool {
         SyncConnection connection = null;
         try {
             connection = getConnection();
-            AuthResult authResult = connection.authenticate(userName, password);
+            AuthResult authResult = connection.authenticate(userName, password,Integer.MAX_VALUE);
             return new Session(connection, authResult, this, reconnect);
         } catch (Exception e) {
             // if get the connection succeeded, but authenticate failed,
