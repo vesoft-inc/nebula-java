@@ -16,6 +16,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class MetaManager implements MetaCache {
      * init the meta info cache
      */
     public MetaManager(List<HostAddress> address)
-            throws TException, ClientServerIncompatibleException {
+            throws TException, ClientServerIncompatibleException, UnknownHostException {
         metaClient = new MetaClient(address);
         metaClient.connect();
         fillMetaInfo();
@@ -66,7 +67,7 @@ public class MetaManager implements MetaCache {
      */
     public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
                        int executionRetry, boolean enableSSL, SSLParam sslParam)
-            throws TException, ClientServerIncompatibleException {
+            throws TException, ClientServerIncompatibleException, UnknownHostException {
         metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
                 sslParam);
         metaClient.connect();
