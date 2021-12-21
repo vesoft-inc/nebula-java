@@ -521,8 +521,9 @@ public class TestDataFromServer {
             Assert.assertEquals(rowData, "[{\"person.first_out_city\":1111,\"person"
                     + ".book_num\":100,\"person.age\":10,\"person.expend\":100,\"person.is_girl\":"
                     + "false,\"person.name\":\"Bob\",\"person.grade\":3,\"person.birthday\":\"2010"
-                    + "-09-10T02:08:02.0Z\",\"student.name\":\"Bob\",\"person.child_name\":\"Hello"
-                    + " Worl\",\"person.property\":1000,\"person.morning\":\"23:10:00.000000Z\",\""
+                    + "-09-10T02:08:02.000000000Z\",\"student.name\":\"Bob\","
+                    + "\"person.child_name\":\"Hello Worl\","
+                    + "\"person.property\":1000,\"person.morning\":\"23:10:00.000000000Z\",\""
                     + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
         } catch (IOErrorException e) {
             e.printStackTrace();
