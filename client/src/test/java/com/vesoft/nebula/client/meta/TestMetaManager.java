@@ -16,6 +16,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -107,8 +108,12 @@ public class TestMetaManager extends TestCase {
     public void testMultiVersionSchema() throws ClientServerIncompatibleException {
         MockNebulaGraph.createMultiVersionTagAndEdge();
         metaManager.close();
-        metaManager = new MetaManager(
-                Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
+        try {
+            metaManager = new MetaManager(
+                    Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
+        } catch (UnknownHostException e) {
+            assert (false);
+        }
         TagItem tagItem = metaManager.getTag("testMeta", "player");
         assert (tagItem.getVersion() == 1);
         assert (tagItem.schema.getColumns().size() == 1);
