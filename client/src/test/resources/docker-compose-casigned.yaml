@@ -128,6 +128,20 @@ services:
     restart: on-failure
     cap_add:
       - SYS_PTRACE
+  console:
+    image: vesoft/nebula-console:nightly
+    entrypoint: ""
+    command: 
+      - sh
+      - -c
+      - |
+        sleep 3 &&
+        nebula-console -addr graphd-casigned -port 9669 -u root -p nebula -e 'ADD HOSTS "172.29.2.1":9779' &&
+        sleep 36000
+    depends_on:
+      - graphd-casigned
+    networks:
+      - nebula-net-casigned
 
 networks:
   nebula-net-casigned:
