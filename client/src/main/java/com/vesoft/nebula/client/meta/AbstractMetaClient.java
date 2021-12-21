@@ -10,6 +10,8 @@ import com.facebook.thrift.transport.TTransport;
 import com.google.common.base.Preconditions;
 import com.google.common.net.InetAddresses;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public class AbstractMetaClient {
@@ -22,16 +24,16 @@ public class AbstractMetaClient {
     protected TTransport transport;
 
     public AbstractMetaClient(List<HostAddress> addresses, int timeout,
-                              int connectionRetry, int executionRetry) {
+                              int connectionRetry, int executionRetry) throws UnknownHostException {
         Preconditions.checkArgument(timeout > 0);
-        Preconditions.checkArgument(connectionRetry > 0);
-        Preconditions.checkArgument(executionRetry > 0);
+        Preconditions.checkArgument(connectionRetry >= 0);
+        Preconditions.checkArgument(executionRetry >= 0);
         for (HostAddress address : addresses) {
-            String host = address.getHost();
+            String host = InetAddress.getByName(address.getHost()).getHostAddress();
             int port = address.getPort();
             // check if the address is a valid ip address or uri address and port is valid
             if ((!InetAddresses.isInetAddress(host) || !InetAddresses.isUriInetAddress(host))
-                || (port <= 0 || port >= 65535)) {
+                    || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                         host, port));
             }
