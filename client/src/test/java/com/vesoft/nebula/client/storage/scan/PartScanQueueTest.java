@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.storage.scan;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.storage.ScanCursor;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
@@ -30,12 +31,12 @@ public class PartScanQueueTest {
         // test validate leader
         HostAddress rightAddr = new HostAddress("127.0.0.1", 1);
         assert (queue.getPart(rightAddr).getLeader().getPort() == 1);
-        assert (queue.getPart(rightAddr).getCursor() == null);
+        assert ("".equals(new String(queue.getPart(rightAddr).getCursor().next_cursor)));
 
         // test cursor
         HostAddress addr = new HostAddress("127.0.0.1", 3);
         assert (queue.getPart(addr).getLeader().getPort() == 3);
-        assert (new String(queue.getPart(addr).getCursor()).equals("cursor"));
+        assert (new String(queue.getPart(addr).getCursor().next_cursor).equals("cursor"));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class PartScanQueueTest {
         partScanInfoSet.add(new PartScanInfo(4, new HostAddress("127.0.0.1", 2)));
 
         PartScanInfo partScanInfo = new PartScanInfo(5, new HostAddress("127.0.0.1", 3));
-        partScanInfo.setCursor("cursor".getBytes());
+        partScanInfo.setCursor(new ScanCursor(true, "cursor".getBytes()));
         partScanInfoSet.add(partScanInfo);
         return partScanInfoSet;
     }

@@ -77,6 +77,7 @@ public class SyncConnection extends Connection {
                         Charsets.UTF_8));
             }
         } catch (TException | IOException e) {
+            close();
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
     }
@@ -248,7 +249,7 @@ public class SyncConnection extends Connection {
     }
 
     public void close() {
-        if (transport != null) {
+        if (transport != null && transport.isOpen()) {
             transport.close();
         }
     }

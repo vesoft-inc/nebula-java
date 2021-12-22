@@ -8,6 +8,7 @@ package com.vesoft.nebula.encoder;
 import com.vesoft.nebula.meta.ColumnDef;
 import com.vesoft.nebula.meta.ColumnTypeDef;
 import com.vesoft.nebula.meta.EdgeItem;
+import com.vesoft.nebula.meta.GeoShape;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.TagItem;
 import java.nio.ByteBuffer;
@@ -201,11 +202,13 @@ public class NebulaCodecImpl implements NebulaCodec {
             boolean nullable = col.isSetNullable() && col.isNullable();
             boolean hasDefault = col.isSetDefault_value();
             int len = type.isSetType_length() ? type.getType_length() : 0;
+            GeoShape geoShape = type.isSetGeo_shape() ? type.getGeo_shape() : GeoShape.ANY;
             schemaProvider.addField(new String(col.getName()),
                 type.type.getValue(),
                 len,
                 nullable,
-                hasDefault ? col.getDefault_value() : null);
+                hasDefault ? col.getDefault_value() : null,
+                geoShape.getValue());
         }
         return schemaProvider;
     }

@@ -201,7 +201,7 @@ public class ResultSet {
      * get latency of the query execute time
      * @return int
      */
-    public int getLatency() {
+    public long getLatency() {
         return response.latency_in_us;
     }
 

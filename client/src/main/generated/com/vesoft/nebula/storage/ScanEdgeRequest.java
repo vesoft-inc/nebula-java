@@ -27,21 +27,19 @@ import com.facebook.thrift.protocol.*;
 public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, Comparable<ScanEdgeRequest> {
   private static final TStruct STRUCT_DESC = new TStruct("ScanEdgeRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
-  private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
-  private static final TField CURSOR_FIELD_DESC = new TField("cursor", TType.STRING, (short)3);
-  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.STRUCT, (short)4);
-  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)5);
-  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)6);
-  private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)7);
-  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)8);
-  private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)9);
-  private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)10);
-  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)11);
+  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)3);
+  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)4);
+  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)5);
+  private static final TField END_TIME_FIELD_DESC = new TField("end_time", TType.I64, (short)6);
+  private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)7);
+  private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)8);
+  private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)9);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)10);
 
   public int space_id;
-  public int part_id;
-  public byte[] cursor;
-  public EdgeProp return_columns;
+  public Map<Integer,ScanCursor> parts;
+  public List<EdgeProp> return_columns;
   public long limit;
   public long start_time;
   public long end_time;
@@ -50,26 +48,24 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
   public boolean enable_read_from_follower;
   public RequestCommon common;
   public static final int SPACE_ID = 1;
-  public static final int PART_ID = 2;
-  public static final int CURSOR = 3;
-  public static final int RETURN_COLUMNS = 4;
-  public static final int LIMIT = 5;
-  public static final int START_TIME = 6;
-  public static final int END_TIME = 7;
-  public static final int FILTER = 8;
-  public static final int ONLY_LATEST_VERSION = 9;
-  public static final int ENABLE_READ_FROM_FOLLOWER = 10;
-  public static final int COMMON = 11;
+  public static final int PARTS = 2;
+  public static final int RETURN_COLUMNS = 3;
+  public static final int LIMIT = 4;
+  public static final int START_TIME = 5;
+  public static final int END_TIME = 6;
+  public static final int FILTER = 7;
+  public static final int ONLY_LATEST_VERSION = 8;
+  public static final int ENABLE_READ_FROM_FOLLOWER = 9;
+  public static final int COMMON = 10;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private static final int __PART_ID_ISSET_ID = 1;
-  private static final int __LIMIT_ISSET_ID = 2;
-  private static final int __START_TIME_ISSET_ID = 3;
-  private static final int __END_TIME_ISSET_ID = 4;
-  private static final int __ONLY_LATEST_VERSION_ISSET_ID = 5;
-  private static final int __ENABLE_READ_FROM_FOLLOWER_ISSET_ID = 6;
-  private BitSet __isset_bit_vector = new BitSet(7);
+  private static final int __LIMIT_ISSET_ID = 1;
+  private static final int __START_TIME_ISSET_ID = 2;
+  private static final int __END_TIME_ISSET_ID = 3;
+  private static final int __ONLY_LATEST_VERSION_ISSET_ID = 4;
+  private static final int __ENABLE_READ_FROM_FOLLOWER_ISSET_ID = 5;
+  private BitSet __isset_bit_vector = new BitSet(6);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -77,12 +73,13 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(PART_ID, new FieldMetaData("part_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(CURSOR, new FieldMetaData("cursor", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new StructMetaData(TType.STRUCT, ScanCursor.class))));
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, EdgeProp.class)));
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, EdgeProp.class))));
     tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(START_TIME, new FieldMetaData("start_time", TFieldRequirementType.OPTIONAL, 
@@ -113,16 +110,15 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
   public ScanEdgeRequest(
       int space_id,
-      int part_id,
-      EdgeProp return_columns,
+      Map<Integer,ScanCursor> parts,
+      List<EdgeProp> return_columns,
       long limit,
       boolean only_latest_version,
       boolean enable_read_from_follower) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.part_id = part_id;
-    setPart_idIsSet(true);
+    this.parts = parts;
     this.return_columns = return_columns;
     this.limit = limit;
     setLimitIsSet(true);
@@ -134,9 +130,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
   public ScanEdgeRequest(
       int space_id,
-      int part_id,
-      byte[] cursor,
-      EdgeProp return_columns,
+      Map<Integer,ScanCursor> parts,
+      List<EdgeProp> return_columns,
       long limit,
       long start_time,
       long end_time,
@@ -147,9 +142,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
-    this.part_id = part_id;
-    setPart_idIsSet(true);
-    this.cursor = cursor;
+    this.parts = parts;
     this.return_columns = return_columns;
     this.limit = limit;
     setLimitIsSet(true);
@@ -167,9 +160,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
   public static class Builder {
     private int space_id;
-    private int part_id;
-    private byte[] cursor;
-    private EdgeProp return_columns;
+    private Map<Integer,ScanCursor> parts;
+    private List<EdgeProp> return_columns;
     private long limit;
     private long start_time;
     private long end_time;
@@ -178,7 +170,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     private boolean enable_read_from_follower;
     private RequestCommon common;
 
-    BitSet __optional_isset = new BitSet(7);
+    BitSet __optional_isset = new BitSet(6);
 
     public Builder() {
     }
@@ -189,18 +181,12 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public Builder setPart_id(final int part_id) {
-      this.part_id = part_id;
-      __optional_isset.set(__PART_ID_ISSET_ID, true);
+    public Builder setParts(final Map<Integer,ScanCursor> parts) {
+      this.parts = parts;
       return this;
     }
 
-    public Builder setCursor(final byte[] cursor) {
-      this.cursor = cursor;
-      return this;
-    }
-
-    public Builder setReturn_columns(final EdgeProp return_columns) {
+    public Builder setReturn_columns(final List<EdgeProp> return_columns) {
       this.return_columns = return_columns;
       return this;
     }
@@ -250,10 +236,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
-      if (__optional_isset.get(__PART_ID_ISSET_ID)) {
-        result.setPart_id(this.part_id);
-      }
-      result.setCursor(this.cursor);
+      result.setParts(this.parts);
       result.setReturn_columns(this.return_columns);
       if (__optional_isset.get(__LIMIT_ISSET_ID)) {
         result.setLimit(this.limit);
@@ -287,9 +270,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
-    this.part_id = TBaseHelper.deepCopy(other.part_id);
-    if (other.isSetCursor()) {
-      this.cursor = TBaseHelper.deepCopy(other.cursor);
+    if (other.isSetParts()) {
+      this.parts = TBaseHelper.deepCopy(other.parts);
     }
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
@@ -334,58 +316,35 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public int getPart_id() {
-    return this.part_id;
+  public Map<Integer,ScanCursor> getParts() {
+    return this.parts;
   }
 
-  public ScanEdgeRequest setPart_id(int part_id) {
-    this.part_id = part_id;
-    setPart_idIsSet(true);
+  public ScanEdgeRequest setParts(Map<Integer,ScanCursor> parts) {
+    this.parts = parts;
     return this;
   }
 
-  public void unsetPart_id() {
-    __isset_bit_vector.clear(__PART_ID_ISSET_ID);
+  public void unsetParts() {
+    this.parts = null;
   }
 
-  // Returns true if field part_id is set (has been assigned a value) and false otherwise
-  public boolean isSetPart_id() {
-    return __isset_bit_vector.get(__PART_ID_ISSET_ID);
+  // Returns true if field parts is set (has been assigned a value) and false otherwise
+  public boolean isSetParts() {
+    return this.parts != null;
   }
 
-  public void setPart_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
-  }
-
-  public byte[] getCursor() {
-    return this.cursor;
-  }
-
-  public ScanEdgeRequest setCursor(byte[] cursor) {
-    this.cursor = cursor;
-    return this;
-  }
-
-  public void unsetCursor() {
-    this.cursor = null;
-  }
-
-  // Returns true if field cursor is set (has been assigned a value) and false otherwise
-  public boolean isSetCursor() {
-    return this.cursor != null;
-  }
-
-  public void setCursorIsSet(boolean __value) {
+  public void setPartsIsSet(boolean __value) {
     if (!__value) {
-      this.cursor = null;
+      this.parts = null;
     }
   }
 
-  public EdgeProp getReturn_columns() {
+  public List<EdgeProp> getReturn_columns() {
     return this.return_columns;
   }
 
-  public ScanEdgeRequest setReturn_columns(EdgeProp return_columns) {
+  public ScanEdgeRequest setReturn_columns(List<EdgeProp> return_columns) {
     this.return_columns = return_columns;
     return this;
   }
@@ -568,6 +527,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -578,19 +538,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
-    case PART_ID:
+    case PARTS:
       if (__value == null) {
-        unsetPart_id();
+        unsetParts();
       } else {
-        setPart_id((Integer)__value);
-      }
-      break;
-
-    case CURSOR:
-      if (__value == null) {
-        unsetCursor();
-      } else {
-        setCursor((byte[])__value);
+        setParts((Map<Integer,ScanCursor>)__value);
       }
       break;
 
@@ -598,7 +550,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       if (__value == null) {
         unsetReturn_columns();
       } else {
-        setReturn_columns((EdgeProp)__value);
+        setReturn_columns((List<EdgeProp>)__value);
       }
       break;
 
@@ -668,11 +620,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     case SPACE_ID:
       return new Integer(getSpace_id());
 
-    case PART_ID:
-      return new Integer(getPart_id());
-
-    case CURSOR:
-      return getCursor();
+    case PARTS:
+      return getParts();
 
     case RETURN_COLUMNS:
       return getReturn_columns();
@@ -715,9 +664,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
-
-    if (!TBaseHelper.equalsSlow(this.isSetCursor(), that.isSetCursor(), this.cursor, that.cursor)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetReturn_columns(), that.isSetReturn_columns(), this.return_columns, that.return_columns)) { return false; }
 
@@ -740,7 +687,7 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, cursor, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower, common});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower, common});
   }
 
   @Override
@@ -763,19 +710,11 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetPart_id()).compareTo(other.isSetPart_id());
+    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetCursor()).compareTo(other.isSetCursor());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(cursor, other.cursor);
+    lastComparison = TBaseHelper.compareTo(parts, other.parts);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -865,25 +804,44 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PART_ID:
-          if (__field.type == TType.I32) {
-            this.part_id = iprot.readI32();
-            setPart_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case CURSOR:
-          if (__field.type == TType.STRING) {
-            this.cursor = iprot.readBinary();
+        case PARTS:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map198 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map198.size));
+              for (int _i199 = 0; 
+                   (_map198.size < 0) ? iprot.peekMap() : (_i199 < _map198.size); 
+                   ++_i199)
+              {
+                int _key200;
+                ScanCursor _val201;
+                _key200 = iprot.readI32();
+                _val201 = new ScanCursor();
+                _val201.read(iprot);
+                this.parts.put(_key200, _val201);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
         case RETURN_COLUMNS:
-          if (__field.type == TType.STRUCT) {
-            this.return_columns = new EdgeProp();
-            this.return_columns.read(iprot);
+          if (__field.type == TType.LIST) {
+            {
+              TList _list202 = iprot.readListBegin();
+              this.return_columns = new ArrayList<EdgeProp>(Math.max(0, _list202.size));
+              for (int _i203 = 0; 
+                   (_list202.size < 0) ? iprot.peekList() : (_i203 < _list202.size); 
+                   ++_i203)
+              {
+                EdgeProp _elem204;
+                _elem204 = new EdgeProp();
+                _elem204.read(iprot);
+                this.return_columns.add(_elem204);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -963,19 +921,27 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
     oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(PART_ID_FIELD_DESC);
-    oprot.writeI32(this.part_id);
-    oprot.writeFieldEnd();
-    if (this.cursor != null) {
-      if (isSetCursor()) {
-        oprot.writeFieldBegin(CURSOR_FIELD_DESC);
-        oprot.writeBinary(this.cursor);
-        oprot.writeFieldEnd();
+    if (this.parts != null) {
+      oprot.writeFieldBegin(PARTS_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.parts.size()));
+        for (Map.Entry<Integer, ScanCursor> _iter205 : this.parts.entrySet())        {
+          oprot.writeI32(_iter205.getKey());
+          _iter205.getValue().write(oprot);
+        }
+        oprot.writeMapEnd();
       }
+      oprot.writeFieldEnd();
     }
     if (this.return_columns != null) {
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
-      this.return_columns.write(oprot);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
+        for (EdgeProp _iter206 : this.return_columns)        {
+          _iter206.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(LIMIT_FIELD_DESC);
@@ -1039,30 +1005,15 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("part_id");
+    sb.append("parts");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
-    first = false;
-    if (isSetCursor())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("cursor");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getCursor() == null) {
-        sb.append("null");
-      } else {
-          int __cursor_size = Math.min(this.getCursor().length, 128);
-          for (int i = 0; i < __cursor_size; i++) {
-            if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this.getCursor()[i]).length() > 1 ? Integer.toHexString(this.getCursor()[i]).substring(Integer.toHexString(this.getCursor()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getCursor()[i]).toUpperCase());
-          }
-          if (this.getCursor().length > 128) sb.append(" ...");
-      }
-      first = false;
+    if (this.getParts() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
+    first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("return_columns");

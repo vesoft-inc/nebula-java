@@ -6,12 +6,12 @@
 package com.vesoft.nebula.encoder;
 
 import com.vesoft.nebula.HostAddr;
-import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.PropertyType;
 import com.vesoft.nebula.client.meta.MetaCache;
 import com.vesoft.nebula.meta.ColumnDef;
 import com.vesoft.nebula.meta.ColumnTypeDef;
 import com.vesoft.nebula.meta.EdgeItem;
-import com.vesoft.nebula.meta.PropertyType;
+import com.vesoft.nebula.meta.GeoShape;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.SpaceDesc;
 import com.vesoft.nebula.meta.SpaceItem;
@@ -80,6 +80,19 @@ public class MetaCacheImplTest implements MetaCache {
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col15").getBytes(),
             new ColumnTypeDef(PropertyType.INT32));
+        columnDef.setNullable(true);
+        columns.add(columnDef);
+        columnDef = new ColumnDef(("Col16").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.POINT));
+        columns.add(columnDef);
+        columnDef = new ColumnDef(("Col17").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.LINESTRING));
+        columns.add(columnDef);
+        columnDef = new ColumnDef(("Col18").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.POLYGON));
+        columns.add(columnDef);
+        columnDef = new ColumnDef(("Col19").getBytes(),
+            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.ANY));
         columnDef.setNullable(true);
         columns.add(columnDef);
         return new Schema(columns, null);

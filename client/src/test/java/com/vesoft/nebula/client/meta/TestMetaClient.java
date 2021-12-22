@@ -17,6 +17,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,10 +44,10 @@ public class TestMetaClient extends TestCase {
     }
 
     private void connect() {
-        metaClient = new MetaClient(address, port);
         try {
+            metaClient = new MetaClient(address, port);
             metaClient.connect();
-        } catch (TException | ClientServerIncompatibleException e) {
+        } catch (TException | UnknownHostException | ClientServerIncompatibleException e) {
             e.printStackTrace();
             assert (false);
         }
@@ -54,10 +55,11 @@ public class TestMetaClient extends TestCase {
 
     public void testFailConnect() {
         int port = 1111;
-        MetaClient client = new MetaClient(address, port);
+
         try {
+            MetaClient client = new MetaClient(address, port);
             client.connect();
-        } catch (TException | ClientServerIncompatibleException e) {
+        } catch (TException | UnknownHostException | ClientServerIncompatibleException e) {
             assert (true);
         }
     }
@@ -107,7 +109,11 @@ public class TestMetaClient extends TestCase {
 
     public void testListHosts() {
         if (metaClient == null) {
-            metaClient = new MetaClient(address, port);
+            try {
+                metaClient = new MetaClient(address, port);
+            } catch (UnknownHostException e) {
+                assert (false);
+            }
         }
         assert (metaClient.listHosts().size() == 3);
     }
@@ -126,7 +132,11 @@ public class TestMetaClient extends TestCase {
             assert (false);
         }
         if (metaClient == null) {
-            metaClient = new MetaClient(address, port);
+            try {
+                metaClient = new MetaClient(address, port);
+            } catch (UnknownHostException e) {
+                assert (false);
+            }
         }
         assert (metaClient.listHosts().size() == 2);
 

@@ -135,7 +135,6 @@ public class StorageClientTest {
             assert (result.getPropNames().get(2).equals("age"));
             assert (result.isAllSuccess());
 
-
             List<VertexRow> rows = result.getVertices();
             for (VertexRow row : rows) {
                 try {
@@ -387,46 +386,7 @@ public class StorageClientTest {
             ScanVertexResultIterator resultIterator = sslClient.scanVertex(
                     "testStorageCA",
                     "person");
-            while (resultIterator.hasNext()) {
-                ScanVertexResult result = null;
-                try {
-                    result = resultIterator.next();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    assert (false);
-                }
-                if (result.isEmpty()) {
-                    continue;
-                }
-                Assert.assertEquals(1, result.getPropNames().size());
-                assert (result.getPropNames().get(0).equals("_vid"));
-                assert (result.isAllSuccess());
-
-                List<VertexRow> rows = result.getVertices();
-                for (VertexRow row : rows) {
-                    try {
-                        assert (Arrays.asList("1", "2", "3", "4", "5")
-                                .contains(row.getVid().asString()));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                        assert (false);
-                    }
-                    assert (row.getProps().size() == 0);
-                }
-
-                List<VertexTableRow> tableRows = result.getVertexTableRows();
-                for (VertexTableRow tableRow : tableRows) {
-                    try {
-                        assert (Arrays.asList("1", "2", "3", "4", "5")
-                                .contains(tableRow.getVid().asString()));
-                        assert (Arrays.asList("1", "2", "3", "4", "5")
-                                .contains(tableRow.getString(0)));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                        assert (false);
-                    }
-                }
-            }
+            assertIterator(resultIterator);
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
@@ -481,6 +441,7 @@ public class StorageClientTest {
     }
 
     private void assertIterator(ScanVertexResultIterator resultIterator) {
+        int count = 0;
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -492,6 +453,7 @@ public class StorageClientTest {
             if (result.isEmpty()) {
                 continue;
             }
+            count += result.getVertices().size();
             Assert.assertEquals(1, result.getPropNames().size());
             assert (result.getPropNames().get(0).equals("_vid"));
             assert (result.isAllSuccess());
@@ -521,5 +483,7 @@ public class StorageClientTest {
                 }
             }
         }
+        System.out.println("count:" + count);
+        assert (count == 5);
     }
 }

@@ -555,16 +555,16 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list157 = iprot.readListBegin();
-              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list157.size));
-              for (int _i158 = 0; 
-                   (_list157.size < 0) ? iprot.peekList() : (_i158 < _list157.size); 
-                   ++_i158)
+              TList _list171 = iprot.readListBegin();
+              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list171.size));
+              for (int _i172 = 0; 
+                   (_list171.size < 0) ? iprot.peekList() : (_i172 < _list171.size); 
+                   ++_i172)
               {
-                IndexFieldDef _elem159;
-                _elem159 = new IndexFieldDef();
-                _elem159.read(iprot);
-                this.fields.add(_elem159);
+                IndexFieldDef _elem173;
+                _elem173 = new IndexFieldDef();
+                _elem173.read(iprot);
+                this.fields.add(_elem173);
               }
               iprot.readListEnd();
             }
@@ -621,8 +621,8 @@ public class CreateEdgeIndexReq implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (IndexFieldDef _iter160 : this.fields)        {
-          _iter160.write(oprot);
+        for (IndexFieldDef _iter174 : this.fields)        {
+          _iter174.write(oprot);
         }
         oprot.writeListEnd();
       }

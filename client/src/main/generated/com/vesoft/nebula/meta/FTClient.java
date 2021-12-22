@@ -29,13 +29,16 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)1);
   private static final TField USER_FIELD_DESC = new TField("user", TType.STRING, (short)2);
   private static final TField PWD_FIELD_DESC = new TField("pwd", TType.STRING, (short)3);
+  private static final TField CONN_TYPE_FIELD_DESC = new TField("conn_type", TType.STRING, (short)4);
 
   public com.vesoft.nebula.HostAddr host;
   public byte[] user;
   public byte[] pwd;
+  public byte[] conn_type;
   public static final int HOST = 1;
   public static final int USER = 2;
   public static final int PWD = 3;
+  public static final int CONN_TYPE = 4;
 
   // isset id assignments
 
@@ -48,6 +51,8 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     tmpMetaDataMap.put(USER, new FieldMetaData("user", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(PWD, new FieldMetaData("pwd", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(CONN_TYPE, new FieldMetaData("conn_type", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -68,17 +73,20 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   public FTClient(
       com.vesoft.nebula.HostAddr host,
       byte[] user,
-      byte[] pwd) {
+      byte[] pwd,
+      byte[] conn_type) {
     this();
     this.host = host;
     this.user = user;
     this.pwd = pwd;
+    this.conn_type = conn_type;
   }
 
   public static class Builder {
     private com.vesoft.nebula.HostAddr host;
     private byte[] user;
     private byte[] pwd;
+    private byte[] conn_type;
 
     public Builder() {
     }
@@ -98,11 +106,17 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return this;
     }
 
+    public Builder setConn_type(final byte[] conn_type) {
+      this.conn_type = conn_type;
+      return this;
+    }
+
     public FTClient build() {
       FTClient result = new FTClient();
       result.setHost(this.host);
       result.setUser(this.user);
       result.setPwd(this.pwd);
+      result.setConn_type(this.conn_type);
       return result;
     }
   }
@@ -123,6 +137,9 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     }
     if (other.isSetPwd()) {
       this.pwd = TBaseHelper.deepCopy(other.pwd);
+    }
+    if (other.isSetConn_type()) {
+      this.conn_type = TBaseHelper.deepCopy(other.conn_type);
     }
   }
 
@@ -202,6 +219,30 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
+  public byte[] getConn_type() {
+    return this.conn_type;
+  }
+
+  public FTClient setConn_type(byte[] conn_type) {
+    this.conn_type = conn_type;
+    return this;
+  }
+
+  public void unsetConn_type() {
+    this.conn_type = null;
+  }
+
+  // Returns true if field conn_type is set (has been assigned a value) and false otherwise
+  public boolean isSetConn_type() {
+    return this.conn_type != null;
+  }
+
+  public void setConn_typeIsSet(boolean __value) {
+    if (!__value) {
+      this.conn_type = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case HOST:
@@ -228,6 +269,14 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
+    case CONN_TYPE:
+      if (__value == null) {
+        unsetConn_type();
+      } else {
+        setConn_type((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -243,6 +292,9 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
 
     case PWD:
       return getPwd();
+
+    case CONN_TYPE:
+      return getConn_type();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -265,12 +317,14 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
 
     if (!TBaseHelper.equalsSlow(this.isSetPwd(), that.isSetPwd(), this.pwd, that.pwd)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetConn_type(), that.isSetConn_type(), this.conn_type, that.conn_type)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {host, user, pwd});
+    return Arrays.deepHashCode(new Object[] {host, user, pwd, conn_type});
   }
 
   @Override
@@ -306,6 +360,14 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(pwd, other.pwd);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetConn_type()).compareTo(other.isSetConn_type());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(conn_type, other.conn_type);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -345,6 +407,13 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case CONN_TYPE:
+          if (__field.type == TType.STRING) {
+            this.conn_type = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -378,6 +447,13 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       if (isSetPwd()) {
         oprot.writeFieldBegin(PWD_FIELD_DESC);
         oprot.writeBinary(this.pwd);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.conn_type != null) {
+      if (isSetConn_type()) {
+        oprot.writeFieldBegin(CONN_TYPE_FIELD_DESC);
+        oprot.writeBinary(this.conn_type);
         oprot.writeFieldEnd();
       }
     }
@@ -446,6 +522,25 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
             sb.append(Integer.toHexString(this.getPwd()[i]).length() > 1 ? Integer.toHexString(this.getPwd()[i]).substring(Integer.toHexString(this.getPwd()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPwd()[i]).toUpperCase());
           }
           if (this.getPwd().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetConn_type())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("conn_type");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getConn_type() == null) {
+        sb.append("null");
+      } else {
+          int __conn_type_size = Math.min(this.getConn_type().length, 128);
+          for (int i = 0; i < __conn_type_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getConn_type()[i]).length() > 1 ? Integer.toHexString(this.getConn_type()[i]).substring(Integer.toHexString(this.getConn_type()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getConn_type()[i]).toUpperCase());
+          }
+          if (this.getConn_type().length > 128) sb.append(" ...");
       }
       first = false;
     }

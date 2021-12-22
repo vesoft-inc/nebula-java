@@ -574,11 +574,11 @@ public class StorageClient {
             }
         }
         VertexProp vertexCols = new VertexProp((int) tag, props);
-
+        List<VertexProp> vertexProps = Arrays.asList(vertexCols);
         ScanVertexRequest request = new ScanVertexRequest();
         request
                 .setSpace_id(getSpaceId(spaceName))
-                .setReturn_columns(vertexCols)
+                .setReturn_columns(vertexProps)
                 .setLimit(limit)
                 .setStart_time(startTime)
                 .setEnd_time(endTime)
@@ -1035,11 +1035,12 @@ public class StorageClient {
 
         long edgeId = getEdgeId(spaceName, edgeName);
         EdgeProp edgeCols = new EdgeProp((int) edgeId, props);
+        List<EdgeProp> edgeProps = Arrays.asList(edgeCols);
 
         ScanEdgeRequest request = new ScanEdgeRequest();
         request
                 .setSpace_id(getSpaceId(spaceName))
-                .setReturn_columns(edgeCols)
+                .setReturn_columns(edgeProps)
                 .setLimit(limit)
                 .setStart_time(startTime)
                 .setEnd_time(endTime)

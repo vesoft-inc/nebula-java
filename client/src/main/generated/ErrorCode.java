@@ -12,32 +12,21 @@ import java.util.HashMap;
 @SuppressWarnings({ "unused" })
 public enum ErrorCode implements com.facebook.thrift.TEnum {
   SUCCEEDED(0),
-  E_LOG_GAP(-1),
-  E_LOG_STALE(-2),
-  E_MISSING_COMMIT(-3),
-  E_WAITING_SNAPSHOT(-4),
-  E_UNKNOWN_PART(-5),
-  E_TERM_OUT_OF_DATE(-6),
-  E_LAST_LOG_TERM_TOO_OLD(-7),
-  E_BAD_STATE(-8),
-  E_WRONG_LEADER(-9),
+  E_UNKNOWN_PART(-1),
+  E_LOG_GAP(-2),
+  E_LOG_STALE(-3),
+  E_TERM_OUT_OF_DATE(-4),
+  E_WAITING_SNAPSHOT(-5),
+  E_BAD_STATE(-6),
+  E_WRONG_LEADER(-7),
+  E_NOT_READY(-8),
+  E_BAD_ROLE(-9),
   E_WAL_FAIL(-10),
-  E_NOT_READY(-11),
-  E_HOST_STOPPED(-12),
-  E_NOT_A_LEADER(-13),
-  E_HOST_DISCONNECTED(-14),
-  E_TOO_MANY_REQUESTS(-15),
-  E_PERSIST_SNAPSHOT_FAILED(-16),
-  E_BAD_ROLE(-17),
-  E_EXCEPTION(-20);
-
-  private static final Map<Integer, ErrorCode> INDEXED_VALUES = new HashMap<Integer, ErrorCode>();
-
-  static {
-    for (ErrorCode e: values()) {
-      INDEXED_VALUES.put(e.getValue(), e);
-    }
-  }
+  E_HOST_STOPPED(-11),
+  E_TOO_MANY_REQUESTS(-12),
+  E_PERSIST_SNAPSHOT_FAILED(-13),
+  E_RPC_EXCEPTION(-14),
+  E_NO_WAL_FOUND(-15);
 
   private final int value;
 
@@ -57,6 +46,41 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
    * @return null if the value is not found.
    */
   public static ErrorCode findByValue(int value) { 
-    return INDEXED_VALUES.get(value);
+    switch (value) {
+      case 0:
+        return SUCCEEDED;
+      case -1:
+        return E_UNKNOWN_PART;
+      case -2:
+        return E_LOG_GAP;
+      case -3:
+        return E_LOG_STALE;
+      case -4:
+        return E_TERM_OUT_OF_DATE;
+      case -5:
+        return E_WAITING_SNAPSHOT;
+      case -6:
+        return E_BAD_STATE;
+      case -7:
+        return E_WRONG_LEADER;
+      case -8:
+        return E_NOT_READY;
+      case -9:
+        return E_BAD_ROLE;
+      case -10:
+        return E_WAL_FAIL;
+      case -11:
+        return E_HOST_STOPPED;
+      case -12:
+        return E_TOO_MANY_REQUESTS;
+      case -13:
+        return E_PERSIST_SNAPSHOT_FAILED;
+      case -14:
+        return E_RPC_EXCEPTION;
+      case -15:
+        return E_NO_WAL_FOUND;
+      default:
+        return null;
+    }
   }
 }

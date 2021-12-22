@@ -3,18 +3,23 @@
  * This source code is licensed under Apache 2.0 License.
  */
 
-package test.java.com.vesoft.nebula.encoder;
+package com.vesoft.nebula.encoder;
 
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.LineString;
 import com.vesoft.nebula.NullType;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
+import com.vesoft.nebula.PropertyType;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.encoder.MetaCacheImplTest;
 import com.vesoft.nebula.encoder.NebulaCodecImpl;
 import com.vesoft.nebula.meta.EdgeItem;
-import com.vesoft.nebula.meta.PropertyType;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
 import java.util.ArrayList;
@@ -31,14 +36,23 @@ public class TestEncoder {
     private final MetaCacheImplTest cacheImplTest = new MetaCacheImplTest();
     private final NebulaCodecImpl codec = new NebulaCodecImpl();
 
-    final String allTypeValueExpectResult = "090cc001081000200000004000000000000000db0f494069"
-        + "57148b0abf05405d0000000c0000004e6562756c61204772617068bb334e5e000000"
-        + "00e40702140a1e2d00000000e40702140a1e2d00000000000000000000000000000000"
-        + "48656c6c6f20776f726c6421";
+    final String allTypeValueExpectResult = "090ce001081000200000004000000000000000"
+        + "db0f49406957148b0abf05407d0000000c0000004e6562756c61204772617068bb334e5e"
+        + "00000000e40702140a1e2d00000000e40702140a1e2d0000000000000000000000000000"
+        + "000089000000150000009e00000039000000d70000009100000000000000000000004865"
+        + "6c6c6f20776f726c6421010100000000000000006066409a999999997956400102000000"
+        + "030000000000000000000000000000000000f03f000000000000f03f0000000000000040"
+        + "00000000000008400000000000001c4001030000000200000004000000cdcccccccc2c5b"
+        + "c0000000000080414000000000000059c00000000000404740cdccccccccac56c0333333"
+        + "3333734140cdcccccccc2c5bc000000000008041400400000066666666660659c0333333"
+        + "3333b344409a99999999b959c0cdcccccccccc424033333333333358c00000000000c042"
+        + "4066666666660659c03333333333b34440";
 
     private List<String> getCols() {
         return Arrays.asList("Col01","Col02", "Col03", "Col04", "Col05", "Col06",
-            "Col07","Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14");
+            "Col07","Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14",
+            // Purposely skip the col15
+            "Col16", "Col17", "Col18", "Col19");
     }
 
     private List<Object> getValues() {
@@ -61,8 +75,39 @@ public class TestEncoder {
         dateValue.setDVal(new Date((short)2020, (byte)2, (byte)20));
         final Value nullVal = new Value();
         nullVal.setNVal(NullType.__NULL__);
+        // geograph point
+        // POINT(179.0 89.9)
+        final Value geogPointVal = new Value();
+        geogPointVal.setGgVal(Geography.ptVal(new Point(new Coordinate(179.0, 89.9))));
+        // geography linestring
+        // LINESTRING(0 1, 1 2, 3 7)
+        final Value geogLineStringVal = new Value();
+        List<Coordinate> line = new ArrayList<>();
+        line.add(new Coordinate(0, 1));
+        line.add(new Coordinate(1, 2));
+        line.add(new Coordinate(3, 7));
+        geogLineStringVal.setGgVal(Geography.lsVal(new LineString(line)));
+        // geography polygon
+        // POLYGON((-108.7 35.0, -100.0 46.5, -90.7 34.9, -108.7 35.0),
+        // (-100.1 41.4, -102.9 37.6, -96.8 37.5, -100.1 41.4))
+        final Value geogPolygonVal = new Value();
+        List<Coordinate> shell = new ArrayList<>();
+        shell.add(new Coordinate(-108.7, 35.0));
+        shell.add(new Coordinate(-100.0, 46.5));
+        shell.add(new Coordinate(-90.7, 34.9));
+        shell.add(new Coordinate(-108.7, 35.0));
+        List<Coordinate> hole = new ArrayList<>();
+        hole.add(new Coordinate(-100.1, 41.4));
+        hole.add(new Coordinate(-102.9, 37.6));
+        hole.add(new Coordinate(-96.8, 37.5));
+        hole.add(new Coordinate(-100.1, 41.4));
+        List<List<Coordinate>> rings = new ArrayList<List<Coordinate>>();
+        rings.add(shell);
+        rings.add(hole);
+        geogPolygonVal.setGgVal(Geography.pgVal(new Polygon(rings)));
         return Arrays.asList(true, 8, 16, 32, intVal, pi, e, strVal, fixVal,
-            timestampVal, dateValue, timeVal, datetimeValue, nullVal);
+            timestampVal, dateValue, timeVal, datetimeValue, nullVal,
+            geogPointVal, geogLineStringVal, geogPolygonVal, nullVal);
     }
 
     public int getSpaceVidLen(String spaceName) throws RuntimeException {

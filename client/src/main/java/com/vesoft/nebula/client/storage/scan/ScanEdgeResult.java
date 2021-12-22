@@ -157,8 +157,11 @@ public class ScanEdgeResult {
             if (propNames.isEmpty()) {
                 List<byte[]> colNames = dataSets.get(0).getColumn_names();
                 for (byte[] colName : colNames) {
-                    String name = new String(colName).split("\\.")[1];
-                    propNames.add(name);
+                    String propName = new String(colName);
+                    if (!propName.contains(".")) {
+                        continue;
+                    }
+                    propNames.add(propName.split("\\.")[1]);
                 }
             }
         }

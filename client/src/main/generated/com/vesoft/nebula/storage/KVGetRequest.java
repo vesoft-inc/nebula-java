@@ -341,29 +341,29 @@ public class KVGetRequest implements TBase, java.io.Serializable, Cloneable, Com
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map222 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map222.size));
-              for (int _i223 = 0; 
-                   (_map222.size < 0) ? iprot.peekMap() : (_i223 < _map222.size); 
-                   ++_i223)
+              TMap _map220 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<byte[]>>(Math.max(0, 2*_map220.size));
+              for (int _i221 = 0; 
+                   (_map220.size < 0) ? iprot.peekMap() : (_i221 < _map220.size); 
+                   ++_i221)
               {
-                int _key224;
-                List<byte[]> _val225;
-                _key224 = iprot.readI32();
+                int _key222;
+                List<byte[]> _val223;
+                _key222 = iprot.readI32();
                 {
-                  TList _list226 = iprot.readListBegin();
-                  _val225 = new ArrayList<byte[]>(Math.max(0, _list226.size));
-                  for (int _i227 = 0; 
-                       (_list226.size < 0) ? iprot.peekList() : (_i227 < _list226.size); 
-                       ++_i227)
+                  TList _list224 = iprot.readListBegin();
+                  _val223 = new ArrayList<byte[]>(Math.max(0, _list224.size));
+                  for (int _i225 = 0; 
+                       (_list224.size < 0) ? iprot.peekList() : (_i225 < _list224.size); 
+                       ++_i225)
                   {
-                    byte[] _elem228;
-                    _elem228 = iprot.readBinary();
-                    _val225.add(_elem228);
+                    byte[] _elem226;
+                    _elem226 = iprot.readBinary();
+                    _val223.add(_elem226);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key224, _val225);
+                this.parts.put(_key222, _val223);
               }
               iprot.readMapEnd();
             }
@@ -403,12 +403,12 @@ public class KVGetRequest implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<byte[]>> _iter229 : this.parts.entrySet())        {
-          oprot.writeI32(_iter229.getKey());
+        for (Map.Entry<Integer, List<byte[]>> _iter227 : this.parts.entrySet())        {
+          oprot.writeI32(_iter227.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRING, _iter229.getValue().size()));
-            for (byte[] _iter230 : _iter229.getValue())            {
-              oprot.writeBinary(_iter230);
+            oprot.writeListBegin(new TList(TType.STRING, _iter227.getValue().size()));
+            for (byte[] _iter228 : _iter227.getValue())            {
+              oprot.writeBinary(_iter228);
             }
             oprot.writeListEnd();
           }
