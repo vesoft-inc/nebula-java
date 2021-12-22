@@ -135,7 +135,7 @@ public class SyncConnection extends Connection {
     public AuthResult authenticate(String user, String password,int timeout)
             throws AuthFailedException, IOErrorException, ClientServerIncompatibleException {
         try {
-            if (timeout>0) {
+            if (timeout > 0) {
                 this.transport.setTimeout(timeout);
             }
             AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
@@ -164,7 +164,7 @@ public class SyncConnection extends Connection {
             }
             throw new AuthFailedException(String.format("Authenticate failed: %s", e.getMessage()));
         } finally {
-            if (timeout>0) {
+            if (timeout > 0) {
                 this.transport.setTimeout(this.timeout);
             }
         }
@@ -178,7 +178,7 @@ public class SyncConnection extends Connection {
     public ExecutionResponse execute(long sessionID, String stmt,int timeout)
             throws IOErrorException {
         try {
-            if (timeout>0) {
+            if (timeout > 0) {
                 this.transport.setTimeout(timeout);
             }
             return client.execute(sessionID, stmt.getBytes());
@@ -201,7 +201,7 @@ public class SyncConnection extends Connection {
             }
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         } finally {
-            if (timeout>0) {
+            if (timeout > 0) {
                 this.transport.setTimeout(this.timeout);
             }
         }
