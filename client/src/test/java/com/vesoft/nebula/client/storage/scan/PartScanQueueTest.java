@@ -61,7 +61,7 @@ public class PartScanQueueTest {
         partScanInfoSet.add(new PartScanInfo(4, new HostAddress("127.0.0.1", 2)));
 
         PartScanInfo partScanInfo = new PartScanInfo(5, new HostAddress("127.0.0.1", 3));
-        partScanInfo.setCursor(new ScanCursor(true, "cursor".getBytes()));
+        partScanInfo.setCursor(new ScanCursor("cursor".getBytes()));
         partScanInfoSet.add(partScanInfo);
         return partScanInfoSet;
     }
