@@ -560,16 +560,16 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list4 = iprot.readListBegin();
-              this.fields = new ArrayList<ColumnDef>(Math.max(0, _list4.size));
-              for (int _i5 = 0; 
-                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
-                   ++_i5)
+              TList _list8 = iprot.readListBegin();
+              this.fields = new ArrayList<ColumnDef>(Math.max(0, _list8.size));
+              for (int _i9 = 0; 
+                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
+                   ++_i9)
               {
-                ColumnDef _elem6;
-                _elem6 = new ColumnDef();
-                _elem6.read(iprot);
-                this.fields.add(_elem6);
+                ColumnDef _elem10;
+                _elem10 = new ColumnDef();
+                _elem10.read(iprot);
+                this.fields.add(_elem10);
               }
               iprot.readListEnd();
             }
@@ -623,8 +623,8 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (ColumnDef _iter7 : this.fields)        {
-          _iter7.write(oprot);
+        for (ColumnDef _iter11 : this.fields)        {
+          _iter11.write(oprot);
         }
         oprot.writeListEnd();
       }

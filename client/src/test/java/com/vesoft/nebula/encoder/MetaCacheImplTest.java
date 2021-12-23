@@ -30,69 +30,69 @@ public class MetaCacheImplTest implements MetaCache {
     private Schema genNoDefaultVal() {
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef = new ColumnDef(("Col01").getBytes(),
-            new ColumnTypeDef(PropertyType.BOOL));
+                new ColumnTypeDef(PropertyType.BOOL));
         columns.add(columnDef);
 
         columnDef = new ColumnDef(("Col02").getBytes(),
-            new ColumnTypeDef(PropertyType.INT8));
+                new ColumnTypeDef(PropertyType.INT8));
         columns.add(columnDef);
 
         columnDef = new ColumnDef(("Col03").getBytes(),
-            new ColumnTypeDef(PropertyType.INT16));
+                new ColumnTypeDef(PropertyType.INT16));
         columns.add(columnDef);
 
         columnDef = new ColumnDef(("Col04").getBytes(),
-            new ColumnTypeDef(PropertyType.INT32));
+                new ColumnTypeDef(PropertyType.INT32));
         columns.add(columnDef);
 
         columnDef = new ColumnDef(("Col05").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columns.add(columnDef);
 
         columnDef = new ColumnDef(("Col06").getBytes(),
-            new ColumnTypeDef(PropertyType.FLOAT));
+                new ColumnTypeDef(PropertyType.FLOAT));
         columns.add(columnDef);
 
         columnDef = new ColumnDef(("Col07").getBytes(),
-            new ColumnTypeDef(PropertyType.DOUBLE));
+                new ColumnTypeDef(PropertyType.DOUBLE));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col08").getBytes(),
-            new ColumnTypeDef(PropertyType.STRING));
+                new ColumnTypeDef(PropertyType.STRING));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col09").getBytes(),
-            new ColumnTypeDef(PropertyType.FIXED_STRING, (short)12, null));
+                new ColumnTypeDef(PropertyType.FIXED_STRING, (short) 12, null));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col10").getBytes(),
-            new ColumnTypeDef(PropertyType.TIMESTAMP));
+                new ColumnTypeDef(PropertyType.TIMESTAMP));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col11").getBytes(),
-            new ColumnTypeDef(PropertyType.DATE));
+                new ColumnTypeDef(PropertyType.DATE));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col12").getBytes(),
-            new ColumnTypeDef(PropertyType.TIME));
+                new ColumnTypeDef(PropertyType.TIME));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col13").getBytes(),
-            new ColumnTypeDef(PropertyType.DATETIME));
+                new ColumnTypeDef(PropertyType.DATETIME));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col14").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columnDef.setNullable(true);
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col15").getBytes(),
-            new ColumnTypeDef(PropertyType.INT32));
+                new ColumnTypeDef(PropertyType.INT32));
         columnDef.setNullable(true);
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col16").getBytes(),
-            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.POINT));
+                new ColumnTypeDef(PropertyType.GEOGRAPHY, (short) 0, GeoShape.POINT));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col17").getBytes(),
-            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.LINESTRING));
+                new ColumnTypeDef(PropertyType.GEOGRAPHY, (short) 0, GeoShape.LINESTRING));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col18").getBytes(),
-            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.POLYGON));
+                new ColumnTypeDef(PropertyType.GEOGRAPHY, (short) 0, GeoShape.POLYGON));
         columns.add(columnDef);
         columnDef = new ColumnDef(("Col19").getBytes(),
-            new ColumnTypeDef(PropertyType.GEOGRAPHY, (short)0, GeoShape.ANY));
+                new ColumnTypeDef(PropertyType.GEOGRAPHY, (short) 0, GeoShape.ANY));
         columnDef.setNullable(true);
         columns.add(columnDef);
         return new Schema(columns, null);
@@ -101,22 +101,22 @@ public class MetaCacheImplTest implements MetaCache {
     private Schema genWithDefaultVal() {
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef1 = new ColumnDef(("Col01").getBytes(),
-            new ColumnTypeDef(PropertyType.BOOL));
+                new ColumnTypeDef(PropertyType.BOOL));
         columnDef1.setDefault_value("".getBytes());
         columns.add(columnDef1);
 
         ColumnDef columnDef2 = new ColumnDef(("Col02").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columnDef2.setDefault_value("".getBytes());
         columns.add(columnDef2);
 
         ColumnDef columnDef3 = new ColumnDef(("Col03").getBytes(),
-            new ColumnTypeDef(PropertyType.STRING));
+                new ColumnTypeDef(PropertyType.STRING));
         columnDef3.setDefault_value("".getBytes());
         columns.add(columnDef3);
 
         ColumnDef columnDef4 = new ColumnDef(("Col04").getBytes(),
-            new ColumnTypeDef(PropertyType.FIXED_STRING));
+                new ColumnTypeDef(PropertyType.FIXED_STRING));
         columnDef4.setDefault_value("".getBytes());
         columns.add(columnDef4);
         return new Schema(columns, null);
@@ -131,11 +131,11 @@ public class MetaCacheImplTest implements MetaCache {
 
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef1 = new ColumnDef(("name").getBytes(),
-            new ColumnTypeDef(PropertyType.STRING));
+                new ColumnTypeDef(PropertyType.STRING));
         columns.add(columnDef1);
 
         ColumnDef columnDef2 = new ColumnDef(("age").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columns.add(columnDef2);
 
         tagItem.schema = new Schema(columns, null);
@@ -151,11 +151,11 @@ public class MetaCacheImplTest implements MetaCache {
 
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef1 = new ColumnDef(("start").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columns.add(columnDef1);
 
         ColumnDef columnDef2 = new ColumnDef(("end").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columns.add(columnDef2);
 
         edgeItem.schema = new Schema(columns, null);
@@ -165,7 +165,7 @@ public class MetaCacheImplTest implements MetaCache {
     public Schema genEmptyString() {
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef = new ColumnDef(("Col01").getBytes(),
-            new ColumnTypeDef(PropertyType.STRING));
+                new ColumnTypeDef(PropertyType.STRING));
         columns.add(columnDef);
         return new Schema(columns, null);
     }
@@ -173,7 +173,7 @@ public class MetaCacheImplTest implements MetaCache {
     public Schema genWithoutString() {
         List<ColumnDef> columns = new ArrayList<>();
         ColumnDef columnDef = new ColumnDef(("Col01").getBytes(),
-            new ColumnTypeDef(PropertyType.INT64));
+                new ColumnTypeDef(PropertyType.INT64));
         columns.add(columnDef);
         return new Schema(columns, null);
     }
@@ -185,12 +185,13 @@ public class MetaCacheImplTest implements MetaCache {
     public MetaCacheImplTest() {
         spaceItem.space_id = 1;
         SpaceDesc spaceDesc = new SpaceDesc("test_space".getBytes(),
-                                3,
-                                1,
-                                            "utf-8".getBytes(),
-                                            "utf-8".getBytes(),
-                                            new ColumnTypeDef(
-                                                PropertyType.FIXED_STRING, (short)20, null));
+                3,
+                1,
+                "utf-8".getBytes(),
+                "utf-8".getBytes(),
+                new ColumnTypeDef(
+                        PropertyType.FIXED_STRING, (short) 20, null),
+                Arrays.asList());
 
         this.spaceItem = spaceItem;
         this.spaceItem.properties = spaceDesc;

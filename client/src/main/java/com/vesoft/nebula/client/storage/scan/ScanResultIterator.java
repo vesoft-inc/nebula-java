@@ -104,9 +104,9 @@ public class ScanResultIterator {
     }
 
     protected void handleSucceedResult(AtomicInteger existSuccess, ScanResponse response,
-                                     PartScanInfo partInfo) {
+                                       PartScanInfo partInfo) {
         existSuccess.addAndGet(1);
-        if (!response.getCursors().get(partInfo.getPart()).has_next) {
+        if (response.getCursors().get(partInfo.getPart()).next_cursor == null) {
             partScanQueue.dropPart(partInfo);
         } else {
             partInfo.setCursor(response.getCursors().get(partInfo.getPart()));
@@ -114,7 +114,7 @@ public class ScanResultIterator {
     }
 
     protected void handleFailedResult(ScanResponse response, PartScanInfo partInfo,
-                                    List<Exception> exceptions) {
+                                      List<Exception> exceptions) {
         for (PartitionResult partResult : response.getResult().getFailed_parts()) {
             if (partResult.code == ErrorCode.E_LEADER_CHANGED) {
                 freshLeader(spaceName, partInfo.getPart(), partResult.getLeader());

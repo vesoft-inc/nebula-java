@@ -349,16 +349,16 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
         case CLIENTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list265 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list265.size));
-              for (int _i266 = 0; 
-                   (_list265.size < 0) ? iprot.peekList() : (_i266 < _list265.size); 
-                   ++_i266)
+              TList _list281 = iprot.readListBegin();
+              this.clients = new ArrayList<FTClient>(Math.max(0, _list281.size));
+              for (int _i282 = 0; 
+                   (_list281.size < 0) ? iprot.peekList() : (_i282 < _list281.size); 
+                   ++_i282)
               {
-                FTClient _elem267;
-                _elem267 = new FTClient();
-                _elem267.read(iprot);
-                this.clients.add(_elem267);
+                FTClient _elem283;
+                _elem283 = new FTClient();
+                _elem283.read(iprot);
+                this.clients.add(_elem283);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter268 : this.clients)        {
-          _iter268.write(oprot);
+        for (FTClient _iter284 : this.clients)        {
+          _iter284.write(oprot);
         }
         oprot.writeListEnd();
       }

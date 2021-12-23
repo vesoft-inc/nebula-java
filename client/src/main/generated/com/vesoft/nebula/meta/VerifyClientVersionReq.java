@@ -26,13 +26,16 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class VerifyClientVersionReq implements TBase, java.io.Serializable, Cloneable, Comparable<VerifyClientVersionReq> {
   private static final TStruct STRUCT_DESC = new TStruct("VerifyClientVersionReq");
-  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)1);
+  private static final TField CLIENT_VERSION_FIELD_DESC = new TField("client_version", TType.STRING, (short)1);
   private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)2);
+  private static final TField BUILD_VERSION_FIELD_DESC = new TField("build_version", TType.STRING, (short)3);
 
-  public byte[] version;
+  public byte[] client_version;
   public com.vesoft.nebula.HostAddr host;
-  public static final int VERSION = 1;
+  public byte[] build_version;
+  public static final int CLIENT_VERSION = 1;
   public static final int HOST = 2;
+  public static final int BUILD_VERSION = 3;
 
   // isset id assignments
 
@@ -40,10 +43,12 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.REQUIRED, 
+    tmpMetaDataMap.put(CLIENT_VERSION, new FieldMetaData("client_version", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
+    tmpMetaDataMap.put(BUILD_VERSION, new FieldMetaData("build_version", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -52,33 +57,36 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
   }
 
   public VerifyClientVersionReq() {
-    this.version = "2.6.0".getBytes();
+    this.client_version = "2.6.0".getBytes();
 
   }
 
   public VerifyClientVersionReq(
-      byte[] version) {
+      byte[] client_version) {
     this();
-    this.version = version;
+    this.client_version = client_version;
   }
 
   public VerifyClientVersionReq(
-      byte[] version,
-      com.vesoft.nebula.HostAddr host) {
+      byte[] client_version,
+      com.vesoft.nebula.HostAddr host,
+      byte[] build_version) {
     this();
-    this.version = version;
+    this.client_version = client_version;
     this.host = host;
+    this.build_version = build_version;
   }
 
   public static class Builder {
-    private byte[] version;
+    private byte[] client_version;
     private com.vesoft.nebula.HostAddr host;
+    private byte[] build_version;
 
     public Builder() {
     }
 
-    public Builder setVersion(final byte[] version) {
-      this.version = version;
+    public Builder setClient_version(final byte[] client_version) {
+      this.client_version = client_version;
       return this;
     }
 
@@ -87,10 +95,16 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       return this;
     }
 
+    public Builder setBuild_version(final byte[] build_version) {
+      this.build_version = build_version;
+      return this;
+    }
+
     public VerifyClientVersionReq build() {
       VerifyClientVersionReq result = new VerifyClientVersionReq();
-      result.setVersion(this.version);
+      result.setClient_version(this.client_version);
       result.setHost(this.host);
+      result.setBuild_version(this.build_version);
       return result;
     }
   }
@@ -103,11 +117,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
    * Performs a deep copy on <i>other</i>.
    */
   public VerifyClientVersionReq(VerifyClientVersionReq other) {
-    if (other.isSetVersion()) {
-      this.version = TBaseHelper.deepCopy(other.version);
+    if (other.isSetClient_version()) {
+      this.client_version = TBaseHelper.deepCopy(other.client_version);
     }
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
+    }
+    if (other.isSetBuild_version()) {
+      this.build_version = TBaseHelper.deepCopy(other.build_version);
     }
   }
 
@@ -115,27 +132,27 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     return new VerifyClientVersionReq(this);
   }
 
-  public byte[] getVersion() {
-    return this.version;
+  public byte[] getClient_version() {
+    return this.client_version;
   }
 
-  public VerifyClientVersionReq setVersion(byte[] version) {
-    this.version = version;
+  public VerifyClientVersionReq setClient_version(byte[] client_version) {
+    this.client_version = client_version;
     return this;
   }
 
-  public void unsetVersion() {
-    this.version = null;
+  public void unsetClient_version() {
+    this.client_version = null;
   }
 
-  // Returns true if field version is set (has been assigned a value) and false otherwise
-  public boolean isSetVersion() {
-    return this.version != null;
+  // Returns true if field client_version is set (has been assigned a value) and false otherwise
+  public boolean isSetClient_version() {
+    return this.client_version != null;
   }
 
-  public void setVersionIsSet(boolean __value) {
+  public void setClient_versionIsSet(boolean __value) {
     if (!__value) {
-      this.version = null;
+      this.client_version = null;
     }
   }
 
@@ -163,13 +180,37 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     }
   }
 
+  public byte[] getBuild_version() {
+    return this.build_version;
+  }
+
+  public VerifyClientVersionReq setBuild_version(byte[] build_version) {
+    this.build_version = build_version;
+    return this;
+  }
+
+  public void unsetBuild_version() {
+    this.build_version = null;
+  }
+
+  // Returns true if field build_version is set (has been assigned a value) and false otherwise
+  public boolean isSetBuild_version() {
+    return this.build_version != null;
+  }
+
+  public void setBuild_versionIsSet(boolean __value) {
+    if (!__value) {
+      this.build_version = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case VERSION:
+    case CLIENT_VERSION:
       if (__value == null) {
-        unsetVersion();
+        unsetClient_version();
       } else {
-        setVersion((byte[])__value);
+        setClient_version((byte[])__value);
       }
       break;
 
@@ -181,6 +222,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       }
       break;
 
+    case BUILD_VERSION:
+      if (__value == null) {
+        unsetBuild_version();
+      } else {
+        setBuild_version((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -188,11 +237,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case VERSION:
-      return getVersion();
+    case CLIENT_VERSION:
+      return getClient_version();
 
     case HOST:
       return getHost();
+
+    case BUILD_VERSION:
+      return getBuild_version();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -209,16 +261,18 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       return false;
     VerifyClientVersionReq that = (VerifyClientVersionReq)_that;
 
-    if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetClient_version(), that.isSetClient_version(), this.client_version, that.client_version)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetBuild_version(), that.isSetBuild_version(), this.build_version, that.build_version)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {version, host});
+    return Arrays.deepHashCode(new Object[] {client_version, host, build_version});
   }
 
   @Override
@@ -233,11 +287,11 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    lastComparison = Boolean.valueOf(isSetClient_version()).compareTo(other.isSetClient_version());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(version, other.version);
+    lastComparison = TBaseHelper.compareTo(client_version, other.client_version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -246,6 +300,14 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(host, other.host);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetBuild_version()).compareTo(other.isSetBuild_version());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(build_version, other.build_version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -263,9 +325,9 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       }
       switch (__field.id)
       {
-        case VERSION:
+        case CLIENT_VERSION:
           if (__field.type == TType.STRING) {
-            this.version = iprot.readBinary();
+            this.client_version = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -274,6 +336,13 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
           if (__field.type == TType.STRUCT) {
             this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case BUILD_VERSION:
+          if (__field.type == TType.STRING) {
+            this.build_version = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -295,14 +364,19 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.version != null) {
-      oprot.writeFieldBegin(VERSION_FIELD_DESC);
-      oprot.writeBinary(this.version);
+    if (this.client_version != null) {
+      oprot.writeFieldBegin(CLIENT_VERSION_FIELD_DESC);
+      oprot.writeBinary(this.client_version);
       oprot.writeFieldEnd();
     }
     if (this.host != null) {
       oprot.writeFieldBegin(HOST_FIELD_DESC);
       this.host.write(oprot);
+      oprot.writeFieldEnd();
+    }
+    if (this.build_version != null) {
+      oprot.writeFieldBegin(BUILD_VERSION_FIELD_DESC);
+      oprot.writeBinary(this.build_version);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -326,18 +400,18 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("version");
+    sb.append("client_version");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getVersion() == null) {
+    if (this.getClient_version() == null) {
       sb.append("null");
     } else {
-        int __version_size = Math.min(this.getVersion().length, 128);
-        for (int i = 0; i < __version_size; i++) {
+        int __client_version_size = Math.min(this.getClient_version().length, 128);
+        for (int i = 0; i < __client_version_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getClient_version()[i]).length() > 1 ? Integer.toHexString(this.getClient_version()[i]).substring(Integer.toHexString(this.getClient_version()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getClient_version()[i]).toUpperCase());
         }
-        if (this.getVersion().length > 128) sb.append(" ...");
+        if (this.getClient_version().length > 128) sb.append(" ...");
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -351,6 +425,22 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       sb.append(TBaseHelper.toString(this.getHost(), indent + 1, prettyPrint));
     }
     first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("build_version");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getBuild_version() == null) {
+      sb.append("null");
+    } else {
+        int __build_version_size = Math.min(this.getBuild_version().length, 128);
+        for (int i = 0; i < __build_version_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getBuild_version()[i]).length() > 1 ? Integer.toHexString(this.getBuild_version()[i]).substring(Integer.toHexString(this.getBuild_version()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getBuild_version()[i]).toUpperCase());
+        }
+        if (this.getBuild_version().length > 128) sb.append(" ...");
+    }
+    first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();
@@ -358,8 +448,8 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
   public void validate() throws TException {
     // check for required fields
-    if (version == null) {
-      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'version' was not present! Struct: " + toString());
+    if (client_version == null) {
+      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'client_version' was not present! Struct: " + toString());
     }
   }
 

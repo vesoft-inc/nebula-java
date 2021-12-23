@@ -198,15 +198,15 @@ public class PartitionList implements TBase, java.io.Serializable, Cloneable, Co
         case PART_LIST:
           if (__field.type == TType.LIST) {
             {
-              TList _list140 = iprot.readListBegin();
-              this.part_list = new ArrayList<Integer>(Math.max(0, _list140.size));
-              for (int _i141 = 0; 
-                   (_list140.size < 0) ? iprot.peekList() : (_i141 < _list140.size); 
-                   ++_i141)
+              TList _list152 = iprot.readListBegin();
+              this.part_list = new ArrayList<Integer>(Math.max(0, _list152.size));
+              for (int _i153 = 0; 
+                   (_list152.size < 0) ? iprot.peekList() : (_i153 < _list152.size); 
+                   ++_i153)
               {
-                int _elem142;
-                _elem142 = iprot.readI32();
-                this.part_list.add(_elem142);
+                int _elem154;
+                _elem154 = iprot.readI32();
+                this.part_list.add(_elem154);
               }
               iprot.readListEnd();
             }
@@ -235,8 +235,8 @@ public class PartitionList implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(PART_LIST_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.part_list.size()));
-        for (int _iter143 : this.part_list)        {
-          oprot.writeI32(_iter143);
+        for (int _iter155 : this.part_list)        {
+          oprot.writeI32(_iter155);
         }
         oprot.writeListEnd();
       }

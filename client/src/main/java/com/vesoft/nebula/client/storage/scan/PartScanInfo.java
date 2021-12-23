@@ -20,7 +20,7 @@ public class PartScanInfo implements Serializable {
     public PartScanInfo(int part, HostAddress leader) {
         this.part = part;
         this.leader = leader;
-        cursor = new ScanCursor(true, "".getBytes());
+        cursor = new ScanCursor("".getBytes());
     }
 
     public int getPart() {
