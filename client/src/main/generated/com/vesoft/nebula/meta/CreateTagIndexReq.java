@@ -555,16 +555,16 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list163 = iprot.readListBegin();
-              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list163.size));
-              for (int _i164 = 0; 
-                   (_list163.size < 0) ? iprot.peekList() : (_i164 < _list163.size); 
-                   ++_i164)
+              TList _list175 = iprot.readListBegin();
+              this.fields = new ArrayList<IndexFieldDef>(Math.max(0, _list175.size));
+              for (int _i176 = 0; 
+                   (_list175.size < 0) ? iprot.peekList() : (_i176 < _list175.size); 
+                   ++_i176)
               {
-                IndexFieldDef _elem165;
-                _elem165 = new IndexFieldDef();
-                _elem165.read(iprot);
-                this.fields.add(_elem165);
+                IndexFieldDef _elem177;
+                _elem177 = new IndexFieldDef();
+                _elem177.read(iprot);
+                this.fields.add(_elem177);
               }
               iprot.readListEnd();
             }
@@ -621,8 +621,8 @@ public class CreateTagIndexReq implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (IndexFieldDef _iter166 : this.fields)        {
-          _iter166.write(oprot);
+        for (IndexFieldDef _iter178 : this.fields)        {
+          _iter178.write(oprot);
         }
         oprot.writeListEnd();
       }

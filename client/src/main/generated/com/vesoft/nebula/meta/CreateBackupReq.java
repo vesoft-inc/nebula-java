@@ -198,15 +198,15 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
         case SPACES:
           if (__field.type == TType.LIST) {
             {
-              TList _list249 = iprot.readListBegin();
-              this.spaces = new ArrayList<byte[]>(Math.max(0, _list249.size));
-              for (int _i250 = 0; 
-                   (_list249.size < 0) ? iprot.peekList() : (_i250 < _list249.size); 
-                   ++_i250)
+              TList _list265 = iprot.readListBegin();
+              this.spaces = new ArrayList<byte[]>(Math.max(0, _list265.size));
+              for (int _i266 = 0; 
+                   (_list265.size < 0) ? iprot.peekList() : (_i266 < _list265.size); 
+                   ++_i266)
               {
-                byte[] _elem251;
-                _elem251 = iprot.readBinary();
-                this.spaces.add(_elem251);
+                byte[] _elem267;
+                _elem267 = iprot.readBinary();
+                this.spaces.add(_elem267);
               }
               iprot.readListEnd();
             }
@@ -236,8 +236,8 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
         oprot.writeFieldBegin(SPACES_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.spaces.size()));
-          for (byte[] _iter252 : this.spaces)          {
-            oprot.writeBinary(_iter252);
+          for (byte[] _iter268 : this.spaces)          {
+            oprot.writeBinary(_iter268);
           }
           oprot.writeListEnd();
         }

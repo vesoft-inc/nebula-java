@@ -26,24 +26,17 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Comparable<ScanCursor> {
   private static final TStruct STRUCT_DESC = new TStruct("ScanCursor");
-  private static final TField HAS_NEXT_FIELD_DESC = new TField("has_next", TType.BOOL, (short)3);
-  private static final TField NEXT_CURSOR_FIELD_DESC = new TField("next_cursor", TType.STRING, (short)4);
+  private static final TField NEXT_CURSOR_FIELD_DESC = new TField("next_cursor", TType.STRING, (short)1);
 
-  public boolean has_next;
   public byte[] next_cursor;
-  public static final int HAS_NEXT = 3;
-  public static final int NEXT_CURSOR = 4;
+  public static final int NEXT_CURSOR = 1;
 
   // isset id assignments
-  private static final int __HAS_NEXT_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(HAS_NEXT, new FieldMetaData("has_next", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(NEXT_CURSOR, new FieldMetaData("next_cursor", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -57,34 +50,15 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public ScanCursor(
-      boolean has_next) {
-    this();
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
-  }
-
-  public ScanCursor(
-      boolean has_next,
       byte[] next_cursor) {
     this();
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
     this.next_cursor = next_cursor;
   }
 
   public static class Builder {
-    private boolean has_next;
     private byte[] next_cursor;
 
-    BitSet __optional_isset = new BitSet(1);
-
     public Builder() {
-    }
-
-    public Builder setHas_next(final boolean has_next) {
-      this.has_next = has_next;
-      __optional_isset.set(__HAS_NEXT_ISSET_ID, true);
-      return this;
     }
 
     public Builder setNext_cursor(final byte[] next_cursor) {
@@ -94,9 +68,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
 
     public ScanCursor build() {
       ScanCursor result = new ScanCursor();
-      if (__optional_isset.get(__HAS_NEXT_ISSET_ID)) {
-        result.setHas_next(this.has_next);
-      }
       result.setNext_cursor(this.next_cursor);
       return result;
     }
@@ -110,9 +81,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
    * Performs a deep copy on <i>other</i>.
    */
   public ScanCursor(ScanCursor other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.has_next = TBaseHelper.deepCopy(other.has_next);
     if (other.isSetNext_cursor()) {
       this.next_cursor = TBaseHelper.deepCopy(other.next_cursor);
     }
@@ -120,29 +88,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
 
   public ScanCursor deepCopy() {
     return new ScanCursor(this);
-  }
-
-  public boolean isHas_next() {
-    return this.has_next;
-  }
-
-  public ScanCursor setHas_next(boolean has_next) {
-    this.has_next = has_next;
-    setHas_nextIsSet(true);
-    return this;
-  }
-
-  public void unsetHas_next() {
-    __isset_bit_vector.clear(__HAS_NEXT_ISSET_ID);
-  }
-
-  // Returns true if field has_next is set (has been assigned a value) and false otherwise
-  public boolean isSetHas_next() {
-    return __isset_bit_vector.get(__HAS_NEXT_ISSET_ID);
-  }
-
-  public void setHas_nextIsSet(boolean __value) {
-    __isset_bit_vector.set(__HAS_NEXT_ISSET_ID, __value);
   }
 
   public byte[] getNext_cursor() {
@@ -171,14 +116,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
 
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case HAS_NEXT:
-      if (__value == null) {
-        unsetHas_next();
-      } else {
-        setHas_next((Boolean)__value);
-      }
-      break;
-
     case NEXT_CURSOR:
       if (__value == null) {
         unsetNext_cursor();
@@ -194,9 +131,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case HAS_NEXT:
-      return new Boolean(isHas_next());
-
     case NEXT_CURSOR:
       return getNext_cursor();
 
@@ -215,8 +149,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
       return false;
     ScanCursor that = (ScanCursor)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.has_next, that.has_next)) { return false; }
-
     if (!TBaseHelper.equalsSlow(this.isSetNext_cursor(), that.isSetNext_cursor(), this.next_cursor, that.next_cursor)) { return false; }
 
     return true;
@@ -224,7 +156,7 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {has_next, next_cursor});
+    return Arrays.deepHashCode(new Object[] {next_cursor});
   }
 
   @Override
@@ -239,14 +171,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetHas_next()).compareTo(other.isSetHas_next());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(has_next, other.has_next);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
     lastComparison = Boolean.valueOf(isSetNext_cursor()).compareTo(other.isSetNext_cursor());
     if (lastComparison != 0) {
       return lastComparison;
@@ -269,14 +193,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
       }
       switch (__field.id)
       {
-        case HAS_NEXT:
-          if (__field.type == TType.BOOL) {
-            this.has_next = iprot.readBool();
-            setHas_nextIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         case NEXT_CURSOR:
           if (__field.type == TType.STRING) {
             this.next_cursor = iprot.readBinary();
@@ -301,9 +217,6 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(HAS_NEXT_FIELD_DESC);
-    oprot.writeBool(this.has_next);
-    oprot.writeFieldEnd();
     if (this.next_cursor != null) {
       if (isSetNext_cursor()) {
         oprot.writeFieldBegin(NEXT_CURSOR_FIELD_DESC);
@@ -331,15 +244,8 @@ public class ScanCursor implements TBase, java.io.Serializable, Cloneable, Compa
     sb.append(newLine);
     boolean first = true;
 
-    sb.append(indentStr);
-    sb.append("has_next");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isHas_next(), indent + 1, prettyPrint));
-    first = false;
     if (isSetNext_cursor())
     {
-      if (!first) sb.append("," + newLine);
       sb.append(indentStr);
       sb.append("next_cursor");
       sb.append(space);

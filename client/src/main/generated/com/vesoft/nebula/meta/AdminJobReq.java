@@ -348,15 +348,15 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
         case PARAS:
           if (__field.type == TType.LIST) {
             {
-              TList _list26 = iprot.readListBegin();
-              this.paras = new ArrayList<byte[]>(Math.max(0, _list26.size));
-              for (int _i27 = 0; 
-                   (_list26.size < 0) ? iprot.peekList() : (_i27 < _list26.size); 
-                   ++_i27)
+              TList _list30 = iprot.readListBegin();
+              this.paras = new ArrayList<byte[]>(Math.max(0, _list30.size));
+              for (int _i31 = 0; 
+                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
+                   ++_i31)
               {
-                byte[] _elem28;
-                _elem28 = iprot.readBinary();
-                this.paras.add(_elem28);
+                byte[] _elem32;
+                _elem32 = iprot.readBinary();
+                this.paras.add(_elem32);
               }
               iprot.readListEnd();
             }
@@ -395,8 +395,8 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(PARAS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.paras.size()));
-        for (byte[] _iter29 : this.paras)        {
-          oprot.writeBinary(_iter29);
+        for (byte[] _iter33 : this.paras)        {
+          oprot.writeBinary(_iter33);
         }
         oprot.writeListEnd();
       }

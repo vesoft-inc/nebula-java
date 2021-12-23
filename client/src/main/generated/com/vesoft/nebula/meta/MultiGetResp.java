@@ -349,15 +349,15 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
         case VALUES:
           if (__field.type == TType.LIST) {
             {
-              TList _list132 = iprot.readListBegin();
-              this.values = new ArrayList<byte[]>(Math.max(0, _list132.size));
-              for (int _i133 = 0; 
-                   (_list132.size < 0) ? iprot.peekList() : (_i133 < _list132.size); 
-                   ++_i133)
+              TList _list144 = iprot.readListBegin();
+              this.values = new ArrayList<byte[]>(Math.max(0, _list144.size));
+              for (int _i145 = 0; 
+                   (_list144.size < 0) ? iprot.peekList() : (_i145 < _list144.size); 
+                   ++_i145)
               {
-                byte[] _elem134;
-                _elem134 = iprot.readBinary();
-                this.values.add(_elem134);
+                byte[] _elem146;
+                _elem146 = iprot.readBinary();
+                this.values.add(_elem146);
               }
               iprot.readListEnd();
             }
@@ -396,8 +396,8 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(VALUES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.values.size()));
-        for (byte[] _iter135 : this.values)        {
-          oprot.writeBinary(_iter135);
+        for (byte[] _iter147 : this.values)        {
+          oprot.writeBinary(_iter147);
         }
         oprot.writeListEnd();
       }

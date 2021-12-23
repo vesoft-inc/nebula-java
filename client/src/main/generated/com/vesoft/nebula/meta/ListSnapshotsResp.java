@@ -349,16 +349,16 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
         case SNAPSHOTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list200 = iprot.readListBegin();
-              this.snapshots = new ArrayList<Snapshot>(Math.max(0, _list200.size));
-              for (int _i201 = 0; 
-                   (_list200.size < 0) ? iprot.peekList() : (_i201 < _list200.size); 
-                   ++_i201)
+              TList _list212 = iprot.readListBegin();
+              this.snapshots = new ArrayList<Snapshot>(Math.max(0, _list212.size));
+              for (int _i213 = 0; 
+                   (_list212.size < 0) ? iprot.peekList() : (_i213 < _list212.size); 
+                   ++_i213)
               {
-                Snapshot _elem202;
-                _elem202 = new Snapshot();
-                _elem202.read(iprot);
-                this.snapshots.add(_elem202);
+                Snapshot _elem214;
+                _elem214 = new Snapshot();
+                _elem214.read(iprot);
+                this.snapshots.add(_elem214);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListSnapshotsResp implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(SNAPSHOTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.snapshots.size()));
-        for (Snapshot _iter203 : this.snapshots)        {
-          _iter203.write(oprot);
+        for (Snapshot _iter215 : this.snapshots)        {
+          _iter215.write(oprot);
         }
         oprot.writeListEnd();
       }

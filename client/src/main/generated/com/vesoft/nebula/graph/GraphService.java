@@ -37,7 +37,11 @@ public class GraphService {
 
     public ExecutionResponse execute(long sessionId, byte[] stmt) throws TException;
 
+    public ExecutionResponse executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException;
+
     public byte[] executeJson(long sessionId, byte[] stmt) throws TException;
+
+    public byte[] executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException;
 
     public VerifyClientVersionResp verifyClientVersion(VerifyClientVersionReq req) throws TException;
 
@@ -51,7 +55,11 @@ public class GraphService {
 
     public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
 
+    public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler) throws TException;
+
     public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
+
+    public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler) throws TException;
 
     public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler) throws TException;
 
@@ -199,6 +207,53 @@ public class GraphService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "execute failed: unknown result");
     }
 
+    public ExecutionResponse executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException
+    {
+      ContextStack ctx = getContextStack("GraphService.executeWithParameter", null);
+      this.setContextStack(ctx);
+      send_executeWithParameter(sessionId, stmt, parameterMap);
+      return recv_executeWithParameter();
+    }
+
+    public void send_executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "GraphService.executeWithParameter", null);
+      oprot_.writeMessageBegin(new TMessage("executeWithParameter", TMessageType.CALL, seqid_));
+      executeWithParameter_args args = new executeWithParameter_args();
+      args.sessionId = sessionId;
+      args.stmt = stmt;
+      args.parameterMap = parameterMap;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "GraphService.executeWithParameter", args);
+      return;
+    }
+
+    public ExecutionResponse recv_executeWithParameter() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "GraphService.executeWithParameter");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      executeWithParameter_result result = new executeWithParameter_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "GraphService.executeWithParameter", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeWithParameter failed: unknown result");
+    }
+
     public byte[] executeJson(long sessionId, byte[] stmt) throws TException
     {
       ContextStack ctx = getContextStack("GraphService.executeJson", null);
@@ -243,6 +298,53 @@ public class GraphService {
         return result.success;
       }
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeJson failed: unknown result");
+    }
+
+    public byte[] executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException
+    {
+      ContextStack ctx = getContextStack("GraphService.executeJsonWithParameter", null);
+      this.setContextStack(ctx);
+      send_executeJsonWithParameter(sessionId, stmt, parameterMap);
+      return recv_executeJsonWithParameter();
+    }
+
+    public void send_executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "GraphService.executeJsonWithParameter", null);
+      oprot_.writeMessageBegin(new TMessage("executeJsonWithParameter", TMessageType.CALL, seqid_));
+      executeJsonWithParameter_args args = new executeJsonWithParameter_args();
+      args.sessionId = sessionId;
+      args.stmt = stmt;
+      args.parameterMap = parameterMap;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "GraphService.executeJsonWithParameter", args);
+      return;
+    }
+
+    public byte[] recv_executeJsonWithParameter() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "GraphService.executeJsonWithParameter");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      executeJsonWithParameter_result result = new executeJsonWithParameter_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "GraphService.executeJsonWithParameter", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeJsonWithParameter failed: unknown result");
     }
 
     public VerifyClientVersionResp verifyClientVersion(VerifyClientVersionReq req) throws TException
@@ -308,9 +410,9 @@ public class GraphService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler34) throws TException {
+    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler36) throws TException {
       checkReady();
-      authenticate_call method_call = new authenticate_call(username, password, resultHandler34, this, ___protocolFactory, ___transport);
+      authenticate_call method_call = new authenticate_call(username, password, resultHandler36, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -318,8 +420,8 @@ public class GraphService {
     public static class authenticate_call extends TAsyncMethodCall {
       private byte[] username;
       private byte[] password;
-      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler35, TAsyncClient client31, TProtocolFactory protocolFactory32, TNonblockingTransport transport33) throws TException {
-        super(client31, protocolFactory32, transport33, resultHandler35, false);
+      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler37, TAsyncClient client33, TProtocolFactory protocolFactory34, TNonblockingTransport transport35) throws TException {
+        super(client33, protocolFactory34, transport35, resultHandler37, false);
         this.username = username;
         this.password = password;
       }
@@ -343,17 +445,17 @@ public class GraphService {
       }
     }
 
-    public void signout(long sessionId, AsyncMethodCallback resultHandler39) throws TException {
+    public void signout(long sessionId, AsyncMethodCallback resultHandler41) throws TException {
       checkReady();
-      signout_call method_call = new signout_call(sessionId, resultHandler39, this, ___protocolFactory, ___transport);
+      signout_call method_call = new signout_call(sessionId, resultHandler41, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class signout_call extends TAsyncMethodCall {
       private long sessionId;
-      public signout_call(long sessionId, AsyncMethodCallback resultHandler40, TAsyncClient client36, TProtocolFactory protocolFactory37, TNonblockingTransport transport38) throws TException {
-        super(client36, protocolFactory37, transport38, resultHandler40, true);
+      public signout_call(long sessionId, AsyncMethodCallback resultHandler42, TAsyncClient client38, TProtocolFactory protocolFactory39, TNonblockingTransport transport40) throws TException {
+        super(client38, protocolFactory39, transport40, resultHandler42, true);
         this.sessionId = sessionId;
       }
 
@@ -374,9 +476,9 @@ public class GraphService {
       }
     }
 
-    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler44) throws TException {
+    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler46) throws TException {
       checkReady();
-      execute_call method_call = new execute_call(sessionId, stmt, resultHandler44, this, ___protocolFactory, ___transport);
+      execute_call method_call = new execute_call(sessionId, stmt, resultHandler46, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -384,8 +486,8 @@ public class GraphService {
     public static class execute_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler45, TAsyncClient client41, TProtocolFactory protocolFactory42, TNonblockingTransport transport43) throws TException {
-        super(client41, protocolFactory42, transport43, resultHandler45, false);
+      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler47, TAsyncClient client43, TProtocolFactory protocolFactory44, TNonblockingTransport transport45) throws TException {
+        super(client43, protocolFactory44, transport45, resultHandler47, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -409,9 +511,47 @@ public class GraphService {
       }
     }
 
-    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler49) throws TException {
+    public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler51) throws TException {
       checkReady();
-      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler49, this, ___protocolFactory, ___transport);
+      executeWithParameter_call method_call = new executeWithParameter_call(sessionId, stmt, parameterMap, resultHandler51, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class executeWithParameter_call extends TAsyncMethodCall {
+      private long sessionId;
+      private byte[] stmt;
+      private Map<byte[],com.vesoft.nebula.Value> parameterMap;
+      public executeWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler52, TAsyncClient client48, TProtocolFactory protocolFactory49, TNonblockingTransport transport50) throws TException {
+        super(client48, protocolFactory49, transport50, resultHandler52, false);
+        this.sessionId = sessionId;
+        this.stmt = stmt;
+        this.parameterMap = parameterMap;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("executeWithParameter", TMessageType.CALL, 0));
+        executeWithParameter_args args = new executeWithParameter_args();
+        args.setSessionId(sessionId);
+        args.setStmt(stmt);
+        args.setParameterMap(parameterMap);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ExecutionResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_executeWithParameter();
+      }
+    }
+
+    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler56) throws TException {
+      checkReady();
+      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler56, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -419,8 +559,8 @@ public class GraphService {
     public static class executeJson_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler50, TAsyncClient client46, TProtocolFactory protocolFactory47, TNonblockingTransport transport48) throws TException {
-        super(client46, protocolFactory47, transport48, resultHandler50, false);
+      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler57, TAsyncClient client53, TProtocolFactory protocolFactory54, TNonblockingTransport transport55) throws TException {
+        super(client53, protocolFactory54, transport55, resultHandler57, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -444,17 +584,55 @@ public class GraphService {
       }
     }
 
-    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler54) throws TException {
+    public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler61) throws TException {
       checkReady();
-      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler54, this, ___protocolFactory, ___transport);
+      executeJsonWithParameter_call method_call = new executeJsonWithParameter_call(sessionId, stmt, parameterMap, resultHandler61, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class executeJsonWithParameter_call extends TAsyncMethodCall {
+      private long sessionId;
+      private byte[] stmt;
+      private Map<byte[],com.vesoft.nebula.Value> parameterMap;
+      public executeJsonWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler62, TAsyncClient client58, TProtocolFactory protocolFactory59, TNonblockingTransport transport60) throws TException {
+        super(client58, protocolFactory59, transport60, resultHandler62, false);
+        this.sessionId = sessionId;
+        this.stmt = stmt;
+        this.parameterMap = parameterMap;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("executeJsonWithParameter", TMessageType.CALL, 0));
+        executeJsonWithParameter_args args = new executeJsonWithParameter_args();
+        args.setSessionId(sessionId);
+        args.setStmt(stmt);
+        args.setParameterMap(parameterMap);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public byte[] getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_executeJsonWithParameter();
+      }
+    }
+
+    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler66) throws TException {
+      checkReady();
+      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler66, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class verifyClientVersion_call extends TAsyncMethodCall {
       private VerifyClientVersionReq req;
-      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler55, TAsyncClient client51, TProtocolFactory protocolFactory52, TNonblockingTransport transport53) throws TException {
-        super(client51, protocolFactory52, transport53, resultHandler55, false);
+      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler67, TAsyncClient client63, TProtocolFactory protocolFactory64, TNonblockingTransport transport65) throws TException {
+        super(client63, protocolFactory64, transport65, resultHandler67, false);
         this.req = req;
       }
 
@@ -487,7 +665,9 @@ public class GraphService {
       processMap_.put("authenticate", new authenticate());
       processMap_.put("signout", new signout());
       processMap_.put("execute", new execute());
+      processMap_.put("executeWithParameter", new executeWithParameter());
       processMap_.put("executeJson", new executeJson());
+      processMap_.put("executeJsonWithParameter", new executeJsonWithParameter());
       processMap_.put("verifyClientVersion", new verifyClientVersion());
     }
 
@@ -577,6 +757,27 @@ public class GraphService {
 
     }
 
+    private class executeWithParameter implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("GraphService.executeWithParameter", server_ctx);
+        executeWithParameter_args args = new executeWithParameter_args();
+        event_handler_.preRead(handler_ctx, "GraphService.executeWithParameter");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "GraphService.executeWithParameter", args);
+        executeWithParameter_result result = new executeWithParameter_result();
+        result.success = iface_.executeWithParameter(args.sessionId, args.stmt, args.parameterMap);
+        event_handler_.preWrite(handler_ctx, "GraphService.executeWithParameter", result);
+        oprot.writeMessageBegin(new TMessage("executeWithParameter", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "GraphService.executeWithParameter", result);
+      }
+
+    }
+
     private class executeJson implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
@@ -594,6 +795,27 @@ public class GraphService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "GraphService.executeJson", result);
+      }
+
+    }
+
+    private class executeJsonWithParameter implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("GraphService.executeJsonWithParameter", server_ctx);
+        executeJsonWithParameter_args args = new executeJsonWithParameter_args();
+        event_handler_.preRead(handler_ctx, "GraphService.executeJsonWithParameter");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "GraphService.executeJsonWithParameter", args);
+        executeJsonWithParameter_result result = new executeJsonWithParameter_result();
+        result.success = iface_.executeJsonWithParameter(args.sessionId, args.stmt, args.parameterMap);
+        event_handler_.preWrite(handler_ctx, "GraphService.executeJsonWithParameter", result);
+        oprot.writeMessageBegin(new TMessage("executeJsonWithParameter", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "GraphService.executeJsonWithParameter", result);
       }
 
     }
@@ -1848,6 +2070,561 @@ public class GraphService {
 
   }
 
+  public static class executeWithParameter_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeWithParameter_args");
+    private static final TField SESSION_ID_FIELD_DESC = new TField("sessionId", TType.I64, (short)1);
+    private static final TField STMT_FIELD_DESC = new TField("stmt", TType.STRING, (short)2);
+    private static final TField PARAMETER_MAP_FIELD_DESC = new TField("parameterMap", TType.MAP, (short)3);
+
+    public long sessionId;
+    public byte[] stmt;
+    public Map<byte[],com.vesoft.nebula.Value> parameterMap;
+    public static final int SESSIONID = 1;
+    public static final int STMT = 2;
+    public static final int PARAMETERMAP = 3;
+
+    // isset id assignments
+    private static final int __SESSIONID_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SESSIONID, new FieldMetaData("sessionId", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I64)));
+      tmpMetaDataMap.put(STMT, new FieldMetaData("stmt", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      tmpMetaDataMap.put(PARAMETERMAP, new FieldMetaData("parameterMap", TFieldRequirementType.DEFAULT, 
+          new MapMetaData(TType.MAP, 
+              new FieldValueMetaData(TType.STRING), 
+              new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class))));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeWithParameter_args.class, metaDataMap);
+    }
+
+    public executeWithParameter_args() {
+    }
+
+    public executeWithParameter_args(
+        long sessionId,
+        byte[] stmt,
+        Map<byte[],com.vesoft.nebula.Value> parameterMap) {
+      this();
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      this.stmt = stmt;
+      this.parameterMap = parameterMap;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeWithParameter_args(executeWithParameter_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      this.sessionId = TBaseHelper.deepCopy(other.sessionId);
+      if (other.isSetStmt()) {
+        this.stmt = TBaseHelper.deepCopy(other.stmt);
+      }
+      if (other.isSetParameterMap()) {
+        this.parameterMap = TBaseHelper.deepCopy(other.parameterMap);
+      }
+    }
+
+    public executeWithParameter_args deepCopy() {
+      return new executeWithParameter_args(this);
+    }
+
+    public long getSessionId() {
+      return this.sessionId;
+    }
+
+    public executeWithParameter_args setSessionId(long sessionId) {
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      return this;
+    }
+
+    public void unsetSessionId() {
+      __isset_bit_vector.clear(__SESSIONID_ISSET_ID);
+    }
+
+    // Returns true if field sessionId is set (has been assigned a value) and false otherwise
+    public boolean isSetSessionId() {
+      return __isset_bit_vector.get(__SESSIONID_ISSET_ID);
+    }
+
+    public void setSessionIdIsSet(boolean __value) {
+      __isset_bit_vector.set(__SESSIONID_ISSET_ID, __value);
+    }
+
+    public byte[] getStmt() {
+      return this.stmt;
+    }
+
+    public executeWithParameter_args setStmt(byte[] stmt) {
+      this.stmt = stmt;
+      return this;
+    }
+
+    public void unsetStmt() {
+      this.stmt = null;
+    }
+
+    // Returns true if field stmt is set (has been assigned a value) and false otherwise
+    public boolean isSetStmt() {
+      return this.stmt != null;
+    }
+
+    public void setStmtIsSet(boolean __value) {
+      if (!__value) {
+        this.stmt = null;
+      }
+    }
+
+    public Map<byte[],com.vesoft.nebula.Value> getParameterMap() {
+      return this.parameterMap;
+    }
+
+    public executeWithParameter_args setParameterMap(Map<byte[],com.vesoft.nebula.Value> parameterMap) {
+      this.parameterMap = parameterMap;
+      return this;
+    }
+
+    public void unsetParameterMap() {
+      this.parameterMap = null;
+    }
+
+    // Returns true if field parameterMap is set (has been assigned a value) and false otherwise
+    public boolean isSetParameterMap() {
+      return this.parameterMap != null;
+    }
+
+    public void setParameterMapIsSet(boolean __value) {
+      if (!__value) {
+        this.parameterMap = null;
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SESSIONID:
+        if (__value == null) {
+          unsetSessionId();
+        } else {
+          setSessionId((Long)__value);
+        }
+        break;
+
+      case STMT:
+        if (__value == null) {
+          unsetStmt();
+        } else {
+          setStmt((byte[])__value);
+        }
+        break;
+
+      case PARAMETERMAP:
+        if (__value == null) {
+          unsetParameterMap();
+        } else {
+          setParameterMap((Map<byte[],com.vesoft.nebula.Value>)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SESSIONID:
+        return new Long(getSessionId());
+
+      case STMT:
+        return getStmt();
+
+      case PARAMETERMAP:
+        return getParameterMap();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof executeWithParameter_args))
+        return false;
+      executeWithParameter_args that = (executeWithParameter_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.sessionId, that.sessionId)) { return false; }
+
+      if (!TBaseHelper.equalsSlow(this.isSetStmt(), that.isSetStmt(), this.stmt, that.stmt)) { return false; }
+
+      if (!TBaseHelper.equalsSlow(this.isSetParameterMap(), that.isSetParameterMap(), this.parameterMap, that.parameterMap)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {sessionId, stmt, parameterMap});
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SESSIONID:
+            if (__field.type == TType.I64) {
+              this.sessionId = iprot.readI64();
+              setSessionIdIsSet(true);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case STMT:
+            if (__field.type == TType.STRING) {
+              this.stmt = iprot.readBinary();
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case PARAMETERMAP:
+            if (__field.type == TType.MAP) {
+              {
+                TMap _map68 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map68.size));
+                for (int _i69 = 0; 
+                     (_map68.size < 0) ? iprot.peekMap() : (_i69 < _map68.size); 
+                     ++_i69)
+                {
+                  byte[] _key70;
+                  com.vesoft.nebula.Value _val71;
+                  _key70 = iprot.readBinary();
+                  _val71 = new com.vesoft.nebula.Value();
+                  _val71.read(iprot);
+                  this.parameterMap.put(_key70, _val71);
+                }
+                iprot.readMapEnd();
+              }
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
+      oprot.writeI64(this.sessionId);
+      oprot.writeFieldEnd();
+      if (this.stmt != null) {
+        oprot.writeFieldBegin(STMT_FIELD_DESC);
+        oprot.writeBinary(this.stmt);
+        oprot.writeFieldEnd();
+      }
+      if (this.parameterMap != null) {
+        oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter72 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter72.getKey());
+            _iter72.getValue().write(oprot);
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeWithParameter_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("sessionId");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getSessionId(), indent + 1, prettyPrint));
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("stmt");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getStmt() == null) {
+        sb.append("null");
+      } else {
+          int __stmt_size = Math.min(this.getStmt().length, 128);
+          for (int i = 0; i < __stmt_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getStmt()[i]).length() > 1 ? Integer.toHexString(this.getStmt()[i]).substring(Integer.toHexString(this.getStmt()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getStmt()[i]).toUpperCase());
+          }
+          if (this.getStmt().length > 128) sb.append(" ...");
+      }
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("parameterMap");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getParameterMap() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getParameterMap(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class executeWithParameter_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeWithParameter_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ExecutionResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ExecutionResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeWithParameter_result.class, metaDataMap);
+    }
+
+    public executeWithParameter_result() {
+    }
+
+    public executeWithParameter_result(
+        ExecutionResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeWithParameter_result(executeWithParameter_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public executeWithParameter_result deepCopy() {
+      return new executeWithParameter_result(this);
+    }
+
+    public ExecutionResponse getSuccess() {
+      return this.success;
+    }
+
+    public executeWithParameter_result setSuccess(ExecutionResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ExecutionResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof executeWithParameter_result))
+        return false;
+      executeWithParameter_result that = (executeWithParameter_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new ExecutionResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeWithParameter_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
   public static class executeJson_args implements TBase, java.io.Serializable, Cloneable, Comparable<executeJson_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("executeJson_args");
     private static final TField SESSION_ID_FIELD_DESC = new TField("sessionId", TType.I64, (short)1);
@@ -2335,6 +3112,588 @@ public class GraphService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("executeJson_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+          int __success_size = Math.min(this.getSuccess().length, 128);
+          for (int i = 0; i < __success_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getSuccess()[i]).length() > 1 ? Integer.toHexString(this.getSuccess()[i]).substring(Integer.toHexString(this.getSuccess()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSuccess()[i]).toUpperCase());
+          }
+          if (this.getSuccess().length > 128) sb.append(" ...");
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class executeJsonWithParameter_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeJsonWithParameter_args");
+    private static final TField SESSION_ID_FIELD_DESC = new TField("sessionId", TType.I64, (short)1);
+    private static final TField STMT_FIELD_DESC = new TField("stmt", TType.STRING, (short)2);
+    private static final TField PARAMETER_MAP_FIELD_DESC = new TField("parameterMap", TType.MAP, (short)3);
+
+    public long sessionId;
+    public byte[] stmt;
+    public Map<byte[],com.vesoft.nebula.Value> parameterMap;
+    public static final int SESSIONID = 1;
+    public static final int STMT = 2;
+    public static final int PARAMETERMAP = 3;
+
+    // isset id assignments
+    private static final int __SESSIONID_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SESSIONID, new FieldMetaData("sessionId", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I64)));
+      tmpMetaDataMap.put(STMT, new FieldMetaData("stmt", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      tmpMetaDataMap.put(PARAMETERMAP, new FieldMetaData("parameterMap", TFieldRequirementType.DEFAULT, 
+          new MapMetaData(TType.MAP, 
+              new FieldValueMetaData(TType.STRING), 
+              new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class))));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeJsonWithParameter_args.class, metaDataMap);
+    }
+
+    public executeJsonWithParameter_args() {
+    }
+
+    public executeJsonWithParameter_args(
+        long sessionId,
+        byte[] stmt,
+        Map<byte[],com.vesoft.nebula.Value> parameterMap) {
+      this();
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      this.stmt = stmt;
+      this.parameterMap = parameterMap;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeJsonWithParameter_args(executeJsonWithParameter_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      this.sessionId = TBaseHelper.deepCopy(other.sessionId);
+      if (other.isSetStmt()) {
+        this.stmt = TBaseHelper.deepCopy(other.stmt);
+      }
+      if (other.isSetParameterMap()) {
+        this.parameterMap = TBaseHelper.deepCopy(other.parameterMap);
+      }
+    }
+
+    public executeJsonWithParameter_args deepCopy() {
+      return new executeJsonWithParameter_args(this);
+    }
+
+    public long getSessionId() {
+      return this.sessionId;
+    }
+
+    public executeJsonWithParameter_args setSessionId(long sessionId) {
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      return this;
+    }
+
+    public void unsetSessionId() {
+      __isset_bit_vector.clear(__SESSIONID_ISSET_ID);
+    }
+
+    // Returns true if field sessionId is set (has been assigned a value) and false otherwise
+    public boolean isSetSessionId() {
+      return __isset_bit_vector.get(__SESSIONID_ISSET_ID);
+    }
+
+    public void setSessionIdIsSet(boolean __value) {
+      __isset_bit_vector.set(__SESSIONID_ISSET_ID, __value);
+    }
+
+    public byte[] getStmt() {
+      return this.stmt;
+    }
+
+    public executeJsonWithParameter_args setStmt(byte[] stmt) {
+      this.stmt = stmt;
+      return this;
+    }
+
+    public void unsetStmt() {
+      this.stmt = null;
+    }
+
+    // Returns true if field stmt is set (has been assigned a value) and false otherwise
+    public boolean isSetStmt() {
+      return this.stmt != null;
+    }
+
+    public void setStmtIsSet(boolean __value) {
+      if (!__value) {
+        this.stmt = null;
+      }
+    }
+
+    public Map<byte[],com.vesoft.nebula.Value> getParameterMap() {
+      return this.parameterMap;
+    }
+
+    public executeJsonWithParameter_args setParameterMap(Map<byte[],com.vesoft.nebula.Value> parameterMap) {
+      this.parameterMap = parameterMap;
+      return this;
+    }
+
+    public void unsetParameterMap() {
+      this.parameterMap = null;
+    }
+
+    // Returns true if field parameterMap is set (has been assigned a value) and false otherwise
+    public boolean isSetParameterMap() {
+      return this.parameterMap != null;
+    }
+
+    public void setParameterMapIsSet(boolean __value) {
+      if (!__value) {
+        this.parameterMap = null;
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SESSIONID:
+        if (__value == null) {
+          unsetSessionId();
+        } else {
+          setSessionId((Long)__value);
+        }
+        break;
+
+      case STMT:
+        if (__value == null) {
+          unsetStmt();
+        } else {
+          setStmt((byte[])__value);
+        }
+        break;
+
+      case PARAMETERMAP:
+        if (__value == null) {
+          unsetParameterMap();
+        } else {
+          setParameterMap((Map<byte[],com.vesoft.nebula.Value>)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SESSIONID:
+        return new Long(getSessionId());
+
+      case STMT:
+        return getStmt();
+
+      case PARAMETERMAP:
+        return getParameterMap();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof executeJsonWithParameter_args))
+        return false;
+      executeJsonWithParameter_args that = (executeJsonWithParameter_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.sessionId, that.sessionId)) { return false; }
+
+      if (!TBaseHelper.equalsSlow(this.isSetStmt(), that.isSetStmt(), this.stmt, that.stmt)) { return false; }
+
+      if (!TBaseHelper.equalsSlow(this.isSetParameterMap(), that.isSetParameterMap(), this.parameterMap, that.parameterMap)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {sessionId, stmt, parameterMap});
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SESSIONID:
+            if (__field.type == TType.I64) {
+              this.sessionId = iprot.readI64();
+              setSessionIdIsSet(true);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case STMT:
+            if (__field.type == TType.STRING) {
+              this.stmt = iprot.readBinary();
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case PARAMETERMAP:
+            if (__field.type == TType.MAP) {
+              {
+                TMap _map73 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map73.size));
+                for (int _i74 = 0; 
+                     (_map73.size < 0) ? iprot.peekMap() : (_i74 < _map73.size); 
+                     ++_i74)
+                {
+                  byte[] _key75;
+                  com.vesoft.nebula.Value _val76;
+                  _key75 = iprot.readBinary();
+                  _val76 = new com.vesoft.nebula.Value();
+                  _val76.read(iprot);
+                  this.parameterMap.put(_key75, _val76);
+                }
+                iprot.readMapEnd();
+              }
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
+      oprot.writeI64(this.sessionId);
+      oprot.writeFieldEnd();
+      if (this.stmt != null) {
+        oprot.writeFieldBegin(STMT_FIELD_DESC);
+        oprot.writeBinary(this.stmt);
+        oprot.writeFieldEnd();
+      }
+      if (this.parameterMap != null) {
+        oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter77 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter77.getKey());
+            _iter77.getValue().write(oprot);
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeJsonWithParameter_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("sessionId");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getSessionId(), indent + 1, prettyPrint));
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("stmt");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getStmt() == null) {
+        sb.append("null");
+      } else {
+          int __stmt_size = Math.min(this.getStmt().length, 128);
+          for (int i = 0; i < __stmt_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getStmt()[i]).length() > 1 ? Integer.toHexString(this.getStmt()[i]).substring(Integer.toHexString(this.getStmt()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getStmt()[i]).toUpperCase());
+          }
+          if (this.getStmt().length > 128) sb.append(" ...");
+      }
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("parameterMap");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getParameterMap() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getParameterMap(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class executeJsonWithParameter_result implements TBase, java.io.Serializable, Cloneable, Comparable<executeJsonWithParameter_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeJsonWithParameter_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
+
+    public byte[] success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeJsonWithParameter_result.class, metaDataMap);
+    }
+
+    public executeJsonWithParameter_result() {
+    }
+
+    public executeJsonWithParameter_result(
+        byte[] success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeJsonWithParameter_result(executeJsonWithParameter_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public executeJsonWithParameter_result deepCopy() {
+      return new executeJsonWithParameter_result(this);
+    }
+
+    public byte[] getSuccess() {
+      return this.success;
+    }
+
+    public executeJsonWithParameter_result setSuccess(byte[] success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((byte[])__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof executeJsonWithParameter_result))
+        return false;
+      executeJsonWithParameter_result that = (executeJsonWithParameter_result)_that;
+
+      if (!TBaseHelper.equalsSlow(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(executeJsonWithParameter_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRING) {
+              this.success = iprot.readBinary();
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        oprot.writeBinary(this.success);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeJsonWithParameter_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

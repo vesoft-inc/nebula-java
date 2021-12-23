@@ -30,23 +30,27 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
   private static final TField PROP_NAMES_FIELD_DESC = new TField("prop_names", TType.MAP, (short)3);
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)4);
-  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)5);
+  private static final TField IGNORE_EXISTED_INDEX_FIELD_DESC = new TField("ignore_existed_index", TType.BOOL, (short)5);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)6);
 
   public int space_id;
   public Map<Integer,List<NewVertex>> parts;
   public Map<Integer,List<byte[]>> prop_names;
   public boolean if_not_exists;
+  public boolean ignore_existed_index;
   public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int PROP_NAMES = 3;
   public static final int IF_NOT_EXISTS = 4;
-  public static final int COMMON = 5;
+  public static final int IGNORE_EXISTED_INDEX = 5;
+  public static final int COMMON = 6;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __IF_NOT_EXISTS_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __IGNORE_EXISTED_INDEX_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -66,6 +70,8 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
                 new FieldValueMetaData(TType.STRING)))));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(IGNORE_EXISTED_INDEX, new FieldMetaData("ignore_existed_index", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
         new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -76,20 +82,8 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
   }
 
   public AddVerticesRequest() {
-  }
+    this.ignore_existed_index = false;
 
-  public AddVerticesRequest(
-      int space_id,
-      Map<Integer,List<NewVertex>> parts,
-      Map<Integer,List<byte[]>> prop_names,
-      boolean if_not_exists) {
-    this();
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
-    this.parts = parts;
-    this.prop_names = prop_names;
-    this.if_not_exists = if_not_exists;
-    setIf_not_existsIsSet(true);
   }
 
   public AddVerticesRequest(
@@ -97,6 +91,24 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       Map<Integer,List<NewVertex>> parts,
       Map<Integer,List<byte[]>> prop_names,
       boolean if_not_exists,
+      boolean ignore_existed_index) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.prop_names = prop_names;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    this.ignore_existed_index = ignore_existed_index;
+    setIgnore_existed_indexIsSet(true);
+  }
+
+  public AddVerticesRequest(
+      int space_id,
+      Map<Integer,List<NewVertex>> parts,
+      Map<Integer,List<byte[]>> prop_names,
+      boolean if_not_exists,
+      boolean ignore_existed_index,
       RequestCommon common) {
     this();
     this.space_id = space_id;
@@ -105,6 +117,8 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     this.prop_names = prop_names;
     this.if_not_exists = if_not_exists;
     setIf_not_existsIsSet(true);
+    this.ignore_existed_index = ignore_existed_index;
+    setIgnore_existed_indexIsSet(true);
     this.common = common;
   }
 
@@ -113,9 +127,10 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     private Map<Integer,List<NewVertex>> parts;
     private Map<Integer,List<byte[]>> prop_names;
     private boolean if_not_exists;
+    private boolean ignore_existed_index;
     private RequestCommon common;
 
-    BitSet __optional_isset = new BitSet(2);
+    BitSet __optional_isset = new BitSet(3);
 
     public Builder() {
     }
@@ -142,6 +157,12 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
+    public Builder setIgnore_existed_index(final boolean ignore_existed_index) {
+      this.ignore_existed_index = ignore_existed_index;
+      __optional_isset.set(__IGNORE_EXISTED_INDEX_ISSET_ID, true);
+      return this;
+    }
+
     public Builder setCommon(final RequestCommon common) {
       this.common = common;
       return this;
@@ -156,6 +177,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       result.setProp_names(this.prop_names);
       if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
         result.setIf_not_exists(this.if_not_exists);
+      }
+      if (__optional_isset.get(__IGNORE_EXISTED_INDEX_ISSET_ID)) {
+        result.setIgnore_existed_index(this.ignore_existed_index);
       }
       result.setCommon(this.common);
       return result;
@@ -180,6 +204,7 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       this.prop_names = TBaseHelper.deepCopy(other.prop_names);
     }
     this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
+    this.ignore_existed_index = TBaseHelper.deepCopy(other.ignore_existed_index);
     if (other.isSetCommon()) {
       this.common = TBaseHelper.deepCopy(other.common);
     }
@@ -283,6 +308,29 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
+  public boolean isIgnore_existed_index() {
+    return this.ignore_existed_index;
+  }
+
+  public AddVerticesRequest setIgnore_existed_index(boolean ignore_existed_index) {
+    this.ignore_existed_index = ignore_existed_index;
+    setIgnore_existed_indexIsSet(true);
+    return this;
+  }
+
+  public void unsetIgnore_existed_index() {
+    __isset_bit_vector.clear(__IGNORE_EXISTED_INDEX_ISSET_ID);
+  }
+
+  // Returns true if field ignore_existed_index is set (has been assigned a value) and false otherwise
+  public boolean isSetIgnore_existed_index() {
+    return __isset_bit_vector.get(__IGNORE_EXISTED_INDEX_ISSET_ID);
+  }
+
+  public void setIgnore_existed_indexIsSet(boolean __value) {
+    __isset_bit_vector.set(__IGNORE_EXISTED_INDEX_ISSET_ID, __value);
+  }
+
   public RequestCommon getCommon() {
     return this.common;
   }
@@ -342,6 +390,14 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case IGNORE_EXISTED_INDEX:
+      if (__value == null) {
+        unsetIgnore_existed_index();
+      } else {
+        setIgnore_existed_index((Boolean)__value);
+      }
+      break;
+
     case COMMON:
       if (__value == null) {
         unsetCommon();
@@ -369,6 +425,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     case IF_NOT_EXISTS:
       return new Boolean(isIf_not_exists());
 
+    case IGNORE_EXISTED_INDEX:
+      return new Boolean(isIgnore_existed_index());
+
     case COMMON:
       return getCommon();
 
@@ -395,6 +454,8 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.ignore_existed_index, that.ignore_existed_index)) { return false; }
+
     if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
 
     return true;
@@ -402,7 +463,7 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists, common});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, prop_names, if_not_exists, ignore_existed_index, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -499,6 +560,14 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case IGNORE_EXISTED_INDEX:
+          if (__field.type == TType.BOOL) {
+            this.ignore_existed_index = iprot.readBool();
+            setIgnore_existed_indexIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         case COMMON:
           if (__field.type == TType.STRUCT) {
             this.common = new RequestCommon();
@@ -566,6 +635,9 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
     oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
+    oprot.writeFieldBegin(IGNORE_EXISTED_INDEX_FIELD_DESC);
+    oprot.writeBool(this.ignore_existed_index);
+    oprot.writeFieldEnd();
     if (this.common != null) {
       if (isSetCommon()) {
         oprot.writeFieldBegin(COMMON_FIELD_DESC);
@@ -627,6 +699,13 @@ public class AddVerticesRequest implements TBase, java.io.Serializable, Cloneabl
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("ignore_existed_index");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isIgnore_existed_index(), indent + 1, prettyPrint));
     first = false;
     if (isSetCommon())
     {

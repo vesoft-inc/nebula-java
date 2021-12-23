@@ -25,10 +25,19 @@ public enum PropertyType implements com.facebook.thrift.TEnum {
   INT16(9),
   INT32(10),
   TIMESTAMP(21),
+  DURATION(23),
   DATE(24),
   DATETIME(25),
   TIME(26),
   GEOGRAPHY(31);
+
+  private static final Map<Integer, PropertyType> INDEXED_VALUES = new HashMap<Integer, PropertyType>();
+
+  static {
+    for (PropertyType e: values()) {
+      INDEXED_VALUES.put(e.getValue(), e);
+    }
+  }
 
   private final int value;
 
@@ -48,41 +57,6 @@ public enum PropertyType implements com.facebook.thrift.TEnum {
    * @return null if the value is not found.
    */
   public static PropertyType findByValue(int value) { 
-    switch (value) {
-      case 0:
-        return UNKNOWN;
-      case 1:
-        return BOOL;
-      case 2:
-        return INT64;
-      case 3:
-        return VID;
-      case 4:
-        return FLOAT;
-      case 5:
-        return DOUBLE;
-      case 6:
-        return STRING;
-      case 7:
-        return FIXED_STRING;
-      case 8:
-        return INT8;
-      case 9:
-        return INT16;
-      case 10:
-        return INT32;
-      case 21:
-        return TIMESTAMP;
-      case 24:
-        return DATE;
-      case 25:
-        return DATETIME;
-      case 26:
-        return TIME;
-      case 31:
-        return GEOGRAPHY;
-      default:
-        return null;
-    }
+    return INDEXED_VALUES.get(value);
   }
 }
