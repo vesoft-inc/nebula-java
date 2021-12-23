@@ -48,6 +48,7 @@ import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -75,30 +76,32 @@ public class MetaClient extends AbstractMetaClient {
     private MetaService.Client client;
     private final List<HostAddress> addresses;
 
-    public MetaClient(String host, int port) {
+    public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
     }
 
-    public MetaClient(HostAddress address) {
+    public MetaClient(HostAddress address) throws UnknownHostException {
         this(Arrays.asList(address), DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
-    public MetaClient(List<HostAddress> addresses) {
+    public MetaClient(List<HostAddress> addresses) throws UnknownHostException {
         this(addresses, DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
-    public MetaClient(List<HostAddress> addresses, int connectionRetry, int executionRetry) {
+    public MetaClient(List<HostAddress> addresses, int connectionRetry, int executionRetry)
+            throws UnknownHostException {
         this(addresses, DEFAULT_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
     public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
-                      int executionRetry) {
+                      int executionRetry) throws UnknownHostException {
         super(addresses, timeout, connectionRetry, executionRetry);
         this.addresses = addresses;
     }
 
     public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
-                      int executionRetry, boolean enableSSL, SSLParam sslParam) {
+                      int executionRetry, boolean enableSSL, SSLParam sslParam)
+            throws UnknownHostException {
         super(addresses, timeout, connectionRetry, executionRetry);
         this.addresses = addresses;
         this.enableSSL = enableSSL;
