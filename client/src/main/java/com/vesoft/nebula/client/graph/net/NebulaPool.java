@@ -94,6 +94,10 @@ public class NebulaPool {
         objConfig.setMinIdle(config.getMinConnSize());
         objConfig.setMaxIdle(config.getMaxConnSize());
         objConfig.setMaxTotal(config.getMaxConnSize());
+        objConfig.setTestOnBorrow(true);
+        objConfig.setTestOnReturn(true);
+        objConfig.setTestWhileIdle(true);
+        objConfig.setTestOnCreate(true);
         objConfig.setTimeBetweenEvictionRunsMillis(config.getIntervalIdle() <= 0
             ? BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS
             : config.getIntervalIdle());
@@ -135,7 +139,7 @@ public class NebulaPool {
         SyncConnection connection = null;
         try {
             connection = getConnection();
-            AuthResult authResult = connection.authenticate(userName, password);
+            AuthResult authResult = connection.authenticate(userName, password,Integer.MAX_VALUE);
             return new Session(connection, authResult, this, reconnect);
         } catch (Exception e) {
             // if get the connection succeeded, but authenticate failed,

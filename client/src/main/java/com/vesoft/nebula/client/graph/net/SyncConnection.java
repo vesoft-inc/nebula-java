@@ -10,7 +10,6 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TSocket;
-import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
 import com.facebook.thrift.utils.StandardCharsets;
 import com.google.common.base.Charsets;
@@ -37,7 +36,7 @@ public class SyncConnection extends Connection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncConnection.class);
 
-    protected TTransport transport = null;
+    protected TSocket transport = null;
     protected TProtocol protocol = null;
     private GraphService.Client client = null;
     private int timeout = 0;
@@ -128,17 +127,26 @@ public class SyncConnection extends Connection {
         }
     }
 
+
     public AuthResult authenticate(String user, String password)
             throws AuthFailedException, IOErrorException, ClientServerIncompatibleException {
+        return authenticate(user,password,0);
+    }
+
+    public AuthResult authenticate(String user, String password,int timeout)
+            throws AuthFailedException, IOErrorException, ClientServerIncompatibleException {
         try {
+            if (timeout > 0) {
+                this.transport.setTimeout(timeout);
+            }
             AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 if (resp.error_msg != null) {
                     throw new AuthFailedException(new String(resp.error_msg));
                 } else {
                     throw new AuthFailedException(
-                        "The error_msg is null, "
-                            + "maybe the service not set or the response is disorder.");
+                            "The error_msg is null, "
+                                    + "maybe the service not set or the response is disorder.");
                 }
             }
             return new AuthResult(resp.getSession_id(), resp.getTime_zone_offset_seconds());
@@ -148,7 +156,7 @@ public class SyncConnection extends Connection {
                 if (te.getType() == TTransportException.END_OF_FILE) {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
-                    || te.getMessage().contains("Read timed out")) {
+                        || te.getMessage().contains("Read timed out")) {
                     reopen();
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 } else if (te.getType() == TTransportException.NOT_OPEN) {
@@ -156,12 +164,24 @@ public class SyncConnection extends Connection {
                 }
             }
             throw new AuthFailedException(String.format("Authenticate failed: %s", e.getMessage()));
+        } finally {
+            if (timeout > 0) {
+                this.transport.setTimeout(this.timeout);
+            }
         }
     }
 
     public ExecutionResponse execute(long sessionID, String stmt)
             throws IOErrorException {
+        return execute(sessionID,stmt,0);
+    }
+
+    public ExecutionResponse execute(long sessionID, String stmt,int timeout)
+            throws IOErrorException {
         try {
+            if (timeout > 0) {
+                this.transport.setTimeout(timeout);
+            }
             return client.execute(sessionID, stmt.getBytes());
         } catch (TException e) {
             if (e instanceof TTransportException) {
@@ -171,7 +191,7 @@ public class SyncConnection extends Connection {
                 } else if (te.getType() == TTransportException.NOT_OPEN) {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
-                    || te.getMessage().contains("Read timed out")) {
+                        || te.getMessage().contains("Read timed out")) {
                     try {
                         reopen();
                     } catch (ClientServerIncompatibleException ex) {
@@ -181,6 +201,10 @@ public class SyncConnection extends Connection {
                 }
             }
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        } finally {
+            if (timeout > 0) {
+                this.transport.setTimeout(this.timeout);
+            }
         }
     }
 
