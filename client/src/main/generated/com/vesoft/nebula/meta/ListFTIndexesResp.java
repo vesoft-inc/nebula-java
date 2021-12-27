@@ -350,18 +350,18 @@ public class ListFTIndexesResp implements TBase, java.io.Serializable, Cloneable
         case INDEXES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map289 = iprot.readMapBegin();
-              this.indexes = new HashMap<byte[],FTIndex>(Math.max(0, 2*_map289.size));
-              for (int _i290 = 0; 
-                   (_map289.size < 0) ? iprot.peekMap() : (_i290 < _map289.size); 
-                   ++_i290)
+              TMap _map293 = iprot.readMapBegin();
+              this.indexes = new HashMap<byte[],FTIndex>(Math.max(0, 2*_map293.size));
+              for (int _i294 = 0; 
+                   (_map293.size < 0) ? iprot.peekMap() : (_i294 < _map293.size); 
+                   ++_i294)
               {
-                byte[] _key291;
-                FTIndex _val292;
-                _key291 = iprot.readBinary();
-                _val292 = new FTIndex();
-                _val292.read(iprot);
-                this.indexes.put(_key291, _val292);
+                byte[] _key295;
+                FTIndex _val296;
+                _key295 = iprot.readBinary();
+                _val296 = new FTIndex();
+                _val296.read(iprot);
+                this.indexes.put(_key295, _val296);
               }
               iprot.readMapEnd();
             }
@@ -400,9 +400,9 @@ public class ListFTIndexesResp implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(INDEXES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.indexes.size()));
-        for (Map.Entry<byte[], FTIndex> _iter293 : this.indexes.entrySet())        {
-          oprot.writeBinary(_iter293.getKey());
-          _iter293.getValue().write(oprot);
+        for (Map.Entry<byte[], FTIndex> _iter297 : this.indexes.entrySet())        {
+          oprot.writeBinary(_iter297.getKey());
+          _iter297.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }

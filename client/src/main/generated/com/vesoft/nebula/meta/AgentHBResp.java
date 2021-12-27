@@ -24,29 +24,24 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comparable<BalanceResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("BalanceResp");
+public class AgentHBResp implements TBase, java.io.Serializable, Cloneable, Comparable<AgentHBResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("AgentHBResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
-  private static final TField ID_FIELD_DESC = new TField("id", TType.I64, (short)2);
-  private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)3);
-  private static final TField TASKS_FIELD_DESC = new TField("tasks", TType.LIST, (short)4);
+  private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
+  private static final TField SERVICE_LIST_FIELD_DESC = new TField("service_list", TType.LIST, (short)3);
 
   /**
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
   public com.vesoft.nebula.ErrorCode code;
-  public long id;
   public com.vesoft.nebula.HostAddr leader;
-  public List<BalanceTask> tasks;
+  public List<ServiceInfo> service_list;
   public static final int CODE = 1;
-  public static final int ID = 2;
-  public static final int LEADER = 3;
-  public static final int TASKS = 4;
+  public static final int LEADER = 2;
+  public static final int SERVICE_LIST = 3;
 
   // isset id assignments
-  private static final int __ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -54,43 +49,35 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(TASKS, new FieldMetaData("tasks", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(SERVICE_LIST, new FieldMetaData("service_list", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, BalanceTask.class))));
+            new StructMetaData(TType.STRUCT, ServiceInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(BalanceResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(AgentHBResp.class, metaDataMap);
   }
 
-  public BalanceResp() {
+  public AgentHBResp() {
   }
 
-  public BalanceResp(
+  public AgentHBResp(
       com.vesoft.nebula.ErrorCode code,
-      long id,
       com.vesoft.nebula.HostAddr leader,
-      List<BalanceTask> tasks) {
+      List<ServiceInfo> service_list) {
     this();
     this.code = code;
-    this.id = id;
-    setIdIsSet(true);
     this.leader = leader;
-    this.tasks = tasks;
+    this.service_list = service_list;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
-    private long id;
     private com.vesoft.nebula.HostAddr leader;
-    private List<BalanceTask> tasks;
-
-    BitSet __optional_isset = new BitSet(1);
+    private List<ServiceInfo> service_list;
 
     public Builder() {
     }
@@ -100,30 +87,21 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       return this;
     }
 
-    public Builder setId(final long id) {
-      this.id = id;
-      __optional_isset.set(__ID_ISSET_ID, true);
-      return this;
-    }
-
     public Builder setLeader(final com.vesoft.nebula.HostAddr leader) {
       this.leader = leader;
       return this;
     }
 
-    public Builder setTasks(final List<BalanceTask> tasks) {
-      this.tasks = tasks;
+    public Builder setService_list(final List<ServiceInfo> service_list) {
+      this.service_list = service_list;
       return this;
     }
 
-    public BalanceResp build() {
-      BalanceResp result = new BalanceResp();
+    public AgentHBResp build() {
+      AgentHBResp result = new AgentHBResp();
       result.setCode(this.code);
-      if (__optional_isset.get(__ID_ISSET_ID)) {
-        result.setId(this.id);
-      }
       result.setLeader(this.leader);
-      result.setTasks(this.tasks);
+      result.setService_list(this.service_list);
       return result;
     }
   }
@@ -135,23 +113,20 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public BalanceResp(BalanceResp other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
+  public AgentHBResp(AgentHBResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
-    this.id = TBaseHelper.deepCopy(other.id);
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetTasks()) {
-      this.tasks = TBaseHelper.deepCopy(other.tasks);
+    if (other.isSetService_list()) {
+      this.service_list = TBaseHelper.deepCopy(other.service_list);
     }
   }
 
-  public BalanceResp deepCopy() {
-    return new BalanceResp(this);
+  public AgentHBResp deepCopy() {
+    return new AgentHBResp(this);
   }
 
   /**
@@ -166,7 +141,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public BalanceResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public AgentHBResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -186,34 +161,11 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public long getId() {
-    return this.id;
-  }
-
-  public BalanceResp setId(long id) {
-    this.id = id;
-    setIdIsSet(true);
-    return this;
-  }
-
-  public void unsetId() {
-    __isset_bit_vector.clear(__ID_ISSET_ID);
-  }
-
-  // Returns true if field id is set (has been assigned a value) and false otherwise
-  public boolean isSetId() {
-    return __isset_bit_vector.get(__ID_ISSET_ID);
-  }
-
-  public void setIdIsSet(boolean __value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, __value);
-  }
-
   public com.vesoft.nebula.HostAddr getLeader() {
     return this.leader;
   }
 
-  public BalanceResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public AgentHBResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -233,27 +185,27 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public List<BalanceTask> getTasks() {
-    return this.tasks;
+  public List<ServiceInfo> getService_list() {
+    return this.service_list;
   }
 
-  public BalanceResp setTasks(List<BalanceTask> tasks) {
-    this.tasks = tasks;
+  public AgentHBResp setService_list(List<ServiceInfo> service_list) {
+    this.service_list = service_list;
     return this;
   }
 
-  public void unsetTasks() {
-    this.tasks = null;
+  public void unsetService_list() {
+    this.service_list = null;
   }
 
-  // Returns true if field tasks is set (has been assigned a value) and false otherwise
-  public boolean isSetTasks() {
-    return this.tasks != null;
+  // Returns true if field service_list is set (has been assigned a value) and false otherwise
+  public boolean isSetService_list() {
+    return this.service_list != null;
   }
 
-  public void setTasksIsSet(boolean __value) {
+  public void setService_listIsSet(boolean __value) {
     if (!__value) {
-      this.tasks = null;
+      this.service_list = null;
     }
   }
 
@@ -268,14 +220,6 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       }
       break;
 
-    case ID:
-      if (__value == null) {
-        unsetId();
-      } else {
-        setId((Long)__value);
-      }
-      break;
-
     case LEADER:
       if (__value == null) {
         unsetLeader();
@@ -284,11 +228,11 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       }
       break;
 
-    case TASKS:
+    case SERVICE_LIST:
       if (__value == null) {
-        unsetTasks();
+        unsetService_list();
       } else {
-        setTasks((List<BalanceTask>)__value);
+        setService_list((List<ServiceInfo>)__value);
       }
       break;
 
@@ -302,14 +246,11 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     case CODE:
       return getCode();
 
-    case ID:
-      return new Long(getId());
-
     case LEADER:
       return getLeader();
 
-    case TASKS:
-      return getTasks();
+    case SERVICE_LIST:
+      return getService_list();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -322,28 +263,26 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof BalanceResp))
+    if (!(_that instanceof AgentHBResp))
       return false;
-    BalanceResp that = (BalanceResp)_that;
+    AgentHBResp that = (AgentHBResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.id, that.id)) { return false; }
-
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetTasks(), that.isSetTasks(), this.tasks, that.tasks)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetService_list(), that.isSetService_list(), this.service_list, that.service_list)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, id, leader, tasks});
+    return Arrays.deepHashCode(new Object[] {code, leader, service_list});
   }
 
   @Override
-  public int compareTo(BalanceResp other) {
+  public int compareTo(AgentHBResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -362,14 +301,6 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(id, other.id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
     lastComparison = Boolean.valueOf(isSetLeader()).compareTo(other.isSetLeader());
     if (lastComparison != 0) {
       return lastComparison;
@@ -378,11 +309,11 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetTasks()).compareTo(other.isSetTasks());
+    lastComparison = Boolean.valueOf(isSetService_list()).compareTo(other.isSetService_list());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(tasks, other.tasks);
+    lastComparison = TBaseHelper.compareTo(service_list, other.service_list);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -407,14 +338,6 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case ID:
-          if (__field.type == TType.I64) {
-            this.id = iprot.readI64();
-            setIdIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         case LEADER:
           if (__field.type == TType.STRUCT) {
             this.leader = new com.vesoft.nebula.HostAddr();
@@ -423,19 +346,19 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case TASKS:
+        case SERVICE_LIST:
           if (__field.type == TType.LIST) {
             {
-              TList _list178 = iprot.readListBegin();
-              this.tasks = new ArrayList<BalanceTask>(Math.max(0, _list178.size));
-              for (int _i179 = 0; 
-                   (_list178.size < 0) ? iprot.peekList() : (_i179 < _list178.size); 
-                   ++_i179)
+              TList _list175 = iprot.readListBegin();
+              this.service_list = new ArrayList<ServiceInfo>(Math.max(0, _list175.size));
+              for (int _i176 = 0; 
+                   (_list175.size < 0) ? iprot.peekList() : (_i176 < _list175.size); 
+                   ++_i176)
               {
-                BalanceTask _elem180;
-                _elem180 = new BalanceTask();
-                _elem180.read(iprot);
-                this.tasks.add(_elem180);
+                ServiceInfo _elem177;
+                _elem177 = new ServiceInfo();
+                _elem177.read(iprot);
+                this.service_list.add(_elem177);
               }
               iprot.readListEnd();
             }
@@ -465,20 +388,17 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeI32(this.code == null ? 0 : this.code.getValue());
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(ID_FIELD_DESC);
-    oprot.writeI64(this.id);
-    oprot.writeFieldEnd();
     if (this.leader != null) {
       oprot.writeFieldBegin(LEADER_FIELD_DESC);
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.tasks != null) {
-      oprot.writeFieldBegin(TASKS_FIELD_DESC);
+    if (this.service_list != null) {
+      oprot.writeFieldBegin(SERVICE_LIST_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.tasks.size()));
-        for (BalanceTask _iter181 : this.tasks)        {
-          _iter181.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.service_list.size()));
+        for (ServiceInfo _iter178 : this.service_list)        {
+          _iter178.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -498,7 +418,7 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("BalanceResp");
+    StringBuilder sb = new StringBuilder("AgentHBResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -524,13 +444,6 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("id");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
     sb.append("leader");
     sb.append(space);
     sb.append(":").append(space);
@@ -542,13 +455,13 @@ public class BalanceResp implements TBase, java.io.Serializable, Cloneable, Comp
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("tasks");
+    sb.append("service_list");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getTasks() == null) {
+    if (this.getService_list() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getTasks(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getService_list(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

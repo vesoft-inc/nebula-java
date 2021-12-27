@@ -349,16 +349,16 @@ public class ListTagIndexesResp implements TBase, java.io.Serializable, Cloneabl
         case ITEMS:
           if (__field.type == TType.LIST) {
             {
-              TList _list179 = iprot.readListBegin();
-              this.items = new ArrayList<IndexItem>(Math.max(0, _list179.size));
-              for (int _i180 = 0; 
-                   (_list179.size < 0) ? iprot.peekList() : (_i180 < _list179.size); 
-                   ++_i180)
+              TList _list183 = iprot.readListBegin();
+              this.items = new ArrayList<IndexItem>(Math.max(0, _list183.size));
+              for (int _i184 = 0; 
+                   (_list183.size < 0) ? iprot.peekList() : (_i184 < _list183.size); 
+                   ++_i184)
               {
-                IndexItem _elem181;
-                _elem181 = new IndexItem();
-                _elem181.read(iprot);
-                this.items.add(_elem181);
+                IndexItem _elem185;
+                _elem185 = new IndexItem();
+                _elem185.read(iprot);
+                this.items.add(_elem185);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListTagIndexesResp implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (IndexItem _iter182 : this.items)        {
-          _iter182.write(oprot);
+        for (IndexItem _iter186 : this.items)        {
+          _iter186.write(oprot);
         }
         oprot.writeListEnd();
       }

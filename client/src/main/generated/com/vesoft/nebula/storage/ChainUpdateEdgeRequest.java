@@ -454,15 +454,15 @@ public class ChainUpdateEdgeRequest implements TBase, java.io.Serializable, Clon
         case PARTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list304 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list304.size));
-              for (int _i305 = 0; 
-                   (_list304.size < 0) ? iprot.peekList() : (_i305 < _list304.size); 
-                   ++_i305)
+              TList _list316 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list316.size));
+              for (int _i317 = 0; 
+                   (_list316.size < 0) ? iprot.peekList() : (_i317 < _list316.size); 
+                   ++_i317)
               {
-                int _elem306;
-                _elem306 = iprot.readI32();
-                this.parts.add(_elem306);
+                int _elem318;
+                _elem318 = iprot.readI32();
+                this.parts.add(_elem318);
               }
               iprot.readListEnd();
             }
@@ -507,8 +507,8 @@ public class ChainUpdateEdgeRequest implements TBase, java.io.Serializable, Clon
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter307 : this.parts)        {
-          oprot.writeI32(_iter307);
+        for (int _iter319 : this.parts)        {
+          oprot.writeI32(_iter319);
         }
         oprot.writeListEnd();
       }

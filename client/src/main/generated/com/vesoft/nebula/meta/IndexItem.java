@@ -32,6 +32,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField SCHEMA_NAME_FIELD_DESC = new TField("schema_name", TType.STRING, (short)4);
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)5);
   private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)6);
+  private static final TField INDEX_PARAMS_FIELD_DESC = new TField("index_params", TType.STRUCT, (short)7);
 
   public int index_id;
   public byte[] index_name;
@@ -39,12 +40,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public byte[] schema_name;
   public List<ColumnDef> fields;
   public byte[] comment;
+  public IndexParams index_params;
   public static final int INDEX_ID = 1;
   public static final int INDEX_NAME = 2;
   public static final int SCHEMA_ID = 3;
   public static final int SCHEMA_NAME = 4;
   public static final int FIELDS = 5;
   public static final int COMMENT = 6;
+  public static final int INDEX_PARAMS = 7;
 
   // isset id assignments
   private static final int __INDEX_ID_ISSET_ID = 0;
@@ -67,6 +70,8 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
             new StructMetaData(TType.STRUCT, ColumnDef.class))));
     tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(INDEX_PARAMS, new FieldMetaData("index_params", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, IndexParams.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -98,7 +103,8 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       com.vesoft.nebula.SchemaID schema_id,
       byte[] schema_name,
       List<ColumnDef> fields,
-      byte[] comment) {
+      byte[] comment,
+      IndexParams index_params) {
     this();
     this.index_id = index_id;
     setIndex_idIsSet(true);
@@ -107,6 +113,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     this.schema_name = schema_name;
     this.fields = fields;
     this.comment = comment;
+    this.index_params = index_params;
   }
 
   public static class Builder {
@@ -116,6 +123,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     private byte[] schema_name;
     private List<ColumnDef> fields;
     private byte[] comment;
+    private IndexParams index_params;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -153,6 +161,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
+    public Builder setIndex_params(final IndexParams index_params) {
+      this.index_params = index_params;
+      return this;
+    }
+
     public IndexItem build() {
       IndexItem result = new IndexItem();
       if (__optional_isset.get(__INDEX_ID_ISSET_ID)) {
@@ -163,6 +176,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       result.setSchema_name(this.schema_name);
       result.setFields(this.fields);
       result.setComment(this.comment);
+      result.setIndex_params(this.index_params);
       return result;
     }
   }
@@ -192,6 +206,9 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
     if (other.isSetComment()) {
       this.comment = TBaseHelper.deepCopy(other.comment);
+    }
+    if (other.isSetIndex_params()) {
+      this.index_params = TBaseHelper.deepCopy(other.index_params);
     }
   }
 
@@ -342,6 +359,30 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
+  public IndexParams getIndex_params() {
+    return this.index_params;
+  }
+
+  public IndexItem setIndex_params(IndexParams index_params) {
+    this.index_params = index_params;
+    return this;
+  }
+
+  public void unsetIndex_params() {
+    this.index_params = null;
+  }
+
+  // Returns true if field index_params is set (has been assigned a value) and false otherwise
+  public boolean isSetIndex_params() {
+    return this.index_params != null;
+  }
+
+  public void setIndex_paramsIsSet(boolean __value) {
+    if (!__value) {
+      this.index_params = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -393,6 +434,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       }
       break;
 
+    case INDEX_PARAMS:
+      if (__value == null) {
+        unsetIndex_params();
+      } else {
+        setIndex_params((IndexParams)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -417,6 +466,9 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
     case COMMENT:
       return getComment();
+
+    case INDEX_PARAMS:
+      return getIndex_params();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -445,12 +497,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
     if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetIndex_params(), that.isSetIndex_params(), this.index_params, that.index_params)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields, comment});
+    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields, comment, index_params});
   }
 
   @Override
@@ -510,6 +564,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(comment, other.comment);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetIndex_params()).compareTo(other.isSetIndex_params());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(index_params, other.index_params);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -584,6 +646,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case INDEX_PARAMS:
+          if (__field.type == TType.STRUCT) {
+            this.index_params = new IndexParams();
+            this.index_params.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -634,6 +704,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       if (isSetComment()) {
         oprot.writeFieldBegin(COMMENT_FIELD_DESC);
         oprot.writeBinary(this.comment);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.index_params != null) {
+      if (isSetIndex_params()) {
+        oprot.writeFieldBegin(INDEX_PARAMS_FIELD_DESC);
+        this.index_params.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -733,6 +810,20 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
             sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
           }
           if (this.getComment().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetIndex_params())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("index_params");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getIndex_params() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getIndex_params(), indent + 1, prettyPrint));
       }
       first = false;
     }

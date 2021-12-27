@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula;
+package com.vesoft.nebula.meta;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,15 +24,15 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Comparable<NodeInfo> {
-  private static final TStruct STRUCT_DESC = new TStruct("NodeInfo");
+public class HostBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<HostBackupInfo> {
+  private static final TStruct STRUCT_DESC = new TStruct("HostBackupInfo");
   private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)1);
-  private static final TField DIR_FIELD_DESC = new TField("dir", TType.STRUCT, (short)2);
+  private static final TField CHECKPOINTS_FIELD_DESC = new TField("checkpoints", TType.LIST, (short)2);
 
-  public HostAddr host;
-  public DirInfo dir;
+  public com.vesoft.nebula.HostAddr host;
+  public List<com.vesoft.nebula.CheckpointInfo> checkpoints;
   public static final int HOST = 1;
-  public static final int DIR = 2;
+  public static final int CHECKPOINTS = 2;
 
   // isset id assignments
 
@@ -41,48 +41,49 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(HOST, new FieldMetaData("host", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, HostAddr.class)));
-    tmpMetaDataMap.put(DIR, new FieldMetaData("dir", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, DirInfo.class)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
+    tmpMetaDataMap.put(CHECKPOINTS, new FieldMetaData("checkpoints", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.CheckpointInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(NodeInfo.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(HostBackupInfo.class, metaDataMap);
   }
 
-  public NodeInfo() {
+  public HostBackupInfo() {
   }
 
-  public NodeInfo(
-      HostAddr host,
-      DirInfo dir) {
+  public HostBackupInfo(
+      com.vesoft.nebula.HostAddr host,
+      List<com.vesoft.nebula.CheckpointInfo> checkpoints) {
     this();
     this.host = host;
-    this.dir = dir;
+    this.checkpoints = checkpoints;
   }
 
   public static class Builder {
-    private HostAddr host;
-    private DirInfo dir;
+    private com.vesoft.nebula.HostAddr host;
+    private List<com.vesoft.nebula.CheckpointInfo> checkpoints;
 
     public Builder() {
     }
 
-    public Builder setHost(final HostAddr host) {
+    public Builder setHost(final com.vesoft.nebula.HostAddr host) {
       this.host = host;
       return this;
     }
 
-    public Builder setDir(final DirInfo dir) {
-      this.dir = dir;
+    public Builder setCheckpoints(final List<com.vesoft.nebula.CheckpointInfo> checkpoints) {
+      this.checkpoints = checkpoints;
       return this;
     }
 
-    public NodeInfo build() {
-      NodeInfo result = new NodeInfo();
+    public HostBackupInfo build() {
+      HostBackupInfo result = new HostBackupInfo();
       result.setHost(this.host);
-      result.setDir(this.dir);
+      result.setCheckpoints(this.checkpoints);
       return result;
     }
   }
@@ -94,24 +95,24 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public NodeInfo(NodeInfo other) {
+  public HostBackupInfo(HostBackupInfo other) {
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
     }
-    if (other.isSetDir()) {
-      this.dir = TBaseHelper.deepCopy(other.dir);
+    if (other.isSetCheckpoints()) {
+      this.checkpoints = TBaseHelper.deepCopy(other.checkpoints);
     }
   }
 
-  public NodeInfo deepCopy() {
-    return new NodeInfo(this);
+  public HostBackupInfo deepCopy() {
+    return new HostBackupInfo(this);
   }
 
-  public HostAddr getHost() {
+  public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
-  public NodeInfo setHost(HostAddr host) {
+  public HostBackupInfo setHost(com.vesoft.nebula.HostAddr host) {
     this.host = host;
     return this;
   }
@@ -131,45 +132,46 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public DirInfo getDir() {
-    return this.dir;
+  public List<com.vesoft.nebula.CheckpointInfo> getCheckpoints() {
+    return this.checkpoints;
   }
 
-  public NodeInfo setDir(DirInfo dir) {
-    this.dir = dir;
+  public HostBackupInfo setCheckpoints(List<com.vesoft.nebula.CheckpointInfo> checkpoints) {
+    this.checkpoints = checkpoints;
     return this;
   }
 
-  public void unsetDir() {
-    this.dir = null;
+  public void unsetCheckpoints() {
+    this.checkpoints = null;
   }
 
-  // Returns true if field dir is set (has been assigned a value) and false otherwise
-  public boolean isSetDir() {
-    return this.dir != null;
+  // Returns true if field checkpoints is set (has been assigned a value) and false otherwise
+  public boolean isSetCheckpoints() {
+    return this.checkpoints != null;
   }
 
-  public void setDirIsSet(boolean __value) {
+  public void setCheckpointsIsSet(boolean __value) {
     if (!__value) {
-      this.dir = null;
+      this.checkpoints = null;
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case HOST:
       if (__value == null) {
         unsetHost();
       } else {
-        setHost((HostAddr)__value);
+        setHost((com.vesoft.nebula.HostAddr)__value);
       }
       break;
 
-    case DIR:
+    case CHECKPOINTS:
       if (__value == null) {
-        unsetDir();
+        unsetCheckpoints();
       } else {
-        setDir((DirInfo)__value);
+        setCheckpoints((List<com.vesoft.nebula.CheckpointInfo>)__value);
       }
       break;
 
@@ -183,8 +185,8 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
     case HOST:
       return getHost();
 
-    case DIR:
-      return getDir();
+    case CHECKPOINTS:
+      return getCheckpoints();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -197,24 +199,24 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof NodeInfo))
+    if (!(_that instanceof HostBackupInfo))
       return false;
-    NodeInfo that = (NodeInfo)_that;
+    HostBackupInfo that = (HostBackupInfo)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetDir(), that.isSetDir(), this.dir, that.dir)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetCheckpoints(), that.isSetCheckpoints(), this.checkpoints, that.checkpoints)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {host, dir});
+    return Arrays.deepHashCode(new Object[] {host, checkpoints});
   }
 
   @Override
-  public int compareTo(NodeInfo other) {
+  public int compareTo(HostBackupInfo other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -233,11 +235,11 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetDir()).compareTo(other.isSetDir());
+    lastComparison = Boolean.valueOf(isSetCheckpoints()).compareTo(other.isSetCheckpoints());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(dir, other.dir);
+    lastComparison = TBaseHelper.compareTo(checkpoints, other.checkpoints);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -257,16 +259,28 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
       {
         case HOST:
           if (__field.type == TType.STRUCT) {
-            this.host = new HostAddr();
+            this.host = new com.vesoft.nebula.HostAddr();
             this.host.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case DIR:
-          if (__field.type == TType.STRUCT) {
-            this.dir = new DirInfo();
-            this.dir.read(iprot);
+        case CHECKPOINTS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list252 = iprot.readListBegin();
+              this.checkpoints = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list252.size));
+              for (int _i253 = 0; 
+                   (_list252.size < 0) ? iprot.peekList() : (_i253 < _list252.size); 
+                   ++_i253)
+              {
+                com.vesoft.nebula.CheckpointInfo _elem254;
+                _elem254 = new com.vesoft.nebula.CheckpointInfo();
+                _elem254.read(iprot);
+                this.checkpoints.add(_elem254);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -293,9 +307,15 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
       this.host.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.dir != null) {
-      oprot.writeFieldBegin(DIR_FIELD_DESC);
-      this.dir.write(oprot);
+    if (this.checkpoints != null) {
+      oprot.writeFieldBegin(CHECKPOINTS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.checkpoints.size()));
+        for (com.vesoft.nebula.CheckpointInfo _iter255 : this.checkpoints)        {
+          _iter255.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -312,7 +332,7 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("NodeInfo");
+    StringBuilder sb = new StringBuilder("HostBackupInfo");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -330,13 +350,13 @@ public class NodeInfo implements TBase, java.io.Serializable, Cloneable, Compara
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("dir");
+    sb.append("checkpoints");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getDir() == null) {
+    if (this.getCheckpoints() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getDir(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getCheckpoints(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

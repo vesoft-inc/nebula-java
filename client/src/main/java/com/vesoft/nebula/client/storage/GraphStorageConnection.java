@@ -18,14 +18,11 @@ import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.storage.GraphStorageService;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
-import com.vesoft.nebula.storage.ScanEdgeResponse;
 import com.vesoft.nebula.storage.ScanResponse;
 import com.vesoft.nebula.storage.ScanVertexRequest;
-import com.vesoft.nebula.storage.ScanVertexResponse;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import javax.net.ssl.SSLSocketFactory;
 
 public class GraphStorageConnection {
