@@ -419,17 +419,17 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
         case TERM_OF_PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map277 = iprot.readMapBegin();
-              this.term_of_parts = new HashMap<Integer,Long>(Math.max(0, 2*_map277.size));
-              for (int _i278 = 0; 
-                   (_map277.size < 0) ? iprot.peekMap() : (_i278 < _map277.size); 
-                   ++_i278)
+              TMap _map289 = iprot.readMapBegin();
+              this.term_of_parts = new HashMap<Integer,Long>(Math.max(0, 2*_map289.size));
+              for (int _i290 = 0; 
+                   (_map289.size < 0) ? iprot.peekMap() : (_i290 < _map289.size); 
+                   ++_i290)
               {
-                int _key279;
-                long _val280;
-                _key279 = iprot.readI32();
-                _val280 = iprot.readI64();
-                this.term_of_parts.put(_key279, _val280);
+                int _key291;
+                long _val292;
+                _key291 = iprot.readI32();
+                _val292 = iprot.readI64();
+                this.term_of_parts.put(_key291, _val292);
               }
               iprot.readMapEnd();
             }
@@ -456,29 +456,29 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
         case EDGE_VER:
           if (__field.type == TType.MAP) {
             {
-              TMap _map281 = iprot.readMapBegin();
-              this.edge_ver = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map281.size));
-              for (int _i282 = 0; 
-                   (_map281.size < 0) ? iprot.peekMap() : (_i282 < _map281.size); 
-                   ++_i282)
+              TMap _map293 = iprot.readMapBegin();
+              this.edge_ver = new HashMap<Integer,List<Long>>(Math.max(0, 2*_map293.size));
+              for (int _i294 = 0; 
+                   (_map293.size < 0) ? iprot.peekMap() : (_i294 < _map293.size); 
+                   ++_i294)
               {
-                int _key283;
-                List<Long> _val284;
-                _key283 = iprot.readI32();
+                int _key295;
+                List<Long> _val296;
+                _key295 = iprot.readI32();
                 {
-                  TList _list285 = iprot.readListBegin();
-                  _val284 = new ArrayList<Long>(Math.max(0, _list285.size));
-                  for (int _i286 = 0; 
-                       (_list285.size < 0) ? iprot.peekList() : (_i286 < _list285.size); 
-                       ++_i286)
+                  TList _list297 = iprot.readListBegin();
+                  _val296 = new ArrayList<Long>(Math.max(0, _list297.size));
+                  for (int _i298 = 0; 
+                       (_list297.size < 0) ? iprot.peekList() : (_i298 < _list297.size); 
+                       ++_i298)
                   {
-                    long _elem287;
-                    _elem287 = iprot.readI64();
-                    _val284.add(_elem287);
+                    long _elem299;
+                    _elem299 = iprot.readI64();
+                    _val296.add(_elem299);
                   }
                   iprot.readListEnd();
                 }
-                this.edge_ver.put(_key283, _val284);
+                this.edge_ver.put(_key295, _val296);
               }
               iprot.readMapEnd();
             }
@@ -510,9 +510,9 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(TERM_OF_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.I64, this.term_of_parts.size()));
-        for (Map.Entry<Integer, Long> _iter288 : this.term_of_parts.entrySet())        {
-          oprot.writeI32(_iter288.getKey());
-          oprot.writeI64(_iter288.getValue());
+        for (Map.Entry<Integer, Long> _iter300 : this.term_of_parts.entrySet())        {
+          oprot.writeI32(_iter300.getKey());
+          oprot.writeI64(_iter300.getValue());
         }
         oprot.writeMapEnd();
       }
@@ -537,12 +537,12 @@ public class InternalTxnRequest implements TBase, java.io.Serializable, Cloneabl
         oprot.writeFieldBegin(EDGE_VER_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.edge_ver.size()));
-          for (Map.Entry<Integer, List<Long>> _iter289 : this.edge_ver.entrySet())          {
-            oprot.writeI32(_iter289.getKey());
+          for (Map.Entry<Integer, List<Long>> _iter301 : this.edge_ver.entrySet())          {
+            oprot.writeI32(_iter301.getKey());
             {
-              oprot.writeListBegin(new TList(TType.I64, _iter289.getValue().size()));
-              for (long _iter290 : _iter289.getValue())              {
-                oprot.writeI64(_iter290);
+              oprot.writeListBegin(new TList(TType.I64, _iter301.getValue().size()));
+              for (long _iter302 : _iter301.getValue())              {
+                oprot.writeI64(_iter302);
               }
               oprot.writeListEnd();
             }

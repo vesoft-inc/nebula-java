@@ -7,16 +7,13 @@ package com.vesoft.nebula.client.storage.scan;
 
 import com.facebook.thrift.TException;
 import com.vesoft.nebula.DataSet;
-import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.GraphStorageConnection;
 import com.vesoft.nebula.client.storage.StorageConnPool;
 import com.vesoft.nebula.client.storage.data.ScanStatus;
-import com.vesoft.nebula.storage.PartitionResult;
 import com.vesoft.nebula.storage.ScanCursor;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
-import com.vesoft.nebula.storage.ScanEdgeResponse;
 import com.vesoft.nebula.storage.ScanResponse;
 import java.util.ArrayList;
 import java.util.Collections;

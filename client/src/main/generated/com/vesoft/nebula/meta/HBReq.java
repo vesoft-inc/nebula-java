@@ -32,6 +32,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   private static final TField LEADER_PART_IDS_FIELD_DESC = new TField("leader_partIds", TType.MAP, (short)4);
   private static final TField GIT_INFO_SHA_FIELD_DESC = new TField("git_info_sha", TType.STRING, (short)5);
   private static final TField DISK_PARTS_FIELD_DESC = new TField("disk_parts", TType.MAP, (short)6);
+  private static final TField DIR_FIELD_DESC = new TField("dir", TType.STRUCT, (short)7);
+  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)8);
 
   /**
    * 
@@ -43,12 +45,16 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public Map<Integer,List<LeaderInfo>> leader_partIds;
   public byte[] git_info_sha;
   public Map<Integer,Map<byte[],PartitionList>> disk_parts;
+  public com.vesoft.nebula.DirInfo dir;
+  public byte[] version;
   public static final int ROLE = 1;
   public static final int HOST = 2;
   public static final int CLUSTER_ID = 3;
   public static final int LEADER_PARTIDS = 4;
   public static final int GIT_INFO_SHA = 5;
   public static final int DISK_PARTS = 6;
+  public static final int DIR = 7;
+  public static final int VERSION = 8;
 
   // isset id assignments
   private static final int __CLUSTER_ID_ISSET_ID = 0;
@@ -77,6 +83,10 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
             new MapMetaData(TType.MAP, 
                 new FieldValueMetaData(TType.STRING), 
                 new StructMetaData(TType.STRUCT, PartitionList.class)))));
+    tmpMetaDataMap.put(DIR, new FieldMetaData("dir", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DirInfo.class)));
+    tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -106,7 +116,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       long cluster_id,
       Map<Integer,List<LeaderInfo>> leader_partIds,
       byte[] git_info_sha,
-      Map<Integer,Map<byte[],PartitionList>> disk_parts) {
+      Map<Integer,Map<byte[],PartitionList>> disk_parts,
+      com.vesoft.nebula.DirInfo dir,
+      byte[] version) {
     this();
     this.role = role;
     this.host = host;
@@ -115,6 +127,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     this.leader_partIds = leader_partIds;
     this.git_info_sha = git_info_sha;
     this.disk_parts = disk_parts;
+    this.dir = dir;
+    this.version = version;
   }
 
   public static class Builder {
@@ -124,6 +138,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     private Map<Integer,List<LeaderInfo>> leader_partIds;
     private byte[] git_info_sha;
     private Map<Integer,Map<byte[],PartitionList>> disk_parts;
+    private com.vesoft.nebula.DirInfo dir;
+    private byte[] version;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -161,6 +177,16 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return this;
     }
 
+    public Builder setDir(final com.vesoft.nebula.DirInfo dir) {
+      this.dir = dir;
+      return this;
+    }
+
+    public Builder setVersion(final byte[] version) {
+      this.version = version;
+      return this;
+    }
+
     public HBReq build() {
       HBReq result = new HBReq();
       result.setRole(this.role);
@@ -171,6 +197,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       result.setLeader_partIds(this.leader_partIds);
       result.setGit_info_sha(this.git_info_sha);
       result.setDisk_parts(this.disk_parts);
+      result.setDir(this.dir);
+      result.setVersion(this.version);
       return result;
     }
   }
@@ -200,6 +228,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
     if (other.isSetDisk_parts()) {
       this.disk_parts = TBaseHelper.deepCopy(other.disk_parts);
+    }
+    if (other.isSetDir()) {
+      this.dir = TBaseHelper.deepCopy(other.dir);
+    }
+    if (other.isSetVersion()) {
+      this.version = TBaseHelper.deepCopy(other.version);
     }
   }
 
@@ -358,6 +392,54 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
   }
 
+  public com.vesoft.nebula.DirInfo getDir() {
+    return this.dir;
+  }
+
+  public HBReq setDir(com.vesoft.nebula.DirInfo dir) {
+    this.dir = dir;
+    return this;
+  }
+
+  public void unsetDir() {
+    this.dir = null;
+  }
+
+  // Returns true if field dir is set (has been assigned a value) and false otherwise
+  public boolean isSetDir() {
+    return this.dir != null;
+  }
+
+  public void setDirIsSet(boolean __value) {
+    if (!__value) {
+      this.dir = null;
+    }
+  }
+
+  public byte[] getVersion() {
+    return this.version;
+  }
+
+  public HBReq setVersion(byte[] version) {
+    this.version = version;
+    return this;
+  }
+
+  public void unsetVersion() {
+    this.version = null;
+  }
+
+  // Returns true if field version is set (has been assigned a value) and false otherwise
+  public boolean isSetVersion() {
+    return this.version != null;
+  }
+
+  public void setVersionIsSet(boolean __value) {
+    if (!__value) {
+      this.version = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -409,6 +491,22 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       break;
 
+    case DIR:
+      if (__value == null) {
+        unsetDir();
+      } else {
+        setDir((com.vesoft.nebula.DirInfo)__value);
+      }
+      break;
+
+    case VERSION:
+      if (__value == null) {
+        unsetVersion();
+      } else {
+        setVersion((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -433,6 +531,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     case DISK_PARTS:
       return getDisk_parts();
+
+    case DIR:
+      return getDir();
+
+    case VERSION:
+      return getVersion();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -461,12 +565,16 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     if (!TBaseHelper.equalsSlow(this.isSetDisk_parts(), that.isSetDisk_parts(), this.disk_parts, that.disk_parts)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetDir(), that.isSetDir(), this.dir, that.dir)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, disk_parts});
+    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, disk_parts, dir, version});
   }
 
   @Override
@@ -526,6 +634,22 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(disk_parts, other.disk_parts);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetDir()).compareTo(other.isSetDir());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(dir, other.dir);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(version, other.version);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -643,6 +767,21 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case DIR:
+          if (__field.type == TType.STRUCT) {
+            this.dir = new com.vesoft.nebula.DirInfo();
+            this.dir.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case VERSION:
+          if (__field.type == TType.STRING) {
+            this.version = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -716,6 +855,20 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
           }
           oprot.writeMapEnd();
         }
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.dir != null) {
+      if (isSetDir()) {
+        oprot.writeFieldBegin(DIR_FIELD_DESC);
+        this.dir.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.version != null) {
+      if (isSetVersion()) {
+        oprot.writeFieldBegin(VERSION_FIELD_DESC);
+        oprot.writeBinary(this.version);
         oprot.writeFieldEnd();
       }
     }
@@ -816,6 +969,39 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this.getDisk_parts(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetDir())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("dir");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getDir() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getDir(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetVersion())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("version");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getVersion() == null) {
+        sb.append("null");
+      } else {
+          int __version_size = Math.min(this.getVersion().length, 128);
+          for (int i = 0; i < __version_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
+          }
+          if (this.getVersion().length > 128) sb.append(" ...");
       }
       first = false;
     }

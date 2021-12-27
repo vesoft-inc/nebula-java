@@ -26,29 +26,29 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Comparable<BackupMeta> {
   private static final TStruct STRUCT_DESC = new TStruct("BackupMeta");
-  private static final TField BACKUP_INFO_FIELD_DESC = new TField("backup_info", TType.MAP, (short)1);
+  private static final TField SPACE_BACKUPS_FIELD_DESC = new TField("space_backups", TType.MAP, (short)1);
   private static final TField META_FILES_FIELD_DESC = new TField("meta_files", TType.LIST, (short)2);
   private static final TField BACKUP_NAME_FIELD_DESC = new TField("backup_name", TType.STRING, (short)3);
   private static final TField FULL_FIELD_DESC = new TField("full", TType.BOOL, (short)4);
-  private static final TField INCLUDE_SYSTEM_SPACE_FIELD_DESC = new TField("include_system_space", TType.BOOL, (short)5);
+  private static final TField ALL_SPACES_FIELD_DESC = new TField("all_spaces", TType.BOOL, (short)5);
   private static final TField CREATE_TIME_FIELD_DESC = new TField("create_time", TType.I64, (short)6);
 
-  public Map<Integer,SpaceBackupInfo> backup_info;
+  public Map<Integer,SpaceBackupInfo> space_backups;
   public List<byte[]> meta_files;
   public byte[] backup_name;
   public boolean full;
-  public boolean include_system_space;
+  public boolean all_spaces;
   public long create_time;
-  public static final int BACKUP_INFO = 1;
+  public static final int SPACE_BACKUPS = 1;
   public static final int META_FILES = 2;
   public static final int BACKUP_NAME = 3;
   public static final int FULL = 4;
-  public static final int INCLUDE_SYSTEM_SPACE = 5;
+  public static final int ALL_SPACES = 5;
   public static final int CREATE_TIME = 6;
 
   // isset id assignments
   private static final int __FULL_ISSET_ID = 0;
-  private static final int __INCLUDE_SYSTEM_SPACE_ISSET_ID = 1;
+  private static final int __ALL_SPACES_ISSET_ID = 1;
   private static final int __CREATE_TIME_ISSET_ID = 2;
   private BitSet __isset_bit_vector = new BitSet(3);
 
@@ -56,7 +56,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(BACKUP_INFO, new FieldMetaData("backup_info", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(SPACE_BACKUPS, new FieldMetaData("space_backups", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new StructMetaData(TType.STRUCT, SpaceBackupInfo.class))));
@@ -67,7 +67,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FULL, new FieldMetaData("full", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
-    tmpMetaDataMap.put(INCLUDE_SYSTEM_SPACE, new FieldMetaData("include_system_space", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(ALL_SPACES, new FieldMetaData("all_spaces", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(CREATE_TIME, new FieldMetaData("create_time", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
@@ -82,30 +82,30 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   }
 
   public BackupMeta(
-      Map<Integer,SpaceBackupInfo> backup_info,
+      Map<Integer,SpaceBackupInfo> space_backups,
       List<byte[]> meta_files,
       byte[] backup_name,
       boolean full,
-      boolean include_system_space,
+      boolean all_spaces,
       long create_time) {
     this();
-    this.backup_info = backup_info;
+    this.space_backups = space_backups;
     this.meta_files = meta_files;
     this.backup_name = backup_name;
     this.full = full;
     setFullIsSet(true);
-    this.include_system_space = include_system_space;
-    setInclude_system_spaceIsSet(true);
+    this.all_spaces = all_spaces;
+    setAll_spacesIsSet(true);
     this.create_time = create_time;
     setCreate_timeIsSet(true);
   }
 
   public static class Builder {
-    private Map<Integer,SpaceBackupInfo> backup_info;
+    private Map<Integer,SpaceBackupInfo> space_backups;
     private List<byte[]> meta_files;
     private byte[] backup_name;
     private boolean full;
-    private boolean include_system_space;
+    private boolean all_spaces;
     private long create_time;
 
     BitSet __optional_isset = new BitSet(3);
@@ -113,8 +113,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     public Builder() {
     }
 
-    public Builder setBackup_info(final Map<Integer,SpaceBackupInfo> backup_info) {
-      this.backup_info = backup_info;
+    public Builder setSpace_backups(final Map<Integer,SpaceBackupInfo> space_backups) {
+      this.space_backups = space_backups;
       return this;
     }
 
@@ -134,9 +134,9 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
-    public Builder setInclude_system_space(final boolean include_system_space) {
-      this.include_system_space = include_system_space;
-      __optional_isset.set(__INCLUDE_SYSTEM_SPACE_ISSET_ID, true);
+    public Builder setAll_spaces(final boolean all_spaces) {
+      this.all_spaces = all_spaces;
+      __optional_isset.set(__ALL_SPACES_ISSET_ID, true);
       return this;
     }
 
@@ -148,14 +148,14 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
     public BackupMeta build() {
       BackupMeta result = new BackupMeta();
-      result.setBackup_info(this.backup_info);
+      result.setSpace_backups(this.space_backups);
       result.setMeta_files(this.meta_files);
       result.setBackup_name(this.backup_name);
       if (__optional_isset.get(__FULL_ISSET_ID)) {
         result.setFull(this.full);
       }
-      if (__optional_isset.get(__INCLUDE_SYSTEM_SPACE_ISSET_ID)) {
-        result.setInclude_system_space(this.include_system_space);
+      if (__optional_isset.get(__ALL_SPACES_ISSET_ID)) {
+        result.setAll_spaces(this.all_spaces);
       }
       if (__optional_isset.get(__CREATE_TIME_ISSET_ID)) {
         result.setCreate_time(this.create_time);
@@ -174,8 +174,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   public BackupMeta(BackupMeta other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    if (other.isSetBackup_info()) {
-      this.backup_info = TBaseHelper.deepCopy(other.backup_info);
+    if (other.isSetSpace_backups()) {
+      this.space_backups = TBaseHelper.deepCopy(other.space_backups);
     }
     if (other.isSetMeta_files()) {
       this.meta_files = TBaseHelper.deepCopy(other.meta_files);
@@ -184,7 +184,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       this.backup_name = TBaseHelper.deepCopy(other.backup_name);
     }
     this.full = TBaseHelper.deepCopy(other.full);
-    this.include_system_space = TBaseHelper.deepCopy(other.include_system_space);
+    this.all_spaces = TBaseHelper.deepCopy(other.all_spaces);
     this.create_time = TBaseHelper.deepCopy(other.create_time);
   }
 
@@ -192,27 +192,27 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     return new BackupMeta(this);
   }
 
-  public Map<Integer,SpaceBackupInfo> getBackup_info() {
-    return this.backup_info;
+  public Map<Integer,SpaceBackupInfo> getSpace_backups() {
+    return this.space_backups;
   }
 
-  public BackupMeta setBackup_info(Map<Integer,SpaceBackupInfo> backup_info) {
-    this.backup_info = backup_info;
+  public BackupMeta setSpace_backups(Map<Integer,SpaceBackupInfo> space_backups) {
+    this.space_backups = space_backups;
     return this;
   }
 
-  public void unsetBackup_info() {
-    this.backup_info = null;
+  public void unsetSpace_backups() {
+    this.space_backups = null;
   }
 
-  // Returns true if field backup_info is set (has been assigned a value) and false otherwise
-  public boolean isSetBackup_info() {
-    return this.backup_info != null;
+  // Returns true if field space_backups is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_backups() {
+    return this.space_backups != null;
   }
 
-  public void setBackup_infoIsSet(boolean __value) {
+  public void setSpace_backupsIsSet(boolean __value) {
     if (!__value) {
-      this.backup_info = null;
+      this.space_backups = null;
     }
   }
 
@@ -287,27 +287,27 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__FULL_ISSET_ID, __value);
   }
 
-  public boolean isInclude_system_space() {
-    return this.include_system_space;
+  public boolean isAll_spaces() {
+    return this.all_spaces;
   }
 
-  public BackupMeta setInclude_system_space(boolean include_system_space) {
-    this.include_system_space = include_system_space;
-    setInclude_system_spaceIsSet(true);
+  public BackupMeta setAll_spaces(boolean all_spaces) {
+    this.all_spaces = all_spaces;
+    setAll_spacesIsSet(true);
     return this;
   }
 
-  public void unsetInclude_system_space() {
-    __isset_bit_vector.clear(__INCLUDE_SYSTEM_SPACE_ISSET_ID);
+  public void unsetAll_spaces() {
+    __isset_bit_vector.clear(__ALL_SPACES_ISSET_ID);
   }
 
-  // Returns true if field include_system_space is set (has been assigned a value) and false otherwise
-  public boolean isSetInclude_system_space() {
-    return __isset_bit_vector.get(__INCLUDE_SYSTEM_SPACE_ISSET_ID);
+  // Returns true if field all_spaces is set (has been assigned a value) and false otherwise
+  public boolean isSetAll_spaces() {
+    return __isset_bit_vector.get(__ALL_SPACES_ISSET_ID);
   }
 
-  public void setInclude_system_spaceIsSet(boolean __value) {
-    __isset_bit_vector.set(__INCLUDE_SYSTEM_SPACE_ISSET_ID, __value);
+  public void setAll_spacesIsSet(boolean __value) {
+    __isset_bit_vector.set(__ALL_SPACES_ISSET_ID, __value);
   }
 
   public long getCreate_time() {
@@ -336,11 +336,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case BACKUP_INFO:
+    case SPACE_BACKUPS:
       if (__value == null) {
-        unsetBackup_info();
+        unsetSpace_backups();
       } else {
-        setBackup_info((Map<Integer,SpaceBackupInfo>)__value);
+        setSpace_backups((Map<Integer,SpaceBackupInfo>)__value);
       }
       break;
 
@@ -368,11 +368,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
-    case INCLUDE_SYSTEM_SPACE:
+    case ALL_SPACES:
       if (__value == null) {
-        unsetInclude_system_space();
+        unsetAll_spaces();
       } else {
-        setInclude_system_space((Boolean)__value);
+        setAll_spaces((Boolean)__value);
       }
       break;
 
@@ -391,8 +391,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case BACKUP_INFO:
-      return getBackup_info();
+    case SPACE_BACKUPS:
+      return getSpace_backups();
 
     case META_FILES:
       return getMeta_files();
@@ -403,8 +403,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     case FULL:
       return new Boolean(isFull());
 
-    case INCLUDE_SYSTEM_SPACE:
-      return new Boolean(isInclude_system_space());
+    case ALL_SPACES:
+      return new Boolean(isAll_spaces());
 
     case CREATE_TIME:
       return new Long(getCreate_time());
@@ -424,7 +424,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       return false;
     BackupMeta that = (BackupMeta)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetBackup_info(), that.isSetBackup_info(), this.backup_info, that.backup_info)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetSpace_backups(), that.isSetSpace_backups(), this.space_backups, that.space_backups)) { return false; }
 
     if (!TBaseHelper.equalsSlow(this.isSetMeta_files(), that.isSetMeta_files(), this.meta_files, that.meta_files)) { return false; }
 
@@ -432,7 +432,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
     if (!TBaseHelper.equalsNobinary(this.full, that.full)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.include_system_space, that.include_system_space)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.all_spaces, that.all_spaces)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.create_time, that.create_time)) { return false; }
 
@@ -441,7 +441,7 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {backup_info, meta_files, backup_name, full, include_system_space, create_time});
+    return Arrays.deepHashCode(new Object[] {space_backups, meta_files, backup_name, full, all_spaces, create_time});
   }
 
   @Override
@@ -456,11 +456,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetBackup_info()).compareTo(other.isSetBackup_info());
+    lastComparison = Boolean.valueOf(isSetSpace_backups()).compareTo(other.isSetSpace_backups());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(backup_info, other.backup_info);
+    lastComparison = TBaseHelper.compareTo(space_backups, other.space_backups);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -488,11 +488,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetInclude_system_space()).compareTo(other.isSetInclude_system_space());
+    lastComparison = Boolean.valueOf(isSetAll_spaces()).compareTo(other.isSetAll_spaces());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(include_system_space, other.include_system_space);
+    lastComparison = TBaseHelper.compareTo(all_spaces, other.all_spaces);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -518,21 +518,21 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       }
       switch (__field.id)
       {
-        case BACKUP_INFO:
+        case SPACE_BACKUPS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map256 = iprot.readMapBegin();
-              this.backup_info = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map256.size));
-              for (int _i257 = 0; 
-                   (_map256.size < 0) ? iprot.peekMap() : (_i257 < _map256.size); 
-                   ++_i257)
+              TMap _map260 = iprot.readMapBegin();
+              this.space_backups = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map260.size));
+              for (int _i261 = 0; 
+                   (_map260.size < 0) ? iprot.peekMap() : (_i261 < _map260.size); 
+                   ++_i261)
               {
-                int _key258;
-                SpaceBackupInfo _val259;
-                _key258 = iprot.readI32();
-                _val259 = new SpaceBackupInfo();
-                _val259.read(iprot);
-                this.backup_info.put(_key258, _val259);
+                int _key262;
+                SpaceBackupInfo _val263;
+                _key262 = iprot.readI32();
+                _val263 = new SpaceBackupInfo();
+                _val263.read(iprot);
+                this.space_backups.put(_key262, _val263);
               }
               iprot.readMapEnd();
             }
@@ -543,15 +543,15 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case META_FILES:
           if (__field.type == TType.LIST) {
             {
-              TList _list260 = iprot.readListBegin();
-              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list260.size));
-              for (int _i261 = 0; 
-                   (_list260.size < 0) ? iprot.peekList() : (_i261 < _list260.size); 
-                   ++_i261)
+              TList _list264 = iprot.readListBegin();
+              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list264.size));
+              for (int _i265 = 0; 
+                   (_list264.size < 0) ? iprot.peekList() : (_i265 < _list264.size); 
+                   ++_i265)
               {
-                byte[] _elem262;
-                _elem262 = iprot.readBinary();
-                this.meta_files.add(_elem262);
+                byte[] _elem266;
+                _elem266 = iprot.readBinary();
+                this.meta_files.add(_elem266);
               }
               iprot.readListEnd();
             }
@@ -574,10 +574,10 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case INCLUDE_SYSTEM_SPACE:
+        case ALL_SPACES:
           if (__field.type == TType.BOOL) {
-            this.include_system_space = iprot.readBool();
-            setInclude_system_spaceIsSet(true);
+            this.all_spaces = iprot.readBool();
+            setAll_spacesIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -607,13 +607,13 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.backup_info != null) {
-      oprot.writeFieldBegin(BACKUP_INFO_FIELD_DESC);
+    if (this.space_backups != null) {
+      oprot.writeFieldBegin(SPACE_BACKUPS_FIELD_DESC);
       {
-        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.backup_info.size()));
-        for (Map.Entry<Integer, SpaceBackupInfo> _iter263 : this.backup_info.entrySet())        {
-          oprot.writeI32(_iter263.getKey());
-          _iter263.getValue().write(oprot);
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.space_backups.size()));
+        for (Map.Entry<Integer, SpaceBackupInfo> _iter267 : this.space_backups.entrySet())        {
+          oprot.writeI32(_iter267.getKey());
+          _iter267.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -623,8 +623,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(META_FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.meta_files.size()));
-        for (byte[] _iter264 : this.meta_files)        {
-          oprot.writeBinary(_iter264);
+        for (byte[] _iter268 : this.meta_files)        {
+          oprot.writeBinary(_iter268);
         }
         oprot.writeListEnd();
       }
@@ -638,8 +638,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     oprot.writeFieldBegin(FULL_FIELD_DESC);
     oprot.writeBool(this.full);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(INCLUDE_SYSTEM_SPACE_FIELD_DESC);
-    oprot.writeBool(this.include_system_space);
+    oprot.writeFieldBegin(ALL_SPACES_FIELD_DESC);
+    oprot.writeBool(this.all_spaces);
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(CREATE_TIME_FIELD_DESC);
     oprot.writeI64(this.create_time);
@@ -665,13 +665,13 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("backup_info");
+    sb.append("space_backups");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getBackup_info() == null) {
+    if (this.getSpace_backups() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getBackup_info(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSpace_backups(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -710,10 +710,10 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("include_system_space");
+    sb.append("all_spaces");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isInclude_system_space(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.isAll_spaces(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
