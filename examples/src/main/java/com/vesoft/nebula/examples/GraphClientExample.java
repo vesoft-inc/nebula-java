@@ -7,7 +7,9 @@ package com.vesoft.nebula.examples;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.vesoft.nebula.Date;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
@@ -17,8 +19,11 @@ import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,6 +141,37 @@ public class GraphClientExample {
                 String query = "GO FROM \"Bob\" OVER like "
                         + "YIELD $^.person.name, $^.person.age, like.likeness";
                 ResultSet resp = session.execute(query);
+                if (!resp.isSucceeded()) {
+                    log.error(String.format("Execute: `%s', failed: %s",
+                            query, resp.getErrorMessage()));
+                    System.exit(1);
+                }
+                printResult(resp);
+            }
+            {
+                // prepare parameters
+                Map<String, Object> paramMap = new HashMap<String, Object>();
+                paramMap.put("p1", 3);
+                paramMap.put("p2", true);
+                paramMap.put("p3", 3.3);
+                Value nvalue = new Value();
+                Date date = new Date();
+                date.setYear((short) 2021);
+                nvalue.setDVal(date);
+                List<Object> list = new ArrayList<>();
+                list.add(1);
+                list.add(true);
+                list.add(nvalue);
+                list.add(date);
+                paramMap.put("p4", list);
+                Map<String, Object> map = new HashMap<>();
+                map.put("a", 1);
+                map.put("b", true);
+                map.put("c", nvalue);
+                map.put("d", list);
+                paramMap.put("p5", map);
+                String query = "RETURN abs($p1+1),toBoolean($p2) and false,$p3,$p4[2],$p5.d[3]";
+                ResultSet resp = session.executeWithParameter(query, paramMap);
                 if (!resp.isSucceeded()) {
                     log.error(String.format("Execute: `%s', failed: %s",
                             query, resp.getErrorMessage()));
