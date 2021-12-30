@@ -531,7 +531,7 @@ public class TestData {
             // test Duration
             valueWrapper = new ValueWrapper(new Value(Value.DUVAL, new Duration(100, 20, 1)),
                     "utf-8", 28800);
-            expectString = "P1M0DT100.00002S";
+            expectString = "P1MT100.000020000S";
             String expectDurationString = "duration({months:1, seconds:100, microseconds:20})";
             Assert.assertEquals(expectString, valueWrapper.asDuration().toString());
             Assert.assertEquals(expectDurationString,
