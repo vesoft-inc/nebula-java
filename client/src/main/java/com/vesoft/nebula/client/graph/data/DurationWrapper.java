@@ -50,10 +50,10 @@ public class DurationWrapper extends BaseDataObject {
 
     @Override
     public String toString() {
-        long year = duration.seconds / (60 * 60 * 24);
-        long remainSeconds = duration.seconds - (year) * (60 * 60 * 24);
-        return String.format("P%dM%dDT%sS",
-                duration.months, year, remainSeconds + duration.microseconds / 1000000.0);
+        long totalSeconds = duration.seconds + duration.microseconds / 1000000;
+        int remainMicroSeconds = duration.microseconds % 1000000;
+        String microSends = String.format("%06d", remainMicroSeconds) + "000";
+        return String.format("P%dMT%d.%sS", duration.months, totalSeconds, microSends);
     }
 
     @Override
