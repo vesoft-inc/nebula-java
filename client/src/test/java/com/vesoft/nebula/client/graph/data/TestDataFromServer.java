@@ -290,7 +290,7 @@ public class TestDataFromServer {
             Assert.assertEquals("duration", node.getId().asString());
             Assert.assertEquals(Arrays.asList("tag_duration"), node.tagNames());
             properties = node.properties("tag_duration");
-            DurationWrapper durationWrapper = new DurationWrapper(new Duration(1, 100, 20));
+            DurationWrapper durationWrapper = new DurationWrapper(new Duration(100, 20, 1));
             Assert.assertEquals(durationWrapper, properties.get("col").asDuration());
             Assert.assertEquals(durationWrapper.toString(),
                     properties.get("col").asDuration().toString());
