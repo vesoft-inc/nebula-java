@@ -7,6 +7,7 @@ package com.vesoft.nebula.client.storage.data;
 
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
+import com.vesoft.nebula.client.graph.data.DurationWrapper;
 import com.vesoft.nebula.client.graph.data.GeographyWrapper;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
@@ -70,6 +71,10 @@ public class BaseTableRow {
 
     public GeographyWrapper getGeography(int i) {
         return values.get(i).asGeography();
+    }
+
+    public DurationWrapper getDuration(int i) {
+        return values.get(i).asDuration();
     }
 
     public List<ValueWrapper> getValues() {
