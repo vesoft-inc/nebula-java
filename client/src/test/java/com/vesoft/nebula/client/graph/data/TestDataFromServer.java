@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Duration;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.LineString;
@@ -58,7 +59,8 @@ public class TestDataFromServer {
                 + "CREATE EDGE IF NOT EXISTS like(likeness double);"
                 + "CREATE EDGE IF NOT EXISTS friend(start_year int, end_year int);"
                 + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));"
-                + "CREATE TAG IF NOT EXISTS any_shape(geo geography);");
+                + "CREATE TAG IF NOT EXISTS any_shape(geo geography);"
+                + "CREATE TAG IF NOT EXISTS tag_duration(col duration);");
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
         TimeUnit.SECONDS.sleep(10);
         String insertVertexes = "INSERT VERTEX person(name, age, grade,friends, book_num, "
@@ -121,6 +123,11 @@ public class TestDataFromServer {
         insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':"
                 + "(ST_GeogFromText('POLYGON((0 1, 1 2, 2 3, 0 1))'));";
         resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        String insertDuration = "INSERT VERTEX tag_duration(col) VALUES 'duration':"
+                + "(duration({months:1, seconds:100, microseconds:20}));";
+        resp = session.execute(insertDuration);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
 
@@ -267,6 +274,26 @@ public class TestDataFromServer {
             Assert.assertEquals(geographyWrapper.toString(),
                     properties.get("geo").asGeography().toString());
 
+            result = session.execute(
+                    "FETCH PROP ON tag_duration 'duration' yield vertex as vertices_");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("duration", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("tag_duration"), node.tagNames());
+            properties = node.properties("tag_duration");
+            DurationWrapper durationWrapper = new DurationWrapper(new Duration(100, 20, 1));
+            Assert.assertEquals(durationWrapper, properties.get("col").asDuration());
+            Assert.assertEquals(durationWrapper.toString(),
+                    properties.get("col").asDuration().toString());
 
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
