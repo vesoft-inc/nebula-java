@@ -536,6 +536,7 @@ public class TestData {
             Assert.assertEquals(expectString, valueWrapper.asDuration().toString());
             Assert.assertEquals(expectDurationString,
                     valueWrapper.asDuration().getDurationString());
+
         } catch (Exception e) {
             e.printStackTrace();
             assert (false);
