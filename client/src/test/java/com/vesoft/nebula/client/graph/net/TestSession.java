@@ -227,7 +227,7 @@ public class TestSession {
             map.put("c", nvalue);
             map.put("d", list);
             paramMap.put("p5", map);
-            // test executeWithParameter interface
+            // test `executeWithParameter` interface
             ResultSet resp =
                     session.executeWithParameter("RETURN $p1+1,$p2,$p3,$p4[2],$p5.d[3]", paramMap);
             Assert.assertTrue(resp.isSucceeded());
