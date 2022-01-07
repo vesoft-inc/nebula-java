@@ -37,19 +37,19 @@ The v2.0.0-rc branch works with Nebula Graph v2.0.0-beta and v2.0.0-rc1, but not
 To use this Java client, do a check of  these:
 
 - Java 8 or a later version is installed.
-- Nebula Graph v2.0 is deployed. For more information, see [Deployment and installation of Nebula Graph](https://docs.nebula-graph.io/2.0/4.deployment-and-installation/1.resource-preparations/ "Click to go to Nebula Graph website").
+- Nebula Graph is deployed. For more information, see [Deployment and installation of Nebula Graph](https://docs.nebula-graph.io/master/4.deployment-and-installation/1.resource-preparations/ "Click to go to Nebula Graph website").
 
 ## Modify pom.xml
 
 If you use Maven to manage your project, add the following dependency to your `pom.xml` file. 
-Replace `2.0.0-SNAPSHOT` with an appropriate Nebula Java v2.x version. 
+Replace `3.0-SNAPSHOT` with an appropriate Nebula Java version. 
 For more versions, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ```xml
   <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
   </dependency>
 ```
 There are the version correspondence between client and Nebula:
@@ -67,11 +67,11 @@ There are the version correspondence between client and Nebula:
 |    2.5.0       |    2.5.0,2.5.1      |
 |    2.6.0       |    2.6.0,2.6.1      |
 |    2.6.1       |    2.6.0,2.6.1      |
-|  2.0.0-SNAPSHOT|       nightly       |
+|  3.0-SNAPSHOT  |       nightly       |
 
 ## Graph client example
 
-To connect to the `nebula-graphd` process of Nebula Graph v2.0:
+To connect to the `nebula-graphd` process of Nebula Graph:
 
 ```java
 NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
