@@ -241,7 +241,7 @@ public class TestSession {
             session.release();
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(e.getMessage(), false);
+            Assert.assertFalse(true);
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")
