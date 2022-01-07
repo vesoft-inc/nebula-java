@@ -67,7 +67,7 @@ There are the version correspondence between client and Nebula:
 |    2.5.0       |    2.5.0,2.5.1      |
 |    2.6.0       |    2.6.0,2.6.1      |
 |    2.6.1       |    2.6.0,2.6.1      |
-|  2.0.0-SNAPSHOT|       nightly       |
+|  3.0.0-SNAPSHOT|       nightly       |
 
 ## Graph client example
 
