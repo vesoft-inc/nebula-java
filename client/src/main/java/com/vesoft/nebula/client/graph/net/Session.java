@@ -18,6 +18,7 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ExecutionResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -95,8 +96,7 @@ public class Session {
                     "The session was released, couldn't use again.");
         }
         Map<byte[], Value> map = new HashMap<>();
-        parameterMap.entrySet().stream()
-                .forEach(x -> map.put(x.getKey().getBytes(), value2Nvalue(x.getValue())));
+        parameterMap.forEach((key, value) -> map.put(key.getBytes(), value2Nvalue(value)));
 
         if (connectionIsBroken.get() && retryConnect) {
             if (retryConnect()) {
@@ -371,7 +371,7 @@ public class Session {
      * @return nebula list
      */
     private NList list2Nlist(List<Object> list) throws UnsupportedOperationException {
-        NList nlist = new NList();
+        NList nlist = new NList(new ArrayList<Value>());
         for (Object item : list) {
             nlist.values.add(value2Nvalue(item));
         }
@@ -384,7 +384,7 @@ public class Session {
      * @return nebula map
      */
     private NMap map2Nmap(Map<String, Object> map) throws UnsupportedOperationException {
-        NMap nmap = new NMap();
+        NMap nmap = new NMap(new HashMap<byte[],Value>());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             nmap.kvs.put(entry.getKey().getBytes(), value2Nvalue(entry.getValue()));
         }

@@ -236,12 +236,12 @@ public class TestSession {
             Assert.assertTrue(row.values.get(1).equals(Value.bVal(true)));
             Assert.assertTrue(row.values.get(2).equals(Value.fVal(3.3)));
             Assert.assertTrue(row.values.get(3).equals(list.get(2)));
-            Assert.assertTrue(row.values.get(4).equals(((List)map.get("d")).get(3)));
+            Assert.assertTrue(row.values.get(4).getDVal().equals(list.get(3)));
             // release session
             session.release();
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(e.getMessage(), false);
+            Assert.assertFalse(true);
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")
