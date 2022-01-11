@@ -28,8 +28,7 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
   private static final TStruct STRUCT_DESC = new TStruct("ListClusterInfoResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField META_SERVERS_FIELD_DESC = new TField("meta_servers", TType.LIST, (short)3);
-  private static final TField STORAGE_SERVERS_FIELD_DESC = new TField("storage_servers", TType.LIST, (short)4);
+  private static final TField HOST_SERVICES_FIELD_DESC = new TField("host_services", TType.MAP, (short)3);
 
   /**
    * 
@@ -37,12 +36,10 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<com.vesoft.nebula.HostAddr> meta_servers;
-  public List<com.vesoft.nebula.NodeInfo> storage_servers;
+  public Map<String,List<ServiceInfo>> host_services;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int META_SERVERS = 3;
-  public static final int STORAGE_SERVERS = 4;
+  public static final int HOST_SERVICES = 3;
 
   // isset id assignments
 
@@ -54,12 +51,11 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(META_SERVERS, new FieldMetaData("meta_servers", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
-    tmpMetaDataMap.put(STORAGE_SERVERS, new FieldMetaData("storage_servers", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, com.vesoft.nebula.NodeInfo.class))));
+    tmpMetaDataMap.put(HOST_SERVICES, new FieldMetaData("host_services", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.STRING), 
+            new ListMetaData(TType.LIST, 
+                new StructMetaData(TType.STRUCT, ServiceInfo.class)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -73,20 +69,17 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
   public ListClusterInfoResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<com.vesoft.nebula.HostAddr> meta_servers,
-      List<com.vesoft.nebula.NodeInfo> storage_servers) {
+      Map<String,List<ServiceInfo>> host_services) {
     this();
     this.code = code;
     this.leader = leader;
-    this.meta_servers = meta_servers;
-    this.storage_servers = storage_servers;
+    this.host_services = host_services;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<com.vesoft.nebula.HostAddr> meta_servers;
-    private List<com.vesoft.nebula.NodeInfo> storage_servers;
+    private Map<String,List<ServiceInfo>> host_services;
 
     public Builder() {
     }
@@ -101,13 +94,8 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
-    public Builder setMeta_servers(final List<com.vesoft.nebula.HostAddr> meta_servers) {
-      this.meta_servers = meta_servers;
-      return this;
-    }
-
-    public Builder setStorage_servers(final List<com.vesoft.nebula.NodeInfo> storage_servers) {
-      this.storage_servers = storage_servers;
+    public Builder setHost_services(final Map<String,List<ServiceInfo>> host_services) {
+      this.host_services = host_services;
       return this;
     }
 
@@ -115,8 +103,7 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
       ListClusterInfoResp result = new ListClusterInfoResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setMeta_servers(this.meta_servers);
-      result.setStorage_servers(this.storage_servers);
+      result.setHost_services(this.host_services);
       return result;
     }
   }
@@ -135,11 +122,8 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetMeta_servers()) {
-      this.meta_servers = TBaseHelper.deepCopy(other.meta_servers);
-    }
-    if (other.isSetStorage_servers()) {
-      this.storage_servers = TBaseHelper.deepCopy(other.storage_servers);
+    if (other.isSetHost_services()) {
+      this.host_services = TBaseHelper.deepCopy(other.host_services);
     }
   }
 
@@ -203,51 +187,27 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  public List<com.vesoft.nebula.HostAddr> getMeta_servers() {
-    return this.meta_servers;
+  public Map<String,List<ServiceInfo>> getHost_services() {
+    return this.host_services;
   }
 
-  public ListClusterInfoResp setMeta_servers(List<com.vesoft.nebula.HostAddr> meta_servers) {
-    this.meta_servers = meta_servers;
+  public ListClusterInfoResp setHost_services(Map<String,List<ServiceInfo>> host_services) {
+    this.host_services = host_services;
     return this;
   }
 
-  public void unsetMeta_servers() {
-    this.meta_servers = null;
+  public void unsetHost_services() {
+    this.host_services = null;
   }
 
-  // Returns true if field meta_servers is set (has been assigned a value) and false otherwise
-  public boolean isSetMeta_servers() {
-    return this.meta_servers != null;
+  // Returns true if field host_services is set (has been assigned a value) and false otherwise
+  public boolean isSetHost_services() {
+    return this.host_services != null;
   }
 
-  public void setMeta_serversIsSet(boolean __value) {
+  public void setHost_servicesIsSet(boolean __value) {
     if (!__value) {
-      this.meta_servers = null;
-    }
-  }
-
-  public List<com.vesoft.nebula.NodeInfo> getStorage_servers() {
-    return this.storage_servers;
-  }
-
-  public ListClusterInfoResp setStorage_servers(List<com.vesoft.nebula.NodeInfo> storage_servers) {
-    this.storage_servers = storage_servers;
-    return this;
-  }
-
-  public void unsetStorage_servers() {
-    this.storage_servers = null;
-  }
-
-  // Returns true if field storage_servers is set (has been assigned a value) and false otherwise
-  public boolean isSetStorage_servers() {
-    return this.storage_servers != null;
-  }
-
-  public void setStorage_serversIsSet(boolean __value) {
-    if (!__value) {
-      this.storage_servers = null;
+      this.host_services = null;
     }
   }
 
@@ -270,19 +230,11 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
-    case META_SERVERS:
+    case HOST_SERVICES:
       if (__value == null) {
-        unsetMeta_servers();
+        unsetHost_services();
       } else {
-        setMeta_servers((List<com.vesoft.nebula.HostAddr>)__value);
-      }
-      break;
-
-    case STORAGE_SERVERS:
-      if (__value == null) {
-        unsetStorage_servers();
-      } else {
-        setStorage_servers((List<com.vesoft.nebula.NodeInfo>)__value);
+        setHost_services((Map<String,List<ServiceInfo>>)__value);
       }
       break;
 
@@ -299,11 +251,8 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
     case LEADER:
       return getLeader();
 
-    case META_SERVERS:
-      return getMeta_servers();
-
-    case STORAGE_SERVERS:
-      return getStorage_servers();
+    case HOST_SERVICES:
+      return getHost_services();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -324,16 +273,14 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetMeta_servers(), that.isSetMeta_servers(), this.meta_servers, that.meta_servers)) { return false; }
-
-    if (!TBaseHelper.equalsNobinary(this.isSetStorage_servers(), that.isSetStorage_servers(), this.storage_servers, that.storage_servers)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost_services(), that.isSetHost_services(), this.host_services, that.host_services)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, meta_servers, storage_servers});
+    return Arrays.deepHashCode(new Object[] {code, leader, host_services});
   }
 
   @Override
@@ -364,19 +311,11 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetMeta_servers()).compareTo(other.isSetMeta_servers());
+    lastComparison = Boolean.valueOf(isSetHost_services()).compareTo(other.isSetHost_services());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(meta_servers, other.meta_servers);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetStorage_servers()).compareTo(other.isSetStorage_servers());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(storage_servers, other.storage_servers);
+    lastComparison = TBaseHelper.compareTo(host_services, other.host_services);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -409,41 +348,35 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case META_SERVERS:
-          if (__field.type == TType.LIST) {
+        case HOST_SERVICES:
+          if (__field.type == TType.MAP) {
             {
-              TList _list325 = iprot.readListBegin();
-              this.meta_servers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list325.size));
-              for (int _i326 = 0; 
-                   (_list325.size < 0) ? iprot.peekList() : (_i326 < _list325.size); 
-                   ++_i326)
+              TMap _map335 = iprot.readMapBegin();
+              this.host_services = new HashMap<String,List<ServiceInfo>>(Math.max(0, 2*_map335.size));
+              for (int _i336 = 0; 
+                   (_map335.size < 0) ? iprot.peekMap() : (_i336 < _map335.size); 
+                   ++_i336)
               {
-                com.vesoft.nebula.HostAddr _elem327;
-                _elem327 = new com.vesoft.nebula.HostAddr();
-                _elem327.read(iprot);
-                this.meta_servers.add(_elem327);
+                String _key337;
+                List<ServiceInfo> _val338;
+                _key337 = iprot.readString();
+                {
+                  TList _list339 = iprot.readListBegin();
+                  _val338 = new ArrayList<ServiceInfo>(Math.max(0, _list339.size));
+                  for (int _i340 = 0; 
+                       (_list339.size < 0) ? iprot.peekList() : (_i340 < _list339.size); 
+                       ++_i340)
+                  {
+                    ServiceInfo _elem341;
+                    _elem341 = new ServiceInfo();
+                    _elem341.read(iprot);
+                    _val338.add(_elem341);
+                  }
+                  iprot.readListEnd();
+                }
+                this.host_services.put(_key337, _val338);
               }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case STORAGE_SERVERS:
-          if (__field.type == TType.LIST) {
-            {
-              TList _list328 = iprot.readListBegin();
-              this.storage_servers = new ArrayList<com.vesoft.nebula.NodeInfo>(Math.max(0, _list328.size));
-              for (int _i329 = 0; 
-                   (_list328.size < 0) ? iprot.peekList() : (_i329 < _list328.size); 
-                   ++_i329)
-              {
-                com.vesoft.nebula.NodeInfo _elem330;
-                _elem330 = new com.vesoft.nebula.NodeInfo();
-                _elem330.read(iprot);
-                this.storage_servers.add(_elem330);
-              }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -476,25 +409,21 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.meta_servers != null) {
-      oprot.writeFieldBegin(META_SERVERS_FIELD_DESC);
+    if (this.host_services != null) {
+      oprot.writeFieldBegin(HOST_SERVICES_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.meta_servers.size()));
-        for (com.vesoft.nebula.HostAddr _iter331 : this.meta_servers)        {
-          _iter331.write(oprot);
+        oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.host_services.size()));
+        for (Map.Entry<String, List<ServiceInfo>> _iter342 : this.host_services.entrySet())        {
+          oprot.writeString(_iter342.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter342.getValue().size()));
+            for (ServiceInfo _iter343 : _iter342.getValue())            {
+              _iter343.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
         }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
-    if (this.storage_servers != null) {
-      oprot.writeFieldBegin(STORAGE_SERVERS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.storage_servers.size()));
-        for (com.vesoft.nebula.NodeInfo _iter332 : this.storage_servers)        {
-          _iter332.write(oprot);
-        }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -549,24 +478,13 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("meta_servers");
+    sb.append("host_services");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getMeta_servers() == null) {
+    if (this.getHost_services() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getMeta_servers(), indent + 1, prettyPrint));
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("storage_servers");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getStorage_servers() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getStorage_servers(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost_services(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

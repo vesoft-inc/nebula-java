@@ -26,24 +26,23 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Comparable<DropCPRequest> {
   private static final TStruct STRUCT_DESC = new TStruct("DropCPRequest");
-  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
+  private static final TField SPACE_IDS_FIELD_DESC = new TField("space_ids", TType.LIST, (short)1);
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)2);
 
-  public int space_id;
+  public List<Integer> space_ids;
   public byte[] name;
-  public static final int SPACE_ID = 1;
+  public static final int SPACE_IDS = 1;
   public static final int NAME = 2;
 
   // isset id assignments
-  private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(SPACE_IDS, new FieldMetaData("space_ids", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I32))));
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -57,26 +56,22 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
   }
 
   public DropCPRequest(
-      int space_id,
+      List<Integer> space_ids,
       byte[] name) {
     this();
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+    this.space_ids = space_ids;
     this.name = name;
   }
 
   public static class Builder {
-    private int space_id;
+    private List<Integer> space_ids;
     private byte[] name;
-
-    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
 
-    public Builder setSpace_id(final int space_id) {
-      this.space_id = space_id;
-      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+    public Builder setSpace_ids(final List<Integer> space_ids) {
+      this.space_ids = space_ids;
       return this;
     }
 
@@ -87,9 +82,7 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
 
     public DropCPRequest build() {
       DropCPRequest result = new DropCPRequest();
-      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
-        result.setSpace_id(this.space_id);
-      }
+      result.setSpace_ids(this.space_ids);
       result.setName(this.name);
       return result;
     }
@@ -103,9 +96,9 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
    * Performs a deep copy on <i>other</i>.
    */
   public DropCPRequest(DropCPRequest other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.space_id = TBaseHelper.deepCopy(other.space_id);
+    if (other.isSetSpace_ids()) {
+      this.space_ids = TBaseHelper.deepCopy(other.space_ids);
+    }
     if (other.isSetName()) {
       this.name = TBaseHelper.deepCopy(other.name);
     }
@@ -115,27 +108,28 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
     return new DropCPRequest(this);
   }
 
-  public int getSpace_id() {
-    return this.space_id;
+  public List<Integer> getSpace_ids() {
+    return this.space_ids;
   }
 
-  public DropCPRequest setSpace_id(int space_id) {
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+  public DropCPRequest setSpace_ids(List<Integer> space_ids) {
+    this.space_ids = space_ids;
     return this;
   }
 
-  public void unsetSpace_id() {
-    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
+  public void unsetSpace_ids() {
+    this.space_ids = null;
   }
 
-  // Returns true if field space_id is set (has been assigned a value) and false otherwise
-  public boolean isSetSpace_id() {
-    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
+  // Returns true if field space_ids is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_ids() {
+    return this.space_ids != null;
   }
 
-  public void setSpace_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
+  public void setSpace_idsIsSet(boolean __value) {
+    if (!__value) {
+      this.space_ids = null;
+    }
   }
 
   public byte[] getName() {
@@ -162,13 +156,14 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case SPACE_ID:
+    case SPACE_IDS:
       if (__value == null) {
-        unsetSpace_id();
+        unsetSpace_ids();
       } else {
-        setSpace_id((Integer)__value);
+        setSpace_ids((List<Integer>)__value);
       }
       break;
 
@@ -187,8 +182,8 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case SPACE_ID:
-      return new Integer(getSpace_id());
+    case SPACE_IDS:
+      return getSpace_ids();
 
     case NAME:
       return getName();
@@ -208,7 +203,7 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
       return false;
     DropCPRequest that = (DropCPRequest)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetSpace_ids(), that.isSetSpace_ids(), this.space_ids, that.space_ids)) { return false; }
 
     if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
@@ -217,7 +212,7 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, name});
+    return Arrays.deepHashCode(new Object[] {space_ids, name});
   }
 
   @Override
@@ -232,11 +227,11 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    lastComparison = Boolean.valueOf(isSetSpace_ids()).compareTo(other.isSetSpace_ids());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    lastComparison = TBaseHelper.compareTo(space_ids, other.space_ids);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -262,10 +257,21 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
       }
       switch (__field.id)
       {
-        case SPACE_ID:
-          if (__field.type == TType.I32) {
-            this.space_id = iprot.readI32();
-            setSpace_idIsSet(true);
+        case SPACE_IDS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list260 = iprot.readListBegin();
+              this.space_ids = new ArrayList<Integer>(Math.max(0, _list260.size));
+              for (int _i261 = 0; 
+                   (_list260.size < 0) ? iprot.peekList() : (_i261 < _list260.size); 
+                   ++_i261)
+              {
+                int _elem262;
+                _elem262 = iprot.readI32();
+                this.space_ids.add(_elem262);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -294,9 +300,17 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
-    oprot.writeI32(this.space_id);
-    oprot.writeFieldEnd();
+    if (this.space_ids != null) {
+      oprot.writeFieldBegin(SPACE_IDS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.I32, this.space_ids.size()));
+        for (int _iter263 : this.space_ids)        {
+          oprot.writeI32(_iter263);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
     if (this.name != null) {
       oprot.writeFieldBegin(NAME_FIELD_DESC);
       oprot.writeBinary(this.name);
@@ -323,10 +337,14 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("space_id");
+    sb.append("space_ids");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
+    if (this.getSpace_ids() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getSpace_ids(), indent + 1, prettyPrint));
+    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

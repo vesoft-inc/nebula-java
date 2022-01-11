@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.examples;
@@ -62,27 +61,21 @@ public class StorageClientExample {
             if (result.isEmpty()) {
                 continue;
             }
-            System.out.println(result.getPropNames());
+
             List<VertexRow> vertexRows = result.getVertices();
             for (VertexRow row : vertexRows) {
                 if (result.getVertex(row.getVid()) != null) {
-                    System.out.println("vid : " + result.getVertex(row.getVid()));
+                    System.out.println(result.getVertex(row.getVid()));
                 }
             }
-            System.out.println(result.getVidVertices());
 
-
-            System.out.println("result vertex table view:");
+            System.out.println("\nresult vertex table view:");
+            System.out.println(result.getPropNames());
             List<VertexTableRow> vertexTableRows = result.getVertexTableRows();
             for (VertexTableRow vertex : vertexTableRows) {
-                try {
-                    System.out.println("_vid: " + vertex.getVid().asString());
-                    System.out.println(vertex.getValues());
-                } catch (UnsupportedEncodingException e) {
-                    LOGGER.error("decode String error, ", e);
-                }
+                System.out.println(vertex.getValues());
             }
-            System.out.println(result.getVertices());
+            System.out.println("\n");
         }
     }
 
@@ -109,21 +102,16 @@ public class StorageClientExample {
             if (result.isEmpty()) {
                 continue;
             }
-            System.out.println(result.getPropNames());
+
             System.out.println(result.getEdges());
 
-            System.out.println("result edge table view:");
+            System.out.println("\nresult edge table view:");
+            System.out.println(result.getPropNames());
             List<EdgeTableRow> edgeTableRows = result.getEdgeTableRows();
             for (EdgeTableRow edge : edgeTableRows) {
-                try {
-                    System.out.println("_src:" + edge.getSrcId().asString());
-                    System.out.println("_dst:" + edge.getDstId().asString());
-                } catch (UnsupportedEncodingException e) {
-                    LOGGER.error("decode String error, ", e);
-                }
-                System.out.println("_rank:" + edge.getRank());
                 System.out.println(edge.getValues());
             }
+            System.out.println("\n");
         }
     }
 }

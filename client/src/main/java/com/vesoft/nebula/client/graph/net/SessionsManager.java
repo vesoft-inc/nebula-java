@@ -1,7 +1,6 @@
 /* Copyright (c) 2021 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph.net;
@@ -9,6 +8,7 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.SessionsManagerConfig;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.net.UnknownHostException;
@@ -44,7 +44,8 @@ public class SessionsManager {
      * @return SessionWrapper
      * @throws RuntimeException the exception when get SessionWrapper
      */
-    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException {
+    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException,
+            ClientServerIncompatibleException {
         checkClose();
         if (pool == null) {
             init();

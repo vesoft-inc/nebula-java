@@ -1,6 +1,8 @@
 package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +12,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RoundRobinLoadBalancer implements LoadBalancer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoundRobinLoadBalancer.class);
     private static final int S_OK = 0;
     private static final int S_BAD = 1;
     private final List<HostAddress> addresses = new ArrayList<>();
@@ -21,6 +25,8 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private final AtomicInteger pos = new AtomicInteger(0);
     private final int delayTime = 60;  // unit seconds
     private final ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
+    private SSLParam sslParam;
+    private boolean enabledSsl;
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout) {
         this.timeout = timeout;
@@ -29,6 +35,12 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
             this.serversStatus.put(addr, S_BAD);
         }
         schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
+    }
+
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam) {
+        this(addresses,timeout);
+        this.sslParam = sslParam;
+        this.enabledSsl = true;
     }
 
     public void close() {
@@ -63,11 +75,15 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     public boolean ping(HostAddress addr) {
         try {
             Connection connection = new SyncConnection();
-            connection.open(addr, this.timeout);
+            if (enabledSsl) {
+                connection.open(addr, this.timeout, sslParam);
+            } else {
+                connection.open(addr, this.timeout);
+            }
             boolean pong = connection.ping();
             connection.close();
             return pong;
-        } catch (IOErrorException e) {
+        } catch (IOErrorException | ClientServerIncompatibleException e) {
             return false;
         }
     }
@@ -82,7 +98,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         return true;
     }
 
-    private void scheduleTask() {
+    private void scheduleTask()  {
         updateServersStatus();
     }
 }

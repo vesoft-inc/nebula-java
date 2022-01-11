@@ -27,7 +27,7 @@ import com.facebook.thrift.protocol.*;
 public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("ExecutionResponse");
   private static final TField ERROR_CODE_FIELD_DESC = new TField("error_code", TType.I32, (short)1);
-  private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I32, (short)2);
+  private static final TField LATENCY_IN_US_FIELD_DESC = new TField("latency_in_us", TType.I64, (short)2);
   private static final TField DATA_FIELD_DESC = new TField("data", TType.STRUCT, (short)3);
   private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)4);
   private static final TField ERROR_MSG_FIELD_DESC = new TField("error_msg", TType.STRING, (short)5);
@@ -39,7 +39,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
    * @see com.vesoft.nebula.ErrorCode
    */
   public com.vesoft.nebula.ErrorCode error_code;
-  public int latency_in_us;
+  public long latency_in_us;
   public com.vesoft.nebula.DataSet data;
   public byte[] space_name;
   public byte[] error_msg;
@@ -64,7 +64,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LATENCY_IN_US, new FieldMetaData("latency_in_us", TFieldRequirementType.REQUIRED, 
-        new FieldValueMetaData(TType.I32)));
+        new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.OPTIONAL, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
     tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.OPTIONAL, 
@@ -87,7 +87,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
   public ExecutionResponse(
       com.vesoft.nebula.ErrorCode error_code,
-      int latency_in_us) {
+      long latency_in_us) {
     this();
     this.error_code = error_code;
     this.latency_in_us = latency_in_us;
@@ -96,7 +96,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
   public ExecutionResponse(
       com.vesoft.nebula.ErrorCode error_code,
-      int latency_in_us,
+      long latency_in_us,
       com.vesoft.nebula.DataSet data,
       byte[] space_name,
       byte[] error_msg,
@@ -115,7 +115,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode error_code;
-    private int latency_in_us;
+    private long latency_in_us;
     private com.vesoft.nebula.DataSet data;
     private byte[] space_name;
     private byte[] error_msg;
@@ -132,7 +132,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
-    public Builder setLatency_in_us(final int latency_in_us) {
+    public Builder setLatency_in_us(final long latency_in_us) {
       this.latency_in_us = latency_in_us;
       __optional_isset.set(__LATENCY_IN_US_ISSET_ID, true);
       return this;
@@ -245,11 +245,11 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public int getLatency_in_us() {
+  public long getLatency_in_us() {
     return this.latency_in_us;
   }
 
-  public ExecutionResponse setLatency_in_us(int latency_in_us) {
+  public ExecutionResponse setLatency_in_us(long latency_in_us) {
     this.latency_in_us = latency_in_us;
     setLatency_in_usIsSet(true);
     return this;
@@ -402,7 +402,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       if (__value == null) {
         unsetLatency_in_us();
       } else {
-        setLatency_in_us((Integer)__value);
+        setLatency_in_us((Long)__value);
       }
       break;
 
@@ -457,7 +457,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       return getError_code();
 
     case LATENCY_IN_US:
-      return new Integer(getLatency_in_us());
+      return new Long(getLatency_in_us());
 
     case DATA:
       return getData();
@@ -530,8 +530,8 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
           }
           break;
         case LATENCY_IN_US:
-          if (__field.type == TType.I32) {
-            this.latency_in_us = iprot.readI32();
+          if (__field.type == TType.I64) {
+            this.latency_in_us = iprot.readI64();
             setLatency_in_usIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -600,7 +600,7 @@ public class ExecutionResponse implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(LATENCY_IN_US_FIELD_DESC);
-    oprot.writeI32(this.latency_in_us);
+    oprot.writeI64(this.latency_in_us);
     oprot.writeFieldEnd();
     if (this.data != null) {
       if (isSetData()) {

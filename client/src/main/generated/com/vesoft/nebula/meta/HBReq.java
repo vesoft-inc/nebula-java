@@ -31,7 +31,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)3);
   private static final TField LEADER_PART_IDS_FIELD_DESC = new TField("leader_partIds", TType.MAP, (short)4);
   private static final TField GIT_INFO_SHA_FIELD_DESC = new TField("git_info_sha", TType.STRING, (short)5);
-  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)6);
+  private static final TField DISK_PARTS_FIELD_DESC = new TField("disk_parts", TType.MAP, (short)6);
+  private static final TField DIR_FIELD_DESC = new TField("dir", TType.STRUCT, (short)7);
+  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)8);
 
   /**
    * 
@@ -42,13 +44,17 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public long cluster_id;
   public Map<Integer,List<LeaderInfo>> leader_partIds;
   public byte[] git_info_sha;
+  public Map<Integer,Map<byte[],PartitionList>> disk_parts;
+  public com.vesoft.nebula.DirInfo dir;
   public byte[] version;
   public static final int ROLE = 1;
   public static final int HOST = 2;
   public static final int CLUSTER_ID = 3;
   public static final int LEADER_PARTIDS = 4;
   public static final int GIT_INFO_SHA = 5;
-  public static final int VERSION = 6;
+  public static final int DISK_PARTS = 6;
+  public static final int DIR = 7;
+  public static final int VERSION = 8;
 
   // isset id assignments
   private static final int __CLUSTER_ID_ISSET_ID = 0;
@@ -71,6 +77,14 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
                 new StructMetaData(TType.STRUCT, LeaderInfo.class)))));
     tmpMetaDataMap.put(GIT_INFO_SHA, new FieldMetaData("git_info_sha", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(DISK_PARTS, new FieldMetaData("disk_parts", TFieldRequirementType.OPTIONAL, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new MapMetaData(TType.MAP, 
+                new FieldValueMetaData(TType.STRING), 
+                new StructMetaData(TType.STRUCT, PartitionList.class)))));
+    tmpMetaDataMap.put(DIR, new FieldMetaData("dir", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DirInfo.class)));
     tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -102,6 +116,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       long cluster_id,
       Map<Integer,List<LeaderInfo>> leader_partIds,
       byte[] git_info_sha,
+      Map<Integer,Map<byte[],PartitionList>> disk_parts,
+      com.vesoft.nebula.DirInfo dir,
       byte[] version) {
     this();
     this.role = role;
@@ -110,6 +126,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     setCluster_idIsSet(true);
     this.leader_partIds = leader_partIds;
     this.git_info_sha = git_info_sha;
+    this.disk_parts = disk_parts;
+    this.dir = dir;
     this.version = version;
   }
 
@@ -119,6 +137,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     private long cluster_id;
     private Map<Integer,List<LeaderInfo>> leader_partIds;
     private byte[] git_info_sha;
+    private Map<Integer,Map<byte[],PartitionList>> disk_parts;
+    private com.vesoft.nebula.DirInfo dir;
     private byte[] version;
 
     BitSet __optional_isset = new BitSet(1);
@@ -152,6 +172,16 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return this;
     }
 
+    public Builder setDisk_parts(final Map<Integer,Map<byte[],PartitionList>> disk_parts) {
+      this.disk_parts = disk_parts;
+      return this;
+    }
+
+    public Builder setDir(final com.vesoft.nebula.DirInfo dir) {
+      this.dir = dir;
+      return this;
+    }
+
     public Builder setVersion(final byte[] version) {
       this.version = version;
       return this;
@@ -166,6 +196,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       result.setLeader_partIds(this.leader_partIds);
       result.setGit_info_sha(this.git_info_sha);
+      result.setDisk_parts(this.disk_parts);
+      result.setDir(this.dir);
       result.setVersion(this.version);
       return result;
     }
@@ -193,6 +225,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
     if (other.isSetGit_info_sha()) {
       this.git_info_sha = TBaseHelper.deepCopy(other.git_info_sha);
+    }
+    if (other.isSetDisk_parts()) {
+      this.disk_parts = TBaseHelper.deepCopy(other.disk_parts);
+    }
+    if (other.isSetDir()) {
+      this.dir = TBaseHelper.deepCopy(other.dir);
     }
     if (other.isSetVersion()) {
       this.version = TBaseHelper.deepCopy(other.version);
@@ -330,6 +368,54 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
   }
 
+  public Map<Integer,Map<byte[],PartitionList>> getDisk_parts() {
+    return this.disk_parts;
+  }
+
+  public HBReq setDisk_parts(Map<Integer,Map<byte[],PartitionList>> disk_parts) {
+    this.disk_parts = disk_parts;
+    return this;
+  }
+
+  public void unsetDisk_parts() {
+    this.disk_parts = null;
+  }
+
+  // Returns true if field disk_parts is set (has been assigned a value) and false otherwise
+  public boolean isSetDisk_parts() {
+    return this.disk_parts != null;
+  }
+
+  public void setDisk_partsIsSet(boolean __value) {
+    if (!__value) {
+      this.disk_parts = null;
+    }
+  }
+
+  public com.vesoft.nebula.DirInfo getDir() {
+    return this.dir;
+  }
+
+  public HBReq setDir(com.vesoft.nebula.DirInfo dir) {
+    this.dir = dir;
+    return this;
+  }
+
+  public void unsetDir() {
+    this.dir = null;
+  }
+
+  // Returns true if field dir is set (has been assigned a value) and false otherwise
+  public boolean isSetDir() {
+    return this.dir != null;
+  }
+
+  public void setDirIsSet(boolean __value) {
+    if (!__value) {
+      this.dir = null;
+    }
+  }
+
   public byte[] getVersion() {
     return this.version;
   }
@@ -397,6 +483,22 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       break;
 
+    case DISK_PARTS:
+      if (__value == null) {
+        unsetDisk_parts();
+      } else {
+        setDisk_parts((Map<Integer,Map<byte[],PartitionList>>)__value);
+      }
+      break;
+
+    case DIR:
+      if (__value == null) {
+        unsetDir();
+      } else {
+        setDir((com.vesoft.nebula.DirInfo)__value);
+      }
+      break;
+
     case VERSION:
       if (__value == null) {
         unsetVersion();
@@ -427,6 +529,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     case GIT_INFO_SHA:
       return getGit_info_sha();
 
+    case DISK_PARTS:
+      return getDisk_parts();
+
+    case DIR:
+      return getDir();
+
     case VERSION:
       return getVersion();
 
@@ -455,6 +563,10 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     if (!TBaseHelper.equalsSlow(this.isSetGit_info_sha(), that.isSetGit_info_sha(), this.git_info_sha, that.git_info_sha)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetDisk_parts(), that.isSetDisk_parts(), this.disk_parts, that.disk_parts)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetDir(), that.isSetDir(), this.dir, that.dir)) { return false; }
+
     if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
 
     return true;
@@ -462,7 +574,7 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, version});
+    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, disk_parts, dir, version});
   }
 
   @Override
@@ -517,6 +629,22 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetDisk_parts()).compareTo(other.isSetDisk_parts());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(disk_parts, other.disk_parts);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetDir()).compareTo(other.isSetDir());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(dir, other.dir);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
     if (lastComparison != 0) {
       return lastComparison;
@@ -565,30 +693,30 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         case LEADER_PARTIDS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map140 = iprot.readMapBegin();
-              this.leader_partIds = new HashMap<Integer,List<LeaderInfo>>(Math.max(0, 2*_map140.size));
-              for (int _i141 = 0; 
-                   (_map140.size < 0) ? iprot.peekMap() : (_i141 < _map140.size); 
-                   ++_i141)
+              TMap _map156 = iprot.readMapBegin();
+              this.leader_partIds = new HashMap<Integer,List<LeaderInfo>>(Math.max(0, 2*_map156.size));
+              for (int _i157 = 0; 
+                   (_map156.size < 0) ? iprot.peekMap() : (_i157 < _map156.size); 
+                   ++_i157)
               {
-                int _key142;
-                List<LeaderInfo> _val143;
-                _key142 = iprot.readI32();
+                int _key158;
+                List<LeaderInfo> _val159;
+                _key158 = iprot.readI32();
                 {
-                  TList _list144 = iprot.readListBegin();
-                  _val143 = new ArrayList<LeaderInfo>(Math.max(0, _list144.size));
-                  for (int _i145 = 0; 
-                       (_list144.size < 0) ? iprot.peekList() : (_i145 < _list144.size); 
-                       ++_i145)
+                  TList _list160 = iprot.readListBegin();
+                  _val159 = new ArrayList<LeaderInfo>(Math.max(0, _list160.size));
+                  for (int _i161 = 0; 
+                       (_list160.size < 0) ? iprot.peekList() : (_i161 < _list160.size); 
+                       ++_i161)
                   {
-                    LeaderInfo _elem146;
-                    _elem146 = new LeaderInfo();
-                    _elem146.read(iprot);
-                    _val143.add(_elem146);
+                    LeaderInfo _elem162;
+                    _elem162 = new LeaderInfo();
+                    _elem162.read(iprot);
+                    _val159.add(_elem162);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_partIds.put(_key142, _val143);
+                this.leader_partIds.put(_key158, _val159);
               }
               iprot.readMapEnd();
             }
@@ -599,6 +727,50 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         case GIT_INFO_SHA:
           if (__field.type == TType.STRING) {
             this.git_info_sha = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case DISK_PARTS:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map163 = iprot.readMapBegin();
+              this.disk_parts = new HashMap<Integer,Map<byte[],PartitionList>>(Math.max(0, 2*_map163.size));
+              for (int _i164 = 0; 
+                   (_map163.size < 0) ? iprot.peekMap() : (_i164 < _map163.size); 
+                   ++_i164)
+              {
+                int _key165;
+                Map<byte[],PartitionList> _val166;
+                _key165 = iprot.readI32();
+                {
+                  TMap _map167 = iprot.readMapBegin();
+                  _val166 = new HashMap<byte[],PartitionList>(Math.max(0, 2*_map167.size));
+                  for (int _i168 = 0; 
+                       (_map167.size < 0) ? iprot.peekMap() : (_i168 < _map167.size); 
+                       ++_i168)
+                  {
+                    byte[] _key169;
+                    PartitionList _val170;
+                    _key169 = iprot.readBinary();
+                    _val170 = new PartitionList();
+                    _val170.read(iprot);
+                    _val166.put(_key169, _val170);
+                  }
+                  iprot.readMapEnd();
+                }
+                this.disk_parts.put(_key165, _val166);
+              }
+              iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case DIR:
+          if (__field.type == TType.STRUCT) {
+            this.dir = new com.vesoft.nebula.DirInfo();
+            this.dir.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -645,12 +817,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         oprot.writeFieldBegin(LEADER_PART_IDS_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_partIds.size()));
-          for (Map.Entry<Integer, List<LeaderInfo>> _iter147 : this.leader_partIds.entrySet())          {
-            oprot.writeI32(_iter147.getKey());
+          for (Map.Entry<Integer, List<LeaderInfo>> _iter171 : this.leader_partIds.entrySet())          {
+            oprot.writeI32(_iter171.getKey());
             {
-              oprot.writeListBegin(new TList(TType.STRUCT, _iter147.getValue().size()));
-              for (LeaderInfo _iter148 : _iter147.getValue())              {
-                _iter148.write(oprot);
+              oprot.writeListBegin(new TList(TType.STRUCT, _iter171.getValue().size()));
+              for (LeaderInfo _iter172 : _iter171.getValue())              {
+                _iter172.write(oprot);
               }
               oprot.writeListEnd();
             }
@@ -664,6 +836,34 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       oprot.writeFieldBegin(GIT_INFO_SHA_FIELD_DESC);
       oprot.writeBinary(this.git_info_sha);
       oprot.writeFieldEnd();
+    }
+    if (this.disk_parts != null) {
+      if (isSetDisk_parts()) {
+        oprot.writeFieldBegin(DISK_PARTS_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.I32, TType.MAP, this.disk_parts.size()));
+          for (Map.Entry<Integer, Map<byte[],PartitionList>> _iter173 : this.disk_parts.entrySet())          {
+            oprot.writeI32(_iter173.getKey());
+            {
+              oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, _iter173.getValue().size()));
+              for (Map.Entry<byte[], PartitionList> _iter174 : _iter173.getValue().entrySet())              {
+                oprot.writeBinary(_iter174.getKey());
+                _iter174.getValue().write(oprot);
+              }
+              oprot.writeMapEnd();
+            }
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.dir != null) {
+      if (isSetDir()) {
+        oprot.writeFieldBegin(DIR_FIELD_DESC);
+        this.dir.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     if (this.version != null) {
       if (isSetVersion()) {
@@ -758,6 +958,34 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         if (this.getGit_info_sha().length > 128) sb.append(" ...");
     }
     first = false;
+    if (isSetDisk_parts())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("disk_parts");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getDisk_parts() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getDisk_parts(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetDir())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("dir");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getDir() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getDir(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     if (isSetVersion())
     {
       if (!first) sb.append("," + newLine);

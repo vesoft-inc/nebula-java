@@ -71,6 +71,37 @@ public class TSocket extends TIOStreamTransport implements TSocketIf {
   }
 
   /**
+   * Constructor that takes an already created socket that comes alone with timeout
+   * and connectionTimeout.
+   *
+   * @param socket Already created socket object
+   * @param timeout Socket timeout
+   * @param connectionTimeout Socket connection timeout
+   * @throws TTransportException if there is an error setting up the streams
+   */
+  public TSocket(Socket socket, int timeout, int connectionTimeout) throws TTransportException {
+    socket_ = socket;
+    try {
+      socket_.setSoLinger(false, 0);
+      socket_.setTcpNoDelay(true);
+      socket_.setSoTimeout(timeout);
+      connectionTimeout_ = connectionTimeout;
+    } catch (SocketException sx) {
+      LOGGER.warn("Could not configure socket.", sx);
+    }
+
+    if (isOpen()) {
+      try {
+        inputStream_ = new BufferedInputStream(socket_.getInputStream());
+        outputStream_ = new BufferedOutputStream(socket_.getOutputStream());
+      } catch (IOException iox) {
+        close();
+        throw new TTransportException(TTransportException.NOT_OPEN, iox);
+      }
+    }
+  }
+
+  /**
    * Creates a new unconnected socket that will connect to the given host on the given port.
    *
    * @param host Remote host

@@ -1,21 +1,24 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage.scan;
 
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.client.storage.StorageConnPool;
+import com.vesoft.nebula.storage.PartitionResult;
+import com.vesoft.nebula.storage.ScanResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,5 +97,34 @@ public class ScanResultIterator {
             errorMsg.append(exceptions.get(i).getMessage());
         }
         throw new ExecuteFailedException("no parts succeed, error message: " + errorMsg.toString());
+    }
+
+    protected boolean isSuccessful(ScanResponse response) {
+        return response != null && response.result.failed_parts.size() <= 0;
+    }
+
+    protected void handleSucceedResult(AtomicInteger existSuccess, ScanResponse response,
+                                       PartScanInfo partInfo) {
+        existSuccess.addAndGet(1);
+        if (response.getCursors().get(partInfo.getPart()).next_cursor == null) {
+            partScanQueue.dropPart(partInfo);
+        } else {
+            partInfo.setCursor(response.getCursors().get(partInfo.getPart()));
+        }
+    }
+
+    protected void handleFailedResult(ScanResponse response, PartScanInfo partInfo,
+                                      List<Exception> exceptions) {
+        for (PartitionResult partResult : response.getResult().getFailed_parts()) {
+            if (partResult.code == ErrorCode.E_LEADER_CHANGED) {
+                freshLeader(spaceName, partInfo.getPart(), partResult.getLeader());
+                partInfo.setLeader(getLeader(partResult.getLeader()));
+            } else {
+                int code = partResult.getCode().getValue();
+                LOGGER.error(String.format("part scan failed, error code=%d", code));
+                partScanQueue.dropPart(partInfo);
+                exceptions.add(new Exception(String.format("part scan, error code=%d", code)));
+            }
+        }
     }
 }

@@ -31,6 +31,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField TERM_FIELD_DESC = new TField("term", TType.I64, (short)5);
   private static final TField LAST_LOG_ID_FIELD_DESC = new TField("last_log_id", TType.I64, (short)6);
   private static final TField LAST_LOG_TERM_FIELD_DESC = new TField("last_log_term", TType.I64, (short)7);
+  private static final TField IS_PRE_VOTE_FIELD_DESC = new TField("is_pre_vote", TType.BOOL, (short)8);
 
   public int space;
   public int part;
@@ -39,6 +40,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   public long term;
   public long last_log_id;
   public long last_log_term;
+  public boolean is_pre_vote;
   public static final int SPACE = 1;
   public static final int PART = 2;
   public static final int CANDIDATE_ADDR = 3;
@@ -46,6 +48,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   public static final int TERM = 5;
   public static final int LAST_LOG_ID = 6;
   public static final int LAST_LOG_TERM = 7;
+  public static final int IS_PRE_VOTE = 8;
 
   // isset id assignments
   private static final int __SPACE_ISSET_ID = 0;
@@ -54,7 +57,8 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
   private static final int __TERM_ISSET_ID = 3;
   private static final int __LAST_LOG_ID_ISSET_ID = 4;
   private static final int __LAST_LOG_TERM_ISSET_ID = 5;
-  private BitSet __isset_bit_vector = new BitSet(6);
+  private static final int __IS_PRE_VOTE_ISSET_ID = 6;
+  private BitSet __isset_bit_vector = new BitSet(7);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -74,6 +78,8 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(LAST_LOG_TERM, new FieldMetaData("last_log_term", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(IS_PRE_VOTE, new FieldMetaData("is_pre_vote", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -91,7 +97,8 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       int candidate_port,
       long term,
       long last_log_id,
-      long last_log_term) {
+      long last_log_term,
+      boolean is_pre_vote) {
     this();
     this.space = space;
     setSpaceIsSet(true);
@@ -106,6 +113,8 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     setLast_log_idIsSet(true);
     this.last_log_term = last_log_term;
     setLast_log_termIsSet(true);
+    this.is_pre_vote = is_pre_vote;
+    setIs_pre_voteIsSet(true);
   }
 
   public static class Builder {
@@ -116,8 +125,9 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     private long term;
     private long last_log_id;
     private long last_log_term;
+    private boolean is_pre_vote;
 
-    BitSet __optional_isset = new BitSet(6);
+    BitSet __optional_isset = new BitSet(7);
 
     public Builder() {
     }
@@ -163,6 +173,12 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
+    public Builder setIs_pre_vote(final boolean is_pre_vote) {
+      this.is_pre_vote = is_pre_vote;
+      __optional_isset.set(__IS_PRE_VOTE_ISSET_ID, true);
+      return this;
+    }
+
     public AskForVoteRequest build() {
       AskForVoteRequest result = new AskForVoteRequest();
       if (__optional_isset.get(__SPACE_ISSET_ID)) {
@@ -183,6 +199,9 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       }
       if (__optional_isset.get(__LAST_LOG_TERM_ISSET_ID)) {
         result.setLast_log_term(this.last_log_term);
+      }
+      if (__optional_isset.get(__IS_PRE_VOTE_ISSET_ID)) {
+        result.setIs_pre_vote(this.is_pre_vote);
       }
       return result;
     }
@@ -207,6 +226,7 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     this.term = TBaseHelper.deepCopy(other.term);
     this.last_log_id = TBaseHelper.deepCopy(other.last_log_id);
     this.last_log_term = TBaseHelper.deepCopy(other.last_log_term);
+    this.is_pre_vote = TBaseHelper.deepCopy(other.is_pre_vote);
   }
 
   public AskForVoteRequest deepCopy() {
@@ -375,6 +395,29 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__LAST_LOG_TERM_ISSET_ID, __value);
   }
 
+  public boolean isIs_pre_vote() {
+    return this.is_pre_vote;
+  }
+
+  public AskForVoteRequest setIs_pre_vote(boolean is_pre_vote) {
+    this.is_pre_vote = is_pre_vote;
+    setIs_pre_voteIsSet(true);
+    return this;
+  }
+
+  public void unsetIs_pre_vote() {
+    __isset_bit_vector.clear(__IS_PRE_VOTE_ISSET_ID);
+  }
+
+  // Returns true if field is_pre_vote is set (has been assigned a value) and false otherwise
+  public boolean isSetIs_pre_vote() {
+    return __isset_bit_vector.get(__IS_PRE_VOTE_ISSET_ID);
+  }
+
+  public void setIs_pre_voteIsSet(boolean __value) {
+    __isset_bit_vector.set(__IS_PRE_VOTE_ISSET_ID, __value);
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE:
@@ -433,6 +476,14 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
+    case IS_PRE_VOTE:
+      if (__value == null) {
+        unsetIs_pre_vote();
+      } else {
+        setIs_pre_vote((Boolean)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -460,6 +511,9 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
 
     case LAST_LOG_TERM:
       return new Long(getLast_log_term());
+
+    case IS_PRE_VOTE:
+      return new Boolean(isIs_pre_vote());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -490,12 +544,14 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
 
     if (!TBaseHelper.equalsNobinary(this.last_log_term, that.last_log_term)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.is_pre_vote, that.is_pre_vote)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, part, candidate_addr, candidate_port, term, last_log_id, last_log_term});
+    return Arrays.deepHashCode(new Object[] {space, part, candidate_addr, candidate_port, term, last_log_id, last_log_term, is_pre_vote});
   }
 
   @Override
@@ -563,6 +619,14 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(last_log_term, other.last_log_term);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetIs_pre_vote()).compareTo(other.isSetIs_pre_vote());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(is_pre_vote, other.is_pre_vote);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -635,6 +699,14 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case IS_PRE_VOTE:
+          if (__field.type == TType.BOOL) {
+            this.is_pre_vote = iprot.readBool();
+            setIs_pre_voteIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -674,6 +746,9 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(LAST_LOG_TERM_FIELD_DESC);
     oprot.writeI64(this.last_log_term);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(IS_PRE_VOTE_FIELD_DESC);
+    oprot.writeBool(this.is_pre_vote);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -746,6 +821,13 @@ public class AskForVoteRequest implements TBase, java.io.Serializable, Cloneable
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getLast_log_term(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("is_pre_vote");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isIs_pre_vote(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage;
@@ -56,7 +55,11 @@ public class StorageConnPoolFactory
     public void activateObject(HostAddress address,
                                PooledObject<GraphStorageConnection> pooledObject)
             throws Exception {
-        pooledObject.getObject().open(address, config.getTimeout());
+        pooledObject.getObject().open(
+                address,
+                config.getTimeout(),
+                config.isEnableSSL(),
+                config.getSslParam());
     }
 
     @Override

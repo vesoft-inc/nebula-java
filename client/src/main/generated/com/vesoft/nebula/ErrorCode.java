@@ -26,7 +26,7 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_TAG_PROP_NOT_FOUND(-10),
   E_ROLE_NOT_FOUND(-11),
   E_CONFIG_NOT_FOUND(-12),
-  E_GROUP_NOT_FOUND(-13),
+  E_MACHINE_NOT_FOUND(-13),
   E_ZONE_NOT_FOUND(-14),
   E_LISTENER_NOT_FOUND(-15),
   E_PART_NOT_FOUND(-16),
@@ -66,7 +66,7 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_BALANCED(-2024),
   E_NO_RUNNING_BALANCE_PLAN(-2025),
   E_NO_VALID_HOST(-2026),
-  E_CORRUPTTED_BALANCE_PLAN(-2027),
+  E_CORRUPTED_BALANCE_PLAN(-2027),
   E_NO_INVALID_BALANCE_PLAN(-2028),
   E_IMPROPER_ROLE(-2030),
   E_INVALID_PARTITION_NUM(-2031),
@@ -94,6 +94,7 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_LIST_CLUSTER_GET_ABS_PATH_FAILURE(-2071),
   E_GET_META_DIR_FAILURE(-2072),
   E_QUERY_NOT_FOUND(-2073),
+  E_AGENT_HB_FAILUE(-2074),
   E_CONSENSUS_ERROR(-3001),
   E_KEY_HAS_EXISTS(-3002),
   E_DATA_TYPE_MISMATCH(-3003),
@@ -128,6 +129,11 @@ public enum ErrorCode implements com.facebook.thrift.TEnum {
   E_USER_CANCEL(-3052),
   E_TASK_EXECUTION_FAILED(-3053),
   E_PLAN_IS_KILLED(-3060),
+  E_NO_TERM(-3070),
+  E_OUTDATED_TERM(-3071),
+  E_OUTDATED_EDGE(-3072),
+  E_WRITE_WRITE_CONFLICT(-3073),
+  E_CLIENT_SERVER_INCOMPATIBLE(-3061),
   E_UNKNOWN(-8000);
 
   private static final Map<Integer, ErrorCode> INDEXED_VALUES = new HashMap<Integer, ErrorCode>();

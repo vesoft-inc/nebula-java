@@ -277,30 +277,30 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map236 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.KeyValue>>(Math.max(0, 2*_map236.size));
-              for (int _i237 = 0; 
-                   (_map236.size < 0) ? iprot.peekMap() : (_i237 < _map236.size); 
-                   ++_i237)
+              TMap _map234 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.KeyValue>>(Math.max(0, 2*_map234.size));
+              for (int _i235 = 0; 
+                   (_map234.size < 0) ? iprot.peekMap() : (_i235 < _map234.size); 
+                   ++_i235)
               {
-                int _key238;
-                List<com.vesoft.nebula.KeyValue> _val239;
-                _key238 = iprot.readI32();
+                int _key236;
+                List<com.vesoft.nebula.KeyValue> _val237;
+                _key236 = iprot.readI32();
                 {
-                  TList _list240 = iprot.readListBegin();
-                  _val239 = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list240.size));
-                  for (int _i241 = 0; 
-                       (_list240.size < 0) ? iprot.peekList() : (_i241 < _list240.size); 
-                       ++_i241)
+                  TList _list238 = iprot.readListBegin();
+                  _val237 = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list238.size));
+                  for (int _i239 = 0; 
+                       (_list238.size < 0) ? iprot.peekList() : (_i239 < _list238.size); 
+                       ++_i239)
                   {
-                    com.vesoft.nebula.KeyValue _elem242;
-                    _elem242 = new com.vesoft.nebula.KeyValue();
-                    _elem242.read(iprot);
-                    _val239.add(_elem242);
+                    com.vesoft.nebula.KeyValue _elem240;
+                    _elem240 = new com.vesoft.nebula.KeyValue();
+                    _elem240.read(iprot);
+                    _val237.add(_elem240);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key238, _val239);
+                this.parts.put(_key236, _val237);
               }
               iprot.readMapEnd();
             }
@@ -332,12 +332,12 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.KeyValue>> _iter243 : this.parts.entrySet())        {
-          oprot.writeI32(_iter243.getKey());
+        for (Map.Entry<Integer, List<com.vesoft.nebula.KeyValue>> _iter241 : this.parts.entrySet())        {
+          oprot.writeI32(_iter241.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter243.getValue().size()));
-            for (com.vesoft.nebula.KeyValue _iter244 : _iter243.getValue())            {
-              _iter244.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter241.getValue().size()));
+            for (com.vesoft.nebula.KeyValue _iter242 : _iter241.getValue())            {
+              _iter242.write(oprot);
             }
             oprot.writeListEnd();
           }

@@ -267,15 +267,15 @@ public class DirInfo implements TBase, java.io.Serializable, Cloneable, Comparab
         case DATA:
           if (__field.type == TType.LIST) {
             {
-              TList _list48 = iprot.readListBegin();
-              this.data = new ArrayList<byte[]>(Math.max(0, _list48.size));
-              for (int _i49 = 0; 
-                   (_list48.size < 0) ? iprot.peekList() : (_i49 < _list48.size); 
-                   ++_i49)
+              TList _list60 = iprot.readListBegin();
+              this.data = new ArrayList<byte[]>(Math.max(0, _list60.size));
+              for (int _i61 = 0; 
+                   (_list60.size < 0) ? iprot.peekList() : (_i61 < _list60.size); 
+                   ++_i61)
               {
-                byte[] _elem50;
-                _elem50 = iprot.readBinary();
-                this.data.add(_elem50);
+                byte[] _elem62;
+                _elem62 = iprot.readBinary();
+                this.data.add(_elem62);
               }
               iprot.readListEnd();
             }
@@ -309,8 +309,8 @@ public class DirInfo implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeFieldBegin(DATA_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.data.size()));
-        for (byte[] _iter51 : this.data)        {
-          oprot.writeBinary(_iter51);
+        for (byte[] _iter63 : this.data)        {
+          oprot.writeBinary(_iter63);
         }
         oprot.writeListEnd();
       }

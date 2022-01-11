@@ -30,6 +30,8 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
   private static final TField SCAN_TYPE_FIELD_DESC = new TField("scan_type", TType.I32, (short)2);
   private static final TField BEGIN_VALUE_FIELD_DESC = new TField("begin_value", TType.STRUCT, (short)3);
   private static final TField END_VALUE_FIELD_DESC = new TField("end_value", TType.STRUCT, (short)4);
+  private static final TField INCLUDE_BEGIN_FIELD_DESC = new TField("include_begin", TType.BOOL, (short)5);
+  private static final TField INCLUDE_END_FIELD_DESC = new TField("include_end", TType.BOOL, (short)6);
 
   public byte[] column_name;
   /**
@@ -39,12 +41,19 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
   public ScanType scan_type;
   public com.vesoft.nebula.Value begin_value;
   public com.vesoft.nebula.Value end_value;
+  public boolean include_begin;
+  public boolean include_end;
   public static final int COLUMN_NAME = 1;
   public static final int SCAN_TYPE = 2;
   public static final int BEGIN_VALUE = 3;
   public static final int END_VALUE = 4;
+  public static final int INCLUDE_BEGIN = 5;
+  public static final int INCLUDE_END = 6;
 
   // isset id assignments
+  private static final int __INCLUDE_BEGIN_ISSET_ID = 0;
+  private static final int __INCLUDE_END_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -58,6 +67,10 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
     tmpMetaDataMap.put(END_VALUE, new FieldMetaData("end_value", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)));
+    tmpMetaDataMap.put(INCLUDE_BEGIN, new FieldMetaData("include_begin", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(INCLUDE_END, new FieldMetaData("include_end", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -66,18 +79,28 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
   }
 
   public IndexColumnHint() {
+    this.include_begin = true;
+
+    this.include_end = false;
+
   }
 
   public IndexColumnHint(
       byte[] column_name,
       ScanType scan_type,
       com.vesoft.nebula.Value begin_value,
-      com.vesoft.nebula.Value end_value) {
+      com.vesoft.nebula.Value end_value,
+      boolean include_begin,
+      boolean include_end) {
     this();
     this.column_name = column_name;
     this.scan_type = scan_type;
     this.begin_value = begin_value;
     this.end_value = end_value;
+    this.include_begin = include_begin;
+    setInclude_beginIsSet(true);
+    this.include_end = include_end;
+    setInclude_endIsSet(true);
   }
 
   public static class Builder {
@@ -85,6 +108,10 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     private ScanType scan_type;
     private com.vesoft.nebula.Value begin_value;
     private com.vesoft.nebula.Value end_value;
+    private boolean include_begin;
+    private boolean include_end;
+
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
@@ -109,12 +136,30 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
+    public Builder setInclude_begin(final boolean include_begin) {
+      this.include_begin = include_begin;
+      __optional_isset.set(__INCLUDE_BEGIN_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setInclude_end(final boolean include_end) {
+      this.include_end = include_end;
+      __optional_isset.set(__INCLUDE_END_ISSET_ID, true);
+      return this;
+    }
+
     public IndexColumnHint build() {
       IndexColumnHint result = new IndexColumnHint();
       result.setColumn_name(this.column_name);
       result.setScan_type(this.scan_type);
       result.setBegin_value(this.begin_value);
       result.setEnd_value(this.end_value);
+      if (__optional_isset.get(__INCLUDE_BEGIN_ISSET_ID)) {
+        result.setInclude_begin(this.include_begin);
+      }
+      if (__optional_isset.get(__INCLUDE_END_ISSET_ID)) {
+        result.setInclude_end(this.include_end);
+      }
       return result;
     }
   }
@@ -127,6 +172,8 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
    * Performs a deep copy on <i>other</i>.
    */
   public IndexColumnHint(IndexColumnHint other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetColumn_name()) {
       this.column_name = TBaseHelper.deepCopy(other.column_name);
     }
@@ -139,6 +186,8 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     if (other.isSetEnd_value()) {
       this.end_value = TBaseHelper.deepCopy(other.end_value);
     }
+    this.include_begin = TBaseHelper.deepCopy(other.include_begin);
+    this.include_end = TBaseHelper.deepCopy(other.include_end);
   }
 
   public IndexColumnHint deepCopy() {
@@ -249,6 +298,52 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public boolean isInclude_begin() {
+    return this.include_begin;
+  }
+
+  public IndexColumnHint setInclude_begin(boolean include_begin) {
+    this.include_begin = include_begin;
+    setInclude_beginIsSet(true);
+    return this;
+  }
+
+  public void unsetInclude_begin() {
+    __isset_bit_vector.clear(__INCLUDE_BEGIN_ISSET_ID);
+  }
+
+  // Returns true if field include_begin is set (has been assigned a value) and false otherwise
+  public boolean isSetInclude_begin() {
+    return __isset_bit_vector.get(__INCLUDE_BEGIN_ISSET_ID);
+  }
+
+  public void setInclude_beginIsSet(boolean __value) {
+    __isset_bit_vector.set(__INCLUDE_BEGIN_ISSET_ID, __value);
+  }
+
+  public boolean isInclude_end() {
+    return this.include_end;
+  }
+
+  public IndexColumnHint setInclude_end(boolean include_end) {
+    this.include_end = include_end;
+    setInclude_endIsSet(true);
+    return this;
+  }
+
+  public void unsetInclude_end() {
+    __isset_bit_vector.clear(__INCLUDE_END_ISSET_ID);
+  }
+
+  // Returns true if field include_end is set (has been assigned a value) and false otherwise
+  public boolean isSetInclude_end() {
+    return __isset_bit_vector.get(__INCLUDE_END_ISSET_ID);
+  }
+
+  public void setInclude_endIsSet(boolean __value) {
+    __isset_bit_vector.set(__INCLUDE_END_ISSET_ID, __value);
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case COLUMN_NAME:
@@ -283,6 +378,22 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case INCLUDE_BEGIN:
+      if (__value == null) {
+        unsetInclude_begin();
+      } else {
+        setInclude_begin((Boolean)__value);
+      }
+      break;
+
+    case INCLUDE_END:
+      if (__value == null) {
+        unsetInclude_end();
+      } else {
+        setInclude_end((Boolean)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -301,6 +412,12 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
 
     case END_VALUE:
       return getEnd_value();
+
+    case INCLUDE_BEGIN:
+      return new Boolean(isInclude_begin());
+
+    case INCLUDE_END:
+      return new Boolean(isInclude_end());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -325,12 +442,16 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsNobinary(this.isSetEnd_value(), that.isSetEnd_value(), this.end_value, that.end_value)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.include_begin, that.include_begin)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.include_end, that.include_end)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {column_name, scan_type, begin_value, end_value});
+    return Arrays.deepHashCode(new Object[] {column_name, scan_type, begin_value, end_value, include_begin, include_end});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -374,6 +495,22 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case INCLUDE_BEGIN:
+          if (__field.type == TType.BOOL) {
+            this.include_begin = iprot.readBool();
+            setInclude_beginIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case INCLUDE_END:
+          if (__field.type == TType.BOOL) {
+            this.include_end = iprot.readBool();
+            setInclude_endIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -411,6 +548,12 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
       this.end_value.write(oprot);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(INCLUDE_BEGIN_FIELD_DESC);
+    oprot.writeBool(this.include_begin);
+    oprot.writeFieldEnd();
+    oprot.writeFieldBegin(INCLUDE_END_FIELD_DESC);
+    oprot.writeBool(this.include_end);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -486,6 +629,20 @@ public class IndexColumnHint implements TBase, java.io.Serializable, Cloneable {
     } else {
       sb.append(TBaseHelper.toString(this.getEnd_value(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("include_begin");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isInclude_begin(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("include_end");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isInclude_end(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
