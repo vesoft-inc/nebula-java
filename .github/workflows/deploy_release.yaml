@@ -1,4 +1,4 @@
-name: Deploy release to the Maven Central Repository
+name: release
 
 on:
   release:
