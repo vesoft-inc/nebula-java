@@ -18,6 +18,6 @@ import java.util.Arrays;
 @SuppressWarnings({ "unused" })
 public class Constants {
 
-  public static final byte[] version = "2.6.0".getBytes();
+  public static final byte[] version = "3.0.0".getBytes();
 
 }

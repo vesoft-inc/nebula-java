@@ -28,9 +28,9 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
   public static final int ERROR_CODE = 1;
 
   // isset id assignments
@@ -52,18 +52,18 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
   }
 
   public SendSnapshotResponse(
-      ErrorCode error_code) {
+      com.vesoft.nebula.ErrorCode error_code) {
     this();
     this.error_code = error_code;
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
 
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
       return this;
     }
@@ -94,17 +94,17 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public SendSnapshotResponse setError_code(ErrorCode error_code) {
+  public SendSnapshotResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -130,7 +130,7 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -205,7 +205,7 @@ public class SendSnapshotResponse implements TBase, java.io.Serializable, Clonea
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

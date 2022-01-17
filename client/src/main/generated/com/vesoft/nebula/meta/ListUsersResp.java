@@ -350,17 +350,17 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
         case USERS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map195 = iprot.readMapBegin();
-              this.users = new HashMap<byte[],byte[]>(Math.max(0, 2*_map195.size));
-              for (int _i196 = 0; 
-                   (_map195.size < 0) ? iprot.peekMap() : (_i196 < _map195.size); 
-                   ++_i196)
+              TMap _map199 = iprot.readMapBegin();
+              this.users = new HashMap<byte[],byte[]>(Math.max(0, 2*_map199.size));
+              for (int _i200 = 0; 
+                   (_map199.size < 0) ? iprot.peekMap() : (_i200 < _map199.size); 
+                   ++_i200)
               {
-                byte[] _key197;
-                byte[] _val198;
-                _key197 = iprot.readBinary();
-                _val198 = iprot.readBinary();
-                this.users.put(_key197, _val198);
+                byte[] _key201;
+                byte[] _val202;
+                _key201 = iprot.readBinary();
+                _val202 = iprot.readBinary();
+                this.users.put(_key201, _val202);
               }
               iprot.readMapEnd();
             }
@@ -399,9 +399,9 @@ public class ListUsersResp implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(USERS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.STRING, this.users.size()));
-        for (Map.Entry<byte[], byte[]> _iter199 : this.users.entrySet())        {
-          oprot.writeBinary(_iter199.getKey());
-          oprot.writeBinary(_iter199.getValue());
+        for (Map.Entry<byte[], byte[]> _iter203 : this.users.entrySet())        {
+          oprot.writeBinary(_iter203.getKey());
+          oprot.writeBinary(_iter203.getValue());
         }
         oprot.writeMapEnd();
       }

@@ -27,7 +27,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
   private static final TField SPACE_FIELD_DESC = new TField("space", TType.I32, (short)1);
   private static final TField PART_FIELD_DESC = new TField("part", TType.I32, (short)2);
   private static final TField CURRENT_TERM_FIELD_DESC = new TField("current_term", TType.I64, (short)3);
-  private static final TField LAST_LOG_ID_FIELD_DESC = new TField("last_log_id", TType.I64, (short)4);
   private static final TField COMMITTED_LOG_ID_FIELD_DESC = new TField("committed_log_id", TType.I64, (short)5);
   private static final TField LEADER_ADDR_FIELD_DESC = new TField("leader_addr", TType.STRING, (short)6);
   private static final TField LEADER_PORT_FIELD_DESC = new TField("leader_port", TType.I32, (short)7);
@@ -37,7 +36,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
   public int space;
   public int part;
   public long current_term;
-  public long last_log_id;
   public long committed_log_id;
   public String leader_addr;
   public int leader_port;
@@ -46,7 +44,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
   public static final int SPACE = 1;
   public static final int PART = 2;
   public static final int CURRENT_TERM = 3;
-  public static final int LAST_LOG_ID = 4;
   public static final int COMMITTED_LOG_ID = 5;
   public static final int LEADER_ADDR = 6;
   public static final int LEADER_PORT = 7;
@@ -57,12 +54,11 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
   private static final int __SPACE_ISSET_ID = 0;
   private static final int __PART_ISSET_ID = 1;
   private static final int __CURRENT_TERM_ISSET_ID = 2;
-  private static final int __LAST_LOG_ID_ISSET_ID = 3;
-  private static final int __COMMITTED_LOG_ID_ISSET_ID = 4;
-  private static final int __LEADER_PORT_ISSET_ID = 5;
-  private static final int __LAST_LOG_TERM_SENT_ISSET_ID = 6;
-  private static final int __LAST_LOG_ID_SENT_ISSET_ID = 7;
-  private BitSet __isset_bit_vector = new BitSet(8);
+  private static final int __COMMITTED_LOG_ID_ISSET_ID = 3;
+  private static final int __LEADER_PORT_ISSET_ID = 4;
+  private static final int __LAST_LOG_TERM_SENT_ISSET_ID = 5;
+  private static final int __LAST_LOG_ID_SENT_ISSET_ID = 6;
+  private BitSet __isset_bit_vector = new BitSet(7);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -73,8 +69,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     tmpMetaDataMap.put(PART, new FieldMetaData("part", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(CURRENT_TERM, new FieldMetaData("current_term", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(LAST_LOG_ID, new FieldMetaData("last_log_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(COMMITTED_LOG_ID, new FieldMetaData("committed_log_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
@@ -100,7 +94,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
       int space,
       int part,
       long current_term,
-      long last_log_id,
       long committed_log_id,
       String leader_addr,
       int leader_port,
@@ -113,8 +106,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     setPartIsSet(true);
     this.current_term = current_term;
     setCurrent_termIsSet(true);
-    this.last_log_id = last_log_id;
-    setLast_log_idIsSet(true);
     this.committed_log_id = committed_log_id;
     setCommitted_log_idIsSet(true);
     this.leader_addr = leader_addr;
@@ -130,14 +121,13 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     private int space;
     private int part;
     private long current_term;
-    private long last_log_id;
     private long committed_log_id;
     private String leader_addr;
     private int leader_port;
     private long last_log_term_sent;
     private long last_log_id_sent;
 
-    BitSet __optional_isset = new BitSet(8);
+    BitSet __optional_isset = new BitSet(7);
 
     public Builder() {
     }
@@ -157,12 +147,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     public Builder setCurrent_term(final long current_term) {
       this.current_term = current_term;
       __optional_isset.set(__CURRENT_TERM_ISSET_ID, true);
-      return this;
-    }
-
-    public Builder setLast_log_id(final long last_log_id) {
-      this.last_log_id = last_log_id;
-      __optional_isset.set(__LAST_LOG_ID_ISSET_ID, true);
       return this;
     }
 
@@ -206,9 +190,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
       if (__optional_isset.get(__CURRENT_TERM_ISSET_ID)) {
         result.setCurrent_term(this.current_term);
       }
-      if (__optional_isset.get(__LAST_LOG_ID_ISSET_ID)) {
-        result.setLast_log_id(this.last_log_id);
-      }
       if (__optional_isset.get(__COMMITTED_LOG_ID_ISSET_ID)) {
         result.setCommitted_log_id(this.committed_log_id);
       }
@@ -239,7 +220,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     this.space = TBaseHelper.deepCopy(other.space);
     this.part = TBaseHelper.deepCopy(other.part);
     this.current_term = TBaseHelper.deepCopy(other.current_term);
-    this.last_log_id = TBaseHelper.deepCopy(other.last_log_id);
     this.committed_log_id = TBaseHelper.deepCopy(other.committed_log_id);
     if (other.isSetLeader_addr()) {
       this.leader_addr = TBaseHelper.deepCopy(other.leader_addr);
@@ -320,29 +300,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
 
   public void setCurrent_termIsSet(boolean __value) {
     __isset_bit_vector.set(__CURRENT_TERM_ISSET_ID, __value);
-  }
-
-  public long getLast_log_id() {
-    return this.last_log_id;
-  }
-
-  public HeartbeatRequest setLast_log_id(long last_log_id) {
-    this.last_log_id = last_log_id;
-    setLast_log_idIsSet(true);
-    return this;
-  }
-
-  public void unsetLast_log_id() {
-    __isset_bit_vector.clear(__LAST_LOG_ID_ISSET_ID);
-  }
-
-  // Returns true if field last_log_id is set (has been assigned a value) and false otherwise
-  public boolean isSetLast_log_id() {
-    return __isset_bit_vector.get(__LAST_LOG_ID_ISSET_ID);
-  }
-
-  public void setLast_log_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__LAST_LOG_ID_ISSET_ID, __value);
   }
 
   public long getCommitted_log_id() {
@@ -487,14 +444,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
       }
       break;
 
-    case LAST_LOG_ID:
-      if (__value == null) {
-        unsetLast_log_id();
-      } else {
-        setLast_log_id((Long)__value);
-      }
-      break;
-
     case COMMITTED_LOG_ID:
       if (__value == null) {
         unsetCommitted_log_id();
@@ -551,9 +500,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     case CURRENT_TERM:
       return new Long(getCurrent_term());
 
-    case LAST_LOG_ID:
-      return new Long(getLast_log_id());
-
     case COMMITTED_LOG_ID:
       return new Long(getCommitted_log_id());
 
@@ -590,8 +536,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
 
     if (!TBaseHelper.equalsNobinary(this.current_term, that.current_term)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.last_log_id, that.last_log_id)) { return false; }
-
     if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader_addr(), that.isSetLeader_addr(), this.leader_addr, that.leader_addr)) { return false; }
@@ -607,7 +551,7 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, part, current_term, last_log_id, committed_log_id, leader_addr, leader_port, last_log_term_sent, last_log_id_sent});
+    return Arrays.deepHashCode(new Object[] {space, part, current_term, committed_log_id, leader_addr, leader_port, last_log_term_sent, last_log_id_sent});
   }
 
   @Override
@@ -643,14 +587,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(current_term, other.current_term);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetLast_log_id()).compareTo(other.isSetLast_log_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(last_log_id, other.last_log_id);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -732,14 +668,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case LAST_LOG_ID:
-          if (__field.type == TType.I64) {
-            this.last_log_id = iprot.readI64();
-            setLast_log_idIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         case COMMITTED_LOG_ID:
           if (__field.type == TType.I64) {
             this.committed_log_id = iprot.readI64();
@@ -805,9 +733,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     oprot.writeFieldBegin(CURRENT_TERM_FIELD_DESC);
     oprot.writeI64(this.current_term);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(LAST_LOG_ID_FIELD_DESC);
-    oprot.writeI64(this.last_log_id);
-    oprot.writeFieldEnd();
     oprot.writeFieldBegin(COMMITTED_LOG_ID_FIELD_DESC);
     oprot.writeI64(this.committed_log_id);
     oprot.writeFieldEnd();
@@ -864,13 +789,6 @@ public class HeartbeatRequest implements TBase, java.io.Serializable, Cloneable,
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getCurrent_term(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("last_log_id");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getLast_log_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

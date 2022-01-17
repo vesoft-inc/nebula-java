@@ -260,15 +260,15 @@ public class MergeZoneReq implements TBase, java.io.Serializable, Cloneable, Com
         case ZONES:
           if (__field.type == TType.LIST) {
             {
-              TList _list224 = iprot.readListBegin();
-              this.zones = new ArrayList<byte[]>(Math.max(0, _list224.size));
-              for (int _i225 = 0; 
-                   (_list224.size < 0) ? iprot.peekList() : (_i225 < _list224.size); 
-                   ++_i225)
+              TList _list228 = iprot.readListBegin();
+              this.zones = new ArrayList<byte[]>(Math.max(0, _list228.size));
+              for (int _i229 = 0; 
+                   (_list228.size < 0) ? iprot.peekList() : (_i229 < _list228.size); 
+                   ++_i229)
               {
-                byte[] _elem226;
-                _elem226 = iprot.readBinary();
-                this.zones.add(_elem226);
+                byte[] _elem230;
+                _elem230 = iprot.readBinary();
+                this.zones.add(_elem230);
               }
               iprot.readListEnd();
             }
@@ -304,8 +304,8 @@ public class MergeZoneReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(ZONES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.zones.size()));
-        for (byte[] _iter227 : this.zones)        {
-          oprot.writeBinary(_iter227);
+        for (byte[] _iter231 : this.zones)        {
+          oprot.writeBinary(_iter231);
         }
         oprot.writeListEnd();
       }

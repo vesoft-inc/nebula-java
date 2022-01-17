@@ -35,9 +35,9 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
   /**
    * 
    * @see Role
@@ -101,7 +101,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
   }
 
   public GetStateResponse(
-      ErrorCode error_code,
+      com.vesoft.nebula.ErrorCode error_code,
       Role role,
       long term,
       boolean is_leader,
@@ -126,7 +126,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
     private Role role;
     private long term;
     private boolean is_leader;
@@ -140,7 +140,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
       return this;
     }
@@ -241,17 +241,17 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public GetStateResponse setError_code(ErrorCode error_code) {
+  public GetStateResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -456,7 +456,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -678,7 +678,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

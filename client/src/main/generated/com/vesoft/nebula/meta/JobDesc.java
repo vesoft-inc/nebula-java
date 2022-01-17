@@ -558,15 +558,15 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
         case PARAS:
           if (__field.type == TType.LIST) {
             {
-              TList _list34 = iprot.readListBegin();
-              this.paras = new ArrayList<String>(Math.max(0, _list34.size));
-              for (int _i35 = 0; 
-                   (_list34.size < 0) ? iprot.peekList() : (_i35 < _list34.size); 
-                   ++_i35)
+              TList _list38 = iprot.readListBegin();
+              this.paras = new ArrayList<String>(Math.max(0, _list38.size));
+              for (int _i39 = 0; 
+                   (_list38.size < 0) ? iprot.peekList() : (_i39 < _list38.size); 
+                   ++_i39)
               {
-                String _elem36;
-                _elem36 = iprot.readString();
-                this.paras.add(_elem36);
+                String _elem40;
+                _elem40 = iprot.readString();
+                this.paras.add(_elem40);
               }
               iprot.readListEnd();
             }
@@ -626,8 +626,8 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeFieldBegin(PARAS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.paras.size()));
-        for (String _iter37 : this.paras)        {
-          oprot.writeString(_iter37);
+        for (String _iter41 : this.paras)        {
+          oprot.writeString(_iter41);
         }
         oprot.writeListEnd();
       }

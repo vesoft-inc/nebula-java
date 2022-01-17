@@ -35,6 +35,8 @@ public class InternalStorageService {
 
     public UpdateResponse chainUpdateEdge(ChainUpdateEdgeRequest req) throws TException;
 
+    public ExecResponse chainDeleteEdges(ChainDeleteEdgesRequest req) throws TException;
+
   }
 
   public interface AsyncIface {
@@ -42,6 +44,8 @@ public class InternalStorageService {
     public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -164,6 +168,51 @@ public class InternalStorageService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainUpdateEdge failed: unknown result");
     }
 
+    public ExecResponse chainDeleteEdges(ChainDeleteEdgesRequest req) throws TException
+    {
+      ContextStack ctx = getContextStack("InternalStorageService.chainDeleteEdges", null);
+      this.setContextStack(ctx);
+      send_chainDeleteEdges(req);
+      return recv_chainDeleteEdges();
+    }
+
+    public void send_chainDeleteEdges(ChainDeleteEdgesRequest req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "InternalStorageService.chainDeleteEdges", null);
+      oprot_.writeMessageBegin(new TMessage("chainDeleteEdges", TMessageType.CALL, seqid_));
+      chainDeleteEdges_args args = new chainDeleteEdges_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "InternalStorageService.chainDeleteEdges", args);
+      return;
+    }
+
+    public ExecResponse recv_chainDeleteEdges() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "InternalStorageService.chainDeleteEdges");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      chainDeleteEdges_result result = new chainDeleteEdges_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "InternalStorageService.chainDeleteEdges", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainDeleteEdges failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -182,17 +231,17 @@ public class InternalStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler529) throws TException {
+    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler539) throws TException {
       checkReady();
-      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler529, this, ___protocolFactory, ___transport);
+      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler539, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainAddEdges_call extends TAsyncMethodCall {
       private ChainAddEdgesRequest req;
-      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler530, TAsyncClient client526, TProtocolFactory protocolFactory527, TNonblockingTransport transport528) throws TException {
-        super(client526, protocolFactory527, transport528, resultHandler530, false);
+      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler540, TAsyncClient client536, TProtocolFactory protocolFactory537, TNonblockingTransport transport538) throws TException {
+        super(client536, protocolFactory537, transport538, resultHandler540, false);
         this.req = req;
       }
 
@@ -214,17 +263,17 @@ public class InternalStorageService {
       }
     }
 
-    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler534) throws TException {
+    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler544) throws TException {
       checkReady();
-      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler534, this, ___protocolFactory, ___transport);
+      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler544, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainUpdateEdge_call extends TAsyncMethodCall {
       private ChainUpdateEdgeRequest req;
-      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler535, TAsyncClient client531, TProtocolFactory protocolFactory532, TNonblockingTransport transport533) throws TException {
-        super(client531, protocolFactory532, transport533, resultHandler535, false);
+      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler545, TAsyncClient client541, TProtocolFactory protocolFactory542, TNonblockingTransport transport543) throws TException {
+        super(client541, protocolFactory542, transport543, resultHandler545, false);
         this.req = req;
       }
 
@@ -246,6 +295,38 @@ public class InternalStorageService {
       }
     }
 
+    public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler549) throws TException {
+      checkReady();
+      chainDeleteEdges_call method_call = new chainDeleteEdges_call(req, resultHandler549, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class chainDeleteEdges_call extends TAsyncMethodCall {
+      private ChainDeleteEdgesRequest req;
+      public chainDeleteEdges_call(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler550, TAsyncClient client546, TProtocolFactory protocolFactory547, TNonblockingTransport transport548) throws TException {
+        super(client546, protocolFactory547, transport548, resultHandler550, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("chainDeleteEdges", TMessageType.CALL, 0));
+        chainDeleteEdges_args args = new chainDeleteEdges_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ExecResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_chainDeleteEdges();
+      }
+    }
+
   }
 
   public static class Processor implements TProcessor {
@@ -256,6 +337,7 @@ public class InternalStorageService {
       event_handler_ = new TProcessorEventHandler(); // Empty handler
       processMap_.put("chainAddEdges", new chainAddEdges());
       processMap_.put("chainUpdateEdge", new chainUpdateEdge());
+      processMap_.put("chainDeleteEdges", new chainDeleteEdges());
     }
 
     protected static interface ProcessFunction {
@@ -326,6 +408,27 @@ public class InternalStorageService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "InternalStorageService.chainUpdateEdge", result);
+      }
+
+    }
+
+    private class chainDeleteEdges implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("InternalStorageService.chainDeleteEdges", server_ctx);
+        chainDeleteEdges_args args = new chainDeleteEdges_args();
+        event_handler_.preRead(handler_ctx, "InternalStorageService.chainDeleteEdges");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "InternalStorageService.chainDeleteEdges", args);
+        chainDeleteEdges_result result = new chainDeleteEdges_result();
+        result.success = iface_.chainDeleteEdges(args.req);
+        event_handler_.preWrite(handler_ctx, "InternalStorageService.chainDeleteEdges", result);
+        oprot.writeMessageBegin(new TMessage("chainDeleteEdges", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "InternalStorageService.chainDeleteEdges", result);
       }
 
     }
@@ -1107,6 +1210,418 @@ public class InternalStorageService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("chainUpdateEdge_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class chainDeleteEdges_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("chainDeleteEdges_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public ChainDeleteEdgesRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ChainDeleteEdgesRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(chainDeleteEdges_args.class, metaDataMap);
+    }
+
+    public chainDeleteEdges_args() {
+    }
+
+    public chainDeleteEdges_args(
+        ChainDeleteEdgesRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public chainDeleteEdges_args(chainDeleteEdges_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public chainDeleteEdges_args deepCopy() {
+      return new chainDeleteEdges_args(this);
+    }
+
+    public ChainDeleteEdgesRequest getReq() {
+      return this.req;
+    }
+
+    public chainDeleteEdges_args setReq(ChainDeleteEdgesRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((ChainDeleteEdgesRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof chainDeleteEdges_args))
+        return false;
+      chainDeleteEdges_args that = (chainDeleteEdges_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new ChainDeleteEdgesRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("chainDeleteEdges_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class chainDeleteEdges_result implements TBase, java.io.Serializable, Cloneable, Comparable<chainDeleteEdges_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("chainDeleteEdges_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ExecResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ExecResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(chainDeleteEdges_result.class, metaDataMap);
+    }
+
+    public chainDeleteEdges_result() {
+    }
+
+    public chainDeleteEdges_result(
+        ExecResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public chainDeleteEdges_result(chainDeleteEdges_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public chainDeleteEdges_result deepCopy() {
+      return new chainDeleteEdges_result(this);
+    }
+
+    public ExecResponse getSuccess() {
+      return this.success;
+    }
+
+    public chainDeleteEdges_result setSuccess(ExecResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ExecResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof chainDeleteEdges_result))
+        return false;
+      chainDeleteEdges_result that = (chainDeleteEdges_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(chainDeleteEdges_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new ExecResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("chainDeleteEdges_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

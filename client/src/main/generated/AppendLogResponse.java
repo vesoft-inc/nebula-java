@@ -29,34 +29,34 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
   private static final TField LEADER_ADDR_FIELD_DESC = new TField("leader_addr", TType.STRING, (short)3);
   private static final TField LEADER_PORT_FIELD_DESC = new TField("leader_port", TType.I32, (short)4);
   private static final TField COMMITTED_LOG_ID_FIELD_DESC = new TField("committed_log_id", TType.I64, (short)5);
-  private static final TField LAST_LOG_ID_FIELD_DESC = new TField("last_log_id", TType.I64, (short)6);
-  private static final TField LAST_LOG_TERM_FIELD_DESC = new TField("last_log_term", TType.I64, (short)7);
+  private static final TField LAST_MATCHED_LOG_ID_FIELD_DESC = new TField("last_matched_log_id", TType.I64, (short)6);
+  private static final TField LAST_MATCHED_LOG_TERM_FIELD_DESC = new TField("last_matched_log_term", TType.I64, (short)7);
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
   public long current_term;
   public String leader_addr;
   public int leader_port;
   public long committed_log_id;
-  public long last_log_id;
-  public long last_log_term;
+  public long last_matched_log_id;
+  public long last_matched_log_term;
   public static final int ERROR_CODE = 1;
   public static final int CURRENT_TERM = 2;
   public static final int LEADER_ADDR = 3;
   public static final int LEADER_PORT = 4;
   public static final int COMMITTED_LOG_ID = 5;
-  public static final int LAST_LOG_ID = 6;
-  public static final int LAST_LOG_TERM = 7;
+  public static final int LAST_MATCHED_LOG_ID = 6;
+  public static final int LAST_MATCHED_LOG_TERM = 7;
 
   // isset id assignments
   private static final int __CURRENT_TERM_ISSET_ID = 0;
   private static final int __LEADER_PORT_ISSET_ID = 1;
   private static final int __COMMITTED_LOG_ID_ISSET_ID = 2;
-  private static final int __LAST_LOG_ID_ISSET_ID = 3;
-  private static final int __LAST_LOG_TERM_ISSET_ID = 4;
+  private static final int __LAST_MATCHED_LOG_ID_ISSET_ID = 3;
+  private static final int __LAST_MATCHED_LOG_TERM_ISSET_ID = 4;
   private BitSet __isset_bit_vector = new BitSet(5);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
@@ -73,9 +73,9 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(COMMITTED_LOG_ID, new FieldMetaData("committed_log_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(LAST_LOG_ID, new FieldMetaData("last_log_id", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(LAST_MATCHED_LOG_ID, new FieldMetaData("last_matched_log_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
-    tmpMetaDataMap.put(LAST_LOG_TERM, new FieldMetaData("last_log_term", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(LAST_MATCHED_LOG_TERM, new FieldMetaData("last_matched_log_term", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -88,13 +88,13 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public AppendLogResponse(
-      ErrorCode error_code,
+      com.vesoft.nebula.ErrorCode error_code,
       long current_term,
       String leader_addr,
       int leader_port,
       long committed_log_id,
-      long last_log_id,
-      long last_log_term) {
+      long last_matched_log_id,
+      long last_matched_log_term) {
     this();
     this.error_code = error_code;
     this.current_term = current_term;
@@ -104,27 +104,27 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     setLeader_portIsSet(true);
     this.committed_log_id = committed_log_id;
     setCommitted_log_idIsSet(true);
-    this.last_log_id = last_log_id;
-    setLast_log_idIsSet(true);
-    this.last_log_term = last_log_term;
-    setLast_log_termIsSet(true);
+    this.last_matched_log_id = last_matched_log_id;
+    setLast_matched_log_idIsSet(true);
+    this.last_matched_log_term = last_matched_log_term;
+    setLast_matched_log_termIsSet(true);
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
     private long current_term;
     private String leader_addr;
     private int leader_port;
     private long committed_log_id;
-    private long last_log_id;
-    private long last_log_term;
+    private long last_matched_log_id;
+    private long last_matched_log_term;
 
     BitSet __optional_isset = new BitSet(5);
 
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
       return this;
     }
@@ -152,15 +152,15 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
-    public Builder setLast_log_id(final long last_log_id) {
-      this.last_log_id = last_log_id;
-      __optional_isset.set(__LAST_LOG_ID_ISSET_ID, true);
+    public Builder setLast_matched_log_id(final long last_matched_log_id) {
+      this.last_matched_log_id = last_matched_log_id;
+      __optional_isset.set(__LAST_MATCHED_LOG_ID_ISSET_ID, true);
       return this;
     }
 
-    public Builder setLast_log_term(final long last_log_term) {
-      this.last_log_term = last_log_term;
-      __optional_isset.set(__LAST_LOG_TERM_ISSET_ID, true);
+    public Builder setLast_matched_log_term(final long last_matched_log_term) {
+      this.last_matched_log_term = last_matched_log_term;
+      __optional_isset.set(__LAST_MATCHED_LOG_TERM_ISSET_ID, true);
       return this;
     }
 
@@ -177,11 +177,11 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
       if (__optional_isset.get(__COMMITTED_LOG_ID_ISSET_ID)) {
         result.setCommitted_log_id(this.committed_log_id);
       }
-      if (__optional_isset.get(__LAST_LOG_ID_ISSET_ID)) {
-        result.setLast_log_id(this.last_log_id);
+      if (__optional_isset.get(__LAST_MATCHED_LOG_ID_ISSET_ID)) {
+        result.setLast_matched_log_id(this.last_matched_log_id);
       }
-      if (__optional_isset.get(__LAST_LOG_TERM_ISSET_ID)) {
-        result.setLast_log_term(this.last_log_term);
+      if (__optional_isset.get(__LAST_MATCHED_LOG_TERM_ISSET_ID)) {
+        result.setLast_matched_log_term(this.last_matched_log_term);
       }
       return result;
     }
@@ -206,8 +206,8 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     }
     this.leader_port = TBaseHelper.deepCopy(other.leader_port);
     this.committed_log_id = TBaseHelper.deepCopy(other.committed_log_id);
-    this.last_log_id = TBaseHelper.deepCopy(other.last_log_id);
-    this.last_log_term = TBaseHelper.deepCopy(other.last_log_term);
+    this.last_matched_log_id = TBaseHelper.deepCopy(other.last_matched_log_id);
+    this.last_matched_log_term = TBaseHelper.deepCopy(other.last_matched_log_term);
   }
 
   public AppendLogResponse deepCopy() {
@@ -216,17 +216,17 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public AppendLogResponse setError_code(ErrorCode error_code) {
+  public AppendLogResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -339,50 +339,50 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     __isset_bit_vector.set(__COMMITTED_LOG_ID_ISSET_ID, __value);
   }
 
-  public long getLast_log_id() {
-    return this.last_log_id;
+  public long getLast_matched_log_id() {
+    return this.last_matched_log_id;
   }
 
-  public AppendLogResponse setLast_log_id(long last_log_id) {
-    this.last_log_id = last_log_id;
-    setLast_log_idIsSet(true);
+  public AppendLogResponse setLast_matched_log_id(long last_matched_log_id) {
+    this.last_matched_log_id = last_matched_log_id;
+    setLast_matched_log_idIsSet(true);
     return this;
   }
 
-  public void unsetLast_log_id() {
-    __isset_bit_vector.clear(__LAST_LOG_ID_ISSET_ID);
+  public void unsetLast_matched_log_id() {
+    __isset_bit_vector.clear(__LAST_MATCHED_LOG_ID_ISSET_ID);
   }
 
-  // Returns true if field last_log_id is set (has been assigned a value) and false otherwise
-  public boolean isSetLast_log_id() {
-    return __isset_bit_vector.get(__LAST_LOG_ID_ISSET_ID);
+  // Returns true if field last_matched_log_id is set (has been assigned a value) and false otherwise
+  public boolean isSetLast_matched_log_id() {
+    return __isset_bit_vector.get(__LAST_MATCHED_LOG_ID_ISSET_ID);
   }
 
-  public void setLast_log_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__LAST_LOG_ID_ISSET_ID, __value);
+  public void setLast_matched_log_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_MATCHED_LOG_ID_ISSET_ID, __value);
   }
 
-  public long getLast_log_term() {
-    return this.last_log_term;
+  public long getLast_matched_log_term() {
+    return this.last_matched_log_term;
   }
 
-  public AppendLogResponse setLast_log_term(long last_log_term) {
-    this.last_log_term = last_log_term;
-    setLast_log_termIsSet(true);
+  public AppendLogResponse setLast_matched_log_term(long last_matched_log_term) {
+    this.last_matched_log_term = last_matched_log_term;
+    setLast_matched_log_termIsSet(true);
     return this;
   }
 
-  public void unsetLast_log_term() {
-    __isset_bit_vector.clear(__LAST_LOG_TERM_ISSET_ID);
+  public void unsetLast_matched_log_term() {
+    __isset_bit_vector.clear(__LAST_MATCHED_LOG_TERM_ISSET_ID);
   }
 
-  // Returns true if field last_log_term is set (has been assigned a value) and false otherwise
-  public boolean isSetLast_log_term() {
-    return __isset_bit_vector.get(__LAST_LOG_TERM_ISSET_ID);
+  // Returns true if field last_matched_log_term is set (has been assigned a value) and false otherwise
+  public boolean isSetLast_matched_log_term() {
+    return __isset_bit_vector.get(__LAST_MATCHED_LOG_TERM_ISSET_ID);
   }
 
-  public void setLast_log_termIsSet(boolean __value) {
-    __isset_bit_vector.set(__LAST_LOG_TERM_ISSET_ID, __value);
+  public void setLast_matched_log_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__LAST_MATCHED_LOG_TERM_ISSET_ID, __value);
   }
 
   public void setFieldValue(int fieldID, Object __value) {
@@ -391,7 +391,7 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -427,19 +427,19 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
-    case LAST_LOG_ID:
+    case LAST_MATCHED_LOG_ID:
       if (__value == null) {
-        unsetLast_log_id();
+        unsetLast_matched_log_id();
       } else {
-        setLast_log_id((Long)__value);
+        setLast_matched_log_id((Long)__value);
       }
       break;
 
-    case LAST_LOG_TERM:
+    case LAST_MATCHED_LOG_TERM:
       if (__value == null) {
-        unsetLast_log_term();
+        unsetLast_matched_log_term();
       } else {
-        setLast_log_term((Long)__value);
+        setLast_matched_log_term((Long)__value);
       }
       break;
 
@@ -465,11 +465,11 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     case COMMITTED_LOG_ID:
       return new Long(getCommitted_log_id());
 
-    case LAST_LOG_ID:
-      return new Long(getLast_log_id());
+    case LAST_MATCHED_LOG_ID:
+      return new Long(getLast_matched_log_id());
 
-    case LAST_LOG_TERM:
-      return new Long(getLast_log_term());
+    case LAST_MATCHED_LOG_TERM:
+      return new Long(getLast_matched_log_term());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -496,16 +496,16 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
 
     if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.last_log_id, that.last_log_id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.last_matched_log_id, that.last_matched_log_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.last_log_term, that.last_log_term)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.last_matched_log_term, that.last_matched_log_term)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {error_code, current_term, leader_addr, leader_port, committed_log_id, last_log_id, last_log_term});
+    return Arrays.deepHashCode(new Object[] {error_code, current_term, leader_addr, leader_port, committed_log_id, last_matched_log_id, last_matched_log_term});
   }
 
   @Override
@@ -560,19 +560,19 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetLast_log_id()).compareTo(other.isSetLast_log_id());
+    lastComparison = Boolean.valueOf(isSetLast_matched_log_id()).compareTo(other.isSetLast_matched_log_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(last_log_id, other.last_log_id);
+    lastComparison = TBaseHelper.compareTo(last_matched_log_id, other.last_matched_log_id);
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetLast_log_term()).compareTo(other.isSetLast_log_term());
+    lastComparison = Boolean.valueOf(isSetLast_matched_log_term()).compareTo(other.isSetLast_matched_log_term());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(last_log_term, other.last_log_term);
+    lastComparison = TBaseHelper.compareTo(last_matched_log_term, other.last_matched_log_term);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -592,7 +592,7 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -628,18 +628,18 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case LAST_LOG_ID:
+        case LAST_MATCHED_LOG_ID:
           if (__field.type == TType.I64) {
-            this.last_log_id = iprot.readI64();
-            setLast_log_idIsSet(true);
+            this.last_matched_log_id = iprot.readI64();
+            setLast_matched_log_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case LAST_LOG_TERM:
+        case LAST_MATCHED_LOG_TERM:
           if (__field.type == TType.I64) {
-            this.last_log_term = iprot.readI64();
-            setLast_log_termIsSet(true);
+            this.last_matched_log_term = iprot.readI64();
+            setLast_matched_log_termIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -680,11 +680,11 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     oprot.writeFieldBegin(COMMITTED_LOG_ID_FIELD_DESC);
     oprot.writeI64(this.committed_log_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(LAST_LOG_ID_FIELD_DESC);
-    oprot.writeI64(this.last_log_id);
+    oprot.writeFieldBegin(LAST_MATCHED_LOG_ID_FIELD_DESC);
+    oprot.writeI64(this.last_matched_log_id);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(LAST_LOG_TERM_FIELD_DESC);
-    oprot.writeI64(this.last_log_term);
+    oprot.writeFieldBegin(LAST_MATCHED_LOG_TERM_FIELD_DESC);
+    oprot.writeI64(this.last_matched_log_term);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -758,17 +758,17 @@ public class AppendLogResponse implements TBase, java.io.Serializable, Cloneable
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("last_log_id");
+    sb.append("last_matched_log_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getLast_log_id(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_matched_log_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("last_log_term");
+    sb.append("last_matched_log_term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getLast_log_term(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getLast_matched_log_term(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

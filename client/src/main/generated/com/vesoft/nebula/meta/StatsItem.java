@@ -600,17 +600,17 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
         case TAG_VERTICES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map46 = iprot.readMapBegin();
-              this.tag_vertices = new HashMap<byte[],Long>(Math.max(0, 2*_map46.size));
-              for (int _i47 = 0; 
-                   (_map46.size < 0) ? iprot.peekMap() : (_i47 < _map46.size); 
-                   ++_i47)
+              TMap _map50 = iprot.readMapBegin();
+              this.tag_vertices = new HashMap<byte[],Long>(Math.max(0, 2*_map50.size));
+              for (int _i51 = 0; 
+                   (_map50.size < 0) ? iprot.peekMap() : (_i51 < _map50.size); 
+                   ++_i51)
               {
-                byte[] _key48;
-                long _val49;
-                _key48 = iprot.readBinary();
-                _val49 = iprot.readI64();
-                this.tag_vertices.put(_key48, _val49);
+                byte[] _key52;
+                long _val53;
+                _key52 = iprot.readBinary();
+                _val53 = iprot.readI64();
+                this.tag_vertices.put(_key52, _val53);
               }
               iprot.readMapEnd();
             }
@@ -621,17 +621,17 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
         case EDGES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map50 = iprot.readMapBegin();
-              this.edges = new HashMap<byte[],Long>(Math.max(0, 2*_map50.size));
-              for (int _i51 = 0; 
-                   (_map50.size < 0) ? iprot.peekMap() : (_i51 < _map50.size); 
-                   ++_i51)
+              TMap _map54 = iprot.readMapBegin();
+              this.edges = new HashMap<byte[],Long>(Math.max(0, 2*_map54.size));
+              for (int _i55 = 0; 
+                   (_map54.size < 0) ? iprot.peekMap() : (_i55 < _map54.size); 
+                   ++_i55)
               {
-                byte[] _key52;
-                long _val53;
-                _key52 = iprot.readBinary();
-                _val53 = iprot.readI64();
-                this.edges.put(_key52, _val53);
+                byte[] _key56;
+                long _val57;
+                _key56 = iprot.readBinary();
+                _val57 = iprot.readI64();
+                this.edges.put(_key56, _val57);
               }
               iprot.readMapEnd();
             }
@@ -658,30 +658,30 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
         case POSITIVE_PART_CORRELATIVITY:
           if (__field.type == TType.MAP) {
             {
-              TMap _map54 = iprot.readMapBegin();
-              this.positive_part_correlativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map54.size));
-              for (int _i55 = 0; 
-                   (_map54.size < 0) ? iprot.peekMap() : (_i55 < _map54.size); 
-                   ++_i55)
+              TMap _map58 = iprot.readMapBegin();
+              this.positive_part_correlativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map58.size));
+              for (int _i59 = 0; 
+                   (_map58.size < 0) ? iprot.peekMap() : (_i59 < _map58.size); 
+                   ++_i59)
               {
-                int _key56;
-                List<Correlativity> _val57;
-                _key56 = iprot.readI32();
+                int _key60;
+                List<Correlativity> _val61;
+                _key60 = iprot.readI32();
                 {
-                  TList _list58 = iprot.readListBegin();
-                  _val57 = new ArrayList<Correlativity>(Math.max(0, _list58.size));
-                  for (int _i59 = 0; 
-                       (_list58.size < 0) ? iprot.peekList() : (_i59 < _list58.size); 
-                       ++_i59)
+                  TList _list62 = iprot.readListBegin();
+                  _val61 = new ArrayList<Correlativity>(Math.max(0, _list62.size));
+                  for (int _i63 = 0; 
+                       (_list62.size < 0) ? iprot.peekList() : (_i63 < _list62.size); 
+                       ++_i63)
                   {
-                    Correlativity _elem60;
-                    _elem60 = new Correlativity();
-                    _elem60.read(iprot);
-                    _val57.add(_elem60);
+                    Correlativity _elem64;
+                    _elem64 = new Correlativity();
+                    _elem64.read(iprot);
+                    _val61.add(_elem64);
                   }
                   iprot.readListEnd();
                 }
-                this.positive_part_correlativity.put(_key56, _val57);
+                this.positive_part_correlativity.put(_key60, _val61);
               }
               iprot.readMapEnd();
             }
@@ -692,30 +692,30 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
         case NEGATIVE_PART_CORRELATIVITY:
           if (__field.type == TType.MAP) {
             {
-              TMap _map61 = iprot.readMapBegin();
-              this.negative_part_correlativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map61.size));
-              for (int _i62 = 0; 
-                   (_map61.size < 0) ? iprot.peekMap() : (_i62 < _map61.size); 
-                   ++_i62)
+              TMap _map65 = iprot.readMapBegin();
+              this.negative_part_correlativity = new HashMap<Integer,List<Correlativity>>(Math.max(0, 2*_map65.size));
+              for (int _i66 = 0; 
+                   (_map65.size < 0) ? iprot.peekMap() : (_i66 < _map65.size); 
+                   ++_i66)
               {
-                int _key63;
-                List<Correlativity> _val64;
-                _key63 = iprot.readI32();
+                int _key67;
+                List<Correlativity> _val68;
+                _key67 = iprot.readI32();
                 {
-                  TList _list65 = iprot.readListBegin();
-                  _val64 = new ArrayList<Correlativity>(Math.max(0, _list65.size));
-                  for (int _i66 = 0; 
-                       (_list65.size < 0) ? iprot.peekList() : (_i66 < _list65.size); 
-                       ++_i66)
+                  TList _list69 = iprot.readListBegin();
+                  _val68 = new ArrayList<Correlativity>(Math.max(0, _list69.size));
+                  for (int _i70 = 0; 
+                       (_list69.size < 0) ? iprot.peekList() : (_i70 < _list69.size); 
+                       ++_i70)
                   {
-                    Correlativity _elem67;
-                    _elem67 = new Correlativity();
-                    _elem67.read(iprot);
-                    _val64.add(_elem67);
+                    Correlativity _elem71;
+                    _elem71 = new Correlativity();
+                    _elem71.read(iprot);
+                    _val68.add(_elem71);
                   }
                   iprot.readListEnd();
                 }
-                this.negative_part_correlativity.put(_key63, _val64);
+                this.negative_part_correlativity.put(_key67, _val68);
               }
               iprot.readMapEnd();
             }
@@ -751,9 +751,9 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(TAG_VERTICES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.I64, this.tag_vertices.size()));
-        for (Map.Entry<byte[], Long> _iter68 : this.tag_vertices.entrySet())        {
-          oprot.writeBinary(_iter68.getKey());
-          oprot.writeI64(_iter68.getValue());
+        for (Map.Entry<byte[], Long> _iter72 : this.tag_vertices.entrySet())        {
+          oprot.writeBinary(_iter72.getKey());
+          oprot.writeI64(_iter72.getValue());
         }
         oprot.writeMapEnd();
       }
@@ -763,9 +763,9 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(EDGES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.I64, this.edges.size()));
-        for (Map.Entry<byte[], Long> _iter69 : this.edges.entrySet())        {
-          oprot.writeBinary(_iter69.getKey());
-          oprot.writeI64(_iter69.getValue());
+        for (Map.Entry<byte[], Long> _iter73 : this.edges.entrySet())        {
+          oprot.writeBinary(_iter73.getKey());
+          oprot.writeI64(_iter73.getValue());
         }
         oprot.writeMapEnd();
       }
@@ -781,12 +781,12 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(POSITIVE_PART_CORRELATIVITY_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.positive_part_correlativity.size()));
-        for (Map.Entry<Integer, List<Correlativity>> _iter70 : this.positive_part_correlativity.entrySet())        {
-          oprot.writeI32(_iter70.getKey());
+        for (Map.Entry<Integer, List<Correlativity>> _iter74 : this.positive_part_correlativity.entrySet())        {
+          oprot.writeI32(_iter74.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter70.getValue().size()));
-            for (Correlativity _iter71 : _iter70.getValue())            {
-              _iter71.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter74.getValue().size()));
+            for (Correlativity _iter75 : _iter74.getValue())            {
+              _iter75.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -799,12 +799,12 @@ public class StatsItem implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(NEGATIVE_PART_CORRELATIVITY_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.negative_part_correlativity.size()));
-        for (Map.Entry<Integer, List<Correlativity>> _iter72 : this.negative_part_correlativity.entrySet())        {
-          oprot.writeI32(_iter72.getKey());
+        for (Map.Entry<Integer, List<Correlativity>> _iter76 : this.negative_part_correlativity.entrySet())        {
+          oprot.writeI32(_iter76.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter72.getValue().size()));
-            for (Correlativity _iter73 : _iter72.getValue())            {
-              _iter73.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter76.getValue().size()));
+            for (Correlativity _iter77 : _iter76.getValue())            {
+              _iter77.write(oprot);
             }
             oprot.writeListEnd();
           }

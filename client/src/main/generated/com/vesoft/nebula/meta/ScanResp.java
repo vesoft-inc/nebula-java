@@ -349,15 +349,15 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
         case VALUES:
           if (__field.type == TType.LIST) {
             {
-              TList _list148 = iprot.readListBegin();
-              this.values = new ArrayList<byte[]>(Math.max(0, _list148.size));
-              for (int _i149 = 0; 
-                   (_list148.size < 0) ? iprot.peekList() : (_i149 < _list148.size); 
-                   ++_i149)
+              TList _list152 = iprot.readListBegin();
+              this.values = new ArrayList<byte[]>(Math.max(0, _list152.size));
+              for (int _i153 = 0; 
+                   (_list152.size < 0) ? iprot.peekList() : (_i153 < _list152.size); 
+                   ++_i153)
               {
-                byte[] _elem150;
-                _elem150 = iprot.readBinary();
-                this.values.add(_elem150);
+                byte[] _elem154;
+                _elem154 = iprot.readBinary();
+                this.values.add(_elem154);
               }
               iprot.readListEnd();
             }
@@ -396,8 +396,8 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldBegin(VALUES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.values.size()));
-        for (byte[] _iter151 : this.values)        {
-          oprot.writeBinary(_iter151);
+        for (byte[] _iter155 : this.values)        {
+          oprot.writeBinary(_iter155);
         }
         oprot.writeListEnd();
       }
