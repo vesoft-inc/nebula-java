@@ -7,6 +7,8 @@
 
 Nebula Java is a Java client for developers to connect their projects to Nebula Graph.
 
+Please be noted that [nebula-JDBC](https://github.com/vesoft-inc/nebula-jdbc)(based on nebula-java) is the JDBC implementing for nebula graph.
+
 > **NOTE**: Nebula Java is not thread-safe.
 
 ## Two main branches of this repository

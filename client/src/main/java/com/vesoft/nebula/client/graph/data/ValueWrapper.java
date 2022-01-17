@@ -605,6 +605,8 @@ public class ValueWrapper {
                 return asPath().toString();
             } else if (isGeography()) {
                 return asGeography().toString();
+            } else if (isDuration()) {
+                return asDuration().toString();
             }
             return "Unknown type: " + descType();
         } catch (UnsupportedEncodingException e) {
