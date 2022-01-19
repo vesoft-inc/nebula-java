@@ -135,9 +135,14 @@ services:
       - sh
       - -c
       - |
-        sleep 3 &&
-        nebula-console -addr graphd-casigned -port 9669 -u root -p nebula -enable_ssl=true -ssl_root_ca_path /share/resources/test.ca.pem -ssl_cert_path /share/resources/test.derive.crt -ssl_private_key_path /share/resources/test.derive.key --ssl_insecure_skip_verify=true -e 'ADD HOSTS "172.29.2.1":9779' &&
-        sleep 36000
+        for i in `seq 1 60`;do
+          var=`nebula-console -addr graphd0 -port 9669 -u root -p nebula -e 'ADD HOSTS "172.28.2.1":9779,"172.28.2.2":9779,"172.28.2.3":9779;'`;
+          if [[ $$? == 0 ]];then
+            break;
+          fi;
+          sleep 1;
+          echo "retry to add hosts.";
+        done && tail -f /dev/null;
     volumes:
       - ./ssl:/share/resources:Z
     depends_on:
