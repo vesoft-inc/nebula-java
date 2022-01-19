@@ -349,16 +349,16 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
         case ITEMS:
           if (__field.type == TType.LIST) {
             {
-              TList _list191 = iprot.readListBegin();
-              this.items = new ArrayList<IndexItem>(Math.max(0, _list191.size));
-              for (int _i192 = 0; 
-                   (_list191.size < 0) ? iprot.peekList() : (_i192 < _list191.size); 
-                   ++_i192)
+              TList _list195 = iprot.readListBegin();
+              this.items = new ArrayList<IndexItem>(Math.max(0, _list195.size));
+              for (int _i196 = 0; 
+                   (_list195.size < 0) ? iprot.peekList() : (_i196 < _list195.size); 
+                   ++_i196)
               {
-                IndexItem _elem193;
-                _elem193 = new IndexItem();
-                _elem193.read(iprot);
-                this.items.add(_elem193);
+                IndexItem _elem197;
+                _elem197 = new IndexItem();
+                _elem197.read(iprot);
+                this.items.add(_elem197);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListEdgeIndexesResp implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(ITEMS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.items.size()));
-        for (IndexItem _iter194 : this.items)        {
-          _iter194.write(oprot);
+        for (IndexItem _iter198 : this.items)        {
+          _iter198.write(oprot);
         }
         oprot.writeListEnd();
       }

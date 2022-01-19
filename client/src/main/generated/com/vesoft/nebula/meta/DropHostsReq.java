@@ -198,16 +198,16 @@ public class DropHostsReq implements TBase, java.io.Serializable, Cloneable, Com
         case HOSTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list98 = iprot.readListBegin();
-              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list98.size));
-              for (int _i99 = 0; 
-                   (_list98.size < 0) ? iprot.peekList() : (_i99 < _list98.size); 
-                   ++_i99)
+              TList _list102 = iprot.readListBegin();
+              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list102.size));
+              for (int _i103 = 0; 
+                   (_list102.size < 0) ? iprot.peekList() : (_i103 < _list102.size); 
+                   ++_i103)
               {
-                com.vesoft.nebula.HostAddr _elem100;
-                _elem100 = new com.vesoft.nebula.HostAddr();
-                _elem100.read(iprot);
-                this.hosts.add(_elem100);
+                com.vesoft.nebula.HostAddr _elem104;
+                _elem104 = new com.vesoft.nebula.HostAddr();
+                _elem104.read(iprot);
+                this.hosts.add(_elem104);
               }
               iprot.readListEnd();
             }
@@ -236,8 +236,8 @@ public class DropHostsReq implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter101 : this.hosts)        {
-          _iter101.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter105 : this.hosts)        {
+          _iter105.write(oprot);
         }
         oprot.writeListEnd();
       }

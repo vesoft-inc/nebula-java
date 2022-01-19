@@ -24,8 +24,8 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class FTClient implements TBase, java.io.Serializable, Cloneable, Comparable<FTClient> {
-  private static final TStruct STRUCT_DESC = new TStruct("FTClient");
+public class ServiceClient implements TBase, java.io.Serializable, Cloneable, Comparable<ServiceClient> {
+  private static final TStruct STRUCT_DESC = new TStruct("ServiceClient");
   private static final TField HOST_FIELD_DESC = new TField("host", TType.STRUCT, (short)1);
   private static final TField USER_FIELD_DESC = new TField("user", TType.STRING, (short)2);
   private static final TField PWD_FIELD_DESC = new TField("pwd", TType.STRING, (short)3);
@@ -58,19 +58,19 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(FTClient.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ServiceClient.class, metaDataMap);
   }
 
-  public FTClient() {
+  public ServiceClient() {
   }
 
-  public FTClient(
+  public ServiceClient(
       com.vesoft.nebula.HostAddr host) {
     this();
     this.host = host;
   }
 
-  public FTClient(
+  public ServiceClient(
       com.vesoft.nebula.HostAddr host,
       byte[] user,
       byte[] pwd,
@@ -111,8 +111,8 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return this;
     }
 
-    public FTClient build() {
-      FTClient result = new FTClient();
+    public ServiceClient build() {
+      ServiceClient result = new ServiceClient();
       result.setHost(this.host);
       result.setUser(this.user);
       result.setPwd(this.pwd);
@@ -128,7 +128,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public FTClient(FTClient other) {
+  public ServiceClient(ServiceClient other) {
     if (other.isSetHost()) {
       this.host = TBaseHelper.deepCopy(other.host);
     }
@@ -143,15 +143,15 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public FTClient deepCopy() {
-    return new FTClient(this);
+  public ServiceClient deepCopy() {
+    return new ServiceClient(this);
   }
 
   public com.vesoft.nebula.HostAddr getHost() {
     return this.host;
   }
 
-  public FTClient setHost(com.vesoft.nebula.HostAddr host) {
+  public ServiceClient setHost(com.vesoft.nebula.HostAddr host) {
     this.host = host;
     return this;
   }
@@ -175,7 +175,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return this.user;
   }
 
-  public FTClient setUser(byte[] user) {
+  public ServiceClient setUser(byte[] user) {
     this.user = user;
     return this;
   }
@@ -199,7 +199,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return this.pwd;
   }
 
-  public FTClient setPwd(byte[] pwd) {
+  public ServiceClient setPwd(byte[] pwd) {
     this.pwd = pwd;
     return this;
   }
@@ -223,7 +223,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     return this.conn_type;
   }
 
-  public FTClient setConn_type(byte[] conn_type) {
+  public ServiceClient setConn_type(byte[] conn_type) {
     this.conn_type = conn_type;
     return this;
   }
@@ -307,9 +307,9 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof FTClient))
+    if (!(_that instanceof ServiceClient))
       return false;
-    FTClient that = (FTClient)_that;
+    ServiceClient that = (ServiceClient)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetHost(), that.isSetHost(), this.host, that.host)) { return false; }
 
@@ -328,7 +328,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
   }
 
   @Override
-  public int compareTo(FTClient other) {
+  public int compareTo(ServiceClient other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -471,7 +471,7 @@ public class FTClient implements TBase, java.io.Serializable, Cloneable, Compara
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("FTClient");
+    StringBuilder sb = new StringBuilder("ServiceClient");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

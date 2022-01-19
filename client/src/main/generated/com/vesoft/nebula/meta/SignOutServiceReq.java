@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.graph;
+package com.vesoft.nebula.meta;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,12 +24,16 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class VerifyClientVersionReq implements TBase, java.io.Serializable, Cloneable, Comparable<VerifyClientVersionReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("VerifyClientVersionReq");
-  private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)1);
+public class SignOutServiceReq implements TBase, java.io.Serializable, Cloneable, Comparable<SignOutServiceReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("SignOutServiceReq");
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
 
-  public byte[] version;
-  public static final int VERSION = 1;
+  /**
+   * 
+   * @see ExternalServiceType
+   */
+  public ExternalServiceType type;
+  public static final int TYPE = 1;
 
   // isset id assignments
 
@@ -37,40 +41,38 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.REQUIRED, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(VerifyClientVersionReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(SignOutServiceReq.class, metaDataMap);
   }
 
-  public VerifyClientVersionReq() {
-    this.version = "3.0.0".getBytes();
-
+  public SignOutServiceReq() {
   }
 
-  public VerifyClientVersionReq(
-      byte[] version) {
+  public SignOutServiceReq(
+      ExternalServiceType type) {
     this();
-    this.version = version;
+    this.type = type;
   }
 
   public static class Builder {
-    private byte[] version;
+    private ExternalServiceType type;
 
     public Builder() {
     }
 
-    public Builder setVersion(final byte[] version) {
-      this.version = version;
+    public Builder setType(final ExternalServiceType type) {
+      this.type = type;
       return this;
     }
 
-    public VerifyClientVersionReq build() {
-      VerifyClientVersionReq result = new VerifyClientVersionReq();
-      result.setVersion(this.version);
+    public SignOutServiceReq build() {
+      SignOutServiceReq result = new SignOutServiceReq();
+      result.setType(this.type);
       return result;
     }
   }
@@ -82,47 +84,55 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public VerifyClientVersionReq(VerifyClientVersionReq other) {
-    if (other.isSetVersion()) {
-      this.version = TBaseHelper.deepCopy(other.version);
+  public SignOutServiceReq(SignOutServiceReq other) {
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
     }
   }
 
-  public VerifyClientVersionReq deepCopy() {
-    return new VerifyClientVersionReq(this);
+  public SignOutServiceReq deepCopy() {
+    return new SignOutServiceReq(this);
   }
 
-  public byte[] getVersion() {
-    return this.version;
+  /**
+   * 
+   * @see ExternalServiceType
+   */
+  public ExternalServiceType getType() {
+    return this.type;
   }
 
-  public VerifyClientVersionReq setVersion(byte[] version) {
-    this.version = version;
+  /**
+   * 
+   * @see ExternalServiceType
+   */
+  public SignOutServiceReq setType(ExternalServiceType type) {
+    this.type = type;
     return this;
   }
 
-  public void unsetVersion() {
-    this.version = null;
+  public void unsetType() {
+    this.type = null;
   }
 
-  // Returns true if field version is set (has been assigned a value) and false otherwise
-  public boolean isSetVersion() {
-    return this.version != null;
+  // Returns true if field type is set (has been assigned a value) and false otherwise
+  public boolean isSetType() {
+    return this.type != null;
   }
 
-  public void setVersionIsSet(boolean __value) {
+  public void setTypeIsSet(boolean __value) {
     if (!__value) {
-      this.version = null;
+      this.type = null;
     }
   }
 
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case VERSION:
+    case TYPE:
       if (__value == null) {
-        unsetVersion();
+        unsetType();
       } else {
-        setVersion((byte[])__value);
+        setType((ExternalServiceType)__value);
       }
       break;
 
@@ -133,8 +143,8 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case VERSION:
-      return getVersion();
+    case TYPE:
+      return getType();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -147,22 +157,22 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof VerifyClientVersionReq))
+    if (!(_that instanceof SignOutServiceReq))
       return false;
-    VerifyClientVersionReq that = (VerifyClientVersionReq)_that;
+    SignOutServiceReq that = (SignOutServiceReq)_that;
 
-    if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {version});
+    return Arrays.deepHashCode(new Object[] {type});
   }
 
   @Override
-  public int compareTo(VerifyClientVersionReq other) {
+  public int compareTo(SignOutServiceReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -173,11 +183,11 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetVersion()).compareTo(other.isSetVersion());
+    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(version, other.version);
+    lastComparison = TBaseHelper.compareTo(type, other.type);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -195,9 +205,9 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
       }
       switch (__field.id)
       {
-        case VERSION:
-          if (__field.type == TType.STRING) {
-            this.version = iprot.readBinary();
+        case TYPE:
+          if (__field.type == TType.I32) {
+            this.type = ExternalServiceType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -219,9 +229,9 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.version != null) {
-      oprot.writeFieldBegin(VERSION_FIELD_DESC);
-      oprot.writeBinary(this.version);
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -238,25 +248,28 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("VerifyClientVersionReq");
+    StringBuilder sb = new StringBuilder("SignOutServiceReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("version");
+    sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getVersion() == null) {
+    if (this.getType() == null) {
       sb.append("null");
     } else {
-        int __version_size = Math.min(this.getVersion().length, 128);
-        for (int i = 0; i < __version_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
-        }
-        if (this.getVersion().length > 128) sb.append(" ...");
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getType());
+      if (type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
@@ -266,9 +279,6 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
 
   public void validate() throws TException {
     // check for required fields
-    if (version == null) {
-      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'version' was not present! Struct: " + toString());
-    }
   }
 
 }

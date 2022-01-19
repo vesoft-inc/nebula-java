@@ -12,16 +12,12 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public enum ListHostType implements com.facebook.thrift.TEnum {
-  ALLOC(0),
-  GRAPH(1),
-  META(2),
-  STORAGE(3),
-  AGENT(4);
+public enum AlterSpaceOp implements com.facebook.thrift.TEnum {
+  ADD_ZONE(1);
 
   private final int value;
 
-  private ListHostType(int value) {
+  private AlterSpaceOp(int value) {
     this.value = value;
   }
 
@@ -36,18 +32,10 @@ public enum ListHostType implements com.facebook.thrift.TEnum {
    * Find a the enum type by its integer value, as defined in the Thrift IDL.
    * @return null if the value is not found.
    */
-  public static ListHostType findByValue(int value) { 
+  public static AlterSpaceOp findByValue(int value) { 
     switch (value) {
-      case 0:
-        return ALLOC;
       case 1:
-        return GRAPH;
-      case 2:
-        return META;
-      case 3:
-        return STORAGE;
-      case 4:
-        return AGENT;
+        return ADD_ZONE;
       default:
         return null;
     }

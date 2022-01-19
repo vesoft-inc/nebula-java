@@ -34,9 +34,9 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
   public long current_term;
   public String leader_addr;
   public int leader_port;
@@ -88,7 +88,7 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public HeartbeatResponse(
-      ErrorCode error_code,
+      com.vesoft.nebula.ErrorCode error_code,
       long current_term,
       String leader_addr,
       int leader_port,
@@ -111,7 +111,7 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
     private long current_term;
     private String leader_addr;
     private int leader_port;
@@ -124,7 +124,7 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
       return this;
     }
@@ -216,17 +216,17 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public HeartbeatResponse setError_code(ErrorCode error_code) {
+  public HeartbeatResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -391,7 +391,7 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -592,7 +592,7 @@ public class HeartbeatResponse implements TBase, java.io.Serializable, Cloneable
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }

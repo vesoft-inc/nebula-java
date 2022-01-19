@@ -24,19 +24,26 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Comparable<KVPutRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("KVPutRequest");
+public class ChainDeleteEdgesRequest implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("ChainDeleteEdgesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField TXN_ID_FIELD_DESC = new TField("txn_id", TType.STRING, (short)3);
+  private static final TField TERM_FIELD_DESC = new TField("term", TType.I64, (short)4);
 
   public int space_id;
-  public Map<Integer,List<com.vesoft.nebula.KeyValue>> parts;
+  public Map<Integer,List<EdgeKey>> parts;
+  public byte[] txn_id;
+  public long term;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
+  public static final int TXN_ID = 3;
+  public static final int TERM = 4;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __TERM_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -48,31 +55,42 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, com.vesoft.nebula.KeyValue.class)))));
+                new StructMetaData(TType.STRUCT, EdgeKey.class)))));
+    tmpMetaDataMap.put(TXN_ID, new FieldMetaData("txn_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(TERM, new FieldMetaData("term", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(KVPutRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ChainDeleteEdgesRequest.class, metaDataMap);
   }
 
-  public KVPutRequest() {
+  public ChainDeleteEdgesRequest() {
   }
 
-  public KVPutRequest(
+  public ChainDeleteEdgesRequest(
       int space_id,
-      Map<Integer,List<com.vesoft.nebula.KeyValue>> parts) {
+      Map<Integer,List<EdgeKey>> parts,
+      byte[] txn_id,
+      long term) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
+    this.txn_id = txn_id;
+    this.term = term;
+    setTermIsSet(true);
   }
 
   public static class Builder {
     private int space_id;
-    private Map<Integer,List<com.vesoft.nebula.KeyValue>> parts;
+    private Map<Integer,List<EdgeKey>> parts;
+    private byte[] txn_id;
+    private long term;
 
-    BitSet __optional_isset = new BitSet(1);
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
@@ -83,17 +101,32 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
-    public Builder setParts(final Map<Integer,List<com.vesoft.nebula.KeyValue>> parts) {
+    public Builder setParts(final Map<Integer,List<EdgeKey>> parts) {
       this.parts = parts;
       return this;
     }
 
-    public KVPutRequest build() {
-      KVPutRequest result = new KVPutRequest();
+    public Builder setTxn_id(final byte[] txn_id) {
+      this.txn_id = txn_id;
+      return this;
+    }
+
+    public Builder setTerm(final long term) {
+      this.term = term;
+      __optional_isset.set(__TERM_ISSET_ID, true);
+      return this;
+    }
+
+    public ChainDeleteEdgesRequest build() {
+      ChainDeleteEdgesRequest result = new ChainDeleteEdgesRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
       result.setParts(this.parts);
+      result.setTxn_id(this.txn_id);
+      if (__optional_isset.get(__TERM_ISSET_ID)) {
+        result.setTerm(this.term);
+      }
       return result;
     }
   }
@@ -105,24 +138,28 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public KVPutRequest(KVPutRequest other) {
+  public ChainDeleteEdgesRequest(ChainDeleteEdgesRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
+    if (other.isSetTxn_id()) {
+      this.txn_id = TBaseHelper.deepCopy(other.txn_id);
+    }
+    this.term = TBaseHelper.deepCopy(other.term);
   }
 
-  public KVPutRequest deepCopy() {
-    return new KVPutRequest(this);
+  public ChainDeleteEdgesRequest deepCopy() {
+    return new ChainDeleteEdgesRequest(this);
   }
 
   public int getSpace_id() {
     return this.space_id;
   }
 
-  public KVPutRequest setSpace_id(int space_id) {
+  public ChainDeleteEdgesRequest setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -141,11 +178,11 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public Map<Integer,List<com.vesoft.nebula.KeyValue>> getParts() {
+  public Map<Integer,List<EdgeKey>> getParts() {
     return this.parts;
   }
 
-  public KVPutRequest setParts(Map<Integer,List<com.vesoft.nebula.KeyValue>> parts) {
+  public ChainDeleteEdgesRequest setParts(Map<Integer,List<EdgeKey>> parts) {
     this.parts = parts;
     return this;
   }
@@ -165,6 +202,53 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
+  public byte[] getTxn_id() {
+    return this.txn_id;
+  }
+
+  public ChainDeleteEdgesRequest setTxn_id(byte[] txn_id) {
+    this.txn_id = txn_id;
+    return this;
+  }
+
+  public void unsetTxn_id() {
+    this.txn_id = null;
+  }
+
+  // Returns true if field txn_id is set (has been assigned a value) and false otherwise
+  public boolean isSetTxn_id() {
+    return this.txn_id != null;
+  }
+
+  public void setTxn_idIsSet(boolean __value) {
+    if (!__value) {
+      this.txn_id = null;
+    }
+  }
+
+  public long getTerm() {
+    return this.term;
+  }
+
+  public ChainDeleteEdgesRequest setTerm(long term) {
+    this.term = term;
+    setTermIsSet(true);
+    return this;
+  }
+
+  public void unsetTerm() {
+    __isset_bit_vector.clear(__TERM_ISSET_ID);
+  }
+
+  // Returns true if field term is set (has been assigned a value) and false otherwise
+  public boolean isSetTerm() {
+    return __isset_bit_vector.get(__TERM_ISSET_ID);
+  }
+
+  public void setTermIsSet(boolean __value) {
+    __isset_bit_vector.set(__TERM_ISSET_ID, __value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -180,7 +264,23 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       if (__value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<com.vesoft.nebula.KeyValue>>)__value);
+        setParts((Map<Integer,List<EdgeKey>>)__value);
+      }
+      break;
+
+    case TXN_ID:
+      if (__value == null) {
+        unsetTxn_id();
+      } else {
+        setTxn_id((byte[])__value);
+      }
+      break;
+
+    case TERM:
+      if (__value == null) {
+        unsetTerm();
+      } else {
+        setTerm((Long)__value);
       }
       break;
 
@@ -197,6 +297,12 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     case PARTS:
       return getParts();
 
+    case TXN_ID:
+      return getTxn_id();
+
+    case TERM:
+      return new Long(getTerm());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -208,51 +314,24 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof KVPutRequest))
+    if (!(_that instanceof ChainDeleteEdgesRequest))
       return false;
-    KVPutRequest that = (KVPutRequest)_that;
+    ChainDeleteEdgesRequest that = (ChainDeleteEdgesRequest)_that;
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetTxn_id(), that.isSetTxn_id(), this.txn_id, that.txn_id)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.term, that.term)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts});
-  }
-
-  @Override
-  public int compareTo(KVPutRequest other) {
-    if (other == null) {
-      // See java.lang.Comparable docs
-      throw new NullPointerException();
-    }
-
-    if (other == this) {
-      return 0;
-    }
-    int lastComparison = 0;
-
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(parts, other.parts);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    return 0;
+    return Arrays.deepHashCode(new Object[] {space_id, parts, txn_id, term});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -277,33 +356,48 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map242 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.KeyValue>>(Math.max(0, 2*_map242.size));
-              for (int _i243 = 0; 
-                   (_map242.size < 0) ? iprot.peekMap() : (_i243 < _map242.size); 
-                   ++_i243)
+              TMap _map314 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map314.size));
+              for (int _i315 = 0; 
+                   (_map314.size < 0) ? iprot.peekMap() : (_i315 < _map314.size); 
+                   ++_i315)
               {
-                int _key244;
-                List<com.vesoft.nebula.KeyValue> _val245;
-                _key244 = iprot.readI32();
+                int _key316;
+                List<EdgeKey> _val317;
+                _key316 = iprot.readI32();
                 {
-                  TList _list246 = iprot.readListBegin();
-                  _val245 = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list246.size));
-                  for (int _i247 = 0; 
-                       (_list246.size < 0) ? iprot.peekList() : (_i247 < _list246.size); 
-                       ++_i247)
+                  TList _list318 = iprot.readListBegin();
+                  _val317 = new ArrayList<EdgeKey>(Math.max(0, _list318.size));
+                  for (int _i319 = 0; 
+                       (_list318.size < 0) ? iprot.peekList() : (_i319 < _list318.size); 
+                       ++_i319)
                   {
-                    com.vesoft.nebula.KeyValue _elem248;
-                    _elem248 = new com.vesoft.nebula.KeyValue();
-                    _elem248.read(iprot);
-                    _val245.add(_elem248);
+                    EdgeKey _elem320;
+                    _elem320 = new EdgeKey();
+                    _elem320.read(iprot);
+                    _val317.add(_elem320);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key244, _val245);
+                this.parts.put(_key316, _val317);
               }
               iprot.readMapEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case TXN_ID:
+          if (__field.type == TType.STRING) {
+            this.txn_id = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case TERM:
+          if (__field.type == TType.I64) {
+            this.term = iprot.readI64();
+            setTermIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -332,12 +426,12 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.KeyValue>> _iter249 : this.parts.entrySet())        {
-          oprot.writeI32(_iter249.getKey());
+        for (Map.Entry<Integer, List<EdgeKey>> _iter321 : this.parts.entrySet())        {
+          oprot.writeI32(_iter321.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter249.getValue().size()));
-            for (com.vesoft.nebula.KeyValue _iter250 : _iter249.getValue())            {
-              _iter250.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter321.getValue().size()));
+            for (EdgeKey _iter322 : _iter321.getValue())            {
+              _iter322.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -346,6 +440,14 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
       }
       oprot.writeFieldEnd();
     }
+    if (this.txn_id != null) {
+      oprot.writeFieldBegin(TXN_ID_FIELD_DESC);
+      oprot.writeBinary(this.txn_id);
+      oprot.writeFieldEnd();
+    }
+    oprot.writeFieldBegin(TERM_FIELD_DESC);
+    oprot.writeI64(this.term);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -360,7 +462,7 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("KVPutRequest");
+    StringBuilder sb = new StringBuilder("ChainDeleteEdgesRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -382,6 +484,29 @@ public class KVPutRequest implements TBase, java.io.Serializable, Cloneable, Com
     } else {
       sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("txn_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getTxn_id() == null) {
+      sb.append("null");
+    } else {
+        int __txn_id_size = Math.min(this.getTxn_id().length, 128);
+        for (int i = 0; i < __txn_id_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getTxn_id()[i]).length() > 1 ? Integer.toHexString(this.getTxn_id()[i]).substring(Integer.toHexString(this.getTxn_id()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getTxn_id()[i]).toUpperCase());
+        }
+        if (this.getTxn_id().length > 128) sb.append(" ...");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("term");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getTerm(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

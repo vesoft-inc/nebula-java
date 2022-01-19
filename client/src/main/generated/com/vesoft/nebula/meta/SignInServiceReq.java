@@ -24,17 +24,17 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneable, Comparable<SignInFTServiceReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("SignInFTServiceReq");
+public class SignInServiceReq implements TBase, java.io.Serializable, Cloneable, Comparable<SignInServiceReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("SignInServiceReq");
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
   private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.LIST, (short)2);
 
   /**
    * 
-   * @see FTServiceType
+   * @see ExternalServiceType
    */
-  public FTServiceType type;
-  public List<FTClient> clients;
+  public ExternalServiceType type;
+  public List<ServiceClient> clients;
   public static final int TYPE = 1;
   public static final int CLIENTS = 2;
 
@@ -48,44 +48,44 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(CLIENTS, new FieldMetaData("clients", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, FTClient.class))));
+            new StructMetaData(TType.STRUCT, ServiceClient.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(SignInFTServiceReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(SignInServiceReq.class, metaDataMap);
   }
 
-  public SignInFTServiceReq() {
+  public SignInServiceReq() {
   }
 
-  public SignInFTServiceReq(
-      FTServiceType type,
-      List<FTClient> clients) {
+  public SignInServiceReq(
+      ExternalServiceType type,
+      List<ServiceClient> clients) {
     this();
     this.type = type;
     this.clients = clients;
   }
 
   public static class Builder {
-    private FTServiceType type;
-    private List<FTClient> clients;
+    private ExternalServiceType type;
+    private List<ServiceClient> clients;
 
     public Builder() {
     }
 
-    public Builder setType(final FTServiceType type) {
+    public Builder setType(final ExternalServiceType type) {
       this.type = type;
       return this;
     }
 
-    public Builder setClients(final List<FTClient> clients) {
+    public Builder setClients(final List<ServiceClient> clients) {
       this.clients = clients;
       return this;
     }
 
-    public SignInFTServiceReq build() {
-      SignInFTServiceReq result = new SignInFTServiceReq();
+    public SignInServiceReq build() {
+      SignInServiceReq result = new SignInServiceReq();
       result.setType(this.type);
       result.setClients(this.clients);
       return result;
@@ -99,7 +99,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public SignInFTServiceReq(SignInFTServiceReq other) {
+  public SignInServiceReq(SignInServiceReq other) {
     if (other.isSetType()) {
       this.type = TBaseHelper.deepCopy(other.type);
     }
@@ -108,23 +108,23 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public SignInFTServiceReq deepCopy() {
-    return new SignInFTServiceReq(this);
+  public SignInServiceReq deepCopy() {
+    return new SignInServiceReq(this);
   }
 
   /**
    * 
-   * @see FTServiceType
+   * @see ExternalServiceType
    */
-  public FTServiceType getType() {
+  public ExternalServiceType getType() {
     return this.type;
   }
 
   /**
    * 
-   * @see FTServiceType
+   * @see ExternalServiceType
    */
-  public SignInFTServiceReq setType(FTServiceType type) {
+  public SignInServiceReq setType(ExternalServiceType type) {
     this.type = type;
     return this;
   }
@@ -144,11 +144,11 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public List<FTClient> getClients() {
+  public List<ServiceClient> getClients() {
     return this.clients;
   }
 
-  public SignInFTServiceReq setClients(List<FTClient> clients) {
+  public SignInServiceReq setClients(List<ServiceClient> clients) {
     this.clients = clients;
     return this;
   }
@@ -175,7 +175,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       if (__value == null) {
         unsetType();
       } else {
-        setType((FTServiceType)__value);
+        setType((ExternalServiceType)__value);
       }
       break;
 
@@ -183,7 +183,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       if (__value == null) {
         unsetClients();
       } else {
-        setClients((List<FTClient>)__value);
+        setClients((List<ServiceClient>)__value);
       }
       break;
 
@@ -211,9 +211,9 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof SignInFTServiceReq))
+    if (!(_that instanceof SignInServiceReq))
       return false;
-    SignInFTServiceReq that = (SignInFTServiceReq)_that;
+    SignInServiceReq that = (SignInServiceReq)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
@@ -228,7 +228,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
   }
 
   @Override
-  public int compareTo(SignInFTServiceReq other) {
+  public int compareTo(SignInServiceReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -271,7 +271,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       {
         case TYPE:
           if (__field.type == TType.I32) {
-            this.type = FTServiceType.findByValue(iprot.readI32());
+            this.type = ExternalServiceType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -279,16 +279,16 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
         case CLIENTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list281 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list281.size));
-              for (int _i282 = 0; 
-                   (_list281.size < 0) ? iprot.peekList() : (_i282 < _list281.size); 
-                   ++_i282)
+              TList _list294 = iprot.readListBegin();
+              this.clients = new ArrayList<ServiceClient>(Math.max(0, _list294.size));
+              for (int _i295 = 0; 
+                   (_list294.size < 0) ? iprot.peekList() : (_i295 < _list294.size); 
+                   ++_i295)
               {
-                FTClient _elem283;
-                _elem283 = new FTClient();
-                _elem283.read(iprot);
-                this.clients.add(_elem283);
+                ServiceClient _elem296;
+                _elem296 = new ServiceClient();
+                _elem296.read(iprot);
+                this.clients.add(_elem296);
               }
               iprot.readListEnd();
             }
@@ -322,8 +322,8 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter284 : this.clients)        {
-          _iter284.write(oprot);
+        for (ServiceClient _iter297 : this.clients)        {
+          _iter297.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -343,7 +343,7 @@ public class SignInFTServiceReq implements TBase, java.io.Serializable, Cloneabl
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("SignInFTServiceReq");
+    StringBuilder sb = new StringBuilder("SignInServiceReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

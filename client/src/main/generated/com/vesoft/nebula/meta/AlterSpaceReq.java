@@ -24,21 +24,21 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comparable<AdminJobReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("AdminJobReq");
-  private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)1);
-  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)2);
+public class AlterSpaceReq implements TBase, java.io.Serializable, Cloneable, Comparable<AlterSpaceReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("AlterSpaceReq");
+  private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)1);
+  private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)2);
   private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)3);
 
+  public byte[] space_name;
   /**
    * 
-   * @see AdminJobOp
+   * @see AlterSpaceOp
    */
-  public AdminJobOp op;
-  public AdminCmd cmd;
+  public AlterSpaceOp op;
   public List<byte[]> paras;
-  public static final int OP = 1;
-  public static final int CMD = 2;
+  public static final int SPACE_NAME = 1;
+  public static final int OP = 2;
   public static final int PARAS = 3;
 
   // isset id assignments
@@ -47,9 +47,9 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(CMD, new FieldMetaData("cmd", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARAS, new FieldMetaData("paras", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
@@ -58,37 +58,37 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(AdminJobReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(AlterSpaceReq.class, metaDataMap);
   }
 
-  public AdminJobReq() {
+  public AlterSpaceReq() {
   }
 
-  public AdminJobReq(
-      AdminJobOp op,
-      AdminCmd cmd,
+  public AlterSpaceReq(
+      byte[] space_name,
+      AlterSpaceOp op,
       List<byte[]> paras) {
     this();
+    this.space_name = space_name;
     this.op = op;
-    this.cmd = cmd;
     this.paras = paras;
   }
 
   public static class Builder {
-    private AdminJobOp op;
-    private AdminCmd cmd;
+    private byte[] space_name;
+    private AlterSpaceOp op;
     private List<byte[]> paras;
 
     public Builder() {
     }
 
-    public Builder setOp(final AdminJobOp op) {
-      this.op = op;
+    public Builder setSpace_name(final byte[] space_name) {
+      this.space_name = space_name;
       return this;
     }
 
-    public Builder setCmd(final AdminCmd cmd) {
-      this.cmd = cmd;
+    public Builder setOp(final AlterSpaceOp op) {
+      this.op = op;
       return this;
     }
 
@@ -97,10 +97,10 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       return this;
     }
 
-    public AdminJobReq build() {
-      AdminJobReq result = new AdminJobReq();
+    public AlterSpaceReq build() {
+      AlterSpaceReq result = new AlterSpaceReq();
+      result.setSpace_name(this.space_name);
       result.setOp(this.op);
-      result.setCmd(this.cmd);
       result.setParas(this.paras);
       return result;
     }
@@ -113,35 +113,59 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public AdminJobReq(AdminJobReq other) {
+  public AlterSpaceReq(AlterSpaceReq other) {
+    if (other.isSetSpace_name()) {
+      this.space_name = TBaseHelper.deepCopy(other.space_name);
+    }
     if (other.isSetOp()) {
       this.op = TBaseHelper.deepCopy(other.op);
-    }
-    if (other.isSetCmd()) {
-      this.cmd = TBaseHelper.deepCopy(other.cmd);
     }
     if (other.isSetParas()) {
       this.paras = TBaseHelper.deepCopy(other.paras);
     }
   }
 
-  public AdminJobReq deepCopy() {
-    return new AdminJobReq(this);
+  public AlterSpaceReq deepCopy() {
+    return new AlterSpaceReq(this);
+  }
+
+  public byte[] getSpace_name() {
+    return this.space_name;
+  }
+
+  public AlterSpaceReq setSpace_name(byte[] space_name) {
+    this.space_name = space_name;
+    return this;
+  }
+
+  public void unsetSpace_name() {
+    this.space_name = null;
+  }
+
+  // Returns true if field space_name is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_name() {
+    return this.space_name != null;
+  }
+
+  public void setSpace_nameIsSet(boolean __value) {
+    if (!__value) {
+      this.space_name = null;
+    }
   }
 
   /**
    * 
-   * @see AdminJobOp
+   * @see AlterSpaceOp
    */
-  public AdminJobOp getOp() {
+  public AlterSpaceOp getOp() {
     return this.op;
   }
 
   /**
    * 
-   * @see AdminJobOp
+   * @see AlterSpaceOp
    */
-  public AdminJobReq setOp(AdminJobOp op) {
+  public AlterSpaceReq setOp(AlterSpaceOp op) {
     this.op = op;
     return this;
   }
@@ -161,35 +185,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public AdminCmd getCmd() {
-    return this.cmd;
-  }
-
-  public AdminJobReq setCmd(AdminCmd cmd) {
-    this.cmd = cmd;
-    return this;
-  }
-
-  public void unsetCmd() {
-    this.cmd = null;
-  }
-
-  // Returns true if field cmd is set (has been assigned a value) and false otherwise
-  public boolean isSetCmd() {
-    return this.cmd != null;
-  }
-
-  public void setCmdIsSet(boolean __value) {
-    if (!__value) {
-      this.cmd = null;
-    }
-  }
-
   public List<byte[]> getParas() {
     return this.paras;
   }
 
-  public AdminJobReq setParas(List<byte[]> paras) {
+  public AlterSpaceReq setParas(List<byte[]> paras) {
     this.paras = paras;
     return this;
   }
@@ -212,19 +212,19 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
+    case SPACE_NAME:
+      if (__value == null) {
+        unsetSpace_name();
+      } else {
+        setSpace_name((byte[])__value);
+      }
+      break;
+
     case OP:
       if (__value == null) {
         unsetOp();
       } else {
-        setOp((AdminJobOp)__value);
-      }
-      break;
-
-    case CMD:
-      if (__value == null) {
-        unsetCmd();
-      } else {
-        setCmd((AdminCmd)__value);
+        setOp((AlterSpaceOp)__value);
       }
       break;
 
@@ -243,11 +243,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case SPACE_NAME:
+      return getSpace_name();
+
     case OP:
       return getOp();
-
-    case CMD:
-      return getCmd();
 
     case PARAS:
       return getParas();
@@ -263,13 +263,13 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof AdminJobReq))
+    if (!(_that instanceof AlterSpaceReq))
       return false;
-    AdminJobReq that = (AdminJobReq)_that;
+    AlterSpaceReq that = (AlterSpaceReq)_that;
+
+    if (!TBaseHelper.equalsSlow(this.isSetSpace_name(), that.isSetSpace_name(), this.space_name, that.space_name)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetOp(), that.isSetOp(), this.op, that.op)) { return false; }
-
-    if (!TBaseHelper.equalsNobinary(this.isSetCmd(), that.isSetCmd(), this.cmd, that.cmd)) { return false; }
 
     if (!TBaseHelper.equalsSlow(this.isSetParas(), that.isSetParas(), this.paras, that.paras)) { return false; }
 
@@ -278,11 +278,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {op, cmd, paras});
+    return Arrays.deepHashCode(new Object[] {space_name, op, paras});
   }
 
   @Override
-  public int compareTo(AdminJobReq other) {
+  public int compareTo(AlterSpaceReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -293,19 +293,19 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetSpace_name()).compareTo(other.isSetSpace_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(space_name, other.space_name);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetOp()).compareTo(other.isSetOp());
     if (lastComparison != 0) {
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(op, other.op);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetCmd()).compareTo(other.isSetCmd());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(cmd, other.cmd);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -331,16 +331,16 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       switch (__field.id)
       {
-        case OP:
-          if (__field.type == TType.I32) {
-            this.op = AdminJobOp.findByValue(iprot.readI32());
+        case SPACE_NAME:
+          if (__field.type == TType.STRING) {
+            this.space_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case CMD:
+        case OP:
           if (__field.type == TType.I32) {
-            this.cmd = AdminCmd.findByValue(iprot.readI32());
+            this.op = AlterSpaceOp.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -348,15 +348,15 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
         case PARAS:
           if (__field.type == TType.LIST) {
             {
-              TList _list34 = iprot.readListBegin();
-              this.paras = new ArrayList<byte[]>(Math.max(0, _list34.size));
-              for (int _i35 = 0; 
-                   (_list34.size < 0) ? iprot.peekList() : (_i35 < _list34.size); 
-                   ++_i35)
+              TList _list30 = iprot.readListBegin();
+              this.paras = new ArrayList<byte[]>(Math.max(0, _list30.size));
+              for (int _i31 = 0; 
+                   (_list30.size < 0) ? iprot.peekList() : (_i31 < _list30.size); 
+                   ++_i31)
               {
-                byte[] _elem36;
-                _elem36 = iprot.readBinary();
-                this.paras.add(_elem36);
+                byte[] _elem32;
+                _elem32 = iprot.readBinary();
+                this.paras.add(_elem32);
               }
               iprot.readListEnd();
             }
@@ -381,22 +381,22 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    if (this.space_name != null) {
+      oprot.writeFieldBegin(SPACE_NAME_FIELD_DESC);
+      oprot.writeBinary(this.space_name);
+      oprot.writeFieldEnd();
+    }
     if (this.op != null) {
       oprot.writeFieldBegin(OP_FIELD_DESC);
       oprot.writeI32(this.op == null ? 0 : this.op.getValue());
-      oprot.writeFieldEnd();
-    }
-    if (this.cmd != null) {
-      oprot.writeFieldBegin(CMD_FIELD_DESC);
-      oprot.writeI32(this.cmd == null ? 0 : this.cmd.getValue());
       oprot.writeFieldEnd();
     }
     if (this.paras != null) {
       oprot.writeFieldBegin(PARAS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.paras.size()));
-        for (byte[] _iter37 : this.paras)        {
-          oprot.writeBinary(_iter37);
+        for (byte[] _iter33 : this.paras)        {
+          oprot.writeBinary(_iter33);
         }
         oprot.writeListEnd();
       }
@@ -416,12 +416,28 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("AdminJobReq");
+    StringBuilder sb = new StringBuilder("AlterSpaceReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
+    sb.append(indentStr);
+    sb.append("space_name");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getSpace_name() == null) {
+      sb.append("null");
+    } else {
+        int __space_name_size = Math.min(this.getSpace_name().length, 128);
+        for (int i = 0; i < __space_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getSpace_name()[i]).length() > 1 ? Integer.toHexString(this.getSpace_name()[i]).substring(Integer.toHexString(this.getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSpace_name()[i]).toUpperCase());
+        }
+        if (this.getSpace_name().length > 128) sb.append(" ...");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
     sb.append(indentStr);
     sb.append("op");
     sb.append(space);
@@ -436,25 +452,6 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       sb.append(this.getOp());
       if (op_name != null) {
-        sb.append(")");
-      }
-    }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("cmd");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getCmd() == null) {
-      sb.append("null");
-    } else {
-      String cmd_name = this.getCmd() == null ? "null" : this.getCmd().name();
-      if (cmd_name != null) {
-        sb.append(cmd_name);
-        sb.append(" (");
-      }
-      sb.append(this.getCmd());
-      if (cmd_name != null) {
         sb.append(")");
       }
     }

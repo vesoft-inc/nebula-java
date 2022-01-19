@@ -57,7 +57,7 @@ public class VerifyClientVersionReq implements TBase, java.io.Serializable, Clon
   }
 
   public VerifyClientVersionReq() {
-    this.client_version = "2.6.0".getBytes();
+    this.client_version = "3.0.0".getBytes();
 
   }
 

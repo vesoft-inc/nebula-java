@@ -23,6 +23,7 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
   DOWNLOAD(7),
   INGEST(8),
   LEADER_BALANCE(9),
+  ZONE_BALANCE(10),
   UNKNOWN(99);
 
   private final int value;
@@ -64,6 +65,8 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
         return INGEST;
       case 9:
         return LEADER_BALANCE;
+      case 10:
+        return ZONE_BALANCE;
       case 99:
         return UNKNOWN;
       default:

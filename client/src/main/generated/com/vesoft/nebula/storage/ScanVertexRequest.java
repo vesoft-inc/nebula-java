@@ -807,18 +807,18 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map189 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map189.size));
-              for (int _i190 = 0; 
-                   (_map189.size < 0) ? iprot.peekMap() : (_i190 < _map189.size); 
-                   ++_i190)
+              TMap _map197 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map197.size));
+              for (int _i198 = 0; 
+                   (_map197.size < 0) ? iprot.peekMap() : (_i198 < _map197.size); 
+                   ++_i198)
               {
-                int _key191;
-                ScanCursor _val192;
-                _key191 = iprot.readI32();
-                _val192 = new ScanCursor();
-                _val192.read(iprot);
-                this.parts.put(_key191, _val192);
+                int _key199;
+                ScanCursor _val200;
+                _key199 = iprot.readI32();
+                _val200 = new ScanCursor();
+                _val200.read(iprot);
+                this.parts.put(_key199, _val200);
               }
               iprot.readMapEnd();
             }
@@ -829,16 +829,16 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         case RETURN_COLUMNS:
           if (__field.type == TType.LIST) {
             {
-              TList _list193 = iprot.readListBegin();
-              this.return_columns = new ArrayList<VertexProp>(Math.max(0, _list193.size));
-              for (int _i194 = 0; 
-                   (_list193.size < 0) ? iprot.peekList() : (_i194 < _list193.size); 
-                   ++_i194)
+              TList _list201 = iprot.readListBegin();
+              this.return_columns = new ArrayList<VertexProp>(Math.max(0, _list201.size));
+              for (int _i202 = 0; 
+                   (_list201.size < 0) ? iprot.peekList() : (_i202 < _list201.size); 
+                   ++_i202)
               {
-                VertexProp _elem195;
-                _elem195 = new VertexProp();
-                _elem195.read(iprot);
-                this.return_columns.add(_elem195);
+                VertexProp _elem203;
+                _elem203 = new VertexProp();
+                _elem203.read(iprot);
+                this.return_columns.add(_elem203);
               }
               iprot.readListEnd();
             }
@@ -925,9 +925,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.parts.size()));
-        for (Map.Entry<Integer, ScanCursor> _iter196 : this.parts.entrySet())        {
-          oprot.writeI32(_iter196.getKey());
-          _iter196.getValue().write(oprot);
+        for (Map.Entry<Integer, ScanCursor> _iter204 : this.parts.entrySet())        {
+          oprot.writeI32(_iter204.getKey());
+          _iter204.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -937,8 +937,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (VertexProp _iter197 : this.return_columns)        {
-          _iter197.write(oprot);
+        for (VertexProp _iter205 : this.return_columns)        {
+          _iter205.write(oprot);
         }
         oprot.writeListEnd();
       }

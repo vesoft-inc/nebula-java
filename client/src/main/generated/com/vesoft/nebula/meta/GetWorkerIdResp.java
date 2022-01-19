@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListEdgesResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListEdgesResp");
+public class GetWorkerIdResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetWorkerIdResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetWorkerIdResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField EDGES_FIELD_DESC = new TField("edges", TType.LIST, (short)3);
+  private static final TField WORKERID_FIELD_DESC = new TField("workerid", TType.I64, (short)3);
 
   /**
    * 
@@ -36,12 +36,14 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<EdgeItem> edges;
+  public long workerid;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int EDGES = 3;
+  public static final int WORKERID = 3;
 
   // isset id assignments
+  private static final int __WORKERID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -51,33 +53,35 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(EDGES, new FieldMetaData("edges", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, EdgeItem.class))));
+    tmpMetaDataMap.put(WORKERID, new FieldMetaData("workerid", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListEdgesResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetWorkerIdResp.class, metaDataMap);
   }
 
-  public ListEdgesResp() {
+  public GetWorkerIdResp() {
   }
 
-  public ListEdgesResp(
+  public GetWorkerIdResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<EdgeItem> edges) {
+      long workerid) {
     this();
     this.code = code;
     this.leader = leader;
-    this.edges = edges;
+    this.workerid = workerid;
+    setWorkeridIsSet(true);
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<EdgeItem> edges;
+    private long workerid;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -92,16 +96,19 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
-    public Builder setEdges(final List<EdgeItem> edges) {
-      this.edges = edges;
+    public Builder setWorkerid(final long workerid) {
+      this.workerid = workerid;
+      __optional_isset.set(__WORKERID_ISSET_ID, true);
       return this;
     }
 
-    public ListEdgesResp build() {
-      ListEdgesResp result = new ListEdgesResp();
+    public GetWorkerIdResp build() {
+      GetWorkerIdResp result = new GetWorkerIdResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setEdges(this.edges);
+      if (__optional_isset.get(__WORKERID_ISSET_ID)) {
+        result.setWorkerid(this.workerid);
+      }
       return result;
     }
   }
@@ -113,20 +120,20 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListEdgesResp(ListEdgesResp other) {
+  public GetWorkerIdResp(GetWorkerIdResp other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetEdges()) {
-      this.edges = TBaseHelper.deepCopy(other.edges);
-    }
+    this.workerid = TBaseHelper.deepCopy(other.workerid);
   }
 
-  public ListEdgesResp deepCopy() {
-    return new ListEdgesResp(this);
+  public GetWorkerIdResp deepCopy() {
+    return new GetWorkerIdResp(this);
   }
 
   /**
@@ -141,7 +148,7 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ListEdgesResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public GetWorkerIdResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +172,7 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
     return this.leader;
   }
 
-  public ListEdgesResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public GetWorkerIdResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,31 +192,29 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public List<EdgeItem> getEdges() {
-    return this.edges;
+  public long getWorkerid() {
+    return this.workerid;
   }
 
-  public ListEdgesResp setEdges(List<EdgeItem> edges) {
-    this.edges = edges;
+  public GetWorkerIdResp setWorkerid(long workerid) {
+    this.workerid = workerid;
+    setWorkeridIsSet(true);
     return this;
   }
 
-  public void unsetEdges() {
-    this.edges = null;
+  public void unsetWorkerid() {
+    __isset_bit_vector.clear(__WORKERID_ISSET_ID);
   }
 
-  // Returns true if field edges is set (has been assigned a value) and false otherwise
-  public boolean isSetEdges() {
-    return this.edges != null;
+  // Returns true if field workerid is set (has been assigned a value) and false otherwise
+  public boolean isSetWorkerid() {
+    return __isset_bit_vector.get(__WORKERID_ISSET_ID);
   }
 
-  public void setEdgesIsSet(boolean __value) {
-    if (!__value) {
-      this.edges = null;
-    }
+  public void setWorkeridIsSet(boolean __value) {
+    __isset_bit_vector.set(__WORKERID_ISSET_ID, __value);
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
@@ -228,11 +233,11 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case EDGES:
+    case WORKERID:
       if (__value == null) {
-        unsetEdges();
+        unsetWorkerid();
       } else {
-        setEdges((List<EdgeItem>)__value);
+        setWorkerid((Long)__value);
       }
       break;
 
@@ -249,8 +254,8 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
     case LEADER:
       return getLeader();
 
-    case EDGES:
-      return getEdges();
+    case WORKERID:
+      return new Long(getWorkerid());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +268,26 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListEdgesResp))
+    if (!(_that instanceof GetWorkerIdResp))
       return false;
-    ListEdgesResp that = (ListEdgesResp)_that;
+    GetWorkerIdResp that = (GetWorkerIdResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetEdges(), that.isSetEdges(), this.edges, that.edges)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.workerid, that.workerid)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, edges});
+    return Arrays.deepHashCode(new Object[] {code, leader, workerid});
   }
 
   @Override
-  public int compareTo(ListEdgesResp other) {
+  public int compareTo(GetWorkerIdResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +314,11 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetEdges()).compareTo(other.isSetEdges());
+    lastComparison = Boolean.valueOf(isSetWorkerid()).compareTo(other.isSetWorkerid());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(edges, other.edges);
+    lastComparison = TBaseHelper.compareTo(workerid, other.workerid);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,22 +351,10 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case EDGES:
-          if (__field.type == TType.LIST) {
-            {
-              TList _list94 = iprot.readListBegin();
-              this.edges = new ArrayList<EdgeItem>(Math.max(0, _list94.size));
-              for (int _i95 = 0; 
-                   (_list94.size < 0) ? iprot.peekList() : (_i95 < _list94.size); 
-                   ++_i95)
-              {
-                EdgeItem _elem96;
-                _elem96 = new EdgeItem();
-                _elem96.read(iprot);
-                this.edges.add(_elem96);
-              }
-              iprot.readListEnd();
-            }
+        case WORKERID:
+          if (__field.type == TType.I64) {
+            this.workerid = iprot.readI64();
+            setWorkeridIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -393,17 +386,9 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.edges != null) {
-      oprot.writeFieldBegin(EDGES_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.edges.size()));
-        for (EdgeItem _iter97 : this.edges)        {
-          _iter97.write(oprot);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(WORKERID_FIELD_DESC);
+    oprot.writeI64(this.workerid);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -418,7 +403,7 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListEdgesResp");
+    StringBuilder sb = new StringBuilder("GetWorkerIdResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -455,14 +440,10 @@ public class ListEdgesResp implements TBase, java.io.Serializable, Cloneable, Co
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("edges");
+    sb.append("workerid");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getEdges() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getEdges(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this.getWorkerid(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
