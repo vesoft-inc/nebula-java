@@ -25,15 +25,20 @@ import com.facebook.thrift.protocol.*;
 public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneable, Comparable<AskForVoteResponse> {
   private static final TStruct STRUCT_DESC = new TStruct("AskForVoteResponse");
   private static final TField ERROR_CODE_FIELD_DESC = new TField("error_code", TType.I32, (short)1);
+  private static final TField CURRENT_TERM_FIELD_DESC = new TField("current_term", TType.I64, (short)2);
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode error_code;
+  public com.vesoft.nebula.ErrorCode error_code;
+  public long current_term;
   public static final int ERROR_CODE = 1;
+  public static final int CURRENT_TERM = 2;
 
   // isset id assignments
+  private static final int __CURRENT_TERM_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -41,6 +46,8 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(ERROR_CODE, new FieldMetaData("error_code", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(CURRENT_TERM, new FieldMetaData("current_term", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -52,25 +59,40 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
   }
 
   public AskForVoteResponse(
-      ErrorCode error_code) {
+      com.vesoft.nebula.ErrorCode error_code,
+      long current_term) {
     this();
     this.error_code = error_code;
+    this.current_term = current_term;
+    setCurrent_termIsSet(true);
   }
 
   public static class Builder {
-    private ErrorCode error_code;
+    private com.vesoft.nebula.ErrorCode error_code;
+    private long current_term;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
 
-    public Builder setError_code(final ErrorCode error_code) {
+    public Builder setError_code(final com.vesoft.nebula.ErrorCode error_code) {
       this.error_code = error_code;
+      return this;
+    }
+
+    public Builder setCurrent_term(final long current_term) {
+      this.current_term = current_term;
+      __optional_isset.set(__CURRENT_TERM_ISSET_ID, true);
       return this;
     }
 
     public AskForVoteResponse build() {
       AskForVoteResponse result = new AskForVoteResponse();
       result.setError_code(this.error_code);
+      if (__optional_isset.get(__CURRENT_TERM_ISSET_ID)) {
+        result.setCurrent_term(this.current_term);
+      }
       return result;
     }
   }
@@ -83,9 +105,12 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
    * Performs a deep copy on <i>other</i>.
    */
   public AskForVoteResponse(AskForVoteResponse other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetError_code()) {
       this.error_code = TBaseHelper.deepCopy(other.error_code);
     }
+    this.current_term = TBaseHelper.deepCopy(other.current_term);
   }
 
   public AskForVoteResponse deepCopy() {
@@ -94,17 +119,17 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public ErrorCode getError_code() {
+  public com.vesoft.nebula.ErrorCode getError_code() {
     return this.error_code;
   }
 
   /**
    * 
-   * @see ErrorCode
+   * @see com.vesoft.nebula.ErrorCode
    */
-  public AskForVoteResponse setError_code(ErrorCode error_code) {
+  public AskForVoteResponse setError_code(com.vesoft.nebula.ErrorCode error_code) {
     this.error_code = error_code;
     return this;
   }
@@ -124,13 +149,44 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
+  public long getCurrent_term() {
+    return this.current_term;
+  }
+
+  public AskForVoteResponse setCurrent_term(long current_term) {
+    this.current_term = current_term;
+    setCurrent_termIsSet(true);
+    return this;
+  }
+
+  public void unsetCurrent_term() {
+    __isset_bit_vector.clear(__CURRENT_TERM_ISSET_ID);
+  }
+
+  // Returns true if field current_term is set (has been assigned a value) and false otherwise
+  public boolean isSetCurrent_term() {
+    return __isset_bit_vector.get(__CURRENT_TERM_ISSET_ID);
+  }
+
+  public void setCurrent_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__CURRENT_TERM_ISSET_ID, __value);
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ERROR_CODE:
       if (__value == null) {
         unsetError_code();
       } else {
-        setError_code((ErrorCode)__value);
+        setError_code((com.vesoft.nebula.ErrorCode)__value);
+      }
+      break;
+
+    case CURRENT_TERM:
+      if (__value == null) {
+        unsetCurrent_term();
+      } else {
+        setCurrent_term((Long)__value);
       }
       break;
 
@@ -143,6 +199,9 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
     switch (fieldID) {
     case ERROR_CODE:
       return getError_code();
+
+    case CURRENT_TERM:
+      return new Long(getCurrent_term());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -161,12 +220,14 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.isSetError_code(), that.isSetError_code(), this.error_code, that.error_code)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.current_term, that.current_term)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {error_code});
+    return Arrays.deepHashCode(new Object[] {error_code, current_term});
   }
 
   @Override
@@ -189,6 +250,14 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetCurrent_term()).compareTo(other.isSetCurrent_term());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(current_term, other.current_term);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -205,7 +274,15 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
       {
         case ERROR_CODE:
           if (__field.type == TType.I32) {
-            this.error_code = ErrorCode.findByValue(iprot.readI32());
+            this.error_code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case CURRENT_TERM:
+          if (__field.type == TType.I64) {
+            this.current_term = iprot.readI64();
+            setCurrent_termIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -232,6 +309,9 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
       oprot.writeI32(this.error_code == null ? 0 : this.error_code.getValue());
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(CURRENT_TERM_FIELD_DESC);
+    oprot.writeI64(this.current_term);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -269,6 +349,13 @@ public class AskForVoteResponse implements TBase, java.io.Serializable, Cloneabl
         sb.append(")");
       }
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("current_term");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getCurrent_term(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

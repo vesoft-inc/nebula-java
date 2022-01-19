@@ -486,30 +486,30 @@ public class ChainAddEdgesRequest implements TBase, java.io.Serializable, Clonea
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map303 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<NewEdge>>(Math.max(0, 2*_map303.size));
-              for (int _i304 = 0; 
-                   (_map303.size < 0) ? iprot.peekMap() : (_i304 < _map303.size); 
-                   ++_i304)
+              TMap _map297 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<NewEdge>>(Math.max(0, 2*_map297.size));
+              for (int _i298 = 0; 
+                   (_map297.size < 0) ? iprot.peekMap() : (_i298 < _map297.size); 
+                   ++_i298)
               {
-                int _key305;
-                List<NewEdge> _val306;
-                _key305 = iprot.readI32();
+                int _key299;
+                List<NewEdge> _val300;
+                _key299 = iprot.readI32();
                 {
-                  TList _list307 = iprot.readListBegin();
-                  _val306 = new ArrayList<NewEdge>(Math.max(0, _list307.size));
-                  for (int _i308 = 0; 
-                       (_list307.size < 0) ? iprot.peekList() : (_i308 < _list307.size); 
-                       ++_i308)
+                  TList _list301 = iprot.readListBegin();
+                  _val300 = new ArrayList<NewEdge>(Math.max(0, _list301.size));
+                  for (int _i302 = 0; 
+                       (_list301.size < 0) ? iprot.peekList() : (_i302 < _list301.size); 
+                       ++_i302)
                   {
-                    NewEdge _elem309;
-                    _elem309 = new NewEdge();
-                    _elem309.read(iprot);
-                    _val306.add(_elem309);
+                    NewEdge _elem303;
+                    _elem303 = new NewEdge();
+                    _elem303.read(iprot);
+                    _val300.add(_elem303);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key305, _val306);
+                this.parts.put(_key299, _val300);
               }
               iprot.readMapEnd();
             }
@@ -520,15 +520,15 @@ public class ChainAddEdgesRequest implements TBase, java.io.Serializable, Clonea
         case PROP_NAMES:
           if (__field.type == TType.LIST) {
             {
-              TList _list310 = iprot.readListBegin();
-              this.prop_names = new ArrayList<byte[]>(Math.max(0, _list310.size));
-              for (int _i311 = 0; 
-                   (_list310.size < 0) ? iprot.peekList() : (_i311 < _list310.size); 
-                   ++_i311)
+              TList _list304 = iprot.readListBegin();
+              this.prop_names = new ArrayList<byte[]>(Math.max(0, _list304.size));
+              for (int _i305 = 0; 
+                   (_list304.size < 0) ? iprot.peekList() : (_i305 < _list304.size); 
+                   ++_i305)
               {
-                byte[] _elem312;
-                _elem312 = iprot.readBinary();
-                this.prop_names.add(_elem312);
+                byte[] _elem306;
+                _elem306 = iprot.readBinary();
+                this.prop_names.add(_elem306);
               }
               iprot.readListEnd();
             }
@@ -584,12 +584,12 @@ public class ChainAddEdgesRequest implements TBase, java.io.Serializable, Clonea
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<NewEdge>> _iter313 : this.parts.entrySet())        {
-          oprot.writeI32(_iter313.getKey());
+        for (Map.Entry<Integer, List<NewEdge>> _iter307 : this.parts.entrySet())        {
+          oprot.writeI32(_iter307.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter313.getValue().size()));
-            for (NewEdge _iter314 : _iter313.getValue())            {
-              _iter314.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter307.getValue().size()));
+            for (NewEdge _iter308 : _iter307.getValue())            {
+              _iter308.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -602,8 +602,8 @@ public class ChainAddEdgesRequest implements TBase, java.io.Serializable, Clonea
       oprot.writeFieldBegin(PROP_NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.prop_names.size()));
-        for (byte[] _iter315 : this.prop_names)        {
-          oprot.writeBinary(_iter315);
+        for (byte[] _iter309 : this.prop_names)        {
+          oprot.writeBinary(_iter309);
         }
         oprot.writeListEnd();
       }

@@ -267,16 +267,16 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
         case PAIRS:
           if (__field.type == TType.LIST) {
             {
-              TList _list136 = iprot.readListBegin();
-              this.pairs = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list136.size));
-              for (int _i137 = 0; 
-                   (_list136.size < 0) ? iprot.peekList() : (_i137 < _list136.size); 
-                   ++_i137)
+              TList _list140 = iprot.readListBegin();
+              this.pairs = new ArrayList<com.vesoft.nebula.KeyValue>(Math.max(0, _list140.size));
+              for (int _i141 = 0; 
+                   (_list140.size < 0) ? iprot.peekList() : (_i141 < _list140.size); 
+                   ++_i141)
               {
-                com.vesoft.nebula.KeyValue _elem138;
-                _elem138 = new com.vesoft.nebula.KeyValue();
-                _elem138.read(iprot);
-                this.pairs.add(_elem138);
+                com.vesoft.nebula.KeyValue _elem142;
+                _elem142 = new com.vesoft.nebula.KeyValue();
+                _elem142.read(iprot);
+                this.pairs.add(_elem142);
               }
               iprot.readListEnd();
             }
@@ -310,8 +310,8 @@ public class MultiPutReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(PAIRS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.pairs.size()));
-        for (com.vesoft.nebula.KeyValue _iter139 : this.pairs)        {
-          _iter139.write(oprot);
+        for (com.vesoft.nebula.KeyValue _iter143 : this.pairs)        {
+          _iter143.write(oprot);
         }
         oprot.writeListEnd();
       }

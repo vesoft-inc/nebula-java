@@ -267,15 +267,15 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
         case KEYS:
           if (__field.type == TType.LIST) {
             {
-              TList _list140 = iprot.readListBegin();
-              this.keys = new ArrayList<byte[]>(Math.max(0, _list140.size));
-              for (int _i141 = 0; 
-                   (_list140.size < 0) ? iprot.peekList() : (_i141 < _list140.size); 
-                   ++_i141)
+              TList _list144 = iprot.readListBegin();
+              this.keys = new ArrayList<byte[]>(Math.max(0, _list144.size));
+              for (int _i145 = 0; 
+                   (_list144.size < 0) ? iprot.peekList() : (_i145 < _list144.size); 
+                   ++_i145)
               {
-                byte[] _elem142;
-                _elem142 = iprot.readBinary();
-                this.keys.add(_elem142);
+                byte[] _elem146;
+                _elem146 = iprot.readBinary();
+                this.keys.add(_elem146);
               }
               iprot.readListEnd();
             }
@@ -309,8 +309,8 @@ public class MultiGetReq implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(KEYS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.keys.size()));
-        for (byte[] _iter143 : this.keys)        {
-          oprot.writeBinary(_iter143);
+        for (byte[] _iter147 : this.keys)        {
+          oprot.writeBinary(_iter147);
         }
         oprot.writeListEnd();
       }

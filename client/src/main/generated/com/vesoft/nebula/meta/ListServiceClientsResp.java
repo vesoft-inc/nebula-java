@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListFTClientsResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListFTClientsResp");
+public class ListServiceClientsResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListServiceClientsResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListServiceClientsResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.LIST, (short)3);
+  private static final TField CLIENTS_FIELD_DESC = new TField("clients", TType.MAP, (short)3);
 
   /**
    * 
@@ -36,7 +36,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<FTClient> clients;
+  public Map<ExternalServiceType,List<ServiceClient>> clients;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int CLIENTS = 3;
@@ -52,22 +52,24 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     tmpMetaDataMap.put(CLIENTS, new FieldMetaData("clients", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, FTClient.class))));
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new StructMetaData(TType.STRUCT, ServiceClient.class)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListFTClientsResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListServiceClientsResp.class, metaDataMap);
   }
 
-  public ListFTClientsResp() {
+  public ListServiceClientsResp() {
   }
 
-  public ListFTClientsResp(
+  public ListServiceClientsResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<FTClient> clients) {
+      Map<ExternalServiceType,List<ServiceClient>> clients) {
     this();
     this.code = code;
     this.leader = leader;
@@ -77,7 +79,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<FTClient> clients;
+    private Map<ExternalServiceType,List<ServiceClient>> clients;
 
     public Builder() {
     }
@@ -92,13 +94,13 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
-    public Builder setClients(final List<FTClient> clients) {
+    public Builder setClients(final Map<ExternalServiceType,List<ServiceClient>> clients) {
       this.clients = clients;
       return this;
     }
 
-    public ListFTClientsResp build() {
-      ListFTClientsResp result = new ListFTClientsResp();
+    public ListServiceClientsResp build() {
+      ListServiceClientsResp result = new ListServiceClientsResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
       result.setClients(this.clients);
@@ -113,7 +115,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListFTClientsResp(ListFTClientsResp other) {
+  public ListServiceClientsResp(ListServiceClientsResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
@@ -125,8 +127,8 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public ListFTClientsResp deepCopy() {
-    return new ListFTClientsResp(this);
+  public ListServiceClientsResp deepCopy() {
+    return new ListServiceClientsResp(this);
   }
 
   /**
@@ -141,7 +143,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ListFTClientsResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public ListServiceClientsResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +167,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     return this.leader;
   }
 
-  public ListFTClientsResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public ListServiceClientsResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,11 +187,11 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     }
   }
 
-  public List<FTClient> getClients() {
+  public Map<ExternalServiceType,List<ServiceClient>> getClients() {
     return this.clients;
   }
 
-  public ListFTClientsResp setClients(List<FTClient> clients) {
+  public ListServiceClientsResp setClients(Map<ExternalServiceType,List<ServiceClient>> clients) {
     this.clients = clients;
     return this;
   }
@@ -232,7 +234,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       if (__value == null) {
         unsetClients();
       } else {
-        setClients((List<FTClient>)__value);
+        setClients((Map<ExternalServiceType,List<ServiceClient>>)__value);
       }
       break;
 
@@ -263,9 +265,9 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListFTClientsResp))
+    if (!(_that instanceof ListServiceClientsResp))
       return false;
-    ListFTClientsResp that = (ListFTClientsResp)_that;
+    ListServiceClientsResp that = (ListServiceClientsResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
@@ -282,7 +284,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
   }
 
   @Override
-  public int compareTo(ListFTClientsResp other) {
+  public int compareTo(ListServiceClientsResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -347,20 +349,34 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
           }
           break;
         case CLIENTS:
-          if (__field.type == TType.LIST) {
+          if (__field.type == TType.MAP) {
             {
-              TList _list285 = iprot.readListBegin();
-              this.clients = new ArrayList<FTClient>(Math.max(0, _list285.size));
-              for (int _i286 = 0; 
-                   (_list285.size < 0) ? iprot.peekList() : (_i286 < _list285.size); 
-                   ++_i286)
+              TMap _map298 = iprot.readMapBegin();
+              this.clients = new HashMap<ExternalServiceType,List<ServiceClient>>(Math.max(0, 2*_map298.size));
+              for (int _i299 = 0; 
+                   (_map298.size < 0) ? iprot.peekMap() : (_i299 < _map298.size); 
+                   ++_i299)
               {
-                FTClient _elem287;
-                _elem287 = new FTClient();
-                _elem287.read(iprot);
-                this.clients.add(_elem287);
+                ExternalServiceType _key300;
+                List<ServiceClient> _val301;
+                _key300 = ExternalServiceType.findByValue(iprot.readI32());
+                {
+                  TList _list302 = iprot.readListBegin();
+                  _val301 = new ArrayList<ServiceClient>(Math.max(0, _list302.size));
+                  for (int _i303 = 0; 
+                       (_list302.size < 0) ? iprot.peekList() : (_i303 < _list302.size); 
+                       ++_i303)
+                  {
+                    ServiceClient _elem304;
+                    _elem304 = new ServiceClient();
+                    _elem304.read(iprot);
+                    _val301.add(_elem304);
+                  }
+                  iprot.readListEnd();
+                }
+                this.clients.put(_key300, _val301);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -396,11 +412,18 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     if (this.clients != null) {
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (FTClient _iter288 : this.clients)        {
-          _iter288.write(oprot);
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.clients.size()));
+        for (Map.Entry<ExternalServiceType, List<ServiceClient>> _iter305 : this.clients.entrySet())        {
+          oprot.writeI32(_iter305.getKey() == null ? 0 : _iter305.getKey().getValue());
+          {
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter305.getValue().size()));
+            for (ServiceClient _iter306 : _iter305.getValue())            {
+              _iter306.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -418,7 +441,7 @@ public class ListFTClientsResp implements TBase, java.io.Serializable, Cloneable
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListFTClientsResp");
+    StringBuilder sb = new StringBuilder("ListServiceClientsResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

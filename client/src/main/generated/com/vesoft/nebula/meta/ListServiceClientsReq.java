@@ -24,12 +24,16 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Comparable<SplitZoneReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("SplitZoneReq");
-  private static final TField ZONE_NAME_FIELD_DESC = new TField("zone_name", TType.STRING, (short)1);
+public class ListServiceClientsReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListServiceClientsReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListServiceClientsReq");
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)1);
 
-  public byte[] zone_name;
-  public static final int ZONE_NAME = 1;
+  /**
+   * 
+   * @see ExternalServiceType
+   */
+  public ExternalServiceType type;
+  public static final int TYPE = 1;
 
   // isset id assignments
 
@@ -37,38 +41,38 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ZONE_NAME, new FieldMetaData("zone_name", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(SplitZoneReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListServiceClientsReq.class, metaDataMap);
   }
 
-  public SplitZoneReq() {
+  public ListServiceClientsReq() {
   }
 
-  public SplitZoneReq(
-      byte[] zone_name) {
+  public ListServiceClientsReq(
+      ExternalServiceType type) {
     this();
-    this.zone_name = zone_name;
+    this.type = type;
   }
 
   public static class Builder {
-    private byte[] zone_name;
+    private ExternalServiceType type;
 
     public Builder() {
     }
 
-    public Builder setZone_name(final byte[] zone_name) {
-      this.zone_name = zone_name;
+    public Builder setType(final ExternalServiceType type) {
+      this.type = type;
       return this;
     }
 
-    public SplitZoneReq build() {
-      SplitZoneReq result = new SplitZoneReq();
-      result.setZone_name(this.zone_name);
+    public ListServiceClientsReq build() {
+      ListServiceClientsReq result = new ListServiceClientsReq();
+      result.setType(this.type);
       return result;
     }
   }
@@ -80,47 +84,55 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public SplitZoneReq(SplitZoneReq other) {
-    if (other.isSetZone_name()) {
-      this.zone_name = TBaseHelper.deepCopy(other.zone_name);
+  public ListServiceClientsReq(ListServiceClientsReq other) {
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
     }
   }
 
-  public SplitZoneReq deepCopy() {
-    return new SplitZoneReq(this);
+  public ListServiceClientsReq deepCopy() {
+    return new ListServiceClientsReq(this);
   }
 
-  public byte[] getZone_name() {
-    return this.zone_name;
+  /**
+   * 
+   * @see ExternalServiceType
+   */
+  public ExternalServiceType getType() {
+    return this.type;
   }
 
-  public SplitZoneReq setZone_name(byte[] zone_name) {
-    this.zone_name = zone_name;
+  /**
+   * 
+   * @see ExternalServiceType
+   */
+  public ListServiceClientsReq setType(ExternalServiceType type) {
+    this.type = type;
     return this;
   }
 
-  public void unsetZone_name() {
-    this.zone_name = null;
+  public void unsetType() {
+    this.type = null;
   }
 
-  // Returns true if field zone_name is set (has been assigned a value) and false otherwise
-  public boolean isSetZone_name() {
-    return this.zone_name != null;
+  // Returns true if field type is set (has been assigned a value) and false otherwise
+  public boolean isSetType() {
+    return this.type != null;
   }
 
-  public void setZone_nameIsSet(boolean __value) {
+  public void setTypeIsSet(boolean __value) {
     if (!__value) {
-      this.zone_name = null;
+      this.type = null;
     }
   }
 
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case ZONE_NAME:
+    case TYPE:
       if (__value == null) {
-        unsetZone_name();
+        unsetType();
       } else {
-        setZone_name((byte[])__value);
+        setType((ExternalServiceType)__value);
       }
       break;
 
@@ -131,8 +143,8 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ZONE_NAME:
-      return getZone_name();
+    case TYPE:
+      return getType();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -145,22 +157,22 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof SplitZoneReq))
+    if (!(_that instanceof ListServiceClientsReq))
       return false;
-    SplitZoneReq that = (SplitZoneReq)_that;
+    ListServiceClientsReq that = (ListServiceClientsReq)_that;
 
-    if (!TBaseHelper.equalsSlow(this.isSetZone_name(), that.isSetZone_name(), this.zone_name, that.zone_name)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {zone_name});
+    return Arrays.deepHashCode(new Object[] {type});
   }
 
   @Override
-  public int compareTo(SplitZoneReq other) {
+  public int compareTo(ListServiceClientsReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -171,11 +183,11 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetZone_name()).compareTo(other.isSetZone_name());
+    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(zone_name, other.zone_name);
+    lastComparison = TBaseHelper.compareTo(type, other.type);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -193,9 +205,9 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (__field.id)
       {
-        case ZONE_NAME:
-          if (__field.type == TType.STRING) {
-            this.zone_name = iprot.readBinary();
+        case TYPE:
+          if (__field.type == TType.I32) {
+            this.type = ExternalServiceType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -217,9 +229,9 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.zone_name != null) {
-      oprot.writeFieldBegin(ZONE_NAME_FIELD_DESC);
-      oprot.writeBinary(this.zone_name);
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -236,25 +248,28 @@ public class SplitZoneReq implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("SplitZoneReq");
+    StringBuilder sb = new StringBuilder("ListServiceClientsReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("zone_name");
+    sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getZone_name() == null) {
+    if (this.getType() == null) {
       sb.append("null");
     } else {
-        int __zone_name_size = Math.min(this.getZone_name().length, 128);
-        for (int i = 0; i < __zone_name_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getZone_name()[i]).length() > 1 ? Integer.toHexString(this.getZone_name()[i]).substring(Integer.toHexString(this.getZone_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getZone_name()[i]).toUpperCase());
-        }
-        if (this.getZone_name().length > 128) sb.append(" ...");
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
+        sb.append(" (");
+      }
+      sb.append(this.getType());
+      if (type_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
