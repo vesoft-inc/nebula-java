@@ -38,7 +38,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam) {
-        this(addresses,timeout);
+        this(addresses, timeout);
         this.sslParam = sslParam;
         this.enabledSsl = true;
     }
@@ -83,7 +83,10 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
             boolean pong = connection.ping();
             connection.close();
             return pong;
-        } catch (IOErrorException | ClientServerIncompatibleException e) {
+        } catch (IOErrorException e) {
+            return false;
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error("version verify failed, ", e);
             return false;
         }
     }
@@ -98,7 +101,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         return true;
     }
 
-    private void scheduleTask()  {
+    private void scheduleTask() {
         updateServersStatus();
     }
 }
