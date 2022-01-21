@@ -91,7 +91,12 @@ public class GraphClientExample {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(100);
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
-            pool.init(addresses, nebulaPoolConfig);
+            Boolean initResult = pool.init(addresses, nebulaPoolConfig);
+            if (!initResult) {
+                log.error("pool init failed.");
+                return;
+            }
+
             session = pool.getSession("root", "nebula", false);
             {
                 String createSchema = "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20)); "
