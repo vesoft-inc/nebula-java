@@ -15,6 +15,10 @@ public interface NebulaCodec {
                      byte[] vertexId,
                      int tagId);
 
+    byte[] orphanVertexKey(int vidLen,
+                          int partitionId,
+                          byte[] vertexId);
+
     byte[] edgeKey(int vidLen,
                    int partitionId,
                    byte[] srcId,
