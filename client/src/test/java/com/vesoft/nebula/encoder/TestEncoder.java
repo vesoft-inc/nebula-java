@@ -37,27 +37,27 @@ public class TestEncoder {
     private final NebulaCodecImpl codec = new NebulaCodecImpl();
 
     final String allTypeValueExpectResult = "090ce001081000200000004000000000000000"
-        + "db0f49406957148b0abf05407d0000000c0000004e6562756c61204772617068bb334e5e"
-        + "00000000e40702140a1e2d00000000e40702140a1e2d0000000000000000000000000000"
-        + "000089000000150000009e00000039000000d70000009100000000000000000000004865"
-        + "6c6c6f20776f726c6421010100000000000000006066409a999999997956400102000000"
-        + "030000000000000000000000000000000000f03f000000000000f03f0000000000000040"
-        + "00000000000008400000000000001c4001030000000200000004000000cdcccccccc2c5b"
-        + "c0000000000080414000000000000059c00000000000404740cdccccccccac56c0333333"
-        + "3333734140cdcccccccc2c5bc000000000008041400400000066666666660659c0333333"
-        + "3333b344409a99999999b959c0cdcccccccccc424033333333333358c00000000000c042"
-        + "4066666666660659c03333333333b34440";
+            + "db0f49406957148b0abf05407d0000000c0000004e6562756c61204772617068bb334e5e"
+            + "00000000e40702140a1e2d00000000e40702140a1e2d0000000000000000000000000000"
+            + "000089000000150000009e00000039000000d70000009100000000000000000000004865"
+            + "6c6c6f20776f726c6421010100000000000000006066409a999999997956400102000000"
+            + "030000000000000000000000000000000000f03f000000000000f03f0000000000000040"
+            + "00000000000008400000000000001c4001030000000200000004000000cdcccccccc2c5b"
+            + "c0000000000080414000000000000059c00000000000404740cdccccccccac56c0333333"
+            + "3333734140cdcccccccc2c5bc000000000008041400400000066666666660659c0333333"
+            + "3333b344409a99999999b959c0cdcccccccccc424033333333333358c00000000000c042"
+            + "4066666666660659c03333333333b34440";
 
     private List<String> getCols() {
-        return Arrays.asList("Col01","Col02", "Col03", "Col04", "Col05", "Col06",
-            "Col07","Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14",
-            // Purposely skip the col15
-            "Col16", "Col17", "Col18", "Col19");
+        return Arrays.asList("Col01", "Col02", "Col03", "Col04", "Col05", "Col06",
+                "Col07", "Col08", "Col09", "Col10", "Col11", "Col12", "Col13", "Col14",
+                // Purposely skip the col15
+                "Col16", "Col17", "Col18", "Col19");
     }
 
     private List<Object> getValues() {
         final double e = 2.71828182845904523536028747135266249775724709369995;
-        final float pi = (float)3.14159265358979;
+        final float pi = (float) 3.14159265358979;
         final Value strVal = new Value();
         strVal.setSVal("Hello world!".getBytes());
         final Value fixVal = new Value();
@@ -67,12 +67,12 @@ public class TestEncoder {
         final Value intVal = new Value();
         intVal.setIVal(64);
         final Value timeVal = new Value();
-        timeVal.setTVal(new Time((byte)10, (byte)30, (byte)45, 0));
+        timeVal.setTVal(new Time((byte) 10, (byte) 30, (byte) 45, 0));
         final Value datetimeValue = new Value();
-        datetimeValue.setDtVal(new DateTime((short)2020, (byte)2, (byte)20,
-            (byte)10, (byte)30, (byte)45, 0));
+        datetimeValue.setDtVal(new DateTime((short) 2020, (byte) 2, (byte) 20,
+                (byte) 10, (byte) 30, (byte) 45, 0));
         final Value dateValue = new Value();
-        dateValue.setDVal(new Date((short)2020, (byte)2, (byte)20));
+        dateValue.setDVal(new Date((short) 2020, (byte) 2, (byte) 20));
         final Value nullVal = new Value();
         nullVal.setNVal(NullType.__NULL__);
         // geograph point
@@ -106,8 +106,8 @@ public class TestEncoder {
         rings.add(hole);
         geogPolygonVal.setGgVal(Geography.pgVal(new Polygon(rings)));
         return Arrays.asList(true, 8, 16, 32, intVal, pi, e, strVal, fixVal,
-            timestampVal, dateValue, timeVal, datetimeValue, nullVal,
-            geogPointVal, geogLineStringVal, geogPolygonVal, nullVal);
+                timestampVal, dateValue, timeVal, datetimeValue, nullVal,
+                geogPointVal, geogLineStringVal, geogPolygonVal, nullVal);
     }
 
     public int getSpaceVidLen(String spaceName) throws RuntimeException {
@@ -138,7 +138,12 @@ public class TestEncoder {
     private byte[] getVertexKey(String spaceName, String vid, String tagName) {
         int tagId = cacheImplTest.getTag(spaceName, tagName).tag_id;
         return codec.vertexKey(getSpaceVidLen(spaceName),
-            getPartId(getPartSize(spaceName), vid), vid.getBytes(), tagId);
+                getPartId(getPartSize(spaceName), vid), vid.getBytes(), tagId);
+    }
+
+    private byte[] getOrphanVertexKey(String spaceName, String vid, String tagName) {
+        return codec.orphanVertexKey(getSpaceVidLen(spaceName),
+                getPartId(getPartSize(spaceName), vid), vid.getBytes());
     }
 
     private byte[] getInBoundEdgeKey(String spaceName,
@@ -148,11 +153,11 @@ public class TestEncoder {
                                      Long ranking) {
         int edgeType = cacheImplTest.getEdge(spaceName, edgeName).edge_type;
         return codec.edgeKeyByDefaultVer(getSpaceVidLen(spaceName),
-            getPartId(getPartSize(spaceName), srcId),
-            srcId.getBytes(),
-            edgeType,
-            ranking,
-            dstId.getBytes());
+                getPartId(getPartSize(spaceName), srcId),
+                srcId.getBytes(),
+                edgeType,
+                ranking,
+                dstId.getBytes());
     }
 
     private byte[] getOutBoundEdgeKey(String spaceName,
@@ -162,46 +167,52 @@ public class TestEncoder {
                                       Long ranking) {
         int edgeType = cacheImplTest.getEdge(spaceName, edgeName).edge_type;
         return codec.edgeKeyByDefaultVer(getSpaceVidLen(spaceName),
-            getPartId(getPartSize(spaceName), dstId),
-            dstId.getBytes(),
-            -edgeType,
-            ranking,
-            srcId.getBytes());
+                getPartId(getPartSize(spaceName), dstId),
+                dstId.getBytes(),
+                -edgeType,
+                ranking,
+                srcId.getBytes());
     }
 
     @Test()
     public void testVertexKey() {
         // test vertexKey
-        byte[] vertexKey = getVertexKey("test_space","Tom", "person");
+        byte[] vertexKey = getVertexKey("test_space", "Tom", "person");
         String hexStr = Hex.encodeHexString(vertexKey);
         String expectResult = "01d80100546f6d00000000000000000000000000"
-            + "0000000002000000";
+                + "0000000002000000";
+        Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
+
+        // test orphanVertexKey
+        byte[] orphanVertexKey = getOrphanVertexKey("test_space", "Tom", "person");
+        hexStr = Hex.encodeHexString(orphanVertexKey);
+        expectResult = "07d80100546f6d0000000000000000000000000000000000";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // less than vidLen
         String vid = "0123456789";
-        vertexKey = codec.vertexKey(10,123, vid.getBytes(), 2020);
+        vertexKey = codec.vertexKey(10, 123, vid.getBytes(), 2020);
         hexStr = Hex.encodeHexString(vertexKey);
         expectResult = "017b000030313233343536373839e4070000";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // large than vidLen
-        vertexKey = codec.vertexKey(100,123, vid.getBytes(), 2020);
+        vertexKey = codec.vertexKey(100, 123, vid.getBytes(), 2020);
         hexStr = Hex.encodeHexString(vertexKey);
         expectResult = "017b00003031323334353637383900000000000000000000000000000000000"
-            + "00000000000000000000000000000000000000000000000000000000000000000000000000"
-            + "00000000000000000000000000000000000000000000000000000000000000000000000e407"
-            + "0000";
+                + "00000000000000000000000000000000000000000000000000000000000000000000000000"
+                + "00000000000000000000000000000000000000000000000000000000000000000000000e407"
+                + "0000";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
     }
 
     @Test()
     public void testEdgeKey() {
         // test edgeKey
-        byte[] edgeKey = getInBoundEdgeKey("test_space", "friend", "Kate","Lily", 0L);
+        byte[] edgeKey = getInBoundEdgeKey("test_space", "friend", "Kate", "Lily", 0L);
         String hexStr = Hex.encodeHexString(edgeKey);
         String expectResult = "02ef00004b617465000000000000000000000000000000000300000080000"
-            + "000000000004c696c790000000000000000000000000000000001";
+                + "000000000004c696c790000000000000000000000000000000001";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         String srcVid = "0123456789";
@@ -209,41 +220,45 @@ public class TestEncoder {
 
         // less than vidLen
         edgeKey = codec.edgeKeyByDefaultVer(
-            10,123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes());
+                10, 123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes());
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "027b000030313233343536373839f2030000800000000000000a3938373635343332313001";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // large than vidLen
         edgeKey = codec.edgeKeyByDefaultVer(
-            100,123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes());
+                100, 123, srcVid.getBytes(), 1010, 10L, dstVid.getBytes());
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "027b0000303132333435363738390000000000000000000000000000000000000000"
-            + "0000000000000000000000000000000000000000000000000000000000000000000000000000000"
-            + "0000000000000000000000000000000000000000000000000000000000000f20300008000000000"
-            + "00000a3938373635343332313000000000000000000000000000000000000000000000000000000"
-            + "0000000000000000000000000000000000000000000000000000000000000000000000000000000"
-            + "00000000000000000000000000000000000000000000000001";
+                + "0000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                + "0000000000000000000000000000000000000000000000000000000000000f20300008000000000"
+                + "00000a3938373635343332313000000000000000000000000000000000000000000000000000000"
+                + "0000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                + "00000000000000000000000000000000000000000000000001";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // less than vidLen with negative edgeType
         edgeKey = codec.edgeKeyByDefaultVer(
-            10,123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes());
+                10, 123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes());
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "027b0000303132333435363738390efcffff800000000000000a39"
-            + "38373635343332313001";
+                + "38373635343332313001";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
 
         // large than vidLen with negative edgeType
         edgeKey = codec.edgeKeyByDefaultVer(
-            100,123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes());
+                100, 123, srcVid.getBytes(), -1010, 10L, dstVid.getBytes());
         hexStr = Hex.encodeHexString(edgeKey);
         expectResult = "027b0000303132333435363738390000000000000000000000000000000000000000000"
-            + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-            + "00000000000000000000000000000000000000000000000000000000efcffff800000000000000a393"
-            + "8373635343332313000000000000000000000000000000000000000000000000000000000000000000"
-            + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-            + "00000000000000000000000000000000001";
+                +
+                "0000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                +
+                "00000000000000000000000000000000000000000000000000000000efcffff800000000000000a393"
+                +
+                "8373635343332313000000000000000000000000000000000000000000000000000000000000000000"
+                +
+                "0000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                + "00000000000000000000000000000000001";
         Assert.assertArrayEquals(expectResult.getBytes(), hexStr.getBytes());
     }
 
@@ -251,7 +266,7 @@ public class TestEncoder {
     public void testEncodeVertexValue() {
         // encode failed, loss filed value
         List<String> colNames = Arrays.asList("Col01", "Col02", "Col03", "Col04", "Col05");
-        List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long)100);
+        List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long) 100);
         TagItem tagItem1 = cacheImplTest.getTag("test", "tag_no_default");
         TagItem tagItem2 = cacheImplTest.getTag("test", "tag_with_empty_string");
         TagItem tagItem3 = cacheImplTest.getTag("test", "tag_with_default");
@@ -273,7 +288,7 @@ public class TestEncoder {
             // FileOutputStream fileOutputStream = new FileOutputStream(file);
             // fileOutputStream.write(encodeStr);
             Assert.assertArrayEquals(allTypeValueExpectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -282,11 +297,11 @@ public class TestEncoder {
         // encode empty string succeeded
         try {
             byte[] encodeStr = codec.encodeTag(tagItem2,
-                Collections.singletonList("Col01"), Collections.singletonList(""));
+                    Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
             Assert.assertArrayEquals(expectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -297,18 +312,18 @@ public class TestEncoder {
             codec.encodeTag(tagItem3, Arrays.asList("Col01", "Col02"), Arrays.asList(true, 8));
         } catch (RuntimeException e) {
             Assert.assertArrayEquals(e.getMessage().getBytes(),
-                "Unsupported default value yet".getBytes());
+                    "Unsupported default value yet".getBytes());
             assert (true);
         }
 
         // test without string type
         try {
             byte[] encodeStr = codec.encodeTag(
-                tagItem4, Arrays.asList("Col01"), Arrays.asList(1024));
+                    tagItem4, Arrays.asList("Col01"), Arrays.asList(1024));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "09070004000000000000";
             Assert.assertArrayEquals(expectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -320,7 +335,7 @@ public class TestEncoder {
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "0907";
             Assert.assertArrayEquals(expectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -329,12 +344,12 @@ public class TestEncoder {
         // test with chinese value
         try {
             byte[] encodeStr = codec.encodeTag(tagItem2,
-                                               Collections.singletonList("Col01"),
-                                               Collections.singletonList("中国"));
+                    Collections.singletonList("Col01"),
+                    Collections.singletonList("中国"));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000006000000e4b8ade59bbd";
             Assert.assertArrayEquals(expectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -345,7 +360,7 @@ public class TestEncoder {
     public void testEncodeEdge() {
         // encode failed, loss filed value
         List<String> colNames = Arrays.asList("Col01", "Col02", "Col03", "Col04", "Col05");
-        List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long)100);
+        List<Object> colVals = Arrays.asList(true, 8, 16, 32, (long) 100);
         EdgeItem edgeItem1 = cacheImplTest.getEdge("test", "edge_no_default");
         EdgeItem edgeItem2 = cacheImplTest.getEdge("test", "edge_with_empty_string");
         EdgeItem edgeItem3 = cacheImplTest.getEdge("test", "edge_without_property");
@@ -361,8 +376,8 @@ public class TestEncoder {
             byte[] encodeStr = codec.encodeEdge(edgeItem1, getCols(), getValues());
             String hexStr = Hex.encodeHexString(encodeStr);
             Assert.assertArrayEquals(
-                allTypeValueExpectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    allTypeValueExpectResult.getBytes(),
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -370,11 +385,11 @@ public class TestEncoder {
         // encode empty string succeeded
         try {
             byte[] encodeStr = codec.encodeEdge(edgeItem2,
-                Collections.singletonList("Col01"), Collections.singletonList(""));
+                    Collections.singletonList("Col01"), Collections.singletonList(""));
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "080900000000000000";
             Assert.assertArrayEquals(expectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -386,7 +401,7 @@ public class TestEncoder {
             String hexStr = Hex.encodeHexString(encodeStr);
             String expectResult = "0907";
             Assert.assertArrayEquals(expectResult.getBytes(),
-                hexStr.substring(0, hexStr.length() - 16).getBytes());
+                    hexStr.substring(0, hexStr.length() - 16).getBytes());
         } catch (Exception exception) {
             exception.printStackTrace();
             Assert.fail(exception.getMessage());
@@ -402,7 +417,7 @@ public class TestEncoder {
             Assert.fail();
         } catch (RuntimeException e) {
             Assert.assertArrayEquals(e.getMessage().getBytes(),
-                "TagItem is null".getBytes());
+                    "TagItem is null".getBytes());
             assert (true);
         }
 
@@ -411,7 +426,7 @@ public class TestEncoder {
             Assert.fail();
         } catch (RuntimeException e) {
             Assert.assertArrayEquals(e.getMessage().getBytes(),
-                "EdgeItem is null".getBytes());
+                    "EdgeItem is null".getBytes());
             assert (true);
         }
     }
