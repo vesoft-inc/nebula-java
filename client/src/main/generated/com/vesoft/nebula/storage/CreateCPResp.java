@@ -274,16 +274,16 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
         case INFO:
           if (__field.type == TType.LIST) {
             {
-              TList _list293 = iprot.readListBegin();
-              this.info = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list293.size));
-              for (int _i294 = 0; 
-                   (_list293.size < 0) ? iprot.peekList() : (_i294 < _list293.size); 
-                   ++_i294)
+              TList _list289 = iprot.readListBegin();
+              this.info = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list289.size));
+              for (int _i290 = 0; 
+                   (_list289.size < 0) ? iprot.peekList() : (_i290 < _list289.size); 
+                   ++_i290)
               {
-                com.vesoft.nebula.CheckpointInfo _elem295;
-                _elem295 = new com.vesoft.nebula.CheckpointInfo();
-                _elem295.read(iprot);
-                this.info.add(_elem295);
+                com.vesoft.nebula.CheckpointInfo _elem291;
+                _elem291 = new com.vesoft.nebula.CheckpointInfo();
+                _elem291.read(iprot);
+                this.info.add(_elem291);
               }
               iprot.readListEnd();
             }
@@ -317,8 +317,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(INFO_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
-        for (com.vesoft.nebula.CheckpointInfo _iter296 : this.info)        {
-          _iter296.write(oprot);
+        for (com.vesoft.nebula.CheckpointInfo _iter292 : this.info)        {
+          _iter292.write(oprot);
         }
         oprot.writeListEnd();
       }

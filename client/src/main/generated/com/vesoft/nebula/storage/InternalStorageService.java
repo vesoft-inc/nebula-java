@@ -231,17 +231,17 @@ public class InternalStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler539) throws TException {
+    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler535) throws TException {
       checkReady();
-      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler539, this, ___protocolFactory, ___transport);
+      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler535, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainAddEdges_call extends TAsyncMethodCall {
       private ChainAddEdgesRequest req;
-      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler540, TAsyncClient client536, TProtocolFactory protocolFactory537, TNonblockingTransport transport538) throws TException {
-        super(client536, protocolFactory537, transport538, resultHandler540, false);
+      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler536, TAsyncClient client532, TProtocolFactory protocolFactory533, TNonblockingTransport transport534) throws TException {
+        super(client532, protocolFactory533, transport534, resultHandler536, false);
         this.req = req;
       }
 
@@ -263,17 +263,17 @@ public class InternalStorageService {
       }
     }
 
-    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler544) throws TException {
+    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler540) throws TException {
       checkReady();
-      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler544, this, ___protocolFactory, ___transport);
+      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler540, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainUpdateEdge_call extends TAsyncMethodCall {
       private ChainUpdateEdgeRequest req;
-      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler545, TAsyncClient client541, TProtocolFactory protocolFactory542, TNonblockingTransport transport543) throws TException {
-        super(client541, protocolFactory542, transport543, resultHandler545, false);
+      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler541, TAsyncClient client537, TProtocolFactory protocolFactory538, TNonblockingTransport transport539) throws TException {
+        super(client537, protocolFactory538, transport539, resultHandler541, false);
         this.req = req;
       }
 
@@ -295,17 +295,17 @@ public class InternalStorageService {
       }
     }
 
-    public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler549) throws TException {
+    public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler545) throws TException {
       checkReady();
-      chainDeleteEdges_call method_call = new chainDeleteEdges_call(req, resultHandler549, this, ___protocolFactory, ___transport);
+      chainDeleteEdges_call method_call = new chainDeleteEdges_call(req, resultHandler545, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainDeleteEdges_call extends TAsyncMethodCall {
       private ChainDeleteEdgesRequest req;
-      public chainDeleteEdges_call(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler550, TAsyncClient client546, TProtocolFactory protocolFactory547, TNonblockingTransport transport548) throws TException {
-        super(client546, protocolFactory547, transport548, resultHandler550, false);
+      public chainDeleteEdges_call(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler546, TAsyncClient client542, TProtocolFactory protocolFactory543, TNonblockingTransport transport544) throws TException {
+        super(client542, protocolFactory543, transport544, resultHandler546, false);
         this.req = req;
       }
 

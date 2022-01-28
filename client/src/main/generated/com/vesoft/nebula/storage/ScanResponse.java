@@ -314,18 +314,18 @@ public class ScanResponse implements TBase, java.io.Serializable, Cloneable {
         case CURSORS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map215 = iprot.readMapBegin();
-              this.cursors = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map215.size));
-              for (int _i216 = 0; 
-                   (_map215.size < 0) ? iprot.peekMap() : (_i216 < _map215.size); 
-                   ++_i216)
+              TMap _map211 = iprot.readMapBegin();
+              this.cursors = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map211.size));
+              for (int _i212 = 0; 
+                   (_map211.size < 0) ? iprot.peekMap() : (_i212 < _map211.size); 
+                   ++_i212)
               {
-                int _key217;
-                ScanCursor _val218;
-                _key217 = iprot.readI32();
-                _val218 = new ScanCursor();
-                _val218.read(iprot);
-                this.cursors.put(_key217, _val218);
+                int _key213;
+                ScanCursor _val214;
+                _key213 = iprot.readI32();
+                _val214 = new ScanCursor();
+                _val214.read(iprot);
+                this.cursors.put(_key213, _val214);
               }
               iprot.readMapEnd();
             }
@@ -366,9 +366,9 @@ public class ScanResponse implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CURSORS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.cursors.size()));
-        for (Map.Entry<Integer, ScanCursor> _iter219 : this.cursors.entrySet())        {
-          oprot.writeI32(_iter219.getKey());
-          _iter219.getValue().write(oprot);
+        for (Map.Entry<Integer, ScanCursor> _iter215 : this.cursors.entrySet())        {
+          oprot.writeI32(_iter215.getKey());
+          _iter215.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
