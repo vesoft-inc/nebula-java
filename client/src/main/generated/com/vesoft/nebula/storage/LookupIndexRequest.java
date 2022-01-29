@@ -33,7 +33,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
   private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)5);
   private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)6);
   private static final TField ORDER_BY_FIELD_DESC = new TField("order_by", TType.LIST, (short)7);
-  private static final TField STAT_COLUMNS_FIELD_DESC = new TField("stat_columns", TType.LIST, (short)8);
 
   public int space_id;
   public List<Integer> parts;
@@ -42,7 +41,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
   public RequestCommon common;
   public long limit;
   public List<OrderBy> order_by;
-  public List<StatProp> stat_columns;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int INDICES = 3;
@@ -50,7 +48,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
   public static final int COMMON = 5;
   public static final int LIMIT = 6;
   public static final int ORDER_BY = 7;
-  public static final int STAT_COLUMNS = 8;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -78,9 +75,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     tmpMetaDataMap.put(ORDER_BY, new FieldMetaData("order_by", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, OrderBy.class))));
-    tmpMetaDataMap.put(STAT_COLUMNS, new FieldMetaData("stat_columns", TFieldRequirementType.OPTIONAL, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, StatProp.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -118,8 +112,7 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       List<byte[]> return_columns,
       RequestCommon common,
       long limit,
-      List<OrderBy> order_by,
-      List<StatProp> stat_columns) {
+      List<OrderBy> order_by) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -130,7 +123,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     this.limit = limit;
     setLimitIsSet(true);
     this.order_by = order_by;
-    this.stat_columns = stat_columns;
   }
 
   public static class Builder {
@@ -141,7 +133,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     private RequestCommon common;
     private long limit;
     private List<OrderBy> order_by;
-    private List<StatProp> stat_columns;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -185,11 +176,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
-    public Builder setStat_columns(final List<StatProp> stat_columns) {
-      this.stat_columns = stat_columns;
-      return this;
-    }
-
     public LookupIndexRequest build() {
       LookupIndexRequest result = new LookupIndexRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -203,7 +189,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         result.setLimit(this.limit);
       }
       result.setOrder_by(this.order_by);
-      result.setStat_columns(this.stat_columns);
       return result;
     }
   }
@@ -234,9 +219,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     this.limit = TBaseHelper.deepCopy(other.limit);
     if (other.isSetOrder_by()) {
       this.order_by = TBaseHelper.deepCopy(other.order_by);
-    }
-    if (other.isSetStat_columns()) {
-      this.stat_columns = TBaseHelper.deepCopy(other.stat_columns);
     }
   }
 
@@ -410,30 +392,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
-  public List<StatProp> getStat_columns() {
-    return this.stat_columns;
-  }
-
-  public LookupIndexRequest setStat_columns(List<StatProp> stat_columns) {
-    this.stat_columns = stat_columns;
-    return this;
-  }
-
-  public void unsetStat_columns() {
-    this.stat_columns = null;
-  }
-
-  // Returns true if field stat_columns is set (has been assigned a value) and false otherwise
-  public boolean isSetStat_columns() {
-    return this.stat_columns != null;
-  }
-
-  public void setStat_columnsIsSet(boolean __value) {
-    if (!__value) {
-      this.stat_columns = null;
-    }
-  }
-
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -493,14 +451,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
-    case STAT_COLUMNS:
-      if (__value == null) {
-        unsetStat_columns();
-      } else {
-        setStat_columns((List<StatProp>)__value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -528,9 +478,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
 
     case ORDER_BY:
       return getOrder_by();
-
-    case STAT_COLUMNS:
-      return getStat_columns();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -561,14 +508,12 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.isSetOrder_by(), that.isSetOrder_by(), this.order_by, that.order_by)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetStat_columns(), that.isSetStat_columns(), this.stat_columns, that.stat_columns)) { return false; }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, indices, return_columns, common, limit, order_by, stat_columns});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, indices, return_columns, common, limit, order_by});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -672,26 +617,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case STAT_COLUMNS:
-          if (__field.type == TType.LIST) {
-            {
-              TList _list186 = iprot.readListBegin();
-              this.stat_columns = new ArrayList<StatProp>(Math.max(0, _list186.size));
-              for (int _i187 = 0; 
-                   (_list186.size < 0) ? iprot.peekList() : (_i187 < _list186.size); 
-                   ++_i187)
-              {
-                StatProp _elem188;
-                _elem188 = new StatProp();
-                _elem188.read(iprot);
-                this.stat_columns.add(_elem188);
-              }
-              iprot.readListEnd();
-            }
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -719,8 +644,8 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter189 : this.parts)        {
-          oprot.writeI32(_iter189);
+        for (int _iter186 : this.parts)        {
+          oprot.writeI32(_iter186);
         }
         oprot.writeListEnd();
       }
@@ -736,8 +661,8 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
-          for (byte[] _iter190 : this.return_columns)          {
-            oprot.writeBinary(_iter190);
+          for (byte[] _iter187 : this.return_columns)          {
+            oprot.writeBinary(_iter187);
           }
           oprot.writeListEnd();
         }
@@ -761,21 +686,8 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         oprot.writeFieldBegin(ORDER_BY_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.order_by.size()));
-          for (OrderBy _iter191 : this.order_by)          {
-            _iter191.write(oprot);
-          }
-          oprot.writeListEnd();
-        }
-        oprot.writeFieldEnd();
-      }
-    }
-    if (this.stat_columns != null) {
-      if (isSetStat_columns()) {
-        oprot.writeFieldBegin(STAT_COLUMNS_FIELD_DESC);
-        {
-          oprot.writeListBegin(new TList(TType.STRUCT, this.stat_columns.size()));
-          for (StatProp _iter192 : this.stat_columns)          {
-            _iter192.write(oprot);
+          for (OrderBy _iter188 : this.order_by)          {
+            _iter188.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -879,20 +791,6 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this.getOrder_by(), indent + 1, prettyPrint));
-      }
-      first = false;
-    }
-    if (isSetStat_columns())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("stat_columns");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getStat_columns() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getStat_columns(), indent + 1, prettyPrint));
       }
       first = false;
     }

@@ -807,18 +807,18 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map206 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map206.size));
-              for (int _i207 = 0; 
-                   (_map206.size < 0) ? iprot.peekMap() : (_i207 < _map206.size); 
-                   ++_i207)
+              TMap _map202 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,ScanCursor>(Math.max(0, 2*_map202.size));
+              for (int _i203 = 0; 
+                   (_map202.size < 0) ? iprot.peekMap() : (_i203 < _map202.size); 
+                   ++_i203)
               {
-                int _key208;
-                ScanCursor _val209;
-                _key208 = iprot.readI32();
-                _val209 = new ScanCursor();
-                _val209.read(iprot);
-                this.parts.put(_key208, _val209);
+                int _key204;
+                ScanCursor _val205;
+                _key204 = iprot.readI32();
+                _val205 = new ScanCursor();
+                _val205.read(iprot);
+                this.parts.put(_key204, _val205);
               }
               iprot.readMapEnd();
             }
@@ -829,16 +829,16 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
         case RETURN_COLUMNS:
           if (__field.type == TType.LIST) {
             {
-              TList _list210 = iprot.readListBegin();
-              this.return_columns = new ArrayList<EdgeProp>(Math.max(0, _list210.size));
-              for (int _i211 = 0; 
-                   (_list210.size < 0) ? iprot.peekList() : (_i211 < _list210.size); 
-                   ++_i211)
+              TList _list206 = iprot.readListBegin();
+              this.return_columns = new ArrayList<EdgeProp>(Math.max(0, _list206.size));
+              for (int _i207 = 0; 
+                   (_list206.size < 0) ? iprot.peekList() : (_i207 < _list206.size); 
+                   ++_i207)
               {
-                EdgeProp _elem212;
-                _elem212 = new EdgeProp();
-                _elem212.read(iprot);
-                this.return_columns.add(_elem212);
+                EdgeProp _elem208;
+                _elem208 = new EdgeProp();
+                _elem208.read(iprot);
+                this.return_columns.add(_elem208);
               }
               iprot.readListEnd();
             }
@@ -925,9 +925,9 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.parts.size()));
-        for (Map.Entry<Integer, ScanCursor> _iter213 : this.parts.entrySet())        {
-          oprot.writeI32(_iter213.getKey());
-          _iter213.getValue().write(oprot);
+        for (Map.Entry<Integer, ScanCursor> _iter209 : this.parts.entrySet())        {
+          oprot.writeI32(_iter209.getKey());
+          _iter209.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -937,8 +937,8 @@ public class ScanEdgeRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.return_columns.size()));
-        for (EdgeProp _iter214 : this.return_columns)        {
-          _iter214.write(oprot);
+        for (EdgeProp _iter210 : this.return_columns)        {
+          _iter210.write(oprot);
         }
         oprot.writeListEnd();
       }
