@@ -51,7 +51,7 @@ public class SyncConnection extends Connection {
         try {
 
             this.serverAddr = address;
-            this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
+            this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.enabledSsl = true;
             this.sslParam = sslParam;
             if (sslSocketFactory == null) {
@@ -78,6 +78,7 @@ public class SyncConnection extends Connection {
                         Charsets.UTF_8));
             }
         } catch (TException | IOException e) {
+            close();
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
     }
@@ -87,7 +88,7 @@ public class SyncConnection extends Connection {
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
-            this.timeout  = timeout <= 0 ? Integer.MAX_VALUE : timeout;
+            this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.transport = new TSocket(
                     address.getHost(), address.getPort(), this.timeout, this.timeout);
             this.transport.open();
@@ -136,18 +137,18 @@ public class SyncConnection extends Connection {
                     throw new AuthFailedException(new String(resp.error_msg));
                 } else {
                     throw new AuthFailedException(
-                        "The error_msg is null, "
-                            + "maybe the service not set or the response is disorder.");
+                            "The error_msg is null, "
+                                    + "maybe the service not set or the response is disorder.");
                 }
             }
             return new AuthResult(resp.getSession_id(), resp.getTime_zone_offset_seconds());
         } catch (TException e) {
             if (e instanceof TTransportException) {
-                TTransportException te = (TTransportException)e;
+                TTransportException te = (TTransportException) e;
                 if (te.getType() == TTransportException.END_OF_FILE) {
                     throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
-                    || te.getMessage().contains("Read timed out")) {
+                        || te.getMessage().contains("Read timed out")) {
                     reopen();
                     throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
                 } else if (te.getType() == TTransportException.NOT_OPEN) {
@@ -170,7 +171,7 @@ public class SyncConnection extends Connection {
                 } else if (te.getType() == TTransportException.NOT_OPEN) {
                     throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
                 } else if (te.getType() == TTransportException.TIMED_OUT
-                    || te.getMessage().contains("Read timed out")) {
+                        || te.getMessage().contains("Read timed out")) {
                     try {
                         reopen();
                     } catch (ClientServerIncompatibleException ex) {
@@ -224,7 +225,7 @@ public class SyncConnection extends Connection {
     }
 
     public void close() {
-        if (transport != null) {
+        if (transport != null && transport.isOpen()) {
             transport.close();
         }
     }
