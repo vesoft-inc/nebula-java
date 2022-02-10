@@ -149,10 +149,16 @@ public class MetaClient extends AbstractMetaClient {
         client = new MetaService.Client(protocol);
 
         // check if client version matches server version
-        VerifyClientVersionResp resp =
-                client.verifyClientVersion(new VerifyClientVersionReq());
+        VerifyClientVersionResp resp = null;
+        try {
+            resp = client.verifyClientVersion(new VerifyClientVersionReq());
+        } catch (Exception e) {
+            LOGGER.error("failed to verify the version between server and client,", e);
+            close();
+            throw e;
+        }
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
-            client.getInputProtocol().getTransport().close();
+            close();
             throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
                     Charsets.UTF_8));
         }
