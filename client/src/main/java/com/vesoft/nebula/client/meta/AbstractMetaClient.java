@@ -9,6 +9,7 @@ import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.TTransport;
 import com.google.common.base.Preconditions;
 import com.google.common.net.InetAddresses;
+import com.google.common.net.InternetDomainName;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -31,8 +32,10 @@ public class AbstractMetaClient {
         for (HostAddress address : addresses) {
             String host = InetAddress.getByName(address.getHost()).getHostAddress();
             int port = address.getPort();
-            // check if the address is a valid ip address or uri address and port is valid
-            if ((!InetAddresses.isInetAddress(host) || !InetAddresses.isUriInetAddress(host))
+            // check if the address is a valid ip, uri address or domain name and port is valid
+            if (!(InetAddresses.isInetAddress(host)
+                        || InetAddresses.isUriInetAddress(host)
+                        || InternetDomainName.isValid(host))
                     || (port <= 0 || port >= 65535)) {
                 throw new IllegalArgumentException(String.format("%s:%d is not a valid address",
                         host, port));
