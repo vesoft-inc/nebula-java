@@ -30,9 +30,9 @@ In the v1.0 branch, you can find source code of these:
 
 For more information, see [README of v1.0](https://github.com/vesoft-inc/nebula-java/blob/v1.0/README.md).
 
-### The v2.0.0-rc branch
+### The v3.0.0 branch
 
-The v2.0.0-rc branch works with Nebula Graph v2.0.0-beta and v2.0.0-rc1, but not for the latest nightly Nebula Graph.
+The v3.0.0 branch works with Nebula Graph v3.0.0, but not for the latest nightly Nebula Graph.
 
 ## Prerequisites
 
@@ -69,6 +69,7 @@ There are the version correspondence between client and Nebula:
 |    2.5.0       |    2.5.0,2.5.1      |
 |    2.6.0       |    2.6.0,2.6.1      |
 |    2.6.1       |    2.6.0,2.6.1      |
+|    3.0.0       |       3.0.0         |
 |  3.0-SNAPSHOT  |       nightly       |
 
 ## Graph client example
