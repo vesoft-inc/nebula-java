@@ -6,8 +6,12 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.SSLParam;
+import java.io.Serializable;
 
-public class NebulaPoolConfig {
+public class NebulaPoolConfig implements Serializable {
+
+    private static final long serialVersionUID = 3977910115039279651L;
+
     // The min connections in pool for all addresses
     private int minConnsSize = 0;
 

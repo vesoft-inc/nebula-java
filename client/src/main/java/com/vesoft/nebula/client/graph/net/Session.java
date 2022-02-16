@@ -18,6 +18,7 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ExecutionResponse;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,7 +39,10 @@ import org.slf4j.LoggerFactory;
  * The user can directly read the data using the interface of ValueWrapper.
  */
 
-public class Session {
+public class Session implements Serializable {
+
+    private static final long serialVersionUID = -8855886967097862376L;
+
     private final long sessionID;
     private final int timezoneOffset;
     private SyncConnection connection;

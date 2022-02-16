@@ -8,9 +8,13 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidSessionException;
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SessionWrapper {
+public class SessionWrapper implements Serializable {
+
+    private static final long serialVersionUID = -8128331485649098264L;
+
     private final Session session;
     private final AtomicBoolean available = new AtomicBoolean(true);
 

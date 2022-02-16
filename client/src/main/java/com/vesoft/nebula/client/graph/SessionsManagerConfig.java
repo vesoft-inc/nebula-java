@@ -7,10 +7,14 @@ package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessionsManagerConfig {
+public class SessionsManagerConfig implements Serializable {
+
+    private static final long serialVersionUID = -2460063747630193912L;
+
     // graphd addresses
     private List<HostAddress> addresses = new ArrayList<>();
 

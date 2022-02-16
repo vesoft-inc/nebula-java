@@ -4,8 +4,12 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import java.io.Serializable;
 
-public abstract class Connection {
+public abstract class Connection implements Serializable {
+
+    private static final long serialVersionUID = -8425216612015802331L;
+
     protected HostAddress serverAddr = null;
 
     public HostAddress getServerAddress() {

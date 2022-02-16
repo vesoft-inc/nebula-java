@@ -6,9 +6,12 @@
 package com.vesoft.nebula.client.storage.scan;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import java.io.Serializable;
 import java.util.Set;
 
-public class PartScanQueue {
+public class PartScanQueue implements Serializable {
+
+    private static final long serialVersionUID = 4817985176727025002L;
 
     private final Set<PartScanInfo> partScanInfoSet;
 
