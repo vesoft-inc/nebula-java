@@ -1,0 +1,154 @@
+version: '3.4'
+services:
+  metad-selfsigned:
+    image: vesoft/nebula-metad:nightly
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+    command:
+      - --meta_server_addrs=172.30.1.1:9559
+      - --local_ip=172.30.1.1
+      - --ws_ip=172.30.1.1
+      - --port=9559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+      - --heartbeat_interval_secs=2
+      - --expired_time_factor=2
+      - --ws_h2_port=11000
+      - --cert_path=/share/resources/test.derive.crt
+      - --key_path=/share/resources/test.derive.key
+      - --password_path=/share/resources/test.ca.password
+      - --enable_ssl=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://172.30.1.1:11000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "7559:9559"
+      - 11000
+      - 11002
+    volumes:
+      - ./data/meta_self:/data/meta:Z
+      - ./logs/meta:/logs:Z
+      - ./ssl:/share/resources:Z
+    networks:
+      nebula-net-selfsigned:
+        ipv4_address: 172.30.1.1
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+
+  storaged-selfsigned:
+    image: vesoft/nebula-storaged:nightly
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+    command:
+      - --meta_server_addrs=172.30.1.1:9559
+      - --local_ip=172.30.2.1
+      - --ws_ip=172.30.2.1
+      - --port=9779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+      - --heartbeat_interval_secs=2
+      - --timezone_name=+08:00:00
+      - --ws_h2_port=12000
+      - --cert_path=/share/resources/test.derive.crt
+      - --key_path=/share/resources/test.derive.key
+      - --password_path=/share/resources/test.ca.password
+      - --enable_ssl=true
+    depends_on:
+      - metad-selfsigned
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://172.30.2.1:12000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "7779:9779"
+      - 12000
+      - 12002
+    volumes:
+      - ./data/storage_self:/data/storage:Z
+      - ./logs/storage:/logs:Z
+      - ./ssl:/share/resources:Z
+    networks:
+      nebula-net-selfsigned:
+        ipv4_address: 172.30.2.1
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+
+  graphd-selfsigned:
+    image: vesoft/nebula-graphd:nightly
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+    command:
+      - --meta_server_addrs=172.30.1.1:9559
+      - --port=9669
+      - --ws_ip=172.30.3.1
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+      - --heartbeat_interval_secs=2
+      - --timezone_name=+08:00:00
+      - --ws_h2_port=13000
+      - --cert_path=/share/resources/test.derive.crt
+      - --key_path=/share/resources/test.derive.key
+      - --password_path=/share/resources/test.ca.password
+      - --enable_ssl=true
+    depends_on:
+      - metad-selfsigned
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://172.30.3.1:13000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "7669:9669"
+      - 13000
+      - 13002
+    volumes:
+      - ./data/graph_self:/data/graph:Z
+      - ./logs/graph:/logs:Z
+      - ./ssl:/share/resources:Z
+    networks:
+      nebula-net-selfsigned:
+        ipv4_address: 172.30.3.1
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+  console:
+    image: vesoft/nebula-console:nightly
+    entrypoint: ""
+    command: 
+      - sh
+      - -c
+      - |
+        sleep 3 &&
+        nebula-console -addr graphd-selfsigned -port 9669 -u root -p nebula -enable_ssl=true -ssl_root_ca_path /share/resources/test.ca.pem -ssl_cert_path /share/resources/test.derive.crt -ssl_private_key_path /share/resources/test.derive.key --ssl_insecure_skip_verify=true -e 'ADD HOSTS "172.30.2.1":9779' &&
+        sleep 36000
+    volumes:
+      - ./data/graph_self:/data/graph:Z
+      - ./logs/graph:/logs:Z
+      - ./ssl:/share/resources:Z
+    depends_on:
+      - graphd-selfsigned
+    networks:
+      - nebula-net-selfsigned
+
+networks:
+  nebula-net-selfsigned:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/16

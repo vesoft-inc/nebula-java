@@ -1,12 +1,11 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.encoder;
 
-import com.vesoft.nebula.meta.PropertyType;
+import com.vesoft.nebula.PropertyType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,7 @@ public class SchemaProviderImpl implements SchemaProvider {
         private final int size;
         private final int offset;
         private final int nullFlagPos;
+        private final int geoShape;
 
         public SchemaField(String name,
                            int type,
@@ -35,7 +35,8 @@ public class SchemaProviderImpl implements SchemaProvider {
                            byte[] defaultValue,
                            int size,
                            int offset,
-                           int nullFlagPos) {
+                           int nullFlagPos,
+                           int geoShape) {
             this.name = name;
             this.type = type;
             this.nullable = nullable;
@@ -44,6 +45,7 @@ public class SchemaProviderImpl implements SchemaProvider {
             this.size = size;
             this.offset = offset;
             this.nullFlagPos = nullFlagPos;
+            this.geoShape = geoShape;
         }
 
         @Override
@@ -84,6 +86,11 @@ public class SchemaProviderImpl implements SchemaProvider {
         @Override
         public int nullFlagPos() {
             return nullFlagPos;
+        }
+
+        @Override
+        public int geoShape() {
+            return geoShape;
         }
     }
 
@@ -170,7 +177,8 @@ public class SchemaProviderImpl implements SchemaProvider {
                          int type,
                          int fixedStrLen,
                          boolean nullable,
-                         byte[] defaultValue) {
+                         byte[] defaultValue,
+                         int geoShape) {
         int size = fieldSize(type, fixedStrLen);
 
         int offset = 0;
@@ -191,7 +199,8 @@ public class SchemaProviderImpl implements SchemaProvider {
             defaultValue,
             size,
             offset,
-            nullFlagPos));
+            nullFlagPos,
+            geoShape));
         fieldNameIndex.put(name, fields.size() - 1);
     }
 
@@ -242,6 +251,8 @@ public class SchemaProviderImpl implements SchemaProvider {
                       + Byte.BYTES          // minute
                       + Byte.BYTES          // sec
                       + Integer.BYTES;      // microsec
+            case GEOGRAPHY:
+                return 8;  // wkb offset + wkb length
             default:
                 throw new RuntimeException("Incorrect field type " + type);
         }

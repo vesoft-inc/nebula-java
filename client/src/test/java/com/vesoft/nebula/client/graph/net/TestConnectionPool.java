@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph.net;
@@ -68,7 +67,7 @@ public class TestConnectionPool {
                 Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
                 config);
             assert false;
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException  e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
         } catch (InvalidConfigException e) {

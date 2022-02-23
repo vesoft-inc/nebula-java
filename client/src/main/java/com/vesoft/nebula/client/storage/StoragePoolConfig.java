@@ -1,11 +1,11 @@
-/*
- * Copyright (c) 2020 vesoft inc. All rights reserved.
+/* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage;
+
+import com.vesoft.nebula.client.graph.data.SSLParam;
 
 public class StoragePoolConfig {
     // The min connections in pool for all addresses
@@ -27,6 +27,10 @@ public class StoragePoolConfig {
 
     // the max total connection in pool for each key
     private int maxTotalPerKey = 10;
+
+    private boolean enableSSL = false;
+
+    private SSLParam sslParam = null;
 
     public int getMinConnsSize() {
         return minConnsSize;
@@ -74,5 +78,21 @@ public class StoragePoolConfig {
 
     public void setMaxTotalPerKey(int maxTotalPerKey) {
         this.maxTotalPerKey = maxTotalPerKey;
+    }
+
+    public boolean isEnableSSL() {
+        return enableSSL;
+    }
+
+    public void setEnableSSL(boolean enableSSL) {
+        this.enableSSL = enableSSL;
+    }
+
+    public SSLParam getSslParam() {
+        return sslParam;
+    }
+
+    public void setSslParam(SSLParam sslParam) {
+        this.sslParam = sslParam;
     }
 }

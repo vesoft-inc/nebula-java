@@ -32,19 +32,22 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField SCHEMA_NAME_FIELD_DESC = new TField("schema_name", TType.STRING, (short)4);
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)5);
   private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)6);
+  private static final TField INDEX_PARAMS_FIELD_DESC = new TField("index_params", TType.STRUCT, (short)7);
 
   public int index_id;
   public byte[] index_name;
-  public SchemaID schema_id;
+  public com.vesoft.nebula.SchemaID schema_id;
   public byte[] schema_name;
   public List<ColumnDef> fields;
   public byte[] comment;
+  public IndexParams index_params;
   public static final int INDEX_ID = 1;
   public static final int INDEX_NAME = 2;
   public static final int SCHEMA_ID = 3;
   public static final int SCHEMA_NAME = 4;
   public static final int FIELDS = 5;
   public static final int COMMENT = 6;
+  public static final int INDEX_PARAMS = 7;
 
   // isset id assignments
   private static final int __INDEX_ID_ISSET_ID = 0;
@@ -59,7 +62,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     tmpMetaDataMap.put(INDEX_NAME, new FieldMetaData("index_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(SCHEMA_ID, new FieldMetaData("schema_id", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, SchemaID.class)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.SchemaID.class)));
     tmpMetaDataMap.put(SCHEMA_NAME, new FieldMetaData("schema_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
@@ -67,6 +70,8 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
             new StructMetaData(TType.STRUCT, ColumnDef.class))));
     tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(INDEX_PARAMS, new FieldMetaData("index_params", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, IndexParams.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -80,7 +85,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public IndexItem(
       int index_id,
       byte[] index_name,
-      SchemaID schema_id,
+      com.vesoft.nebula.SchemaID schema_id,
       byte[] schema_name,
       List<ColumnDef> fields) {
     this();
@@ -95,10 +100,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
   public IndexItem(
       int index_id,
       byte[] index_name,
-      SchemaID schema_id,
+      com.vesoft.nebula.SchemaID schema_id,
       byte[] schema_name,
       List<ColumnDef> fields,
-      byte[] comment) {
+      byte[] comment,
+      IndexParams index_params) {
     this();
     this.index_id = index_id;
     setIndex_idIsSet(true);
@@ -107,15 +113,17 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     this.schema_name = schema_name;
     this.fields = fields;
     this.comment = comment;
+    this.index_params = index_params;
   }
 
   public static class Builder {
     private int index_id;
     private byte[] index_name;
-    private SchemaID schema_id;
+    private com.vesoft.nebula.SchemaID schema_id;
     private byte[] schema_name;
     private List<ColumnDef> fields;
     private byte[] comment;
+    private IndexParams index_params;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -133,7 +141,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
-    public Builder setSchema_id(final SchemaID schema_id) {
+    public Builder setSchema_id(final com.vesoft.nebula.SchemaID schema_id) {
       this.schema_id = schema_id;
       return this;
     }
@@ -153,6 +161,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
+    public Builder setIndex_params(final IndexParams index_params) {
+      this.index_params = index_params;
+      return this;
+    }
+
     public IndexItem build() {
       IndexItem result = new IndexItem();
       if (__optional_isset.get(__INDEX_ID_ISSET_ID)) {
@@ -163,6 +176,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       result.setSchema_name(this.schema_name);
       result.setFields(this.fields);
       result.setComment(this.comment);
+      result.setIndex_params(this.index_params);
       return result;
     }
   }
@@ -192,6 +206,9 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
     if (other.isSetComment()) {
       this.comment = TBaseHelper.deepCopy(other.comment);
+    }
+    if (other.isSetIndex_params()) {
+      this.index_params = TBaseHelper.deepCopy(other.index_params);
     }
   }
 
@@ -246,11 +263,11 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
-  public SchemaID getSchema_id() {
+  public com.vesoft.nebula.SchemaID getSchema_id() {
     return this.schema_id;
   }
 
-  public IndexItem setSchema_id(SchemaID schema_id) {
+  public IndexItem setSchema_id(com.vesoft.nebula.SchemaID schema_id) {
     this.schema_id = schema_id;
     return this;
   }
@@ -342,6 +359,30 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
+  public IndexParams getIndex_params() {
+    return this.index_params;
+  }
+
+  public IndexItem setIndex_params(IndexParams index_params) {
+    this.index_params = index_params;
+    return this;
+  }
+
+  public void unsetIndex_params() {
+    this.index_params = null;
+  }
+
+  // Returns true if field index_params is set (has been assigned a value) and false otherwise
+  public boolean isSetIndex_params() {
+    return this.index_params != null;
+  }
+
+  public void setIndex_paramsIsSet(boolean __value) {
+    if (!__value) {
+      this.index_params = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -365,7 +406,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       if (__value == null) {
         unsetSchema_id();
       } else {
-        setSchema_id((SchemaID)__value);
+        setSchema_id((com.vesoft.nebula.SchemaID)__value);
       }
       break;
 
@@ -390,6 +431,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
         unsetComment();
       } else {
         setComment((byte[])__value);
+      }
+      break;
+
+    case INDEX_PARAMS:
+      if (__value == null) {
+        unsetIndex_params();
+      } else {
+        setIndex_params((IndexParams)__value);
       }
       break;
 
@@ -418,6 +467,9 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     case COMMENT:
       return getComment();
 
+    case INDEX_PARAMS:
+      return getIndex_params();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -445,12 +497,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
 
     if (!TBaseHelper.equalsSlow(this.isSetComment(), that.isSetComment(), this.comment, that.comment)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetIndex_params(), that.isSetIndex_params(), this.index_params, that.index_params)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields, comment});
+    return Arrays.deepHashCode(new Object[] {index_id, index_name, schema_id, schema_name, fields, comment, index_params});
   }
 
   @Override
@@ -513,6 +567,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetIndex_params()).compareTo(other.isSetIndex_params());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(index_params, other.index_params);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -544,7 +606,7 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
           break;
         case SCHEMA_ID:
           if (__field.type == TType.STRUCT) {
-            this.schema_id = new SchemaID();
+            this.schema_id = new com.vesoft.nebula.SchemaID();
             this.schema_id.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -560,16 +622,16 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list4 = iprot.readListBegin();
-              this.fields = new ArrayList<ColumnDef>(Math.max(0, _list4.size));
-              for (int _i5 = 0; 
-                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
-                   ++_i5)
+              TList _list8 = iprot.readListBegin();
+              this.fields = new ArrayList<ColumnDef>(Math.max(0, _list8.size));
+              for (int _i9 = 0; 
+                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
+                   ++_i9)
               {
-                ColumnDef _elem6;
-                _elem6 = new ColumnDef();
-                _elem6.read(iprot);
-                this.fields.add(_elem6);
+                ColumnDef _elem10;
+                _elem10 = new ColumnDef();
+                _elem10.read(iprot);
+                this.fields.add(_elem10);
               }
               iprot.readListEnd();
             }
@@ -580,6 +642,14 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
         case COMMENT:
           if (__field.type == TType.STRING) {
             this.comment = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case INDEX_PARAMS:
+          if (__field.type == TType.STRUCT) {
+            this.index_params = new IndexParams();
+            this.index_params.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -623,8 +693,8 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (ColumnDef _iter7 : this.fields)        {
-          _iter7.write(oprot);
+        for (ColumnDef _iter11 : this.fields)        {
+          _iter11.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -634,6 +704,13 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
       if (isSetComment()) {
         oprot.writeFieldBegin(COMMENT_FIELD_DESC);
         oprot.writeBinary(this.comment);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.index_params != null) {
+      if (isSetIndex_params()) {
+        oprot.writeFieldBegin(INDEX_PARAMS_FIELD_DESC);
+        this.index_params.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -733,6 +810,20 @@ public class IndexItem implements TBase, java.io.Serializable, Cloneable, Compar
             sb.append(Integer.toHexString(this.getComment()[i]).length() > 1 ? Integer.toHexString(this.getComment()[i]).substring(Integer.toHexString(this.getComment()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getComment()[i]).toUpperCase());
           }
           if (this.getComment().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetIndex_params())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("index_params");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getIndex_params() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getIndex_params(), indent + 1, prettyPrint));
       }
       first = false;
     }

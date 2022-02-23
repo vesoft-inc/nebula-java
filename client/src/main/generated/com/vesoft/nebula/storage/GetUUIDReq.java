@@ -29,13 +29,16 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)3);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)4);
 
   public int space_id;
   public int part_id;
   public byte[] name;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int NAME = 3;
+  public static final int COMMON = 4;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -52,6 +55,8 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -74,10 +79,25 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     this.name = name;
   }
 
+  public GetUUIDReq(
+      int space_id,
+      int part_id,
+      byte[] name,
+      RequestCommon common) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.part_id = part_id;
+    setPart_idIsSet(true);
+    this.name = name;
+    this.common = common;
+  }
+
   public static class Builder {
     private int space_id;
     private int part_id;
     private byte[] name;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -101,6 +121,11 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public GetUUIDReq build() {
       GetUUIDReq result = new GetUUIDReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -110,6 +135,7 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
         result.setPart_id(this.part_id);
       }
       result.setName(this.name);
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -128,6 +154,9 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     this.part_id = TBaseHelper.deepCopy(other.part_id);
     if (other.isSetName()) {
       this.name = TBaseHelper.deepCopy(other.name);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
@@ -205,6 +234,30 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public GetUUIDReq setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -231,6 +284,14 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -246,6 +307,9 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
 
     case NAME:
       return getName();
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -268,12 +332,14 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
 
     if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, name});
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, name, common});
   }
 
   @Override
@@ -309,6 +375,14 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(name, other.name);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCommon()).compareTo(other.isSetCommon());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(common, other.common);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -349,6 +423,14 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -376,6 +458,13 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(NAME_FIELD_DESC);
       oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -426,6 +515,20 @@ public class GetUUIDReq implements TBase, java.io.Serializable, Cloneable, Compa
         if (this.getName().length > 128) sb.append(" ...");
     }
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

@@ -1,12 +1,12 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage.scan;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.storage.ScanCursor;
 import java.io.Serializable;
 
 public class PartScanInfo implements Serializable {
@@ -15,11 +15,12 @@ public class PartScanInfo implements Serializable {
 
     private int part;
     private HostAddress leader;
-    private byte[] cursor = null;
+    private ScanCursor cursor;
 
     public PartScanInfo(int part, HostAddress leader) {
         this.part = part;
         this.leader = leader;
+        cursor = new ScanCursor("".getBytes());
     }
 
     public int getPart() {
@@ -38,11 +39,11 @@ public class PartScanInfo implements Serializable {
         this.leader = leader;
     }
 
-    public byte[] getCursor() {
+    public ScanCursor getCursor() {
         return cursor;
     }
 
-    public void setCursor(byte[] cursor) {
+    public void setCursor(ScanCursor cursor) {
         this.cursor = cursor;
     }
 
@@ -51,7 +52,7 @@ public class PartScanInfo implements Serializable {
         return "PartScanInfo{"
                 + "part=" + part
                 + ", leader=" + leader
-                + ", cursor=" + new String(cursor)
+                + ", cursor=" + new String(cursor.next_cursor)
                 + '}';
     }
 }

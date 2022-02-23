@@ -30,19 +30,29 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.LIST, (short)2);
   private static final TField INDICES_FIELD_DESC = new TField("indices", TType.STRUCT, (short)3);
   private static final TField RETURN_COLUMNS_FIELD_DESC = new TField("return_columns", TType.LIST, (short)4);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)5);
+  private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)6);
+  private static final TField ORDER_BY_FIELD_DESC = new TField("order_by", TType.LIST, (short)7);
 
   public int space_id;
   public List<Integer> parts;
   public IndexSpec indices;
   public List<byte[]> return_columns;
+  public RequestCommon common;
+  public long limit;
+  public List<OrderBy> order_by;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int INDICES = 3;
   public static final int RETURN_COLUMNS = 4;
+  public static final int COMMON = 5;
+  public static final int LIMIT = 6;
+  public static final int ORDER_BY = 7;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __LIMIT_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -58,6 +68,13 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     tmpMetaDataMap.put(RETURN_COLUMNS, new FieldMetaData("return_columns", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
+    tmpMetaDataMap.put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(ORDER_BY, new FieldMetaData("order_by", TFieldRequirementType.OPTIONAL, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, OrderBy.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -92,13 +109,20 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       int space_id,
       List<Integer> parts,
       IndexSpec indices,
-      List<byte[]> return_columns) {
+      List<byte[]> return_columns,
+      RequestCommon common,
+      long limit,
+      List<OrderBy> order_by) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
     this.indices = indices;
     this.return_columns = return_columns;
+    this.common = common;
+    this.limit = limit;
+    setLimitIsSet(true);
+    this.order_by = order_by;
   }
 
   public static class Builder {
@@ -106,8 +130,11 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     private List<Integer> parts;
     private IndexSpec indices;
     private List<byte[]> return_columns;
+    private RequestCommon common;
+    private long limit;
+    private List<OrderBy> order_by;
 
-    BitSet __optional_isset = new BitSet(1);
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
@@ -133,6 +160,22 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
+    public Builder setLimit(final long limit) {
+      this.limit = limit;
+      __optional_isset.set(__LIMIT_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setOrder_by(final List<OrderBy> order_by) {
+      this.order_by = order_by;
+      return this;
+    }
+
     public LookupIndexRequest build() {
       LookupIndexRequest result = new LookupIndexRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -141,6 +184,11 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       result.setParts(this.parts);
       result.setIndices(this.indices);
       result.setReturn_columns(this.return_columns);
+      result.setCommon(this.common);
+      if (__optional_isset.get(__LIMIT_ISSET_ID)) {
+        result.setLimit(this.limit);
+      }
+      result.setOrder_by(this.order_by);
       return result;
     }
   }
@@ -164,6 +212,13 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     }
     if (other.isSetReturn_columns()) {
       this.return_columns = TBaseHelper.deepCopy(other.return_columns);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
+    }
+    this.limit = TBaseHelper.deepCopy(other.limit);
+    if (other.isSetOrder_by()) {
+      this.order_by = TBaseHelper.deepCopy(other.order_by);
     }
   }
 
@@ -266,6 +321,77 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public LookupIndexRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
+  public long getLimit() {
+    return this.limit;
+  }
+
+  public LookupIndexRequest setLimit(long limit) {
+    this.limit = limit;
+    setLimitIsSet(true);
+    return this;
+  }
+
+  public void unsetLimit() {
+    __isset_bit_vector.clear(__LIMIT_ISSET_ID);
+  }
+
+  // Returns true if field limit is set (has been assigned a value) and false otherwise
+  public boolean isSetLimit() {
+    return __isset_bit_vector.get(__LIMIT_ISSET_ID);
+  }
+
+  public void setLimitIsSet(boolean __value) {
+    __isset_bit_vector.set(__LIMIT_ISSET_ID, __value);
+  }
+
+  public List<OrderBy> getOrder_by() {
+    return this.order_by;
+  }
+
+  public LookupIndexRequest setOrder_by(List<OrderBy> order_by) {
+    this.order_by = order_by;
+    return this;
+  }
+
+  public void unsetOrder_by() {
+    this.order_by = null;
+  }
+
+  // Returns true if field order_by is set (has been assigned a value) and false otherwise
+  public boolean isSetOrder_by() {
+    return this.order_by != null;
+  }
+
+  public void setOrder_byIsSet(boolean __value) {
+    if (!__value) {
+      this.order_by = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -301,6 +427,30 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
+    case LIMIT:
+      if (__value == null) {
+        unsetLimit();
+      } else {
+        setLimit((Long)__value);
+      }
+      break;
+
+    case ORDER_BY:
+      if (__value == null) {
+        unsetOrder_by();
+      } else {
+        setOrder_by((List<OrderBy>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -319,6 +469,15 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
 
     case RETURN_COLUMNS:
       return getReturn_columns();
+
+    case COMMON:
+      return getCommon();
+
+    case LIMIT:
+      return new Long(getLimit());
+
+    case ORDER_BY:
+      return getOrder_by();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -343,12 +502,18 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsSlow(this.isSetReturn_columns(), that.isSetReturn_columns(), this.return_columns, that.return_columns)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetLimit(), that.isSetLimit(), this.limit, that.limit)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetOrder_by(), that.isSetOrder_by(), this.order_by, that.order_by)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, indices, return_columns});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, indices, return_columns, common, limit, order_by});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -373,15 +538,15 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list159 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list159.size));
-              for (int _i160 = 0; 
-                   (_list159.size < 0) ? iprot.peekList() : (_i160 < _list159.size); 
-                   ++_i160)
+              TList _list177 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list177.size));
+              for (int _i178 = 0; 
+                   (_list177.size < 0) ? iprot.peekList() : (_i178 < _list177.size); 
+                   ++_i178)
               {
-                int _elem161;
-                _elem161 = iprot.readI32();
-                this.parts.add(_elem161);
+                int _elem179;
+                _elem179 = iprot.readI32();
+                this.parts.add(_elem179);
               }
               iprot.readListEnd();
             }
@@ -400,15 +565,51 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         case RETURN_COLUMNS:
           if (__field.type == TType.LIST) {
             {
-              TList _list162 = iprot.readListBegin();
-              this.return_columns = new ArrayList<byte[]>(Math.max(0, _list162.size));
-              for (int _i163 = 0; 
-                   (_list162.size < 0) ? iprot.peekList() : (_i163 < _list162.size); 
-                   ++_i163)
+              TList _list180 = iprot.readListBegin();
+              this.return_columns = new ArrayList<byte[]>(Math.max(0, _list180.size));
+              for (int _i181 = 0; 
+                   (_list180.size < 0) ? iprot.peekList() : (_i181 < _list180.size); 
+                   ++_i181)
               {
-                byte[] _elem164;
-                _elem164 = iprot.readBinary();
-                this.return_columns.add(_elem164);
+                byte[] _elem182;
+                _elem182 = iprot.readBinary();
+                this.return_columns.add(_elem182);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case LIMIT:
+          if (__field.type == TType.I64) {
+            this.limit = iprot.readI64();
+            setLimitIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case ORDER_BY:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list183 = iprot.readListBegin();
+              this.order_by = new ArrayList<OrderBy>(Math.max(0, _list183.size));
+              for (int _i184 = 0; 
+                   (_list183.size < 0) ? iprot.peekList() : (_i184 < _list183.size); 
+                   ++_i184)
+              {
+                OrderBy _elem185;
+                _elem185 = new OrderBy();
+                _elem185.read(iprot);
+                this.order_by.add(_elem185);
               }
               iprot.readListEnd();
             }
@@ -443,8 +644,8 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter165 : this.parts)        {
-          oprot.writeI32(_iter165);
+        for (int _iter186 : this.parts)        {
+          oprot.writeI32(_iter186);
         }
         oprot.writeListEnd();
       }
@@ -460,8 +661,33 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         oprot.writeFieldBegin(RETURN_COLUMNS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.return_columns.size()));
-          for (byte[] _iter166 : this.return_columns)          {
-            oprot.writeBinary(_iter166);
+          for (byte[] _iter187 : this.return_columns)          {
+            oprot.writeBinary(_iter187);
+          }
+          oprot.writeListEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (isSetLimit()) {
+      oprot.writeFieldBegin(LIMIT_FIELD_DESC);
+      oprot.writeI64(this.limit);
+      oprot.writeFieldEnd();
+    }
+    if (this.order_by != null) {
+      if (isSetOrder_by()) {
+        oprot.writeFieldBegin(ORDER_BY_FIELD_DESC);
+        {
+          oprot.writeListBegin(new TList(TType.STRUCT, this.order_by.size()));
+          for (OrderBy _iter188 : this.order_by)          {
+            _iter188.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -527,6 +753,44 @@ public class LookupIndexRequest implements TBase, java.io.Serializable, Cloneabl
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this.getReturn_columns(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetLimit())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("limit");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getLimit(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetOrder_by())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("order_by");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getOrder_by() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getOrder_by(), indent + 1, prettyPrint));
       }
       first = false;
     }

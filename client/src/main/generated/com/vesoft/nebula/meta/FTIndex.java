@@ -31,7 +31,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)3);
 
   public int space_id;
-  public SchemaID depend_schema;
+  public com.vesoft.nebula.SchemaID depend_schema;
   public List<byte[]> fields;
   public static final int SPACE_ID = 1;
   public static final int DEPEND_SCHEMA = 2;
@@ -48,7 +48,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
     tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(DEPEND_SCHEMA, new FieldMetaData("depend_schema", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, SchemaID.class)));
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.SchemaID.class)));
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
@@ -64,7 +64,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
 
   public FTIndex(
       int space_id,
-      SchemaID depend_schema,
+      com.vesoft.nebula.SchemaID depend_schema,
       List<byte[]> fields) {
     this();
     this.space_id = space_id;
@@ -75,7 +75,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
 
   public static class Builder {
     private int space_id;
-    private SchemaID depend_schema;
+    private com.vesoft.nebula.SchemaID depend_schema;
     private List<byte[]> fields;
 
     BitSet __optional_isset = new BitSet(1);
@@ -89,7 +89,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       return this;
     }
 
-    public Builder setDepend_schema(final SchemaID depend_schema) {
+    public Builder setDepend_schema(final com.vesoft.nebula.SchemaID depend_schema) {
       this.depend_schema = depend_schema;
       return this;
     }
@@ -156,11 +156,11 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
     __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
-  public SchemaID getDepend_schema() {
+  public com.vesoft.nebula.SchemaID getDepend_schema() {
     return this.depend_schema;
   }
 
-  public FTIndex setDepend_schema(SchemaID depend_schema) {
+  public FTIndex setDepend_schema(com.vesoft.nebula.SchemaID depend_schema) {
     this.depend_schema = depend_schema;
     return this;
   }
@@ -219,7 +219,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       if (__value == null) {
         unsetDepend_schema();
       } else {
-        setDepend_schema((SchemaID)__value);
+        setDepend_schema((com.vesoft.nebula.SchemaID)__value);
       }
       break;
 
@@ -336,7 +336,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
           break;
         case DEPEND_SCHEMA:
           if (__field.type == TType.STRUCT) {
-            this.depend_schema = new SchemaID();
+            this.depend_schema = new com.vesoft.nebula.SchemaID();
             this.depend_schema.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -345,15 +345,15 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list279 = iprot.readListBegin();
-              this.fields = new ArrayList<byte[]>(Math.max(0, _list279.size));
-              for (int _i280 = 0; 
-                   (_list279.size < 0) ? iprot.peekList() : (_i280 < _list279.size); 
-                   ++_i280)
+              TList _list307 = iprot.readListBegin();
+              this.fields = new ArrayList<byte[]>(Math.max(0, _list307.size));
+              for (int _i308 = 0; 
+                   (_list307.size < 0) ? iprot.peekList() : (_i308 < _list307.size); 
+                   ++_i308)
               {
-                byte[] _elem281;
-                _elem281 = iprot.readBinary();
-                this.fields.add(_elem281);
+                byte[] _elem309;
+                _elem309 = iprot.readBinary();
+                this.fields.add(_elem309);
               }
               iprot.readListEnd();
             }
@@ -390,8 +390,8 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (byte[] _iter282 : this.fields)        {
-          oprot.writeBinary(_iter282);
+        for (byte[] _iter310 : this.fields)        {
+          oprot.writeBinary(_iter310);
         }
         oprot.writeListEnd();
       }

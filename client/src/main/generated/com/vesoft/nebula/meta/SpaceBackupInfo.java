@@ -27,12 +27,12 @@ import com.facebook.thrift.protocol.*;
 public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, Comparable<SpaceBackupInfo> {
   private static final TStruct STRUCT_DESC = new TStruct("SpaceBackupInfo");
   private static final TField SPACE_FIELD_DESC = new TField("space", TType.STRUCT, (short)1);
-  private static final TField INFO_FIELD_DESC = new TField("info", TType.LIST, (short)2);
+  private static final TField HOST_BACKUPS_FIELD_DESC = new TField("host_backups", TType.LIST, (short)2);
 
   public SpaceDesc space;
-  public List<BackupInfo> info;
+  public List<HostBackupInfo> host_backups;
   public static final int SPACE = 1;
-  public static final int INFO = 2;
+  public static final int HOST_BACKUPS = 2;
 
   // isset id assignments
 
@@ -42,9 +42,9 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(SPACE, new FieldMetaData("space", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, SpaceDesc.class)));
-    tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(HOST_BACKUPS, new FieldMetaData("host_backups", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, BackupInfo.class))));
+            new StructMetaData(TType.STRUCT, HostBackupInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -57,15 +57,15 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
 
   public SpaceBackupInfo(
       SpaceDesc space,
-      List<BackupInfo> info) {
+      List<HostBackupInfo> host_backups) {
     this();
     this.space = space;
-    this.info = info;
+    this.host_backups = host_backups;
   }
 
   public static class Builder {
     private SpaceDesc space;
-    private List<BackupInfo> info;
+    private List<HostBackupInfo> host_backups;
 
     public Builder() {
     }
@@ -75,15 +75,15 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public Builder setInfo(final List<BackupInfo> info) {
-      this.info = info;
+    public Builder setHost_backups(final List<HostBackupInfo> host_backups) {
+      this.host_backups = host_backups;
       return this;
     }
 
     public SpaceBackupInfo build() {
       SpaceBackupInfo result = new SpaceBackupInfo();
       result.setSpace(this.space);
-      result.setInfo(this.info);
+      result.setHost_backups(this.host_backups);
       return result;
     }
   }
@@ -99,8 +99,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     if (other.isSetSpace()) {
       this.space = TBaseHelper.deepCopy(other.space);
     }
-    if (other.isSetInfo()) {
-      this.info = TBaseHelper.deepCopy(other.info);
+    if (other.isSetHost_backups()) {
+      this.host_backups = TBaseHelper.deepCopy(other.host_backups);
     }
   }
 
@@ -132,27 +132,27 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
-  public List<BackupInfo> getInfo() {
-    return this.info;
+  public List<HostBackupInfo> getHost_backups() {
+    return this.host_backups;
   }
 
-  public SpaceBackupInfo setInfo(List<BackupInfo> info) {
-    this.info = info;
+  public SpaceBackupInfo setHost_backups(List<HostBackupInfo> host_backups) {
+    this.host_backups = host_backups;
     return this;
   }
 
-  public void unsetInfo() {
-    this.info = null;
+  public void unsetHost_backups() {
+    this.host_backups = null;
   }
 
-  // Returns true if field info is set (has been assigned a value) and false otherwise
-  public boolean isSetInfo() {
-    return this.info != null;
+  // Returns true if field host_backups is set (has been assigned a value) and false otherwise
+  public boolean isSetHost_backups() {
+    return this.host_backups != null;
   }
 
-  public void setInfoIsSet(boolean __value) {
+  public void setHost_backupsIsSet(boolean __value) {
     if (!__value) {
-      this.info = null;
+      this.host_backups = null;
     }
   }
 
@@ -167,11 +167,11 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
-    case INFO:
+    case HOST_BACKUPS:
       if (__value == null) {
-        unsetInfo();
+        unsetHost_backups();
       } else {
-        setInfo((List<BackupInfo>)__value);
+        setHost_backups((List<HostBackupInfo>)__value);
       }
       break;
 
@@ -185,8 +185,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     case SPACE:
       return getSpace();
 
-    case INFO:
-      return getInfo();
+    case HOST_BACKUPS:
+      return getHost_backups();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -205,14 +205,14 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
 
     if (!TBaseHelper.equalsNobinary(this.isSetSpace(), that.isSetSpace(), this.space, that.space)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetHost_backups(), that.isSetHost_backups(), this.host_backups, that.host_backups)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, info});
+    return Arrays.deepHashCode(new Object[] {space, host_backups});
   }
 
   @Override
@@ -235,11 +235,11 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetInfo()).compareTo(other.isSetInfo());
+    lastComparison = Boolean.valueOf(isSetHost_backups()).compareTo(other.isSetHost_backups());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(info, other.info);
+    lastComparison = TBaseHelper.compareTo(host_backups, other.host_backups);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -265,19 +265,19 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case INFO:
+        case HOST_BACKUPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list246 = iprot.readListBegin();
-              this.info = new ArrayList<BackupInfo>(Math.max(0, _list246.size));
-              for (int _i247 = 0; 
-                   (_list246.size < 0) ? iprot.peekList() : (_i247 < _list246.size); 
-                   ++_i247)
+              TList _list269 = iprot.readListBegin();
+              this.host_backups = new ArrayList<HostBackupInfo>(Math.max(0, _list269.size));
+              for (int _i270 = 0; 
+                   (_list269.size < 0) ? iprot.peekList() : (_i270 < _list269.size); 
+                   ++_i270)
               {
-                BackupInfo _elem248;
-                _elem248 = new BackupInfo();
-                _elem248.read(iprot);
-                this.info.add(_elem248);
+                HostBackupInfo _elem271;
+                _elem271 = new HostBackupInfo();
+                _elem271.read(iprot);
+                this.host_backups.add(_elem271);
               }
               iprot.readListEnd();
             }
@@ -307,12 +307,12 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       this.space.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.info != null) {
-      oprot.writeFieldBegin(INFO_FIELD_DESC);
+    if (this.host_backups != null) {
+      oprot.writeFieldBegin(HOST_BACKUPS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
-        for (BackupInfo _iter249 : this.info)        {
-          _iter249.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.host_backups.size()));
+        for (HostBackupInfo _iter272 : this.host_backups)        {
+          _iter272.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -350,13 +350,13 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("info");
+    sb.append("host_backups");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getInfo() == null) {
+    if (this.getHost_backups() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getInfo(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getHost_backups(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

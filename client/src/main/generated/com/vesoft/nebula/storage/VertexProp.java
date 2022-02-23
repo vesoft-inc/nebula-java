@@ -275,15 +275,15 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
         case PROPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list8 = iprot.readListBegin();
-              this.props = new ArrayList<byte[]>(Math.max(0, _list8.size));
-              for (int _i9 = 0; 
-                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
-                   ++_i9)
+              TList _list13 = iprot.readListBegin();
+              this.props = new ArrayList<byte[]>(Math.max(0, _list13.size));
+              for (int _i14 = 0; 
+                   (_list13.size < 0) ? iprot.peekList() : (_i14 < _list13.size); 
+                   ++_i14)
               {
-                byte[] _elem10;
-                _elem10 = iprot.readBinary();
-                this.props.add(_elem10);
+                byte[] _elem15;
+                _elem15 = iprot.readBinary();
+                this.props.add(_elem15);
               }
               iprot.readListEnd();
             }
@@ -315,8 +315,8 @@ public class VertexProp implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(PROPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.props.size()));
-        for (byte[] _iter11 : this.props)        {
-          oprot.writeBinary(_iter11);
+        for (byte[] _iter16 : this.props)        {
+          oprot.writeBinary(_iter16);
         }
         oprot.writeListEnd();
       }

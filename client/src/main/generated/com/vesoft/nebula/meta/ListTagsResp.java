@@ -349,16 +349,16 @@ public class ListTagsResp implements TBase, java.io.Serializable, Cloneable, Com
         case TAGS:
           if (__field.type == TType.LIST) {
             {
-              TList _list78 = iprot.readListBegin();
-              this.tags = new ArrayList<TagItem>(Math.max(0, _list78.size));
-              for (int _i79 = 0; 
-                   (_list78.size < 0) ? iprot.peekList() : (_i79 < _list78.size); 
-                   ++_i79)
+              TList _list86 = iprot.readListBegin();
+              this.tags = new ArrayList<TagItem>(Math.max(0, _list86.size));
+              for (int _i87 = 0; 
+                   (_list86.size < 0) ? iprot.peekList() : (_i87 < _list86.size); 
+                   ++_i87)
               {
-                TagItem _elem80;
-                _elem80 = new TagItem();
-                _elem80.read(iprot);
-                this.tags.add(_elem80);
+                TagItem _elem88;
+                _elem88 = new TagItem();
+                _elem88.read(iprot);
+                this.tags.add(_elem88);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListTagsResp implements TBase, java.io.Serializable, Cloneable, Com
       oprot.writeFieldBegin(TAGS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.tags.size()));
-        for (TagItem _iter81 : this.tags)        {
-          _iter81.write(oprot);
+        for (TagItem _iter89 : this.tags)        {
+          _iter89.write(oprot);
         }
         oprot.writeListEnd();
       }

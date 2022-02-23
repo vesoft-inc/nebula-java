@@ -339,15 +339,15 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
         case PARTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list196 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list196.size));
-              for (int _i197 = 0; 
-                   (_list196.size < 0) ? iprot.peekList() : (_i197 < _list196.size); 
-                   ++_i197)
+              TList _list285 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list285.size));
+              for (int _i286 = 0; 
+                   (_list285.size < 0) ? iprot.peekList() : (_i286 < _list285.size); 
+                   ++_i286)
               {
-                int _elem198;
-                _elem198 = iprot.readI32();
-                this.parts.add(_elem198);
+                int _elem287;
+                _elem287 = iprot.readI32();
+                this.parts.add(_elem287);
               }
               iprot.readListEnd();
             }
@@ -387,8 +387,8 @@ public class RebuildIndexRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-        for (int _iter199 : this.parts)        {
-          oprot.writeI32(_iter199);
+        for (int _iter288 : this.parts)        {
+          oprot.writeI32(_iter288);
         }
         oprot.writeListEnd();
       }

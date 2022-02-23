@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.meta;
@@ -10,9 +9,15 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
+import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.GetEdgeReq;
@@ -39,12 +44,18 @@ import com.vesoft.nebula.meta.MetaService;
 import com.vesoft.nebula.meta.Schema;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import com.vesoft.nebula.meta.VerifyClientVersionReq;
+import com.vesoft.nebula.meta.VerifyClientVersionResp;
+import com.vesoft.nebula.util.SslUtil;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import javax.net.ssl.SSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,58 +68,107 @@ public class MetaClient extends AbstractMetaClient {
     private static final int DEFAULT_TIMEOUT_MS = 1000;
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
-
     private static final int RETRY_TIMES = 1;
+
+    private boolean enableSSL = false;
+    private SSLParam sslParam = null;
 
     private MetaService.Client client;
     private final List<HostAddress> addresses;
 
-    public MetaClient(String host, int port) {
+    public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
     }
 
-    public MetaClient(HostAddress address) {
+    public MetaClient(HostAddress address) throws UnknownHostException {
         this(Arrays.asList(address), DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
-    public MetaClient(List<HostAddress> addresses) {
+    public MetaClient(List<HostAddress> addresses) throws UnknownHostException {
         this(addresses, DEFAULT_CONNECTION_RETRY_SIZE, DEFAULT_EXECUTION_RETRY_SIZE);
     }
 
-    public MetaClient(List<HostAddress> addresses, int connectionRetry, int executionRetry) {
+    public MetaClient(List<HostAddress> addresses, int connectionRetry, int executionRetry)
+            throws UnknownHostException {
         this(addresses, DEFAULT_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
     public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
-                      int executionRetry) {
+                      int executionRetry) throws UnknownHostException {
         super(addresses, timeout, connectionRetry, executionRetry);
         this.addresses = addresses;
     }
 
-    public void connect() throws TException {
+    public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
+                      int executionRetry, boolean enableSSL, SSLParam sslParam)
+            throws UnknownHostException {
+        super(addresses, timeout, connectionRetry, executionRetry);
+        this.addresses = addresses;
+        this.enableSSL = enableSSL;
+        this.sslParam = sslParam;
+        if (enableSSL && sslParam == null) {
+            throw new IllegalArgumentException("SSL is enabled, but SSLParam is null.");
+        }
+    }
+
+    public void connect()
+            throws TException, ClientServerIncompatibleException {
         doConnect();
     }
 
     /**
      * connect nebula meta server
      */
-    private void doConnect() throws TTransportException {
+    private void doConnect()
+            throws TTransportException, ClientServerIncompatibleException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAddress address = addresses.get(position);
         getClient(address.getHost(), address.getPort());
     }
 
-    private void getClient(String host, int port) throws TTransportException {
-        transport = new TSocket(host, port, timeout, timeout);
-        transport.open();
+    private void getClient(String host, int port)
+            throws TTransportException, ClientServerIncompatibleException {
+        if (enableSSL) {
+            SSLSocketFactory sslSocketFactory;
+            if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
+                sslSocketFactory = SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
+            } else {
+                sslSocketFactory =
+                        SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
+            }
+            try {
+                transport = new TSocket(sslSocketFactory.createSocket(host, port), timeout,
+                        timeout);
+            } catch (IOException e) {
+                throw new TTransportException(IOErrorException.E_UNKNOWN, e);
+            }
+        } else {
+            transport = new TSocket(host, port, timeout, timeout);
+            transport.open();
+        }
+
         protocol = new TCompactProtocol(transport);
         client = new MetaService.Client(protocol);
+
+        // check if client version matches server version
+        VerifyClientVersionResp resp =
+                client.verifyClientVersion(new VerifyClientVersionReq());
+        if (resp.getCode() != ErrorCode.SUCCEEDED) {
+            client.getInputProtocol().getTransport().close();
+            throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
+                    Charsets.UTF_8));
+        }
     }
 
-    private void freshClient(HostAddr leader) throws TTransportException {
+    private void freshClient(HostAddr leader)
+            throws TTransportException {
         close();
-        getClient(leader.getHost(), leader.getPort());
+        try {
+            getClient(leader.getHost(), leader.getPort());
+        } catch (ClientServerIncompatibleException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**

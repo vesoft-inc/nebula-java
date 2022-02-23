@@ -28,11 +28,14 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
   private static final TStruct STRUCT_DESC = new TStruct("DeleteEdgesRequest");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)3);
 
   public int space_id;
   public Map<Integer,List<EdgeKey>> parts;
+  public RequestCommon common;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
+  public static final int COMMON = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -49,6 +52,8 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
                 new StructMetaData(TType.STRUCT, EdgeKey.class)))));
+    tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, RequestCommon.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -68,9 +73,21 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     this.parts = parts;
   }
 
+  public DeleteEdgesRequest(
+      int space_id,
+      Map<Integer,List<EdgeKey>> parts,
+      RequestCommon common) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
+    this.common = common;
+  }
+
   public static class Builder {
     private int space_id;
     private Map<Integer,List<EdgeKey>> parts;
+    private RequestCommon common;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -88,12 +105,18 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
+    public Builder setCommon(final RequestCommon common) {
+      this.common = common;
+      return this;
+    }
+
     public DeleteEdgesRequest build() {
       DeleteEdgesRequest result = new DeleteEdgesRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
       result.setParts(this.parts);
+      result.setCommon(this.common);
       return result;
     }
   }
@@ -111,6 +134,9 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
+    }
+    if (other.isSetCommon()) {
+      this.common = TBaseHelper.deepCopy(other.common);
     }
   }
 
@@ -165,6 +191,30 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
+  public RequestCommon getCommon() {
+    return this.common;
+  }
+
+  public DeleteEdgesRequest setCommon(RequestCommon common) {
+    this.common = common;
+    return this;
+  }
+
+  public void unsetCommon() {
+    this.common = null;
+  }
+
+  // Returns true if field common is set (has been assigned a value) and false otherwise
+  public boolean isSetCommon() {
+    return this.common != null;
+  }
+
+  public void setCommonIsSet(boolean __value) {
+    if (!__value) {
+      this.common = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -184,6 +234,14 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case COMMON:
+      if (__value == null) {
+        unsetCommon();
+      } else {
+        setCommon((RequestCommon)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -196,6 +254,9 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
 
     case PARTS:
       return getParts();
+
+    case COMMON:
+      return getCommon();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -216,12 +277,14 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, common});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -246,33 +309,41 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map126 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map126.size));
-              for (int _i127 = 0; 
-                   (_map126.size < 0) ? iprot.peekMap() : (_i127 < _map126.size); 
-                   ++_i127)
+              TMap _map131 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map131.size));
+              for (int _i132 = 0; 
+                   (_map131.size < 0) ? iprot.peekMap() : (_i132 < _map131.size); 
+                   ++_i132)
               {
-                int _key128;
-                List<EdgeKey> _val129;
-                _key128 = iprot.readI32();
+                int _key133;
+                List<EdgeKey> _val134;
+                _key133 = iprot.readI32();
                 {
-                  TList _list130 = iprot.readListBegin();
-                  _val129 = new ArrayList<EdgeKey>(Math.max(0, _list130.size));
-                  for (int _i131 = 0; 
-                       (_list130.size < 0) ? iprot.peekList() : (_i131 < _list130.size); 
-                       ++_i131)
+                  TList _list135 = iprot.readListBegin();
+                  _val134 = new ArrayList<EdgeKey>(Math.max(0, _list135.size));
+                  for (int _i136 = 0; 
+                       (_list135.size < 0) ? iprot.peekList() : (_i136 < _list135.size); 
+                       ++_i136)
                   {
-                    EdgeKey _elem132;
-                    _elem132 = new EdgeKey();
-                    _elem132.read(iprot);
-                    _val129.add(_elem132);
+                    EdgeKey _elem137;
+                    _elem137 = new EdgeKey();
+                    _elem137.read(iprot);
+                    _val134.add(_elem137);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key128, _val129);
+                this.parts.put(_key133, _val134);
               }
               iprot.readMapEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case COMMON:
+          if (__field.type == TType.STRUCT) {
+            this.common = new RequestCommon();
+            this.common.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -301,12 +372,12 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<EdgeKey>> _iter133 : this.parts.entrySet())        {
-          oprot.writeI32(_iter133.getKey());
+        for (Map.Entry<Integer, List<EdgeKey>> _iter138 : this.parts.entrySet())        {
+          oprot.writeI32(_iter138.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter133.getValue().size()));
-            for (EdgeKey _iter134 : _iter133.getValue())            {
-              _iter134.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter138.getValue().size()));
+            for (EdgeKey _iter139 : _iter138.getValue())            {
+              _iter139.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -314,6 +385,13 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
         oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
+    }
+    if (this.common != null) {
+      if (isSetCommon()) {
+        oprot.writeFieldBegin(COMMON_FIELD_DESC);
+        this.common.write(oprot);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -352,6 +430,20 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
       sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetCommon())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("common");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getCommon() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

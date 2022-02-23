@@ -26,22 +26,31 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, Comparable<CheckpointInfo> {
   private static final TStruct STRUCT_DESC = new TStruct("CheckpointInfo");
-  private static final TField PARTITION_INFO_FIELD_DESC = new TField("partition_info", TType.STRUCT, (short)1);
-  private static final TField PATH_FIELD_DESC = new TField("path", TType.STRING, (short)2);
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
+  private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
+  private static final TField PATH_FIELD_DESC = new TField("path", TType.STRING, (short)3);
 
-  public PartitionBackupInfo partition_info;
+  public int space_id;
+  public Map<Integer,LogInfo> parts;
   public byte[] path;
-  public static final int PARTITION_INFO = 1;
-  public static final int PATH = 2;
+  public static final int SPACE_ID = 1;
+  public static final int PARTS = 2;
+  public static final int PATH = 3;
 
   // isset id assignments
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(PARTITION_INFO, new FieldMetaData("partition_info", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, PartitionBackupInfo.class)));
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(PARTS, new FieldMetaData("parts", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new StructMetaData(TType.STRUCT, LogInfo.class))));
     tmpMetaDataMap.put(PATH, new FieldMetaData("path", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -55,22 +64,34 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
   }
 
   public CheckpointInfo(
-      PartitionBackupInfo partition_info,
+      int space_id,
+      Map<Integer,LogInfo> parts,
       byte[] path) {
     this();
-    this.partition_info = partition_info;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.parts = parts;
     this.path = path;
   }
 
   public static class Builder {
-    private PartitionBackupInfo partition_info;
+    private int space_id;
+    private Map<Integer,LogInfo> parts;
     private byte[] path;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
 
-    public Builder setPartition_info(final PartitionBackupInfo partition_info) {
-      this.partition_info = partition_info;
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setParts(final Map<Integer,LogInfo> parts) {
+      this.parts = parts;
       return this;
     }
 
@@ -81,7 +102,10 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
 
     public CheckpointInfo build() {
       CheckpointInfo result = new CheckpointInfo();
-      result.setPartition_info(this.partition_info);
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
+      result.setParts(this.parts);
       result.setPath(this.path);
       return result;
     }
@@ -95,8 +119,11 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
    * Performs a deep copy on <i>other</i>.
    */
   public CheckpointInfo(CheckpointInfo other) {
-    if (other.isSetPartition_info()) {
-      this.partition_info = TBaseHelper.deepCopy(other.partition_info);
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
+    if (other.isSetParts()) {
+      this.parts = TBaseHelper.deepCopy(other.parts);
     }
     if (other.isSetPath()) {
       this.path = TBaseHelper.deepCopy(other.path);
@@ -107,27 +134,50 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     return new CheckpointInfo(this);
   }
 
-  public PartitionBackupInfo getPartition_info() {
-    return this.partition_info;
+  public int getSpace_id() {
+    return this.space_id;
   }
 
-  public CheckpointInfo setPartition_info(PartitionBackupInfo partition_info) {
-    this.partition_info = partition_info;
+  public CheckpointInfo setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     return this;
   }
 
-  public void unsetPartition_info() {
-    this.partition_info = null;
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
   }
 
-  // Returns true if field partition_info is set (has been assigned a value) and false otherwise
-  public boolean isSetPartition_info() {
-    return this.partition_info != null;
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setPartition_infoIsSet(boolean __value) {
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
+  }
+
+  public Map<Integer,LogInfo> getParts() {
+    return this.parts;
+  }
+
+  public CheckpointInfo setParts(Map<Integer,LogInfo> parts) {
+    this.parts = parts;
+    return this;
+  }
+
+  public void unsetParts() {
+    this.parts = null;
+  }
+
+  // Returns true if field parts is set (has been assigned a value) and false otherwise
+  public boolean isSetParts() {
+    return this.parts != null;
+  }
+
+  public void setPartsIsSet(boolean __value) {
     if (!__value) {
-      this.partition_info = null;
+      this.parts = null;
     }
   }
 
@@ -155,13 +205,22 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case PARTITION_INFO:
+    case SPACE_ID:
       if (__value == null) {
-        unsetPartition_info();
+        unsetSpace_id();
       } else {
-        setPartition_info((PartitionBackupInfo)__value);
+        setSpace_id((Integer)__value);
+      }
+      break;
+
+    case PARTS:
+      if (__value == null) {
+        unsetParts();
+      } else {
+        setParts((Map<Integer,LogInfo>)__value);
       }
       break;
 
@@ -180,8 +239,11 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case PARTITION_INFO:
-      return getPartition_info();
+    case SPACE_ID:
+      return new Integer(getSpace_id());
+
+    case PARTS:
+      return getParts();
 
     case PATH:
       return getPath();
@@ -201,7 +263,9 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       return false;
     CheckpointInfo that = (CheckpointInfo)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetPartition_info(), that.isSetPartition_info(), this.partition_info, that.partition_info)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
     if (!TBaseHelper.equalsSlow(this.isSetPath(), that.isSetPath(), this.path, that.path)) { return false; }
 
@@ -210,7 +274,7 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {partition_info, path});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, path});
   }
 
   @Override
@@ -225,11 +289,19 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetPartition_info()).compareTo(other.isSetPartition_info());
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(partition_info, other.partition_info);
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetParts()).compareTo(other.isSetParts());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(parts, other.parts);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -255,10 +327,32 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       }
       switch (__field.id)
       {
-        case PARTITION_INFO:
-          if (__field.type == TType.STRUCT) {
-            this.partition_info = new PartitionBackupInfo();
-            this.partition_info.read(iprot);
+        case SPACE_ID:
+          if (__field.type == TType.I32) {
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case PARTS:
+          if (__field.type == TType.MAP) {
+            {
+              TMap _map64 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,LogInfo>(Math.max(0, 2*_map64.size));
+              for (int _i65 = 0; 
+                   (_map64.size < 0) ? iprot.peekMap() : (_i65 < _map64.size); 
+                   ++_i65)
+              {
+                int _key66;
+                LogInfo _val67;
+                _key66 = iprot.readI32();
+                _val67 = new LogInfo();
+                _val67.read(iprot);
+                this.parts.put(_key66, _val67);
+              }
+              iprot.readMapEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -287,9 +381,19 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.partition_info != null) {
-      oprot.writeFieldBegin(PARTITION_INFO_FIELD_DESC);
-      this.partition_info.write(oprot);
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
+    oprot.writeFieldEnd();
+    if (this.parts != null) {
+      oprot.writeFieldBegin(PARTS_FIELD_DESC);
+      {
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.parts.size()));
+        for (Map.Entry<Integer, LogInfo> _iter68 : this.parts.entrySet())        {
+          oprot.writeI32(_iter68.getKey());
+          _iter68.getValue().write(oprot);
+        }
+        oprot.writeMapEnd();
+      }
       oprot.writeFieldEnd();
     }
     if (this.path != null) {
@@ -318,13 +422,20 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("partition_info");
+    sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getPartition_info() == null) {
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("parts");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getParts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getPartition_info(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getParts(), indent + 1, prettyPrint));
     }
     first = false;
     if (!first) sb.append("," + newLine);

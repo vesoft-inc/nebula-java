@@ -1,14 +1,21 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph.data;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Duration;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Geography;
+import com.vesoft.nebula.LineString;
+import com.vesoft.nebula.Point;
+import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
@@ -51,9 +58,11 @@ public class TestDataFromServer {
                 + "CREATE TAG IF NOT EXISTS student(name string);"
                 + "CREATE EDGE IF NOT EXISTS like(likeness double);"
                 + "CREATE EDGE IF NOT EXISTS friend(start_year int, end_year int);"
-                + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));");
+                + "CREATE TAG INDEX IF NOT EXISTS person_name_index ON person(name(8));"
+                + "CREATE TAG IF NOT EXISTS any_shape(geo geography);"
+                + "CREATE TAG IF NOT EXISTS tag_duration(col duration);");
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
-        TimeUnit.SECONDS.sleep(6);
+        TimeUnit.SECONDS.sleep(10);
         String insertVertexes = "INSERT VERTEX person(name, age, grade,friends, book_num, "
                 + "birthday, start_school, morning, property,"
                 + "is_girl, child_name, expend, first_out_city) VALUES "
@@ -100,6 +109,26 @@ public class TestDataFromServer {
                 + "'Bob'->'John'@100:(2018, 2020);";
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        String insertShape =
+                "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT(3 8)'));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'LString':"
+                + "(ST_GeogFromText('LINESTRING(3 8, 4.7 73.23)'));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        insertShape = "INSERT VERTEX any_shape(geo) VALUES 'Polygon':"
+                + "(ST_GeogFromText('POLYGON((0 1, 1 2, 2 3, 0 1))'));";
+        resp = session.execute(insertShape);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
+
+        String insertDuration = "INSERT VERTEX tag_duration(col) VALUES 'duration':"
+                + "(duration({months:1, seconds:100, microseconds:20}));";
+        resp = session.execute(insertDuration);
+        Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
     }
 
     @After
@@ -113,7 +142,8 @@ public class TestDataFromServer {
     @Test
     public void testAllSchemaType() {
         try {
-            ResultSet result = session.execute("FETCH PROP ON person 'Bob';");
+            ResultSet result = session.execute(
+                    "FETCH PROP ON person 'Bob' yield vertex as vertices_;");
             Assert.assertTrue(result.isSucceeded());
             Assert.assertEquals("", result.getErrorMessage());
             Assert.assertFalse(result.getLatency() <= 0);
@@ -141,24 +171,24 @@ public class TestDataFromServer {
             DateTimeWrapper dateTimeWrapper = (DateTimeWrapper) new DateTimeWrapper(
                     new DateTime((short) 2010, (byte) 9,
                             (byte) 10, (byte) 02, (byte) 8, (byte) 2, 0)).setTimezoneOffset(28800);
-            DateTimeWrapper resultDateTime =  properties.get("birthday").asDateTime();
+            DateTimeWrapper resultDateTime = properties.get("birthday").asDateTime();
             Assert.assertEquals(dateTimeWrapper, resultDateTime);
             Assert.assertEquals("utc datetime: 2010-09-10T02:08:02.000000, timezoneOffset: 28800",
-                resultDateTime.toString());
+                    resultDateTime.toString());
             Assert.assertEquals("2010-09-10T10:08:02.000000",
-                resultDateTime.getLocalDateTimeStr());
+                    resultDateTime.getLocalDateTimeStr());
             Assert.assertEquals("2010-09-10T02:08:02.000000",
-                resultDateTime.getUTCDateTimeStr());
+                    resultDateTime.getUTCDateTimeStr());
 
             DateWrapper dateWrapper = new DateWrapper(new Date((short) 2017, (byte) 9, (byte) 10));
             Assert.assertEquals(dateWrapper, properties.get("start_school").asDate());
 
             TimeWrapper timeWrapper = (TimeWrapper) new TimeWrapper(
-                new Time((byte) 23, (byte) 10, (byte) 0, 0)).setTimezoneOffset(28800);
+                    new Time((byte) 23, (byte) 10, (byte) 0, 0)).setTimezoneOffset(28800);
             TimeWrapper resultTime = properties.get("morning").asTime();
             Assert.assertEquals(timeWrapper, resultTime);
             Assert.assertEquals("utc time: 23:10:00.000000, timezoneOffset: 28800",
-                resultTime.toString());
+                    resultTime.toString());
             Assert.assertEquals("07:10:00.000000", resultTime.getLocalTimeStr());
             Assert.assertEquals("23:10:00.000000", resultTime.getUTCTimeStr());
 
@@ -169,6 +199,101 @@ public class TestDataFromServer {
             Assert.assertEquals(1111, properties.get("first_out_city").asLong());
             Assert.assertEquals(ValueWrapper.NullType.__NULL__,
                     properties.get("hobby").asNull().getNullType());
+
+            result = session.execute(
+                    "FETCH PROP ON any_shape 'Point' yield vertex as vertices_;");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Point", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
+            GeographyWrapper geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.PTVAL, new Point(new Coordinate(3, 8))));
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    properties.get("geo").asGeography().toString());
+
+            result = session.execute(
+                    "FETCH PROP ON any_shape 'LString' yield vertex as vertices_;");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("LString", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
+            geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.LSVAL, new LineString(Arrays.asList(new Coordinate(3,
+                            8), new Coordinate(4.7, 73.23)))));
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    properties.get("geo").asGeography().toString());
+
+
+            result = session.execute(
+                    "FETCH PROP ON any_shape 'Polygon' yield vertex as vertices_;");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("Polygon", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("any_shape"), node.tagNames());
+            properties = node.properties("any_shape");
+            geographyWrapper = new GeographyWrapper(
+                    new Geography(Geography.PGVAL,
+                            new Polygon(Arrays.asList(Arrays.asList(
+                                    new Coordinate(0, 1),
+                                    new Coordinate(1, 2),
+                                    new Coordinate(2, 3),
+                                    new Coordinate(0, 1))
+                            ))));
+            Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
+            Assert.assertEquals(geographyWrapper.toString(),
+                    properties.get("geo").asGeography().toString());
+
+            result = session.execute(
+                    "FETCH PROP ON tag_duration 'duration' yield vertex as vertices_");
+            Assert.assertTrue(result.isSucceeded());
+            Assert.assertEquals("", result.getErrorMessage());
+            Assert.assertFalse(result.getLatency() <= 0);
+            Assert.assertEquals("", result.getComment());
+            Assert.assertEquals(ErrorCode.SUCCEEDED.getValue(), result.getErrorCode());
+            Assert.assertEquals("test_data", result.getSpaceName());
+            Assert.assertFalse(result.isEmpty());
+            Assert.assertEquals(1, result.rowsSize());
+
+            Assert.assertTrue(result.rowValues(0).get(0).isVertex());
+            node = result.rowValues(0).get(0).asNode();
+            Assert.assertEquals("duration", node.getId().asString());
+            Assert.assertEquals(Arrays.asList("tag_duration"), node.tagNames());
+            properties = node.properties("tag_duration");
+            DurationWrapper durationWrapper = new DurationWrapper(new Duration(100, 20, 1));
+            Assert.assertEquals(durationWrapper, properties.get("col").asDuration());
+            Assert.assertEquals(durationWrapper.toString(),
+                    properties.get("col").asDuration().toString());
 
         } catch (IOErrorException | UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -344,35 +469,36 @@ public class TestDataFromServer {
     public void tesDataset() {
         try {
             ResultSet result = session.execute(
-                "CREATE TAG IF NOT EXISTS player(name string, age int);"
-                    + "CREATE EDGE IF NOT EXISTS like(likeness int);");
+                    "CREATE TAG IF NOT EXISTS player(name string, age int);"
+                            + "CREATE EDGE IF NOT EXISTS like(likeness int);");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
-            TimeUnit.SECONDS.sleep(6);
+            TimeUnit.SECONDS.sleep(10);
             result = session.execute(
-                "INSERT VERTEX player(name, age) values \"a\":(\"a\", 1); "
-                    + "INSERT VERTEX player(name, age) values \"b\":(\"b\", 2); "
-                    + "INSERT VERTEX player(name, age) values \"c\":(\"c\", 3); "
-                    + "INSERT VERTEX player(name, age) values \"d\":(\"d\", 4);"
-                    + "INSERT VERTEX player(name, age) values \"f\":(\"f\", 5);"
-                    + "INSERT VERTEX player(name, age) values \"g\":(\"g\", 6);"
-                    + "INSERT EDGE like(likeness) values \"d\" -> \"a\":(10); "
-                    + "INSERT EDGE like(likeness) values \"d\" -> \"c\":(10);"
-                    + "INSERT EDGE like(likeness) values \"b\" -> \"a\":(10); "
-                    + "INSERT EDGE like(likeness) values \"c\" -> \"b\":(10);"
-                    + "INSERT EDGE like(likeness) values \"a\" -> \"f\":(10); "
-                    + "INSERT EDGE like(likeness) values \"c\" -> \"f\":(10);"
-                    + "INSERT EDGE like(likeness) values \"a\" -> \"g\":(10); "
-                    + "INSERT EDGE like(likeness) values \"g\" -> \"c\":(10);");
+                    "INSERT VERTEX player(name, age) values \"a\":(\"a\", 1); "
+                            + "INSERT VERTEX player(name, age) values \"b\":(\"b\", 2); "
+                            + "INSERT VERTEX player(name, age) values \"c\":(\"c\", 3); "
+                            + "INSERT VERTEX player(name, age) values \"d\":(\"d\", 4);"
+                            + "INSERT VERTEX player(name, age) values \"f\":(\"f\", 5);"
+                            + "INSERT VERTEX player(name, age) values \"g\":(\"g\", 6);"
+                            + "INSERT EDGE like(likeness) values \"d\" -> \"a\":(10); "
+                            + "INSERT EDGE like(likeness) values \"d\" -> \"c\":(10);"
+                            + "INSERT EDGE like(likeness) values \"b\" -> \"a\":(10); "
+                            + "INSERT EDGE like(likeness) values \"c\" -> \"b\":(10);"
+                            + "INSERT EDGE like(likeness) values \"a\" -> \"f\":(10); "
+                            + "INSERT EDGE like(likeness) values \"c\" -> \"f\":(10);"
+                            + "INSERT EDGE like(likeness) values \"a\" -> \"g\":(10); "
+                            + "INSERT EDGE like(likeness) values \"g\" -> \"c\":(10);");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             result = session.execute(
-                "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS");
+                    "FIND NOLOOP PATH FROM \"a\" TO \"c\" OVER like BIDIRECT UPTO 5 STEPS "
+                            + "YIELD path as p");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(4, result.rowsSize());
-            String expectString = "ColumnName: [path], "
-                + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
-                + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
-                + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
-                + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
+            String expectString = "ColumnName: [p], "
+                    + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
+                    + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
+                    + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
+                    + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
             Assert.assertEquals(expectString, result.toString());
         } catch (IOErrorException | InterruptedException e) {
             e.printStackTrace();
@@ -383,11 +509,140 @@ public class TestDataFromServer {
     @Test
     public void testErrorResult() {
         try {
-            ResultSet result = session.execute("FETCH PROP ON no_exist_tag \"nobody\"");
+            ResultSet result = session.execute(
+                    "FETCH PROP ON no_exist_tag \"nobody\" yield vertex as vertices_");
             Assert.assertTrue(result.toString().contains("ExecutionResponse"));
         } catch (IOErrorException e) {
             e.printStackTrace();
             assert false;
+        }
+    }
+
+    @Test
+    public void testBasicTypeForJson() {
+        try {
+            String ngql = "YIELD 1, 2.2, \"hello\", [1,2,\"abc\"], {key: \"value\"}, \"汉字\"";
+            JSONObject resp = JSON.parseObject(session.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1,2.2,\"hello\",[1,2,\"abc\"],{\"key\":\"value\"},\"汉字\"]";
+
+            // check row data
+            Assert.assertEquals(rowData, exp);
+            // check space name
+            String spaceName = resp.getJSONArray("results").getJSONObject(0).getString("spaceName");
+            Assert.assertEquals(spaceName, "test_data");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testComplexTypeForJson() {
+        try {
+            JSONObject resp = JSON.parseObject(session.executeJson("MATCH (v:person {name: "
+                    + "\"Bob\"}) RETURN v"));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            Assert.assertEquals(rowData, "[{\"person.first_out_city\":1111,\"person"
+                    + ".book_num\":100,\"person.age\":10,\"person.expend\":100,\"person.is_girl\":"
+                    + "false,\"person.name\":\"Bob\",\"person.grade\":3,\"person.birthday\":\"2010"
+                    + "-09-10T02:08:02.000000000Z\",\"student.name\":\"Bob\","
+                    + "\"person.child_name\":\"Hello Worl\","
+                    + "\"person.property\":1000,\"person.morning\":\"23:10:00.000000000Z\",\""
+                    + "person.start_school\":\"2017-09-10\",\"person.friends\":10}]");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+
+    @Test
+    public void testErrorForJson() {
+        try {
+            String ngql = "MATCH (v:invalidTag {name: \"Bob\"}) RETURN v";
+            JSONObject resp = JSON.parseObject(session.executeJson(ngql));
+            int code = resp.getJSONArray("errors").getJSONObject(0).getInteger("code");
+            String message = resp.getJSONArray("errors").getJSONObject(0).getString("message");
+
+            // check error code
+            Assert.assertEquals(code, ErrorCode.E_SEMANTIC_ERROR.getValue());
+
+            // check error message
+            Assert.assertEquals(message, "SemanticError: `invalidTag': Unknown tag");
+        } catch (IOErrorException e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testSelfSignedSsl() {
+        Session sslSession = null;
+        NebulaPool sslPool = new NebulaPool();
+        try {
+
+            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+            nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
+            nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
+                    "src/test/resources/ssl/selfsigned.pem",
+                    "src/test/resources/ssl/selfsigned.key",
+                    "vesoft"));
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 7669)),
+                    nebulaSslPoolConfig));
+            sslSession = sslPool.getSession("root", "nebula", true);
+
+            String ngql = "YIELD 1";
+            JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1]";
+            Assert.assertEquals(rowData, exp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (sslSession != null) {
+                sslSession.release();
+            }
+            sslPool.close();
+        }
+    }
+
+    @Test
+    public void testCASignedSsl() {
+        Session sslSession = null;
+        NebulaPool sslPool = new NebulaPool();
+        try {
+            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
+            nebulaSslPoolConfig.setMaxConnSize(100);
+            nebulaSslPoolConfig.setEnableSsl(true);
+            nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
+                    "src/test/resources/ssl/casigned.pem",
+                    "src/test/resources/ssl/casigned.crt",
+                    "src/test/resources/ssl/casigned.key"));
+            Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
+                    nebulaSslPoolConfig));
+            sslSession = sslPool.getSession("root", "nebula", true);
+
+            String ngql = "YIELD 1";
+            JSONObject resp = JSON.parseObject(sslSession.executeJson(ngql));
+            String rowData = resp.getJSONArray("results").getJSONObject(0).getJSONArray("data")
+                    .getJSONObject(0).getJSONArray("row").toJSONString();
+            String exp = "[1]";
+            Assert.assertEquals(rowData, exp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        } finally {
+            if (sslSession != null) {
+                sslSession.release();
+            }
+            sslPool.close();
         }
     }
 }

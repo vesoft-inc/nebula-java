@@ -1,13 +1,13 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.encoder;
 
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
+import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.Time;
 
 public interface RowWriter {
@@ -33,6 +33,8 @@ public interface RowWriter {
     void write(int index, Date v);
 
     void write(int index, DateTime v);
+
+    void write(int index, Geography v);
 
     byte[] encodeStr();
 }
