@@ -16,7 +16,6 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --expired_time_factor=2
-      - --ws_h2_port=11000
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --password_path=/share/resources/test.ca.password
@@ -58,7 +57,6 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
-      - --ws_h2_port=12000
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --password_path=/share/resources/test.ca.password
@@ -100,7 +98,6 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
-      - --ws_h2_port=13000
       - --cert_path=/share/resources/test.derive.crt
       - --key_path=/share/resources/test.derive.key
       - --password_path=/share/resources/test.ca.password
