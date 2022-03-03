@@ -22,10 +22,14 @@ import com.vesoft.nebula.storage.ScanResponse;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import javax.net.ssl.SSLSocketFactory;
 
-public class GraphStorageConnection {
+public class GraphStorageConnection implements Serializable {
+
+    private static final long serialVersionUID = -3631352515689239788L;
+    
     protected TTransport transport = null;
     protected TProtocol protocol = null;
     public HostAddress address;

@@ -10,13 +10,15 @@ import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import com.vesoft.nebula.client.storage.data.ScanStatus;
 import com.vesoft.nebula.client.storage.processor.EdgeProcessor;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScanEdgeResult {
+public class ScanEdgeResult implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanEdgeResult.class);
+    private static final long serialVersionUID = 519190254786197550L;
 
     private final List<DataSet> dataSets;
 

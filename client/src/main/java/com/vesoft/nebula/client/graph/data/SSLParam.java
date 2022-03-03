@@ -5,7 +5,12 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-public abstract class SSLParam {
+import java.io.Serializable;
+
+public abstract class SSLParam implements Serializable {
+
+    private static final long serialVersionUID = 7410233298826490747L;
+
     public enum SignMode {
         NONE,
         SELF_SIGNED,

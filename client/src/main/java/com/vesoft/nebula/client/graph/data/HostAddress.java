@@ -5,7 +5,9 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-public class HostAddress {
+import java.io.Serializable;
+
+public class HostAddress implements Serializable {
     private final String host;
     private final int port;
 

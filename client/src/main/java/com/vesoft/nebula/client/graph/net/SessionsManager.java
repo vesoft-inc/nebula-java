@@ -11,11 +11,15 @@ import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.BitSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SessionsManager {
+public class SessionsManager implements Serializable {
+
+    private static final long serialVersionUID = 7519424097351713021L;
+
     private final SessionsManagerConfig config;
     private NebulaPool pool = null;
     private final CopyOnWriteArrayList<SessionWrapper> sessionList;

@@ -5,7 +5,9 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-public abstract class BaseDataObject {
+import java.io.Serializable;
+
+public abstract class BaseDataObject implements Serializable {
     private String decodeType = "utf-8";
     private int timezoneOffset = 0;
 

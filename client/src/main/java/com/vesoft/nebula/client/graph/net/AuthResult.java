@@ -5,7 +5,12 @@
 
 package com.vesoft.nebula.client.graph.net;
 
-public class AuthResult {
+import java.io.Serializable;
+
+public class AuthResult implements Serializable {
+
+    private static final long serialVersionUID = 8795815613377375650L;
+
     private final long sessionId;
     private final int timezoneOffset;
 

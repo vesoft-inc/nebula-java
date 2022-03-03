@@ -4,11 +4,16 @@ import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import java.io.Serializable;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
+public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection>
+        implements Serializable {
+
+    private static final long serialVersionUID = 6101157301791971560L;
+
     private final NebulaPoolConfig config;
     private final LoadBalancer loadBalancer;
     private static final int retryTime = 3;
@@ -32,7 +37,7 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> {
                 if (config.isEnableSsl()) {
                     if (config.getSslParam() == null) {
                         throw new IllegalArgumentException("SSL Param is required when enableSsl "
-                                                           + "is set to true");
+                                + "is set to true");
                     }
                     conn.open(address, config.getTimeout(), config.getSslParam());
                 } else {

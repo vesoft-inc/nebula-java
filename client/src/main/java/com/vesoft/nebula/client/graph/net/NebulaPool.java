@@ -12,6 +12,7 @@ import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleExceptio
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -24,7 +25,10 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NebulaPool {
+public class NebulaPool implements Serializable {
+
+    private static final long serialVersionUID = 6226487268001127885L;
+
     private GenericObjectPool<SyncConnection> objectPool = null;
     private LoadBalancer loadBalancer;
     private final Logger log = LoggerFactory.getLogger(this.getClass());

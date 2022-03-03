@@ -11,6 +11,7 @@ import com.vesoft.nebula.client.storage.data.ScanStatus;
 import com.vesoft.nebula.client.storage.data.VertexRow;
 import com.vesoft.nebula.client.storage.data.VertexTableRow;
 import com.vesoft.nebula.client.storage.processor.VertexProcessor;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +19,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScanVertexResult {
+public class ScanVertexResult implements Serializable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanVertexResult.class);
+    private static final long serialVersionUID = -2446261806893848521L;
 
     private final List<DataSet> dataSets;
 
