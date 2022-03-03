@@ -9,7 +9,8 @@ import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection> implements Serializable {
+public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection>
+        implements Serializable {
 
     private static final long serialVersionUID = 6101157301791971560L;
 
