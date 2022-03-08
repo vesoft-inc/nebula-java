@@ -73,9 +73,9 @@ public class NebulaPool implements Serializable {
                 "Config waitTime:" + config.getWaitTime() + " is illegal");
         }
 
-        if (config.getWaitTime() < 0) {
+        if (config.getMinClusterHealthRate() < 0) {
             throw new InvalidConfigException(
-                    "Config waitTime:" + config.getWaitTime() + " is illegal");
+                    "Config minClusterHealthRate:" + config.getMinClusterHealthRate() + " is illegal");
         }
     }
 
