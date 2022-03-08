@@ -26,16 +26,19 @@ public class NebulaPoolConfig implements Serializable {
     // 0 means never delete
     private int idleTime = 0;
 
-    // the interval time to check idle connection, unit ms, -1 means no check
+    // The interval time to check idle connection, unit ms, -1 means no check
     private int intervalIdle = -1;
 
-    // the wait time to get idle connection, unit ms
+    // The wait time to get idle connection, unit ms
     private int waitTime = 0;
 
-    // set to true to turn on ssl encrypted traffic
+    // The minimum rate of healthy servers to all servers. if 1 it means all servers should be available on init.
+    private double minClusterHealthRate = 1;
+
+    // Set to true to turn on ssl encrypted traffic
     private boolean enableSsl = false;
 
-    // ssl param is required if ssl is turned on
+    // SSL param is required if ssl is turned on
     private SSLParam sslParam = null;
 
     public boolean isEnableSsl() {
@@ -105,6 +108,15 @@ public class NebulaPoolConfig implements Serializable {
 
     public NebulaPoolConfig setWaitTime(int waitTime) {
         this.waitTime = waitTime;
+        return this;
+    }
+
+    public double getMinClusterHealthRate() {
+        return minClusterHealthRate;
+    }
+
+    public NebulaPoolConfig setMinClusterHealthRate(double minClusterHealthRate) {
+        this.minClusterHealthRate = minClusterHealthRate;
         return this;
     }
 }
