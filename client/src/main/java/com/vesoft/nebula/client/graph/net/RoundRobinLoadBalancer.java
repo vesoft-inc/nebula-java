@@ -29,7 +29,8 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private SSLParam sslParam;
     private boolean enabledSsl;
 
-    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, double minClusterHealthRate) {
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
+                                  double minClusterHealthRate) {
         this.timeout = timeout;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);

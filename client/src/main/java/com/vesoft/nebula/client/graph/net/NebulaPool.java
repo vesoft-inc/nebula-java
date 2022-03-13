@@ -75,7 +75,8 @@ public class NebulaPool implements Serializable {
 
         if (config.getMinClusterHealthRate() < 0) {
             throw new InvalidConfigException(
-                    "Config minClusterHealthRate:" + config.getMinClusterHealthRate() + " is illegal");
+                    "Config minClusterHealthRate:" + config.getMinClusterHealthRate()
+                            + " is illegal");
         }
     }
 
@@ -97,7 +98,8 @@ public class NebulaPool implements Serializable {
         this.loadBalancer = config.isEnableSsl()
                 ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam(),
                 config.getMinClusterHealthRate())
-                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getMinClusterHealthRate());
+                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout(),
+                config.getMinClusterHealthRate());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();

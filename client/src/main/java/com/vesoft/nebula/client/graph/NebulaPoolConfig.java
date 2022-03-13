@@ -32,7 +32,8 @@ public class NebulaPoolConfig implements Serializable {
     // The wait time to get idle connection, unit ms
     private int waitTime = 0;
 
-    // The minimum rate of healthy servers to all servers. if 1 it means all servers should be available on init.
+    // The minimum rate of healthy servers to all servers. if 1 it means all servers should be
+    // available on init.
     private double minClusterHealthRate = 1;
 
     // Set to true to turn on ssl encrypted traffic
