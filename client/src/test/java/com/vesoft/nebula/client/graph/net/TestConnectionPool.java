@@ -128,7 +128,7 @@ public class TestConnectionPool {
             // set idle time
             nebulaPoolConfig.setIdleTime(2000);
             nebulaPoolConfig.setIntervalIdle(1000);
-            nebulaPoolConfig.setMinClusterHealthRate(1);
+            nebulaPoolConfig.setMinClusterHealthRate(0);
             // set wait time
             nebulaPoolConfig.setWaitTime(1000);
             List<HostAddress> addresses = Collections.singletonList(
