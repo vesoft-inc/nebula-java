@@ -72,6 +72,12 @@ public class NebulaPool implements Serializable {
             throw new InvalidConfigException(
                 "Config waitTime:" + config.getWaitTime() + " is illegal");
         }
+
+        if (config.getMinClusterHealthRate() < 0) {
+            throw new InvalidConfigException(
+                    "Config minClusterHealthRate:" + config.getMinClusterHealthRate()
+                            + " is illegal");
+        }
     }
 
     /**
@@ -90,8 +96,10 @@ public class NebulaPool implements Serializable {
         this.waitTime = config.getWaitTime();
         List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = config.isEnableSsl()
-                ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam())
-                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
+                ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam(),
+                config.getMinClusterHealthRate())
+                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout(),
+                config.getMinClusterHealthRate());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();

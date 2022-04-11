@@ -21,24 +21,28 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private static final int S_BAD = 1;
     private final List<HostAddress> addresses = new ArrayList<>();
     private final Map<HostAddress, Integer> serversStatus = new ConcurrentHashMap<>();
+    private final double minClusterHealthRate;
     private final int timeout;
     private final AtomicInteger pos = new AtomicInteger(0);
-    private final int delayTime = 60;  // unit seconds
+    private final int delayTime = 60;  // Unit seconds
     private final ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
     private SSLParam sslParam;
     private boolean enabledSsl;
 
-    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout) {
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
+                                  double minClusterHealthRate) {
         this.timeout = timeout;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);
             this.serversStatus.put(addr, S_BAD);
         }
+        this.minClusterHealthRate = minClusterHealthRate;
         schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
     }
 
-    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam) {
-        this(addresses, timeout);
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
+                                  double minClusterHealthRate) {
+        this(addresses, timeout, minClusterHealthRate);
         this.sslParam = sslParam;
         this.enabledSsl = true;
     }
@@ -63,11 +67,11 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     }
 
     public void updateServersStatus() {
-        for (HostAddress addr : addresses) {
-            if (ping(addr)) {
-                serversStatus.put(addr, S_OK);
+        for (HostAddress hostAddress : addresses) {
+            if (ping(hostAddress)) {
+                serversStatus.put(hostAddress, S_OK);
             } else {
-                serversStatus.put(addr, S_BAD);
+                serversStatus.put(hostAddress, S_BAD);
             }
         }
     }
@@ -93,12 +97,16 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
 
     public boolean isServersOK() {
         this.updateServersStatus();
-        for (HostAddress addr : addresses) {
-            if (serversStatus.get(addr) == S_BAD) {
-                return false;
+        double numServersWithOkStatus = 0;
+        for (HostAddress hostAddress : addresses) {
+            if (serversStatus.get(hostAddress) == S_OK) {
+                numServersWithOkStatus++;
             }
         }
-        return true;
+
+        // Check health rate.
+        double okServersRate = numServersWithOkStatus / addresses.size();
+        return okServersRate >= minClusterHealthRate;
     }
 
     private void scheduleTask() {
