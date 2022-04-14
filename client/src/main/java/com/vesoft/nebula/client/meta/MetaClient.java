@@ -152,12 +152,18 @@ public class MetaClient extends AbstractMetaClient {
         client = new MetaService.Client(protocol);
 
         // check if client version matches server version
-        VerifyClientVersionResp resp =
-                client.verifyClientVersion(new VerifyClientVersionReq());
+        VerifyClientVersionResp resp = client
+                .verifyClientVersion(new VerifyClientVersionReq());
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
             client.getInputProtocol().getTransport().close();
-            throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
-                    Charsets.UTF_8));
+            if (resp.getError_msg() == null) {
+                throw new ClientServerIncompatibleException(
+                        new String("Error code: ")
+                                + String.valueOf(resp.getCode().getValue()));
+            }
+            throw new ClientServerIncompatibleException(
+                    new String(resp.getError_msg())
+                            + String.valueOf(resp.getCode().getValue()));
         }
     }
 

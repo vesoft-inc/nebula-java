@@ -24,6 +24,7 @@ import com.vesoft.nebula.client.graph.net.Session;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class TestDataFromServer {
     private final NebulaPool pool = new NebulaPool();
     private Session session = null;
@@ -44,7 +44,8 @@ public class TestDataFromServer {
     public void setUp() throws Exception {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(1);
-        Assert.assertTrue(pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)),
+        Assert.assertTrue(pool.init(Arrays.asList(new HostAddress(
+                "127.0.0.1", 9670)),
                 nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
         ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data"
@@ -110,8 +111,8 @@ public class TestDataFromServer {
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        String insertShape =
-                "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT(3 8)'));";
+        String insertShape = 
+            "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT(3 8)'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
@@ -170,7 +171,8 @@ public class TestDataFromServer {
 
             DateTimeWrapper dateTimeWrapper = (DateTimeWrapper) new DateTimeWrapper(
                     new DateTime((short) 2010, (byte) 9,
-                            (byte) 10, (byte) 02, (byte) 8, (byte) 2, 0)).setTimezoneOffset(28800);
+                            (byte) 10, (byte) 02, (byte) 8, (byte) 2, 0))
+                    .setTimezoneOffset(28800);
             DateTimeWrapper resultDateTime = properties.get("birthday").asDateTime();
             Assert.assertEquals(dateTimeWrapper, resultDateTime);
             Assert.assertEquals("utc datetime: 2010-09-10T02:08:02.000000, timezoneOffset: 28800",
@@ -245,7 +247,6 @@ public class TestDataFromServer {
             Assert.assertEquals(geographyWrapper.toString(),
                     properties.get("geo").asGeography().toString());
 
-
             result = session.execute(
                     "FETCH PROP ON any_shape 'Polygon' yield vertex as vertices_;");
             Assert.assertTrue(result.isSucceeded());
@@ -268,8 +269,7 @@ public class TestDataFromServer {
                                     new Coordinate(0, 1),
                                     new Coordinate(1, 2),
                                     new Coordinate(2, 3),
-                                    new Coordinate(0, 1))
-                            ))));
+                                    new Coordinate(0, 1))))));
             Assert.assertEquals(geographyWrapper, properties.get("geo").asGeography());
             Assert.assertEquals(geographyWrapper.toString(),
                     properties.get("geo").asGeography().toString());
@@ -386,7 +386,7 @@ public class TestDataFromServer {
             Assert.assertTrue(node.hasTagName("person"));
             Assert.assertTrue(node.hasTagName("student"));
             Assert.assertEquals(Arrays.asList("person", "student")
-                            .stream().sorted().collect(Collectors.toList()),
+                    .stream().sorted().collect(Collectors.toList()),
                     node.tagNames().stream().sorted().collect(Collectors.toList()));
             Assert.assertEquals(
                     Arrays.asList("name").stream().sorted().collect(Collectors.toList()),
@@ -494,16 +494,31 @@ public class TestDataFromServer {
                             + "YIELD path as p");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(4, result.rowsSize());
-            String expectString = "ColumnName: [p], "
-                    + "Rows: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" ), "
-                    + "(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" ), "
-                    + "(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" ), "
-                    + "(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )]";
-            Assert.assertEquals(expectString, result.toString());
-        } catch (IOErrorException | InterruptedException e) {
+
+            List<String> pathStrings = new ArrayList<String>();
+            for (int i = 0; i < result.rowsSize(); i++) {
+                pathStrings.add(result.rowValues(i).toString());
+            }
+            Collections.sort(pathStrings);
+            String listString = String.join(", ",
+                    pathStrings);
+
+            String expectString = "ColumnName: [p],"
+                    + " Values: [(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )], "
+                    + "ColumnName: [p],"
+                    + " Values: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" )], "
+                    + "ColumnName: [p],"
+                    + " Values: [(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" )], "
+                    + "ColumnName: [p],"
+                    + " Values: [(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" )]";
+
+            Assert.assertEquals(expectString, listString);
+        } catch (IOErrorException
+                | InterruptedException e) {
             e.printStackTrace();
             assert false;
         }
+
     }
 
     @Test
@@ -557,7 +572,6 @@ public class TestDataFromServer {
             assert false;
         }
     }
-
 
     @Test
     public void testErrorForJson() {
