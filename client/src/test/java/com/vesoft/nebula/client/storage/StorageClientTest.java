@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,6 +57,7 @@ public class StorageClientTest {
         try {
             client.connect();
         } catch (Exception e) {
+            e.printStackTrace();
             assert (false);
         }
 
@@ -111,6 +111,7 @@ public class StorageClientTest {
         try {
             client.connect();
         } catch (Exception e) {
+            e.printStackTrace();
             assert (false);
         }
 
@@ -174,6 +175,7 @@ public class StorageClientTest {
         try {
             client.connect();
         } catch (Exception e) {
+            e.printStackTrace();
             assert (false);
         }
 
@@ -205,6 +207,7 @@ public class StorageClientTest {
         try {
             client.connect();
         } catch (Exception e) {
+            e.printStackTrace();
             assert (false);
         }
 
@@ -266,6 +269,7 @@ public class StorageClientTest {
         try {
             client.connect();
         } catch (Exception e) {
+            e.printStackTrace();
             assert (false);
         }
 
@@ -334,6 +338,7 @@ public class StorageClientTest {
         try {
             client.connect();
         } catch (Exception e) {
+            e.printStackTrace();
             assert (false);
         }
 

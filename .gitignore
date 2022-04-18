@@ -30,6 +30,7 @@ target/
 .eclipse/
 *.iml
 .vscode/
+eclipse-formatter.xml
 .settings
 .project
 client/.classpath
