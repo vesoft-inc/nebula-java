@@ -4,7 +4,7 @@ Nebula Flink Connector 是一个自定义的 Flink 连接器，支持 Flink 从 
 
 ## 使用说明
 
-关于 Nebula Flink Connector 的详细使用说明，请参考文档[《Nebula Flink Connector 用户手册》](https://docs.nebula-graph.com.cn/nebula-flink/nf-ug-what-is-flink-connector/ "点击前往 Nebula Graph 网站")。
+关于 Nebula Flink Connector 的详细使用说明，请参考文档[《Nebula Flink Connector 用户手册》](https://docs.nebula-graph.com.cn/1.2.1/nebula-flink/nf-ug-what-is-flink-connector/ "点击前往 Nebula Graph 网站")。
 
 ## 贡献
 
