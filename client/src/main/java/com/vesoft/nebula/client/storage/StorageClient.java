@@ -579,7 +579,6 @@ public class StorageClient {
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
                     leader.getPort())));
         }
-        List<HostAddress> addrs = getStorageAddresses();
 
         long tag = metaManager.getTag(spaceName, tagName).getTag_id();
         List<byte[]> props = new ArrayList<>();
@@ -607,6 +606,7 @@ public class StorageClient {
                 .setEnd_time(endTime)
                 .setEnable_read_from_follower(allowReadFromFollower);
 
+        List<HostAddress> addrs = getStorageAddresses();
         return doScanVertex(spaceName, tagName, partScanInfoSet, request, addrs, allowPartSuccess);
     }
 
@@ -1035,7 +1035,6 @@ public class StorageClient {
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
                     leader.getPort())));
         }
-        List<HostAddress> addrs = getStorageAddresses();
         List<byte[]> props = new ArrayList<>();
         props.add("_src".getBytes());
         props.add("_dst".getBytes());
@@ -1066,6 +1065,7 @@ public class StorageClient {
                 .setEnd_time(endTime)
                 .setEnable_read_from_follower(allowReadFromFollower);
 
+        List<HostAddress> addrs = getStorageAddresses();
         return doScanEdge(spaceName, edgeName, partScanInfoSet, request, addrs, allowPartSuccess);
     }
 
