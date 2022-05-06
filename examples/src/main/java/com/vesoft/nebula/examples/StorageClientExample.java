@@ -5,6 +5,7 @@
 
 package com.vesoft.nebula.examples;
 
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.storage.StorageClient;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import com.vesoft.nebula.client.storage.data.VertexRow;
@@ -25,6 +26,12 @@ public class StorageClientExample {
     public static void main(String[] args) {
         // input params are the metad's ip and port
         StorageClient client = new StorageClient("127.0.0.1", 9559);
+
+        // optionally we could set the storage hosts addresses
+        // List<HostAddress> storageAddresses = Arrays.asList(
+        //            new HostAddress("127.0.0.1", 9779));
+        // client.setStorageAddresses(storageAddresses)
+
         try {
             client.connect();
         } catch (Exception e) {

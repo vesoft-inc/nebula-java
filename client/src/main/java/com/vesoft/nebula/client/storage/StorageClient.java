@@ -32,7 +32,8 @@ public class StorageClient {
     private final GraphStorageConnection connection;
     private StorageConnPool pool;
     private MetaManager metaManager;
-    private final List<HostAddress> addresses;
+    private final List<HostAddress> addresses; // meta addresses
+    private List<HostAddress> storageAddresses = new ArrayList<>();
     private int timeout = 10000; // ms
     private int connectionRetry = 3;
     private int executionRetry = 1;
@@ -107,6 +108,31 @@ public class StorageClient {
         return true;
     }
 
+    /**
+     * Set Storage Addresses.
+     */
+
+    public void setStorageAddresses(List<HostAddress> storageAddresses) {
+        this.storageAddresses = storageAddresses;
+    }
+
+    /**
+     * Get Storage Addresses.
+     * if storageAddresses is empty, fetch with listHosts()
+     * 
+     * @return an arrayList of HostAddress
+     */
+
+    public List<HostAddress> getStorageAddresses() {
+        if (storageAddresses.isEmpty()) {
+            List<HostAddress> addrs = new ArrayList<>();
+            for (HostAddr addr : metaManager.listHosts()) {
+                addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
+            }
+            return addrs;
+        }
+        return storageAddresses;
+    }
 
     /**
      * scan vertex of all parts with specific return cols, if returnCols is an empty list, then
@@ -553,10 +579,7 @@ public class StorageClient {
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
                     leader.getPort())));
         }
-        List<HostAddress> addrs = new ArrayList<>();
-        for (HostAddr addr : metaManager.listHosts()) {
-            addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
-        }
+        List<HostAddress> addrs = getStorageAddresses();
 
         long tag = metaManager.getTag(spaceName, tagName).getTag_id();
         List<byte[]> props = new ArrayList<>();
@@ -1012,10 +1035,7 @@ public class StorageClient {
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
                     leader.getPort())));
         }
-        List<HostAddress> addrs = new ArrayList<>();
-        for (HostAddr addr : metaManager.listHosts()) {
-            addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
-        }
+        List<HostAddress> addrs = getStorageAddresses();
         List<byte[]> props = new ArrayList<>();
         props.add("_src".getBytes());
         props.add("_dst".getBytes());
