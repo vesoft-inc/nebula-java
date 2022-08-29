@@ -48,6 +48,7 @@ import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;

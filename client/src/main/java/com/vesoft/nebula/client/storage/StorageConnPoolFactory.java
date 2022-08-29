@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.storage;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import java.io.Serializable;
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("checkstyle:Indentation")
 public class StorageConnPoolFactory
-        implements KeyedPooledObjectFactory<HostAddress, GraphStorageConnection> {
+        implements KeyedPooledObjectFactory<HostAddress, GraphStorageConnection>, Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageConnPoolFactory.class);
 
     private final StoragePoolConfig config;
