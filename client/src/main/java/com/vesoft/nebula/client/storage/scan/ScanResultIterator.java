@@ -13,6 +13,7 @@ import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.client.storage.StorageConnPool;
 import com.vesoft.nebula.storage.PartitionResult;
 import com.vesoft.nebula.storage.ScanResponse;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScanResultIterator {
+public class ScanResultIterator implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanResultIterator.class);
 
     protected boolean hasNext = true;

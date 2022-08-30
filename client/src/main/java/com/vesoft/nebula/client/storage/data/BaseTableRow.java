@@ -11,10 +11,11 @@ import com.vesoft.nebula.client.graph.data.DurationWrapper;
 import com.vesoft.nebula.client.graph.data.GeographyWrapper;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class BaseTableRow {
+public class BaseTableRow implements Serializable {
     protected final List<ValueWrapper> values;
     protected String decodeType = "utf-8";
 
