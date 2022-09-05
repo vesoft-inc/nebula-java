@@ -1,7 +1,7 @@
 # nebula-java
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
-[![LICENSE](https://img.shields.io/github/license/vesoft-inc/nebula.svg)](https://github.com/vesoft-inc/nebula-java/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/github/license/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/tag/vesoft-inc/nebula-java.svg?label=release)](https://github.com/vesoft-inc/nebula-java/releases)
 [![GitHub release date](https://img.shields.io/github/release-date/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/releases)
 [![codecov](https://codecov.io/gh/vesoft-inc/nebula-java/branch/master/graph/badge.svg?token=WQVAG6VMMQ)](https://codecov.io/gh/vesoft-inc/nebula-java)
