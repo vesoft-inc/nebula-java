@@ -1,8 +1,9 @@
 # nebula-java
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
-[![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
-[![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
+[![LICENSE](https://img.shields.io/github/license/vesoft-inc/nebula.svg)](https://github.com/vesoft-inc/nebula-java/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/tag/vesoft-inc/nebula-java.svg?label=release)](https://github.com/vesoft-inc/nebula-java/releases)
+[![GitHub release date](https://img.shields.io/github/release-date/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/releases)
 [![codecov](https://codecov.io/gh/vesoft-inc/nebula-java/branch/master/graph/badge.svg?token=WQVAG6VMMQ)](https://codecov.io/gh/vesoft-inc/nebula-java)
 
 Nebula Java is a Java client for developers to connect their projects to Nebula Graph.
