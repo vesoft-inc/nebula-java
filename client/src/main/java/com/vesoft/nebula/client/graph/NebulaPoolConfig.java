@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.io.Serializable;
 
 public class NebulaPoolConfig implements Serializable {
@@ -119,5 +120,19 @@ public class NebulaPoolConfig implements Serializable {
     public NebulaPoolConfig setMinClusterHealthRate(double minClusterHealthRate) {
         this.minClusterHealthRate = minClusterHealthRate;
         return this;
+    }
+
+    public static NebulaPoolConfig copy(SessionPoolConfig sessionPoolConfig) {
+        NebulaPoolConfig config = new NebulaPoolConfig();
+        config.setMinConnSize(sessionPoolConfig.getMinConnsSize());
+        config.setMaxConnSize(sessionPoolConfig.getMaxConnsSize());
+        config.setTimeout(sessionPoolConfig.getTimeout());
+        config.setIdleTime(sessionPoolConfig.getIdleTime());
+        config.setWaitTime(sessionPoolConfig.getWaitTime());
+        config.setIntervalIdle(sessionPoolConfig.getIntervalIdle());
+        config.setMinClusterHealthRate(sessionPoolConfig.getMinClusterHealthRate());
+        config.setEnableSsl(sessionPoolConfig.isEnableSsl());
+        config.setSslParam(sessionPoolConfig.getSslParam());
+        return config;
     }
 }
