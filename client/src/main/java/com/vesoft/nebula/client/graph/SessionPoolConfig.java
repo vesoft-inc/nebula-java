@@ -59,68 +59,132 @@ public class SessionPoolConfig implements Serializable {
     private boolean reConnect = true;
 
 
-    public int getMaxSessionSize() {
-        return maxSessionSize;
-    }
-
-    public int getMinSessionSize() {
-        return minSessionSize;
-    }
-
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getSpaceName() {
-        return spaceName;
-    }
-
-    public boolean isReConnect() {
-        return reConnect;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<HostAddress> getGraphAddressList() {
         return graphAddressList;
     }
 
+    public void setGraphAddressList(List<HostAddress> graphAddressList) {
+        this.graphAddressList = graphAddressList;
+    }
+
+    public String getSpaceName() {
+        return spaceName;
+    }
+
+    public void setSpaceName(String spaceName) {
+        this.spaceName = spaceName;
+    }
+
     public int getMinConnsSize() {
         return minConnsSize;
+    }
+
+    public void setMinConnsSize(int minConnsSize) {
+        this.minConnsSize = minConnsSize;
     }
 
     public int getMaxConnsSize() {
         return maxConnsSize;
     }
 
+    public void setMaxConnsSize(int maxConnsSize) {
+        this.maxConnsSize = maxConnsSize;
+    }
+
+    public int getMinSessionSize() {
+        return minSessionSize;
+    }
+
+    public void setMinSessionSize(int minSessionSize) {
+        this.minSessionSize = minSessionSize;
+    }
+
+    public int getMaxSessionSize() {
+        return maxSessionSize;
+    }
+
+    public void setMaxSessionSize(int maxSessionSize) {
+        this.maxSessionSize = maxSessionSize;
+    }
+
     public int getTimeout() {
         return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
     public int getIdleTime() {
         return idleTime;
     }
 
+    public void setIdleTime(int idleTime) {
+        this.idleTime = idleTime;
+    }
+
     public int getIntervalIdle() {
         return intervalIdle;
+    }
+
+    public void setIntervalIdle(int intervalIdle) {
+        this.intervalIdle = intervalIdle;
     }
 
     public int getWaitTime() {
         return waitTime;
     }
 
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
     public double getMinClusterHealthRate() {
         return minClusterHealthRate;
+    }
+
+    public void setMinClusterHealthRate(double minClusterHealthRate) {
+        this.minClusterHealthRate = minClusterHealthRate;
     }
 
     public boolean isEnableSsl() {
         return enableSsl;
     }
 
+    public void setEnableSsl(boolean enableSsl) {
+        this.enableSsl = enableSsl;
+    }
+
     public SSLParam getSslParam() {
         return sslParam;
+    }
+
+    public void setSslParam(SSLParam sslParam) {
+        this.sslParam = sslParam;
+    }
+
+    public boolean isReConnect() {
+        return reConnect;
+    }
+
+    public void setReConnect(boolean reConnect) {
+        this.reConnect = reConnect;
     }
 
     @Override
