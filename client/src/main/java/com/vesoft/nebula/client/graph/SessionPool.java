@@ -180,6 +180,7 @@ public class SessionPool implements Serializable {
         }
         sessionQueue.clear();
         healthCheckSchedule.shutdown();
+        sessionQueueMaintainSchedule.shutdown();
     }
 
 
