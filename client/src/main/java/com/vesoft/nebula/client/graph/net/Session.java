@@ -317,6 +317,16 @@ public class Session implements Serializable {
     }
 
     /**
+     * check current session is ok
+     */
+    public synchronized boolean pingSession() {
+        if (connection == null) {
+            return false;
+        }
+        return connection.ping(sessionID);
+    }
+
+    /**
      * Notifies the server that the session is no longer needed
      * and returns the connection to the pool,
      * and the connection will be reuse.

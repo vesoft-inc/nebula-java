@@ -241,6 +241,17 @@ public class SyncConnection extends Connection {
         }
     }
 
+    @Override
+    public boolean ping(long sessionID) {
+        try {
+            execute(sessionID, "YIELD 1;");
+            return true;
+        } catch (IOErrorException e) {
+            return false;
+        }
+    }
+
+
     public void close() {
         if (transport != null && transport.isOpen()) {
             transport.close();
