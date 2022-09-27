@@ -189,23 +189,23 @@ public class SessionPoolConfig implements Serializable {
 
     @Override
     public String toString() {
-        return "SessionPoolConfig{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", graphAddressList=" + graphAddressList +
-                ", spaceName='" + spaceName + '\'' +
-                ", minConnsSize=" + minConnsSize +
-                ", maxConnsSize=" + maxConnsSize +
-                ", minSessionSize=" + minSessionSize +
-                ", maxSessionSize=" + maxSessionSize +
-                ", timeout=" + timeout +
-                ", idleTime=" + idleTime +
-                ", intervalIdle=" + intervalIdle +
-                ", waitTime=" + waitTime +
-                ", minClusterHealthRate=" + minClusterHealthRate +
-                ", enableSsl=" + enableSsl +
-                ", sslParam=" + sslParam +
-                ", reConnect=" + reConnect +
-                '}';
+        return "SessionPoolConfig{"
+                + "username='" + username + '\''
+                + ", password='" + password + '\''
+                + ", graphAddressList=" + graphAddressList
+                + ", spaceName='" + spaceName + '\''
+                + ", minConnsSize=" + minConnsSize
+                + ", maxConnsSize=" + maxConnsSize
+                + ", minSessionSize=" + minSessionSize
+                + ", maxSessionSize=" + maxSessionSize
+                + ", timeout=" + timeout
+                + ", idleTime=" + idleTime
+                + ", intervalIdle=" + intervalIdle
+                + ", waitTime=" + waitTime
+                + ", minClusterHealthRate=" + minClusterHealthRate
+                + ", enableSsl=" + enableSsl
+                + ", sslParam=" + sslParam
+                + ", reConnect=" + reConnect
+                + '}';
     }
 }
