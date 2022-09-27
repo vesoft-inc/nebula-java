@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.graph;
 
 import com.alibaba.fastjson.JSON;
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
@@ -134,6 +135,13 @@ public class SessionPool implements Serializable {
             ClientServerIncompatibleException, AuthFailedException {
         NebulaSession nebulaSession = getSession();
         ResultSet resultSet = nebulaSession.getSession().execute(stmt);
+
+        // re-execute for session error
+        if (isSessionError(resultSet)) {
+            sessionQueue.remove(nebulaSession);
+            nebulaSession = getSession();
+            resultSet = nebulaSession.getSession().execute(stmt);
+        }
         useSpace(nebulaSession, resultSet);
         return resultSet;
     }
@@ -151,6 +159,13 @@ public class SessionPool implements Serializable {
             NotValidConnectionException, IOErrorException {
         NebulaSession nebulaSession = getSession();
         ResultSet resultSet = nebulaSession.getSession().executeWithParameter(stmt, parameterMap);
+
+        // re-execute for session error
+        if (isSessionError(resultSet)) {
+            sessionQueue.remove(nebulaSession);
+            nebulaSession = getSession();
+            resultSet = nebulaSession.getSession().executeWithParameter(stmt, parameterMap);
+        }
         useSpace(nebulaSession, resultSet);
         return resultSet;
     }
@@ -166,6 +181,11 @@ public class SessionPool implements Serializable {
             AuthFailedException, NotValidConnectionException, IOErrorException {
         NebulaSession nebulaSession = getSession();
         String result = nebulaSession.getSession().executeJson(stmt);
+        if (isSessionErrorForJson(result)) {
+            sessionQueue.remove(nebulaSession);
+            nebulaSession = getSession();
+            result = nebulaSession.getSession().executeJson(stmt);
+        }
         useSpaceForJson(nebulaSession, result);
         return result;
     }
@@ -260,6 +280,9 @@ public class SessionPool implements Serializable {
      */
     private void useSpace(NebulaSession nebulaSession, ResultSet resultSet)
             throws IOErrorException {
+        if (resultSet == null) {
+            return;
+        }
         if (!spaceName.equals(resultSet.getSpaceName())) {
             nebulaSession.getSession().execute("USE " + spaceName);
         }
@@ -283,4 +306,22 @@ public class SessionPool implements Serializable {
         releaseSession(nebulaSession);
     }
 
+    private boolean isSessionError(ResultSet resultSet) {
+        return resultSet != null
+                && (resultSet.getErrorCode() == ErrorCode.E_SESSION_INVALID.getValue()
+                || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue()
+                || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue());
+    }
+
+    private boolean isSessionErrorForJson(String resultSet) {
+        if (resultSet == null || "".equals(resultSet)) {
+            return false;
+        }
+        long errorCode =
+                (Long) JSON.parseObject(resultSet).getJSONArray("errors")
+                        .getJSONObject(0).get("code");
+        return errorCode == ErrorCode.E_SESSION_INVALID.getValue()
+                || errorCode == ErrorCode.E_SESSION_NOT_FOUND.getValue()
+                || errorCode == ErrorCode.E_SESSION_TIMEOUT.getValue();
+    }
 }
