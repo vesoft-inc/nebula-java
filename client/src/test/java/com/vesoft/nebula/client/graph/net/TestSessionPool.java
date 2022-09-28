@@ -17,6 +17,10 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -137,7 +141,34 @@ public class TestSessionPool {
         }
     }
 
+    @Test
+    public void testThreadSafe() {
+        List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "session_pool_test", "root",
+                "nebula");
+        SessionPool sessionPool = new SessionPool(config);
+        assert sessionPool.init();
 
-
+        // call execute() in multi threads
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        AtomicInteger failedCount = new AtomicInteger(0);
+        for (int i = 0; i < 10; i++) {
+            executorService.submit(() -> {
+                try {
+                    sessionPool.execute("SHOW SPACES;");
+                } catch (Exception e) {
+                    failedCount.incrementAndGet();
+                }
+            });
+        }
+        try {
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            assert false;
+        }
+        executorService.shutdown();
+        assert failedCount.get() == 0;
+    }
 
 }
