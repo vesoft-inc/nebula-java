@@ -41,9 +41,9 @@ public class SessionPool implements Serializable {
             Executors.newScheduledThreadPool(1);
 
     public CopyOnWriteArrayList<NebulaSession> sessionList = new CopyOnWriteArrayList<>();
-    public static AtomicInteger idleSessionSize = new AtomicInteger(0);
-    public static AtomicBoolean hasInit = new AtomicBoolean(false);
-    public static AtomicBoolean isClosed = new AtomicBoolean(false);
+    public AtomicInteger idleSessionSize = new AtomicInteger(0);
+    public AtomicBoolean hasInit = new AtomicBoolean(false);
+    public AtomicBoolean isClosed = new AtomicBoolean(false);
 
     private final SessionPoolConfig sessionPoolConfig;
     private final NebulaPool nebulaPool;
