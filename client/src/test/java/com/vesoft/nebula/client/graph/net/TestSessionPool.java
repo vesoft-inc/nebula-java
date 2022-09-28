@@ -109,6 +109,7 @@ public class TestSessionPool {
             e.printStackTrace();
             assert false;
         }
+        sessionPool.close();
     }
 
     @Test
@@ -173,6 +174,7 @@ public class TestSessionPool {
             assert false;
         }
         executorService.shutdown();
+        sessionPool.close();
         assert failedCount.get() == 0;
     }
 
