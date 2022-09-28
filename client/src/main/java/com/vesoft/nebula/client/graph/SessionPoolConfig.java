@@ -14,10 +14,10 @@ public class SessionPoolConfig implements Serializable {
 
     private static final long serialVersionUID = -2266013330384849132L;
 
-    private String username;
-
-    private String password;
     private List<HostAddress> graphAddressList;
+
+    private String username;
+    private String password;
     private String spaceName;
 
     // The min connections in pool for all addresses
@@ -59,52 +59,43 @@ public class SessionPoolConfig implements Serializable {
     private boolean reConnect = true;
 
 
-    public String getUsername() {
-        return username;
-    }
-
-    public SessionPoolConfig setUsername(String username) {
+    public SessionPoolConfig(List<HostAddress> addresses,
+                             String spaceName,
+                             String username,
+                             String password) {
+        if (addresses == null || addresses.size() == 0) {
+            throw new IllegalArgumentException("Graph addresses cannot be empty.");
+        }
+        if (spaceName == null || spaceName.trim().isEmpty()) {
+            throw new IllegalArgumentException("space name cannot be blank.");
+        }
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("user name cannot be blank.");
         }
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("password cannot be blank.");
+        }
+
+        this.graphAddressList = addresses;
+        this.spaceName = spaceName;
         this.username = username;
-        return this;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public SessionPoolConfig setPassword(String password) {
-        if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("password cannot be blank.");
-        }
-        this.password = password;
-        return this;
-    }
-
     public List<HostAddress> getGraphAddressList() {
         return graphAddressList;
     }
 
-    public SessionPoolConfig setGraphAddressList(List<HostAddress> graphAddressList) {
-        if (graphAddressList == null || graphAddressList.size() == 0) {
-            throw new IllegalArgumentException("Graph addresses cannot be empty.");
-        }
-        this.graphAddressList = graphAddressList;
-        return this;
-    }
-
     public String getSpaceName() {
         return spaceName;
-    }
-
-    public SessionPoolConfig setSpaceName(String spaceName) {
-        if (spaceName == null || spaceName.trim().isEmpty()) {
-            throw new IllegalArgumentException("space name cannot be blank.");
-        }
-        this.spaceName = spaceName;
-        return this;
     }
 
     public int getMinConnsSize() {
