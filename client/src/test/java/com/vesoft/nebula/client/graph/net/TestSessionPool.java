@@ -56,12 +56,14 @@ public class TestSessionPool {
                 new SessionPoolConfig(addresses, "space", "user", "12345");
         SessionPool sessionPool = new SessionPool(config);
         assert (!sessionPool.init());
+        sessionPool.close();
 
         // host unknown
         addresses = Arrays.asList(new HostAddress("host", 10000));
         config = new SessionPoolConfig(addresses, "space", "user", "12345");
         sessionPool = new SessionPool(config);
         assert (!sessionPool.init());
+        sessionPool.close();
 
         // wrong user
         addresses = Arrays.asList(new HostAddress(ip, 9669));
@@ -69,18 +71,21 @@ public class TestSessionPool {
                 .setMinSessionSize(1);
         sessionPool = new SessionPool(config);
         assert (!sessionPool.init());
+        sessionPool.close();
 
         // set MinSessionSize 0, and init will return true even if the user is wrong
         config = new SessionPoolConfig(addresses, "space", "user", "nebula")
                 .setMinSessionSize(0);
         sessionPool = new SessionPool(config);
         assert (sessionPool.init());
+        sessionPool.close();
 
         // init failed for not exist space
         config = new SessionPoolConfig(addresses, "space", "root", "nebula")
                 .setMinSessionSize(2);
         sessionPool = new SessionPool(config);
         assert (!sessionPool.init());
+        sessionPool.close();
 
         // init success
         config = new SessionPoolConfig(addresses, "space_for_session_pool", "root", "nebula")
@@ -123,7 +128,6 @@ public class TestSessionPool {
             e.printStackTrace();
             assert false;
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assert true;
         }
 
@@ -157,6 +161,7 @@ public class TestSessionPool {
                 try {
                     sessionPool.execute("SHOW SPACES;");
                 } catch (Exception e) {
+                    e.printStackTrace();
                     failedCount.incrementAndGet();
                 }
             });
