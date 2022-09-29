@@ -101,7 +101,6 @@ public class SessionPool implements Serializable {
      * init the SessionPool
      */
     public boolean init() {
-        isClosed.compareAndSet(true, false);
         if (hasInit.get()) {
             return true;
         }
@@ -217,7 +216,6 @@ public class SessionPool implements Serializable {
         }
 
         isClosed.compareAndSet(false, true);
-        hasInit.compareAndSet(true, false);
         for (NebulaSession nebulaSession : sessionList) {
             nebulaSession.getSession().release();
         }
