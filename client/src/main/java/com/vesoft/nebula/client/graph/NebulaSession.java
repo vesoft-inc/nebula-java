@@ -25,27 +25,23 @@ public class NebulaSession implements Serializable {
         return session;
     }
 
-    public synchronized Boolean isIdle() {
+    public Boolean isIdle() {
         return state == SessionState.IDLE;
     }
 
-    public synchronized Boolean isUsed() {
+    public Boolean isUsed() {
         return state == SessionState.USED;
     }
 
     public void setIdle() {
-        synchronized (this) {
-            if (isUsed()) {
-                state = SessionState.IDLE;
-            }
+        if (isUsed()) {
+            state = SessionState.IDLE;
         }
     }
 
     public void setUsed() {
-        synchronized (this) {
-            if (isIdle()) {
-                state = SessionState.USED;
-            }
+        if (isIdle()) {
+            state = SessionState.USED;
         }
     }
 }
