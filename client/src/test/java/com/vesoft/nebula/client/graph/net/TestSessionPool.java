@@ -160,7 +160,13 @@ public class TestSessionPool {
         for (int i = 0; i < 10; i++) {
             executorService.submit(() -> {
                 try {
-                    sessionPool.execute("SHOW SPACES;");
+                    ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                    if (!resultSet.isSucceeded()) {
+                        System.out.println("show spaces failed, ErrorCode:"
+                                + resultSet.getErrorCode() + " ErrorMessage："
+                                + resultSet.getErrorMessage());
+                        failedCount.incrementAndGet();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     failedCount.incrementAndGet();
