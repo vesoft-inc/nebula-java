@@ -145,7 +145,13 @@ public class SessionPool implements Serializable {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
-        ResultSet resultSet = nebulaSession.getSession().execute(stmt);
+        ResultSet resultSet = null;
+        try {
+            resultSet = nebulaSession.getSession().execute(stmt);
+        } catch (IOErrorException e) {
+            useSpace(nebulaSession, null);
+            throw e;
+        }
 
         // re-execute for session error
         if (isSessionError(resultSet)) {
@@ -171,7 +177,13 @@ public class SessionPool implements Serializable {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
-        ResultSet resultSet = nebulaSession.getSession().executeWithParameter(stmt, parameterMap);
+        ResultSet resultSet = null;
+        try {
+            resultSet = nebulaSession.getSession().executeWithParameter(stmt, parameterMap);
+        } catch (IOErrorException e) {
+            useSpace(nebulaSession, null);
+            throw e;
+        }
 
         // re-execute for session error
         if (isSessionError(resultSet)) {
@@ -196,7 +208,14 @@ public class SessionPool implements Serializable {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
-        String result = nebulaSession.getSession().executeJson(stmt);
+        String result = null;
+        try {
+            result = nebulaSession.getSession().executeJson(stmt);
+        } catch (IOErrorException e) {
+            useSpace(nebulaSession, null);
+            throw e;
+        }
+
         if (isSessionErrorForJson(result)) {
             sessionList.remove(nebulaSession);
             nebulaSession = getSession();
@@ -339,6 +358,7 @@ public class SessionPool implements Serializable {
     private void useSpace(NebulaSession nebulaSession, ResultSet resultSet)
             throws IOErrorException {
         if (resultSet == null) {
+            releaseSession(nebulaSession);
             return;
         }
         // space has been drop, close the SessionPool
