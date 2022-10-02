@@ -7,17 +7,18 @@ package com.vesoft.nebula.client.graph;
 
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
-import com.vesoft.nebula.client.graph.net.NebulaPool;
-import com.vesoft.nebula.client.graph.net.Session;
+import com.vesoft.nebula.client.graph.net.AuthResult;
 import com.vesoft.nebula.client.graph.net.SessionState;
+import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
-import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
@@ -45,8 +46,9 @@ public class SessionPool implements Serializable {
     public AtomicBoolean hasInit = new AtomicBoolean(false);
     public AtomicBoolean isClosed = new AtomicBoolean(false);
 
+    private final AtomicInteger pos = new AtomicInteger(0);
+
     private final SessionPoolConfig sessionPoolConfig;
-    private final NebulaPool nebulaPool;
     private final int minSessionSize;
     private final int maxSessionSize;
     private final String spaceName;
@@ -57,7 +59,6 @@ public class SessionPool implements Serializable {
         this.minSessionSize = poolConfig.getMinSessionSize();
         this.maxSessionSize = poolConfig.getMaxSessionSize();
         this.spaceName = poolConfig.getSpaceName();
-        nebulaPool = new NebulaPool();
     }
 
 
@@ -105,17 +106,6 @@ public class SessionPool implements Serializable {
             return true;
         }
 
-        NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.copy(sessionPoolConfig);
-        try {
-            if (!nebulaPool.init(sessionPoolConfig.getGraphAddressList(), nebulaPoolConfig)) {
-                log.error("NebulaPool init failed.");
-                return false;
-            }
-        } catch (UnknownHostException e) {
-            log.error("NebulaPool init error for UnknownHost. ", e);
-            return false;
-        }
-
         while (sessionList.size() < minSessionSize) {
             try {
                 createSessionObject(SessionState.IDLE);
@@ -145,19 +135,20 @@ public class SessionPool implements Serializable {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         try {
-            resultSet = nebulaSession.getSession().execute(stmt);
+            resultSet = nebulaSession.execute(stmt);
+
+
+            // re-execute for session error
+            if (isSessionError(resultSet)) {
+                sessionList.remove(nebulaSession);
+                nebulaSession = getSession();
+                resultSet = nebulaSession.execute(stmt);
+            }
         } catch (IOErrorException e) {
             useSpace(nebulaSession, null);
             throw e;
-        }
-
-        // re-execute for session error
-        if (isSessionError(resultSet)) {
-            sessionList.remove(nebulaSession);
-            nebulaSession = getSession();
-            resultSet = nebulaSession.getSession().execute(stmt);
         }
         useSpace(nebulaSession, resultSet);
         return resultSet;
@@ -177,52 +168,23 @@ public class SessionPool implements Serializable {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         try {
-            resultSet = nebulaSession.getSession().executeWithParameter(stmt, parameterMap);
+            resultSet = nebulaSession.executeWithParameter(stmt, parameterMap);
+
+            // re-execute for session error
+            if (isSessionError(resultSet)) {
+                sessionList.remove(nebulaSession);
+                nebulaSession = getSession();
+                resultSet = nebulaSession.executeWithParameter(stmt, parameterMap);
+            }
         } catch (IOErrorException e) {
             useSpace(nebulaSession, null);
             throw e;
         }
 
-        // re-execute for session error
-        if (isSessionError(resultSet)) {
-            sessionList.remove(nebulaSession);
-            nebulaSession = getSession();
-            resultSet = nebulaSession.getSession().executeWithParameter(stmt, parameterMap);
-        }
         useSpace(nebulaSession, resultSet);
         return resultSet;
-    }
-
-
-    /**
-     * Execute the nGql sentence for json result
-     *
-     * @param stmt The nGql sentence.
-     * @return The json result
-     */
-    public String executeJson(String stmt) throws ClientServerIncompatibleException,
-            AuthFailedException, NotValidConnectionException, IOErrorException,
-            BindSpaceFailedException {
-        stmtCheck(stmt);
-        checkSessionPool();
-        NebulaSession nebulaSession = getSession();
-        String result = null;
-        try {
-            result = nebulaSession.getSession().executeJson(stmt);
-        } catch (IOErrorException e) {
-            useSpace(nebulaSession, null);
-            throw e;
-        }
-
-        if (isSessionErrorForJson(result)) {
-            sessionList.remove(nebulaSession);
-            nebulaSession = getSession();
-            result = nebulaSession.getSession().executeJson(stmt);
-        }
-        useSpaceForJson(nebulaSession, result);
-        return result;
     }
 
 
@@ -236,7 +198,7 @@ public class SessionPool implements Serializable {
 
         isClosed.compareAndSet(false, true);
         for (NebulaSession nebulaSession : sessionList) {
-            nebulaSession.getSession().release();
+            nebulaSession.release();
         }
         sessionList.clear();
         if (!healthCheckSchedule.isShutdown()) {
@@ -292,9 +254,11 @@ public class SessionPool implements Serializable {
     private void checkSession() {
         for (NebulaSession nebulaSession : sessionList) {
             if (nebulaSession.isIdle()) {
-                boolean isOk = nebulaSession.getSession().pingSession();
-                if (!isOk) {
-                    nebulaSession.getSession().release();
+                try {
+                    nebulaSession.execute("YIELD 1");
+                } catch (IOErrorException e) {
+                    log.error("session ping error, {}, remove current session.", e.getMessage());
+                    nebulaSession.release();
                     sessionList.remove(nebulaSession);
                 }
             }
@@ -309,20 +273,12 @@ public class SessionPool implements Serializable {
         if (idleSessionSize.get() > minSessionSize) {
             for (NebulaSession nebulaSession : sessionList) {
                 if (nebulaSession.isIdle()) {
+                    nebulaSession.release();
                     sessionList.remove(nebulaSession);
                     if (idleSessionSize.decrementAndGet() <= minSessionSize) {
                         break;
                     }
                 }
-            }
-        }
-        // add more sessions to minSessionSize
-        if (sessionList.size() < minSessionSize) {
-            try {
-                createSessionObject(SessionState.IDLE);
-                idleSessionSize.incrementAndGet();
-            } catch (Exception e) {
-                log.warn("update Session pool failed, {}", e.getMessage());
             }
         }
     }
@@ -336,18 +292,35 @@ public class SessionPool implements Serializable {
     private NebulaSession createSessionObject(SessionState state)
             throws ClientServerIncompatibleException, AuthFailedException,
             NotValidConnectionException, IOErrorException, BindSpaceFailedException {
-        Session session = nebulaPool.getSession(sessionPoolConfig.getUsername(),
-                sessionPoolConfig.getPassword(), sessionPoolConfig.isReConnect());
-        ResultSet result = session.execute("USE " + spaceName);
+        SyncConnection connection = new SyncConnection();
+        connection.open(getAddress(), sessionPoolConfig.getTimeout());
+        AuthResult authResult = null;
+        try {
+            authResult = connection.authenticate(sessionPoolConfig.getUsername(),
+                    sessionPoolConfig.getPassword());
+        } catch (AuthFailedException e) {
+            log.error(e.getMessage());
+            close();
+            throw e;
+        }
+
+        NebulaSession nebulaSession = new NebulaSession(connection, authResult.getSessionId(),
+                authResult.getTimezoneOffset(), state);
+        ResultSet result = nebulaSession.execute("USE " + spaceName);
         if (!result.isSucceeded()) {
-            session.release();
+            nebulaSession.release();
             throw new BindSpaceFailedException(result.getErrorMessage());
         }
-        NebulaSession nebulaSession = new NebulaSession(session, state);
         sessionList.add(nebulaSession);
         return nebulaSession;
     }
 
+
+    public HostAddress getAddress() {
+        List<HostAddress> addresses = sessionPoolConfig.getGraphAddressList();
+        int newPos = (pos.getAndIncrement()) % addresses.size();
+        return addresses.get(newPos);
+    }
 
     /**
      * execute the "USE SPACE_NAME" when session's space changed.
@@ -369,10 +342,10 @@ public class SessionPool implements Serializable {
         }
         // re-bind the configured spaceName, if bind failed, then remove this session.
         if (!spaceName.equals(resultSet.getSpaceName())) {
-            ResultSet switchSpaceResult = nebulaSession.getSession().execute("USE " + spaceName);
+            ResultSet switchSpaceResult = nebulaSession.execute("USE " + spaceName);
             if (!switchSpaceResult.isSucceeded()) {
                 log.warn("Bind Space failed, {}", switchSpaceResult.getErrorMessage());
-                nebulaSession.getSession().release();
+                nebulaSession.release();
                 sessionList.remove(nebulaSession);
                 return;
             }
@@ -392,7 +365,7 @@ public class SessionPool implements Serializable {
                 (String) JSON.parseObject(result).getJSONArray("results")
                         .getJSONObject(0).get("spaceName");
         if (!spaceName.equals(responseSpaceName)) {
-            nebulaSession.getSession().execute("USE " + spaceName);
+            nebulaSession.execute("USE " + spaceName);
         }
         releaseSession(nebulaSession);
     }
@@ -401,7 +374,7 @@ public class SessionPool implements Serializable {
         return resultSet != null
                 && (resultSet.getErrorCode() == ErrorCode.E_SESSION_INVALID.getValue()
                 || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue()
-                || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue());
+                || resultSet.getErrorCode() == ErrorCode.E_SESSION_TIMEOUT.getValue());
     }
 
     private boolean isSessionErrorForJson(String resultSet) {

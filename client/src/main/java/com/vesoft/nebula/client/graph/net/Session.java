@@ -384,7 +384,7 @@ public class Session implements Serializable {
      * @param list java list
      * @return nebula list
      */
-    private NList list2Nlist(List<Object> list) throws UnsupportedOperationException {
+    private static NList list2Nlist(List<Object> list) throws UnsupportedOperationException {
         NList nlist = new NList(new ArrayList<Value>());
         for (Object item : list) {
             nlist.values.add(value2Nvalue(item));
@@ -397,7 +397,7 @@ public class Session implements Serializable {
      * @param map java map
      * @return nebula map
      */
-    private NMap map2Nmap(Map<String, Object> map) throws UnsupportedOperationException {
+    private static NMap map2Nmap(Map<String, Object> map) throws UnsupportedOperationException {
         NMap nmap = new NMap(new HashMap<byte[],Value>());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             nmap.kvs.put(entry.getKey().getBytes(), value2Nvalue(entry.getValue()));
@@ -411,7 +411,7 @@ public class Session implements Serializable {
      * @param value java obj
      * @return nebula value
      */
-    private Value value2Nvalue(Object value) throws UnsupportedOperationException {
+    public static Value value2Nvalue(Object value) throws UnsupportedOperationException {
         Value nvalue = new Value();
         if (value == null) {
             nvalue.setNVal(NullType.__NULL__);

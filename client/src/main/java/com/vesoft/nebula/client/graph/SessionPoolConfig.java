@@ -6,7 +6,6 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
-import com.vesoft.nebula.client.graph.data.SSLParam;
 import java.io.Serializable;
 import java.util.List;
 
@@ -14,14 +13,14 @@ public class SessionPoolConfig implements Serializable {
 
     private static final long serialVersionUID = -2266013330384849132L;
 
-    private List<HostAddress> graphAddressList;
+    private final List<HostAddress> graphAddressList;
 
-    private String username;
-    private String password;
-    private String spaceName;
+    private final String username;
+    private final String password;
+    private final String spaceName;
 
     // The min connections in pool for all addresses
-    private int minConnsSize = 0;
+    private int minConnsSize = 1;
 
     // The max connections in pool for all addresses
     private int maxConnsSize = 10;
@@ -45,18 +44,6 @@ public class SessionPoolConfig implements Serializable {
 
     // The wait time to get idle connection, unit ms
     private int waitTime = 0;
-
-    // The minimum rate of healthy servers to all servers. if 1 it means all servers should be
-    // available on init.
-    private double minClusterHealthRate = 1;
-
-    // Set to true to turn on ssl encrypted traffic
-    private boolean enableSsl = false;
-
-    // SSL param is required if ssl is turned on
-    private SSLParam sslParam = null;
-
-    private boolean reConnect = true;
 
 
     public SessionPoolConfig(List<HostAddress> addresses,
@@ -103,8 +90,9 @@ public class SessionPoolConfig implements Serializable {
     }
 
     public SessionPoolConfig setMinConnsSize(int minConnsSize) {
-        if (minConnsSize < 0) {
-            throw new IllegalArgumentException("minConnsSize cannot be less than 0.");
+        if (minConnsSize < 1) {
+            throw new IllegalArgumentException("To ensure the correctness of SessionPool's init(),"
+                    + " minConnsSize cannot be less than 1.");
         }
         this.minConnsSize = minConnsSize;
         return this;
@@ -194,51 +182,11 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
-    public double getMinClusterHealthRate() {
-        return minClusterHealthRate;
-    }
-
-    public SessionPoolConfig setMinClusterHealthRate(double minClusterHealthRate) {
-        if (minClusterHealthRate <= 0 || minClusterHealthRate > 1) {
-            throw new IllegalArgumentException(
-                    "minClusterHealthRate cannot be less than 0 or larger than 1.");
-        }
-        this.minClusterHealthRate = minClusterHealthRate;
-        return this;
-    }
-
-    public boolean isEnableSsl() {
-        return enableSsl;
-    }
-
-    public SessionPoolConfig setEnableSsl(boolean enableSsl) {
-        this.enableSsl = enableSsl;
-        return this;
-    }
-
-    public SSLParam getSslParam() {
-        return sslParam;
-    }
-
-    public SessionPoolConfig setSslParam(SSLParam sslParam) {
-        this.sslParam = sslParam;
-        return this;
-    }
-
-    public boolean isReConnect() {
-        return reConnect;
-    }
-
-    public SessionPoolConfig setReConnect(boolean reConnect) {
-        this.reConnect = reConnect;
-        return this;
-    }
 
     @Override
     public String toString() {
         return "SessionPoolConfig{"
                 + "username='" + username + '\''
-                + ", password='" + password + '\''
                 + ", graphAddressList=" + graphAddressList
                 + ", spaceName='" + spaceName + '\''
                 + ", minConnsSize=" + minConnsSize
@@ -249,10 +197,6 @@ public class SessionPoolConfig implements Serializable {
                 + ", idleTime=" + idleTime
                 + ", intervalIdle=" + intervalIdle
                 + ", waitTime=" + waitTime
-                + ", minClusterHealthRate=" + minClusterHealthRate
-                + ", enableSsl=" + enableSsl
-                + ", sslParam=" + sslParam
-                + ", reConnect=" + reConnect
                 + '}';
     }
 }
