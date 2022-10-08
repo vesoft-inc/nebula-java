@@ -14,7 +14,6 @@ import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -104,7 +103,7 @@ public class TestSessionPool {
         assert sessionPool.init();
         try {
             ResultSet result = sessionPool.execute("SHOW SPACES");
-        } catch (IOErrorException | NotValidConnectionException | AuthFailedException
+        } catch (IOErrorException | AuthFailedException
                 | ClientServerIncompatibleException | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
@@ -123,8 +122,7 @@ public class TestSessionPool {
         // test USE SPACE
         try {
             sessionPool.execute("USE TEST_USE_SPACE");
-        } catch (IOErrorException | NotValidConnectionException
-                | AuthFailedException | ClientServerIncompatibleException
+        } catch (IOErrorException | AuthFailedException | ClientServerIncompatibleException
                 | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
@@ -136,8 +134,7 @@ public class TestSessionPool {
         try {
             sessionPool.execute("DROP SPACE session_pool_test");
             sessionPool.execute("YIELD 1");
-        } catch (IOErrorException | NotValidConnectionException
-                | AuthFailedException | ClientServerIncompatibleException
+        } catch (IOErrorException | AuthFailedException | ClientServerIncompatibleException
                 | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
@@ -149,8 +146,8 @@ public class TestSessionPool {
     @Test
     public void testThreadSafe() {
         List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
-        SessionPoolConfig config = new SessionPoolConfig(addresses, "session_pool_test", "root",
-                "nebula");
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_session_pool",
+                "root", "nebula");
         SessionPool sessionPool = new SessionPool(config);
         assert sessionPool.init();
 

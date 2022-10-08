@@ -13,7 +13,6 @@ import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
-import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.AuthResult;
 import com.vesoft.nebula.client.graph.net.SessionState;
 import com.vesoft.nebula.client.graph.net.SyncConnection;
@@ -67,8 +66,7 @@ public class SessionPool implements Serializable {
      * return an idle session
      */
     private synchronized NebulaSession getSession() throws ClientServerIncompatibleException,
-            AuthFailedException, NotValidConnectionException, IOErrorException,
-            BindSpaceFailedException {
+            AuthFailedException, IOErrorException, BindSpaceFailedException {
         int retry = 1;
         while (retry-- > 0) {
             // if there are idle sessions, get session from queue
@@ -131,7 +129,7 @@ public class SessionPool implements Serializable {
      *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
      * @return The ResultSet
      */
-    public ResultSet execute(String stmt) throws IOErrorException, NotValidConnectionException,
+    public synchronized ResultSet execute(String stmt) throws IOErrorException,
             ClientServerIncompatibleException, AuthFailedException, BindSpaceFailedException {
         stmtCheck(stmt);
         checkSessionPool();
@@ -139,7 +137,6 @@ public class SessionPool implements Serializable {
         ResultSet resultSet;
         try {
             resultSet = nebulaSession.execute(stmt);
-
 
             // re-execute for session error
             if (isSessionError(resultSet)) {
@@ -163,9 +160,9 @@ public class SessionPool implements Serializable {
      * @param parameterMap The nGql parameter map
      * @return The ResultSet
      */
-    public ResultSet execute(String stmt, Map<String, Object> parameterMap)
+    public synchronized ResultSet execute(String stmt, Map<String, Object> parameterMap)
             throws ClientServerIncompatibleException, AuthFailedException,
-            NotValidConnectionException, IOErrorException, BindSpaceFailedException {
+            IOErrorException, BindSpaceFailedException {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
@@ -256,7 +253,11 @@ public class SessionPool implements Serializable {
         for (NebulaSession nebulaSession : sessionList) {
             if (nebulaSession.isIdle()) {
                 try {
+                    nebulaSession.setUsed();
+                    idleSessionSize.decrementAndGet();
                     nebulaSession.execute("YIELD 1");
+                    nebulaSession.setIdle();
+                    idleSessionSize.incrementAndGet();
                 } catch (IOErrorException e) {
                     log.error("session ping error, {}, remove current session.", e.getMessage());
                     nebulaSession.release();
@@ -290,12 +291,12 @@ public class SessionPool implements Serializable {
      * @param state {@link SessionState}
      * @return NebulaSession
      */
-    private NebulaSession createSessionObject(SessionState state)
+    private synchronized NebulaSession createSessionObject(SessionState state)
             throws ClientServerIncompatibleException, AuthFailedException,
-            NotValidConnectionException, IOErrorException, BindSpaceFailedException {
+            IOErrorException, BindSpaceFailedException {
         SyncConnection connection = new SyncConnection();
         connection.open(getAddress(), sessionPoolConfig.getTimeout());
-        AuthResult authResult = null;
+        AuthResult authResult;
         try {
             authResult = connection.authenticate(sessionPoolConfig.getUsername(),
                     sessionPoolConfig.getPassword());
@@ -336,7 +337,7 @@ public class SessionPool implements Serializable {
             return;
         }
         // space has been drop, close the SessionPool
-        if (resultSet.getSpaceName().isEmpty()) {
+        if (resultSet.getSpaceName().trim().isEmpty()) {
             log.warn("space {} has been drop, close the SessionPool.", spaceName);
             close();
             return;
@@ -371,6 +372,7 @@ public class SessionPool implements Serializable {
         releaseSession(nebulaSession);
     }
 
+
     private boolean isSessionError(ResultSet resultSet) {
         return resultSet != null
                 && (resultSet.getErrorCode() == ErrorCode.E_SESSION_INVALID.getValue()
@@ -378,17 +380,6 @@ public class SessionPool implements Serializable {
                 || resultSet.getErrorCode() == ErrorCode.E_SESSION_TIMEOUT.getValue());
     }
 
-    private boolean isSessionErrorForJson(String resultSet) {
-        if (resultSet == null || "".equals(resultSet)) {
-            return false;
-        }
-        long errorCode =
-                (Long) JSON.parseObject(resultSet).getJSONArray("errors")
-                        .getJSONObject(0).get("code");
-        return errorCode == ErrorCode.E_SESSION_INVALID.getValue()
-                || errorCode == ErrorCode.E_SESSION_NOT_FOUND.getValue()
-                || errorCode == ErrorCode.E_SESSION_TIMEOUT.getValue();
-    }
 
     private void checkSessionPool() {
         if (!hasInit.get()) {
