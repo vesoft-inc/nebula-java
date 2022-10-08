@@ -35,7 +35,6 @@ public class SessionPool implements Serializable {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private final int delayTime = 60; // must be less than NebulaGraph's session_idle_timeout_secs
     private final ScheduledExecutorService healthCheckSchedule =
             Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService sessionQueueMaintainSchedule =
@@ -51,6 +50,7 @@ public class SessionPool implements Serializable {
     private final SessionPoolConfig sessionPoolConfig;
     private final int minSessionSize;
     private final int maxSessionSize;
+    private final int delayTime;
     private final String spaceName;
 
 
@@ -58,6 +58,7 @@ public class SessionPool implements Serializable {
         this.sessionPoolConfig = poolConfig;
         this.minSessionSize = poolConfig.getMinSessionSize();
         this.maxSessionSize = poolConfig.getMaxSessionSize();
+        this.delayTime = poolConfig.getIdleTime();
         this.spaceName = poolConfig.getSpaceName();
     }
 

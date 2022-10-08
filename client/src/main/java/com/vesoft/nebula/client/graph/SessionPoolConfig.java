@@ -20,13 +20,7 @@ public class SessionPoolConfig implements Serializable {
     private final String spaceName;
 
     // The min connections in pool for all addresses
-    private int minConnsSize = 1;
-
-    // The max connections in pool for all addresses
-    private int maxConnsSize = 10;
-
-    // The min connections in pool for all addresses
-    private int minSessionSize = 0;
+    private int minSessionSize = 1;
 
     // The max connections in pool for all addresses
     private int maxSessionSize = 10;
@@ -34,13 +28,9 @@ public class SessionPoolConfig implements Serializable {
     // Socket timeout and Socket connection timeout, unit: millisecond
     private int timeout = 0;
 
-    // The idleTime of the connection, unit: millisecond
-    // The connection's idle time more than idleTime, it will be delete
-    // 0 means never delete
-    private int idleTime = 0;
-
-    // The interval time to check idle connection, unit ms, -1 means no check
-    private int intervalIdle = -1;
+    // The idleTime for clean the idle session
+    // must be less than NebulaGraph's session_idle_timeout_secs, unit: second
+    private int idleTime = 600;
 
     // The wait time to get idle connection, unit ms
     private int waitTime = 0;
@@ -83,31 +73,6 @@ public class SessionPoolConfig implements Serializable {
 
     public String getSpaceName() {
         return spaceName;
-    }
-
-    public int getMinConnsSize() {
-        return minConnsSize;
-    }
-
-    public SessionPoolConfig setMinConnsSize(int minConnsSize) {
-        if (minConnsSize < 1) {
-            throw new IllegalArgumentException("To ensure the correctness of SessionPool's init(),"
-                    + " minConnsSize cannot be less than 1.");
-        }
-        this.minConnsSize = minConnsSize;
-        return this;
-    }
-
-    public int getMaxConnsSize() {
-        return maxConnsSize;
-    }
-
-    public SessionPoolConfig setMaxConnsSize(int maxConnsSize) {
-        if (maxConnsSize < 1) {
-            throw new IllegalArgumentException("maxConnsSize cannot be less than 1.");
-        }
-        this.maxConnsSize = maxConnsSize;
-        return this;
     }
 
     public int getMinSessionSize() {
@@ -158,18 +123,6 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
-    public int getIntervalIdle() {
-        return intervalIdle;
-    }
-
-    public SessionPoolConfig setIntervalIdle(int intervalIdle) {
-        if (intervalIdle < 0) {
-            throw new IllegalArgumentException("intervalIdle cannot be less than 0.");
-        }
-        this.intervalIdle = intervalIdle;
-        return this;
-    }
-
     public int getWaitTime() {
         return waitTime;
     }
@@ -189,13 +142,10 @@ public class SessionPoolConfig implements Serializable {
                 + "username='" + username + '\''
                 + ", graphAddressList=" + graphAddressList
                 + ", spaceName='" + spaceName + '\''
-                + ", minConnsSize=" + minConnsSize
-                + ", maxConnsSize=" + maxConnsSize
                 + ", minSessionSize=" + minSessionSize
                 + ", maxSessionSize=" + maxSessionSize
                 + ", timeout=" + timeout
                 + ", idleTime=" + idleTime
-                + ", intervalIdle=" + intervalIdle
                 + ", waitTime=" + waitTime
                 + '}';
     }
