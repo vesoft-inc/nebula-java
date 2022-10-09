@@ -35,21 +35,31 @@ public class TestSessionPool {
             Session session = pool.getSession("root", "nebula", true);
             ResultSet resultSet = session.execute(
                     "CREATE SPACE IF NOT EXISTS space_for_session_pool(vid_type=int);"
-                            + "CREATE SPACE IF NOT EXISTS session_pool_test(vid_type=int)");
+                            + "CREATE SPACE IF NOT EXISTS session_pool_test(vid_type=int);"
+                            + "CREATE SPACE IF NOT EXISTS space_for_changed_passwd(vid_type=int);"
+                            + "CREATE USER IF NOT EXISTS test WITH PASSWORD '12345'");
             if (!resultSet.isSucceeded()) {
                 System.out.println("create space failed: " + resultSet.getErrorMessage());
                 assert false;
             }
             Thread.sleep(3000);
+            ResultSet result = session.execute(
+                    "GRANT ROLE DBA ON space_for_changed_passwd TO test;");
+            if (!result.isSucceeded()) {
+                System.out.println("grant role DBA to test failed: " + result.getErrorMessage());
+                assert false;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
         }
+        pool.close();
     }
 
     @Test()
     public void testInitFailed() {
-        // NebulaPool init failed
+        // NebulaPool init failed for wrong port
         List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 1000));
         SessionPoolConfig config =
                 new SessionPoolConfig(addresses, "space", "user", "12345");
@@ -72,9 +82,9 @@ public class TestSessionPool {
         assert (!sessionPool.init());
         sessionPool.close();
 
-        // set MinSessionSize 0, and init will return true even if the user is wrong
+        // set MinSessionSize 1, and init will return false when the user is wrong
         config = new SessionPoolConfig(addresses, "space", "user", "nebula")
-                .setMinSessionSize(0);
+                .setMinSessionSize(1);
         sessionPool = new SessionPool(config);
         assert (sessionPool.init());
         sessionPool.close();
@@ -92,6 +102,14 @@ public class TestSessionPool {
         sessionPool = new SessionPool(config);
         assert (sessionPool.init());
         sessionPool.close();
+
+        // wrong MinSessionSize
+        try {
+            new SessionPoolConfig(addresses, "space_for_session_pool", "root", "nebula")
+                    .setMinSessionSize(0);
+        } catch (IllegalArgumentException e) {
+            assert true;
+        }
     }
 
     @Test()
@@ -141,6 +159,65 @@ public class TestSessionPool {
         } catch (RuntimeException e) {
             assert true;
         }
+    }
+
+    @Test
+    public void testChangePasswd() {
+        List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_changed_passwd",
+                "test",
+                "12345");
+        SessionPool sessionPool = new SessionPool(config);
+        assert sessionPool.init();
+
+        // change the password
+        try {
+            ResultSet result = sessionPool.execute("CHANGE PASSWORD test FROM '12345' TO '23456';");
+            if (!result.isSucceeded()) {
+                System.out.println("change password failed: " + result.getErrorMessage());
+                assert false;
+            }
+        } catch (IOErrorException | AuthFailedException | ClientServerIncompatibleException
+                | BindSpaceFailedException e) {
+            e.printStackTrace();
+            assert false;
+        }
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            assert false;
+        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < 5; i++) {
+            executorService.submit(() -> {
+                try {
+                    ResultSet resultSet = sessionPool.execute("YIELD 1");
+                } catch (AuthFailedException e) {
+                    System.out.println("auth failed, we except here.");
+                } catch (IOErrorException | ClientServerIncompatibleException
+                        | BindSpaceFailedException e) {
+                    e.printStackTrace();
+                    assert false;
+                } catch (RuntimeException e) {
+                    if ("The SessionPool has been closed.".equalsIgnoreCase(e.getMessage())) {
+                        System.out.println("session pool is closed, we except here.");
+                    } else {
+                        e.printStackTrace();
+                        assert false;
+                    }
+                }
+            });
+        }
+        try {
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            assert false;
+        }
+        executorService.shutdown();
+        sessionPool.close();
     }
 
     @Test

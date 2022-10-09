@@ -129,7 +129,7 @@ public class SessionPool implements Serializable {
      *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
      * @return The ResultSet
      */
-    public synchronized ResultSet execute(String stmt) throws IOErrorException,
+    public ResultSet execute(String stmt) throws IOErrorException,
             ClientServerIncompatibleException, AuthFailedException, BindSpaceFailedException {
         stmtCheck(stmt);
         checkSessionPool();
