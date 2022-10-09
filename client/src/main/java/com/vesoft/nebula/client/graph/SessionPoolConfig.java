@@ -80,8 +80,8 @@ public class SessionPoolConfig implements Serializable {
     }
 
     public SessionPoolConfig setMinSessionSize(int minSessionSize) {
-        if (minSessionSize < 0) {
-            throw new IllegalArgumentException("minSessionSize cannot be less than 0.");
+        if (minSessionSize < 1) {
+            throw new IllegalArgumentException("minSessionSize cannot be less than 1.");
         }
         this.minSessionSize = minSessionSize;
         return this;
