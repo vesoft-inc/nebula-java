@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.io.Serializable;
 
 public class NebulaPoolConfig implements Serializable {
