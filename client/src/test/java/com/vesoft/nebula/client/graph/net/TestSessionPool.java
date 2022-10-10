@@ -86,7 +86,7 @@ public class TestSessionPool {
         config = new SessionPoolConfig(addresses, "space", "user", "nebula")
                 .setMinSessionSize(1);
         sessionPool = new SessionPool(config);
-        assert (sessionPool.init());
+        assert (!sessionPool.init());
         sessionPool.close();
 
         // init failed for not exist space
