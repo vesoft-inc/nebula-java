@@ -14,6 +14,7 @@ import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NebulaSession implements Serializable {
 
@@ -22,14 +23,14 @@ public class NebulaSession implements Serializable {
     private long sessionID;
     private int timezoneOffset;
     private SyncConnection connection;
-    private SessionState state;
+    private AtomicReference<SessionState> state = new AtomicReference<>();
 
     public NebulaSession(SyncConnection connection, long sessionID, int timezoneOffset,
                          SessionState state) {
         this.connection = connection;
         this.sessionID = sessionID;
         this.timezoneOffset = timezoneOffset;
-        this.state = state;
+        this.state.set(state);
     }
 
     public long getSessionID() {
@@ -37,23 +38,19 @@ public class NebulaSession implements Serializable {
     }
 
     public Boolean isIdle() {
-        return state == SessionState.IDLE;
+        return state.get() == SessionState.IDLE;
     }
 
     public Boolean isUsed() {
-        return state == SessionState.USED;
+        return state.get() == SessionState.USED;
     }
 
-    public void setIdle() {
-        if (isUsed()) {
-            state = SessionState.IDLE;
-        }
+    public boolean isUsedAndSetIdle() {
+        return state.compareAndSet(SessionState.USED, SessionState.IDLE);
     }
 
-    public void setUsed() {
-        if (isIdle()) {
-            state = SessionState.USED;
-        }
+    public boolean isIdleAndSetUsed() {
+        return state.compareAndSet(SessionState.IDLE, SessionState.USED);
     }
 
     public ResultSet execute(String stmt) throws IOErrorException {
