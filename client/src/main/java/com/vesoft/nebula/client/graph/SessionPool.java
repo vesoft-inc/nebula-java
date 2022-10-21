@@ -144,6 +144,7 @@ public class SessionPool implements Serializable {
 
             // re-execute for session error
             if (isSessionError(resultSet)) {
+                nebulaSession.release();
                 sessionList.remove(nebulaSession);
                 nebulaSession = getSession();
                 resultSet = nebulaSession.execute(stmt);

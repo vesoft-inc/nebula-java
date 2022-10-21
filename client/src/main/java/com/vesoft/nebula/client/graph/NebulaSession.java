@@ -66,6 +66,7 @@ public class NebulaSession implements Serializable {
 
     public void release() {
         connection.signout(sessionID);
+        connection.close();
         connection = null;
     }
 }
