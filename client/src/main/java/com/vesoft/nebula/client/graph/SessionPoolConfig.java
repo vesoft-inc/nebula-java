@@ -30,7 +30,10 @@ public class SessionPoolConfig implements Serializable {
 
     // The idleTime for clean the idle session
     // must be less than NebulaGraph's session_idle_timeout_secs, unit: second
-    private int idleTime = 600;
+    private int cleanTime = 3600;
+
+    // The healthCheckTime for schedule check the health of session
+    private int healthCheckTime = 600;
 
     // The wait time to get idle connection, unit ms
     private int waitTime = 0;
@@ -111,15 +114,27 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
-    public int getIdleTime() {
-        return idleTime;
+    public int getCleanTime() {
+        return cleanTime;
     }
 
-    public SessionPoolConfig setIdleTime(int idleTime) {
-        if (idleTime < 0) {
-            throw new IllegalArgumentException("idleTime cannot be less than 0.");
+    public SessionPoolConfig setCleanTime(int cleanTime) {
+        if (cleanTime < 0) {
+            throw new IllegalArgumentException("cleanTime cannot be less than 0.");
         }
-        this.idleTime = idleTime;
+        this.cleanTime = cleanTime;
+        return this;
+    }
+
+    public int getHealthCheckTime() {
+        return healthCheckTime;
+    }
+
+    public SessionPoolConfig setHealthCheckTime(int healthCheckTime) {
+        if (healthCheckTime < 0) {
+            throw new IllegalArgumentException("cleanTime cannot be less than 0.");
+        }
+        this.healthCheckTime = healthCheckTime;
         return this;
     }
 
@@ -145,7 +160,8 @@ public class SessionPoolConfig implements Serializable {
                 + ", minSessionSize=" + minSessionSize
                 + ", maxSessionSize=" + maxSessionSize
                 + ", timeout=" + timeout
-                + ", idleTime=" + idleTime
+                + ", idleTime=" + cleanTime
+                + ", healthCheckTime=" + healthCheckTime
                 + ", waitTime=" + waitTime
                 + '}';
     }

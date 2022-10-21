@@ -49,16 +49,20 @@ public class SessionPool implements Serializable {
     private final SessionPoolConfig sessionPoolConfig;
     private final int minSessionSize;
     private final int maxSessionSize;
-    private final int delayTime;
+    private final int cleanTime;
+    private final int healthCheckTime;
     private final String spaceName;
+    private final String useSpace;
 
 
     public SessionPool(SessionPoolConfig poolConfig) {
         this.sessionPoolConfig = poolConfig;
         this.minSessionSize = poolConfig.getMinSessionSize();
         this.maxSessionSize = poolConfig.getMaxSessionSize();
-        this.delayTime = poolConfig.getIdleTime();
+        this.cleanTime = poolConfig.getCleanTime();
+        this.healthCheckTime = poolConfig.getHealthCheckTime();
         this.spaceName = poolConfig.getSpaceName();
+        useSpace = "USE `" + spaceName + "`;";
     }
 
 
@@ -68,12 +72,11 @@ public class SessionPool implements Serializable {
     private synchronized NebulaSession getSession() throws ClientServerIncompatibleException,
             AuthFailedException, IOErrorException, BindSpaceFailedException {
         int retry = 1;
-        while (retry-- > 0) {
+        while (retry-- >= 0) {
             // if there are idle sessions, get session from queue
             if (idleSessionSize.get() > 0) {
                 for (NebulaSession nebulaSession : sessionList) {
-                    if (nebulaSession.isIdle()) {
-                        nebulaSession.setUsed();
+                    if (nebulaSession.isIdleAndSetUsed()) {
                         idleSessionSize.decrementAndGet();
                         return nebulaSession;
                     }
@@ -114,8 +117,9 @@ public class SessionPool implements Serializable {
                 return false;
             }
         }
-        healthCheckSchedule.scheduleAtFixedRate(this::checkSession, 0, delayTime, TimeUnit.SECONDS);
-        sessionQueueMaintainSchedule.scheduleAtFixedRate(this::updateSessionQueue, 0, delayTime,
+        healthCheckSchedule.scheduleAtFixedRate(this::checkSession, 0, healthCheckTime,
+                TimeUnit.SECONDS);
+        sessionQueueMaintainSchedule.scheduleAtFixedRate(this::updateSessionQueue, 0, cleanTime,
                 TimeUnit.SECONDS);
         hasInit.compareAndSet(false, true);
         return true;
@@ -140,6 +144,7 @@ public class SessionPool implements Serializable {
 
             // re-execute for session error
             if (isSessionError(resultSet)) {
+                nebulaSession.release();
                 sessionList.remove(nebulaSession);
                 nebulaSession = getSession();
                 resultSet = nebulaSession.execute(stmt);
@@ -241,7 +246,7 @@ public class SessionPool implements Serializable {
      * release the NebulaSession when finished the execution.
      */
     private synchronized void releaseSession(NebulaSession nebulaSession) {
-        nebulaSession.setIdle();
+        nebulaSession.isUsedAndSetIdle();
         idleSessionSize.incrementAndGet();
     }
 
@@ -251,12 +256,11 @@ public class SessionPool implements Serializable {
      */
     private void checkSession() {
         for (NebulaSession nebulaSession : sessionList) {
-            if (nebulaSession.isIdle()) {
+            if (nebulaSession.isIdleAndSetUsed()) {
                 try {
-                    nebulaSession.setUsed();
                     idleSessionSize.decrementAndGet();
                     nebulaSession.execute("YIELD 1");
-                    nebulaSession.setIdle();
+                    nebulaSession.isUsedAndSetIdle();
                     idleSessionSize.incrementAndGet();
                 } catch (IOErrorException e) {
                     log.error("session ping error, {}, remove current session.", e.getMessage());
@@ -273,12 +277,14 @@ public class SessionPool implements Serializable {
     private void updateSessionQueue() {
         // remove the idle sessions
         if (idleSessionSize.get() > minSessionSize) {
-            for (NebulaSession nebulaSession : sessionList) {
-                if (nebulaSession.isIdle()) {
-                    nebulaSession.release();
-                    sessionList.remove(nebulaSession);
-                    if (idleSessionSize.decrementAndGet() <= minSessionSize) {
-                        break;
+            synchronized (this) {
+                for (NebulaSession nebulaSession : sessionList) {
+                    if (nebulaSession.isIdle()) {
+                        nebulaSession.release();
+                        sessionList.remove(nebulaSession);
+                        if (idleSessionSize.decrementAndGet() <= minSessionSize) {
+                            break;
+                        }
                     }
                 }
             }
@@ -308,7 +314,7 @@ public class SessionPool implements Serializable {
 
         NebulaSession nebulaSession = new NebulaSession(connection, authResult.getSessionId(),
                 authResult.getTimezoneOffset(), state);
-        ResultSet result = nebulaSession.execute("USE " + spaceName);
+        ResultSet result = nebulaSession.execute(useSpace);
         if (!result.isSucceeded()) {
             nebulaSession.release();
             throw new BindSpaceFailedException(result.getErrorMessage());
@@ -344,7 +350,7 @@ public class SessionPool implements Serializable {
         }
         // re-bind the configured spaceName, if bind failed, then remove this session.
         if (!spaceName.equals(resultSet.getSpaceName())) {
-            ResultSet switchSpaceResult = nebulaSession.execute("USE " + spaceName);
+            ResultSet switchSpaceResult = nebulaSession.execute(useSpace);
             if (!switchSpaceResult.isSucceeded()) {
                 log.warn("Bind Space failed, {}", switchSpaceResult.getErrorMessage());
                 nebulaSession.release();
@@ -367,7 +373,7 @@ public class SessionPool implements Serializable {
                 (String) JSON.parseObject(result).getJSONArray("results")
                         .getJSONObject(0).get("spaceName");
         if (!spaceName.equals(responseSpaceName)) {
-            nebulaSession.execute("USE " + spaceName);
+            nebulaSession.execute(useSpace);
         }
         releaseSession(nebulaSession);
     }
