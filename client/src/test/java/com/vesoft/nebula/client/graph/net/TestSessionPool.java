@@ -133,7 +133,8 @@ public class TestSessionPool {
     public void testExecuteForSpace() {
         List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
         SessionPoolConfig config = new SessionPoolConfig(addresses, "session_pool_test", "root",
-                "nebula");
+                "nebula").setHealthCheckTime(1);
+
         SessionPool sessionPool = new SessionPool(config);
         assert sessionPool.init();
 
