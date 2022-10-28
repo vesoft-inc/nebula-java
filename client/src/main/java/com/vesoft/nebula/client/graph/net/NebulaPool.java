@@ -124,7 +124,9 @@ public class NebulaPool implements Serializable {
      * close the pool, all connections will be closed
      */
     public void close() {
-        checkClosed();
+        if (isClosed.get()) {
+            return;
+        }
         isClosed.set(true);
         this.loadBalancer.close();
         this.objectPool.close();
