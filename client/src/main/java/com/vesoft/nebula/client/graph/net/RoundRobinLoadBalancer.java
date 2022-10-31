@@ -48,7 +48,9 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     }
 
     public void close() {
-        schedule.shutdownNow();
+        if (!schedule.isShutdown()) {
+            schedule.shutdownNow();
+        }
     }
 
     @Override
