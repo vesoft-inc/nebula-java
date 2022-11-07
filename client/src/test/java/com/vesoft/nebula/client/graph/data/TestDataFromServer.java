@@ -5,8 +5,8 @@
 
 package com.vesoft.nebula.client.graph.data;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.vesoft.nebula.Coordinate;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
@@ -37,13 +37,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestDataFromServer {
+
     private final NebulaPool pool = new NebulaPool();
     private Session session = null;
 
     @Before
     public void setUp() throws Exception {
-        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(1);
+        NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(1).build();
         Assert.assertTrue(
                 pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9670)), nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
@@ -649,14 +649,16 @@ public class TestDataFromServer {
         NebulaPool sslPool = new NebulaPool();
         try {
 
-            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
-            nebulaSslPoolConfig.setMaxConnSize(100);
-            nebulaSslPoolConfig.setEnableSsl(true);
-            nebulaSslPoolConfig.setSslParam(
-                    new SelfSignedSSLParam(
-                            "src/test/resources/ssl/selfsigned.pem",
-                            "src/test/resources/ssl/selfsigned.key",
-                            "vesoft"));
+            NebulaPoolConfig nebulaSslPoolConfig =
+                    NebulaPoolConfig.builder()
+                            .maxConnSize(100)
+                            .enableSsl(true)
+                            .sslParam(
+                                    new SelfSignedSSLParam(
+                                            "src/test/resources/ssl/selfsigned.pem",
+                                            "src/test/resources/ssl/selfsigned.key",
+                                            "vesoft"))
+                            .build();
             Assert.assertTrue(
                     sslPool.init(
                             Arrays.asList(new HostAddress("127.0.0.1", 7669)),
@@ -690,14 +692,16 @@ public class TestDataFromServer {
         Session sslSession = null;
         NebulaPool sslPool = new NebulaPool();
         try {
-            NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
-            nebulaSslPoolConfig.setMaxConnSize(100);
-            nebulaSslPoolConfig.setEnableSsl(true);
-            nebulaSslPoolConfig.setSslParam(
-                    new CASignedSSLParam(
-                            "src/test/resources/ssl/casigned.pem",
-                            "src/test/resources/ssl/casigned.crt",
-                            "src/test/resources/ssl/casigned.key"));
+            NebulaPoolConfig nebulaSslPoolConfig =
+                    NebulaPoolConfig.builder()
+                            .maxConnSize(100)
+                            .enableSsl(true)
+                            .sslParam(
+                                    new CASignedSSLParam(
+                                            "src/test/resources/ssl/casigned.pem",
+                                            "src/test/resources/ssl/casigned.crt",
+                                            "src/test/resources/ssl/casigned.key"))
+                            .build();
             Assert.assertTrue(
                     sslPool.init(
                             Arrays.asList(new HostAddress("127.0.0.1", 8669)),

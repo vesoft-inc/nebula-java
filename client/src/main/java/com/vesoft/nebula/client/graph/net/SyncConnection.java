@@ -12,7 +12,6 @@ import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
 import com.facebook.thrift.utils.StandardCharsets;
-import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
@@ -77,7 +76,7 @@ public class SyncConnection extends Connection {
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
                 throw new ClientServerIncompatibleException(
-                        new String(resp.getError_msg(), Charsets.UTF_8));
+                        new String(resp.getError_msg(), StandardCharsets.UTF_8));
             }
         } catch (TException | IOException e) {
             close();
@@ -102,7 +101,7 @@ public class SyncConnection extends Connection {
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
                 throw new ClientServerIncompatibleException(
-                        new String(resp.getError_msg(), Charsets.UTF_8));
+                        new String(resp.getError_msg(), StandardCharsets.UTF_8));
             }
         } catch (TException e) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());

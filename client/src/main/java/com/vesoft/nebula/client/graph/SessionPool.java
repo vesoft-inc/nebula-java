@@ -5,7 +5,6 @@
 
 package com.vesoft.nebula.client.graph;
 
-import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
@@ -334,26 +333,6 @@ public class SessionPool implements Serializable {
                 sessionList.remove(nebulaSession);
                 return;
             }
-        }
-        releaseSession(nebulaSession);
-    }
-
-    /**
-     * execute the "USE SPACE_NAME" when session's space changed for Json interface
-     *
-     * @param nebulaSession NebulaSession
-     * @param result execute response
-     */
-    private void useSpaceForJson(NebulaSession nebulaSession, String result)
-            throws IOErrorException {
-        String responseSpaceName =
-                (String)
-                        JSON.parseObject(result)
-                                .getJSONArray("results")
-                                .getJSONObject(0)
-                                .get("spaceName");
-        if (!spaceName.equals(responseSpaceName)) {
-            nebulaSession.execute(useSpace);
         }
         releaseSession(nebulaSession);
     }

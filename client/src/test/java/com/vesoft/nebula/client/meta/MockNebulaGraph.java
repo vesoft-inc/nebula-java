@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
 
 /** two spaces: test1, test2, both have 2 parts each space has one tag and one edge */
 public class MockNebulaGraph {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MockNebulaGraph.class);
 
     public static void initGraph() {
-        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(100);
+        NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(100).build();
         List<HostAddress> addresses =
                 Arrays.asList(
                         new HostAddress("127.0.0.1", 9669), new HostAddress("127.0.0.1", 9670));
@@ -85,8 +85,7 @@ public class MockNebulaGraph {
     }
 
     public static void createMultiVersionTagAndEdge() {
-        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(100);
+        NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(100).build();
         List<HostAddress> addresses =
                 Arrays.asList(
                         new HostAddress("127.0.0.1", 9669), new HostAddress("127.0.0.1", 9670));
@@ -127,14 +126,16 @@ public class MockNebulaGraph {
     }
 
     public static void createSpaceWithCASSL() {
-        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(100);
-        nebulaPoolConfig.setEnableSsl(true);
-        nebulaPoolConfig.setSslParam(
-                new CASignedSSLParam(
-                        "src/test/resources/ssl/casigned.pem",
-                        "src/test/resources/ssl/casigned.crt",
-                        "src/test/resources/ssl/casigned.key"));
+        NebulaPoolConfig nebulaPoolConfig =
+                NebulaPoolConfig.builder()
+                        .maxConnSize(100)
+                        .enableSsl(true)
+                        .sslParam(
+                                new CASignedSSLParam(
+                                        "src/test/resources/ssl/casigned.pem",
+                                        "src/test/resources/ssl/casigned.crt",
+                                        "src/test/resources/ssl/casigned.key"))
+                        .build();
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
         NebulaPool pool = new NebulaPool();
         Session session = null;
@@ -161,14 +162,16 @@ public class MockNebulaGraph {
     }
 
     public static void createSpaceWithSelfSSL() {
-        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(100);
-        nebulaPoolConfig.setEnableSsl(true);
-        nebulaPoolConfig.setSslParam(
-                new SelfSignedSSLParam(
-                        "src/test/resources/ssl/selfsigned.pem",
-                        "src/test/resources/ssl/selfsigned.key",
-                        "vesoft"));
+        NebulaPoolConfig nebulaPoolConfig =
+                NebulaPoolConfig.builder()
+                        .maxConnSize(100)
+                        .enableSsl(true)
+                        .sslParam(
+                                new SelfSignedSSLParam(
+                                        "src/test/resources/ssl/selfsigned.pem",
+                                        "src/test/resources/ssl/selfsigned.key",
+                                        "vesoft"))
+                        .build();
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 7669));
         NebulaPool pool = new NebulaPool();
         Session session = null;

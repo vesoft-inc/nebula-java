@@ -32,8 +32,7 @@ public class TestSession {
         System.out.println("<==== testMultiThreadUseTheSameSession ====>");
         NebulaPool pool = new NebulaPool();
         try {
-            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-            nebulaPoolConfig.setMaxConnSize(1);
+            NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(1).build();
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9670));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             Session session = pool.getSession("root", "nebula", true);
@@ -65,8 +64,7 @@ public class TestSession {
         System.out.println("<==== testReconnectWithOneService ====>");
         NebulaPool pool = new NebulaPool();
         try {
-            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-            nebulaPoolConfig.setMaxConnSize(1);
+            NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(1).build();
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             Session session = pool.getSession("root", "nebula", true);
@@ -105,8 +103,7 @@ public class TestSession {
             p.waitFor(10, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
 
-            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-            nebulaPoolConfig.setMaxConnSize(6);
+            NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(6).build();
             List<HostAddress> addresses =
                     Arrays.asList(
                             new HostAddress("127.0.0.1", 9669),
@@ -194,8 +191,7 @@ public class TestSession {
             p.waitFor(10, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
 
-            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-            nebulaPoolConfig.setMaxConnSize(6);
+            NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(6).build();
             List<HostAddress> addresses =
                     Arrays.asList(
                             new HostAddress("127.0.0.1", 9669),
@@ -235,16 +231,16 @@ public class TestSession {
                     session.executeWithParameter("RETURN $p1+1,$p2,$p3,$p4[2],$p5.d[3]", paramMap);
             Assert.assertTrue(resp.isSucceeded());
             Row row = resp.getRows().get(0);
-            Assert.assertTrue(row.values.get(0).equals(Value.iVal(4)));
-            Assert.assertTrue(row.values.get(1).equals(Value.bVal(true)));
-            Assert.assertTrue(row.values.get(2).equals(Value.fVal(3.3)));
-            Assert.assertTrue(row.values.get(3).equals(list.get(2)));
-            Assert.assertTrue(row.values.get(4).getDVal().equals(list.get(3)));
+            Assert.assertEquals(row.values.get(0), Value.iVal(4));
+            Assert.assertEquals(row.values.get(1), Value.bVal(true));
+            Assert.assertEquals(row.values.get(2), Value.fVal(3.3));
+            Assert.assertEquals(row.values.get(3), list.get(2));
+            Assert.assertEquals(row.values.get(4).getDVal(), list.get(3));
             // release session
             session.release();
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(true);
+            Assert.fail();
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")

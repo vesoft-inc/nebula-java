@@ -29,8 +29,8 @@ public class TestSessionsManager {
         try {
             try {
                 NebulaPool pool = new NebulaPool();
-                NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-                nebulaPoolConfig.setMaxConnSize(1);
+                NebulaPoolConfig nebulaPoolConfig =
+                        NebulaPoolConfig.builder().maxConnSize(1).build();
                 Assert.assertTrue(
                         pool.init(
                                 Collections.singletonList(new HostAddress("127.0.0.1", 9670)),
@@ -51,14 +51,15 @@ public class TestSessionsManager {
                 Assert.assertFalse(e.getMessage(), false);
             }
 
-            SessionsManagerConfig config = new SessionsManagerConfig();
-            NebulaPoolConfig poolConfig = new NebulaPoolConfig();
-            poolConfig.setMaxConnSize(4);
-            config.setAddresses(Collections.singletonList(new HostAddress("127.0.0.1", 9670)))
-                    .setUserName("root")
-                    .setPassword("nebula")
-                    .setSpaceName("test_session_manager")
-                    .setPoolConfig(poolConfig);
+            NebulaPoolConfig poolConfig = NebulaPoolConfig.builder().maxConnSize(4).build();
+            SessionsManagerConfig config =
+                    SessionsManagerConfig.builder()
+                            .userName("root")
+                            .password("nebula")
+                            .spaceName("test_session_manager")
+                            .poolConfig(poolConfig)
+                            .address(new HostAddress("127.0.0.1", 9670))
+                            .build();
             SessionsManager sessionsManager = new SessionsManager(config);
             // Gets the session of the specified space
             SessionWrapper session = sessionsManager.getSessionWrapper();

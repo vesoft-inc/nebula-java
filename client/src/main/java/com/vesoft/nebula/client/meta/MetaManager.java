@@ -6,7 +6,6 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
-import com.google.common.collect.Maps;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
@@ -24,19 +23,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** MetaManager is a manager for meta info, such as spaces,tags and edges. */
 public class MetaManager implements MetaCache, Serializable {
-    private class SpaceInfo {
+    private static class SpaceInfo {
         private SpaceItem spaceItem = null;
-        private Map<String, TagItem> tagItems = new HashMap<>();
-        private Map<Integer, String> tagIdNames = new HashMap<>();
-        private Map<String, EdgeItem> edgeItems = new HashMap<>();
-        private Map<Integer, String> edgeTypeNames = new HashMap<>();
-        private Map<Integer, List<HostAddr>> partsAlloc = new HashMap<>();
+        private final Map<String, TagItem> tagItems = new HashMap<>();
+        private final Map<Integer, String> tagIdNames = new HashMap<>();
+        private final Map<String, EdgeItem> edgeItems = new HashMap<>();
+        private final Map<Integer, String> edgeTypeNames = new HashMap<>();
+        private final Map<Integer, List<HostAddr>> partsAlloc = new HashMap<>();
     }
 
     private Map<String, MetaManager.SpaceInfo> spacesInfo = new HashMap<>();
@@ -44,7 +44,7 @@ public class MetaManager implements MetaCache, Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaManager.class);
 
-    private MetaClient metaClient;
+    private final MetaClient metaClient;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     private static final int DEFAULT_TIMEOUT_MS = 1000;
@@ -88,8 +88,7 @@ public class MetaManager implements MetaCache, Serializable {
             for (IdName space : spaces) {
                 SpaceInfo spaceInfo = new SpaceInfo();
                 String spaceName = new String(space.name);
-                SpaceItem spaceItem = metaClient.getSpace(spaceName);
-                spaceInfo.spaceItem = spaceItem;
+                spaceInfo.spaceItem = metaClient.getSpace(spaceName);
                 List<TagItem> tags = metaClient.getTags(spaceName);
                 for (TagItem tag : tags) {
                     String tagName = new String(tag.tag_name);
@@ -108,7 +107,8 @@ public class MetaManager implements MetaCache, Serializable {
                         spaceInfo.edgeTypeNames.put(edge.edge_type, edgeName);
                     }
                 }
-                spaceInfo.partsAlloc = metaClient.getPartsAlloc(spaceName);
+                spaceInfo.partsAlloc.clear();
+                spaceInfo.partsAlloc.putAll(metaClient.getPartsAlloc(spaceName));
                 tempSpacesInfo.put(spaceName, spaceInfo);
             }
             try {
@@ -119,7 +119,7 @@ public class MetaManager implements MetaCache, Serializable {
                 }
                 for (String spaceName : spacesInfo.keySet()) {
                     if (!partLeaders.containsKey(spaceName)) {
-                        partLeaders.put(spaceName, Maps.newConcurrentMap());
+                        partLeaders.put(spaceName, new ConcurrentHashMap<>());
                         for (int partId : spacesInfo.get(spaceName).partsAlloc.keySet()) {
                             if (spacesInfo.get(spaceName).partsAlloc.get(partId).size() < 1) {
                                 LOGGER.error(

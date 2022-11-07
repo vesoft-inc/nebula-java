@@ -5,7 +5,6 @@
 
 package com.vesoft.nebula.client.storage.processor;
 
-import com.google.common.collect.Maps;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Value;
@@ -13,6 +12,7 @@ import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class EdgeProcessor {
                     Value srcId = null;
                     Value dstId = null;
                     Value rank = null;
-                    Map<String, ValueWrapper> props = Maps.newHashMap();
+                    Map<String, ValueWrapper> props = new HashMap<>();
                     for (int i = 0; i < values.size(); i++) {
                         String colName = new String(colNames.get(i));
                         if (!colName.contains(".")) {
