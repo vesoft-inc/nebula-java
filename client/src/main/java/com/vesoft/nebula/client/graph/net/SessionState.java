@@ -6,5 +6,6 @@
 package com.vesoft.nebula.client.graph.net;
 
 public enum SessionState {
-    IDLE, USED
+    IDLE,
+    USED
 }

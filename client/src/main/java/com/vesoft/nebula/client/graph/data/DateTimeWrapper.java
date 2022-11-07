@@ -82,21 +82,32 @@ public class DateTimeWrapper extends BaseDataObject {
      * @return the DataTime String with the timezone
      */
     public String getLocalDateTimeStr() {
-        DateTime localDateTime = TimeUtil.datetimeConvertWithTimezone(dateTime,
-                                                                      getTimezoneOffset());
-        return String.format("%d-%02d-%02dT%02d:%02d:%02d.%06d",
-            localDateTime.year, localDateTime.month, localDateTime.day,
-            localDateTime.hour, localDateTime.minute, localDateTime.sec,
-            localDateTime.microsec);
+        DateTime localDateTime =
+                TimeUtil.datetimeConvertWithTimezone(dateTime, getTimezoneOffset());
+        return String.format(
+                "%d-%02d-%02dT%02d:%02d:%02d.%06d",
+                localDateTime.year,
+                localDateTime.month,
+                localDateTime.day,
+                localDateTime.hour,
+                localDateTime.minute,
+                localDateTime.sec,
+                localDateTime.microsec);
     }
 
     /**
      * @return the utc DateTime String
      */
     public String getUTCDateTimeStr() {
-        return String.format("%d-%02d-%02dT%02d:%02d:%02d.%06d",
-            dateTime.year, dateTime.month, dateTime.day,
-            dateTime.hour, dateTime.minute, dateTime.sec, dateTime.microsec);
+        return String.format(
+                "%d-%02d-%02dT%02d:%02d:%02d.%06d",
+                dateTime.year,
+                dateTime.month,
+                dateTime.day,
+                dateTime.hour,
+                dateTime.minute,
+                dateTime.sec,
+                dateTime.microsec);
     }
 
     /**
@@ -104,9 +115,16 @@ public class DateTimeWrapper extends BaseDataObject {
      */
     @Override
     public String toString() {
-        return String.format("utc datetime: %d-%02d-%02dT%02d:%02d:%02d.%06d, timezoneOffset: %d",
-            dateTime.year, dateTime.month, dateTime.day,
-            dateTime.hour, dateTime.minute, dateTime.sec, dateTime.microsec, getTimezoneOffset());
+        return String.format(
+                "utc datetime: %d-%02d-%02dT%02d:%02d:%02d.%06d, timezoneOffset: %d",
+                dateTime.year,
+                dateTime.month,
+                dateTime.day,
+                dateTime.hour,
+                dateTime.minute,
+                dateTime.sec,
+                dateTime.microsec,
+                getTimezoneOffset());
     }
 
     @Override
@@ -119,12 +137,12 @@ public class DateTimeWrapper extends BaseDataObject {
         }
         DateTimeWrapper that = (DateTimeWrapper) o;
         return dateTime.year == that.getYear()
-            && dateTime.month == that.getMonth()
-            && dateTime.day == that.getDay()
-            && dateTime.hour == that.getHour()
-            && dateTime.minute == that.getMinute()
-            && dateTime.sec == dateTime.getSec()
-            && dateTime.microsec == dateTime.getMicrosec();
+                && dateTime.month == that.getMonth()
+                && dateTime.day == that.getDay()
+                && dateTime.hour == that.getHour()
+                && dateTime.minute == that.getMinute()
+                && dateTime.sec == dateTime.getSec()
+                && dateTime.microsec == dateTime.getMicrosec();
     }
 
     @Override

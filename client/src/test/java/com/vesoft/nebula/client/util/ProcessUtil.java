@@ -11,8 +11,7 @@ import java.io.InputStreamReader;
 public class ProcessUtil {
     public static void printProcessStatus(String cmd, Process p) {
         try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(p.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String line;
             System.out.print(cmd + " output: ");

@@ -50,9 +50,12 @@ public class PartScanInfo implements Serializable {
     @Override
     public String toString() {
         return "PartScanInfo{"
-                + "part=" + part
-                + ", leader=" + leader
-                + ", cursor=" + new String(cursor.next_cursor)
+                + "part="
+                + part
+                + ", leader="
+                + leader
+                + ", cursor="
+                + new String(cursor.next_cursor)
                 + '}';
     }
 }

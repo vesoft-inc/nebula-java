@@ -38,7 +38,7 @@ public class SslUtil {
         final String keyFile = param.getKeyFilePath();
         final String password = "";
         try {
-            //Add BouncyCastle as a Security Provider
+            // Add BouncyCastle as a Security Provider
             Security.addProvider(new BouncyCastleProvider());
 
             // Load client private key
@@ -60,8 +60,9 @@ public class SslUtil {
             KeyPair key;
 
             if (keyObject instanceof PEMEncryptedKeyPair) {
-                key = keyConverter.getKeyPair(((PEMEncryptedKeyPair) keyObject)
-                        .decryptKeyPair(provider));
+                key =
+                        keyConverter.getKeyPair(
+                                ((PEMEncryptedKeyPair) keyObject).decryptKeyPair(provider));
             } else {
                 key = keyConverter.getKeyPair((PEMKeyPair) keyObject);
             }
@@ -85,8 +86,8 @@ public class SslUtil {
             caKeyStore.load(null, null);
             caKeyStore.setCertificateEntry("ca-certificate", caCert);
 
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
-                    TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(caKeyStore);
 
             // Load client certificate
@@ -105,17 +106,22 @@ public class SslUtil {
             X509Certificate cert = certificateConverter.getCertificate(certHolder);
             clientKeyStore.load(null, null);
             clientKeyStore.setCertificateEntry("certificate", cert);
-            clientKeyStore.setKeyEntry("private-key", key.getPrivate(), password.toCharArray(),
-                    new Certificate[]{cert});
+            clientKeyStore.setKeyEntry(
+                    "private-key",
+                    key.getPrivate(),
+                    password.toCharArray(),
+                    new Certificate[] {cert});
 
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
-                    KeyManagerFactory.getDefaultAlgorithm());
+            KeyManagerFactory keyManagerFactory =
+                    KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(clientKeyStore, password.toCharArray());
 
             // Create SSL socket factory
             SSLContext context = SSLContext.getInstance("TLSv1.3");
-            context.init(keyManagerFactory.getKeyManagers(),
-                    trustManagerFactory.getTrustManagers(), null);
+            context.init(
+                    keyManagerFactory.getKeyManagers(),
+                    trustManagerFactory.getTrustManagers(),
+                    null);
 
             // Return the newly created socket factory object
             return context.getSocketFactory();
@@ -154,8 +160,9 @@ public class SslUtil {
             KeyPair key;
 
             if (keyObject instanceof PEMEncryptedKeyPair) {
-                key = keyConverter.getKeyPair(((PEMEncryptedKeyPair) keyObject)
-                        .decryptKeyPair(provider));
+                key =
+                        keyConverter.getKeyPair(
+                                ((PEMEncryptedKeyPair) keyObject).decryptKeyPair(provider));
             } else {
                 key = keyConverter.getKeyPair((PEMKeyPair) keyObject);
             }
@@ -181,25 +188,30 @@ public class SslUtil {
             keyStore.load(null, null);
             keyStore.setCertificateEntry("certificate", cert);
 
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
-                    TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStore);
 
             // Client key and certificates are sent to server so it can authenticate the client
             KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
             clientKeyStore.load(null, null);
             clientKeyStore.setCertificateEntry("certificate", cert);
-            clientKeyStore.setKeyEntry("private-key", key.getPrivate(), password.toCharArray(),
-                    new Certificate[]{cert});
+            clientKeyStore.setKeyEntry(
+                    "private-key",
+                    key.getPrivate(),
+                    password.toCharArray(),
+                    new Certificate[] {cert});
 
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
-                    KeyManagerFactory.getDefaultAlgorithm());
+            KeyManagerFactory keyManagerFactory =
+                    KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(clientKeyStore, password.toCharArray());
 
             // Create SSL socket factory
             SSLContext context = SSLContext.getInstance("TLSv1.3");
-            context.init(keyManagerFactory.getKeyManagers(),
-                    trustManagerFactory.getTrustManagers(), null);
+            context.init(
+                    keyManagerFactory.getKeyManagers(),
+                    trustManagerFactory.getTrustManagers(),
+                    null);
 
             // Return the newly created socket factory object
             return context.getSocketFactory();

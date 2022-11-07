@@ -27,8 +27,7 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection>
     public SyncConnection create() throws IOErrorException, ClientServerIncompatibleException {
         HostAddress address = loadBalancer.getAddress();
         if (address == null) {
-            throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
-                    "All servers are broken.");
+            throw new IOErrorException(IOErrorException.E_ALL_BROKEN, "All servers are broken.");
         }
         int retry = retryTime;
         SyncConnection conn = new SyncConnection();
@@ -36,8 +35,8 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection>
             try {
                 if (config.isEnableSsl()) {
                     if (config.getSslParam() == null) {
-                        throw new IllegalArgumentException("SSL Param is required when enableSsl "
-                                + "is set to true");
+                        throw new IllegalArgumentException(
+                                "SSL Param is required when enableSsl " + "is set to true");
                     }
                     conn.open(address, config.getTimeout(), config.getSslParam());
                 } else {

@@ -23,6 +23,7 @@ public class Node extends BaseDataObject {
 
     /**
      * Node is a wrapper around the Vertex type returned by nebula-graph
+     *
      * @param vertex the vertex returned by nebula-graph
      * @throws UnsupportedEncodingException if decoded binary failed
      */
@@ -39,8 +40,9 @@ public class Node extends BaseDataObject {
 
     /**
      * get vid from the node
-     * @return ValueWrapper, if int id, you can call getId().asLong(),
-     *     if string id, you can call getId().asString()
+     *
+     * @return ValueWrapper, if int id, you can call getId().asLong(), if string id, you can call
+     *     getId().asString()
      */
     public ValueWrapper getId() {
         return vid;
@@ -48,6 +50,7 @@ public class Node extends BaseDataObject {
 
     /**
      * get all tag name from the node
+     *
      * @return the list of tag name
      */
     public List<String> tagNames() {
@@ -56,6 +59,7 @@ public class Node extends BaseDataObject {
 
     /**
      * Used to be compatible with older versions of interfaces
+     *
      * @return the list of tag name
      */
     public List<String> labels() {
@@ -64,6 +68,7 @@ public class Node extends BaseDataObject {
 
     /**
      * determine if node contains the given tag
+     *
      * @param tagName the tag name
      * @return boolean
      */
@@ -73,6 +78,7 @@ public class Node extends BaseDataObject {
 
     /**
      * Used to be compatible with older versions of interfaces
+     *
      * @return tboolean
      */
     public boolean hasLabel(String tagName) {
@@ -81,6 +87,7 @@ public class Node extends BaseDataObject {
 
     /**
      * get property values from the node
+     *
      * @param tagName the tag name
      * @return the list of ValueWrapper
      */
@@ -98,6 +105,7 @@ public class Node extends BaseDataObject {
 
     /**
      * get property names from the node
+     *
      * @param tagName the given tag name
      * @return the list of property names
      * @throws UnsupportedEncodingException decode error exception
@@ -117,12 +125,13 @@ public class Node extends BaseDataObject {
 
     /**
      * get property names and values from the node
+     *
      * @param tagName the given tag name
      * @return the HashMap, key is property name, value is ValueWrapper
      * @throws UnsupportedEncodingException decode error exception
      */
     public HashMap<String, ValueWrapper> properties(String tagName)
-        throws UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         int index = tagNames.indexOf(tagName);
         if (index < 0) {
             throw new IllegalArgumentException(tagName + " is not found");
@@ -130,10 +139,12 @@ public class Node extends BaseDataObject {
 
         HashMap<String, ValueWrapper> properties = new HashMap();
         for (byte[] name : vertex.tags.get(index).props.keySet()) {
-            properties.put(new String(name, getDecodeType()),
-                new ValueWrapper(vertex.tags.get(index).props.get(name),
-                                 getDecodeType(),
-                                 getTimezoneOffset()));
+            properties.put(
+                    new String(name, getDecodeType()),
+                    new ValueWrapper(
+                            vertex.tags.get(index).props.get(name),
+                            getDecodeType(),
+                            getTimezoneOffset()));
         }
         return properties;
     }

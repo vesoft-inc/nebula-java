@@ -11,9 +11,7 @@ import java.util.Objects;
 public class DurationWrapper extends BaseDataObject {
     private final Duration duration;
 
-    /**
-     * DurationWrapper is a wrapper for the duration type of nebula-graph
-     */
+    /** DurationWrapper is a wrapper for the duration type of nebula-graph */
     public DurationWrapper(Duration duration) {
         this.duration = duration;
     }
@@ -43,10 +41,10 @@ public class DurationWrapper extends BaseDataObject {
      * @return the duration string
      */
     public String getDurationString() {
-        return String.format("duration({months:%d, seconds:%d, microseconds:%d})",
+        return String.format(
+                "duration({months:%d, seconds:%d, microseconds:%d})",
                 getMonths(), getSeconds(), getMicroseconds());
     }
-
 
     @Override
     public String toString() {
@@ -74,5 +72,4 @@ public class DurationWrapper extends BaseDataObject {
     public int hashCode() {
         return Objects.hash(duration);
     }
-
 }

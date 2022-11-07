@@ -52,5 +52,4 @@ public class PointWrapper extends BaseDataObject {
     public int hashCode() {
         return Objects.hash(point);
     }
-
 }

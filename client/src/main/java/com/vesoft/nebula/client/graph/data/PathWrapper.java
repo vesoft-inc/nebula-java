@@ -28,10 +28,10 @@ public class PathWrapper extends BaseDataObject {
         Node endNode;
 
         /**
-         * The segment is used to represent an edge in a path.
-         * It contains information about the starting point and the ending point,
-         * as well as information about the edge,
-         * and its direction is used to indicate that the starting point points to the ending point
+         * The segment is used to represent an edge in a path. It contains information about the
+         * starting point and the ending point, as well as information about the edge, and its
+         * direction is used to indicate that the starting point points to the ending point
+         *
          * @param startNode the start node
          * @param relationShip the edge
          * @param endNode the end node
@@ -85,15 +85,19 @@ public class PathWrapper extends BaseDataObject {
         @Override
         public String toString() {
             return "Segment{"
-                    + "startNode=" + startNode
-                    + ", relationShip=" + relationShip
-                    + ", endNode=" + endNode
+                    + "startNode="
+                    + startNode
+                    + ", relationShip="
+                    + relationShip
+                    + ", endNode="
+                    + endNode
                     + '}';
         }
     }
 
     /**
      * get the start node from the path
+     *
      * @return Node
      */
     public Node getStartNode() {
@@ -105,6 +109,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * get the end node from the path
+     *
      * @return Node
      */
     public Node getEndNode() {
@@ -116,6 +121,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * determine if path contains the given node
+     *
      * @param node the given node
      * @return boolean
      */
@@ -125,6 +131,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * determine if path contains the given relationShip
+     *
      * @param relationship the given relationship
      * @return boolean
      */
@@ -134,6 +141,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * get all nodes from the path
+     *
      * @return the list of Node
      */
     public List<Node> getNodes() {
@@ -142,6 +150,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * get all relationship from the path
+     *
      * @return the List of Relationship
      */
     public List<Relationship> getRelationships() {
@@ -150,6 +159,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * get all segments from the path
+     *
      * @return the List of Segment
      */
     public List<Segment> getSegments() {
@@ -158,6 +168,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * get the length of the path
+     *
      * @return int
      */
     public int length() {
@@ -166,6 +177,7 @@ public class PathWrapper extends BaseDataObject {
 
     /**
      * PathWrapper is a wrapper around the Path type returned by nebula-graph
+     *
      * @param path the Path type returned by nebula-graph
      * @throws InvalidValueException if the path is illegal
      * @throws UnsupportedEncodingException if decode binary failed
@@ -178,9 +190,11 @@ public class PathWrapper extends BaseDataObject {
             return;
         }
         this.path = path;
-        nodes.add((Node) new Node(path.src)
-            .setDecodeType(getDecodeType())
-            .setTimezoneOffset(getTimezoneOffset()));
+        nodes.add(
+                (Node)
+                        new Node(path.src)
+                                .setDecodeType(getDecodeType())
+                                .setTimezoneOffset(getTimezoneOffset()));
         List<Value> vids = new ArrayList<>();
         vids.add(path.src.vid);
         Value srcId;
@@ -191,39 +205,41 @@ public class PathWrapper extends BaseDataObject {
             int type = step.type;
             if (step.type > 0) {
                 startNode = nodes.get(nodes.size() - 1);
-                endNode = (Node) new Node(step.dst)
-                    .setDecodeType(getDecodeType())
-                    .setTimezoneOffset(getTimezoneOffset());
+                endNode =
+                        (Node)
+                                new Node(step.dst)
+                                        .setDecodeType(getDecodeType())
+                                        .setTimezoneOffset(getTimezoneOffset());
                 nodes.add(endNode);
                 srcId = vids.get(vids.size() - 1);
                 dstId = step.dst.vid;
             } else {
                 type = -type;
-                startNode = (Node) new Node(step.dst)
-                    .setDecodeType(getDecodeType())
-                    .setTimezoneOffset(getTimezoneOffset());
+                startNode =
+                        (Node)
+                                new Node(step.dst)
+                                        .setDecodeType(getDecodeType())
+                                        .setTimezoneOffset(getTimezoneOffset());
                 endNode = nodes.get(nodes.size() - 1);
                 nodes.add(startNode);
                 dstId = vids.get(vids.size() - 1);
                 srcId = step.dst.vid;
             }
             vids.add(step.dst.vid);
-            Edge edge = new Edge(srcId,
-                                 dstId,
-                                 type,
-                                 step.name,
-                                 step.ranking,
-                                 step.props);
-            Relationship relationShip = (Relationship) new Relationship(edge)
-                .setDecodeType(getDecodeType())
-                .setTimezoneOffset(getTimezoneOffset());
+            Edge edge = new Edge(srcId, dstId, type, step.name, step.ranking, step.props);
+            Relationship relationShip =
+                    (Relationship)
+                            new Relationship(edge)
+                                    .setDecodeType(getDecodeType())
+                                    .setTimezoneOffset(getTimezoneOffset());
             relationships.add(relationShip);
             Segment segment = new Segment(startNode, relationShip, endNode);
             if (segment.getStartNode() != nodes.get(nodes.size() - 1)
                     && segment.getEndNode() != nodes.get(nodes.size() - 1)) {
                 throw new InvalidValueException(
-                        String.format("Relationship [%s] does not connect to the last node",
-                                       relationShip.toString()));
+                        String.format(
+                                "Relationship [%s] does not connect to the last node",
+                                relationShip.toString()));
             }
             segments.add(segment);
         }
@@ -241,25 +257,30 @@ public class PathWrapper extends BaseDataObject {
                     propStrs.add(key + ": " + props.get(key).toString());
                 }
                 Step step = path.steps.get(i);
-                Node node = (Node) new Node(step.dst)
-                    .setDecodeType(getDecodeType())
-                    .setTimezoneOffset(getTimezoneOffset());
+                Node node =
+                        (Node)
+                                new Node(step.dst)
+                                        .setDecodeType(getDecodeType())
+                                        .setTimezoneOffset(getTimezoneOffset());
                 if (step.type > 0) {
-                    edgeStrs.add(String.format("-[:%s@%d{%s}]->%s",
-                        relationship.edgeName(),
-                        relationship.ranking(),
-                        String.join(", ", propStrs),
-                        node.toString()));
+                    edgeStrs.add(
+                            String.format(
+                                    "-[:%s@%d{%s}]->%s",
+                                    relationship.edgeName(),
+                                    relationship.ranking(),
+                                    String.join(", ", propStrs),
+                                    node.toString()));
                 } else {
-                    edgeStrs.add(String.format("<-[:%s@%d{%s}]-%s",
-                        relationship.edgeName(),
-                        relationship.ranking(),
-                        String.join(", ", propStrs),
-                        node.toString()));
+                    edgeStrs.add(
+                            String.format(
+                                    "<-[:%s@%d{%s}]-%s",
+                                    relationship.edgeName(),
+                                    relationship.ranking(),
+                                    String.join(", ", propStrs),
+                                    node.toString()));
                 }
             }
-            return String.format("%s%s",
-                getStartNode().toString(), String.join("", edgeStrs));
+            return String.format("%s%s", getStartNode().toString(), String.join("", edgeStrs));
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }

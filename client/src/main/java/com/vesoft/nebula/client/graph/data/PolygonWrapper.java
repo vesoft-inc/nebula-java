@@ -20,7 +20,7 @@ public class PolygonWrapper extends BaseDataObject {
 
     public List<List<CoordinateWrapper>> getCoordListList() {
         List<List<CoordinateWrapper>> coordListList = new ArrayList<>();
-        for (List<Coordinate> cl: polygon.getCoordListList()) {
+        for (List<Coordinate> cl : polygon.getCoordListList()) {
             List<CoordinateWrapper> coordList = new ArrayList<>();
             for (Coordinate coordinate : cl) {
                 coordList.add(new CoordinateWrapper(coordinate));

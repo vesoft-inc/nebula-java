@@ -52,7 +52,6 @@ public class PartScanQueueTest {
         assert (queue.size() == 4);
     }
 
-
     private Set<PartScanInfo> mockPartScanInfo() {
         Set<PartScanInfo> partScanInfoSet = new HashSet<>();
         partScanInfoSet.add(new PartScanInfo(1, new HostAddress("127.0.0.1", 1)));

@@ -31,14 +31,14 @@ public class StorageConnPoolFactory
     }
 
     @Override
-    public void destroyObject(HostAddress hostAndPort,
-                              PooledObject<GraphStorageConnection> pooledObject) {
+    public void destroyObject(
+            HostAddress hostAndPort, PooledObject<GraphStorageConnection> pooledObject) {
         pooledObject.getObject().close();
     }
 
     @Override
-    public boolean validateObject(HostAddress hostAndPort,
-                                  PooledObject<GraphStorageConnection> pooledObject) {
+    public boolean validateObject(
+            HostAddress hostAndPort, PooledObject<GraphStorageConnection> pooledObject) {
         GraphStorageConnection connection = pooledObject.getObject();
         if (connection == null) {
             return false;
@@ -46,26 +46,27 @@ public class StorageConnPoolFactory
         try {
             return connection.transport.isOpen();
         } catch (Exception e) {
-            LOGGER.warn(String.format("storage connection with %s:%d is not open",
-                    hostAndPort.getHost(), hostAndPort.getPort()), e);
+            LOGGER.warn(
+                    String.format(
+                            "storage connection with %s:%d is not open",
+                            hostAndPort.getHost(), hostAndPort.getPort()),
+                    e);
             return false;
         }
     }
 
     @Override
-    public void activateObject(HostAddress address,
-                               PooledObject<GraphStorageConnection> pooledObject)
+    public void activateObject(
+            HostAddress address, PooledObject<GraphStorageConnection> pooledObject)
             throws Exception {
-        pooledObject.getObject().open(
-                address,
-                config.getTimeout(),
-                config.isEnableSSL(),
-                config.getSslParam());
+        pooledObject
+                .getObject()
+                .open(address, config.getTimeout(), config.isEnableSSL(), config.getSslParam());
     }
 
     @Override
-    public void passivateObject(HostAddress hostAndPort,
-                                PooledObject<GraphStorageConnection> pooledObject) {
+    public void passivateObject(
+            HostAddress hostAndPort, PooledObject<GraphStorageConnection> pooledObject) {
         pooledObject.markReturning();
     }
 }

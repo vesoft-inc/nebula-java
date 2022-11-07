@@ -6,7 +6,10 @@
 package com.vesoft.nebula.client.graph.data;
 
 import java.io.Serializable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@EqualsAndHashCode
 public abstract class SSLParam implements Serializable {
 
     private static final long serialVersionUID = 7410233298826490747L;
@@ -17,13 +20,9 @@ public abstract class SSLParam implements Serializable {
         CA_SIGNED
     }
 
-    private SignMode signMode;
+    @Getter private final SignMode signMode;
 
     public SSLParam(SignMode signMode) {
         this.signMode = signMode;
-    }
-
-    public SignMode getSignMode() {
-        return signMode;
     }
 }

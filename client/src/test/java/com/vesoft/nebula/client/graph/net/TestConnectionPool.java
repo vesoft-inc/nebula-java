@@ -11,31 +11,36 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static com.vesoft.nebula.client.graph.NebulaPoolConfig.defaultConfig;
+import static java.util.Collections.singletonList;
+
 public class TestConnectionPool {
+
     @Test()
     public void testInitFailed() {
         // config illegal, illegal idle time
         try {
             NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setIdleTime(-10);
-            pool.init(
-                Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
-                config);
+            NebulaPoolConfig config = NebulaPoolConfig.builder().idleTime(-10).build();
+            pool.init(singletonList(new HostAddress("127.0.0.1", 3777)), config);
             assert false;
-        } catch (UnknownHostException e) {
+        }
+        catch (UnknownHostException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
-        } catch (InvalidConfigException e) {
+        }
+        catch (InvalidConfigException e) {
             System.out.println("We expect must reach here: init pool failed.");
             Assert.assertTrue(true);
         }
@@ -43,16 +48,15 @@ public class TestConnectionPool {
         // config illegal, illegal max conn size
         try {
             NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setMaxConnSize(-10);
-            pool.init(
-                Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
-                config);
+            NebulaPoolConfig config = NebulaPoolConfig.builder().maxConnSize(-10).build();
+            pool.init(singletonList(new HostAddress("127.0.0.1", 3777)), config);
             assert false;
-        } catch (UnknownHostException e) {
+        }
+        catch (UnknownHostException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
-        } catch (InvalidConfigException e) {
+        }
+        catch (InvalidConfigException e) {
             System.out.println("We expect must reach here: init pool failed.");
             Assert.assertTrue(true);
         }
@@ -60,17 +64,16 @@ public class TestConnectionPool {
         // config illegal, illegal min conn size
         try {
             NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setMaxConnSize(10);
-            config.setMinConnSize(20);
-            pool.init(
-                Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
-                config);
+            NebulaPoolConfig config =
+                NebulaPoolConfig.builder().maxConnSize(10).minConnSize(20).build();
+            pool.init(singletonList(new HostAddress("127.0.0.1", 3777)), config);
             assert false;
-        } catch (UnknownHostException  e) {
+        }
+        catch (UnknownHostException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
-        } catch (InvalidConfigException e) {
+        }
+        catch (InvalidConfigException e) {
             System.out.println("We expect must reach here: init pool failed.");
             Assert.assertTrue(true);
         }
@@ -78,27 +81,27 @@ public class TestConnectionPool {
         // config illegal, illegal timeout
         try {
             NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setTimeout(-10);
-            pool.init(
-                Collections.singletonList(new HostAddress("127.0.0.1", 3777)),
-                config);
+            NebulaPoolConfig config = NebulaPoolConfig.builder().timeout(-10).build();
+            pool.init(singletonList(new HostAddress("127.0.0.1", 3777)), config);
             assert false;
-        } catch (UnknownHostException e) {
+        }
+        catch (UnknownHostException e) {
             System.out.println("We expect must reach here: init pool failed.");
             assert false;
-        } catch (InvalidConfigException e) {
+        }
+        catch (InvalidConfigException e) {
             System.out.println("We expect must reach here: init pool failed.");
             Assert.assertTrue(true);
         }
 
         // hostname is not existed
         try {
-            List<HostAddress> addresses = Collections.singletonList(
-                new HostAddress("hostname", 3888));
+            List<HostAddress> addresses =
+                singletonList(new HostAddress("hostname", 3888));
             NebulaPool pool = new NebulaPool();
-            Assert.assertFalse(pool.init(addresses, new NebulaPoolConfig()));
-        } catch (UnknownHostException e) {
+            Assert.assertFalse(pool.init(addresses, NebulaPoolConfig.builder().build()));
+        }
+        catch (UnknownHostException e) {
             System.out.println("We expect must reach here: init pool failed.");
             Assert.assertTrue(true);
         }
@@ -108,11 +111,12 @@ public class TestConnectionPool {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMinConnSize(0);
             nebulaPoolConfig.setMaxConnSize(1);
-            List<HostAddress> addresses = Collections.singletonList(
-                new HostAddress("127.0.0.1", 3888));
+            List<HostAddress> addresses =
+                singletonList(new HostAddress("127.0.0.1", 3888));
             NebulaPool pool = new NebulaPool();
             Assert.assertFalse(pool.init(addresses, nebulaPoolConfig));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
         }
@@ -131,8 +135,8 @@ public class TestConnectionPool {
             nebulaPoolConfig.setMinClusterHealthRate(0);
             // set wait time
             nebulaPoolConfig.setWaitTime(1000);
-            List<HostAddress> addresses = Collections.singletonList(
-                new HostAddress("127.0.0.1", 9671));
+            List<HostAddress> addresses =
+                singletonList(new HostAddress("127.0.0.1", 9671));
             pool = new NebulaPool();
             assert pool.init(addresses, nebulaPoolConfig);
             int i = 0;
@@ -154,10 +158,11 @@ public class TestConnectionPool {
             try {
                 Session session = pool.getSession("root", "nebula", false);
                 Assert.assertTrue(session == null);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.out.println("We expect must reach here: get session failed.");
-                long  timeInterval = System.currentTimeMillis() - beginTime;
+                long timeInterval = System.currentTimeMillis() - beginTime;
                 System.out.println("timeInterval is " + timeInterval);
                 Assert.assertTrue(System.currentTimeMillis() - beginTime >= 1000);
                 assert (true);
@@ -183,10 +188,12 @@ public class TestConnectionPool {
             // Test multi release
             session.release();
             session.release();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             assert (false);
-        } finally {
+        }
+        finally {
             if (pool != null) {
                 pool.close();
             }
@@ -200,28 +207,28 @@ public class TestConnectionPool {
         try {
             pool.getSession("root", "nebula", false);
             assert false;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Assert.assertTrue(
-                e.getMessage().contains(
-                    "The pool has not been initialized, please initialize it first."));
+                e.getMessage()
+                    .contains(
+                        "The pool has not been initialized, please initialize it first."));
             System.out.println("We expect must reach here: init pool failed.");
             assert true;
         }
 
         // init twice
         try {
-            pool.init(
-                Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
-                new NebulaPoolConfig());
+            pool.init(singletonList(new HostAddress("127.0.0.1", 9669)), defaultConfig());
             assert true;
-            pool.init(
-                Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
-                new NebulaPoolConfig());
+            pool.init(singletonList(new HostAddress("127.0.0.1", 9669)), defaultConfig());
             assert false;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Assert.assertTrue(
-                e.getMessage().contains(
-                    "The pool has already been initialized. "
+                e.getMessage()
+                    .contains(
+                        "The pool has already been initialized. "
                         + "Please do not initialize the pool repeatedly"));
             System.out.println("We expect must reach here: init pool failed.");
             assert true;
@@ -231,7 +238,8 @@ public class TestConnectionPool {
             pool.close();
             pool.getSession("root", "nebula", false);
             assert (false);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("The pool has closed. Couldn't use again."));
             assert (true);
         }
@@ -244,20 +252,21 @@ public class TestConnectionPool {
         NebulaPool pool = null;
         Session session = null;
         try {
-            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-            nebulaPoolConfig.setMaxConnSize(1);
-            nebulaPoolConfig.setTimeout(1000);
-            List<HostAddress> addresses = Collections.singletonList(
-                new HostAddress("127.0.0.1", 9669));
+            NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder()
+                .maxConnSize(1)
+                .timeout(1000)
+                .build();
+            List<HostAddress> addresses =
+                singletonList(new HostAddress("127.0.0.1", 9669));
             pool = new NebulaPool();
             assert pool.init(addresses, nebulaPoolConfig);
             session = pool.getSession("root", "nebula", false);
             assert (session != null);
             try {
-                session.execute(
-                    "USE nba;GO 600 STEPS FROM \"Tim Duncan\" OVER like");
+                session.execute("USE nba;GO 600 STEPS FROM \"Tim Duncan\" OVER like");
                 assert false;
-            } catch (IOErrorException e) {
+            }
+            catch (IOErrorException e) {
                 Assert.assertTrue(e.getMessage().contains("Read timed out"));
                 assert true;
             }
@@ -267,7 +276,8 @@ public class TestConnectionPool {
                 Assert.assertTrue(resultSet.isSucceeded());
                 Assert.assertTrue(resultSet.toString().contains("ColumnName: [Name]"));
                 assert true;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 assert false;
             }
@@ -277,14 +287,17 @@ public class TestConnectionPool {
                 ResultSet resultSet = session.execute("SHOW HOSTS");
                 Assert.assertTrue(resultSet.isSucceeded());
                 Assert.assertTrue(resultSet.toString().contains("ColumnName:"));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 assert false;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             assert false;
-        } finally {
+        }
+        finally {
             if (session != null) {
                 session.release();
             }

@@ -40,13 +40,14 @@ public class TestSession {
             ExecutorService executorService = Executors.newFixedThreadPool(10);
             AtomicInteger failedCount = new AtomicInteger(0);
             for (int i = 0; i < 10; i++) {
-                executorService.submit(() -> {
-                    try {
-                        session.execute("SHOW SPACES;");
-                    } catch (Exception e) {
-                        failedCount.incrementAndGet();
-                    }
-                });
+                executorService.submit(
+                        () -> {
+                            try {
+                                session.execute("SHOW SPACES;");
+                            } catch (Exception e) {
+                                failedCount.incrementAndGet();
+                            }
+                        });
             }
             executorService.awaitTermination(10, TimeUnit.SECONDS);
             executorService.shutdown();
@@ -66,8 +67,7 @@ public class TestSession {
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(1);
-            List<HostAddress> addresses = Arrays.asList(
-                    new HostAddress("127.0.0.1", 9669));
+            List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             Session session = pool.getSession("root", "nebula", true);
             session.release();
@@ -107,10 +107,11 @@ public class TestSession {
 
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(6);
-            List<HostAddress> addresses = Arrays.asList(
-                    new HostAddress("127.0.0.1", 9669),
-                    new HostAddress("127.0.0.1", 9670),
-                    new HostAddress("127.0.0.1", 9671));
+            List<HostAddress> addresses =
+                    Arrays.asList(
+                            new HostAddress("127.0.0.1", 9669),
+                            new HostAddress("127.0.0.1", 9670),
+                            new HostAddress("127.0.0.1", 9671));
             TimeUnit.SECONDS.sleep(15);
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             TimeUnit.SECONDS.sleep(15);
@@ -120,9 +121,10 @@ public class TestSession {
             // test ping
             Assert.assertTrue(session.ping());
 
-            ResultSet resp = session.execute(
-                    "CREATE SPACE IF NOT EXISTS test_session(vid_type=fixed_string(8)); "
-                            + "USE test_session;");
+            ResultSet resp =
+                    session.execute(
+                            "CREATE SPACE IF NOT EXISTS test_session(vid_type=fixed_string(8)); "
+                                    + "USE test_session;");
             Assert.assertTrue(resp.isSucceeded());
             for (int i = 0; i < 10; i++) {
                 if (i == 3) {
@@ -194,10 +196,11 @@ public class TestSession {
 
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(6);
-            List<HostAddress> addresses = Arrays.asList(
-                    new HostAddress("127.0.0.1", 9669),
-                    new HostAddress("127.0.0.1", 9670),
-                    new HostAddress("127.0.0.1", 9671));
+            List<HostAddress> addresses =
+                    Arrays.asList(
+                            new HostAddress("127.0.0.1", 9669),
+                            new HostAddress("127.0.0.1", 9670),
+                            new HostAddress("127.0.0.1", 9671));
             TimeUnit.SECONDS.sleep(15);
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
             TimeUnit.SECONDS.sleep(15);

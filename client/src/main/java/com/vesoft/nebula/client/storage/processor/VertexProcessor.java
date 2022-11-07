@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 public class VertexProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(VertexProcessor.class);
 
-    public static Map<ValueWrapper, VertexRow> constructVertexRow(List<DataSet> dataSets,
-                                                                  String decodeType) {
+    public static Map<ValueWrapper, VertexRow> constructVertexRow(
+            List<DataSet> dataSets, String decodeType) {
         Map<ValueWrapper, VertexRow> vidVertices = Maps.newHashMap();
         for (DataSet dataSet : dataSets) {
             List<Row> rows = dataSet.getRows();
@@ -42,7 +42,8 @@ public class VertexProcessor {
                         if ("_vid".equals(colName.split("\\.")[1])) {
                             vid = values.get(i);
                         } else {
-                            props.put(colName.split("\\.")[1],
+                            props.put(
+                                    colName.split("\\.")[1],
                                     new ValueWrapper(values.get(i), decodeType));
                         }
                     }
@@ -54,8 +55,8 @@ public class VertexProcessor {
         return vidVertices;
     }
 
-    public static List<VertexTableRow> constructVertexTableRow(List<DataSet> dataSets,
-                                                               String decodeType) {
+    public static List<VertexTableRow> constructVertexTableRow(
+            List<DataSet> dataSets, String decodeType) {
         List<VertexTableRow> vertexRows = new ArrayList<>();
         for (DataSet dataSet : dataSets) {
             List<Row> rows = dataSet.getRows();

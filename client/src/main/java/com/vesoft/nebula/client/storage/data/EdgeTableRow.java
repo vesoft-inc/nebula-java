@@ -25,7 +25,6 @@ public class EdgeTableRow extends BaseTableRow {
         return values.get(0);
     }
 
-
     public ValueWrapper getDstId() {
         if (values.size() < 3) {
             throw new IllegalArgumentException("no dst id is returned");
@@ -40,14 +39,17 @@ public class EdgeTableRow extends BaseTableRow {
         return values.get(2).asLong();
     }
 
-
     @Override
     public String toString() {
         return "EdgeTableView{"
-                + "srcId=" + getSrcId().toString()
-                + ", dstId=" + getDstId().toString()
-                + ", rank=" + getRank()
-                + ", values=" + getValues()
+                + "srcId="
+                + getSrcId().toString()
+                + ", dstId="
+                + getDstId().toString()
+                + ", rank="
+                + getRank()
+                + ", values="
+                + getValues()
                 + '}';
     }
 }

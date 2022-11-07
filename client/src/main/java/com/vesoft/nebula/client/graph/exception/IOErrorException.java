@@ -5,9 +5,7 @@
 
 package com.vesoft.nebula.client.graph.exception;
 
-/**
- *
- */
+/** */
 public class IOErrorException extends java.lang.Exception {
     public static final int E_UNKNOWN = 0;
 
@@ -30,4 +28,3 @@ public class IOErrorException extends java.lang.Exception {
         return type;
     }
 }
-

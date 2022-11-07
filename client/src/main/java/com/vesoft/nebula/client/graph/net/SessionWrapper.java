@@ -28,8 +28,7 @@ public class SessionWrapper implements Serializable {
      * @param stmt The query sentence.
      * @return The ResultSet.
      */
-    public ResultSet execute(String stmt)
-            throws IOErrorException {
+    public ResultSet execute(String stmt) throws IOErrorException {
         if (!available()) {
             throw new InvalidSessionException();
         }

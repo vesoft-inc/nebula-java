@@ -19,6 +19,7 @@ public class Relationship extends BaseDataObject {
 
     /**
      * Relationship is a wrapper around the Edge type returned by nebula-graph
+     *
      * @param edge the Edge type returned by nebula-graph
      */
     public Relationship(Edge edge) {
@@ -30,26 +31,31 @@ public class Relationship extends BaseDataObject {
 
     /**
      * get the src id from the relationship
-     * @return ValueWrapper, if int id, you can call srcId().asLong(),
-     *     if string id, you can call srcId().asString()
+     *
+     * @return ValueWrapper, if int id, you can call srcId().asLong(), if string id, you can call
+     *     srcId().asString()
      */
     public ValueWrapper srcId() {
-        return edge.type > 0 ? new ValueWrapper(edge.src, getDecodeType(), getTimezoneOffset())
-            : new ValueWrapper(edge.dst, getDecodeType(), getTimezoneOffset());
+        return edge.type > 0
+                ? new ValueWrapper(edge.src, getDecodeType(), getTimezoneOffset())
+                : new ValueWrapper(edge.dst, getDecodeType(), getTimezoneOffset());
     }
 
     /**
      * get the dst id from the relationship
-     * @return ValueWrapper, if int id, you can call srcId().asLong(),
-     *     if string id, you can call srcId().asString()
+     *
+     * @return ValueWrapper, if int id, you can call srcId().asLong(), if string id, you can call
+     *     srcId().asString()
      */
     public ValueWrapper dstId() {
-        return edge.type > 0 ? new ValueWrapper(edge.dst, getDecodeType(), getTimezoneOffset())
-            : new ValueWrapper(edge.src, getDecodeType(), getTimezoneOffset());
+        return edge.type > 0
+                ? new ValueWrapper(edge.dst, getDecodeType(), getTimezoneOffset())
+                : new ValueWrapper(edge.src, getDecodeType(), getTimezoneOffset());
     }
 
     /**
      * get edge name from the relationship
+     *
      * @return String
      */
     public String edgeName() {
@@ -58,6 +64,7 @@ public class Relationship extends BaseDataObject {
 
     /**
      * get ranking from the relationship
+     *
      * @return long
      */
     public long ranking() {
@@ -66,6 +73,7 @@ public class Relationship extends BaseDataObject {
 
     /**
      * get all property name from the relationship
+     *
      * @return the List of String
      * @throws UnsupportedEncodingException if decode binary failed
      */
@@ -79,6 +87,7 @@ public class Relationship extends BaseDataObject {
 
     /**
      * get property values from the relationship
+     *
      * @return the List of ValueWrapper
      */
     public List<ValueWrapper> values() {
@@ -91,13 +100,15 @@ public class Relationship extends BaseDataObject {
 
     /**
      * get property names and values from the relationship
+     *
      * @return the HashMap, key is String, value is ValueWrapper>
      */
     public HashMap<String, ValueWrapper> properties() throws UnsupportedEncodingException {
         HashMap<String, ValueWrapper> properties = new HashMap<>();
         for (byte[] key : edge.props.keySet()) {
-            properties.put(new String(key, getDecodeType()),
-                new ValueWrapper(edge.props.get(key), getDecodeType(), getTimezoneOffset()));
+            properties.put(
+                    new String(key, getDecodeType()),
+                    new ValueWrapper(edge.props.get(key), getDecodeType(), getTimezoneOffset()));
         }
         return properties;
     }
@@ -112,9 +123,9 @@ public class Relationship extends BaseDataObject {
         }
         Relationship that = (Relationship) o;
         return ranking() == that.ranking()
-            && Objects.equals(srcId(), that.srcId())
-            && Objects.equals(dstId(), that.dstId())
-            && Objects.equals(edgeName(), that.edgeName());
+                && Objects.equals(srcId(), that.srcId())
+                && Objects.equals(dstId(), that.dstId())
+                && Objects.equals(edgeName(), that.edgeName());
     }
 
     @Override
@@ -130,8 +141,9 @@ public class Relationship extends BaseDataObject {
             for (String key : props.keySet()) {
                 propStrs.add(key + ": " + props.get(key).toString());
             }
-            return String.format("(%s)-[:%s@%d{%s}]->(%s)",
-                srcId(), edgeName(), ranking(), String.join(", ", propStrs), dstId());
+            return String.format(
+                    "(%s)-[:%s@%d{%s}]->(%s)",
+                    srcId(), edgeName(), ranking(), String.join(", ", propStrs), dstId());
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         }

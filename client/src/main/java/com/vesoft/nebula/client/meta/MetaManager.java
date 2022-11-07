@@ -28,9 +28,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * MetaManager is a manager for meta info, such as spaces,tags and edges.
- */
+/** MetaManager is a manager for meta info, such as spaces,tags and edges. */
 public class MetaManager implements MetaCache, Serializable {
     private class SpaceInfo {
         private SpaceItem spaceItem = null;
@@ -53,9 +51,7 @@ public class MetaManager implements MetaCache, Serializable {
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
     private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
 
-    /**
-     * init the meta info cache
-     */
+    /** init the meta info cache */
     public MetaManager(List<HostAddress> address)
             throws TException, ClientServerIncompatibleException, UnknownHostException {
         metaClient = new MetaClient(address);
@@ -63,29 +59,28 @@ public class MetaManager implements MetaCache, Serializable {
         fillMetaInfo();
     }
 
-    /**
-     * init the meta info cache with more config
-     */
-    public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
-                       int executionRetry, boolean enableSSL, SSLParam sslParam)
+    /** init the meta info cache with more config */
+    public MetaManager(
+            List<HostAddress> address,
+            int timeout,
+            int connectionRetry,
+            int executionRetry,
+            boolean enableSSL,
+            SSLParam sslParam)
             throws TException, ClientServerIncompatibleException, UnknownHostException {
-        metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
-                sslParam);
+        metaClient =
+                new MetaClient(
+                        address, timeout, connectionRetry, executionRetry, enableSSL, sslParam);
         metaClient.connect();
         fillMetaInfo();
     }
 
-    /**
-     * close meta client
-     */
+    /** close meta client */
     public void close() {
         metaClient.close();
     }
 
-
-    /**
-     * fill the meta info
-     */
+    /** fill the meta info */
     private void fillMetaInfo() {
         try {
             Map<String, MetaManager.SpaceInfo> tempSpacesInfo = new HashMap<>();
@@ -127,13 +122,21 @@ public class MetaManager implements MetaCache, Serializable {
                         partLeaders.put(spaceName, Maps.newConcurrentMap());
                         for (int partId : spacesInfo.get(spaceName).partsAlloc.keySet()) {
                             if (spacesInfo.get(spaceName).partsAlloc.get(partId).size() < 1) {
-                                LOGGER.error("space {} part {} has not allocation host.",
-                                        spaceName, partId);
+                                LOGGER.error(
+                                        "space {} part {} has not allocation host.",
+                                        spaceName,
+                                        partId);
                             } else {
-                                partLeaders.get(spaceName).put(partId,
-                                        spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
+                                partLeaders
+                                        .get(spaceName)
+                                        .put(
+                                                partId,
+                                                spacesInfo
+                                                        .get(spaceName)
+                                                        .partsAlloc
+                                                        .get(partId)
+                                                        .get(0));
                             }
-
                         }
                     }
                 }
@@ -144,7 +147,6 @@ public class MetaManager implements MetaCache, Serializable {
             LOGGER.error(e.getMessage());
         }
     }
-
 
     /**
      * get space id
@@ -182,7 +184,7 @@ public class MetaManager implements MetaCache, Serializable {
      * get tag id
      *
      * @param spaceName nebula graph space name
-     * @param tagName   nebula tag name
+     * @param tagName nebula tag name
      * @return int
      */
     public int getTagId(String spaceName, String tagName) throws IllegalArgumentException {
@@ -193,7 +195,7 @@ public class MetaManager implements MetaCache, Serializable {
      * get tag
      *
      * @param spaceName nebula space name
-     * @param tagName   nebula tag name
+     * @param tagName nebula tag name
      * @return
      */
     @Override
@@ -216,12 +218,11 @@ public class MetaManager implements MetaCache, Serializable {
         }
     }
 
-
     /**
      * get edge type
      *
      * @param spaceName nebula graph space name
-     * @param edgeName  nebula edge name
+     * @param edgeName nebula edge name
      * @return long
      */
     public int getEdgeType(String spaceName, String edgeName) throws IllegalArgumentException {
@@ -232,7 +233,7 @@ public class MetaManager implements MetaCache, Serializable {
      * get Edge
      *
      * @param spaceName nebula graph space name
-     * @param edgeName  nebula edge name
+     * @param edgeName nebula edge name
      * @return
      */
     @Override
@@ -259,7 +260,7 @@ public class MetaManager implements MetaCache, Serializable {
      * get part leader
      *
      * @param spaceName nebula graph space name
-     * @param part      nebula part id
+     * @param part nebula part id
      * @return leader
      */
     public HostAddr getLeader(String spaceName, int part) throws IllegalArgumentException {
@@ -322,7 +323,7 @@ public class MetaManager implements MetaCache, Serializable {
      * cache new leader for part
      *
      * @param spaceName nebula graph space
-     * @param part      nebula part
+     * @param part nebula part
      * @param newLeader nebula part new leader
      */
     public void updateLeader(String spaceName, int part, HostAddr newLeader)
@@ -346,9 +347,7 @@ public class MetaManager implements MetaCache, Serializable {
         }
     }
 
-    /**
-     * get all storage addresses
-     */
+    /** get all storage addresses */
     public Set<HostAddr> listHosts() {
         Set<HostAddr> hosts = metaClient.listHosts();
         if (hosts == null) {

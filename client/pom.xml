@@ -12,17 +12,16 @@
     <artifactId>client</artifactId>
 
     <properties>
-        <commons-lang.version>2.6</commons-lang.version>
-        <commons-lang3.version>3.8</commons-lang3.version>
-        <slf4j-log4j12.version>1.7.25</slf4j-log4j12.version>
-        <slf4j-api.version>1.7.25</slf4j-api.version>
-        <junit.version>4.13.1</junit.version>
-        <guava.version>14.0</guava.version>
-        <commons-codec.version>1.13</commons-codec.version>
-        <commons-pool2.version>2.2</commons-pool2.version>
-        <servlet.version>3.0.1</servlet.version>
-        <fastjson.version>1.2.83</fastjson.version>
-        <bouncycastle.version>1.69</bouncycastle.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <slf4j-log4j12.version>1.7.36</slf4j-log4j12.version>
+        <slf4j-api.version>1.7.36</slf4j-api.version>
+        <junit.version>4.13.2</junit.version>
+        <guava.version>31.1-jre</guava.version>
+        <commons-codec.version>1.15</commons-codec.version>
+        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <servlet.version>4.0.1</servlet.version>
+        <fastjson.version>2.0.16</fastjson.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
     </properties>
 
     <build>
@@ -200,9 +199,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${commons-lang.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -260,7 +260,7 @@
         <dependency>
             <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
-            <version>1.16.1</version>
+            <version>${jts.version}</version>
         </dependency>
     </dependencies>
 </project>

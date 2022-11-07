@@ -12,7 +12,8 @@ public class TimeWrapper extends BaseDataObject {
     private final Time time;
 
     /**
-     *  TimeWrapper is a wrapper for the time tyoe of nebula-graph
+     * TimeWrapper is a wrapper for the time tyoe of nebula-graph
+     *
      * @param time the utc time
      */
     public TimeWrapper(Time time) {
@@ -66,16 +67,17 @@ public class TimeWrapper extends BaseDataObject {
      */
     public String getLocalTimeStr() {
         Time localTime = TimeUtil.timeConvertWithTimezone(time, getTimezoneOffset());
-        return String.format("%02d:%02d:%02d.%06d",
-            localTime.hour, localTime.minute, localTime.sec, localTime.microsec);
+        return String.format(
+                "%02d:%02d:%02d.%06d",
+                localTime.hour, localTime.minute, localTime.sec, localTime.microsec);
     }
 
     /**
      * @return the utc Time String
      */
     public String getUTCTimeStr() {
-        return String.format("%02d:%02d:%02d.%06d",
-                             time.hour, time.minute, time.sec, time.microsec);
+        return String.format(
+                "%02d:%02d:%02d.%06d", time.hour, time.minute, time.sec, time.microsec);
     }
 
     /**
@@ -83,8 +85,9 @@ public class TimeWrapper extends BaseDataObject {
      */
     @Override
     public String toString() {
-        return String.format("utc time: %02d:%02d:%02d.%06d, timezoneOffset: %d",
-            time.hour, time.minute, time.sec, time.microsec, getTimezoneOffset());
+        return String.format(
+                "utc time: %02d:%02d:%02d.%06d, timezoneOffset: %d",
+                time.hour, time.minute, time.sec, time.microsec, getTimezoneOffset());
     }
 
     @Override
@@ -97,9 +100,9 @@ public class TimeWrapper extends BaseDataObject {
         }
         TimeWrapper that = (TimeWrapper) o;
         return time.hour == that.getHour()
-            && time.minute == that.getMinute()
-            && time.sec == time.getSec()
-            && time.microsec == time.getMicrosec();
+                && time.minute == that.getMinute()
+                && time.sec == time.getSec()
+                && time.microsec == time.getMicrosec();
     }
 
     @Override

@@ -50,8 +50,11 @@ public class MockStorageData {
                 LOGGER.error(insertVertexResult.getErrorMessage());
                 assert (false);
             }
-        } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException | ClientServerIncompatibleException e) {
+        } catch (UnknownHostException
+                | NotValidConnectionException
+                | IOErrorException
+                | AuthFailedException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
         } finally {
             pool.close();
@@ -59,45 +62,49 @@ public class MockStorageData {
     }
 
     public static String createSpace() {
-        String exec = "CREATE SPACE IF NOT EXISTS testStorage(partition_num=10,"
-                + "vid_type=fixed_string(8));"
-                + "USE testStorage;"
-                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
-                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        String exec =
+                "CREATE SPACE IF NOT EXISTS testStorage(partition_num=10,"
+                        + "vid_type=fixed_string(8));"
+                        + "USE testStorage;"
+                        + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                        + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
         return exec;
     }
 
     public static String createSpaceCa() {
-        String exec = "CREATE SPACE IF NOT EXISTS testStorageCA(partition_num=10,"
-                + "vid_type=fixed_string(8));"
-                + "USE testStorageCA;"
-                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
-                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        String exec =
+                "CREATE SPACE IF NOT EXISTS testStorageCA(partition_num=10,"
+                        + "vid_type=fixed_string(8));"
+                        + "USE testStorageCA;"
+                        + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                        + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
         return exec;
     }
 
     public static String createSpaceSelf() {
-        String exec = "CREATE SPACE IF NOT EXISTS testStorageSelf(partition_num=10,"
-                + "vid_type=fixed_string(8));"
-                + "USE testStorageSelf;"
-                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
-                + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
+        String exec =
+                "CREATE SPACE IF NOT EXISTS testStorageSelf(partition_num=10,"
+                        + "vid_type=fixed_string(8));"
+                        + "USE testStorageSelf;"
+                        + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                        + "CREATE EDGE IF NOT EXISTS friend(likeness double);";
         return exec;
     }
 
     public static String insertData() {
-        String exec = "INSERT VERTEX person(name, age) VALUES "
-                + "\"1\":(\"Tom\", 18), "
-                + "\"2\":(\"Jina\", 20), "
-                + "\"3\":(\"Bob\", 23), "
-                + "\"4\":(\"Tim\", 15), "
-                + "\"5\":(\"Viki\", 25);"
-                + "INSERT EDGE friend(likeness) VALUES "
-                + "\"1\" -> \"2\":(1.0), "
-                + "\"2\" -> \"3\":(2.1), "
-                + "\"3\" -> \"4\":(3.2), "
-                + "\"4\" -> \"2\":(4.5), "
-                + "\"5\" -> \"1\":(5.9);";
+        String exec =
+                "INSERT VERTEX person(name, age) VALUES "
+                        + "\"1\":(\"Tom\", 18), "
+                        + "\"2\":(\"Jina\", 20), "
+                        + "\"3\":(\"Bob\", 23), "
+                        + "\"4\":(\"Tim\", 15), "
+                        + "\"5\":(\"Viki\", 25);"
+                        + "INSERT EDGE friend(likeness) VALUES "
+                        + "\"1\" -> \"2\":(1.0), "
+                        + "\"2\" -> \"3\":(2.1), "
+                        + "\"3\" -> \"4\":(3.2), "
+                        + "\"4\" -> \"2\":(4.5), "
+                        + "\"5\" -> \"1\":(5.9);";
         return exec;
     }
 
@@ -106,10 +113,11 @@ public class MockStorageData {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
         nebulaPoolConfig.setEnableSsl(true);
-        nebulaPoolConfig.setSslParam(new CASignedSSLParam(
-                "src/test/resources/ssl/casigned.pem",
-                "src/test/resources/ssl/casigned.crt",
-                "src/test/resources/ssl/casigned.key"));
+        nebulaPoolConfig.setSslParam(
+                new CASignedSSLParam(
+                        "src/test/resources/ssl/casigned.pem",
+                        "src/test/resources/ssl/casigned.crt",
+                        "src/test/resources/ssl/casigned.key"));
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
         NebulaPool pool = new NebulaPool();
         Session session = null;
@@ -130,8 +138,11 @@ public class MockStorageData {
                 LOGGER.error("insert vertex data failed, {}", insertVertexResult.getErrorMessage());
                 assert (false);
             }
-        } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException | ClientServerIncompatibleException e) {
+        } catch (UnknownHostException
+                | NotValidConnectionException
+                | IOErrorException
+                | AuthFailedException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
         } finally {
             if (session != null) {
@@ -146,10 +157,11 @@ public class MockStorageData {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(100);
         nebulaPoolConfig.setEnableSsl(true);
-        nebulaPoolConfig.setSslParam(new SelfSignedSSLParam(
-                "src/test/resources/ssl/selfsigned.pem",
-                "src/test/resources/ssl/selfsigned.key",
-                "vesoft"));
+        nebulaPoolConfig.setSslParam(
+                new SelfSignedSSLParam(
+                        "src/test/resources/ssl/selfsigned.pem",
+                        "src/test/resources/ssl/selfsigned.key",
+                        "vesoft"));
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
         NebulaPool pool = new NebulaPool();
         Session session = null;
@@ -171,8 +183,11 @@ public class MockStorageData {
                 LOGGER.error(insertVertexResult.getErrorMessage());
                 assert (false);
             }
-        } catch (UnknownHostException | NotValidConnectionException
-                | IOErrorException | AuthFailedException | ClientServerIncompatibleException e) {
+        } catch (UnknownHostException
+                | NotValidConnectionException
+                | IOErrorException
+                | AuthFailedException
+                | ClientServerIncompatibleException e) {
             e.printStackTrace();
         } finally {
             if (session != null) {

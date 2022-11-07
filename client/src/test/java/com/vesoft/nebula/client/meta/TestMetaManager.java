@@ -11,17 +11,13 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
-import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
@@ -30,12 +26,11 @@ public class TestMetaManager extends TestCase {
 
     public void setUp() throws Exception {
         MockNebulaGraph.initGraph();
-        metaManager = new MetaManager(
-                Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
+        metaManager =
+                new MetaManager(Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
     }
 
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     public void testGetSpace() {
         assert (metaManager.getSpaceId("testMeta") > 0);
@@ -89,7 +84,8 @@ public class TestMetaManager extends TestCase {
 
     public void testGetSpaceParts() {
         assert (metaManager.getSpaceParts("testMeta").size() == 10);
-        Assert.assertArrayEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).toArray(),
+        Assert.assertArrayEquals(
+                Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).toArray(),
                 metaManager.getSpaceParts("testMeta").toArray());
 
         // test get leader
@@ -109,8 +105,8 @@ public class TestMetaManager extends TestCase {
         MockNebulaGraph.createMultiVersionTagAndEdge();
         metaManager.close();
         try {
-            metaManager = new MetaManager(
-                    Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
+            metaManager =
+                    new MetaManager(Collections.singletonList(new HostAddress("127.0.0.1", 9559)));
         } catch (UnknownHostException e) {
             assert (false);
         }
@@ -123,7 +119,6 @@ public class TestMetaManager extends TestCase {
         assert (edgeItem.schema.getColumns().size() == 1);
     }
 
-
     public void testCASignedSSLMetaManager() {
         MetaManager metaManager = null;
         try {
@@ -131,14 +126,20 @@ public class TestMetaManager extends TestCase {
             // mock data with CA ssl
             MockNebulaGraph.createSpaceWithCASSL();
 
-            SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+            SSLParam sslParam =
+                    new CASignedSSLParam(
+                            "src/test/resources/ssl/casigned.pem",
+                            "src/test/resources/ssl/casigned.crt",
+                            "src/test/resources/ssl/casigned.key");
 
-            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1",
-                    8559)), 3000, 1, 1, true, sslParam);
-
+            metaManager =
+                    new MetaManager(
+                            Arrays.asList(new HostAddress("127.0.0.1", 8559)),
+                            3000,
+                            1,
+                            1,
+                            true,
+                            sslParam);
 
             assert (metaManager.getSpaceId("testMetaCA") > 0);
             SpaceItem spaceItem = metaManager.getSpace("testMetaCA");
@@ -169,12 +170,19 @@ public class TestMetaManager extends TestCase {
             // mock data with Self ssl
             MockNebulaGraph.createSpaceWithSelfSSL();
 
-            SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
-            metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1", 7559)),
-                    3000, 1, 1, true, sslParam);
+            SSLParam sslParam =
+                    new SelfSignedSSLParam(
+                            "src/test/resources/ssl/selfsigned.pem",
+                            "src/test/resources/ssl/selfsigned.key",
+                            "vesoft");
+            metaManager =
+                    new MetaManager(
+                            Arrays.asList(new HostAddress("127.0.0.1", 7559)),
+                            3000,
+                            1,
+                            1,
+                            true,
+                            sslParam);
 
             assert (metaManager.getSpaceId("testMetaSelf") > 0);
             SpaceItem spaceItem = metaManager.getSpace("testMetaSelf");

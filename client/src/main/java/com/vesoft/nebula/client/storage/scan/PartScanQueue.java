@@ -33,9 +33,7 @@ public class PartScanQueue implements Serializable {
         return null;
     }
 
-    /**
-     * delete part from set
-     */
+    /** delete part from set */
     public synchronized void dropPart(PartScanInfo partScanInfo) {
         partScanInfoSet.remove(partScanInfo);
     }
@@ -43,5 +41,4 @@ public class PartScanQueue implements Serializable {
     public int size() {
         return partScanInfoSet.size();
     }
-
 }

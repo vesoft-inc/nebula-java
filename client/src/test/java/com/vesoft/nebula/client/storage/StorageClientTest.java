@@ -17,8 +17,6 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
-import com.vesoft.nebula.client.util.ProcessUtil;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
@@ -61,9 +59,7 @@ public class StorageClientTest {
             assert (false);
         }
 
-        ScanVertexResultIterator resultIterator = client.scanVertex(
-                "testStorage",
-                "person");
+        ScanVertexResultIterator resultIterator = client.scanVertex("testStorage", "person");
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -96,8 +92,7 @@ public class StorageClientTest {
                 try {
                     assert (Arrays.asList("1", "2", "3", "4", "5")
                             .contains(tableRow.getVid().asString()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
@@ -115,10 +110,8 @@ public class StorageClientTest {
             assert (false);
         }
 
-        ScanVertexResultIterator resultIterator = client.scanVertex(
-                "testStorage",
-                "person",
-                Arrays.asList("name", "age"));
+        ScanVertexResultIterator resultIterator =
+                client.scanVertex("testStorage", "person", Arrays.asList("name", "age"));
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -157,8 +150,7 @@ public class StorageClientTest {
                 try {
                     assert (Arrays.asList("1", "2", "3", "4", "5")
                             .contains(tableRow.getVid().asString()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
                     assert (Arrays.asList("Tom", "Jina", "Bob", "Tim", "Viki")
                             .contains(tableRow.getString(1)));
                 } catch (UnsupportedEncodingException e) {
@@ -179,10 +171,8 @@ public class StorageClientTest {
             assert (false);
         }
 
-        ScanVertexResultIterator resultIterator = client.scanVertex(
-                "testStorage",
-                "person",
-                Arrays.asList());
+        ScanVertexResultIterator resultIterator =
+                client.scanVertex("testStorage", "person", Arrays.asList());
         while (resultIterator.hasNext()) {
             ScanVertexResult result = null;
             try {
@@ -211,9 +201,7 @@ public class StorageClientTest {
             assert (false);
         }
 
-        ScanEdgeResultIterator resultIterator = client.scanEdge(
-                "testStorage",
-                "friend");
+        ScanEdgeResultIterator resultIterator = client.scanEdge("testStorage", "friend");
         while (resultIterator.hasNext()) {
             ScanEdgeResult result = null;
             try {
@@ -252,10 +240,8 @@ public class StorageClientTest {
                             .contains(tableRow.getSrcId().asString()));
                     assert (Arrays.asList("1", "2", "3", "4", "5")
                             .contains(tableRow.getDstId().asString()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(0)));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(1)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(1)));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
@@ -273,10 +259,8 @@ public class StorageClientTest {
             assert (false);
         }
 
-        ScanEdgeResultIterator resultIterator = client.scanEdge(
-                "testStorage",
-                "friend",
-                Arrays.asList("likeness"));
+        ScanEdgeResultIterator resultIterator =
+                client.scanEdge("testStorage", "friend", Arrays.asList("likeness"));
         while (resultIterator.hasNext()) {
             ScanEdgeResult result = null;
             try {
@@ -294,7 +278,6 @@ public class StorageClientTest {
             assert (result.getPropNames().get(2).equals("_rank"));
             assert (result.getPropNames().get(3).equals("likeness"));
             assert (result.isAllSuccess());
-
 
             List<EdgeRow> rows = result.getEdges();
             for (EdgeRow row : rows) {
@@ -320,10 +303,8 @@ public class StorageClientTest {
                             .contains(tableRow.getSrcId().asString()));
                     assert (Arrays.asList("1", "2", "3", "4", "5")
                             .contains(tableRow.getDstId().asString()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(0)));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(1)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(1)));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);
@@ -342,10 +323,8 @@ public class StorageClientTest {
             assert (false);
         }
 
-        ScanEdgeResultIterator resultIterator = client.scanEdge(
-                "testStorage",
-                "friend",
-                Arrays.asList());
+        ScanEdgeResultIterator resultIterator =
+                client.scanEdge("testStorage", "friend", Arrays.asList());
         while (resultIterator.hasNext()) {
             ScanEdgeResult result = null;
             try {
@@ -381,16 +360,16 @@ public class StorageClientTest {
             // mock graph data
             MockStorageData.mockCASslData();
 
-            SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+            SSLParam sslParam =
+                    new CASignedSSLParam(
+                            "src/test/resources/ssl/casigned.pem",
+                            "src/test/resources/ssl/casigned.crt",
+                            "src/test/resources/ssl/casigned.key");
             sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
             sslClient.connect();
 
-            ScanVertexResultIterator resultIterator = sslClient.scanVertex(
-                    "testStorageCA",
-                    "person");
+            ScanVertexResultIterator resultIterator =
+                    sslClient.scanVertex("testStorageCA", "person");
             assertIterator(resultIterator);
         } catch (Exception e) {
             e.printStackTrace();
@@ -406,7 +385,6 @@ public class StorageClientTest {
         }
     }
 
-
     @Test
     public void testSelfSignedSSL() {
         // start nebula service with ssl enable
@@ -420,16 +398,16 @@ public class StorageClientTest {
             // mock graph data
             MockStorageData.mockSelfSslData();
 
-            SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
+            SSLParam sslParam =
+                    new SelfSignedSSLParam(
+                            "src/test/resources/ssl/selfsigned.pem",
+                            "src/test/resources/ssl/selfsigned.key",
+                            "vesoft");
             sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
             sslClient.connect();
 
-            ScanVertexResultIterator resultIterator = sslClient.scanVertex(
-                    "testStorageSelf",
-                    "person");
+            ScanVertexResultIterator resultIterator =
+                    sslClient.scanVertex("testStorageSelf", "person");
             assertIterator(resultIterator);
         } catch (Exception e) {
             e.printStackTrace();
@@ -480,8 +458,7 @@ public class StorageClientTest {
                 try {
                     assert (Arrays.asList("1", "2", "3", "4", "5")
                             .contains(tableRow.getVid().asString()));
-                    assert (Arrays.asList("1", "2", "3", "4", "5")
-                            .contains(tableRow.getString(0)));
+                    assert (Arrays.asList("1", "2", "3", "4", "5").contains(tableRow.getString(0)));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     assert (false);

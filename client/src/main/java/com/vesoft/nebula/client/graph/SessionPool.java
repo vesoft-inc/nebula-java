@@ -54,7 +54,6 @@ public class SessionPool implements Serializable {
     private final String spaceName;
     private final String useSpace;
 
-
     public SessionPool(SessionPoolConfig poolConfig) {
         this.sessionPoolConfig = poolConfig;
         this.minSessionSize = poolConfig.getMinSessionSize();
@@ -65,12 +64,10 @@ public class SessionPool implements Serializable {
         useSpace = "USE `" + spaceName + "`;";
     }
 
-
-    /**
-     * return an idle session
-     */
-    private synchronized NebulaSession getSession() throws ClientServerIncompatibleException,
-            AuthFailedException, IOErrorException, BindSpaceFailedException {
+    /** return an idle session */
+    private synchronized NebulaSession getSession()
+            throws ClientServerIncompatibleException, AuthFailedException, IOErrorException,
+                    BindSpaceFailedException {
         int retry = 1;
         while (retry-- >= 0) {
             // if there are idle sessions, get session from queue
@@ -99,10 +96,7 @@ public class SessionPool implements Serializable {
         throw new RuntimeException("no extra session available");
     }
 
-
-    /**
-     * init the SessionPool
-     */
+    /** init the SessionPool */
     public boolean init() {
         if (hasInit.get()) {
             return true;
@@ -117,24 +111,24 @@ public class SessionPool implements Serializable {
                 return false;
             }
         }
-        healthCheckSchedule.scheduleAtFixedRate(this::checkSession, 0, healthCheckTime,
-                TimeUnit.SECONDS);
-        sessionQueueMaintainSchedule.scheduleAtFixedRate(this::updateSessionQueue, 0, cleanTime,
-                TimeUnit.SECONDS);
+        healthCheckSchedule.scheduleAtFixedRate(
+                this::checkSession, 0, healthCheckTime, TimeUnit.SECONDS);
+        sessionQueueMaintainSchedule.scheduleAtFixedRate(
+                this::updateSessionQueue, 0, cleanTime, TimeUnit.SECONDS);
         hasInit.compareAndSet(false, true);
         return true;
     }
 
-
     /**
      * Execute the nGql sentence.
      *
-     * @param stmt The nGql sentence.
-     *             such as insert ngql `INSERT VERTEX person(name) VALUES "Tom":("Tom");`
+     * @param stmt The nGql sentence. such as insert ngql `INSERT VERTEX person(name) VALUES
+     *     "Tom":("Tom");`
      * @return The ResultSet
      */
-    public ResultSet execute(String stmt) throws IOErrorException,
-            ClientServerIncompatibleException, AuthFailedException, BindSpaceFailedException {
+    public ResultSet execute(String stmt)
+            throws IOErrorException, ClientServerIncompatibleException, AuthFailedException,
+                    BindSpaceFailedException {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
@@ -157,17 +151,16 @@ public class SessionPool implements Serializable {
         return resultSet;
     }
 
-
     /**
      * Execute the nGql sentence with parameter
      *
-     * @param stmt         The nGql sentence.
+     * @param stmt The nGql sentence.
      * @param parameterMap The nGql parameter map
      * @return The ResultSet
      */
     public synchronized ResultSet execute(String stmt, Map<String, Object> parameterMap)
-            throws ClientServerIncompatibleException, AuthFailedException,
-            IOErrorException, BindSpaceFailedException {
+            throws ClientServerIncompatibleException, AuthFailedException, IOErrorException,
+                    BindSpaceFailedException {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
@@ -190,10 +183,7 @@ public class SessionPool implements Serializable {
         return resultSet;
     }
 
-
-    /**
-     * close the session pool
-     */
+    /** close the session pool */
     public void close() {
         if (isClosed.get()) {
             return;
@@ -212,48 +202,33 @@ public class SessionPool implements Serializable {
         }
     }
 
-
-    /**
-     * if the SessionPool has been initialized
-     */
+    /** if the SessionPool has been initialized */
     public boolean isActive() {
         return hasInit.get();
     }
 
-    /**
-     * if the SessionPool is closed
-     */
+    /** if the SessionPool is closed */
     public boolean isClosed() {
         return isClosed.get();
     }
 
-    /**
-     * get the number of all Session
-     */
+    /** get the number of all Session */
     public int getSessionNums() {
         return sessionList.size();
     }
 
-    /**
-     * get the number of idle Session
-     */
+    /** get the number of idle Session */
     public int getIdleSessionNums() {
         return idleSessionSize.get();
     }
 
-
-    /**
-     * release the NebulaSession when finished the execution.
-     */
+    /** release the NebulaSession when finished the execution. */
     private synchronized void releaseSession(NebulaSession nebulaSession) {
         nebulaSession.isUsedAndSetIdle();
         idleSessionSize.incrementAndGet();
     }
 
-
-    /**
-     * check if session is valid, if session is invalid, remove it.
-     */
+    /** check if session is valid, if session is invalid, remove it. */
     private void checkSession() {
         for (NebulaSession nebulaSession : sessionList) {
             if (nebulaSession.isIdleAndSetUsed()) {
@@ -271,9 +246,7 @@ public class SessionPool implements Serializable {
         }
     }
 
-    /**
-     * update the session queue according to minSessionSize
-     */
+    /** update the session queue according to minSessionSize */
     private void updateSessionQueue() {
         // remove the idle sessions
         if (idleSessionSize.get() > minSessionSize) {
@@ -298,22 +271,27 @@ public class SessionPool implements Serializable {
      * @return NebulaSession
      */
     private synchronized NebulaSession createSessionObject(SessionState state)
-            throws ClientServerIncompatibleException, AuthFailedException,
-            IOErrorException, BindSpaceFailedException {
+            throws ClientServerIncompatibleException, AuthFailedException, IOErrorException,
+                    BindSpaceFailedException {
         SyncConnection connection = new SyncConnection();
         connection.open(getAddress(), sessionPoolConfig.getTimeout());
         AuthResult authResult;
         try {
-            authResult = connection.authenticate(sessionPoolConfig.getUsername(),
-                    sessionPoolConfig.getPassword());
+            authResult =
+                    connection.authenticate(
+                            sessionPoolConfig.getUsername(), sessionPoolConfig.getPassword());
         } catch (AuthFailedException e) {
             log.error(e.getMessage());
             close();
             throw e;
         }
 
-        NebulaSession nebulaSession = new NebulaSession(connection, authResult.getSessionId(),
-                authResult.getTimezoneOffset(), state);
+        NebulaSession nebulaSession =
+                new NebulaSession(
+                        connection,
+                        authResult.getSessionId(),
+                        authResult.getTimezoneOffset(),
+                        state);
         ResultSet result = nebulaSession.execute(useSpace);
         if (!result.isSucceeded()) {
             nebulaSession.release();
@@ -323,9 +301,8 @@ public class SessionPool implements Serializable {
         return nebulaSession;
     }
 
-
     public HostAddress getAddress() {
-        List<HostAddress> addresses = sessionPoolConfig.getGraphAddressList();
+        List<HostAddress> addresses = sessionPoolConfig.getGraphAddresses();
         int newPos = (pos.getAndIncrement()) % addresses.size();
         return addresses.get(newPos);
     }
@@ -334,7 +311,7 @@ public class SessionPool implements Serializable {
      * execute the "USE SPACE_NAME" when session's space changed.
      *
      * @param nebulaSession NebulaSession
-     * @param resultSet     execute response
+     * @param resultSet execute response
      */
     private void useSpace(NebulaSession nebulaSession, ResultSet resultSet)
             throws IOErrorException {
@@ -365,38 +342,38 @@ public class SessionPool implements Serializable {
      * execute the "USE SPACE_NAME" when session's space changed for Json interface
      *
      * @param nebulaSession NebulaSession
-     * @param result        execute response
+     * @param result execute response
      */
     private void useSpaceForJson(NebulaSession nebulaSession, String result)
             throws IOErrorException {
         String responseSpaceName =
-                (String) JSON.parseObject(result).getJSONArray("results")
-                        .getJSONObject(0).get("spaceName");
+                (String)
+                        JSON.parseObject(result)
+                                .getJSONArray("results")
+                                .getJSONObject(0)
+                                .get("spaceName");
         if (!spaceName.equals(responseSpaceName)) {
             nebulaSession.execute(useSpace);
         }
         releaseSession(nebulaSession);
     }
 
-
     private boolean isSessionError(ResultSet resultSet) {
         return resultSet != null
                 && (resultSet.getErrorCode() == ErrorCode.E_SESSION_INVALID.getValue()
-                || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue()
-                || resultSet.getErrorCode() == ErrorCode.E_SESSION_TIMEOUT.getValue());
+                        || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue()
+                        || resultSet.getErrorCode() == ErrorCode.E_SESSION_TIMEOUT.getValue());
     }
-
 
     private void checkSessionPool() {
         if (!hasInit.get()) {
-            throw new RuntimeException("The SessionPool has not been initialized, "
-                    + "please call init() first.");
+            throw new RuntimeException(
+                    "The SessionPool has not been initialized, " + "please call init() first.");
         }
         if (isClosed.get()) {
             throw new RuntimeException("The SessionPool has been closed.");
         }
     }
-
 
     private void stmtCheck(String stmt) {
         if (stmt == null || stmt.trim().isEmpty()) {

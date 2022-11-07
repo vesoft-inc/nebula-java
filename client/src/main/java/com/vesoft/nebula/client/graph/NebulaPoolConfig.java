@@ -6,119 +6,46 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.SSLParam;
-import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.io.Serializable;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Value;
 
+@Value
+@Builder(toBuilder = true)
 public class NebulaPoolConfig implements Serializable {
 
-    private static final long serialVersionUID = 3977910115039279651L;
+    public static NebulaPoolConfig defaultConfig() {
+        return NebulaPoolConfig.builder().build();
+    }
 
     // The min connections in pool for all addresses
-    private int minConnsSize = 0;
+    int minConnSize;
 
     // The max connections in pool for all addresses
-    private int maxConnsSize = 10;
+    @Default int maxConnSize = 10;
 
     // Socket timeout and Socket connection timeout, unit: millisecond
-    private int timeout = 0;
+    int timeout;
 
     // The idleTime of the connection, unit: millisecond
     // The connection's idle time more than idleTime, it will be delete
     // 0 means never delete
-    private int idleTime = 0;
+    int idleTime;
 
     // The interval time to check idle connection, unit ms, -1 means no check
-    private int intervalIdle = -1;
+    @Default int intervalIdle = -1;
 
     // The wait time to get idle connection, unit ms
-    private int waitTime = 0;
+    int waitTime;
 
     // The minimum rate of healthy servers to all servers. if 1 it means all servers should be
     // available on init.
-    private double minClusterHealthRate = 1;
+    @Default double minClusterHealthRate = 1;
 
     // Set to true to turn on ssl encrypted traffic
-    private boolean enableSsl = false;
+    boolean enableSsl;
 
     // SSL param is required if ssl is turned on
-    private SSLParam sslParam = null;
-
-    public boolean isEnableSsl() {
-        return enableSsl;
-    }
-
-    public void setEnableSsl(boolean enableSsl) {
-        this.enableSsl = enableSsl;
-    }
-
-    public SSLParam getSslParam() {
-        return sslParam;
-    }
-
-    public void setSslParam(SSLParam sslParam) {
-        this.sslParam = sslParam;
-    }
-
-    public int getMinConnSize() {
-        return minConnsSize;
-    }
-
-    public NebulaPoolConfig setMinConnSize(int minConnSize) {
-        this.minConnsSize = minConnSize;
-        return this;
-    }
-
-    public int getMaxConnSize() {
-        return maxConnsSize;
-    }
-
-    public NebulaPoolConfig setMaxConnSize(int maxConnSize) {
-        this.maxConnsSize = maxConnSize;
-        return this;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public NebulaPoolConfig setTimeout(int timeout) {
-        this.timeout = timeout;
-        return this;
-    }
-
-    public int getIdleTime() {
-        return idleTime;
-    }
-
-    public NebulaPoolConfig setIdleTime(int idleTime) {
-        this.idleTime = idleTime;
-        return this;
-    }
-
-    public int getIntervalIdle() {
-        return intervalIdle;
-    }
-
-    public NebulaPoolConfig setIntervalIdle(int intervalIdle) {
-        this.intervalIdle = intervalIdle;
-        return this;
-    }
-
-    public int getWaitTime() {
-        return waitTime;
-    }
-
-    public NebulaPoolConfig setWaitTime(int waitTime) {
-        this.waitTime = waitTime;
-        return this;
-    }
-
-    public double getMinClusterHealthRate() {
-        return minClusterHealthRate;
-    }
-
-    public NebulaPoolConfig setMinClusterHealthRate(double minClusterHealthRate) {
-        this.minClusterHealthRate = minClusterHealthRate;
-        return this;
-    }
+    SSLParam sslParam;
 }

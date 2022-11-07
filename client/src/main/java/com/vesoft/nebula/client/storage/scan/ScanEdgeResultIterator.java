@@ -34,25 +34,31 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
     private final ScanEdgeRequest request;
     private ExecutorService threadPool = null;
 
-    private ScanEdgeResultIterator(MetaManager metaManager,
-                                   StorageConnPool pool,
-                                   Set<PartScanInfo> partScanInfoList,
-                                   List<HostAddress> addresses,
-                                   ScanEdgeRequest request,
-                                   String spaceName,
-                                   String labelName,
-                                   boolean partSuccess) {
-        super(metaManager, pool, new PartScanQueue(partScanInfoList), addresses, spaceName,
-                labelName, partSuccess);
+    private ScanEdgeResultIterator(
+            MetaManager metaManager,
+            StorageConnPool pool,
+            Set<PartScanInfo> partScanInfoList,
+            List<HostAddress> addresses,
+            ScanEdgeRequest request,
+            String spaceName,
+            String labelName,
+            boolean partSuccess) {
+        super(
+                metaManager,
+                pool,
+                new PartScanQueue(partScanInfoList),
+                addresses,
+                spaceName,
+                labelName,
+                partSuccess);
         this.request = request;
     }
-
 
     /**
      * get the next edge set
      *
-     * <p>in every next function, the client will send new scan request to storage server
-     * parallel, and the parallel num is the space's leader hosts.
+     * <p>in every next function, the client will send new scan request to storage server parallel,
+     * and the parallel num is the space's leader hosts.
      *
      * @return {@link ScanEdgeResult}
      */
@@ -70,61 +76,63 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
         threadPool = Executors.newFixedThreadPool(addresses.size());
         for (HostAddress addr : addresses) {
-            threadPool.submit(() -> {
-                ScanResponse response;
-                PartScanInfo partInfo = partScanQueue.getPart(addr);
-                // no part need to scan
-                if (partInfo == null) {
-                    countDownLatch.countDown();
-                    existSuccess.addAndGet(1);
-                    return;
-                }
+            threadPool.submit(
+                    () -> {
+                        ScanResponse response;
+                        PartScanInfo partInfo = partScanQueue.getPart(addr);
+                        // no part need to scan
+                        if (partInfo == null) {
+                            countDownLatch.countDown();
+                            existSuccess.addAndGet(1);
+                            return;
+                        }
 
-                GraphStorageConnection connection;
-                try {
-                    connection = pool.getStorageConnection(new HostAddress(addr.getHost(),
-                            addr.getPort()));
-                } catch (Exception e) {
-                    LOGGER.error("get storage client error, ", e);
-                    exceptions.add(e);
-                    countDownLatch.countDown();
-                    return;
-                }
+                        GraphStorageConnection connection;
+                        try {
+                            connection =
+                                    pool.getStorageConnection(
+                                            new HostAddress(addr.getHost(), addr.getPort()));
+                        } catch (Exception e) {
+                            LOGGER.error("get storage client error, ", e);
+                            exceptions.add(e);
+                            countDownLatch.countDown();
+                            return;
+                        }
 
-                Map<Integer, ScanCursor> cursorMap = new HashMap<>();
-                cursorMap.put(partInfo.getPart(), partInfo.getCursor());
-                ScanEdgeRequest partRequest = new ScanEdgeRequest(request);
-                partRequest.setParts(cursorMap);
-                try {
-                    response = connection.scanEdge(partRequest);
-                } catch (TException e) {
-                    LOGGER.error(String.format("Scan edgeRow failed for %s", e.getMessage()), e);
-                    exceptions.add(e);
-                    partScanQueue.dropPart(partInfo);
-                    countDownLatch.countDown();
-                    return;
-                }
+                        Map<Integer, ScanCursor> cursorMap = new HashMap<>();
+                        cursorMap.put(partInfo.getPart(), partInfo.getCursor());
+                        ScanEdgeRequest partRequest = new ScanEdgeRequest(request);
+                        partRequest.setParts(cursorMap);
+                        try {
+                            response = connection.scanEdge(partRequest);
+                        } catch (TException e) {
+                            LOGGER.error(
+                                    String.format("Scan edgeRow failed for %s", e.getMessage()), e);
+                            exceptions.add(e);
+                            partScanQueue.dropPart(partInfo);
+                            countDownLatch.countDown();
+                            return;
+                        }
 
-                if (response == null) {
-                    handleNullResponse(partInfo, exceptions);
-                    countDownLatch.countDown();
-                    return;
-                }
+                        if (response == null) {
+                            handleNullResponse(partInfo, exceptions);
+                            countDownLatch.countDown();
+                            return;
+                        }
 
-                if (isSuccessful(response)) {
-                    handleSucceedResult(existSuccess, response, partInfo);
-                    results.add(response.getProps());
-                }
+                        if (isSuccessful(response)) {
+                            handleSucceedResult(existSuccess, response, partInfo);
+                            results.add(response.getProps());
+                        }
 
-                if (response.getResult() != null) {
-                    handleFailedResult(response, partInfo, exceptions);
-                } else {
-                    handleNullResult(partInfo, exceptions);
-                }
-                pool.release(new HostAddress(addr.getHost(), addr.getPort()), connection);
-                countDownLatch.countDown();
-            });
-
+                        if (response.getResult() != null) {
+                            handleFailedResult(response, partInfo, exceptions);
+                        } else {
+                            handleNullResult(partInfo, exceptions);
+                        }
+                        pool.release(new HostAddress(addr.getHost(), addr.getPort()), connection);
+                        countDownLatch.countDown();
+                    });
         }
 
         try {
@@ -141,8 +149,8 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             if (existSuccess.get() == 0) {
                 throwExceptions(exceptions);
             }
-            ScanStatus status = exceptions.size() > 0 ? ScanStatus.PART_SUCCESS :
-                    ScanStatus.ALL_SUCCESS;
+            ScanStatus status =
+                    exceptions.size() > 0 ? ScanStatus.PART_SUCCESS : ScanStatus.ALL_SUCCESS;
             return new ScanEdgeResult(results, status);
         } else {
             hasNext = partScanQueue.size() > 0 && exceptions.isEmpty();
@@ -156,10 +164,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         }
     }
 
-
-    /**
-     * builder to build {@link ScanEdgeResultIterator}
-     */
+    /** builder to build {@link ScanEdgeResultIterator} */
     public static class ScanEdgeResultBuilder {
 
         MetaManager metaManager;
@@ -210,7 +215,6 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             this.partSuccess = partSuccess;
             return this;
         }
-
 
         public ScanEdgeResultIterator build() {
             return new ScanEdgeResultIterator(

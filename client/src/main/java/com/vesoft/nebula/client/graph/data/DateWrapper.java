@@ -42,8 +42,8 @@ public class DateWrapper extends BaseDataObject {
         }
         DateWrapper that = (DateWrapper) o;
         return date.year == that.getYear()
-            && date.month == that.getMonth()
-            && date.day == that.getDay();
+                && date.month == that.getMonth()
+                && date.day == that.getDay();
     }
 
     @Override

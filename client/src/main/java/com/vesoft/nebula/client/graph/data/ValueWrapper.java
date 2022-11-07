@@ -105,9 +105,9 @@ public class ValueWrapper {
     }
 
     /**
-     * @param value      the Value get from service
-     * @param decodeType the decodeType get from the service to decode the byte array,
-     *                   but now the service no return the decodeType, so use the utf-8
+     * @param value the Value get from service
+     * @param decodeType the decodeType get from the service to decode the byte array, but now the
+     *     service no return the decodeType, so use the utf-8
      */
     public ValueWrapper(Value value, String decodeType) {
         this.value = value;
@@ -116,9 +116,9 @@ public class ValueWrapper {
     }
 
     /**
-     * @param value          the Value get from service
-     * @param decodeType     the decodeType get from the service to decode the byte array,
-     *                       but now the service no return the decodeType, so use the utf-8
+     * @param value the Value get from service
+     * @param decodeType the decodeType get from the service to decode the byte array, but now the
+     *     service no return the decodeType, so use the utf-8
      * @param timezoneOffset the timezone offset get from the service to calculate local time
      */
     public ValueWrapper(Value value, String decodeType, int timezoneOffset) {
@@ -337,7 +337,7 @@ public class ValueWrapper {
      * Convert the original data type Value to String
      *
      * @return String
-     * @throws InvalidValueException        if the value type is not string
+     * @throws InvalidValueException if the value type is not string
      * @throws UnsupportedEncodingException if decode bianry failed
      */
     public String asString() throws InvalidValueException, UnsupportedEncodingException {
@@ -413,7 +413,8 @@ public class ValueWrapper {
         HashMap<String, ValueWrapper> kvs = new HashMap<>();
         Map<byte[], Value> inValues = value.getMVal().getKvs();
         for (byte[] key : inValues.keySet()) {
-            kvs.put(new String(key, decodeType),
+            kvs.put(
+                    new String(key, decodeType),
                     new ValueWrapper(inValues.get(key), decodeType, timezoneOffset));
         }
         return kvs;
@@ -427,9 +428,10 @@ public class ValueWrapper {
      */
     public TimeWrapper asTime() throws InvalidValueException {
         if (value.getSetField() == Value.TVAL) {
-            return (TimeWrapper) new TimeWrapper(value.getTVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (TimeWrapper)
+                    new TimeWrapper(value.getTVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field time because value's type is " + descType());
@@ -457,9 +459,10 @@ public class ValueWrapper {
      */
     public DateTimeWrapper asDateTime() throws InvalidValueException {
         if (value.getSetField() == Value.DTVAL) {
-            return (DateTimeWrapper) new DateTimeWrapper(value.getDtVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (DateTimeWrapper)
+                    new DateTimeWrapper(value.getDtVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field datetime because value's type is " + descType());
@@ -469,14 +472,15 @@ public class ValueWrapper {
      * Convert the original data type Value to Node
      *
      * @return Node
-     * @throws InvalidValueException        if the value type is not vertex
+     * @throws InvalidValueException if the value type is not vertex
      * @throws UnsupportedEncodingException if decode binary failed
      */
     public Node asNode() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.VVAL) {
-            return (Node) new Node(value.getVVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (Node)
+                    new Node(value.getVVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field Node because value's type is " + descType());
@@ -490,9 +494,10 @@ public class ValueWrapper {
      */
     public Relationship asRelationship() throws InvalidValueException {
         if (value.getSetField() == Value.EVAL) {
-            return (Relationship) new Relationship(value.getEVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (Relationship)
+                    new Relationship(value.getEVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field Relationship because value's type is " + descType());
@@ -502,14 +507,15 @@ public class ValueWrapper {
      * Convert the original data type Value to Path
      *
      * @return PathWrapper
-     * @throws InvalidValueException        if the value type is not path
+     * @throws InvalidValueException if the value type is not path
      * @throws UnsupportedEncodingException if decode bianry failed
      */
     public PathWrapper asPath() throws InvalidValueException, UnsupportedEncodingException {
         if (value.getSetField() == Value.PVAL) {
-            return (PathWrapper) new PathWrapper(value.getPVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (PathWrapper)
+                    new PathWrapper(value.getPVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field PathWrapper because value's type is " + descType());
@@ -523,9 +529,10 @@ public class ValueWrapper {
      */
     public GeographyWrapper asGeography() throws InvalidValueException {
         if (value.getSetField() == Value.GGVAL) {
-            return (GeographyWrapper) new GeographyWrapper(value.getGgVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (GeographyWrapper)
+                    new GeographyWrapper(value.getGgVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
         throw new InvalidValueException(
                 "Cannot get field GeographyWrapper because value's type is " + descType());
@@ -539,12 +546,13 @@ public class ValueWrapper {
      */
     public DurationWrapper asDuration() throws InvalidValueException {
         if (value.getSetField() == Value.DUVAL) {
-            return (DurationWrapper) new DurationWrapper(value.getDuVal())
-                    .setDecodeType(decodeType)
-                    .setTimezoneOffset(timezoneOffset);
+            return (DurationWrapper)
+                    new DurationWrapper(value.getDuVal())
+                            .setDecodeType(decodeType)
+                            .setTimezoneOffset(timezoneOffset);
         }
-        throw new InvalidValueException("Cannot get field DurationWrapper because value's type is "
-                + descType());
+        throw new InvalidValueException(
+                "Cannot get field DurationWrapper because value's type is " + descType());
     }
 
     @Override
@@ -556,8 +564,7 @@ public class ValueWrapper {
             return false;
         }
         ValueWrapper that = (ValueWrapper) o;
-        return Objects.equals(value, that.value)
-                && Objects.equals(decodeType, that.decodeType);
+        return Objects.equals(value, that.value) && Objects.equals(decodeType, that.decodeType);
     }
 
     @Override

@@ -18,23 +18,26 @@ public class TimeUtil {
      * @return the datetime with the timezoneoffset
      */
     public static DateTime datetimeConvertWithTimezone(DateTime dateTime, int timezoneOffset) {
-        LocalDateTime localDateTime = LocalDateTime.of(dateTime.getYear(),
-            dateTime.getMonth(),
-            dateTime.getDay(),
-            dateTime.getHour(),
-            dateTime.getMinute(),
-            dateTime.getSec(),
-            dateTime.getMicrosec() * 1000);
+        LocalDateTime localDateTime =
+                LocalDateTime.of(
+                        dateTime.getYear(),
+                        dateTime.getMonth(),
+                        dateTime.getDay(),
+                        dateTime.getHour(),
+                        dateTime.getMinute(),
+                        dateTime.getSec(),
+                        dateTime.getMicrosec() * 1000);
         ZoneOffset zoneOffset = ZoneOffset.ofTotalSeconds(timezoneOffset);
         OffsetDateTime utcOffsetDateTime = localDateTime.atOffset(ZoneOffset.UTC);
         OffsetDateTime localOffsetDateTime = utcOffsetDateTime.withOffsetSameInstant(zoneOffset);
-        return new DateTime((short) localOffsetDateTime.getYear(),
-                            (byte) localOffsetDateTime.getMonth().getValue(),
-                            (byte) localOffsetDateTime.getDayOfMonth(),
-                            (byte) localOffsetDateTime.getHour(),
-                            (byte) localOffsetDateTime.getMinute(),
-                            (byte) localOffsetDateTime.getSecond(),
-            localOffsetDateTime.getNano() / 1000);
+        return new DateTime(
+                (short) localOffsetDateTime.getYear(),
+                (byte) localOffsetDateTime.getMonth().getValue(),
+                (byte) localOffsetDateTime.getDayOfMonth(),
+                (byte) localOffsetDateTime.getHour(),
+                (byte) localOffsetDateTime.getMinute(),
+                (byte) localOffsetDateTime.getSecond(),
+                localOffsetDateTime.getNano() / 1000);
     }
 
     /**
@@ -43,13 +46,20 @@ public class TimeUtil {
      * @return the time with the timezone offset
      */
     public static Time timeConvertWithTimezone(Time time, int timezoneOffset) {
-        DateTime dateTime = new DateTime(
-            (short) 0,(byte)1, (byte)1,
-            time.getHour(), time.getMinute(), time.getSec(), time.getMicrosec());
+        DateTime dateTime =
+                new DateTime(
+                        (short) 0,
+                        (byte) 1,
+                        (byte) 1,
+                        time.getHour(),
+                        time.getMinute(),
+                        time.getSec(),
+                        time.getMicrosec());
         DateTime localDateTime = datetimeConvertWithTimezone(dateTime, timezoneOffset);
-        return new Time(localDateTime.getHour(),
-                        localDateTime.getMinute(),
-                        localDateTime.getSec(),
-                        localDateTime.getMicrosec());
+        return new Time(
+                localDateTime.getHour(),
+                localDateTime.getMinute(),
+                localDateTime.getSec(),
+                localDateTime.getMicrosec());
     }
 }

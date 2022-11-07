@@ -18,9 +18,7 @@ public class VertexTableRow extends BaseTableRow {
         super(values, decodeType);
     }
 
-    /**
-     * vertex id in vertexTableRow
-     */
+    /** vertex id in vertexTableRow */
     public ValueWrapper getVid() {
         if (values.size() < 1) {
             throw new IllegalArgumentException("no vertex id is returned");
@@ -31,9 +29,10 @@ public class VertexTableRow extends BaseTableRow {
     @Override
     public String toString() {
         return "VertexTableView{"
-                + "vid=" + getVid().toString()
-                + ", values=" + mkString(",")
+                + "vid="
+                + getVid().toString()
+                + ", values="
+                + mkString(",")
                 + '}';
     }
-
 }

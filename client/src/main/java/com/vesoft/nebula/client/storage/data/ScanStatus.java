@@ -6,13 +6,9 @@
 package com.vesoft.nebula.client.storage.data;
 
 public enum ScanStatus {
-    /**
-     * all parts succeed
-     */
+    /** all parts succeed */
     ALL_SUCCESS,
 
-    /**
-     * part of parts succeed
-     */
+    /** part of parts succeed */
     PART_SUCCESS;
 }

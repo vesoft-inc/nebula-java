@@ -34,7 +34,6 @@ import javax.net.ssl.SSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class SyncConnection extends Connection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncConnection.class);
@@ -65,19 +64,20 @@ public class SyncConnection extends Connection {
                             SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
                 }
             }
-            this.transport = new TSocket(
-                    sslSocketFactory.createSocket(address.getHost(),
-                            address.getPort()), this.timeout, this.timeout);
+            this.transport =
+                    new TSocket(
+                            sslSocketFactory.createSocket(address.getHost(), address.getPort()),
+                            this.timeout,
+                            this.timeout);
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
-            VerifyClientVersionResp resp =
-                    client.verifyClientVersion(new VerifyClientVersionReq());
+            VerifyClientVersionResp resp = client.verifyClientVersion(new VerifyClientVersionReq());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
-                throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
-                        Charsets.UTF_8));
+                throw new ClientServerIncompatibleException(
+                        new String(resp.getError_msg(), Charsets.UTF_8));
             }
         } catch (TException | IOException e) {
             close();
@@ -91,19 +91,18 @@ public class SyncConnection extends Connection {
         try {
             this.serverAddr = address;
             this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
-            this.transport = new TSocket(
-                    address.getHost(), address.getPort(), this.timeout, this.timeout);
+            this.transport =
+                    new TSocket(address.getHost(), address.getPort(), this.timeout, this.timeout);
             this.transport.open();
             this.protocol = new TCompactProtocol(transport);
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
-            VerifyClientVersionResp resp =
-                    client.verifyClientVersion(new VerifyClientVersionReq());
+            VerifyClientVersionResp resp = client.verifyClientVersion(new VerifyClientVersionReq());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
-                throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
-                        Charsets.UTF_8));
+                throw new ClientServerIncompatibleException(
+                        new String(resp.getError_msg(), Charsets.UTF_8));
             }
         } catch (TException e) {
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
@@ -161,14 +160,13 @@ public class SyncConnection extends Connection {
         }
     }
 
-    public ExecutionResponse execute(long sessionID, String stmt)
-            throws IOErrorException {
-        return executeWithParameter(sessionID,
-                stmt, (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
+    public ExecutionResponse execute(long sessionID, String stmt) throws IOErrorException {
+        return executeWithParameter(
+                sessionID, stmt, (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
     }
 
-    public ExecutionResponse executeWithParameter(long sessionID, String stmt,
-                                                  Map<byte[], com.vesoft.nebula.Value> parameterMap)
+    public ExecutionResponse executeWithParameter(
+            long sessionID, String stmt, Map<byte[], com.vesoft.nebula.Value> parameterMap)
             throws IOErrorException {
         try {
             return client.executeWithParameter(sessionID, stmt.getBytes(), parameterMap);
@@ -193,14 +191,13 @@ public class SyncConnection extends Connection {
         }
     }
 
-    public String executeJson(long sessionID, String stmt)
-            throws IOErrorException {
-        return executeJsonWithParameter(sessionID, stmt,
-                (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
+    public String executeJson(long sessionID, String stmt) throws IOErrorException {
+        return executeJsonWithParameter(
+                sessionID, stmt, (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
     }
 
-    public String executeJsonWithParameter(long sessionID, String stmt,
-                                           Map<byte[], com.vesoft.nebula.Value> parameterMap)
+    public String executeJsonWithParameter(
+            long sessionID, String stmt, Map<byte[], com.vesoft.nebula.Value> parameterMap)
             throws IOErrorException {
         try {
             byte[] result =
@@ -251,11 +248,9 @@ public class SyncConnection extends Connection {
         }
     }
 
-
     public void close() {
         if (transport != null && transport.isOpen()) {
             transport.close();
         }
     }
-
 }

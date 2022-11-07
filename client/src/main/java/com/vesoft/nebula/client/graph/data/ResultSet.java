@@ -57,19 +57,19 @@ public class ResultSet {
             return this.colValues.spliterator();
         }
 
-
         @Override
         public String toString() {
             List<String> valueStr = new ArrayList<>();
             for (ValueWrapper v : colValues) {
                 valueStr.add(v.toString());
             }
-            return String.format("ColumnName: %s, Values: %s",
-                columnNames.toString(), valueStr.toString());
+            return String.format(
+                    "ColumnName: %s, Values: %s", columnNames.toString(), valueStr.toString());
         }
 
         /**
          * get column value by index
+         *
          * @param index the index of the rows
          * @return ValueWrapper
          */
@@ -83,6 +83,7 @@ public class ResultSet {
 
         /**
          * get column value by column name
+         *
          * @param columnName the columna name
          * @return ValueWrapper
          */
@@ -91,13 +92,15 @@ public class ResultSet {
             if (index == -1) {
                 throw new IllegalArgumentException(
                         "Cannot get field because the columnName '"
-                            + columnName + "' is not exists");
+                                + columnName
+                                + "' is not exists");
             }
             return this.colValues.get(index);
         }
 
         /**
          * get all values
+         *
          * @return the list of ValueWrapper
          */
         public List<ValueWrapper> values() {
@@ -106,6 +109,7 @@ public class ResultSet {
 
         /**
          * get the size of record
+         *
          * @return int the size of columns
          */
         public int size() {
@@ -114,13 +118,13 @@ public class ResultSet {
 
         /**
          * if the column name exists
+         *
          * @param columnName the column name
          * @return boolean
          */
         public boolean contains(String columnName) {
             return this.columnNames.contains(columnName);
         }
-
     }
 
     public ResultSet(ExecutionResponse resp, int timezoneOffset) {
@@ -139,6 +143,7 @@ public class ResultSet {
 
     /**
      * the execute result is succeeded
+     *
      * @return boolean
      */
     public boolean isSucceeded() {
@@ -147,6 +152,7 @@ public class ResultSet {
 
     /**
      * the result data is empty
+     *
      * @return boolean
      */
     public boolean isEmpty() {
@@ -155,6 +161,7 @@ public class ResultSet {
 
     /**
      * get errorCode of execute result
+     *
      * @return int
      */
     public int getErrorCode() {
@@ -163,6 +170,7 @@ public class ResultSet {
 
     /**
      * get the space name of current session
+     *
      * @return String
      */
     public String getSpaceName() {
@@ -175,6 +183,7 @@ public class ResultSet {
 
     /**
      * get the error message of the execute result
+     *
      * @return String
      */
     public String getErrorMessage() {
@@ -187,6 +196,7 @@ public class ResultSet {
 
     /**
      * get the comment from the server
+     *
      * @return String
      */
     public String getComment() {
@@ -199,6 +209,7 @@ public class ResultSet {
 
     /**
      * get latency of the query execute time
+     *
      * @return int
      */
     public long getLatency() {
@@ -207,6 +218,7 @@ public class ResultSet {
 
     /**
      * get the PalnDesc
+     *
      * @return PlanDescription
      */
     public PlanDescription getPlanDesc() {
@@ -215,6 +227,7 @@ public class ResultSet {
 
     /**
      * get keys of the dataset
+     *
      * @return the list of String
      */
     public List<String> keys() {
@@ -223,6 +236,7 @@ public class ResultSet {
 
     /**
      * get column names of the dataset
+     *
      * @return the
      */
     public List<String> getColumnNames() {
@@ -231,6 +245,7 @@ public class ResultSet {
 
     /**
      * get the size of rows
+     *
      * @return int
      */
     public int rowsSize() {
@@ -242,6 +257,7 @@ public class ResultSet {
 
     /**
      * get row values with the row index
+     *
      * @param index the index of the rows
      * @return Record
      */
@@ -257,6 +273,7 @@ public class ResultSet {
 
     /**
      * get col values on the column key
+     *
      * @param columnName the column name
      * @return the list of ValueWrapper
      */
@@ -270,15 +287,18 @@ public class ResultSet {
         }
         List<ValueWrapper> values = new ArrayList<>();
         for (int i = 0; i < response.data.rows.size(); i++) {
-            values.add(new ValueWrapper(response.data.rows.get(i).values.get(index),
-                                        decodeType,
-                                        timezoneOffset));
+            values.add(
+                    new ValueWrapper(
+                            response.data.rows.get(i).values.get(index),
+                            decodeType,
+                            timezoneOffset));
         }
         return values;
     }
 
     /**
      * get all rows, the value is the origin value, the string is binary
+     *
      * @return the list of Row
      */
     public List<Row> getRows() {
@@ -304,7 +324,7 @@ public class ResultSet {
             rowStrs.add(String.join(",", valueStrs));
             i++;
         }
-        return String.format("ColumnName: %s, Rows: %s",
-            columnNames.toString(), rowStrs.toString());
+        return String.format(
+                "ColumnName: %s, Rows: %s", columnNames.toString(), rowStrs.toString());
     }
 }

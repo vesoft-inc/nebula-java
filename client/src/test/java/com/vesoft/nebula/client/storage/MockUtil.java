@@ -11,7 +11,6 @@ import com.vesoft.nebula.Date;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.Point;
-import com.vesoft.nebula.Polygon;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
@@ -42,10 +41,18 @@ public class MockUtil {
         values1.add(Value.fVal(1.0));
         values1.add(Value.dVal(new Date((short) 2020, (byte) 1, (byte) 1)));
         values1.add(Value.tVal(new Time((byte) 12, (byte) 1, (byte) 1, 100)));
-        values1.add(Value.dtVal(new DateTime((short) 2020, (byte) 1, (byte) 1, (byte) 12,
-                (byte) 10, (byte) 30, 100)));
-        values1.add(Value.ggVal(new Geography(Geography.PTVAL,
-                new Point(new Coordinate(1.0, 1.5)))));
+        values1.add(
+                Value.dtVal(
+                        new DateTime(
+                                (short) 2020,
+                                (byte) 1,
+                                (byte) 1,
+                                (byte) 12,
+                                (byte) 10,
+                                (byte) 30,
+                                100)));
+        values1.add(
+                Value.ggVal(new Geography(Geography.PTVAL, new Point(new Coordinate(1.0, 1.5)))));
 
         List<Row> rows = new ArrayList<>();
         rows.add(new Row(values1));

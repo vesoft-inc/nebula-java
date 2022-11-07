@@ -99,56 +99,67 @@ public class GraphClientExample {
 
             session = pool.getSession("root", "nebula", false);
             {
-                String createSchema = "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20)); "
-                        + "USE test;"
-                        + "CREATE TAG IF NOT EXISTS person(name string, age int);"
-                        + "CREATE EDGE IF NOT EXISTS like(likeness double)";
+                String createSchema =
+                        "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20)); "
+                                + "USE test;"
+                                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                                + "CREATE EDGE IF NOT EXISTS like(likeness double)";
                 ResultSet resp = session.execute(createSchema);
                 if (!resp.isSucceeded()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            createSchema, resp.getErrorMessage()));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    createSchema, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             TimeUnit.SECONDS.sleep(5);
             {
-                String insertVertexes = "INSERT VERTEX person(name, age) VALUES "
-                        + "'Bob':('Bob', 10), "
-                        + "'Lily':('Lily', 9), "
-                        + "'Tom':('Tom', 10), "
-                        + "'Jerry':('Jerry', 13), "
-                        + "'John':('John', 11);";
+                String insertVertexes =
+                        "INSERT VERTEX person(name, age) VALUES "
+                                + "'Bob':('Bob', 10), "
+                                + "'Lily':('Lily', 9), "
+                                + "'Tom':('Tom', 10), "
+                                + "'Jerry':('Jerry', 13), "
+                                + "'John':('John', 11);";
                 ResultSet resp = session.execute(insertVertexes);
                 if (!resp.isSucceeded()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            insertVertexes, resp.getErrorMessage()));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    insertVertexes, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             {
-                String insertEdges = "INSERT EDGE like(likeness) VALUES "
-                        + "'Bob'->'Lily':(80.0), "
-                        + "'Bob'->'Tom':(70.0), "
-                        + "'Lily'->'Jerry':(84.0), "
-                        + "'Tom'->'Jerry':(68.3), "
-                        + "'Bob'->'John':(97.2);";
+                String insertEdges =
+                        "INSERT EDGE like(likeness) VALUES "
+                                + "'Bob'->'Lily':(80.0), "
+                                + "'Bob'->'Tom':(70.0), "
+                                + "'Lily'->'Jerry':(84.0), "
+                                + "'Tom'->'Jerry':(68.3), "
+                                + "'Bob'->'John':(97.2);";
                 ResultSet resp = session.execute(insertEdges);
                 if (!resp.isSucceeded()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            insertEdges, resp.getErrorMessage()));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    insertEdges, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             {
-                String query = "GO FROM \"Bob\" OVER like "
-                        + "YIELD $^.person.name, $^.person.age, like.likeness";
+                String query =
+                        "GO FROM \"Bob\" OVER like "
+                                + "YIELD $^.person.name, $^.person.age, like.likeness";
                 ResultSet resp = session.execute(query);
                 if (!resp.isSucceeded()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            query, resp.getErrorMessage()));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s", query, resp.getErrorMessage()));
                     System.exit(1);
                 }
                 printResult(resp);
@@ -178,8 +189,9 @@ public class GraphClientExample {
                 String query = "RETURN abs($p1+1),toBoolean($p2) and false,$p3,$p4[2],$p5.d[3]";
                 ResultSet resp = session.executeWithParameter(query, paramMap);
                 if (!resp.isSucceeded()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            query, resp.getErrorMessage()));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s", query, resp.getErrorMessage()));
                     System.exit(1);
                 }
                 printResult(resp);
@@ -190,8 +202,10 @@ public class GraphClientExample {
                 String resp = session.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
                 if (errors.getInteger("code") != 0) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("message")));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);
@@ -201,20 +215,23 @@ public class GraphClientExample {
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
                 nebulaSslPoolConfig.setEnableSsl(true);
-                nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
-                        "examples/src/main/resources/ssl/casigned.pem",
-                        "examples/src/main/resources/ssl/casigned.crt",
-                        "examples/src/main/resources/ssl/casigned.key"));
+                nebulaSslPoolConfig.setSslParam(
+                        new CASignedSSLParam(
+                                "examples/src/main/resources/ssl/casigned.pem",
+                                "examples/src/main/resources/ssl/casigned.crt",
+                                "examples/src/main/resources/ssl/casigned.key"));
                 NebulaPool sslPool = new NebulaPool();
-                sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9669)),
-                        nebulaSslPoolConfig);
+                sslPool.init(
+                        Arrays.asList(new HostAddress("127.0.0.1", 9669)), nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
                 if (errors.getInteger("code") != ErrorCode.SUCCEEDED.getValue()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("message")));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);
@@ -224,20 +241,23 @@ public class GraphClientExample {
                 NebulaPoolConfig nebulaSslPoolConfig = new NebulaPoolConfig();
                 nebulaSslPoolConfig.setMaxConnSize(100);
                 nebulaSslPoolConfig.setEnableSsl(true);
-                nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
-                        "examples/src/main/resources/ssl/selfsigned.pem",
-                        "examples/src/main/resources/ssl/selfsigned.key",
-                        "vesoft"));
+                nebulaSslPoolConfig.setSslParam(
+                        new SelfSignedSSLParam(
+                                "examples/src/main/resources/ssl/selfsigned.pem",
+                                "examples/src/main/resources/ssl/selfsigned.key",
+                                "vesoft"));
                 NebulaPool sslPool = new NebulaPool();
-                sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 9669)),
-                        nebulaSslPoolConfig);
+                sslPool.init(
+                        Arrays.asList(new HostAddress("127.0.0.1", 9669)), nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
                 if (errors.getInteger("code") != ErrorCode.SUCCEEDED.getValue()) {
-                    log.error(String.format("Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("message")));
+                    log.error(
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);

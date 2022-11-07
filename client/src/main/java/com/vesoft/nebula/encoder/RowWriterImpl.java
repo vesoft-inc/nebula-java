@@ -20,10 +20,8 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.codec.binary.Hex;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.ByteOrderValues;
-import org.locationtech.jts.io.WKBWriter;
 
 public class RowWriterImpl implements RowWriter {
     private final SchemaProviderImpl schema;
@@ -50,31 +48,31 @@ public class RowWriterImpl implements RowWriter {
         int schemaVerSize = 0;
         if (ver > 0) {
             if (ver <= 0x00FF) {
-                header = 0x09;  // 0x08 | 0x01, one byte for the schema version
+                header = 0x09; // 0x08 | 0x01, one byte for the schema version
                 headerLen = 2;
                 schemaVerSize = 1;
             } else if (ver < 0x00FFFF) {
-                header = 0x0A;  // 0x08 | 0x02, two bytes for the schema version
+                header = 0x0A; // 0x08 | 0x02, two bytes for the schema version
                 headerLen = 3;
                 schemaVerSize = 2;
             } else if (ver < 0x00FFFFFF) {
-                header = 0x0B;  // 0x08 | 0x03, three bytes for the schema version
+                header = 0x0B; // 0x08 | 0x03, three bytes for the schema version
                 headerLen = 4;
                 schemaVerSize = 3;
             } else if (ver < 0x00FFFFFFFF) {
-                header = 0x0C;  // 0x08 | 0x04, four bytes for the schema version
+                header = 0x0C; // 0x08 | 0x04, four bytes for the schema version
                 headerLen = 5;
                 schemaVerSize = 4;
             } else if (ver < 0x00FFFFFFFFFFL) {
-                header = 0x0D;  // 0x08 | 0x05, five bytes for the schema version
+                header = 0x0D; // 0x08 | 0x05, five bytes for the schema version
                 headerLen = 6;
                 schemaVerSize = 5;
             } else if (ver < 0x00FFFFFFFFFFFFL) {
-                header = 0x0E;  // 0x08 | 0x06, six bytes for the schema version
+                header = 0x0E; // 0x08 | 0x06, six bytes for the schema version
                 headerLen = 7;
                 schemaVerSize = 6;
             } else if (ver < 0x00FFFFFFFFFFFFFFL) {
-                header = 0x0F;  // 0x08 | 0x07, severn bytes for the schema version
+                header = 0x0F; // 0x08 | 0x07, severn bytes for the schema version
                 headerLen = 8;
                 schemaVerSize = 7;
             } else {
@@ -119,50 +117,54 @@ public class RowWriterImpl implements RowWriter {
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
             case BOOL:
-            case INT8: {
-                if (v) {
-                    buf.put(offset, (byte)0x01);
-                } else  {
-                    buf.put(offset, (byte)0);
+            case INT8:
+                {
+                    if (v) {
+                        buf.put(offset, (byte) 0x01);
+                    } else {
+                        buf.put(offset, (byte) 0);
+                    }
+                    break;
                 }
-                break;
-            }
-            case INT16: {
-                if (v) {
-                    buf.put(offset, (byte)0x01);
-                } else  {
-                    buf.put(offset, (byte)0);
+            case INT16:
+                {
+                    if (v) {
+                        buf.put(offset, (byte) 0x01);
+                    } else {
+                        buf.put(offset, (byte) 0);
+                    }
+                    buf.put(offset + 1, (byte) 0);
+                    break;
                 }
-                buf.put(offset + 1, (byte) 0);
-                break;
-            }
-            case INT32: {
-                if (v) {
-                    buf.put(offset, (byte)0x01);
-                } else  {
-                    buf.put(offset, (byte)0);
+            case INT32:
+                {
+                    if (v) {
+                        buf.put(offset, (byte) 0x01);
+                    } else {
+                        buf.put(offset, (byte) 0);
+                    }
+                    buf.put(offset + 1, (byte) 0)
+                            .put(offset + 2, (byte) 0)
+                            .put(offset + 3, (byte) 0);
+                    break;
                 }
-                buf.put(offset + 1, (byte) 0)
-                     .put(offset + 2, (byte) 0)
-                     .put(offset + 3, (byte) 0);
-                break;
-            }
             case TIMESTAMP:
-            case INT64: {
-                if (v) {
-                    buf.put(offset, (byte)0x01);
-                } else  {
-                    buf.put(offset, (byte)0);
+            case INT64:
+                {
+                    if (v) {
+                        buf.put(offset, (byte) 0x01);
+                    } else {
+                        buf.put(offset, (byte) 0);
+                    }
+                    buf.put(offset + 1, (byte) 0)
+                            .put(offset + 2, (byte) 0)
+                            .put(offset + 3, (byte) 0)
+                            .put(offset + 4, (byte) 0)
+                            .put(offset + 5, (byte) 0)
+                            .put(offset + 6, (byte) 0)
+                            .put(offset + 7, (byte) 0);
+                    break;
                 }
-                buf.put(offset + 1, (byte) 0)
-                    .put(offset + 2, (byte) 0)
-                    .put(offset + 3, (byte) 0)
-                    .put(offset + 4, (byte) 0)
-                    .put(offset + 5, (byte) 0)
-                    .put(offset + 6, (byte) 0)
-                    .put(offset + 7, (byte) 0);
-                break;
-            }
             default:
                 throw new RuntimeException("Write boolean with unsupported type: " + field.type());
         }
@@ -181,47 +183,53 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
-            case INT8: {
-                if (v > 127 || v < 0x80) {
-                    throw new RuntimeException(
-                      "Value: " + v + " is out of range, the type is byte");
+            case INT8:
+                {
+                    if (v > 127 || v < 0x80) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is byte");
+                    }
+                    buf.put(offset, (byte) v);
+                    break;
                 }
-                buf.put(offset, (byte)v);
-                break;
-            }
-            case INT16: {
-                if (v > 0x7FFF || v < 0x8000) {
-                    throw new RuntimeException(
-                      "Value: " + v + " is out of range, the type is short");
+            case INT16:
+                {
+                    if (v > 0x7FFF || v < 0x8000) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is short");
+                    }
+                    buf.putShort(offset, (short) v);
+                    break;
                 }
-                buf.putShort(offset, (short) v);
-                break;
-            }
-            case INT32: {
-                if (v > 0x7FFFFFFF || v < 0x80000000) {
-                    throw new RuntimeException(
-                      "Value: " + v + " is out of range, the type is int");
+            case INT32:
+                {
+                    if (v > 0x7FFFFFFF || v < 0x80000000) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is int");
+                    }
+                    buf.putInt(offset, (int) v);
+                    break;
                 }
-                buf.putInt(offset, (int) v);
-                break;
-            }
             case TIMESTAMP:
-            case INT64: {
-                if (v > 0x7FFFFFFFFFFFFFFFL || v < 0x8000000000000000L) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is long");
+            case INT64:
+                {
+                    if (v > 0x7FFFFFFFFFFFFFFFL || v < 0x8000000000000000L) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is long");
+                    }
+                    buf.putLong(offset, (long) v);
+                    break;
                 }
-                buf.putLong(offset, (long) v);
-                break;
-            }
-            case FLOAT: {
-                buf.putFloat(offset, v);
-                break;
-            }
-            case DOUBLE: {
-                buf.putDouble(offset, v);
-                break;
-            }
+            case FLOAT:
+                {
+                    buf.putFloat(offset, v);
+                    break;
+                }
+            case DOUBLE:
+                {
+                    buf.putDouble(offset, v);
+                    break;
+                }
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -240,47 +248,53 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
-            case INT8: {
-                if (v > 127 || v < 0x80) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is byte");
+            case INT8:
+                {
+                    if (v > 127 || v < 0x80) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is byte");
+                    }
+                    buf.put(offset, (byte) v);
+                    break;
                 }
-                buf.put(offset, (byte)v);
-                break;
-            }
-            case INT16: {
-                if (v > 0x7FFF || v < 0x8000) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is short");
+            case INT16:
+                {
+                    if (v > 0x7FFF || v < 0x8000) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is short");
+                    }
+                    buf.putShort(offset, (short) v);
+                    break;
                 }
-                buf.putShort(offset, (short) v);
-                break;
-            }
-            case INT32: {
-                if (v > 0x7FFFFFFF || v < 0x80000000) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is int");
+            case INT32:
+                {
+                    if (v > 0x7FFFFFFF || v < 0x80000000) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is int");
+                    }
+                    buf.putInt(offset, (int) v);
+                    break;
                 }
-                buf.putInt(offset, (int) v);
-                break;
-            }
             case TIMESTAMP:
-            case INT64: {
-                if (v > 0x7FFFFFFFFFFFFFFFL || v < 0x8000000000000000L) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is long");
+            case INT64:
+                {
+                    if (v > 0x7FFFFFFFFFFFFFFFL || v < 0x8000000000000000L) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is long");
+                    }
+                    buf.putLong(offset, (long) v);
+                    break;
                 }
-                buf.putLong(offset, (long) v);
-                break;
-            }
-            case FLOAT: {
-                buf.putFloat(offset, (float)v);
-                break;
-            }
-            case DOUBLE: {
-                buf.putDouble(offset, v);
-                break;
-            }
+            case FLOAT:
+                {
+                    buf.putFloat(offset, (float) v);
+                    break;
+                }
+            case DOUBLE:
+                {
+                    buf.putDouble(offset, v);
+                    break;
+                }
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -299,35 +313,42 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
-            case BOOL: {
-                buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
-                break;
-            }
-            case INT8: {
-                buf.put(offset, v);
-                break;
-            }
-            case INT16: {
-                buf.putShort(offset, v);
-                break;
-            }
-            case INT32: {
-                buf.putInt(offset, v);
-                break;
-            }
+            case BOOL:
+                {
+                    buf.put(offset, v == 0 ? (byte) 0x00 : (byte) 0x01);
+                    break;
+                }
+            case INT8:
+                {
+                    buf.put(offset, v);
+                    break;
+                }
+            case INT16:
+                {
+                    buf.putShort(offset, v);
+                    break;
+                }
+            case INT32:
+                {
+                    buf.putInt(offset, v);
+                    break;
+                }
             case TIMESTAMP:
-            case INT64: {
-                buf.putLong(offset, v);
-                break;
-            }
-            case FLOAT: {
-                buf.putFloat(offset, v);
-                break;
-            }
-            case DOUBLE: {
-                buf.putDouble(offset, v);
-                break;
-            }
+            case INT64:
+                {
+                    buf.putLong(offset, v);
+                    break;
+                }
+            case FLOAT:
+                {
+                    buf.putFloat(offset, v);
+                    break;
+                }
+            case DOUBLE:
+                {
+                    buf.putDouble(offset, v);
+                    break;
+                }
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -346,39 +367,46 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
-            case BOOL: {
-                buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
-                break;
-            }
-            case INT8: {
-                if (v > 0x7F || v < -0x7F) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is byte");
+            case BOOL:
+                {
+                    buf.put(offset, v == 0 ? (byte) 0x00 : (byte) 0x01);
+                    break;
                 }
-                buf.put(offset, (byte)v);
-                break;
-            }
-            case INT16: {
-                buf.putShort(offset, v);
-                break;
-            }
-            case INT32: {
-                buf.putInt(offset, v);
-                break;
-            }
+            case INT8:
+                {
+                    if (v > 0x7F || v < -0x7F) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is byte");
+                    }
+                    buf.put(offset, (byte) v);
+                    break;
+                }
+            case INT16:
+                {
+                    buf.putShort(offset, v);
+                    break;
+                }
+            case INT32:
+                {
+                    buf.putInt(offset, v);
+                    break;
+                }
             case TIMESTAMP:
-            case INT64: {
-                buf.putLong(offset, v);
-                break;
-            }
-            case FLOAT: {
-                buf.putFloat(offset, v);
-                break;
-            }
-            case DOUBLE: {
-                buf.putDouble(offset, v);
-                break;
-            }
+            case INT64:
+                {
+                    buf.putLong(offset, v);
+                    break;
+                }
+            case FLOAT:
+                {
+                    buf.putFloat(offset, v);
+                    break;
+                }
+            case DOUBLE:
+                {
+                    buf.putDouble(offset, v);
+                    break;
+                }
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -397,43 +425,50 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
-            case BOOL: {
-                buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
-                break;
-            }
-            case INT8: {
-                if (v > 0x7F || v < -0x7F) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is byte");
+            case BOOL:
+                {
+                    buf.put(offset, v == 0 ? (byte) 0x00 : (byte) 0x01);
+                    break;
                 }
-                buf.put(offset, (byte)v);
-                break;
-            }
-            case INT16: {
-                if (v > 0x7FFF || v < -0x7FFF) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is short");
+            case INT8:
+                {
+                    if (v > 0x7F || v < -0x7F) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is byte");
+                    }
+                    buf.put(offset, (byte) v);
+                    break;
                 }
-                buf.putShort(offset, (short) v);
-                break;
-            }
-            case INT32: {
-                buf.putInt(offset, v);
-                break;
-            }
+            case INT16:
+                {
+                    if (v > 0x7FFF || v < -0x7FFF) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is short");
+                    }
+                    buf.putShort(offset, (short) v);
+                    break;
+                }
+            case INT32:
+                {
+                    buf.putInt(offset, v);
+                    break;
+                }
             case TIMESTAMP:
-            case INT64: {
-                buf.putLong(offset, v);
-                break;
-            }
-            case FLOAT: {
-                buf.putFloat(offset, v);
-                break;
-            }
-            case DOUBLE: {
-                buf.putDouble(offset, v);
-                break;
-            }
+            case INT64:
+                {
+                    buf.putLong(offset, v);
+                    break;
+                }
+            case FLOAT:
+                {
+                    buf.putFloat(offset, v);
+                    break;
+                }
+            case DOUBLE:
+                {
+                    buf.putDouble(offset, v);
+                    break;
+                }
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -453,53 +488,62 @@ public class RowWriterImpl implements RowWriter {
         }
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
-            case BOOL: {
-                buf.put(offset, v == 0 ? (byte)0x00 : (byte)0x01);
-                break;
-            }
-            case INT8: {
-                if (v > 0x7F || v < -0x7F) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is byte");
+            case BOOL:
+                {
+                    buf.put(offset, v == 0 ? (byte) 0x00 : (byte) 0x01);
+                    break;
                 }
-                buf.put(offset, (byte)v);
-                break;
-            }
-            case INT16: {
-                if (v > 0x7FFF || v < -0x7FFF) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is short");
+            case INT8:
+                {
+                    if (v > 0x7F || v < -0x7F) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is byte");
+                    }
+                    buf.put(offset, (byte) v);
+                    break;
                 }
-                buf.putShort(offset, (short) v);
-                break;
-            }
-            case INT32: {
-                if (v > 0x7FFFFFFF || v < -0x7FFFFFFF) {
-                    throw new RuntimeException("Value: " + v + " is out of range, the type is int");
+            case INT16:
+                {
+                    if (v > 0x7FFF || v < -0x7FFF) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is short");
+                    }
+                    buf.putShort(offset, (short) v);
+                    break;
                 }
-                buf.putInt(offset, (int)v);
-                break;
-            }
-            case INT64: {
-                buf.putLong(offset, v);
-                break;
-            }
-            case TIMESTAMP: {
-                if (v < 0 || v >  Long.MAX_VALUE / 1000000000) {
-                    throw new RuntimeException(
-                        "Value: " + v + " is out of range, the type is timestamp");
+            case INT32:
+                {
+                    if (v > 0x7FFFFFFF || v < -0x7FFFFFFF) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is int");
+                    }
+                    buf.putInt(offset, (int) v);
+                    break;
                 }
-                buf.putLong(offset, v);
-                break;
-            }
-            case FLOAT: {
-                buf.putFloat(offset, v);
-                break;
-            }
-            case DOUBLE: {
-                buf.putDouble(offset, v);
-                break;
-            }
+            case INT64:
+                {
+                    buf.putLong(offset, v);
+                    break;
+                }
+            case TIMESTAMP:
+                {
+                    if (v < 0 || v > Long.MAX_VALUE / 1000000000) {
+                        throw new RuntimeException(
+                                "Value: " + v + " is out of range, the type is timestamp");
+                    }
+                    buf.putLong(offset, v);
+                    break;
+                }
+            case FLOAT:
+                {
+                    buf.putFloat(offset, v);
+                    break;
+                }
+            case DOUBLE:
+                {
+                    buf.putDouble(offset, v);
+                    break;
+                }
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -519,27 +563,29 @@ public class RowWriterImpl implements RowWriter {
         int offset = headerLen + numNullBytes + field.offset();
         switch (typeEnum) {
             case GEOGRAPHY:
-            case STRING: {
-                strList.add(v);
-                outOfSpaceStr = true;
-                approxStrLen += v.length;
-                break;
-            }
-            case FIXED_STRING: {
-                // In-place string. If the pass-in string is longer than the pre-defined
-                // fixed length, the string will be truncated to the fixed length
-                int len = Math.min(v.length, field.size());
-                for (int i = 0; i < len; i++) {
-                    buf.put(offset + i, v[i]);
+            case STRING:
+                {
+                    strList.add(v);
+                    outOfSpaceStr = true;
+                    approxStrLen += v.length;
+                    break;
                 }
-                if (len < field.size()) {
-                    byte[] fixStr = new byte[field.size() - len];
-                    for (byte b : fixStr) {
-                        buf.put(offset + len, b);
+            case FIXED_STRING:
+                {
+                    // In-place string. If the pass-in string is longer than the pre-defined
+                    // fixed length, the string will be truncated to the fixed length
+                    int len = Math.min(v.length, field.size());
+                    for (int i = 0; i < len; i++) {
+                        buf.put(offset + i, v[i]);
                     }
+                    if (len < field.size()) {
+                        byte[] fixStr = new byte[field.size() - len];
+                        for (byte b : fixStr) {
+                            buf.put(offset + len, b);
+                        }
+                    }
+                    break;
                 }
-                break;
-            }
             default:
                 throw new RuntimeException("Value: " + new String(v) + "'s type is unexpected");
         }
@@ -559,9 +605,9 @@ public class RowWriterImpl implements RowWriter {
         int offset = headerLen + numNullBytes + field.offset();
         if (typeEnum == PropertyType.TIME) {
             buf.put(offset, v.hour)
-                 .put(offset + Byte.BYTES, v.minute)
-                 .put(offset  + 2 * Byte.BYTES, v.sec)
-                 .putInt(offset + 3 * Byte.BYTES, v.microsec);
+                    .put(offset + Byte.BYTES, v.minute)
+                    .put(offset + 2 * Byte.BYTES, v.sec)
+                    .putInt(offset + 3 * Byte.BYTES, v.microsec);
         } else {
             throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
@@ -582,17 +628,17 @@ public class RowWriterImpl implements RowWriter {
         switch (typeEnum) {
             case DATE:
                 buf.putShort(offset, v.year)
-                    .put(offset + Short.BYTES, v.month)
-                    .put(offset + Short.BYTES + Byte.BYTES, v.day);
+                        .put(offset + Short.BYTES, v.month)
+                        .put(offset + Short.BYTES + Byte.BYTES, v.day);
                 break;
             case DATETIME:
                 buf.putShort(offset, v.year)
-                    .put(offset + Short.BYTES, v.month)
-                    .put(offset + Short.BYTES + Byte.BYTES, v.day)
-                    .put(offset + Short.BYTES + 2 * Byte.BYTES, (byte) 0)
-                    .put(offset + Short.BYTES + 3 * Byte.BYTES, (byte) 0)
-                    .put(offset + Short.BYTES + 4 * Byte.BYTES, (byte) 0)
-                    .putInt(offset + Short.BYTES + 5 * Byte.BYTES, 0);
+                        .put(offset + Short.BYTES, v.month)
+                        .put(offset + Short.BYTES + Byte.BYTES, v.day)
+                        .put(offset + Short.BYTES + 2 * Byte.BYTES, (byte) 0)
+                        .put(offset + Short.BYTES + 3 * Byte.BYTES, (byte) 0)
+                        .put(offset + Short.BYTES + 4 * Byte.BYTES, (byte) 0)
+                        .putInt(offset + Short.BYTES + 5 * Byte.BYTES, 0);
                 break;
             default:
                 throw new RuntimeException("Value: " + v + "'s type is unexpected");
@@ -614,17 +660,17 @@ public class RowWriterImpl implements RowWriter {
         switch (typeEnum) {
             case DATE:
                 buf.putShort(offset, v.year)
-                    .put(offset + Short.BYTES, v.month)
-                    .put(offset + Short.BYTES + Byte.BYTES, v.day);
+                        .put(offset + Short.BYTES, v.month)
+                        .put(offset + Short.BYTES + Byte.BYTES, v.day);
                 break;
             case DATETIME:
                 buf.putShort(offset, v.year)
-                    .put(offset + Short.BYTES, v.month)
-                    .put(offset + Short.BYTES + Byte.BYTES, v.day)
-                    .put(offset + Short.BYTES + 2 * Byte.BYTES, v.hour)
-                    .put(offset + Short.BYTES + 3 * Byte.BYTES, v.minute)
-                    .put(offset + Short.BYTES + 4 * Byte.BYTES, v.sec)
-                    .putInt(offset + Short.BYTES + 5 * Byte.BYTES, v.microsec);
+                        .put(offset + Short.BYTES, v.month)
+                        .put(offset + Short.BYTES + Byte.BYTES, v.day)
+                        .put(offset + Short.BYTES + 2 * Byte.BYTES, v.hour)
+                        .put(offset + Short.BYTES + 3 * Byte.BYTES, v.minute)
+                        .put(offset + Short.BYTES + 4 * Byte.BYTES, v.sec)
+                        .putInt(offset + Short.BYTES + 5 * Byte.BYTES, v.microsec);
                 break;
             default:
                 throw new RuntimeException();
@@ -644,19 +690,23 @@ public class RowWriterImpl implements RowWriter {
         }
         if (typeEnum == PropertyType.GEOGRAPHY) {
             if (field.geoShape() != 0 && field.geoShape() != v.getSetField()) {
-                throw new RuntimeException("Incorrect geo shape, expect "
-                        + field.geoShape() + ", got "
-                        + v.getSetField());
+                throw new RuntimeException(
+                        "Incorrect geo shape, expect "
+                                + field.geoShape()
+                                + ", got "
+                                + v.getSetField());
             }
         } else {
             throw new RuntimeException("Value: " + v + "'s type is unexpected");
         }
         org.locationtech.jts.geom.Geometry jtsGeom = convertGeographyToJTSGeometry(v);
-        byte[] wkb = new org.locationtech.jts.io
-                         .WKBWriter(2, this.byteOrder == ByteOrder.BIG_ENDIAN
-                                           ? ByteOrderValues.BIG_ENDIAN
-                                           : ByteOrderValues.LITTLE_ENDIAN)
-                         .write(jtsGeom);
+        byte[] wkb =
+                new org.locationtech.jts.io.WKBWriter(
+                                2,
+                                this.byteOrder == ByteOrder.BIG_ENDIAN
+                                        ? ByteOrderValues.BIG_ENDIAN
+                                        : ByteOrderValues.LITTLE_ENDIAN)
+                        .write(jtsGeom);
         write(index, wkb);
     }
 
@@ -686,23 +736,23 @@ public class RowWriterImpl implements RowWriter {
         } else if (value instanceof Short) {
             write(index, (short) value);
         } else if (value instanceof Integer) {
-            write(index, (int)value);
+            write(index, (int) value);
         } else if (value instanceof Long) {
-            write(index, (long)value);
+            write(index, (long) value);
         } else if (value instanceof String) {
             write(index, ((String) value).getBytes());
         } else if (value instanceof Float) {
-            write(index, (float)value);
+            write(index, (float) value);
         } else if (value instanceof Double) {
-            write(index, (double)value);
+            write(index, (double) value);
         } else if (value instanceof Time) {
-            write(index, (Time)value);
+            write(index, (Time) value);
         } else if (value instanceof Date) {
-            write(index, (Date)value);
+            write(index, (Date) value);
         } else if (value instanceof DateTime) {
-            write(index, (DateTime)value);
+            write(index, (DateTime) value);
         } else if (value instanceof Geography) {
-            write(index, (Geography)value);
+            write(index, (Geography) value);
         } else {
             throw new RuntimeException("Unsupported value object `" + value.getClass() + "\"");
         }
@@ -750,8 +800,11 @@ public class RowWriterImpl implements RowWriter {
                 break;
             default:
                 throw new RuntimeException(
-                  "Unknown value: " + value.getFieldValue().getClass()
-                    + "from index `" + index + "\"");
+                        "Unknown value: "
+                                + value.getFieldValue().getClass()
+                                + "from index `"
+                                + index
+                                + "\"");
         }
     }
 
@@ -777,19 +830,18 @@ public class RowWriterImpl implements RowWriter {
 
     private void setNullBit(int pos) {
         int offset = headerLen + (pos >> 3);
-        buf.put(offset,
-            (byte)((int)buf.get(offset) | orBits[(int)(pos & 0x0000000000000007L)]));
+        buf.put(offset, (byte) ((int) buf.get(offset) | orBits[(int) (pos & 0x0000000000000007L)]));
     }
 
-    private boolean checkNullBit(int pos)  {
+    private boolean checkNullBit(int pos) {
         int offset = headerLen + (pos >> 3);
-        int flag = buf.get(offset) & nullBits[(int)(pos & 0x0000000000000007L)];
+        int flag = buf.get(offset) & nullBits[(int) (pos & 0x0000000000000007L)];
         return flag != 0;
     }
 
     private void clearNullBit(int pos) {
         int offset = headerLen + (pos >> 3);
-        buf.put(offset, (byte)(buf.get(offset) & andBits[(int) (pos & 0x00000007L)]));
+        buf.put(offset, (byte) (buf.get(offset) & andBits[(int) (pos & 0x00000007L)]));
     }
 
     public void checkUnsetFields() {
@@ -846,8 +898,14 @@ public class RowWriterImpl implements RowWriter {
 
     public ByteBuffer processOutOfSpace() {
         ByteBuffer temp;
-        temp = ByteBuffer.allocate((int) (headerLen
-            + numNullBytes + schema.size() + approxStrLen + Long.BYTES));
+        temp =
+                ByteBuffer.allocate(
+                        (int)
+                                (headerLen
+                                        + numNullBytes
+                                        + schema.size()
+                                        + approxStrLen
+                                        + Long.BYTES));
         temp.order(this.byteOrder);
 
         // Reserve enough space to avoid memory re-allocation
@@ -858,14 +916,13 @@ public class RowWriterImpl implements RowWriter {
 
         // Now let's process all strings
         int strNum = 0;
-        for (int i = 0;  i < schema.getNumFields(); i++) {
+        for (int i = 0; i < schema.getNumFields(); i++) {
             SchemaProvider.Field field = schema.field(i);
             PropertyType typeEnum = PropertyType.findByValue(field.type());
             if (typeEnum == null) {
                 throw new RuntimeException("Incorrect field type " + field.type());
             }
-            if (typeEnum != PropertyType.STRING
-                && typeEnum != PropertyType.GEOGRAPHY) {
+            if (typeEnum != PropertyType.STRING && typeEnum != PropertyType.GEOGRAPHY) {
                 continue;
             }
             int offset = headerLen + numNullBytes + field.offset();
@@ -912,65 +969,65 @@ public class RowWriterImpl implements RowWriter {
         return curTime + (nanoTime - nanoTime / 1000000 * 1000000) / 1000;
     }
 
-    public org.locationtech.jts.geom.Geometry
-        convertGeographyToJTSGeometry(Geography geog) {
+    public org.locationtech.jts.geom.Geometry convertGeographyToJTSGeometry(Geography geog) {
         GeometryFactory geomFactory = new GeometryFactory();
         switch (geog.getSetField()) {
-            case Geography.PTVAL: {
-                Point point = geog.getPtVal();
-                Coordinate coord = point.getCoord();
-                return geomFactory.createPoint(
-                        new org.locationtech.jts.geom.Coordinate(coord.x, coord.y));
-            }
-            case Geography.LSVAL: {
-                LineString line = geog.getLsVal();
-                List<Coordinate> coordList = line.getCoordList();
+            case Geography.PTVAL:
+                {
+                    Point point = geog.getPtVal();
+                    Coordinate coord = point.getCoord();
+                    return geomFactory.createPoint(
+                            new org.locationtech.jts.geom.Coordinate(coord.x, coord.y));
+                }
+            case Geography.LSVAL:
+                {
+                    LineString line = geog.getLsVal();
+                    List<Coordinate> coordList = line.getCoordList();
 
-                List<org.locationtech.jts.geom.Coordinate> jtsCoordList =
-                        new ArrayList<>();
-                for (int i = 0; i < coordList.size(); ++i) {
-                    jtsCoordList.add(new org.locationtech.jts.geom.Coordinate(
-                            coordList.get(i).x, coordList.get(i).y));
-                }
-                org.locationtech.jts.geom.Coordinate[] jtsCoordArray =
-                        new org.locationtech.jts.geom.Coordinate[jtsCoordList.size()];
-                return geomFactory.createLineString(
-                        jtsCoordList.toArray(jtsCoordArray));
-            }
-            case Geography.PGVAL: {
-                Polygon polygon = geog.getPgVal();
-                List<List<Coordinate>> coordListList = polygon.getCoordListList();
-                if (coordListList.isEmpty()) {
-                    throw new RuntimeException("Polygon must at least contain one loop");
-                }
-            
-                List<org.locationtech.jts.geom.LinearRing> rings = new ArrayList<>();
-                for (int i = 0; i < coordListList.size(); ++i) {
-                    List<Coordinate> coordList = coordListList.get(i);
-                    List<org.locationtech.jts.geom.Coordinate> jtsCoordList =
-                            new ArrayList<>();
-                    for (int j = 0; j < coordList.size(); ++j) {
-                        jtsCoordList.add(new org.locationtech.jts.geom.Coordinate(
-                                coordList.get(j).x, coordList.get(j).y));
+                    List<org.locationtech.jts.geom.Coordinate> jtsCoordList = new ArrayList<>();
+                    for (int i = 0; i < coordList.size(); ++i) {
+                        jtsCoordList.add(
+                                new org.locationtech.jts.geom.Coordinate(
+                                        coordList.get(i).x, coordList.get(i).y));
                     }
                     org.locationtech.jts.geom.Coordinate[] jtsCoordArray =
                             new org.locationtech.jts.geom.Coordinate[jtsCoordList.size()];
-                    rings.add(geomFactory.createLinearRing(
-                            jtsCoordList.toArray(jtsCoordArray)));
+                    return geomFactory.createLineString(jtsCoordList.toArray(jtsCoordArray));
                 }
-                org.locationtech.jts.geom.LinearRing shell = rings.get(0);
-                if (rings.size() == 1) {
-                    return geomFactory.createPolygon(shell);
-                } else {
-                    rings.remove(0);
-                    org.locationtech.jts.geom.LinearRing[] holesArrary =
-                        new org.locationtech.jts.geom.LinearRing[rings.size() - 1];
-                    return geomFactory.createPolygon(shell, rings.toArray(holesArrary));   
+            case Geography.PGVAL:
+                {
+                    Polygon polygon = geog.getPgVal();
+                    List<List<Coordinate>> coordListList = polygon.getCoordListList();
+                    if (coordListList.isEmpty()) {
+                        throw new RuntimeException("Polygon must at least contain one loop");
+                    }
+
+                    List<org.locationtech.jts.geom.LinearRing> rings = new ArrayList<>();
+                    for (int i = 0; i < coordListList.size(); ++i) {
+                        List<Coordinate> coordList = coordListList.get(i);
+                        List<org.locationtech.jts.geom.Coordinate> jtsCoordList = new ArrayList<>();
+                        for (int j = 0; j < coordList.size(); ++j) {
+                            jtsCoordList.add(
+                                    new org.locationtech.jts.geom.Coordinate(
+                                            coordList.get(j).x, coordList.get(j).y));
+                        }
+                        org.locationtech.jts.geom.Coordinate[] jtsCoordArray =
+                                new org.locationtech.jts.geom.Coordinate[jtsCoordList.size()];
+                        rings.add(
+                                geomFactory.createLinearRing(jtsCoordList.toArray(jtsCoordArray)));
+                    }
+                    org.locationtech.jts.geom.LinearRing shell = rings.get(0);
+                    if (rings.size() == 1) {
+                        return geomFactory.createPolygon(shell);
+                    } else {
+                        rings.remove(0);
+                        org.locationtech.jts.geom.LinearRing[] holesArrary =
+                                new org.locationtech.jts.geom.LinearRing[rings.size() - 1];
+                        return geomFactory.createPolygon(shell, rings.toArray(holesArrary));
+                    }
                 }
-            }
             default:
-                throw new RuntimeException("Unknown geography: "
-                        + geog.getFieldValue().getClass());
+                throw new RuntimeException("Unknown geography: " + geog.getFieldValue().getClass());
         }
     }
 }

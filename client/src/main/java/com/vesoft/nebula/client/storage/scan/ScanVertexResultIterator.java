@@ -28,34 +28,38 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * ScanVertexResult's iterator
- */
+/** ScanVertexResult's iterator */
 public class ScanVertexResultIterator extends ScanResultIterator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanVertexResultIterator.class);
 
     private final ScanVertexRequest request;
     private ExecutorService threadPool = null;
 
-    private ScanVertexResultIterator(MetaManager metaManager,
-                                     StorageConnPool pool,
-                                     Set<PartScanInfo> partScanInfoList,
-                                     List<HostAddress> addresses,
-                                     ScanVertexRequest request,
-                                     String spaceName,
-                                     String labelName,
-                                     boolean partSuccess) {
-        super(metaManager, pool, new PartScanQueue(partScanInfoList), addresses, spaceName,
-                labelName, partSuccess);
+    private ScanVertexResultIterator(
+            MetaManager metaManager,
+            StorageConnPool pool,
+            Set<PartScanInfo> partScanInfoList,
+            List<HostAddress> addresses,
+            ScanVertexRequest request,
+            String spaceName,
+            String labelName,
+            boolean partSuccess) {
+        super(
+                metaManager,
+                pool,
+                new PartScanQueue(partScanInfoList),
+                addresses,
+                spaceName,
+                labelName,
+                partSuccess);
         this.request = request;
     }
-
 
     /**
      * get the next vertex set
      *
-     * <p>in every next function, the client will send new scan request to storage server
-     * parallel, and the parallel num is the space's leader hosts.
+     * <p>in every next function, the client will send new scan request to storage server parallel,
+     * and the parallel num is the space's leader hosts.
      *
      * @return {@link ScanVertexResult}
      */
@@ -73,59 +77,61 @@ public class ScanVertexResultIterator extends ScanResultIterator {
         threadPool = Executors.newFixedThreadPool(addresses.size());
 
         for (HostAddress addr : addresses) {
-            threadPool.submit(() -> {
-                ScanResponse response;
-                PartScanInfo partInfo = partScanQueue.getPart(addr);
-                // no part need to scan
-                if (partInfo == null) {
-                    countDownLatch.countDown();
-                    existSuccess.addAndGet(1);
-                    return;
-                }
+            threadPool.submit(
+                    () -> {
+                        ScanResponse response;
+                        PartScanInfo partInfo = partScanQueue.getPart(addr);
+                        // no part need to scan
+                        if (partInfo == null) {
+                            countDownLatch.countDown();
+                            existSuccess.addAndGet(1);
+                            return;
+                        }
 
-                GraphStorageConnection connection;
-                try {
-                    connection = pool.getStorageConnection(addr);
-                } catch (Exception e) {
-                    LOGGER.error("get storage client error, ", e);
-                    exceptions.add(e);
-                    countDownLatch.countDown();
-                    return;
-                }
+                        GraphStorageConnection connection;
+                        try {
+                            connection = pool.getStorageConnection(addr);
+                        } catch (Exception e) {
+                            LOGGER.error("get storage client error, ", e);
+                            exceptions.add(e);
+                            countDownLatch.countDown();
+                            return;
+                        }
 
-                Map<Integer, ScanCursor> cursorMap = new HashMap<>();
-                cursorMap.put(partInfo.getPart(), partInfo.getCursor());
-                ScanVertexRequest partRequest = new ScanVertexRequest(request);
-                partRequest.setParts(cursorMap);
-                try {
-                    response = connection.scanVertex(partRequest);
-                } catch (TException e) {
-                    LOGGER.error(String.format("Scan vertex failed for %s", e.getMessage()), e);
-                    exceptions.add(e);
-                    partScanQueue.dropPart(partInfo);
-                    countDownLatch.countDown();
-                    return;
-                }
+                        Map<Integer, ScanCursor> cursorMap = new HashMap<>();
+                        cursorMap.put(partInfo.getPart(), partInfo.getCursor());
+                        ScanVertexRequest partRequest = new ScanVertexRequest(request);
+                        partRequest.setParts(cursorMap);
+                        try {
+                            response = connection.scanVertex(partRequest);
+                        } catch (TException e) {
+                            LOGGER.error(
+                                    String.format("Scan vertex failed for %s", e.getMessage()), e);
+                            exceptions.add(e);
+                            partScanQueue.dropPart(partInfo);
+                            countDownLatch.countDown();
+                            return;
+                        }
 
-                if (response == null) {
-                    handleNullResponse(partInfo, exceptions);
-                    countDownLatch.countDown();
-                    return;
-                }
+                        if (response == null) {
+                            handleNullResponse(partInfo, exceptions);
+                            countDownLatch.countDown();
+                            return;
+                        }
 
-                if (isSuccessful(response)) {
-                    handleSucceedResult(existSuccess, response, partInfo);
-                    results.add(response.getProps());
-                }
+                        if (isSuccessful(response)) {
+                            handleSucceedResult(existSuccess, response, partInfo);
+                            results.add(response.getProps());
+                        }
 
-                if (response.getResult() != null) {
-                    handleFailedResult(response, partInfo, exceptions);
-                } else {
-                    handleNullResult(partInfo, exceptions);
-                }
-                pool.release(addr, connection);
-                countDownLatch.countDown();
-            });
+                        if (response.getResult() != null) {
+                            handleFailedResult(response, partInfo, exceptions);
+                        } else {
+                            handleNullResult(partInfo, exceptions);
+                        }
+                        pool.release(addr, connection);
+                        countDownLatch.countDown();
+                    });
         }
 
         try {
@@ -142,8 +148,8 @@ public class ScanVertexResultIterator extends ScanResultIterator {
             if (existSuccess.get() == 0) {
                 throwExceptions(exceptions);
             }
-            ScanStatus status = exceptions.size() > 0 ? ScanStatus.PART_SUCCESS :
-                    ScanStatus.ALL_SUCCESS;
+            ScanStatus status =
+                    exceptions.size() > 0 ? ScanStatus.PART_SUCCESS : ScanStatus.ALL_SUCCESS;
             return new ScanVertexResult(results, status);
         } else {
             hasNext = partScanQueue.size() > 0 && exceptions.isEmpty();
@@ -157,13 +163,7 @@ public class ScanVertexResultIterator extends ScanResultIterator {
         }
     }
 
-
-
-
-
-    /**
-     * builder to build {@link ScanVertexResult}
-     */
+    /** builder to build {@link ScanVertexResult} */
     public static class ScanVertexResultBuilder {
 
         MetaManager metaManager;

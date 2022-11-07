@@ -9,7 +9,6 @@ import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
-import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
@@ -48,7 +47,6 @@ import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -94,14 +92,20 @@ public class MetaClient extends AbstractMetaClient {
         this(addresses, DEFAULT_TIMEOUT_MS, connectionRetry, executionRetry);
     }
 
-    public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
-                      int executionRetry) throws UnknownHostException {
+    public MetaClient(
+            List<HostAddress> addresses, int timeout, int connectionRetry, int executionRetry)
+            throws UnknownHostException {
         super(addresses, timeout, connectionRetry, executionRetry);
         this.addresses = addresses;
     }
 
-    public MetaClient(List<HostAddress> addresses, int timeout, int connectionRetry,
-                      int executionRetry, boolean enableSSL, SSLParam sslParam)
+    public MetaClient(
+            List<HostAddress> addresses,
+            int timeout,
+            int connectionRetry,
+            int executionRetry,
+            boolean enableSSL,
+            SSLParam sslParam)
             throws UnknownHostException {
         super(addresses, timeout, connectionRetry, executionRetry);
         this.addresses = addresses;
@@ -112,16 +116,12 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-    public void connect()
-            throws TException, ClientServerIncompatibleException {
+    public void connect() throws TException, ClientServerIncompatibleException {
         doConnect();
     }
 
-    /**
-     * connect nebula meta server
-     */
-    private void doConnect()
-            throws TTransportException, ClientServerIncompatibleException {
+    /** connect nebula meta server */
+    private void doConnect() throws TTransportException, ClientServerIncompatibleException {
         Random random = new Random(System.currentTimeMillis());
         int position = random.nextInt(addresses.size());
         HostAddress address = addresses.get(position);
@@ -139,8 +139,8 @@ public class MetaClient extends AbstractMetaClient {
                         SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
             }
             try {
-                transport = new TSocket(sslSocketFactory.createSocket(host, port), timeout,
-                        timeout);
+                transport =
+                        new TSocket(sslSocketFactory.createSocket(host, port), timeout, timeout);
             } catch (IOException e) {
                 throw new TTransportException(IOErrorException.E_UNKNOWN, e);
             }
@@ -153,23 +153,19 @@ public class MetaClient extends AbstractMetaClient {
         client = new MetaService.Client(protocol);
 
         // check if client version matches server version
-        VerifyClientVersionResp resp = client
-                .verifyClientVersion(new VerifyClientVersionReq());
+        VerifyClientVersionResp resp = client.verifyClientVersion(new VerifyClientVersionReq());
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
             client.getInputProtocol().getTransport().close();
             if (resp.getError_msg() == null) {
                 throw new ClientServerIncompatibleException(
-                        new String("Error code: ")
-                                + String.valueOf(resp.getCode().getValue()));
+                        new String("Error code: ") + String.valueOf(resp.getCode().getValue()));
             }
             throw new ClientServerIncompatibleException(
-                    new String(resp.getError_msg())
-                            + String.valueOf(resp.getCode().getValue()));
+                    new String(resp.getError_msg()) + String.valueOf(resp.getCode().getValue()));
         }
     }
 
-    private void freshClient(HostAddr leader)
-            throws TTransportException {
+    private void freshClient(HostAddr leader) throws TTransportException {
         close();
         try {
             getClient(leader.getHost(), leader.getPort());
@@ -178,9 +174,7 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-    /**
-     * close transport
-     */
+    /** close transport */
     public void close() {
         if (transport != null && transport.isOpen()) {
             transport.close();
@@ -224,8 +218,8 @@ public class MetaClient extends AbstractMetaClient {
      * @param spaceName nebula graph space
      * @return SpaceItem
      */
-    public synchronized SpaceItem getSpace(String spaceName) throws TException,
-            ExecuteFailedException {
+    public synchronized SpaceItem getSpace(String spaceName)
+            throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
         GetSpaceReq request = new GetSpaceReq();
         request.setSpace_name(spaceName.getBytes());
@@ -287,12 +281,11 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-
     /**
      * get schema of specific tag
      *
      * @param spaceName nebula graph space
-     * @param tagName   nebula tag name
+     * @param tagName nebula tag name
      * @return Schema
      */
     public synchronized Schema getTag(String spaceName, String tagName)
@@ -326,7 +319,6 @@ public class MetaClient extends AbstractMetaClient {
                     "Get tag execute failed, errorCode: " + response.getCode());
         }
     }
-
 
     /**
      * get all edges of specific space
@@ -366,7 +358,7 @@ public class MetaClient extends AbstractMetaClient {
      * get schema of specific edgeRow
      *
      * @param spaceName nebula graph space
-     * @param edgeName  nebula edgeRow name
+     * @param edgeName nebula edgeRow name
      * @return Schema
      */
     public synchronized Schema getEdge(String spaceName, String edgeName)
@@ -401,10 +393,8 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-
     /**
-     * Get all parts and the address in a space
-     * Store in this.parts
+     * Get all parts and the address in a space Store in this.parts
      *
      * @param spaceName Nebula space name
      * @return
@@ -439,9 +429,7 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-    /**
-     * get all Storaged servers
-     */
+    /** get all Storaged servers */
     public synchronized Set<HostAddr> listHosts() {
         int retry = RETRY_TIMES;
         ListHostsReq request = new ListHostsReq();

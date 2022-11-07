@@ -4,9 +4,10 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import java.io.Closeable;
 import java.io.Serializable;
 
-public abstract class Connection implements Serializable {
+public abstract class Connection implements Serializable, Closeable {
 
     private static final long serialVersionUID = -8425216612015802331L;
 
@@ -19,9 +20,8 @@ public abstract class Connection implements Serializable {
     public abstract void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException;
 
-
-    public abstract void open(HostAddress address, int timeout) throws IOErrorException,
-            ClientServerIncompatibleException;
+    public abstract void open(HostAddress address, int timeout)
+            throws IOErrorException, ClientServerIncompatibleException;
 
     public abstract void reopen() throws IOErrorException, ClientServerIncompatibleException;
 

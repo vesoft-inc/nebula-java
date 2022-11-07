@@ -29,17 +29,17 @@ import javax.net.ssl.SSLSocketFactory;
 public class GraphStorageConnection implements Serializable {
 
     private static final long serialVersionUID = -3631352515689239788L;
-    
+
     protected TTransport transport = null;
     protected TProtocol protocol = null;
     public HostAddress address;
     private GraphStorageService.Client client;
 
-    protected GraphStorageConnection() {
-    }
+    protected GraphStorageConnection() {}
 
-    protected GraphStorageConnection open(HostAddress address, int timeout, boolean enableSSL,
-                                          SSLParam sslParam) throws Exception {
+    protected GraphStorageConnection open(
+            HostAddress address, int timeout, boolean enableSSL, SSLParam sslParam)
+            throws Exception {
         this.address = address;
         int newTimeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
         if (enableSSL) {
@@ -62,18 +62,18 @@ public class GraphStorageConnection implements Serializable {
                 throw new TTransportException(IOErrorException.E_UNKNOWN, e);
             }
         } else {
-            this.transport = new TSocket(
-                    InetAddress.getByName(address.getHost()).getHostAddress(),
-                    address.getPort(),
-                    newTimeout,
-                    newTimeout);
+            this.transport =
+                    new TSocket(
+                            InetAddress.getByName(address.getHost()).getHostAddress(),
+                            address.getPort(),
+                            newTimeout,
+                            newTimeout);
             this.transport.open();
         }
         this.protocol = new TCompactProtocol(transport);
         client = new GraphStorageService.Client(protocol);
         return this;
     }
-
 
     public ScanResponse scanVertex(ScanVertexRequest request) throws TException {
         return client.scanVertex(request);
@@ -92,5 +92,4 @@ public class GraphStorageConnection implements Serializable {
     public HostAddress getAddress() {
         return address;
     }
-
 }

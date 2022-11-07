@@ -28,16 +28,12 @@ public class BaseTableRow implements Serializable {
         this.decodeType = decodeType;
     }
 
-    /**
-     * number of elements in vertexTableRow
-     */
+    /** number of elements in vertexTableRow */
     public int size() {
         return values.size();
     }
 
-    /**
-     * check whether the value at position i is null
-     */
+    /** check whether the value at position i is null */
     public boolean isNullAt(int i) {
         return values.get(i) == null;
     }
@@ -82,17 +78,14 @@ public class BaseTableRow implements Serializable {
         return values;
     }
 
-
-    /**
-     * Displays all elements of this vertexTableRow in a string using a separator string.
-     */
+    /** Displays all elements of this vertexTableRow in a string using a separator string. */
     public String mkString(String sep) {
         return mkString("", sep, "");
     }
 
     /**
-     * Displays all elements of this vertexTableRow in a string using
-     * start, end, and separator strings.
+     * Displays all elements of this vertexTableRow in a string using start, end, and separator
+     * strings.
      */
     public String mkString(String start, String sep, String end) {
         int n = size();
@@ -110,5 +103,4 @@ public class BaseTableRow implements Serializable {
         builder.append(end);
         return builder.toString();
     }
-
 }

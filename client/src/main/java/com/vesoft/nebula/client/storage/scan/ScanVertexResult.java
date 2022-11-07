@@ -28,19 +28,13 @@ public class ScanVertexResult implements Serializable {
 
     private final ScanStatus scanStatus;
 
-    /**
-     * VertexRow for table view
-     */
+    /** VertexRow for table view */
     private List<VertexTableRow> vertexTableRows = new ArrayList<>();
 
-    /**
-     * schema for VertexRow's values
-     */
+    /** schema for VertexRow's values */
     private List<String> propNames = new ArrayList<>();
 
-    /**
-     * Vertex for structure view with prop name
-     */
+    /** Vertex for structure view with prop name */
     private List<VertexRow> verticeRows = new ArrayList<>();
 
     private Map<ValueWrapper, VertexRow> vidVertices = new HashMap<>();
@@ -107,7 +101,6 @@ public class ScanVertexResult implements Serializable {
         return verticeRows;
     }
 
-
     /**
      * get the map of vid and vertex row
      *
@@ -119,7 +112,6 @@ public class ScanVertexResult implements Serializable {
         }
         return vidVertices;
     }
-
 
     /**
      * get the result status
@@ -156,9 +148,7 @@ public class ScanVertexResult implements Serializable {
         return true;
     }
 
-    /**
-     * construct vertex row from datasets
-     */
+    /** construct vertex row from datasets */
     private void constructVertexRow() {
         if (isEmpty) {
             return;
@@ -171,9 +161,7 @@ public class ScanVertexResult implements Serializable {
         }
     }
 
-    /**
-     * construct vertex table row from datasets
-     */
+    /** construct vertex table row from datasets */
     private void constructVertexTableRow() {
         if (isEmpty) {
             return;
@@ -185,9 +173,7 @@ public class ScanVertexResult implements Serializable {
         }
     }
 
-    /**
-     * construct property name from dataset
-     */
+    /** construct property name from dataset */
     private void constructPropNames() {
         if (isEmpty) {
             return;
@@ -205,7 +191,4 @@ public class ScanVertexResult implements Serializable {
             }
         }
     }
-
 }
-
-

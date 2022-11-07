@@ -5,7 +5,6 @@
 
 package com.vesoft.nebula.client.storage;
 
-import com.facebook.thrift.TException;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import java.util.Arrays;
 import java.util.List;
@@ -21,12 +20,9 @@ public class StorageConnPoolTest extends TestCase {
         testPoolInit();
     }
 
-    public void tearDown() throws Exception {
-    }
+    public void tearDown() throws Exception {}
 
-    public void testFreshCache() {
-
-    }
+    public void testFreshCache() {}
 
     public void testPoolInit() {
         // invalidate host
@@ -42,11 +38,11 @@ public class StorageConnPoolTest extends TestCase {
 
         // normal
         try {
-            List<HostAddress> address = Arrays.asList(
-                    new HostAddress("127.0.0.1", 9559),
-                    new HostAddress("127.0.0.1", 9560),
-                    new HostAddress("127.0.0.1", 9561)
-            );
+            List<HostAddress> address =
+                    Arrays.asList(
+                            new HostAddress("127.0.0.1", 9559),
+                            new HostAddress("127.0.0.1", 9560),
+                            new HostAddress("127.0.0.1", 9561));
             StoragePoolConfig config = new StoragePoolConfig();
             pool = new StorageConnPool(config);
             assertEquals(pool.getNumActive(new HostAddress("127.0.0.1", 9559)), 0);
@@ -56,11 +52,9 @@ public class StorageConnPoolTest extends TestCase {
         }
     }
 
-
     public void testGetConnection() {
         try {
-            List<HostAddress> address = Arrays.asList(new HostAddress("127.0.0.1",
-                    9559));
+            List<HostAddress> address = Arrays.asList(new HostAddress("127.0.0.1", 9559));
             StoragePoolConfig config = new StoragePoolConfig();
             pool = new StorageConnPool(config);
             pool.getStorageConnection(address.get(0));

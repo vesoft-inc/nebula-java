@@ -16,15 +16,18 @@ import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleExceptio
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GraphSessionPoolExample {
+
     private static final Logger log = LoggerFactory.getLogger(GraphClientExample.class);
 
     public static void main(String[] args) {
@@ -34,8 +37,9 @@ public class GraphSessionPoolExample {
         String spaceName = "test";
         String user = "root";
         String password = "nebula";
-        SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(addresses, spaceName, user,
-                password);
+        SessionPoolConfig sessionPoolConfig =
+            SessionPoolConfig.builder()
+                .graphAddresses(addresses).spaceName(spaceName).username(user).password(password).build();
         SessionPool sessionPool = new SessionPool(sessionPoolConfig);
         if (!sessionPool.init()) {
             log.error("session pool init failed.");
@@ -45,8 +49,11 @@ public class GraphSessionPoolExample {
         try {
             resultSet = sessionPool.execute("match (v:player) return v limit 1;");
             System.out.println(resultSet.toString());
-        } catch (IOErrorException | ClientServerIncompatibleException | AuthFailedException
-                | BindSpaceFailedException e) {
+        }
+        catch (IOErrorException
+               | ClientServerIncompatibleException
+               | AuthFailedException
+               | BindSpaceFailedException e) {
             e.printStackTrace();
             sessionPool.close();
             System.exit(1);
@@ -55,18 +62,22 @@ public class GraphSessionPoolExample {
         // execute in mutil-threads
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 5; i++) {
-            executorService.submit(() -> {
-                try {
-                    ResultSet result = sessionPool.execute("match (v:player) return v limit 1");
-                    System.out.println(result.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            executorService.submit(
+                () -> {
+                    try {
+                        ResultSet result =
+                            sessionPool.execute("match (v:player) return v limit 1");
+                        System.out.println(result.toString());
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
         }
         try {
             executorService.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -74,12 +85,10 @@ public class GraphSessionPoolExample {
         sessionPool.close();
     }
 
-
     private static void prepare() {
         NebulaPool pool = new NebulaPool();
         Session session;
-        NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(100);
+        NebulaPoolConfig nebulaPoolConfig = NebulaPoolConfig.builder().maxConnSize(100).build();
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
         try {
             boolean initResult = pool.init(addresses, nebulaPoolConfig);
@@ -89,15 +98,17 @@ public class GraphSessionPoolExample {
             }
 
             session = pool.getSession("root", "nebula", false);
-            session.execute("CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20));"
-                    + "USE test;"
-                    + "CREATE TAG IF NOT EXISTS player(name string, age int);");
-        } catch (Exception e) {
+            session.execute(
+                "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20));"
+                + "USE test;"
+                + "CREATE TAG IF NOT EXISTS player(name string, age int);");
+        }
+        catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
-        } finally {
+        }
+        finally {
             pool.close();
         }
-
     }
 }

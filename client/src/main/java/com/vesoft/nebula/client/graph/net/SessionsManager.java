@@ -44,14 +44,14 @@ public class SessionsManager implements Serializable {
     }
 
     /**
-     * getSessionWrapper: return a SessionWrapper from sessionManager,
-     * the SessionWrapper couldn't use by multi-thread
+     * getSessionWrapper: return a SessionWrapper from sessionManager, the SessionWrapper couldn't
+     * use by multi-thread
      *
      * @return SessionWrapper
      * @throws RuntimeException the exception when get SessionWrapper
      */
-    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException,
-            ClientServerIncompatibleException {
+    public synchronized SessionWrapper getSessionWrapper()
+            throws RuntimeException, ClientServerIncompatibleException {
         checkClose();
         if (!isInited) {
             init();
@@ -71,8 +71,9 @@ public class SessionsManager implements Serializable {
         }
         // create new session
         try {
-            Session session = pool.getSession(
-                    config.getUserName(), config.getPassword(), config.getReconnect());
+            Session session =
+                    pool.getSession(
+                            config.getUserName(), config.getPassword(), config.isReconnect());
             ResultSet resultSet = session.execute("USE " + config.getSpaceName());
             if (!resultSet.isSucceeded()) {
                 throw new RuntimeException(
@@ -90,8 +91,8 @@ public class SessionsManager implements Serializable {
     }
 
     /**
-     * returnSessionWrapper: return the SessionWrapper to the sessionManger,
-     * the old SessionWrapper couldn't use again.
+     * returnSessionWrapper: return the SessionWrapper to the sessionManger, the old SessionWrapper
+     * couldn't use again.
      *
      * @param session The SessionWrapper
      */
@@ -109,9 +110,7 @@ public class SessionsManager implements Serializable {
         }
     }
 
-    /**
-     * close: release all sessions and close the connection pool
-     */
+    /** close: release all sessions and close the connection pool */
     public synchronized void close() {
         for (SessionWrapper session : sessionList) {
             session.release();

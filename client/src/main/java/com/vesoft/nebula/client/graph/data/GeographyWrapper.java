@@ -35,7 +35,7 @@ public class GeographyWrapper extends BaseDataObject {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GeographyWrapper that = (GeographyWrapper)o;
+        GeographyWrapper that = (GeographyWrapper) o;
         switch (geography.getSetField()) {
             case Geography.PTVAL:
                 return getPointWrapper().equals(that.getPointWrapper());

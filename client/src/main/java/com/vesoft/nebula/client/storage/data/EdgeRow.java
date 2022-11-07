@@ -15,8 +15,8 @@ public class EdgeRow implements Serializable {
     private final long rank;
     private final Map<String, ValueWrapper> props;
 
-    public EdgeRow(ValueWrapper srcId, ValueWrapper dstId, long rank,
-                   Map<String, ValueWrapper> props) {
+    public EdgeRow(
+            ValueWrapper srcId, ValueWrapper dstId, long rank, Map<String, ValueWrapper> props) {
         this.srcId = srcId;
         this.dstId = dstId;
         this.rank = rank;
@@ -42,10 +42,16 @@ public class EdgeRow implements Serializable {
     @Override
     public String toString() {
         return "Edge{"
-                + "srcId='" + srcId.toString() + '\''
-                + ", dstId='" + dstId.toString() + '\''
-                + ", rank=" + rank
-                + ", props=" + props
+                + "srcId='"
+                + srcId.toString()
+                + '\''
+                + ", dstId='"
+                + dstId.toString()
+                + '\''
+                + ", rank="
+                + rank
+                + ", props="
+                + props
                 + '}';
     }
 }

@@ -13,7 +13,6 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
@@ -39,15 +38,12 @@ public class StorageClientExample {
     }
 
     /**
-     * Vertex Person's property in Nebula Graph:
-     * first_name, last_name, gender, birthday
-     * Tom          Li        男       2010
+     * Vertex Person's property in Nebula Graph: first_name, last_name, gender, birthday Tom Li 男
+     * 2010
      */
     public static void scanVertex(StorageClient client) {
-        ScanVertexResultIterator iterator = client.scanVertex(
-                "test",
-                "person",
-                Arrays.asList("name", "age"));
+        ScanVertexResultIterator iterator =
+                client.scanVertex("test", "person", Arrays.asList("name", "age"));
 
         while (iterator.hasNext()) {
             ScanVertexResult result = null;
@@ -79,16 +75,10 @@ public class StorageClientExample {
         }
     }
 
-    /**
-     * Edge Friend's property in Nebula Graph:
-     * degree
-     * 1.0
-     */
+    /** Edge Friend's property in Nebula Graph: degree 1.0 */
     public static void scanEdge(StorageClient client) {
-        ScanEdgeResultIterator iterator = client.scanEdge(
-                "test",
-                "like",
-                Arrays.asList("likeness"));
+        ScanEdgeResultIterator iterator =
+                client.scanEdge("test", "like", Arrays.asList("likeness"));
 
         while (iterator.hasNext()) {
             ScanEdgeResult result = null;

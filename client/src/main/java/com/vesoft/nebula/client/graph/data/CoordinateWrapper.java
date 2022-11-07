@@ -32,8 +32,7 @@ public class CoordinateWrapper extends BaseDataObject {
             return false;
         }
         CoordinateWrapper that = (CoordinateWrapper) o;
-        return this.getX() == that.getX()
-            && this.getY() == that.getY();
+        return this.getX() == that.getX() && this.getY() == that.getY();
     }
 
     @Override

@@ -47,12 +47,17 @@ public class EdgeProcessor {
                         } else if ("_rank".equals(colName.split("\\.")[1])) {
                             rank = values.get(i);
                         } else {
-                            props.put(colName.split("\\.")[1],
+                            props.put(
+                                    colName.split("\\.")[1],
                                     new ValueWrapper(values.get(i), decodeType));
                         }
                     }
-                    EdgeRow edgeRow = new EdgeRow(new ValueWrapper(srcId, decodeType),
-                            new ValueWrapper(dstId, decodeType), rank.getIVal(), props);
+                    EdgeRow edgeRow =
+                            new EdgeRow(
+                                    new ValueWrapper(srcId, decodeType),
+                                    new ValueWrapper(dstId, decodeType),
+                                    rank.getIVal(),
+                                    props);
                     edgeRows.add(edgeRow);
                 }
             }
@@ -60,8 +65,8 @@ public class EdgeProcessor {
         return edgeRows;
     }
 
-    public static List<EdgeTableRow> constructEdgeTableRow(List<DataSet> dataSets,
-                                                           String decodeType) {
+    public static List<EdgeTableRow> constructEdgeTableRow(
+            List<DataSet> dataSets, String decodeType) {
         List<EdgeTableRow> edgeRows = new ArrayList<>();
         for (DataSet dataSet : dataSets) {
             List<Row> rows = dataSet.getRows();

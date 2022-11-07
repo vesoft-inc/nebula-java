@@ -28,15 +28,16 @@ public class SchemaProviderImpl implements SchemaProvider {
         private final int nullFlagPos;
         private final int geoShape;
 
-        public SchemaField(String name,
-                           int type,
-                           boolean nullable,
-                           boolean hasDefault,
-                           byte[] defaultValue,
-                           int size,
-                           int offset,
-                           int nullFlagPos,
-                           int geoShape) {
+        public SchemaField(
+                String name,
+                int type,
+                boolean nullable,
+                boolean hasDefault,
+                byte[] defaultValue,
+                int size,
+                int offset,
+                int nullFlagPos,
+                int geoShape) {
             this.name = name;
             this.type = type;
             this.nullable = nullable;
@@ -132,7 +133,7 @@ public class SchemaProviderImpl implements SchemaProvider {
     public String getFiledName(int index) {
         if (index < 0 || index >= fields.size()) {
             throw new RuntimeException(
-                "Index[" + index + "] is out of range[0-" + fields.size() + "]");
+                    "Index[" + index + "] is out of range[0-" + fields.size() + "]");
         }
         return fields.get(index).name();
     }
@@ -141,7 +142,7 @@ public class SchemaProviderImpl implements SchemaProvider {
     public int getFiledType(int index) {
         if (index < 0 || index >= fields.size()) {
             throw new RuntimeException(
-                "Index[" + index + "] is out of range[0-" + fields.size() + "]");
+                    "Index[" + index + "] is out of range[0-" + fields.size() + "]");
         }
         return fields.get(index).type();
     }
@@ -173,12 +174,13 @@ public class SchemaProviderImpl implements SchemaProvider {
         return fields.get(fieldNameIndex.get(name));
     }
 
-    public void addField(String name,
-                         int type,
-                         int fixedStrLen,
-                         boolean nullable,
-                         byte[] defaultValue,
-                         int geoShape) {
+    public void addField(
+            String name,
+            int type,
+            int fixedStrLen,
+            boolean nullable,
+            byte[] defaultValue,
+            int geoShape) {
         int size = fieldSize(type, fixedStrLen);
 
         int offset = 0;
@@ -192,15 +194,17 @@ public class SchemaProviderImpl implements SchemaProvider {
             nullFlagPos = numNullableFields++;
         }
 
-        fields.add(new SchemaField(name,
-            type,
-            nullable,
-            defaultValue != null,
-            defaultValue,
-            size,
-            offset,
-            nullFlagPos,
-            geoShape));
+        fields.add(
+                new SchemaField(
+                        name,
+                        type,
+                        nullable,
+                        defaultValue != null,
+                        defaultValue,
+                        size,
+                        offset,
+                        nullFlagPos,
+                        geoShape));
         fieldNameIndex.put(name, fields.size() - 1);
     }
 
@@ -228,31 +232,31 @@ public class SchemaProviderImpl implements SchemaProvider {
             case DOUBLE:
                 return Double.BYTES;
             case STRING:
-                return 8;  // string offset + string length
+                return 8; // string offset + string length
             case FIXED_STRING:
-                if (fixedStrLimit < 0)  {
+                if (fixedStrLimit < 0) {
                     throw new RuntimeException("Fixed string length must be greater than zero");
                 }
                 return fixedStrLimit;
             case DATE:
-                return Short.BYTES        // year
-                      + Byte.BYTES        // month
-                      + Byte.BYTES;       // day
+                return Short.BYTES // year
+                        + Byte.BYTES // month
+                        + Byte.BYTES; // day
             case TIME:
-                return Byte.BYTES         // hour
-                      + Byte.BYTES        // minute
-                      + Byte.BYTES        // sec
-                      + Integer.BYTES;    // microsec
+                return Byte.BYTES // hour
+                        + Byte.BYTES // minute
+                        + Byte.BYTES // sec
+                        + Integer.BYTES; // microsec
             case DATETIME:
-                return Short.BYTES          // year
-                      + Byte.BYTES          // month
-                      + Byte.BYTES          // day
-                      + Byte.BYTES          // hour
-                      + Byte.BYTES          // minute
-                      + Byte.BYTES          // sec
-                      + Integer.BYTES;      // microsec
+                return Short.BYTES // year
+                        + Byte.BYTES // month
+                        + Byte.BYTES // day
+                        + Byte.BYTES // hour
+                        + Byte.BYTES // minute
+                        + Byte.BYTES // sec
+                        + Integer.BYTES; // microsec
             case GEOGRAPHY:
-                return 8;  // wkb offset + wkb length
+                return 8; // wkb offset + wkb length
             default:
                 throw new RuntimeException("Incorrect field type " + type);
         }

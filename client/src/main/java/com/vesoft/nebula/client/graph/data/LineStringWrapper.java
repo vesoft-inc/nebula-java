@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class LineStringWrapper extends  BaseDataObject {
+public class LineStringWrapper extends BaseDataObject {
     private final LineString lineString;
 
     public LineStringWrapper(LineString lineString) {

@@ -10,35 +10,23 @@ import com.vesoft.nebula.meta.TagItem;
 import java.util.List;
 
 public interface NebulaCodec {
-    byte[] vertexKey(int vidLen,
-                     int partitionId,
-                     byte[] vertexId,
-                     int tagId);
+    byte[] vertexKey(int vidLen, int partitionId, byte[] vertexId, int tagId);
 
-    byte[] orphanVertexKey(int vidLen,
-                          int partitionId,
-                          byte[] vertexId);
+    byte[] orphanVertexKey(int vidLen, int partitionId, byte[] vertexId);
 
-    byte[] edgeKey(int vidLen,
-                   int partitionId,
-                   byte[] srcId,
-                   int edgeType,
-                   long edgeRank,
-                   byte[] dstId,
-                   byte edgeVerHolder);
+    byte[] edgeKey(
+            int vidLen,
+            int partitionId,
+            byte[] srcId,
+            int edgeType,
+            long edgeRank,
+            byte[] dstId,
+            byte edgeVerHolder);
 
-    byte[] edgeKeyByDefaultVer(int vidLen,
-                               int partitionId,
-                               byte[] srcId,
-                               int edgeType,
-                               long edgeRank,
-                               byte[] dstId);
+    byte[] edgeKeyByDefaultVer(
+            int vidLen, int partitionId, byte[] srcId, int edgeType, long edgeRank, byte[] dstId);
 
-    byte[] encodeTag(TagItem tag,
-                     List<String> names,
-                     List<Object> values);
+    byte[] encodeTag(TagItem tag, List<String> names, List<Object> values);
 
-    byte[] encodeEdge(EdgeItem edge,
-                      List<String> names,
-                      List<Object> values);
+    byte[] encodeEdge(EdgeItem edge, List<String> names, List<Object> values);
 }

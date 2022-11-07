@@ -16,7 +16,6 @@ import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +39,7 @@ public class TestMetaClient extends TestCase {
         connect();
     }
 
-    public void tearDown() throws Exception {
-    }
+    public void tearDown() throws Exception {}
 
     private void connect() {
         try {
@@ -157,13 +155,20 @@ public class TestMetaClient extends TestCase {
             // mock data with CA ssl
             MockNebulaGraph.createSpaceWithCASSL();
 
-            SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+            SSLParam sslParam =
+                    new CASignedSSLParam(
+                            "src/test/resources/ssl/casigned.pem",
+                            "src/test/resources/ssl/casigned.crt",
+                            "src/test/resources/ssl/casigned.key");
 
-            metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 8559)),
-                    3000, 1, 1, true, sslParam);
+            metaClient =
+                    new MetaClient(
+                            Arrays.asList(new HostAddress(address, 8559)),
+                            3000,
+                            1,
+                            1,
+                            true,
+                            sslParam);
             metaClient.connect();
 
             List<TagItem> tags = metaClient.getTags("testMetaCA");
@@ -186,12 +191,19 @@ public class TestMetaClient extends TestCase {
             // mock data with Self ssl
             MockNebulaGraph.createSpaceWithSelfSSL();
 
-            SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
-            metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 7559)),
-                    3000, 1, 1, true, sslParam);
+            SSLParam sslParam =
+                    new SelfSignedSSLParam(
+                            "src/test/resources/ssl/selfsigned.pem",
+                            "src/test/resources/ssl/selfsigned.key",
+                            "vesoft");
+            metaClient =
+                    new MetaClient(
+                            Arrays.asList(new HostAddress(address, 7559)),
+                            3000,
+                            1,
+                            1,
+                            true,
+                            sslParam);
             metaClient.connect();
 
             List<TagItem> tags = metaClient.getTags("testMetaSelf");

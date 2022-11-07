@@ -24,13 +24,13 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private final double minClusterHealthRate;
     private final int timeout;
     private final AtomicInteger pos = new AtomicInteger(0);
-    private final int delayTime = 60;  // Unit seconds
+    private final int delayTime = 60; // Unit seconds
     private final ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
     private SSLParam sslParam;
     private boolean enabledSsl;
 
-    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
-                                  double minClusterHealthRate) {
+    public RoundRobinLoadBalancer(
+            List<HostAddress> addresses, int timeout, double minClusterHealthRate) {
         this.timeout = timeout;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);
@@ -40,8 +40,11 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
     }
 
-    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
-                                  double minClusterHealthRate) {
+    public RoundRobinLoadBalancer(
+            List<HostAddress> addresses,
+            int timeout,
+            SSLParam sslParam,
+            double minClusterHealthRate) {
         this(addresses, timeout, minClusterHealthRate);
         this.sslParam = sslParam;
         this.enabledSsl = true;
@@ -69,26 +72,20 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     }
 
     public void updateServersStatus() {
-        for (HostAddress hostAddress : addresses) {
-            if (ping(hostAddress)) {
-                serversStatus.put(hostAddress, S_OK);
-            } else {
-                serversStatus.put(hostAddress, S_BAD);
-            }
+        for (final HostAddress hostAddress : addresses) {
+            int v = ping(hostAddress) ? S_OK : S_BAD;
+            serversStatus.put(hostAddress, v);
         }
     }
 
     public boolean ping(HostAddress addr) {
-        try {
-            Connection connection = new SyncConnection();
+        try (Connection connection = new SyncConnection()) {
             if (enabledSsl) {
                 connection.open(addr, this.timeout, sslParam);
             } else {
                 connection.open(addr, this.timeout);
             }
-            boolean pong = connection.ping();
-            connection.close();
-            return pong;
+            return connection.ping();
         } catch (IOErrorException e) {
             return false;
         } catch (ClientServerIncompatibleException e) {

@@ -28,10 +28,6 @@ public class VertexRow implements Serializable {
 
     @Override
     public String toString() {
-        return "Vertex{"
-                + "vid=" + vid.toString()
-                + ", props=" + props
-                + '}';
+        return "Vertex{" + "vid=" + vid.toString() + ", props=" + props + '}';
     }
 }
-

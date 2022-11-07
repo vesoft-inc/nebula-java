@@ -14,7 +14,6 @@ import java.io.Serializable;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 public class TestGraphServiceClient {
     @Test
     public void testClientSerialize() {
@@ -25,8 +24,10 @@ public class TestGraphServiceClient {
 
         if (!(client instanceof Serializable)) {
             System.out.println("GraphService.Client is not serialized.");
-            Assert.assertFalse("GraphService.Client is not serialized, "
-                    + "please modify the thrift file manually", false);
+            Assert.assertFalse(
+                    "GraphService.Client is not serialized, "
+                            + "please modify the thrift file manually",
+                    false);
         }
     }
 }

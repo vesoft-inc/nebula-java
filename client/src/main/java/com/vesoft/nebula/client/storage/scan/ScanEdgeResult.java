@@ -22,30 +22,21 @@ public class ScanEdgeResult implements Serializable {
 
     private final List<DataSet> dataSets;
 
-    /**
-     * scan result
-     */
+    /** scan result */
     private final ScanStatus scanStatus;
-    /**
-     * VertexTableRow for table view
-     */
+    /** VertexTableRow for table view */
     private List<EdgeTableRow> edgeTableRows = new ArrayList<>();
 
-    /**
-     * schema for VertexRow's values
-     */
-    private List<String> propNames = new ArrayList<>();
+    /** schema for VertexRow's values */
+    private final List<String> propNames = new ArrayList<>();
 
-    /**
-     * Vertex for structure view with prop name
-     */
+    /** Vertex for structure view with prop name */
     private List<EdgeRow> edgeRows = new ArrayList<>();
 
     // todo set decodeType
-    private String decodeType = "utf-8";
+    private final String decodeType = "utf-8";
 
-    private boolean isEmpty;
-
+    private final boolean isEmpty;
 
     public ScanEdgeResult(List<DataSet> dataSets, ScanStatus status) {
         this.dataSets = dataSets;
@@ -76,7 +67,6 @@ public class ScanEdgeResult implements Serializable {
         }
         return propNames;
     }
-
 
     /**
      * get edge rows
@@ -120,9 +110,7 @@ public class ScanEdgeResult implements Serializable {
         return true;
     }
 
-    /**
-     * convert dataSets to edgeTableRows.
-     */
+    /** convert dataSets to edgeTableRows. */
     private void constructEdgeTableRow() {
         if (isEmpty) {
             return;
@@ -134,9 +122,7 @@ public class ScanEdgeResult implements Serializable {
         }
     }
 
-    /**
-     * convert datasets to edgeRows.
-     */
+    /** convert datasets to edgeRows. */
     private void constructEdgeRow() {
         if (isEmpty) {
             return;
@@ -148,9 +134,7 @@ public class ScanEdgeResult implements Serializable {
         }
     }
 
-    /**
-     * extract result's property names
-     */
+    /** extract result's property names */
     private void constructPropNames() {
         if (isEmpty) {
             return;

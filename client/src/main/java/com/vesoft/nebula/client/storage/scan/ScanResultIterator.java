@@ -17,8 +17,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +36,14 @@ public class ScanResultIterator implements Serializable {
     protected final String labelName;
     protected final boolean partSuccess;
 
-    protected ScanResultIterator(MetaManager metaManager, StorageConnPool pool,
-                                 PartScanQueue partScanQueue, List<HostAddress> addresses,
-                                 String spaceName, String labelName, boolean partSuccess) {
+    protected ScanResultIterator(
+            MetaManager metaManager,
+            StorageConnPool pool,
+            PartScanQueue partScanQueue,
+            List<HostAddress> addresses,
+            String spaceName,
+            String labelName,
+            boolean partSuccess) {
         this.metaManager = metaManager;
         this.pool = pool;
         this.partScanQueue = partScanQueue;
@@ -51,7 +54,6 @@ public class ScanResultIterator implements Serializable {
         this.partCursor = new HashMap<>(partScanQueue.size());
     }
 
-
     /**
      * if iter has more vertex data
      *
@@ -61,13 +63,12 @@ public class ScanResultIterator implements Serializable {
         return hasNext;
     }
 
-
     /**
      * fresh leader for part
      *
      * @param spaceName nebula graph space
-     * @param part      part
-     * @param leader    part new leader
+     * @param part part
+     * @param leader part new leader
      */
     protected void freshLeader(String spaceName, int part, HostAddr leader) {
         metaManager.updateLeader(spaceName, part, leader);
@@ -104,8 +105,8 @@ public class ScanResultIterator implements Serializable {
         return response != null && response.result.failed_parts.size() <= 0;
     }
 
-    protected void handleSucceedResult(AtomicInteger existSuccess, ScanResponse response,
-                                       PartScanInfo partInfo) {
+    protected void handleSucceedResult(
+            AtomicInteger existSuccess, ScanResponse response, PartScanInfo partInfo) {
         existSuccess.addAndGet(1);
         if (response.getCursors().get(partInfo.getPart()).next_cursor == null) {
             partScanQueue.dropPart(partInfo);
@@ -114,8 +115,8 @@ public class ScanResultIterator implements Serializable {
         }
     }
 
-    protected void handleFailedResult(ScanResponse response, PartScanInfo partInfo,
-                                      List<Exception> exceptions) {
+    protected void handleFailedResult(
+            ScanResponse response, PartScanInfo partInfo, List<Exception> exceptions) {
         for (PartitionResult partResult : response.getResult().getFailed_parts()) {
             if (partResult.code == ErrorCode.E_LEADER_CHANGED) {
                 freshLeader(spaceName, partInfo.getPart(), partResult.getLeader());

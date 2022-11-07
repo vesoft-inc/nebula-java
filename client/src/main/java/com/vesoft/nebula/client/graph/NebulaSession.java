@@ -20,13 +20,13 @@ public class NebulaSession implements Serializable {
 
     private static final long serialVersionUID = -88438249377120255L;
 
-    private long sessionID;
-    private int timezoneOffset;
-    private SyncConnection connection;
-    private AtomicReference<SessionState> state = new AtomicReference<>();
+    private final long sessionID;
+    private final int timezoneOffset;
+    private final SyncConnection connection;
+    private final AtomicReference<SessionState> state = new AtomicReference<>();
 
-    public NebulaSession(SyncConnection connection, long sessionID, int timezoneOffset,
-                         SessionState state) {
+    public NebulaSession(
+            SyncConnection connection, long sessionID, int timezoneOffset, SessionState state) {
         this.connection = connection;
         this.sessionID = sessionID;
         this.timezoneOffset = timezoneOffset;
@@ -67,6 +67,5 @@ public class NebulaSession implements Serializable {
     public void release() {
         connection.signout(sessionID);
         connection.close();
-        connection = null;
     }
 }
