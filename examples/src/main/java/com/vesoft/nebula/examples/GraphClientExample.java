@@ -5,8 +5,8 @@
 
 package com.vesoft.nebula.examples;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.vesoft.nebula.Date;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Value;
@@ -16,17 +16,20 @@ import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
-
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,16 +105,16 @@ public class GraphClientExample {
             session = pool.getSession("root", "nebula", false);
             {
                 String createSchema =
-                    "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20)); "
-                    + "USE test;"
-                    + "CREATE TAG IF NOT EXISTS person(name string, age int);"
-                    + "CREATE EDGE IF NOT EXISTS like(likeness double)";
+                        "CREATE SPACE IF NOT EXISTS test(vid_type=fixed_string(20)); "
+                                + "USE test;"
+                                + "CREATE TAG IF NOT EXISTS person(name string, age int);"
+                                + "CREATE EDGE IF NOT EXISTS like(likeness double)";
                 ResultSet resp = session.execute(createSchema);
                 if (!resp.isSucceeded()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s",
-                            createSchema, resp.getErrorMessage()));
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    createSchema, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
@@ -119,49 +122,49 @@ public class GraphClientExample {
             TimeUnit.SECONDS.sleep(5);
             {
                 String insertVertexes =
-                    "INSERT VERTEX person(name, age) VALUES "
-                    + "'Bob':('Bob', 10), "
-                    + "'Lily':('Lily', 9), "
-                    + "'Tom':('Tom', 10), "
-                    + "'Jerry':('Jerry', 13), "
-                    + "'John':('John', 11);";
+                        "INSERT VERTEX person(name, age) VALUES "
+                                + "'Bob':('Bob', 10), "
+                                + "'Lily':('Lily', 9), "
+                                + "'Tom':('Tom', 10), "
+                                + "'Jerry':('Jerry', 13), "
+                                + "'John':('John', 11);";
                 ResultSet resp = session.execute(insertVertexes);
                 if (!resp.isSucceeded()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s",
-                            insertVertexes, resp.getErrorMessage()));
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    insertVertexes, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             {
                 String insertEdges =
-                    "INSERT EDGE like(likeness) VALUES "
-                    + "'Bob'->'Lily':(80.0), "
-                    + "'Bob'->'Tom':(70.0), "
-                    + "'Lily'->'Jerry':(84.0), "
-                    + "'Tom'->'Jerry':(68.3), "
-                    + "'Bob'->'John':(97.2);";
+                        "INSERT EDGE like(likeness) VALUES "
+                                + "'Bob'->'Lily':(80.0), "
+                                + "'Bob'->'Tom':(70.0), "
+                                + "'Lily'->'Jerry':(84.0), "
+                                + "'Tom'->'Jerry':(68.3), "
+                                + "'Bob'->'John':(97.2);";
                 ResultSet resp = session.execute(insertEdges);
                 if (!resp.isSucceeded()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s",
-                            insertEdges, resp.getErrorMessage()));
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    insertEdges, resp.getErrorMessage()));
                     System.exit(1);
                 }
             }
 
             {
                 String query =
-                    "GO FROM \"Bob\" OVER like "
-                    + "YIELD $^.person.name, $^.person.age, like.likeness";
+                        "GO FROM \"Bob\" OVER like "
+                                + "YIELD $^.person.name, $^.person.age, like.likeness";
                 ResultSet resp = session.execute(query);
                 if (!resp.isSucceeded()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s", query, resp.getErrorMessage()));
+                            String.format(
+                                    "Execute: `%s', failed: %s", query, resp.getErrorMessage()));
                     System.exit(1);
                 }
                 printResult(resp);
@@ -192,8 +195,8 @@ public class GraphClientExample {
                 ResultSet resp = session.executeWithParameter(query, paramMap);
                 if (!resp.isSucceeded()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s", query, resp.getErrorMessage()));
+                            String.format(
+                                    "Execute: `%s', failed: %s", query, resp.getErrorMessage()));
                     System.exit(1);
                 }
                 printResult(resp);
@@ -205,71 +208,79 @@ public class GraphClientExample {
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
                 if (errors.getInteger("code") != 0) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("message")));
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);
             }
 
             {
-                NebulaPoolConfig nebulaSslPoolConfig = NebulaPoolConfig.builder()
-                    .maxConnSize(100)
-                    .enableSsl(true)
-                    .sslParam(
-                        new CASignedSSLParam(
-                            "examples/src/main/resources/ssl/casigned.pem",
-                            "examples/src/main/resources/ssl/casigned.crt",
-                            "examples/src/main/resources/ssl/casigned.key"))
-                    .build();
+                NebulaPoolConfig nebulaSslPoolConfig =
+                        NebulaPoolConfig.builder()
+                                .maxConnSize(100)
+                                .enableSsl(true)
+                                .sslParam(
+                                        new CASignedSSLParam(
+                                                "examples/src/main/resources/ssl/casigned.pem",
+                                                "examples/src/main/resources/ssl/casigned.crt",
+                                                "examples/src/main/resources/ssl/casigned.key"))
+                                .build();
 
                 NebulaPool sslPool = new NebulaPool();
                 sslPool.init(
-                    Arrays.asList(new HostAddress("127.0.0.1", 9669)), nebulaSslPoolConfig);
+                        Arrays.asList(new HostAddress("127.0.0.1", 9669)), nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
                 if (errors.getInteger("code") != ErrorCode.SUCCEEDED.getValue()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("message")));
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);
             }
 
             {
-                NebulaPoolConfig nebulaSslPoolConfig = NebulaPoolConfig.builder()
-                    .maxConnSize(100)
-                    .enableSsl(true)
-                    .sslParam(
-                        new SelfSignedSSLParam(
-                            "examples/src/main/resources/ssl/selfsigned.pem",
-                            "examples/src/main/resources/ssl/selfsigned.key",
-                            "vesoft"))
-                    .build();
+                NebulaPoolConfig nebulaSslPoolConfig =
+                        NebulaPoolConfig.builder()
+                                .maxConnSize(100)
+                                .enableSsl(true)
+                                .sslParam(
+                                        new SelfSignedSSLParam(
+                                                "examples/src/main/resources/ssl/selfsigned.pem",
+                                                "examples/src/main/resources/ssl/selfsigned.key",
+                                                "vesoft"))
+                                .build();
                 NebulaPool sslPool = new NebulaPool();
                 sslPool.init(
-                    Arrays.asList(new HostAddress("127.0.0.1", 9669)), nebulaSslPoolConfig);
+                        Arrays.asList(new HostAddress("127.0.0.1", 9669)), nebulaSslPoolConfig);
                 String queryForJson = "YIELD 1";
                 Session sslSession = sslPool.getSession("root", "nebula", false);
                 String resp = sslSession.executeJson(queryForJson);
                 JSONObject errors = JSON.parseObject(resp).getJSONArray("errors").getJSONObject(0);
                 if (errors.getInteger("code") != ErrorCode.SUCCEEDED.getValue()) {
                     log.error(
-                        String.format(
-                            "Execute: `%s', failed: %s",
-                            queryForJson, errors.getString("message")));
+                            String.format(
+                                    "Execute: `%s', failed: %s",
+                                    queryForJson, errors.getString("message")));
                     System.exit(1);
                 }
                 System.out.println(resp);
             }
-        }
-        catch (Exception e) {
+        } catch (RuntimeException | IOErrorException e) {
             e.printStackTrace();
+        } catch (UnknownHostException
+                | AuthFailedException
+                | ClientServerIncompatibleException
+                | NotValidConnectionException
+                | UnsupportedEncodingException
+                | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

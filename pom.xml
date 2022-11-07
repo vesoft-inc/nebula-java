@@ -22,8 +22,14 @@
         <spotless.version>2.12.2</spotless.version>
 
         <!-- airbase -->
-        <air.check.skip-license>true</air.check.skip-license>
-        <air.check.skip-checkstyle>true</air.check.skip-checkstyle>
+        <air.check.fail-license>false</air.check.fail-license>
+        <air.check.fail-checkstyle>false</air.check.fail-checkstyle>
+        <air.check.fail-modernizer>false</air.check.fail-modernizer>
+        <!-- Lint mode for Javadoc. Defaults to 'all'. -->
+        <air.javadoc.lint>none</air.javadoc.lint>
+
+        <!-- airbase skip checks -->
+        <air.check.skip-pmd>true</air.check.skip-pmd>
 
         <!-- dependencies -->
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -36,6 +42,7 @@
         <!-- test dependencies -->
         <junit.version>4.13.2</junit.version>
         <fastjson2.version>2.0.18</fastjson2.version>
+        <commons-csv.version>1.9.0</commons-csv.version>
     </properties>
 
     <!-- More Project Information -->
@@ -196,6 +203,11 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk15on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
@@ -208,6 +220,11 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${commons-csv.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
