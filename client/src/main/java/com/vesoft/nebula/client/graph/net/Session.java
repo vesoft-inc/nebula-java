@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * The user can directly read the data using the interface of ValueWrapper.
  */
 
-public class Session implements Serializable {
+public class Session implements Serializable, AutoCloseable {
 
     private static final long serialVersionUID = -8855886967097862376L;
 
@@ -358,6 +358,13 @@ public class Session implements Serializable {
     }
 
     /**
+     * get SessionID
+     */
+    public long getSessionID() {
+        return sessionID;
+    }
+
+    /**
      * set current connection is invalid, and get a new connection from the pool,
      * if get connection failed, return false, else return true
      *
@@ -381,6 +388,7 @@ public class Session implements Serializable {
 
     /**
      * convert java list to nebula thrift list
+     *
      * @param list java list
      * @return nebula list
      */
@@ -394,11 +402,12 @@ public class Session implements Serializable {
 
     /**
      * convert java map to nebula thrift map
+     *
      * @param map java map
      * @return nebula map
      */
     private static NMap map2Nmap(Map<String, Object> map) throws UnsupportedOperationException {
-        NMap nmap = new NMap(new HashMap<byte[],Value>());
+        NMap nmap = new NMap(new HashMap<byte[], Value>());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             nmap.kvs.put(entry.getKey().getBytes(), value2Nvalue(entry.getValue()));
         }
@@ -408,6 +417,7 @@ public class Session implements Serializable {
 
     /**
      * convert java value type to nebula thrift value type
+     *
      * @param value java obj
      * @return nebula value
      */
@@ -416,51 +426,56 @@ public class Session implements Serializable {
         if (value == null) {
             nvalue.setNVal(NullType.__NULL__);
         } else if (value instanceof Boolean) {
-            boolean bval = (Boolean)value;
+            boolean bval = (Boolean) value;
             nvalue.setBVal(bval);
         } else if (value instanceof Integer) {
-            int ival = (Integer)value;
+            int ival = (Integer) value;
             nvalue.setIVal(ival);
         } else if (value instanceof Short) {
-            int ival = (Short)value;
+            int ival = (Short) value;
             nvalue.setIVal(ival);
         } else if (value instanceof Byte) {
-            int ival = (Byte)value;
+            int ival = (Byte) value;
             nvalue.setIVal(ival);
         } else if (value instanceof Long) {
-            long ival = (Long)value;
+            long ival = (Long) value;
             nvalue.setIVal(ival);
         } else if (value instanceof Float) {
-            float fval = (Float)value;
+            float fval = (Float) value;
             nvalue.setFVal(fval);
         } else if (value instanceof Double) {
-            double dval = (Double)value;
+            double dval = (Double) value;
             nvalue.setFVal(dval);
         } else if (value instanceof String) {
-            byte[] sval = ((String)value).getBytes();
+            byte[] sval = ((String) value).getBytes();
             nvalue.setSVal(sval);
         } else if (value instanceof List) {
-            nvalue.setLVal(list2Nlist((List<Object>)value));
+            nvalue.setLVal(list2Nlist((List<Object>) value));
         } else if (value instanceof Map) {
-            nvalue.setMVal(map2Nmap((Map<String, Object>)value));
+            nvalue.setMVal(map2Nmap((Map<String, Object>) value));
         } else if (value instanceof Value) {
-            return (Value)value;
+            return (Value) value;
         } else if (value instanceof Date) {
-            nvalue.setDVal((Date)value);
+            nvalue.setDVal((Date) value);
         } else if (value instanceof Time) {
-            nvalue.setTVal((Time)value);
+            nvalue.setTVal((Time) value);
         } else if (value instanceof Duration) {
-            nvalue.setDuVal((Duration)value);
+            nvalue.setDuVal((Duration) value);
         } else if (value instanceof DateTime) {
-            nvalue.setDtVal((DateTime)value);
+            nvalue.setDtVal((DateTime) value);
         } else if (value instanceof Geography) {
             nvalue.setGgVal((Geography) value);
         } else {
             // unsupport other Value type, use this function carefully
             throw new UnsupportedOperationException(
                     "Only support convert boolean/float/int/string/map/list to nebula.Value but was"
-                    + value.getClass().getTypeName());
+                            + value.getClass().getTypeName());
         }
         return nvalue;
+    }
+
+    @Override
+    public synchronized void close() {
+        release();
     }
 }

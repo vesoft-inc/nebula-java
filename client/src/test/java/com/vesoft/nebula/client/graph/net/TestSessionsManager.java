@@ -33,20 +33,20 @@ public class TestSessionsManager {
                 NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
                 nebulaPoolConfig.setMaxConnSize(1);
                 Assert.assertTrue(pool.init(Collections.singletonList(
-                    new HostAddress("127.0.0.1", 9670)),
-                    nebulaPoolConfig));
+                        new HostAddress("127.0.0.1", 9670)),
+                        nebulaPoolConfig));
                 Session session = pool.getSession("root", "nebula", true);
                 ResultSet resp = session.execute(
-                    "CREATE SPACE IF NOT EXISTS test_session_manager(vid_type=INT);");
+                        "CREATE SPACE IF NOT EXISTS test_session_manager(vid_type=INT);");
                 Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
                 session.release();
                 pool.close();
                 TimeUnit.SECONDS.sleep(3);
             } catch (UnknownHostException
-                | NotValidConnectionException
-                | AuthFailedException
-                | InterruptedException
-                | ClientServerIncompatibleException e) {
+                    | NotValidConnectionException
+                    | AuthFailedException
+                    | InterruptedException
+                    | ClientServerIncompatibleException e) {
                 Assert.assertFalse(e.getMessage(), false);
             }
 
@@ -54,11 +54,11 @@ public class TestSessionsManager {
             NebulaPoolConfig poolConfig = new NebulaPoolConfig();
             poolConfig.setMaxConnSize(4);
             config.setAddresses(Collections.singletonList(
-                new HostAddress("127.0.0.1", 9670)))
-                .setUserName("root")
-                .setPassword("nebula")
-                .setSpaceName("test_session_manager")
-                .setPoolConfig(poolConfig);
+                    new HostAddress("127.0.0.1", 9670)))
+                    .setUserName("root")
+                    .setPassword("nebula")
+                    .setSpaceName("test_session_manager")
+                    .setPoolConfig(poolConfig);
             SessionsManager sessionsManager = new SessionsManager(config);
             // Gets the session of the specified space
             SessionWrapper session = sessionsManager.getSessionWrapper();
@@ -75,7 +75,7 @@ public class TestSessionsManager {
                 Assert.fail();
             } catch (RuntimeException e) {
                 Assert.assertTrue(e.getMessage().contains(
-                    "The SessionsManager does not have available sessions."));
+                        "The SessionsManager does not have available sessions."));
                 Assert.assertTrue(e.getMessage(), true);
             }
 
@@ -117,6 +117,16 @@ public class TestSessionsManager {
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
                 assert true;
+            } catch (Exception e) {
+                assert false;
+            }
+
+            // Test ping
+            try {
+                session = sessionsManager.getSessionWrapper();
+                assert session.ping();
+                session.release();
+                assert (!session.ping());
             } catch (Exception e) {
                 assert false;
             }
