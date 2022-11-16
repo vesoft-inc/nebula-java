@@ -41,6 +41,7 @@ public class NebulaPool implements Serializable {
         throws UnknownHostException {
         List<HostAddress> newAddrs = new ArrayList<>();
         for (HostAddress addr : addresses) {
+            // get all host name
             InetAddress[] inetAddresses = InetAddress.getAllByName(addr.getHost());
             for (InetAddress inetAddress : inetAddresses) {
                 String ip = inetAddress.getHostAddress();
