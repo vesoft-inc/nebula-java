@@ -52,6 +52,7 @@ public class SessionWrapper implements Serializable {
 
     void release() {
         session.release();
+        setNoAvailable();
     }
 
     Session getSession() {

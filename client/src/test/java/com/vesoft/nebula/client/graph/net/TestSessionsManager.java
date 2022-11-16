@@ -101,12 +101,28 @@ public class TestSessionsManager {
             for (int i = 0; i < 3; i++) {
                 sessionsManager.returnSessionWrapper(sessionList.get(i));
             }
+            sessionList.clear();
             try {
                 for (int i = 0; i < 3; i++) {
-                    sessionsManager.getSessionWrapper();
+                    sessionList.add(sessionsManager.getSessionWrapper());
                 }
             } catch (RuntimeException e) {
                 Assert.assertFalse(e.getMessage(), true);
+            }
+
+
+            // Test ping
+            for (int i = 0; i < 3; i++) {
+                sessionsManager.returnSessionWrapper(sessionList.get(i));
+            }
+
+            try {
+                session = sessionsManager.getSessionWrapper();
+                assert session.ping();
+                session.release();
+                assert (!session.ping());
+            } catch (Exception e) {
+                assert false;
             }
 
             // Test close
@@ -120,17 +136,6 @@ public class TestSessionsManager {
             } catch (Exception e) {
                 assert false;
             }
-
-            // Test ping
-            try {
-                session = sessionsManager.getSessionWrapper();
-                assert session.ping();
-                session.release();
-                assert (!session.ping());
-            } catch (Exception e) {
-                assert false;
-            }
-
         } catch (InvalidConfigException | IOErrorException | ClientServerIncompatibleException e) {
             Assert.fail();
         }
