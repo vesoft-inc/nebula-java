@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph.net;
@@ -9,9 +8,11 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -24,7 +25,10 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NebulaPool {
+public class NebulaPool implements Serializable {
+
+    private static final long serialVersionUID = 6226487268001127885L;
+
     private GenericObjectPool<SyncConnection> objectPool = null;
     private LoadBalancer loadBalancer;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -71,6 +75,12 @@ public class NebulaPool {
             throw new InvalidConfigException(
                 "Config waitTime:" + config.getWaitTime() + " is illegal");
         }
+
+        if (config.getMinClusterHealthRate() < 0) {
+            throw new InvalidConfigException(
+                    "Config minClusterHealthRate:" + config.getMinClusterHealthRate()
+                            + " is illegal");
+        }
     }
 
     /**
@@ -88,7 +98,11 @@ public class NebulaPool {
         checkConfig(config);
         this.waitTime = config.getWaitTime();
         List<HostAddress> newAddrs = hostToIp(addresses);
-        this.loadBalancer = new RoundRobinLoadBalancer(newAddrs, config.getTimeout());
+        this.loadBalancer = config.isEnableSsl()
+                ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam(),
+                config.getMinClusterHealthRate())
+                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout(),
+                config.getMinClusterHealthRate());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
@@ -113,7 +127,9 @@ public class NebulaPool {
      * close the pool, all connections will be closed
      */
     public void close() {
-        checkClosed();
+        if (isClosed.get()) {
+            return;
+        }
         isClosed.set(true);
         this.loadBalancer.close();
         this.objectPool.close();
@@ -130,7 +146,8 @@ public class NebulaPool {
      * @throws AuthFailedException if authenticate failed
      */
     public Session getSession(String userName, String password, boolean reconnect)
-            throws NotValidConnectionException, IOErrorException, AuthFailedException {
+            throws NotValidConnectionException, IOErrorException, AuthFailedException,
+            ClientServerIncompatibleException {
         checkNoInitAndClosed();
         SyncConnection connection = null;
         try {

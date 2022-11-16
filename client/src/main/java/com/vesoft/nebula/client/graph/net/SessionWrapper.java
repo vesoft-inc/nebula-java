@@ -1,7 +1,6 @@
 /* Copyright (c) 2021 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph.net;
@@ -9,9 +8,13 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidSessionException;
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SessionWrapper {
+public class SessionWrapper implements Serializable {
+
+    private static final long serialVersionUID = -8128331485649098264L;
+
     private final Session session;
     private final AtomicBoolean available = new AtomicBoolean(true);
 
@@ -25,7 +28,8 @@ public class SessionWrapper {
      * @param stmt The query sentence.
      * @return The ResultSet.
      */
-    public ResultSet execute(String stmt) throws IOErrorException {
+    public ResultSet execute(String stmt)
+            throws IOErrorException {
         if (!available()) {
             throw new InvalidSessionException();
         }

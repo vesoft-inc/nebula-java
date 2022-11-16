@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage.scan;
@@ -11,13 +10,15 @@ import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import com.vesoft.nebula.client.storage.data.ScanStatus;
 import com.vesoft.nebula.client.storage.processor.EdgeProcessor;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScanEdgeResult {
+public class ScanEdgeResult implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanEdgeResult.class);
+    private static final long serialVersionUID = 519190254786197550L;
 
     private final List<DataSet> dataSets;
 
@@ -158,8 +159,11 @@ public class ScanEdgeResult {
             if (propNames.isEmpty()) {
                 List<byte[]> colNames = dataSets.get(0).getColumn_names();
                 for (byte[] colName : colNames) {
-                    String name = new String(colName).split("\\.")[1];
-                    propNames.add(name);
+                    String propName = new String(colName);
+                    if (!propName.contains(".")) {
+                        continue;
+                    }
+                    propNames.add(propName.split("\\.")[1]);
                 }
             }
         }

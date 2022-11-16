@@ -1,20 +1,21 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import java.io.Serializable;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StorageConnPool {
+public class StorageConnPool implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageConnPool.class);
+    private static final long serialVersionUID = -6459633350295900558L;
 
     private final GenericKeyedObjectPool<HostAddress, GraphStorageConnection> keyedPool;
     private final StorageConnPoolFactory poolFactory;

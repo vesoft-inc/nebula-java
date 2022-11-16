@@ -1,7 +1,6 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.meta;
@@ -10,11 +9,15 @@ import com.facebook.thrift.TException;
 import com.google.common.collect.Maps;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,10 +30,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * MetaManager is a manager for meta info, such as spaces,tags and edges.
- * How to use:
- * MetaManager manager = MetaManager.getMetaManager(Arrays.asList(HostAddress(host, port)));
  */
-public class MetaManager implements MetaCache {
+public class MetaManager implements MetaCache, Serializable {
     private class SpaceInfo {
         private SpaceItem spaceItem = null;
         private Map<String, TagItem> tagItems = new HashMap<>();
@@ -45,43 +46,39 @@ public class MetaManager implements MetaCache {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaManager.class);
 
-    private static MetaClient metaClient;
-    private static MetaManager metaManager;
+    private MetaClient metaClient;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private MetaManager() {
-    }
+    private static final int DEFAULT_TIMEOUT_MS = 1000;
+    private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
+    private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
 
     /**
      * init the meta info cache
-     * make sure this method is called before use metaManager
      */
-    private void init(List<HostAddress> address) throws TException {
+    public MetaManager(List<HostAddress> address)
+            throws TException, ClientServerIncompatibleException, UnknownHostException {
         metaClient = new MetaClient(address);
         metaClient.connect();
         fillMetaInfo();
     }
 
     /**
-     * only way to get a MetaManager object
+     * init the meta info cache with more config
      */
-    public static MetaManager getMetaManager(List<HostAddress> address) throws TException {
-        if (metaManager == null) {
-            synchronized (MetaManager.class) {
-                if (metaManager == null) {
-                    metaManager = new MetaManager();
-                    metaManager.init(address);
-                }
-            }
-        }
-        return metaManager;
+    public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
+                       int executionRetry, boolean enableSSL, SSLParam sslParam)
+            throws TException, ClientServerIncompatibleException, UnknownHostException {
+        metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
+                sslParam);
+        metaClient.connect();
+        fillMetaInfo();
     }
 
     /**
      * close meta client
      */
     public void close() {
-        metaManager = null;
         metaClient.close();
     }
 

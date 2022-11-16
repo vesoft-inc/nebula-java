@@ -32,7 +32,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   private static final TField CHARSET_NAME_FIELD_DESC = new TField("charset_name", TType.STRING, (short)4);
   private static final TField COLLATE_NAME_FIELD_DESC = new TField("collate_name", TType.STRING, (short)5);
   private static final TField VID_TYPE_FIELD_DESC = new TField("vid_type", TType.STRUCT, (short)6);
-  private static final TField GROUP_NAME_FIELD_DESC = new TField("group_name", TType.STRING, (short)7);
+  private static final TField ZONE_NAMES_FIELD_DESC = new TField("zone_names", TType.LIST, (short)7);
   private static final TField ISOLATION_LEVEL_FIELD_DESC = new TField("isolation_level", TType.I32, (short)8);
   private static final TField COMMENT_FIELD_DESC = new TField("comment", TType.STRING, (short)9);
 
@@ -42,7 +42,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   public byte[] charset_name;
   public byte[] collate_name;
   public ColumnTypeDef vid_type;
-  public byte[] group_name;
+  public List<byte[]> zone_names;
   /**
    * 
    * @see IsolationLevel
@@ -55,7 +55,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
   public static final int CHARSET_NAME = 4;
   public static final int COLLATE_NAME = 5;
   public static final int VID_TYPE = 6;
-  public static final int GROUP_NAME = 7;
+  public static final int ZONE_NAMES = 7;
   public static final int ISOLATION_LEVEL = 8;
   public static final int COMMENT = 9;
 
@@ -80,8 +80,9 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(VID_TYPE, new FieldMetaData("vid_type", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, ColumnTypeDef.class)));
-    tmpMetaDataMap.put(GROUP_NAME, new FieldMetaData("group_name", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(ZONE_NAMES, new FieldMetaData("zone_names", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     tmpMetaDataMap.put(ISOLATION_LEVEL, new FieldMetaData("isolation_level", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(COMMENT, new FieldMetaData("comment", TFieldRequirementType.OPTIONAL, 
@@ -99,7 +100,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.replica_factor = 0;
 
     this.vid_type = new ColumnTypeDef();
-    this.vid_type.setType(com.vesoft.nebula.meta.PropertyType.FIXED_STRING);
+    this.vid_type.setType(com.vesoft.nebula.PropertyType.FIXED_STRING);
     this.vid_type.setType_length((short)8);
 
   }
@@ -110,7 +111,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       int replica_factor,
       byte[] charset_name,
       byte[] collate_name,
-      ColumnTypeDef vid_type) {
+      ColumnTypeDef vid_type,
+      List<byte[]> zone_names) {
     this();
     this.space_name = space_name;
     this.partition_num = partition_num;
@@ -120,6 +122,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.charset_name = charset_name;
     this.collate_name = collate_name;
     this.vid_type = vid_type;
+    this.zone_names = zone_names;
   }
 
   public SpaceDesc(
@@ -129,7 +132,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       byte[] charset_name,
       byte[] collate_name,
       ColumnTypeDef vid_type,
-      byte[] group_name,
+      List<byte[]> zone_names,
       IsolationLevel isolation_level,
       byte[] comment) {
     this();
@@ -141,7 +144,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     this.charset_name = charset_name;
     this.collate_name = collate_name;
     this.vid_type = vid_type;
-    this.group_name = group_name;
+    this.zone_names = zone_names;
     this.isolation_level = isolation_level;
     this.comment = comment;
   }
@@ -153,7 +156,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     private byte[] charset_name;
     private byte[] collate_name;
     private ColumnTypeDef vid_type;
-    private byte[] group_name;
+    private List<byte[]> zone_names;
     private IsolationLevel isolation_level;
     private byte[] comment;
 
@@ -194,8 +197,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       return this;
     }
 
-    public Builder setGroup_name(final byte[] group_name) {
-      this.group_name = group_name;
+    public Builder setZone_names(final List<byte[]> zone_names) {
+      this.zone_names = zone_names;
       return this;
     }
 
@@ -221,7 +224,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       result.setCharset_name(this.charset_name);
       result.setCollate_name(this.collate_name);
       result.setVid_type(this.vid_type);
-      result.setGroup_name(this.group_name);
+      result.setZone_names(this.zone_names);
       result.setIsolation_level(this.isolation_level);
       result.setComment(this.comment);
       return result;
@@ -252,8 +255,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     if (other.isSetVid_type()) {
       this.vid_type = TBaseHelper.deepCopy(other.vid_type);
     }
-    if (other.isSetGroup_name()) {
-      this.group_name = TBaseHelper.deepCopy(other.group_name);
+    if (other.isSetZone_names()) {
+      this.zone_names = TBaseHelper.deepCopy(other.zone_names);
     }
     if (other.isSetIsolation_level()) {
       this.isolation_level = TBaseHelper.deepCopy(other.isolation_level);
@@ -409,27 +412,27 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
-  public byte[] getGroup_name() {
-    return this.group_name;
+  public List<byte[]> getZone_names() {
+    return this.zone_names;
   }
 
-  public SpaceDesc setGroup_name(byte[] group_name) {
-    this.group_name = group_name;
+  public SpaceDesc setZone_names(List<byte[]> zone_names) {
+    this.zone_names = zone_names;
     return this;
   }
 
-  public void unsetGroup_name() {
-    this.group_name = null;
+  public void unsetZone_names() {
+    this.zone_names = null;
   }
 
-  // Returns true if field group_name is set (has been assigned a value) and false otherwise
-  public boolean isSetGroup_name() {
-    return this.group_name != null;
+  // Returns true if field zone_names is set (has been assigned a value) and false otherwise
+  public boolean isSetZone_names() {
+    return this.zone_names != null;
   }
 
-  public void setGroup_nameIsSet(boolean __value) {
+  public void setZone_namesIsSet(boolean __value) {
     if (!__value) {
-      this.group_name = null;
+      this.zone_names = null;
     }
   }
 
@@ -489,6 +492,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_NAME:
@@ -539,11 +543,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       }
       break;
 
-    case GROUP_NAME:
+    case ZONE_NAMES:
       if (__value == null) {
-        unsetGroup_name();
+        unsetZone_names();
       } else {
-        setGroup_name((byte[])__value);
+        setZone_names((List<byte[]>)__value);
       }
       break;
 
@@ -588,8 +592,8 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     case VID_TYPE:
       return getVid_type();
 
-    case GROUP_NAME:
-      return getGroup_name();
+    case ZONE_NAMES:
+      return getZone_names();
 
     case ISOLATION_LEVEL:
       return getIsolation_level();
@@ -624,7 +628,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
 
     if (!TBaseHelper.equalsNobinary(this.isSetVid_type(), that.isSetVid_type(), this.vid_type, that.vid_type)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetGroup_name(), that.isSetGroup_name(), this.group_name, that.group_name)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetZone_names(), that.isSetZone_names(), this.zone_names, that.zone_names)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetIsolation_level(), that.isSetIsolation_level(), this.isolation_level, that.isolation_level)) { return false; }
 
@@ -635,7 +639,7 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_name, partition_num, replica_factor, charset_name, collate_name, vid_type, group_name, isolation_level, comment});
+    return Arrays.deepHashCode(new Object[] {space_name, partition_num, replica_factor, charset_name, collate_name, vid_type, zone_names, isolation_level, comment});
   }
 
   @Override
@@ -698,11 +702,11 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetGroup_name()).compareTo(other.isSetGroup_name());
+    lastComparison = Boolean.valueOf(isSetZone_names()).compareTo(other.isSetZone_names());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(group_name, other.group_name);
+    lastComparison = TBaseHelper.compareTo(zone_names, other.zone_names);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -781,9 +785,21 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case GROUP_NAME:
-          if (__field.type == TType.STRING) {
-            this.group_name = iprot.readBinary();
+        case ZONE_NAMES:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list4 = iprot.readListBegin();
+              this.zone_names = new ArrayList<byte[]>(Math.max(0, _list4.size));
+              for (int _i5 = 0; 
+                   (_list4.size < 0) ? iprot.peekList() : (_i5 < _list4.size); 
+                   ++_i5)
+              {
+                byte[] _elem6;
+                _elem6 = iprot.readBinary();
+                this.zone_names.add(_elem6);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -845,12 +861,16 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       this.vid_type.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.group_name != null) {
-      if (isSetGroup_name()) {
-        oprot.writeFieldBegin(GROUP_NAME_FIELD_DESC);
-        oprot.writeBinary(this.group_name);
-        oprot.writeFieldEnd();
+    if (this.zone_names != null) {
+      oprot.writeFieldBegin(ZONE_NAMES_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.zone_names.size()));
+        for (byte[] _iter7 : this.zone_names)        {
+          oprot.writeBinary(_iter7);
+        }
+        oprot.writeListEnd();
       }
+      oprot.writeFieldEnd();
     }
     if (this.isolation_level != null) {
       if (isSetIsolation_level()) {
@@ -958,25 +978,17 @@ public class SpaceDesc implements TBase, java.io.Serializable, Cloneable, Compar
       sb.append(TBaseHelper.toString(this.getVid_type(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetGroup_name())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("group_name");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getGroup_name() == null) {
-        sb.append("null");
-      } else {
-          int __group_name_size = Math.min(this.getGroup_name().length, 128);
-          for (int i = 0; i < __group_name_size; i++) {
-            if (i != 0) sb.append(" ");
-            sb.append(Integer.toHexString(this.getGroup_name()[i]).length() > 1 ? Integer.toHexString(this.getGroup_name()[i]).substring(Integer.toHexString(this.getGroup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getGroup_name()[i]).toUpperCase());
-          }
-          if (this.getGroup_name().length > 128) sb.append(" ...");
-      }
-      first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("zone_names");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getZone_names() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getZone_names(), indent + 1, prettyPrint));
     }
+    first = false;
     if (isSetIsolation_level())
     {
       if (!first) sb.append("," + newLine);

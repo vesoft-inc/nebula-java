@@ -349,16 +349,16 @@ public class ListSpacesResp implements TBase, java.io.Serializable, Cloneable, C
         case SPACES:
           if (__field.type == TType.LIST) {
             {
-              TList _list70 = iprot.readListBegin();
-              this.spaces = new ArrayList<IdName>(Math.max(0, _list70.size));
-              for (int _i71 = 0; 
-                   (_list70.size < 0) ? iprot.peekList() : (_i71 < _list70.size); 
-                   ++_i71)
+              TList _list78 = iprot.readListBegin();
+              this.spaces = new ArrayList<IdName>(Math.max(0, _list78.size));
+              for (int _i79 = 0; 
+                   (_list78.size < 0) ? iprot.peekList() : (_i79 < _list78.size); 
+                   ++_i79)
               {
-                IdName _elem72;
-                _elem72 = new IdName();
-                _elem72.read(iprot);
-                this.spaces.add(_elem72);
+                IdName _elem80;
+                _elem80 = new IdName();
+                _elem80.read(iprot);
+                this.spaces.add(_elem80);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListSpacesResp implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(SPACES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.spaces.size()));
-        for (IdName _iter73 : this.spaces)        {
-          _iter73.write(oprot);
+        for (IdName _iter81 : this.spaces)        {
+          _iter81.write(oprot);
         }
         oprot.writeListEnd();
       }

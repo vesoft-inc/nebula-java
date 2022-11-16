@@ -1,10 +1,14 @@
 # nebula-java
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
-[![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
-[![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
+[![LICENSE](https://img.shields.io/github/license/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/tag/vesoft-inc/nebula-java.svg?label=release)](https://github.com/vesoft-inc/nebula-java/releases)
+[![GitHub release date](https://img.shields.io/github/release-date/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/releases)
+[![codecov](https://codecov.io/gh/vesoft-inc/nebula-java/branch/master/graph/badge.svg?token=WQVAG6VMMQ)](https://codecov.io/gh/vesoft-inc/nebula-java)
 
 Nebula Java is a Java client for developers to connect their projects to Nebula Graph.
+
+Please be noted that [nebula-JDBC](https://github.com/vesoft-inc/nebula-jdbc)(based on nebula-java) is the JDBC implementing for nebula graph.
 
 > **NOTE**: Nebula Java is not thread-safe.
 
@@ -36,19 +40,19 @@ The v2.0.0-rc branch works with Nebula Graph v2.0.0-beta and v2.0.0-rc1, but not
 To use this Java client, do a check of  these:
 
 - Java 8 or a later version is installed.
-- Nebula Graph v2.0 is deployed. For more information, see [Deployment and installation of Nebula Graph](https://docs.nebula-graph.io/2.0/4.deployment-and-installation/1.resource-preparations/ "Click to go to Nebula Graph website").
+- Nebula Graph is deployed. For more information, see [Deployment and installation of Nebula Graph](https://docs.nebula-graph.io/master/4.deployment-and-installation/1.resource-preparations/ "Click to go to Nebula Graph website").
 
 ## Modify pom.xml
 
 If you use Maven to manage your project, add the following dependency to your `pom.xml` file. 
-Replace `2.0.0-SNAPSHOT` with an appropriate Nebula Java v2.x version. 
+Replace `3.0-SNAPSHOT` with an appropriate Nebula Java version. 
 For more versions, visit [releases](https://github.com/vesoft-inc/nebula-java/releases).
 
 ```xml
   <dependency>
     <groupId>com.vesoft</groupId>
     <artifactId>client</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
   </dependency>
 ```
 There are the version correspondence between client and Nebula:
@@ -64,10 +68,17 @@ There are the version correspondence between client and Nebula:
 |  2.0.0/2.0.1   |    2.0.0/2.0.1      |
 |    2.5.0       |      >= 2.5.0       |
 |  2.0.0-SNAPSHOT|    2.0.0-nightly    |
+|    2.0.0       |    2.0.0,2.0.1      |
+|    2.0.1       |    2.0.0,2.0.1      |
+|    2.5.0       |    2.5.0,2.5.1      |
+|    2.6.0       |    2.6.0,2.6.1      |
+|    2.6.1       |    2.6.0,2.6.1      |
+|    3.0.0       | 3.0.x,3.1.x,3.2.x   |
+|  3.0-SNAPSHOT  |       nightly       |
 
 ## Graph client example
 
-To connect to the `nebula-graphd` process of Nebula Graph v2.0:
+To connect to the `nebula-graphd` process of Nebula Graph:
 
 ```java
 NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();

@@ -1,12 +1,18 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph;
 
-public class NebulaPoolConfig {
+import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
+import java.io.Serializable;
+
+public class NebulaPoolConfig implements Serializable {
+
+    private static final long serialVersionUID = 3977910115039279651L;
+
     // The min connections in pool for all addresses
     private int minConnsSize = 0;
 
@@ -21,11 +27,37 @@ public class NebulaPoolConfig {
     // 0 means never delete
     private int idleTime = 0;
 
-    // the interval time to check idle connection, unit ms, -1 means no check
+    // The interval time to check idle connection, unit ms, -1 means no check
     private int intervalIdle = -1;
 
-    // the wait time to get idle connection, unit ms
+    // The wait time to get idle connection, unit ms
     private int waitTime = 0;
+
+    // The minimum rate of healthy servers to all servers. if 1 it means all servers should be
+    // available on init.
+    private double minClusterHealthRate = 1;
+
+    // Set to true to turn on ssl encrypted traffic
+    private boolean enableSsl = false;
+
+    // SSL param is required if ssl is turned on
+    private SSLParam sslParam = null;
+
+    public boolean isEnableSsl() {
+        return enableSsl;
+    }
+
+    public void setEnableSsl(boolean enableSsl) {
+        this.enableSsl = enableSsl;
+    }
+
+    public SSLParam getSslParam() {
+        return sslParam;
+    }
+
+    public void setSslParam(SSLParam sslParam) {
+        this.sslParam = sslParam;
+    }
 
     public int getMinConnSize() {
         return minConnsSize;
@@ -78,6 +110,15 @@ public class NebulaPoolConfig {
 
     public NebulaPoolConfig setWaitTime(int waitTime) {
         this.waitTime = waitTime;
+        return this;
+    }
+
+    public double getMinClusterHealthRate() {
+        return minClusterHealthRate;
+    }
+
+    public NebulaPoolConfig setMinClusterHealthRate(double minClusterHealthRate) {
+        this.minClusterHealthRate = minClusterHealthRate;
         return this;
     }
 }

@@ -1,7 +1,6 @@
 /* Copyright (c) 2021 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph.net;
@@ -9,18 +8,24 @@ package com.vesoft.nebula.client.graph.net;
 import com.vesoft.nebula.client.graph.SessionsManagerConfig;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.BitSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SessionsManager {
+public class SessionsManager implements Serializable {
+
+    private static final long serialVersionUID = 7519424097351713021L;
+
     private final SessionsManagerConfig config;
     private NebulaPool pool = null;
     private final CopyOnWriteArrayList<SessionWrapper> sessionList;
     private BitSet canUseBitSet;
     private Boolean isClose = false;
+    private Boolean isInited = false;
 
     public SessionsManager(SessionsManagerConfig config) {
         this.config = config;
@@ -41,16 +46,18 @@ public class SessionsManager {
     /**
      * getSessionWrapper: return a SessionWrapper from sessionManager,
      * the SessionWrapper couldn't use by multi-thread
+     *
      * @return SessionWrapper
      * @throws RuntimeException the exception when get SessionWrapper
      */
-    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException {
+    public synchronized SessionWrapper getSessionWrapper() throws RuntimeException,
+            ClientServerIncompatibleException {
         checkClose();
-        if (pool == null) {
+        if (!isInited) {
             init();
         }
         if (canUseBitSet.isEmpty()
-            && sessionList.size() >= config.getPoolConfig().getMaxConnSize()) {
+                && sessionList.size() >= config.getPoolConfig().getMaxConnSize()) {
             throw new RuntimeException("The SessionsManager does not have available sessions.");
         }
         if (!canUseBitSet.isEmpty()) {
@@ -65,14 +72,14 @@ public class SessionsManager {
         // create new session
         try {
             Session session = pool.getSession(
-                config.getUserName(), config.getPassword(), config.getReconnect());
+                    config.getUserName(), config.getPassword(), config.getReconnect());
             ResultSet resultSet = session.execute("USE " + config.getSpaceName());
             if (!resultSet.isSucceeded()) {
                 throw new RuntimeException(
-                    "Switch space `"
-                        + config.getSpaceName()
-                        + "' failed: "
-                        + resultSet.getErrorMessage());
+                        "Switch space `"
+                                + config.getSpaceName()
+                                + "' failed: "
+                                + resultSet.getErrorMessage());
             }
             SessionWrapper sessionWrapper = new SessionWrapper(session);
             sessionList.add(sessionWrapper);
@@ -85,6 +92,7 @@ public class SessionsManager {
     /**
      * returnSessionWrapper: return the SessionWrapper to the sessionManger,
      * the old SessionWrapper couldn't use again.
+     *
      * @param session The SessionWrapper
      */
     public synchronized void returnSessionWrapper(SessionWrapper session) {
@@ -124,6 +132,7 @@ public class SessionsManager {
         } catch (UnknownHostException e) {
             throw new RuntimeException("Init the pool failed: " + e.getMessage());
         }
+        isInited = true;
     }
 
     private void checkClose() {

@@ -29,8 +29,15 @@ target/
 .idea/
 .eclipse/
 *.iml
+.vscode/
+eclipse-formatter.xml
+.settings
+.project
+client/.classpath
 
 spark-importer.ipr
 spark-importer.iws
 
 .DS_Store
+
+examples/

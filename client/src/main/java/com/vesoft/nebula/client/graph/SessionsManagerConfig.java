@@ -1,17 +1,20 @@
 /* Copyright (c) 2021 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessionsManagerConfig {
+public class SessionsManagerConfig implements Serializable {
+
+    private static final long serialVersionUID = -2460063747630193912L;
+
     // graphd addresses
     private List<HostAddress> addresses = new ArrayList<>();
 

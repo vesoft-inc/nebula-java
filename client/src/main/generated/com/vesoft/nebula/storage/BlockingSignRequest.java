@@ -26,28 +26,27 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneable, Comparable<BlockingSignRequest> {
   private static final TStruct STRUCT_DESC = new TStruct("BlockingSignRequest");
-  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
+  private static final TField SPACE_IDS_FIELD_DESC = new TField("space_ids", TType.LIST, (short)1);
   private static final TField SIGN_FIELD_DESC = new TField("sign", TType.I32, (short)2);
 
-  public int space_id;
+  public List<Integer> space_ids;
   /**
    * 
    * @see EngineSignType
    */
   public EngineSignType sign;
-  public static final int SPACE_ID = 1;
+  public static final int SPACE_IDS = 1;
   public static final int SIGN = 2;
 
   // isset id assignments
-  private static final int __SPACE_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(SPACE_IDS, new FieldMetaData("space_ids", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I32))));
     tmpMetaDataMap.put(SIGN, new FieldMetaData("sign", TFieldRequirementType.REQUIRED, 
         new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
@@ -67,26 +66,22 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
   }
 
   public BlockingSignRequest(
-      int space_id,
+      List<Integer> space_ids,
       EngineSignType sign) {
     this();
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+    this.space_ids = space_ids;
     this.sign = sign;
   }
 
   public static class Builder {
-    private int space_id;
+    private List<Integer> space_ids;
     private EngineSignType sign;
-
-    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
 
-    public Builder setSpace_id(final int space_id) {
-      this.space_id = space_id;
-      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+    public Builder setSpace_ids(final List<Integer> space_ids) {
+      this.space_ids = space_ids;
       return this;
     }
 
@@ -97,9 +92,7 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
 
     public BlockingSignRequest build() {
       BlockingSignRequest result = new BlockingSignRequest();
-      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
-        result.setSpace_id(this.space_id);
-      }
+      result.setSpace_ids(this.space_ids);
       result.setSign(this.sign);
       return result;
     }
@@ -113,9 +106,9 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
    * Performs a deep copy on <i>other</i>.
    */
   public BlockingSignRequest(BlockingSignRequest other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.space_id = TBaseHelper.deepCopy(other.space_id);
+    if (other.isSetSpace_ids()) {
+      this.space_ids = TBaseHelper.deepCopy(other.space_ids);
+    }
     if (other.isSetSign()) {
       this.sign = TBaseHelper.deepCopy(other.sign);
     }
@@ -125,27 +118,28 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
     return new BlockingSignRequest(this);
   }
 
-  public int getSpace_id() {
-    return this.space_id;
+  public List<Integer> getSpace_ids() {
+    return this.space_ids;
   }
 
-  public BlockingSignRequest setSpace_id(int space_id) {
-    this.space_id = space_id;
-    setSpace_idIsSet(true);
+  public BlockingSignRequest setSpace_ids(List<Integer> space_ids) {
+    this.space_ids = space_ids;
     return this;
   }
 
-  public void unsetSpace_id() {
-    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
+  public void unsetSpace_ids() {
+    this.space_ids = null;
   }
 
-  // Returns true if field space_id is set (has been assigned a value) and false otherwise
-  public boolean isSetSpace_id() {
-    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
+  // Returns true if field space_ids is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_ids() {
+    return this.space_ids != null;
   }
 
-  public void setSpace_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
+  public void setSpace_idsIsSet(boolean __value) {
+    if (!__value) {
+      this.space_ids = null;
+    }
   }
 
   /**
@@ -180,13 +174,14 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case SPACE_ID:
+    case SPACE_IDS:
       if (__value == null) {
-        unsetSpace_id();
+        unsetSpace_ids();
       } else {
-        setSpace_id((Integer)__value);
+        setSpace_ids((List<Integer>)__value);
       }
       break;
 
@@ -205,8 +200,8 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case SPACE_ID:
-      return new Integer(getSpace_id());
+    case SPACE_IDS:
+      return getSpace_ids();
 
     case SIGN:
       return getSign();
@@ -226,7 +221,7 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
       return false;
     BlockingSignRequest that = (BlockingSignRequest)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetSpace_ids(), that.isSetSpace_ids(), this.space_ids, that.space_ids)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetSign(), that.isSetSign(), this.sign, that.sign)) { return false; }
 
@@ -235,7 +230,7 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, sign});
+    return Arrays.deepHashCode(new Object[] {space_ids, sign});
   }
 
   @Override
@@ -250,11 +245,11 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    lastComparison = Boolean.valueOf(isSetSpace_ids()).compareTo(other.isSetSpace_ids());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    lastComparison = TBaseHelper.compareTo(space_ids, other.space_ids);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -280,10 +275,21 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
       }
       switch (__field.id)
       {
-        case SPACE_ID:
-          if (__field.type == TType.I32) {
-            this.space_id = iprot.readI32();
-            setSpace_idIsSet(true);
+        case SPACE_IDS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list268 = iprot.readListBegin();
+              this.space_ids = new ArrayList<Integer>(Math.max(0, _list268.size));
+              for (int _i269 = 0; 
+                   (_list268.size < 0) ? iprot.peekList() : (_i269 < _list268.size); 
+                   ++_i269)
+              {
+                int _elem270;
+                _elem270 = iprot.readI32();
+                this.space_ids.add(_elem270);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -312,9 +318,17 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
-    oprot.writeI32(this.space_id);
-    oprot.writeFieldEnd();
+    if (this.space_ids != null) {
+      oprot.writeFieldBegin(SPACE_IDS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.I32, this.space_ids.size()));
+        for (int _iter271 : this.space_ids)        {
+          oprot.writeI32(_iter271);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
     if (this.sign != null) {
       oprot.writeFieldBegin(SIGN_FIELD_DESC);
       oprot.writeI32(this.sign == null ? 0 : this.sign.getValue());
@@ -341,10 +355,14 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("space_id");
+    sb.append("space_ids");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
+    if (this.getSpace_ids() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getSpace_ids(), indent + 1, prettyPrint));
+    }
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

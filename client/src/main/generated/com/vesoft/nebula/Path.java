@@ -237,16 +237,16 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
         case STEPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list44 = iprot.readListBegin();
-              this.steps = new ArrayList<Step>(Math.max(0, _list44.size));
-              for (int _i45 = 0; 
-                   (_list44.size < 0) ? iprot.peekList() : (_i45 < _list44.size); 
-                   ++_i45)
+              TList _list56 = iprot.readListBegin();
+              this.steps = new ArrayList<Step>(Math.max(0, _list56.size));
+              for (int _i57 = 0; 
+                   (_list56.size < 0) ? iprot.peekList() : (_i57 < _list56.size); 
+                   ++_i57)
               {
-                Step _elem46;
-                _elem46 = new Step();
-                _elem46.read(iprot);
-                this.steps.add(_elem46);
+                Step _elem58;
+                _elem58 = new Step();
+                _elem58.read(iprot);
+                this.steps.add(_elem58);
               }
               iprot.readListEnd();
             }
@@ -280,8 +280,8 @@ public class Path implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(STEPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.steps.size()));
-        for (Step _iter47 : this.steps)        {
-          _iter47.write(oprot);
+        for (Step _iter59 : this.steps)        {
+          _iter59.write(oprot);
         }
         oprot.writeListEnd();
       }

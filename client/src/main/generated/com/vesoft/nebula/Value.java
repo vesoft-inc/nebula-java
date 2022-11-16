@@ -41,6 +41,8 @@ public class Value extends TUnion<Value> {
   private static final TField M_VAL_FIELD_DESC = new TField("mVal", TType.STRUCT, (short)13);
   private static final TField U_VAL_FIELD_DESC = new TField("uVal", TType.STRUCT, (short)14);
   private static final TField G_VAL_FIELD_DESC = new TField("gVal", TType.STRUCT, (short)15);
+  private static final TField GG_VAL_FIELD_DESC = new TField("ggVal", TType.STRUCT, (short)16);
+  private static final TField DU_VAL_FIELD_DESC = new TField("duVal", TType.STRUCT, (short)17);
 
   public static final int NVAL = 1;
   public static final int BVAL = 2;
@@ -57,6 +59,8 @@ public class Value extends TUnion<Value> {
   public static final int MVAL = 13;
   public static final int UVAL = 14;
   public static final int GVAL = 15;
+  public static final int GGVAL = 16;
+  public static final int DUVAL = 17;
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -92,6 +96,10 @@ public class Value extends TUnion<Value> {
         new StructMetaData(TType.STRUCT, NSet.class)));
     tmpMetaDataMap.put(GVAL, new FieldMetaData("gVal", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, DataSet.class)));
+    tmpMetaDataMap.put(GGVAL, new FieldMetaData("ggVal", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, Geography.class)));
+    tmpMetaDataMap.put(DUVAL, new FieldMetaData("duVal", TFieldRequirementType.DEFAULT, 
+        new StructMetaData(TType.STRUCT, Duration.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -201,6 +209,18 @@ public class Value extends TUnion<Value> {
     return x;
   }
 
+  public static Value ggVal(Geography __value) {
+    Value x = new Value();
+    x.setGgVal(__value);
+    return x;
+  }
+
+  public static Value duVal(Duration __value) {
+    Value x = new Value();
+    x.setDuVal(__value);
+    return x;
+  }
+
 
   @Override
   protected void checkType(short setField, Object __value) throws ClassCastException {
@@ -280,6 +300,16 @@ public class Value extends TUnion<Value> {
           break;
         }
         throw new ClassCastException("Was expecting value of type DataSet for field 'gVal', but got " + __value.getClass().getSimpleName());
+      case GGVAL:
+        if (__value instanceof Geography) {
+          break;
+        }
+        throw new ClassCastException("Was expecting value of type Geography for field 'ggVal', but got " + __value.getClass().getSimpleName());
+      case DUVAL:
+        if (__value instanceof Duration) {
+          break;
+        }
+        throw new ClassCastException("Was expecting value of type Duration for field 'duVal', but got " + __value.getClass().getSimpleName());
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -369,6 +399,16 @@ public class Value extends TUnion<Value> {
             break;
           case GVAL:
             if (__field.type == G_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
+            }
+            break;
+          case GGVAL:
+            if (__field.type == GG_VAL_FIELD_DESC.type) {
+              setField_ = __field.id;
+            }
+            break;
+          case DUVAL:
+            if (__field.type == DU_VAL_FIELD_DESC.type) {
               setField_ = __field.id;
             }
             break;
@@ -501,6 +541,22 @@ public class Value extends TUnion<Value> {
           return gVal;
         }
         break;
+      case GGVAL:
+        if (__field.type == GG_VAL_FIELD_DESC.type) {
+          Geography ggVal;
+          ggVal = new Geography();
+          ggVal.read(iprot);
+          return ggVal;
+        }
+        break;
+      case DUVAL:
+        if (__field.type == DU_VAL_FIELD_DESC.type) {
+          Duration duVal;
+          duVal = new Duration();
+          duVal.read(iprot);
+          return duVal;
+        }
+        break;
     }
     TProtocolUtil.skip(iprot, __field.type);
     return null;
@@ -569,6 +625,14 @@ public class Value extends TUnion<Value> {
         DataSet gVal = (DataSet)getFieldValue();
         gVal.write(oprot);
         return;
+      case GGVAL:
+        Geography ggVal = (Geography)getFieldValue();
+        ggVal.write(oprot);
+        return;
+      case DUVAL:
+        Duration duVal = (Duration)getFieldValue();
+        duVal.write(oprot);
+        return;
       default:
         throw new IllegalStateException("Cannot write union with unknown field " + setField);
     }
@@ -607,6 +671,10 @@ public class Value extends TUnion<Value> {
         return U_VAL_FIELD_DESC;
       case GVAL:
         return G_VAL_FIELD_DESC;
+      case GGVAL:
+        return GG_VAL_FIELD_DESC;
+      case DUVAL:
+        return DU_VAL_FIELD_DESC;
       default:
         throw new IllegalArgumentException("Unknown field id " + setField);
     }
@@ -763,6 +831,22 @@ public class Value extends TUnion<Value> {
 
   public void setGVal(DataSet __value) {
     __setValue(GVAL, __value);
+  }
+
+  public Geography getGgVal() {
+    return (Geography) __getValue(GGVAL);
+  }
+
+  public void setGgVal(Geography __value) {
+    __setValue(GGVAL, __value);
+  }
+
+  public Duration getDuVal() {
+    return (Duration) __getValue(DUVAL);
+  }
+
+  public void setDuVal(Duration __value) {
+    __setValue(DUVAL, __value);
   }
 
   public boolean equals(Object other) {

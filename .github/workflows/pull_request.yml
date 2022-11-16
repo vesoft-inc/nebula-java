@@ -1,0 +1,75 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: pull_request
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches:
+      - master
+      - 'v[0-9]+.*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Cache the Maven packages to speed up build
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven-
+
+    - name: Install nebula-graph
+      run: |
+        mkdir tmp
+        pushd tmp
+        git clone https://github.com/vesoft-inc/nebula-docker-compose.git
+        pushd nebula-docker-compose/
+        cp ../../client/src/test/resources/docker-compose.yaml .
+        docker-compose up -d
+        sleep 30
+        docker-compose ps
+        popd
+        popd
+
+    - name: Install nebula-graph with CA SSL
+      run: |
+        pushd tmp
+        mkdir ca
+        pushd ca
+        cp -r ../../client/src/test/resources/ssl .
+        cp ../../client/src/test/resources/docker-compose-casigned.yaml .
+        docker-compose -f docker-compose-casigned.yaml up -d
+        sleep 30
+        docker-compose -f docker-compose-casigned.yaml ps
+        popd
+        popd
+
+    - name: Install nebula-graph with Self SSL
+      run: |
+        pushd tmp
+        mkdir self
+        pushd self
+        cp -r ../../client/src/test/resources/ssl .
+        cp ../../client/src/test/resources/docker-compose-selfsigned.yaml .
+        docker-compose -f docker-compose-selfsigned.yaml up -d
+        sleep 30
+        docker-compose -f docker-compose-selfsigned.yaml ps
+        popd
+        popd
+
+    - name: Build with Maven
+      run: |
+        mvn -B package
+    - uses: codecov/codecov-action@v2

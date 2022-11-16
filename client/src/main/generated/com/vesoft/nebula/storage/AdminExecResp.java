@@ -27,12 +27,12 @@ import com.facebook.thrift.protocol.*;
 public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Comparable<AdminExecResp> {
   private static final TStruct STRUCT_DESC = new TStruct("AdminExecResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
-  private static final TField STATIS_FIELD_DESC = new TField("statis", TType.STRUCT, (short)2);
+  private static final TField STATS_FIELD_DESC = new TField("stats", TType.STRUCT, (short)2);
 
   public ResponseCommon result;
-  public com.vesoft.nebula.meta.StatisItem statis;
+  public com.vesoft.nebula.meta.StatsItem stats;
   public static final int RESULT = 1;
-  public static final int STATIS = 2;
+  public static final int STATS = 2;
 
   // isset id assignments
 
@@ -42,8 +42,8 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
-    tmpMetaDataMap.put(STATIS, new FieldMetaData("statis", TFieldRequirementType.OPTIONAL, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.meta.StatisItem.class)));
+    tmpMetaDataMap.put(STATS, new FieldMetaData("stats", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.meta.StatsItem.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -62,15 +62,15 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
 
   public AdminExecResp(
       ResponseCommon result,
-      com.vesoft.nebula.meta.StatisItem statis) {
+      com.vesoft.nebula.meta.StatsItem stats) {
     this();
     this.result = result;
-    this.statis = statis;
+    this.stats = stats;
   }
 
   public static class Builder {
     private ResponseCommon result;
-    private com.vesoft.nebula.meta.StatisItem statis;
+    private com.vesoft.nebula.meta.StatsItem stats;
 
     public Builder() {
     }
@@ -80,15 +80,15 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
-    public Builder setStatis(final com.vesoft.nebula.meta.StatisItem statis) {
-      this.statis = statis;
+    public Builder setStats(final com.vesoft.nebula.meta.StatsItem stats) {
+      this.stats = stats;
       return this;
     }
 
     public AdminExecResp build() {
       AdminExecResp result = new AdminExecResp();
       result.setResult(this.result);
-      result.setStatis(this.statis);
+      result.setStats(this.stats);
       return result;
     }
   }
@@ -104,8 +104,8 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     if (other.isSetResult()) {
       this.result = TBaseHelper.deepCopy(other.result);
     }
-    if (other.isSetStatis()) {
-      this.statis = TBaseHelper.deepCopy(other.statis);
+    if (other.isSetStats()) {
+      this.stats = TBaseHelper.deepCopy(other.stats);
     }
   }
 
@@ -137,27 +137,27 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
-  public com.vesoft.nebula.meta.StatisItem getStatis() {
-    return this.statis;
+  public com.vesoft.nebula.meta.StatsItem getStats() {
+    return this.stats;
   }
 
-  public AdminExecResp setStatis(com.vesoft.nebula.meta.StatisItem statis) {
-    this.statis = statis;
+  public AdminExecResp setStats(com.vesoft.nebula.meta.StatsItem stats) {
+    this.stats = stats;
     return this;
   }
 
-  public void unsetStatis() {
-    this.statis = null;
+  public void unsetStats() {
+    this.stats = null;
   }
 
-  // Returns true if field statis is set (has been assigned a value) and false otherwise
-  public boolean isSetStatis() {
-    return this.statis != null;
+  // Returns true if field stats is set (has been assigned a value) and false otherwise
+  public boolean isSetStats() {
+    return this.stats != null;
   }
 
-  public void setStatisIsSet(boolean __value) {
+  public void setStatsIsSet(boolean __value) {
     if (!__value) {
-      this.statis = null;
+      this.stats = null;
     }
   }
 
@@ -171,11 +171,11 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
-    case STATIS:
+    case STATS:
       if (__value == null) {
-        unsetStatis();
+        unsetStats();
       } else {
-        setStatis((com.vesoft.nebula.meta.StatisItem)__value);
+        setStats((com.vesoft.nebula.meta.StatsItem)__value);
       }
       break;
 
@@ -189,8 +189,8 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     case RESULT:
       return getResult();
 
-    case STATIS:
-      return getStatis();
+    case STATS:
+      return getStats();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -209,14 +209,14 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetStatis(), that.isSetStatis(), this.statis, that.statis)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetStats(), that.isSetStats(), this.stats, that.stats)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, statis});
+    return Arrays.deepHashCode(new Object[] {result, stats});
   }
 
   @Override
@@ -239,11 +239,11 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetStatis()).compareTo(other.isSetStatis());
+    lastComparison = Boolean.valueOf(isSetStats()).compareTo(other.isSetStats());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(statis, other.statis);
+    lastComparison = TBaseHelper.compareTo(stats, other.stats);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -269,10 +269,10 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case STATIS:
+        case STATS:
           if (__field.type == TType.STRUCT) {
-            this.statis = new com.vesoft.nebula.meta.StatisItem();
-            this.statis.read(iprot);
+            this.stats = new com.vesoft.nebula.meta.StatsItem();
+            this.stats.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -299,10 +299,10 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
       this.result.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.statis != null) {
-      if (isSetStatis()) {
-        oprot.writeFieldBegin(STATIS_FIELD_DESC);
-        this.statis.write(oprot);
+    if (this.stats != null) {
+      if (isSetStats()) {
+        oprot.writeFieldBegin(STATS_FIELD_DESC);
+        this.stats.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -336,17 +336,17 @@ public class AdminExecResp implements TBase, java.io.Serializable, Cloneable, Co
       sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetStatis())
+    if (isSetStats())
     {
       if (!first) sb.append("," + newLine);
       sb.append(indentStr);
-      sb.append("statis");
+      sb.append("stats");
       sb.append(space);
       sb.append(":").append(space);
-      if (this.getStatis() == null) {
+      if (this.getStats() == null) {
         sb.append("null");
       } else {
-        sb.append(TBaseHelper.toString(this.getStatis(), indent + 1, prettyPrint));
+        sb.append(TBaseHelper.toString(this.getStats(), indent + 1, prettyPrint));
       }
       first = false;
     }

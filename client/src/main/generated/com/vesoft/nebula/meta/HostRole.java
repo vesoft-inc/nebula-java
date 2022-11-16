@@ -17,7 +17,8 @@ public enum HostRole implements com.facebook.thrift.TEnum {
   META(1),
   STORAGE(2),
   LISTENER(3),
-  UNKNOWN(4);
+  AGENT(4),
+  UNKNOWN(5);
 
   private final int value;
 
@@ -47,6 +48,8 @@ public enum HostRole implements com.facebook.thrift.TEnum {
       case 3:
         return LISTENER;
       case 4:
+        return AGENT;
+      case 5:
         return UNKNOWN;
       default:
         return null;

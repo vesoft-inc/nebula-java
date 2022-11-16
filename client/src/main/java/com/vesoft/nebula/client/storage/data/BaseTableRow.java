@@ -1,19 +1,21 @@
 /* Copyright (c) 2020 vesoft inc. All rights reserved.
  *
- * This source code is licensed under Apache 2.0 License,
- * attached with Common Clause Condition 1.0, found in the LICENSES directory.
+ * This source code is licensed under Apache 2.0 License.
  */
 
 package com.vesoft.nebula.client.storage.data;
 
 import com.vesoft.nebula.client.graph.data.DateTimeWrapper;
 import com.vesoft.nebula.client.graph.data.DateWrapper;
+import com.vesoft.nebula.client.graph.data.DurationWrapper;
+import com.vesoft.nebula.client.graph.data.GeographyWrapper;
 import com.vesoft.nebula.client.graph.data.TimeWrapper;
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class BaseTableRow {
+public class BaseTableRow implements Serializable {
     protected final List<ValueWrapper> values;
     protected String decodeType = "utf-8";
 
@@ -60,7 +62,6 @@ public class BaseTableRow {
         return values.get(i).asDate();
     }
 
-
     public TimeWrapper getTime(int i) {
         return values.get(i).asTime();
     }
@@ -69,9 +70,18 @@ public class BaseTableRow {
         return values.get(i).asDateTime();
     }
 
+    public GeographyWrapper getGeography(int i) {
+        return values.get(i).asGeography();
+    }
+
+    public DurationWrapper getDuration(int i) {
+        return values.get(i).asDuration();
+    }
+
     public List<ValueWrapper> getValues() {
         return values;
     }
+
 
     /**
      * Displays all elements of this vertexTableRow in a string using a separator string.
