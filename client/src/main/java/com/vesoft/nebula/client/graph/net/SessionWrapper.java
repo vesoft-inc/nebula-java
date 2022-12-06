@@ -16,10 +16,12 @@ public class SessionWrapper implements Serializable {
     private static final long serialVersionUID = -8128331485649098264L;
 
     private final Session session;
+    private final long sessionID;
     private final AtomicBoolean available = new AtomicBoolean(true);
 
     public SessionWrapper(Session session) {
         this.session = session;
+        this.sessionID = session.getSessionID();
     }
 
     /**
@@ -36,6 +38,10 @@ public class SessionWrapper implements Serializable {
         return session.execute(stmt);
     }
 
+    public boolean ping() {
+        return session.pingSession();
+    }
+
     void setNoAvailable() {
         this.available.set(false);
     }
@@ -46,6 +52,7 @@ public class SessionWrapper implements Serializable {
 
     void release() {
         session.release();
+        setNoAvailable();
     }
 
     Session getSession() {
