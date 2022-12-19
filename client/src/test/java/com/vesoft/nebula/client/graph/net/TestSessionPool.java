@@ -267,6 +267,7 @@ public class TestSessionPool {
                 new HostAddress(ip, 9670), new HostAddress(ip, 9671));
         SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_session_pool",
                 "root", "nebula");
+        config.setHealthCheckTime(5);
         SessionPool sessionPool = new SessionPool(config);
         assert sessionPool.init();
 
@@ -291,6 +292,9 @@ public class TestSessionPool {
             p.waitFor(5, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
 
+            // sleep 6 seconds to process the healthy check schedule task
+            Thread.sleep(6);
+
             for (int i = 0; i < 10; i++) {
                 try {
                     ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
@@ -312,8 +316,6 @@ public class TestSessionPool {
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")
-                        .waitFor(5, TimeUnit.SECONDS);
-                runtime.exec("docker start nebula-docker-compose_graphd1_1")
                         .waitFor(5, TimeUnit.SECONDS);
                 TimeUnit.SECONDS.sleep(5);
             } catch (Exception e) {
