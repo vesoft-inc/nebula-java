@@ -14,12 +14,14 @@ import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.util.ProcessUtil;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -257,6 +259,67 @@ public class TestSessionPool {
         executorService.shutdown();
         sessionPool.close();
         assert failedCount.get() == 0;
+    }
+
+    @Test
+    public void testReleaseBrokenSession() {
+        List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669),
+                new HostAddress(ip, 9670), new HostAddress(ip, 9671));
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_session_pool",
+                "root", "nebula");
+        SessionPool sessionPool = new SessionPool(config);
+        assert sessionPool.init();
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                    if (!resultSet.isSucceeded()) {
+                        System.out.println("show spaces failed, ErrorCode:"
+                                + resultSet.getErrorCode() + " ErrorMessage："
+                                + resultSet.getErrorMessage());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    assert false;
+                }
+            }
+
+            String cmd = "docker stop nebula-docker-compose_graphd0_1";
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+
+            for (int i = 0; i < 10; i++) {
+                try {
+                    ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                    if (!resultSet.isSucceeded()) {
+                        System.out.println("show spaces failed, ErrorCode:"
+                                + resultSet.getErrorCode() + " ErrorMessage："
+                                + resultSet.getErrorMessage());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    assert false;
+                }
+            }
+
+            sessionPool.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(), false);
+        } finally {
+            try {
+                runtime.exec("docker start nebula-docker-compose_graphd0_1")
+                        .waitFor(5, TimeUnit.SECONDS);
+                runtime.exec("docker start nebula-docker-compose_graphd1_1")
+                        .waitFor(5, TimeUnit.SECONDS);
+                TimeUnit.SECONDS.sleep(5);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
