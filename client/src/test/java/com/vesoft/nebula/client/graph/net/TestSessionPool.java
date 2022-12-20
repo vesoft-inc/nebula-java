@@ -293,7 +293,7 @@ public class TestSessionPool {
             ProcessUtil.printProcessStatus(cmd, p);
 
             // sleep 6 seconds to process the healthy check schedule task
-            Thread.sleep(6);
+            Thread.sleep(6000);
 
             for (int i = 0; i < 10; i++) {
                 try {
