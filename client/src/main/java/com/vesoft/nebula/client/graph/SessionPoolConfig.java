@@ -32,7 +32,7 @@ public class SessionPoolConfig implements Serializable {
     // must be less than NebulaGraph's session_idle_timeout_secs, unit: second
     private int cleanTime = 3600;
 
-    // The healthCheckTime for schedule check the health of session
+    // The healthCheckTime for schedule check the health of session, unit: second
     private int healthCheckTime = 600;
 
     // The wait time to get idle connection, unit ms

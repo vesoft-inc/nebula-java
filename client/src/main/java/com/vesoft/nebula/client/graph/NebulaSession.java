@@ -15,10 +15,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NebulaSession implements Serializable {
 
     private static final long serialVersionUID = -88438249377120255L;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private long sessionID;
     private int timezoneOffset;
@@ -65,8 +69,12 @@ public class NebulaSession implements Serializable {
     }
 
     public void release() {
-        connection.signout(sessionID);
-        connection.close();
+        try {
+            connection.signout(sessionID);
+            connection.close();
+        } catch (Exception e) {
+            log.warn("release session failed, " + e.getMessage());
+        }
         connection = null;
     }
 }
