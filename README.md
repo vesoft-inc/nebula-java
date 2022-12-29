@@ -89,3 +89,34 @@ session.execute("SHOW HOSTS;");
 session.release();
 pool.close();
 ```
+
+## Graph SessionPool example
+To use SessionPool, you must config the space to connect for SessionPool. **And please notice that SessionPool
+does not support reconnect for broken connection.**
+```java
+List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
+String spaceName = "test";
+String user = "root";
+String password = "nebula";
+SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(addresses, spaceName, user, password);
+SessionPool sessionPool = new SessionPool(sessionPoolConfig);
+if (!sessionPool.init()) {
+   log.error("session pool init failed.");
+   return;
+}
+ResultSet resultSet;
+try {
+    resultSet = sessionPool.execute("match (v:player) return v limit 1;");
+    System.out.println(resultSet.toString());
+} catch (IOErrorException | ClientServerIncompatibleException | AuthFailedException | BindSpaceFailedException e) {
+    e.printStackTrace();
+    System.exit(1);
+} finally {
+    sessionPool.close();
+}
+
+
+
+
+
+```
