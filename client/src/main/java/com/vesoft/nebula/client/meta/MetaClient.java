@@ -168,11 +168,14 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-    private void freshClient(HostAddr leader)
-            throws TTransportException {
+    private void freshClient(HostAddr leader) throws TTransportException {
         close();
         try {
-            getClient(leader.getHost(), leader.getPort());
+            if (leader.getHost() == null || "".equals(leader.getHost())) {
+                doConnect();
+            } else {
+                getClient(leader.getHost(), leader.getPort());
+            }
         } catch (ClientServerIncompatibleException e) {
             LOGGER.error(e.getMessage());
         }
