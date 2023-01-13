@@ -7,7 +7,9 @@ package com.vesoft.nebula.client.storage;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
+import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
@@ -29,9 +31,9 @@ import javax.net.ssl.SSLSocketFactory;
 public class GraphStorageConnection implements Serializable {
 
     private static final long serialVersionUID = -3631352515689239788L;
-    
-    protected TTransport transport = null;
-    protected TProtocol protocol = null;
+
+    protected THeaderTransport transport = null;
+    protected THeaderProtocol protocol = null;
     public HostAddress address;
     private GraphStorageService.Client client;
 
@@ -52,24 +54,24 @@ public class GraphStorageConnection implements Serializable {
             }
             try {
                 transport =
-                        new TSocket(
+                        new THeaderTransport(new TSocket(
                                 sslSocketFactory.createSocket(
                                         InetAddress.getByName(address.getHost()).getHostAddress(),
                                         address.getPort()),
                                 newTimeout,
-                                newTimeout);
+                                newTimeout));
             } catch (IOException e) {
                 throw new TTransportException(IOErrorException.E_UNKNOWN, e);
             }
         } else {
-            this.transport = new TSocket(
+            this.transport = new THeaderTransport(new TSocket(
                     InetAddress.getByName(address.getHost()).getHostAddress(),
                     address.getPort(),
                     newTimeout,
-                    newTimeout);
+                    newTimeout));
             this.transport.open();
         }
-        this.protocol = new TCompactProtocol(transport);
+        this.protocol = new THeaderProtocol(transport);
         client = new GraphStorageService.Client(protocol);
         return this;
     }
