@@ -7,7 +7,9 @@ package com.vesoft.nebula.client.graph.net;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
+import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
@@ -39,8 +41,8 @@ public class SyncConnection extends Connection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncConnection.class);
 
-    protected TTransport transport = null;
-    protected TProtocol protocol = null;
+    protected THeaderTransport transport = null;
+    protected THeaderProtocol protocol = null;
     private GraphService.Client client = null;
     private int timeout = 0;
     private SSLParam sslParam = null;
@@ -65,10 +67,10 @@ public class SyncConnection extends Connection {
                             SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
                 }
             }
-            this.transport = new TSocket(
+            this.transport = new THeaderTransport(new TSocket(
                     sslSocketFactory.createSocket(address.getHost(),
-                            address.getPort()), this.timeout, this.timeout);
-            this.protocol = new TCompactProtocol(transport);
+                            address.getPort()), this.timeout, this.timeout));
+            this.protocol = new THeaderProtocol(transport);
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
@@ -91,10 +93,10 @@ public class SyncConnection extends Connection {
         try {
             this.serverAddr = address;
             this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
-            this.transport = new TSocket(
-                    address.getHost(), address.getPort(), this.timeout, this.timeout);
+            this.transport = new THeaderTransport(new TSocket(
+                    address.getHost(), address.getPort(), this.timeout, this.timeout));
             this.transport.open();
-            this.protocol = new TCompactProtocol(transport);
+            this.protocol = new THeaderProtocol(transport);
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version

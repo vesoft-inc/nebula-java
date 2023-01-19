@@ -7,6 +7,8 @@ package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
+import com.facebook.thrift.protocol.THeaderProtocol;
+import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Charsets;
@@ -139,17 +141,17 @@ public class MetaClient extends AbstractMetaClient {
                         SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
             }
             try {
-                transport = new TSocket(sslSocketFactory.createSocket(host, port), timeout,
-                        timeout);
+                transport = new THeaderTransport(
+                        new TSocket(sslSocketFactory.createSocket(host, port), timeout, timeout));
             } catch (IOException e) {
                 throw new TTransportException(IOErrorException.E_UNKNOWN, e);
             }
         } else {
-            transport = new TSocket(host, port, timeout, timeout);
+            transport = new THeaderTransport(new TSocket(host, port, timeout, timeout));
             transport.open();
         }
 
-        protocol = new TCompactProtocol(transport);
+        protocol = new THeaderProtocol(transport);
         client = new MetaService.Client(protocol);
 
         // check if client version matches server version
