@@ -356,30 +356,30 @@ public class ChainDeleteEdgesRequest implements TBase, java.io.Serializable, Clo
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map310 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map310.size));
-              for (int _i311 = 0; 
-                   (_map310.size < 0) ? iprot.peekMap() : (_i311 < _map310.size); 
-                   ++_i311)
+              TMap _map327 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map327.size));
+              for (int _i328 = 0; 
+                   (_map327.size < 0) ? iprot.peekMap() : (_i328 < _map327.size); 
+                   ++_i328)
               {
-                int _key312;
-                List<EdgeKey> _val313;
-                _key312 = iprot.readI32();
+                int _key329;
+                List<EdgeKey> _val330;
+                _key329 = iprot.readI32();
                 {
-                  TList _list314 = iprot.readListBegin();
-                  _val313 = new ArrayList<EdgeKey>(Math.max(0, _list314.size));
-                  for (int _i315 = 0; 
-                       (_list314.size < 0) ? iprot.peekList() : (_i315 < _list314.size); 
-                       ++_i315)
+                  TList _list331 = iprot.readListBegin();
+                  _val330 = new ArrayList<EdgeKey>(Math.max(0, _list331.size));
+                  for (int _i332 = 0; 
+                       (_list331.size < 0) ? iprot.peekList() : (_i332 < _list331.size); 
+                       ++_i332)
                   {
-                    EdgeKey _elem316;
-                    _elem316 = new EdgeKey();
-                    _elem316.read(iprot);
-                    _val313.add(_elem316);
+                    EdgeKey _elem333;
+                    _elem333 = new EdgeKey();
+                    _elem333.read(iprot);
+                    _val330.add(_elem333);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key312, _val313);
+                this.parts.put(_key329, _val330);
               }
               iprot.readMapEnd();
             }
@@ -426,12 +426,12 @@ public class ChainDeleteEdgesRequest implements TBase, java.io.Serializable, Clo
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<EdgeKey>> _iter317 : this.parts.entrySet())        {
-          oprot.writeI32(_iter317.getKey());
+        for (Map.Entry<Integer, List<EdgeKey>> _iter334 : this.parts.entrySet())        {
+          oprot.writeI32(_iter334.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter317.getValue().size()));
-            for (EdgeKey _iter318 : _iter317.getValue())            {
-              _iter318.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter334.getValue().size()));
+            for (EdgeKey _iter335 : _iter334.getValue())            {
+              _iter335.write(oprot);
             }
             oprot.writeListEnd();
           }

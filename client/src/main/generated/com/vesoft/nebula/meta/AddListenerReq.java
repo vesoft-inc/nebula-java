@@ -356,16 +356,16 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
         case HOSTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list257 = iprot.readListBegin();
-              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list257.size));
-              for (int _i258 = 0; 
-                   (_list257.size < 0) ? iprot.peekList() : (_i258 < _list257.size); 
-                   ++_i258)
+              TList _list245 = iprot.readListBegin();
+              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list245.size));
+              for (int _i246 = 0; 
+                   (_list245.size < 0) ? iprot.peekList() : (_i246 < _list245.size); 
+                   ++_i246)
               {
-                com.vesoft.nebula.HostAddr _elem259;
-                _elem259 = new com.vesoft.nebula.HostAddr();
-                _elem259.read(iprot);
-                this.hosts.add(_elem259);
+                com.vesoft.nebula.HostAddr _elem247;
+                _elem247 = new com.vesoft.nebula.HostAddr();
+                _elem247.read(iprot);
+                this.hosts.add(_elem247);
               }
               iprot.readListEnd();
             }
@@ -402,8 +402,8 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter260 : this.hosts)        {
-          _iter260.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter248 : this.hosts)        {
+          _iter248.write(oprot);
         }
         oprot.writeListEnd();
       }

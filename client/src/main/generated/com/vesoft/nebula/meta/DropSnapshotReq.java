@@ -26,10 +26,10 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, Comparable<DropSnapshotReq> {
   private static final TStruct STRUCT_DESC = new TStruct("DropSnapshotReq");
-  private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)1);
+  private static final TField NAMES_FIELD_DESC = new TField("names", TType.LIST, (short)1);
 
-  public byte[] name;
-  public static final int NAME = 1;
+  public List<byte[]> names;
+  public static final int NAMES = 1;
 
   // isset id assignments
 
@@ -37,8 +37,9 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(NAMES, new FieldMetaData("names", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -50,25 +51,25 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public DropSnapshotReq(
-      byte[] name) {
+      List<byte[]> names) {
     this();
-    this.name = name;
+    this.names = names;
   }
 
   public static class Builder {
-    private byte[] name;
+    private List<byte[]> names;
 
     public Builder() {
     }
 
-    public Builder setName(final byte[] name) {
-      this.name = name;
+    public Builder setNames(final List<byte[]> names) {
+      this.names = names;
       return this;
     }
 
     public DropSnapshotReq build() {
       DropSnapshotReq result = new DropSnapshotReq();
-      result.setName(this.name);
+      result.setNames(this.names);
       return result;
     }
   }
@@ -81,8 +82,8 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
    * Performs a deep copy on <i>other</i>.
    */
   public DropSnapshotReq(DropSnapshotReq other) {
-    if (other.isSetName()) {
-      this.name = TBaseHelper.deepCopy(other.name);
+    if (other.isSetNames()) {
+      this.names = TBaseHelper.deepCopy(other.names);
     }
   }
 
@@ -90,37 +91,38 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
     return new DropSnapshotReq(this);
   }
 
-  public byte[] getName() {
-    return this.name;
+  public List<byte[]> getNames() {
+    return this.names;
   }
 
-  public DropSnapshotReq setName(byte[] name) {
-    this.name = name;
+  public DropSnapshotReq setNames(List<byte[]> names) {
+    this.names = names;
     return this;
   }
 
-  public void unsetName() {
-    this.name = null;
+  public void unsetNames() {
+    this.names = null;
   }
 
-  // Returns true if field name is set (has been assigned a value) and false otherwise
-  public boolean isSetName() {
-    return this.name != null;
+  // Returns true if field names is set (has been assigned a value) and false otherwise
+  public boolean isSetNames() {
+    return this.names != null;
   }
 
-  public void setNameIsSet(boolean __value) {
+  public void setNamesIsSet(boolean __value) {
     if (!__value) {
-      this.name = null;
+      this.names = null;
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case NAME:
+    case NAMES:
       if (__value == null) {
-        unsetName();
+        unsetNames();
       } else {
-        setName((byte[])__value);
+        setNames((List<byte[]>)__value);
       }
       break;
 
@@ -131,8 +133,8 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case NAME:
-      return getName();
+    case NAMES:
+      return getNames();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -149,14 +151,14 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
       return false;
     DropSnapshotReq that = (DropSnapshotReq)_that;
 
-    if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetNames(), that.isSetNames(), this.names, that.names)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {name});
+    return Arrays.deepHashCode(new Object[] {names});
   }
 
   @Override
@@ -171,11 +173,11 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetName()).compareTo(other.isSetName());
+    lastComparison = Boolean.valueOf(isSetNames()).compareTo(other.isSetNames());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(name, other.name);
+    lastComparison = TBaseHelper.compareTo(names, other.names);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -193,9 +195,21 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
       }
       switch (__field.id)
       {
-        case NAME:
-          if (__field.type == TType.STRING) {
-            this.name = iprot.readBinary();
+        case NAMES:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list204 = iprot.readListBegin();
+              this.names = new ArrayList<byte[]>(Math.max(0, _list204.size));
+              for (int _i205 = 0; 
+                   (_list204.size < 0) ? iprot.peekList() : (_i205 < _list204.size); 
+                   ++_i205)
+              {
+                byte[] _elem206;
+                _elem206 = iprot.readBinary();
+                this.names.add(_elem206);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -217,9 +231,15 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.name != null) {
-      oprot.writeFieldBegin(NAME_FIELD_DESC);
-      oprot.writeBinary(this.name);
+    if (this.names != null) {
+      oprot.writeFieldBegin(NAMES_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.names.size()));
+        for (byte[] _iter207 : this.names)        {
+          oprot.writeBinary(_iter207);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -243,18 +263,13 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("name");
+    sb.append("names");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getName() == null) {
+    if (this.getNames() == null) {
       sb.append("null");
     } else {
-        int __name_size = Math.min(this.getName().length, 128);
-        for (int i = 0; i < __name_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getName()[i]).length() > 1 ? Integer.toHexString(this.getName()[i]).substring(Integer.toHexString(this.getName()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getName()[i]).toUpperCase());
-        }
-        if (this.getName().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this.getNames(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

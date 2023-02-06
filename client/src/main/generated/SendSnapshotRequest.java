@@ -26,7 +26,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   private static final TStruct STRUCT_DESC = new TStruct("SendSnapshotRequest");
   private static final TField SPACE_FIELD_DESC = new TField("space", TType.I32, (short)1);
   private static final TField PART_FIELD_DESC = new TField("part", TType.I32, (short)2);
-  private static final TField TERM_FIELD_DESC = new TField("term", TType.I64, (short)3);
+  private static final TField CURRENT_TERM_FIELD_DESC = new TField("current_term", TType.I64, (short)3);
   private static final TField COMMITTED_LOG_ID_FIELD_DESC = new TField("committed_log_id", TType.I64, (short)4);
   private static final TField COMMITTED_LOG_TERM_FIELD_DESC = new TField("committed_log_term", TType.I64, (short)5);
   private static final TField LEADER_ADDR_FIELD_DESC = new TField("leader_addr", TType.STRING, (short)6);
@@ -38,7 +38,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
 
   public int space;
   public int part;
-  public long term;
+  public long current_term;
   public long committed_log_id;
   public long committed_log_term;
   public String leader_addr;
@@ -49,7 +49,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   public boolean done;
   public static final int SPACE = 1;
   public static final int PART = 2;
-  public static final int TERM = 3;
+  public static final int CURRENT_TERM = 3;
   public static final int COMMITTED_LOG_ID = 4;
   public static final int COMMITTED_LOG_TERM = 5;
   public static final int LEADER_ADDR = 6;
@@ -62,7 +62,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   // isset id assignments
   private static final int __SPACE_ISSET_ID = 0;
   private static final int __PART_ISSET_ID = 1;
-  private static final int __TERM_ISSET_ID = 2;
+  private static final int __CURRENT_TERM_ISSET_ID = 2;
   private static final int __COMMITTED_LOG_ID_ISSET_ID = 3;
   private static final int __COMMITTED_LOG_TERM_ISSET_ID = 4;
   private static final int __LEADER_PORT_ISSET_ID = 5;
@@ -79,7 +79,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PART, new FieldMetaData("part", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(TERM, new FieldMetaData("term", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(CURRENT_TERM, new FieldMetaData("current_term", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(COMMITTED_LOG_ID, new FieldMetaData("committed_log_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
@@ -111,7 +111,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   public SendSnapshotRequest(
       int space,
       int part,
-      long term,
+      long current_term,
       long committed_log_id,
       long committed_log_term,
       String leader_addr,
@@ -125,8 +125,8 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     setSpaceIsSet(true);
     this.part = part;
     setPartIsSet(true);
-    this.term = term;
-    setTermIsSet(true);
+    this.current_term = current_term;
+    setCurrent_termIsSet(true);
     this.committed_log_id = committed_log_id;
     setCommitted_log_idIsSet(true);
     this.committed_log_term = committed_log_term;
@@ -146,7 +146,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
   public static class Builder {
     private int space;
     private int part;
-    private long term;
+    private long current_term;
     private long committed_log_id;
     private long committed_log_term;
     private String leader_addr;
@@ -173,9 +173,9 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
-    public Builder setTerm(final long term) {
-      this.term = term;
-      __optional_isset.set(__TERM_ISSET_ID, true);
+    public Builder setCurrent_term(final long current_term) {
+      this.current_term = current_term;
+      __optional_isset.set(__CURRENT_TERM_ISSET_ID, true);
       return this;
     }
 
@@ -233,8 +233,8 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       if (__optional_isset.get(__PART_ISSET_ID)) {
         result.setPart(this.part);
       }
-      if (__optional_isset.get(__TERM_ISSET_ID)) {
-        result.setTerm(this.term);
+      if (__optional_isset.get(__CURRENT_TERM_ISSET_ID)) {
+        result.setCurrent_term(this.current_term);
       }
       if (__optional_isset.get(__COMMITTED_LOG_ID_ISSET_ID)) {
         result.setCommitted_log_id(this.committed_log_id);
@@ -272,7 +272,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space = TBaseHelper.deepCopy(other.space);
     this.part = TBaseHelper.deepCopy(other.part);
-    this.term = TBaseHelper.deepCopy(other.term);
+    this.current_term = TBaseHelper.deepCopy(other.current_term);
     this.committed_log_id = TBaseHelper.deepCopy(other.committed_log_id);
     this.committed_log_term = TBaseHelper.deepCopy(other.committed_log_term);
     if (other.isSetLeader_addr()) {
@@ -337,27 +337,27 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     __isset_bit_vector.set(__PART_ISSET_ID, __value);
   }
 
-  public long getTerm() {
-    return this.term;
+  public long getCurrent_term() {
+    return this.current_term;
   }
 
-  public SendSnapshotRequest setTerm(long term) {
-    this.term = term;
-    setTermIsSet(true);
+  public SendSnapshotRequest setCurrent_term(long current_term) {
+    this.current_term = current_term;
+    setCurrent_termIsSet(true);
     return this;
   }
 
-  public void unsetTerm() {
-    __isset_bit_vector.clear(__TERM_ISSET_ID);
+  public void unsetCurrent_term() {
+    __isset_bit_vector.clear(__CURRENT_TERM_ISSET_ID);
   }
 
-  // Returns true if field term is set (has been assigned a value) and false otherwise
-  public boolean isSetTerm() {
-    return __isset_bit_vector.get(__TERM_ISSET_ID);
+  // Returns true if field current_term is set (has been assigned a value) and false otherwise
+  public boolean isSetCurrent_term() {
+    return __isset_bit_vector.get(__CURRENT_TERM_ISSET_ID);
   }
 
-  public void setTermIsSet(boolean __value) {
-    __isset_bit_vector.set(__TERM_ISSET_ID, __value);
+  public void setCurrent_termIsSet(boolean __value) {
+    __isset_bit_vector.set(__CURRENT_TERM_ISSET_ID, __value);
   }
 
   public long getCommitted_log_id() {
@@ -565,11 +565,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
-    case TERM:
+    case CURRENT_TERM:
       if (__value == null) {
-        unsetTerm();
+        unsetCurrent_term();
       } else {
-        setTerm((Long)__value);
+        setCurrent_term((Long)__value);
       }
       break;
 
@@ -650,8 +650,8 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     case PART:
       return new Integer(getPart());
 
-    case TERM:
-      return new Long(getTerm());
+    case CURRENT_TERM:
+      return new Long(getCurrent_term());
 
     case COMMITTED_LOG_ID:
       return new Long(getCommitted_log_id());
@@ -696,7 +696,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
 
     if (!TBaseHelper.equalsNobinary(this.part, that.part)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.term, that.term)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.current_term, that.current_term)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.committed_log_id, that.committed_log_id)) { return false; }
 
@@ -719,7 +719,7 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space, part, term, committed_log_id, committed_log_term, leader_addr, leader_port, rows, total_size, total_count, done});
+    return Arrays.deepHashCode(new Object[] {space, part, current_term, committed_log_id, committed_log_term, leader_addr, leader_port, rows, total_size, total_count, done});
   }
 
   @Override
@@ -750,11 +750,11 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetTerm()).compareTo(other.isSetTerm());
+    lastComparison = Boolean.valueOf(isSetCurrent_term()).compareTo(other.isSetCurrent_term());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(term, other.term);
+    lastComparison = TBaseHelper.compareTo(current_term, other.current_term);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -852,10 +852,10 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case TERM:
+        case CURRENT_TERM:
           if (__field.type == TType.I64) {
-            this.term = iprot.readI64();
-            setTermIsSet(true);
+            this.current_term = iprot.readI64();
+            setCurrent_termIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -957,8 +957,8 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     oprot.writeFieldBegin(PART_FIELD_DESC);
     oprot.writeI32(this.part);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(TERM_FIELD_DESC);
-    oprot.writeI64(this.term);
+    oprot.writeFieldBegin(CURRENT_TERM_FIELD_DESC);
+    oprot.writeI64(this.current_term);
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(COMMITTED_LOG_ID_FIELD_DESC);
     oprot.writeI64(this.committed_log_id);
@@ -1029,10 +1029,10 @@ public class SendSnapshotRequest implements TBase, java.io.Serializable, Cloneab
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("term");
+    sb.append("current_term");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getTerm(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getCurrent_term(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

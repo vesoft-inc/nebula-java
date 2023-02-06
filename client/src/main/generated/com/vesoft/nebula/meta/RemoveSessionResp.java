@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("GetResp");
+public class RemoveSessionResp implements TBase, java.io.Serializable, Cloneable, Comparable<RemoveSessionResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("RemoveSessionResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
+  private static final TField REMOVED_SESSION_IDS_FIELD_DESC = new TField("removed_session_ids", TType.LIST, (short)3);
 
   /**
    * 
@@ -36,10 +36,10 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public byte[] value;
+  public List<Long> removed_session_ids;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int VALUE = 3;
+  public static final int REMOVED_SESSION_IDS = 3;
 
   // isset id assignments
 
@@ -51,32 +51,33 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(REMOVED_SESSION_IDS, new FieldMetaData("removed_session_ids", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I64))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(GetResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(RemoveSessionResp.class, metaDataMap);
   }
 
-  public GetResp() {
+  public RemoveSessionResp() {
   }
 
-  public GetResp(
+  public RemoveSessionResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      byte[] value) {
+      List<Long> removed_session_ids) {
     this();
     this.code = code;
     this.leader = leader;
-    this.value = value;
+    this.removed_session_ids = removed_session_ids;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private byte[] value;
+    private List<Long> removed_session_ids;
 
     public Builder() {
     }
@@ -91,16 +92,16 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
       return this;
     }
 
-    public Builder setValue(final byte[] value) {
-      this.value = value;
+    public Builder setRemoved_session_ids(final List<Long> removed_session_ids) {
+      this.removed_session_ids = removed_session_ids;
       return this;
     }
 
-    public GetResp build() {
-      GetResp result = new GetResp();
+    public RemoveSessionResp build() {
+      RemoveSessionResp result = new RemoveSessionResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setValue(this.value);
+      result.setRemoved_session_ids(this.removed_session_ids);
       return result;
     }
   }
@@ -112,20 +113,20 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public GetResp(GetResp other) {
+  public RemoveSessionResp(RemoveSessionResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetValue()) {
-      this.value = TBaseHelper.deepCopy(other.value);
+    if (other.isSetRemoved_session_ids()) {
+      this.removed_session_ids = TBaseHelper.deepCopy(other.removed_session_ids);
     }
   }
 
-  public GetResp deepCopy() {
-    return new GetResp(this);
+  public RemoveSessionResp deepCopy() {
+    return new RemoveSessionResp(this);
   }
 
   /**
@@ -140,7 +141,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public GetResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public RemoveSessionResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -164,7 +165,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     return this.leader;
   }
 
-  public GetResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public RemoveSessionResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -184,30 +185,31 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     }
   }
 
-  public byte[] getValue() {
-    return this.value;
+  public List<Long> getRemoved_session_ids() {
+    return this.removed_session_ids;
   }
 
-  public GetResp setValue(byte[] value) {
-    this.value = value;
+  public RemoveSessionResp setRemoved_session_ids(List<Long> removed_session_ids) {
+    this.removed_session_ids = removed_session_ids;
     return this;
   }
 
-  public void unsetValue() {
-    this.value = null;
+  public void unsetRemoved_session_ids() {
+    this.removed_session_ids = null;
   }
 
-  // Returns true if field value is set (has been assigned a value) and false otherwise
-  public boolean isSetValue() {
-    return this.value != null;
+  // Returns true if field removed_session_ids is set (has been assigned a value) and false otherwise
+  public boolean isSetRemoved_session_ids() {
+    return this.removed_session_ids != null;
   }
 
-  public void setValueIsSet(boolean __value) {
+  public void setRemoved_session_idsIsSet(boolean __value) {
     if (!__value) {
-      this.value = null;
+      this.removed_session_ids = null;
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
@@ -226,11 +228,11 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
       }
       break;
 
-    case VALUE:
+    case REMOVED_SESSION_IDS:
       if (__value == null) {
-        unsetValue();
+        unsetRemoved_session_ids();
       } else {
-        setValue((byte[])__value);
+        setRemoved_session_ids((List<Long>)__value);
       }
       break;
 
@@ -247,8 +249,8 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     case LEADER:
       return getLeader();
 
-    case VALUE:
-      return getValue();
+    case REMOVED_SESSION_IDS:
+      return getRemoved_session_ids();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -261,26 +263,26 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof GetResp))
+    if (!(_that instanceof RemoveSessionResp))
       return false;
-    GetResp that = (GetResp)_that;
+    RemoveSessionResp that = (RemoveSessionResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetValue(), that.isSetValue(), this.value, that.value)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetRemoved_session_ids(), that.isSetRemoved_session_ids(), this.removed_session_ids, that.removed_session_ids)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, value});
+    return Arrays.deepHashCode(new Object[] {code, leader, removed_session_ids});
   }
 
   @Override
-  public int compareTo(GetResp other) {
+  public int compareTo(RemoveSessionResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -307,11 +309,11 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetValue()).compareTo(other.isSetValue());
+    lastComparison = Boolean.valueOf(isSetRemoved_session_ids()).compareTo(other.isSetRemoved_session_ids());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(value, other.value);
+    lastComparison = TBaseHelper.compareTo(removed_session_ids, other.removed_session_ids);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -344,9 +346,21 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case VALUE:
-          if (__field.type == TType.STRING) {
-            this.value = iprot.readBinary();
+        case REMOVED_SESSION_IDS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list357 = iprot.readListBegin();
+              this.removed_session_ids = new ArrayList<Long>(Math.max(0, _list357.size));
+              for (int _i358 = 0; 
+                   (_list357.size < 0) ? iprot.peekList() : (_i358 < _list357.size); 
+                   ++_i358)
+              {
+                long _elem359;
+                _elem359 = iprot.readI64();
+                this.removed_session_ids.add(_elem359);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -378,9 +392,15 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.value != null) {
-      oprot.writeFieldBegin(VALUE_FIELD_DESC);
-      oprot.writeBinary(this.value);
+    if (this.removed_session_ids != null) {
+      oprot.writeFieldBegin(REMOVED_SESSION_IDS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.I64, this.removed_session_ids.size()));
+        for (long _iter360 : this.removed_session_ids)        {
+          oprot.writeI64(_iter360);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -397,7 +417,7 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("GetResp");
+    StringBuilder sb = new StringBuilder("RemoveSessionResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -434,18 +454,13 @@ public class GetResp implements TBase, java.io.Serializable, Cloneable, Comparab
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("value");
+    sb.append("removed_session_ids");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getValue() == null) {
+    if (this.getRemoved_session_ids() == null) {
       sb.append("null");
     } else {
-        int __value_size = Math.min(this.getValue().length, 128);
-        for (int i = 0; i < __value_size; i++) {
-          if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getValue()[i]).length() > 1 ? Integer.toHexString(this.getValue()[i]).substring(Integer.toHexString(this.getValue()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getValue()[i]).toUpperCase());
-        }
-        if (this.getValue().length > 128) sb.append(" ...");
+      sb.append(TBaseHelper.toString(this.getRemoved_session_ids(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

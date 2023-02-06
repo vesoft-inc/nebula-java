@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ScanResp implements TBase, java.io.Serializable, Cloneable, Comparable<ScanResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ScanResp");
+public class GetSegmentIdResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetSegmentIdResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetSegmentIdResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField VALUES_FIELD_DESC = new TField("values", TType.LIST, (short)3);
+  private static final TField SEGMENT_ID_FIELD_DESC = new TField("segment_id", TType.I64, (short)3);
 
   /**
    * 
@@ -36,12 +36,14 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<byte[]> values;
+  public long segment_id;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int VALUES = 3;
+  public static final int SEGMENT_ID = 3;
 
   // isset id assignments
+  private static final int __SEGMENT_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -51,33 +53,35 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(VALUES, new FieldMetaData("values", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(SEGMENT_ID, new FieldMetaData("segment_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ScanResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetSegmentIdResp.class, metaDataMap);
   }
 
-  public ScanResp() {
+  public GetSegmentIdResp() {
   }
 
-  public ScanResp(
+  public GetSegmentIdResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<byte[]> values) {
+      long segment_id) {
     this();
     this.code = code;
     this.leader = leader;
-    this.values = values;
+    this.segment_id = segment_id;
+    setSegment_idIsSet(true);
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<byte[]> values;
+    private long segment_id;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -92,16 +96,19 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       return this;
     }
 
-    public Builder setValues(final List<byte[]> values) {
-      this.values = values;
+    public Builder setSegment_id(final long segment_id) {
+      this.segment_id = segment_id;
+      __optional_isset.set(__SEGMENT_ID_ISSET_ID, true);
       return this;
     }
 
-    public ScanResp build() {
-      ScanResp result = new ScanResp();
+    public GetSegmentIdResp build() {
+      GetSegmentIdResp result = new GetSegmentIdResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setValues(this.values);
+      if (__optional_isset.get(__SEGMENT_ID_ISSET_ID)) {
+        result.setSegment_id(this.segment_id);
+      }
       return result;
     }
   }
@@ -113,20 +120,20 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ScanResp(ScanResp other) {
+  public GetSegmentIdResp(GetSegmentIdResp other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetValues()) {
-      this.values = TBaseHelper.deepCopy(other.values);
-    }
+    this.segment_id = TBaseHelper.deepCopy(other.segment_id);
   }
 
-  public ScanResp deepCopy() {
-    return new ScanResp(this);
+  public GetSegmentIdResp deepCopy() {
+    return new GetSegmentIdResp(this);
   }
 
   /**
@@ -141,7 +148,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ScanResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public GetSegmentIdResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +172,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     return this.leader;
   }
 
-  public ScanResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public GetSegmentIdResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,31 +192,29 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public List<byte[]> getValues() {
-    return this.values;
+  public long getSegment_id() {
+    return this.segment_id;
   }
 
-  public ScanResp setValues(List<byte[]> values) {
-    this.values = values;
+  public GetSegmentIdResp setSegment_id(long segment_id) {
+    this.segment_id = segment_id;
+    setSegment_idIsSet(true);
     return this;
   }
 
-  public void unsetValues() {
-    this.values = null;
+  public void unsetSegment_id() {
+    __isset_bit_vector.clear(__SEGMENT_ID_ISSET_ID);
   }
 
-  // Returns true if field values is set (has been assigned a value) and false otherwise
-  public boolean isSetValues() {
-    return this.values != null;
+  // Returns true if field segment_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSegment_id() {
+    return __isset_bit_vector.get(__SEGMENT_ID_ISSET_ID);
   }
 
-  public void setValuesIsSet(boolean __value) {
-    if (!__value) {
-      this.values = null;
-    }
+  public void setSegment_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SEGMENT_ID_ISSET_ID, __value);
   }
 
-  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case CODE:
@@ -228,11 +233,11 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
-    case VALUES:
+    case SEGMENT_ID:
       if (__value == null) {
-        unsetValues();
+        unsetSegment_id();
       } else {
-        setValues((List<byte[]>)__value);
+        setSegment_id((Long)__value);
       }
       break;
 
@@ -249,8 +254,8 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     case LEADER:
       return getLeader();
 
-    case VALUES:
-      return getValues();
+    case SEGMENT_ID:
+      return new Long(getSegment_id());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +268,26 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ScanResp))
+    if (!(_that instanceof GetSegmentIdResp))
       return false;
-    ScanResp that = (ScanResp)_that;
+    GetSegmentIdResp that = (GetSegmentIdResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetValues(), that.isSetValues(), this.values, that.values)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.segment_id, that.segment_id)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, values});
+    return Arrays.deepHashCode(new Object[] {code, leader, segment_id});
   }
 
   @Override
-  public int compareTo(ScanResp other) {
+  public int compareTo(GetSegmentIdResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +314,11 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetValues()).compareTo(other.isSetValues());
+    lastComparison = Boolean.valueOf(isSetSegment_id()).compareTo(other.isSetSegment_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(values, other.values);
+    lastComparison = TBaseHelper.compareTo(segment_id, other.segment_id);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,21 +351,10 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case VALUES:
-          if (__field.type == TType.LIST) {
-            {
-              TList _list152 = iprot.readListBegin();
-              this.values = new ArrayList<byte[]>(Math.max(0, _list152.size));
-              for (int _i153 = 0; 
-                   (_list152.size < 0) ? iprot.peekList() : (_i153 < _list152.size); 
-                   ++_i153)
-              {
-                byte[] _elem154;
-                _elem154 = iprot.readBinary();
-                this.values.add(_elem154);
-              }
-              iprot.readListEnd();
-            }
+        case SEGMENT_ID:
+          if (__field.type == TType.I64) {
+            this.segment_id = iprot.readI64();
+            setSegment_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -392,17 +386,9 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.values != null) {
-      oprot.writeFieldBegin(VALUES_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRING, this.values.size()));
-        for (byte[] _iter155 : this.values)        {
-          oprot.writeBinary(_iter155);
-        }
-        oprot.writeListEnd();
-      }
-      oprot.writeFieldEnd();
-    }
+    oprot.writeFieldBegin(SEGMENT_ID_FIELD_DESC);
+    oprot.writeI64(this.segment_id);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -417,7 +403,7 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ScanResp");
+    StringBuilder sb = new StringBuilder("GetSegmentIdResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -454,14 +440,10 @@ public class ScanResp implements TBase, java.io.Serializable, Cloneable, Compara
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("values");
+    sb.append("segment_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getValues() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getValues(), indent + 1, prettyPrint));
-    }
+    sb.append(TBaseHelper.toString(this.getSegment_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

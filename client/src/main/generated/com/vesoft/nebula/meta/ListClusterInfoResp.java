@@ -351,30 +351,30 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
         case HOST_SERVICES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map353 = iprot.readMapBegin();
-              this.host_services = new HashMap<String,List<ServiceInfo>>(Math.max(0, 2*_map353.size));
-              for (int _i354 = 0; 
-                   (_map353.size < 0) ? iprot.peekMap() : (_i354 < _map353.size); 
-                   ++_i354)
+              TMap _map370 = iprot.readMapBegin();
+              this.host_services = new HashMap<String,List<ServiceInfo>>(Math.max(0, 2*_map370.size));
+              for (int _i371 = 0; 
+                   (_map370.size < 0) ? iprot.peekMap() : (_i371 < _map370.size); 
+                   ++_i371)
               {
-                String _key355;
-                List<ServiceInfo> _val356;
-                _key355 = iprot.readString();
+                String _key372;
+                List<ServiceInfo> _val373;
+                _key372 = iprot.readString();
                 {
-                  TList _list357 = iprot.readListBegin();
-                  _val356 = new ArrayList<ServiceInfo>(Math.max(0, _list357.size));
-                  for (int _i358 = 0; 
-                       (_list357.size < 0) ? iprot.peekList() : (_i358 < _list357.size); 
-                       ++_i358)
+                  TList _list374 = iprot.readListBegin();
+                  _val373 = new ArrayList<ServiceInfo>(Math.max(0, _list374.size));
+                  for (int _i375 = 0; 
+                       (_list374.size < 0) ? iprot.peekList() : (_i375 < _list374.size); 
+                       ++_i375)
                   {
-                    ServiceInfo _elem359;
-                    _elem359 = new ServiceInfo();
-                    _elem359.read(iprot);
-                    _val356.add(_elem359);
+                    ServiceInfo _elem376;
+                    _elem376 = new ServiceInfo();
+                    _elem376.read(iprot);
+                    _val373.add(_elem376);
                   }
                   iprot.readListEnd();
                 }
-                this.host_services.put(_key355, _val356);
+                this.host_services.put(_key372, _val373);
               }
               iprot.readMapEnd();
             }
@@ -413,12 +413,12 @@ public class ListClusterInfoResp implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(HOST_SERVICES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.host_services.size()));
-        for (Map.Entry<String, List<ServiceInfo>> _iter360 : this.host_services.entrySet())        {
-          oprot.writeString(_iter360.getKey());
+        for (Map.Entry<String, List<ServiceInfo>> _iter377 : this.host_services.entrySet())        {
+          oprot.writeString(_iter377.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter360.getValue().size()));
-            for (ServiceInfo _iter361 : _iter360.getValue())            {
-              _iter361.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter377.getValue().size()));
+            for (ServiceInfo _iter378 : _iter377.getValue())            {
+              _iter378.write(oprot);
             }
             oprot.writeListEnd();
           }

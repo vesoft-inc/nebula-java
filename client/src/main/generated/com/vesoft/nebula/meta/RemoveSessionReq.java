@@ -26,21 +26,20 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable, Comparable<RemoveSessionReq> {
   private static final TStruct STRUCT_DESC = new TStruct("RemoveSessionReq");
-  private static final TField SESSION_ID_FIELD_DESC = new TField("session_id", TType.I64, (short)1);
+  private static final TField SESSION_IDS_FIELD_DESC = new TField("session_ids", TType.LIST, (short)1);
 
-  public long session_id;
-  public static final int SESSION_ID = 1;
+  public List<Long> session_ids;
+  public static final int SESSION_IDS = 1;
 
   // isset id assignments
-  private static final int __SESSION_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(SESSION_ID, new FieldMetaData("session_id", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(SESSION_IDS, new FieldMetaData("session_ids", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I64))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -52,31 +51,25 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
   }
 
   public RemoveSessionReq(
-      long session_id) {
+      List<Long> session_ids) {
     this();
-    this.session_id = session_id;
-    setSession_idIsSet(true);
+    this.session_ids = session_ids;
   }
 
   public static class Builder {
-    private long session_id;
-
-    BitSet __optional_isset = new BitSet(1);
+    private List<Long> session_ids;
 
     public Builder() {
     }
 
-    public Builder setSession_id(final long session_id) {
-      this.session_id = session_id;
-      __optional_isset.set(__SESSION_ID_ISSET_ID, true);
+    public Builder setSession_ids(final List<Long> session_ids) {
+      this.session_ids = session_ids;
       return this;
     }
 
     public RemoveSessionReq build() {
       RemoveSessionReq result = new RemoveSessionReq();
-      if (__optional_isset.get(__SESSION_ID_ISSET_ID)) {
-        result.setSession_id(this.session_id);
-      }
+      result.setSession_ids(this.session_ids);
       return result;
     }
   }
@@ -89,45 +82,47 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
    * Performs a deep copy on <i>other</i>.
    */
   public RemoveSessionReq(RemoveSessionReq other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
-    this.session_id = TBaseHelper.deepCopy(other.session_id);
+    if (other.isSetSession_ids()) {
+      this.session_ids = TBaseHelper.deepCopy(other.session_ids);
+    }
   }
 
   public RemoveSessionReq deepCopy() {
     return new RemoveSessionReq(this);
   }
 
-  public long getSession_id() {
-    return this.session_id;
+  public List<Long> getSession_ids() {
+    return this.session_ids;
   }
 
-  public RemoveSessionReq setSession_id(long session_id) {
-    this.session_id = session_id;
-    setSession_idIsSet(true);
+  public RemoveSessionReq setSession_ids(List<Long> session_ids) {
+    this.session_ids = session_ids;
     return this;
   }
 
-  public void unsetSession_id() {
-    __isset_bit_vector.clear(__SESSION_ID_ISSET_ID);
+  public void unsetSession_ids() {
+    this.session_ids = null;
   }
 
-  // Returns true if field session_id is set (has been assigned a value) and false otherwise
-  public boolean isSetSession_id() {
-    return __isset_bit_vector.get(__SESSION_ID_ISSET_ID);
+  // Returns true if field session_ids is set (has been assigned a value) and false otherwise
+  public boolean isSetSession_ids() {
+    return this.session_ids != null;
   }
 
-  public void setSession_idIsSet(boolean __value) {
-    __isset_bit_vector.set(__SESSION_ID_ISSET_ID, __value);
+  public void setSession_idsIsSet(boolean __value) {
+    if (!__value) {
+      this.session_ids = null;
+    }
   }
 
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case SESSION_ID:
+    case SESSION_IDS:
       if (__value == null) {
-        unsetSession_id();
+        unsetSession_ids();
       } else {
-        setSession_id((Long)__value);
+        setSession_ids((List<Long>)__value);
       }
       break;
 
@@ -138,8 +133,8 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case SESSION_ID:
-      return new Long(getSession_id());
+    case SESSION_IDS:
+      return getSession_ids();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -156,14 +151,14 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
       return false;
     RemoveSessionReq that = (RemoveSessionReq)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.session_id, that.session_id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetSession_ids(), that.isSetSession_ids(), this.session_ids, that.session_ids)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {session_id});
+    return Arrays.deepHashCode(new Object[] {session_ids});
   }
 
   @Override
@@ -178,11 +173,11 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetSession_id()).compareTo(other.isSetSession_id());
+    lastComparison = Boolean.valueOf(isSetSession_ids()).compareTo(other.isSetSession_ids());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(session_id, other.session_id);
+    lastComparison = TBaseHelper.compareTo(session_ids, other.session_ids);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -200,10 +195,21 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
       }
       switch (__field.id)
       {
-        case SESSION_ID:
-          if (__field.type == TType.I64) {
-            this.session_id = iprot.readI64();
-            setSession_idIsSet(true);
+        case SESSION_IDS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list353 = iprot.readListBegin();
+              this.session_ids = new ArrayList<Long>(Math.max(0, _list353.size));
+              for (int _i354 = 0; 
+                   (_list353.size < 0) ? iprot.peekList() : (_i354 < _list353.size); 
+                   ++_i354)
+              {
+                long _elem355;
+                _elem355 = iprot.readI64();
+                this.session_ids.add(_elem355);
+              }
+              iprot.readListEnd();
+            }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -225,9 +231,17 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
-    oprot.writeI64(this.session_id);
-    oprot.writeFieldEnd();
+    if (this.session_ids != null) {
+      oprot.writeFieldBegin(SESSION_IDS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.I64, this.session_ids.size()));
+        for (long _iter356 : this.session_ids)        {
+          oprot.writeI64(_iter356);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -249,10 +263,14 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("session_id");
+    sb.append("session_ids");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getSession_id(), indent + 1, prettyPrint));
+    if (this.getSession_ids() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getSession_ids(), indent + 1, prettyPrint));
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -29,6 +29,7 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
   private static final TField KILLED_QUERIES_FIELD_DESC = new TField("killed_queries", TType.MAP, (short)3);
+  private static final TField KILLED_SESSIONS_FIELD_DESC = new TField("killed_sessions", TType.LIST, (short)4);
 
   /**
    * 
@@ -37,9 +38,11 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
   public Map<Long,Map<Long,QueryDesc>> killed_queries;
+  public List<Long> killed_sessions;
   public static final int CODE = 1;
   public static final int LEADER = 2;
   public static final int KILLED_QUERIES = 3;
+  public static final int KILLED_SESSIONS = 4;
 
   // isset id assignments
 
@@ -57,6 +60,9 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
             new MapMetaData(TType.MAP, 
                 new FieldValueMetaData(TType.I64), 
                 new StructMetaData(TType.STRUCT, QueryDesc.class)))));
+    tmpMetaDataMap.put(KILLED_SESSIONS, new FieldMetaData("killed_sessions", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.I64))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -70,17 +76,20 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
   public UpdateSessionsResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      Map<Long,Map<Long,QueryDesc>> killed_queries) {
+      Map<Long,Map<Long,QueryDesc>> killed_queries,
+      List<Long> killed_sessions) {
     this();
     this.code = code;
     this.leader = leader;
     this.killed_queries = killed_queries;
+    this.killed_sessions = killed_sessions;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
     private Map<Long,Map<Long,QueryDesc>> killed_queries;
+    private List<Long> killed_sessions;
 
     public Builder() {
     }
@@ -100,11 +109,17 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
       return this;
     }
 
+    public Builder setKilled_sessions(final List<Long> killed_sessions) {
+      this.killed_sessions = killed_sessions;
+      return this;
+    }
+
     public UpdateSessionsResp build() {
       UpdateSessionsResp result = new UpdateSessionsResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
       result.setKilled_queries(this.killed_queries);
+      result.setKilled_sessions(this.killed_sessions);
       return result;
     }
   }
@@ -125,6 +140,9 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
     }
     if (other.isSetKilled_queries()) {
       this.killed_queries = TBaseHelper.deepCopy(other.killed_queries);
+    }
+    if (other.isSetKilled_sessions()) {
+      this.killed_sessions = TBaseHelper.deepCopy(other.killed_sessions);
     }
   }
 
@@ -212,6 +230,30 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
     }
   }
 
+  public List<Long> getKilled_sessions() {
+    return this.killed_sessions;
+  }
+
+  public UpdateSessionsResp setKilled_sessions(List<Long> killed_sessions) {
+    this.killed_sessions = killed_sessions;
+    return this;
+  }
+
+  public void unsetKilled_sessions() {
+    this.killed_sessions = null;
+  }
+
+  // Returns true if field killed_sessions is set (has been assigned a value) and false otherwise
+  public boolean isSetKilled_sessions() {
+    return this.killed_sessions != null;
+  }
+
+  public void setKilled_sessionsIsSet(boolean __value) {
+    if (!__value) {
+      this.killed_sessions = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -239,6 +281,14 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
       }
       break;
 
+    case KILLED_SESSIONS:
+      if (__value == null) {
+        unsetKilled_sessions();
+      } else {
+        setKilled_sessions((List<Long>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -254,6 +304,9 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
 
     case KILLED_QUERIES:
       return getKilled_queries();
+
+    case KILLED_SESSIONS:
+      return getKilled_sessions();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -276,12 +329,14 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
 
     if (!TBaseHelper.equalsNobinary(this.isSetKilled_queries(), that.isSetKilled_queries(), this.killed_queries, that.killed_queries)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetKilled_sessions(), that.isSetKilled_sessions(), this.killed_sessions, that.killed_sessions)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, killed_queries});
+    return Arrays.deepHashCode(new Object[] {code, leader, killed_queries, killed_sessions});
   }
 
   @Override
@@ -320,6 +375,14 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetKilled_sessions()).compareTo(other.isSetKilled_sessions());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(killed_sessions, other.killed_sessions);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -352,34 +415,53 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
         case KILLED_QUERIES:
           if (__field.type == TType.MAP) {
             {
-              TMap _map330 = iprot.readMapBegin();
-              this.killed_queries = new HashMap<Long,Map<Long,QueryDesc>>(Math.max(0, 2*_map330.size));
-              for (int _i331 = 0; 
-                   (_map330.size < 0) ? iprot.peekMap() : (_i331 < _map330.size); 
-                   ++_i331)
+              TMap _map335 = iprot.readMapBegin();
+              this.killed_queries = new HashMap<Long,Map<Long,QueryDesc>>(Math.max(0, 2*_map335.size));
+              for (int _i336 = 0; 
+                   (_map335.size < 0) ? iprot.peekMap() : (_i336 < _map335.size); 
+                   ++_i336)
               {
-                long _key332;
-                Map<Long,QueryDesc> _val333;
-                _key332 = iprot.readI64();
+                long _key337;
+                Map<Long,QueryDesc> _val338;
+                _key337 = iprot.readI64();
                 {
-                  TMap _map334 = iprot.readMapBegin();
-                  _val333 = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map334.size));
-                  for (int _i335 = 0; 
-                       (_map334.size < 0) ? iprot.peekMap() : (_i335 < _map334.size); 
-                       ++_i335)
+                  TMap _map339 = iprot.readMapBegin();
+                  _val338 = new HashMap<Long,QueryDesc>(Math.max(0, 2*_map339.size));
+                  for (int _i340 = 0; 
+                       (_map339.size < 0) ? iprot.peekMap() : (_i340 < _map339.size); 
+                       ++_i340)
                   {
-                    long _key336;
-                    QueryDesc _val337;
-                    _key336 = iprot.readI64();
-                    _val337 = new QueryDesc();
-                    _val337.read(iprot);
-                    _val333.put(_key336, _val337);
+                    long _key341;
+                    QueryDesc _val342;
+                    _key341 = iprot.readI64();
+                    _val342 = new QueryDesc();
+                    _val342.read(iprot);
+                    _val338.put(_key341, _val342);
                   }
                   iprot.readMapEnd();
                 }
-                this.killed_queries.put(_key332, _val333);
+                this.killed_queries.put(_key337, _val338);
               }
               iprot.readMapEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case KILLED_SESSIONS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list343 = iprot.readListBegin();
+              this.killed_sessions = new ArrayList<Long>(Math.max(0, _list343.size));
+              for (int _i344 = 0; 
+                   (_list343.size < 0) ? iprot.peekList() : (_i344 < _list343.size); 
+                   ++_i344)
+              {
+                long _elem345;
+                _elem345 = iprot.readI64();
+                this.killed_sessions.add(_elem345);
+              }
+              iprot.readListEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -416,18 +498,29 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(KILLED_QUERIES_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I64, TType.MAP, this.killed_queries.size()));
-        for (Map.Entry<Long, Map<Long,QueryDesc>> _iter338 : this.killed_queries.entrySet())        {
-          oprot.writeI64(_iter338.getKey());
+        for (Map.Entry<Long, Map<Long,QueryDesc>> _iter346 : this.killed_queries.entrySet())        {
+          oprot.writeI64(_iter346.getKey());
           {
-            oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, _iter338.getValue().size()));
-            for (Map.Entry<Long, QueryDesc> _iter339 : _iter338.getValue().entrySet())            {
-              oprot.writeI64(_iter339.getKey());
-              _iter339.getValue().write(oprot);
+            oprot.writeMapBegin(new TMap(TType.I64, TType.STRUCT, _iter346.getValue().size()));
+            for (Map.Entry<Long, QueryDesc> _iter347 : _iter346.getValue().entrySet())            {
+              oprot.writeI64(_iter347.getKey());
+              _iter347.getValue().write(oprot);
             }
             oprot.writeMapEnd();
           }
         }
         oprot.writeMapEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    if (this.killed_sessions != null) {
+      oprot.writeFieldBegin(KILLED_SESSIONS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.I64, this.killed_sessions.size()));
+        for (long _iter348 : this.killed_sessions)        {
+          oprot.writeI64(_iter348);
+        }
+        oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -489,6 +582,17 @@ public class UpdateSessionsResp implements TBase, java.io.Serializable, Cloneabl
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this.getKilled_queries(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("killed_sessions");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getKilled_sessions() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getKilled_sessions(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

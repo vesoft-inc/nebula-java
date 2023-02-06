@@ -268,16 +268,16 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
         case HOST_BACKUPS:
           if (__field.type == TType.LIST) {
             {
-              TList _list269 = iprot.readListBegin();
-              this.host_backups = new ArrayList<HostBackupInfo>(Math.max(0, _list269.size));
-              for (int _i270 = 0; 
-                   (_list269.size < 0) ? iprot.peekList() : (_i270 < _list269.size); 
-                   ++_i270)
+              TList _list257 = iprot.readListBegin();
+              this.host_backups = new ArrayList<HostBackupInfo>(Math.max(0, _list257.size));
+              for (int _i258 = 0; 
+                   (_list257.size < 0) ? iprot.peekList() : (_i258 < _list257.size); 
+                   ++_i258)
               {
-                HostBackupInfo _elem271;
-                _elem271 = new HostBackupInfo();
-                _elem271.read(iprot);
-                this.host_backups.add(_elem271);
+                HostBackupInfo _elem259;
+                _elem259 = new HostBackupInfo();
+                _elem259.read(iprot);
+                this.host_backups.add(_elem259);
               }
               iprot.readListEnd();
             }
@@ -311,8 +311,8 @@ public class SpaceBackupInfo implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(HOST_BACKUPS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.host_backups.size()));
-        for (HostBackupInfo _iter272 : this.host_backups)        {
-          _iter272.write(oprot);
+        for (HostBackupInfo _iter260 : this.host_backups)        {
+          _iter260.write(oprot);
         }
         oprot.writeListEnd();
       }

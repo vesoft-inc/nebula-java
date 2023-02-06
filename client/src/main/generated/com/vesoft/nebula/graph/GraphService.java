@@ -6,7 +6,6 @@
  */
 package com.vesoft.nebula.graph;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class GraphService {
 
   }
 
-  public static class Client extends EventHandlerBase implements Iface, TClientIf, Serializable {
+  public static class Client extends EventHandlerBase implements Iface, TClientIf {
     public Client(TProtocol prot)
     {
       this(prot, prot);

@@ -28,14 +28,14 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
   private static final TStruct STRUCT_DESC = new TStruct("CheckpointInfo");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PARTS_FIELD_DESC = new TField("parts", TType.MAP, (short)2);
-  private static final TField PATH_FIELD_DESC = new TField("path", TType.STRING, (short)3);
+  private static final TField DATA_PATH_FIELD_DESC = new TField("data_path", TType.STRING, (short)3);
 
   public int space_id;
   public Map<Integer,LogInfo> parts;
-  public byte[] path;
+  public byte[] data_path;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
-  public static final int PATH = 3;
+  public static final int DATA_PATH = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -51,7 +51,7 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new StructMetaData(TType.STRUCT, LogInfo.class))));
-    tmpMetaDataMap.put(PATH, new FieldMetaData("path", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(DATA_PATH, new FieldMetaData("data_path", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -66,18 +66,18 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
   public CheckpointInfo(
       int space_id,
       Map<Integer,LogInfo> parts,
-      byte[] path) {
+      byte[] data_path) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.parts = parts;
-    this.path = path;
+    this.data_path = data_path;
   }
 
   public static class Builder {
     private int space_id;
     private Map<Integer,LogInfo> parts;
-    private byte[] path;
+    private byte[] data_path;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -95,8 +95,8 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       return this;
     }
 
-    public Builder setPath(final byte[] path) {
-      this.path = path;
+    public Builder setData_path(final byte[] data_path) {
+      this.data_path = data_path;
       return this;
     }
 
@@ -106,7 +106,7 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
         result.setSpace_id(this.space_id);
       }
       result.setParts(this.parts);
-      result.setPath(this.path);
+      result.setData_path(this.data_path);
       return result;
     }
   }
@@ -125,8 +125,8 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     if (other.isSetParts()) {
       this.parts = TBaseHelper.deepCopy(other.parts);
     }
-    if (other.isSetPath()) {
-      this.path = TBaseHelper.deepCopy(other.path);
+    if (other.isSetData_path()) {
+      this.data_path = TBaseHelper.deepCopy(other.data_path);
     }
   }
 
@@ -181,27 +181,27 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public byte[] getPath() {
-    return this.path;
+  public byte[] getData_path() {
+    return this.data_path;
   }
 
-  public CheckpointInfo setPath(byte[] path) {
-    this.path = path;
+  public CheckpointInfo setData_path(byte[] data_path) {
+    this.data_path = data_path;
     return this;
   }
 
-  public void unsetPath() {
-    this.path = null;
+  public void unsetData_path() {
+    this.data_path = null;
   }
 
-  // Returns true if field path is set (has been assigned a value) and false otherwise
-  public boolean isSetPath() {
-    return this.path != null;
+  // Returns true if field data_path is set (has been assigned a value) and false otherwise
+  public boolean isSetData_path() {
+    return this.data_path != null;
   }
 
-  public void setPathIsSet(boolean __value) {
+  public void setData_pathIsSet(boolean __value) {
     if (!__value) {
-      this.path = null;
+      this.data_path = null;
     }
   }
 
@@ -224,11 +224,11 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
-    case PATH:
+    case DATA_PATH:
       if (__value == null) {
-        unsetPath();
+        unsetData_path();
       } else {
-        setPath((byte[])__value);
+        setData_path((byte[])__value);
       }
       break;
 
@@ -245,8 +245,8 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     case PARTS:
       return getParts();
 
-    case PATH:
-      return getPath();
+    case DATA_PATH:
+      return getData_path();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -267,14 +267,14 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
 
     if (!TBaseHelper.equalsNobinary(this.isSetParts(), that.isSetParts(), this.parts, that.parts)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetPath(), that.isSetPath(), this.path, that.path)) { return false; }
+    if (!TBaseHelper.equalsSlow(this.isSetData_path(), that.isSetData_path(), this.data_path, that.data_path)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, path});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, data_path});
   }
 
   @Override
@@ -305,11 +305,11 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetPath()).compareTo(other.isSetPath());
+    lastComparison = Boolean.valueOf(isSetData_path()).compareTo(other.isSetData_path());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(path, other.path);
+    lastComparison = TBaseHelper.compareTo(data_path, other.data_path);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -357,9 +357,9 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case PATH:
+        case DATA_PATH:
           if (__field.type == TType.STRING) {
-            this.path = iprot.readBinary();
+            this.data_path = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -396,9 +396,9 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
       }
       oprot.writeFieldEnd();
     }
-    if (this.path != null) {
-      oprot.writeFieldBegin(PATH_FIELD_DESC);
-      oprot.writeBinary(this.path);
+    if (this.data_path != null) {
+      oprot.writeFieldBegin(DATA_PATH_FIELD_DESC);
+      oprot.writeBinary(this.data_path);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -440,18 +440,18 @@ public class CheckpointInfo implements TBase, java.io.Serializable, Cloneable, C
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("path");
+    sb.append("data_path");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getPath() == null) {
+    if (this.getData_path() == null) {
       sb.append("null");
     } else {
-        int __path_size = Math.min(this.getPath().length, 128);
-        for (int i = 0; i < __path_size; i++) {
+        int __data_path_size = Math.min(this.getData_path().length, 128);
+        for (int i = 0; i < __data_path_size; i++) {
           if (i != 0) sb.append(" ");
-          sb.append(Integer.toHexString(this.getPath()[i]).length() > 1 ? Integer.toHexString(this.getPath()[i]).substring(Integer.toHexString(this.getPath()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPath()[i]).toUpperCase());
+          sb.append(Integer.toHexString(this.getData_path()[i]).length() > 1 ? Integer.toHexString(this.getData_path()[i]).substring(Integer.toHexString(this.getData_path()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getData_path()[i]).toUpperCase());
         }
-        if (this.getPath().length > 128) sb.append(" ...");
+        if (this.getData_path().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

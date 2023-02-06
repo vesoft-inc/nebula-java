@@ -237,15 +237,15 @@ public class DelTags implements TBase, java.io.Serializable, Cloneable {
         case TAGS:
           if (__field.type == TType.LIST) {
             {
-              TList _list140 = iprot.readListBegin();
-              this.tags = new ArrayList<Integer>(Math.max(0, _list140.size));
-              for (int _i141 = 0; 
-                   (_list140.size < 0) ? iprot.peekList() : (_i141 < _list140.size); 
-                   ++_i141)
+              TList _list153 = iprot.readListBegin();
+              this.tags = new ArrayList<Integer>(Math.max(0, _list153.size));
+              for (int _i154 = 0; 
+                   (_list153.size < 0) ? iprot.peekList() : (_i154 < _list153.size); 
+                   ++_i154)
               {
-                int _elem142;
-                _elem142 = iprot.readI32();
-                this.tags.add(_elem142);
+                int _elem155;
+                _elem155 = iprot.readI32();
+                this.tags.add(_elem155);
               }
               iprot.readListEnd();
             }
@@ -279,8 +279,8 @@ public class DelTags implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(TAGS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.tags.size()));
-        for (int _iter143 : this.tags)        {
-          oprot.writeI32(_iter143);
+        for (int _iter156 : this.tags)        {
+          oprot.writeI32(_iter156);
         }
         oprot.writeListEnd();
       }

@@ -693,30 +693,30 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         case LEADER_PARTIDS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map160 = iprot.readMapBegin();
-              this.leader_partIds = new HashMap<Integer,List<LeaderInfo>>(Math.max(0, 2*_map160.size));
-              for (int _i161 = 0; 
-                   (_map160.size < 0) ? iprot.peekMap() : (_i161 < _map160.size); 
-                   ++_i161)
+              TMap _map144 = iprot.readMapBegin();
+              this.leader_partIds = new HashMap<Integer,List<LeaderInfo>>(Math.max(0, 2*_map144.size));
+              for (int _i145 = 0; 
+                   (_map144.size < 0) ? iprot.peekMap() : (_i145 < _map144.size); 
+                   ++_i145)
               {
-                int _key162;
-                List<LeaderInfo> _val163;
-                _key162 = iprot.readI32();
+                int _key146;
+                List<LeaderInfo> _val147;
+                _key146 = iprot.readI32();
                 {
-                  TList _list164 = iprot.readListBegin();
-                  _val163 = new ArrayList<LeaderInfo>(Math.max(0, _list164.size));
-                  for (int _i165 = 0; 
-                       (_list164.size < 0) ? iprot.peekList() : (_i165 < _list164.size); 
-                       ++_i165)
+                  TList _list148 = iprot.readListBegin();
+                  _val147 = new ArrayList<LeaderInfo>(Math.max(0, _list148.size));
+                  for (int _i149 = 0; 
+                       (_list148.size < 0) ? iprot.peekList() : (_i149 < _list148.size); 
+                       ++_i149)
                   {
-                    LeaderInfo _elem166;
-                    _elem166 = new LeaderInfo();
-                    _elem166.read(iprot);
-                    _val163.add(_elem166);
+                    LeaderInfo _elem150;
+                    _elem150 = new LeaderInfo();
+                    _elem150.read(iprot);
+                    _val147.add(_elem150);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_partIds.put(_key162, _val163);
+                this.leader_partIds.put(_key146, _val147);
               }
               iprot.readMapEnd();
             }
@@ -734,32 +734,32 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         case DISK_PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map167 = iprot.readMapBegin();
-              this.disk_parts = new HashMap<Integer,Map<byte[],PartitionList>>(Math.max(0, 2*_map167.size));
-              for (int _i168 = 0; 
-                   (_map167.size < 0) ? iprot.peekMap() : (_i168 < _map167.size); 
-                   ++_i168)
+              TMap _map151 = iprot.readMapBegin();
+              this.disk_parts = new HashMap<Integer,Map<byte[],PartitionList>>(Math.max(0, 2*_map151.size));
+              for (int _i152 = 0; 
+                   (_map151.size < 0) ? iprot.peekMap() : (_i152 < _map151.size); 
+                   ++_i152)
               {
-                int _key169;
-                Map<byte[],PartitionList> _val170;
-                _key169 = iprot.readI32();
+                int _key153;
+                Map<byte[],PartitionList> _val154;
+                _key153 = iprot.readI32();
                 {
-                  TMap _map171 = iprot.readMapBegin();
-                  _val170 = new HashMap<byte[],PartitionList>(Math.max(0, 2*_map171.size));
-                  for (int _i172 = 0; 
-                       (_map171.size < 0) ? iprot.peekMap() : (_i172 < _map171.size); 
-                       ++_i172)
+                  TMap _map155 = iprot.readMapBegin();
+                  _val154 = new HashMap<byte[],PartitionList>(Math.max(0, 2*_map155.size));
+                  for (int _i156 = 0; 
+                       (_map155.size < 0) ? iprot.peekMap() : (_i156 < _map155.size); 
+                       ++_i156)
                   {
-                    byte[] _key173;
-                    PartitionList _val174;
-                    _key173 = iprot.readBinary();
-                    _val174 = new PartitionList();
-                    _val174.read(iprot);
-                    _val170.put(_key173, _val174);
+                    byte[] _key157;
+                    PartitionList _val158;
+                    _key157 = iprot.readBinary();
+                    _val158 = new PartitionList();
+                    _val158.read(iprot);
+                    _val154.put(_key157, _val158);
                   }
                   iprot.readMapEnd();
                 }
-                this.disk_parts.put(_key169, _val170);
+                this.disk_parts.put(_key153, _val154);
               }
               iprot.readMapEnd();
             }
@@ -817,12 +817,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         oprot.writeFieldBegin(LEADER_PART_IDS_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_partIds.size()));
-          for (Map.Entry<Integer, List<LeaderInfo>> _iter175 : this.leader_partIds.entrySet())          {
-            oprot.writeI32(_iter175.getKey());
+          for (Map.Entry<Integer, List<LeaderInfo>> _iter159 : this.leader_partIds.entrySet())          {
+            oprot.writeI32(_iter159.getKey());
             {
-              oprot.writeListBegin(new TList(TType.STRUCT, _iter175.getValue().size()));
-              for (LeaderInfo _iter176 : _iter175.getValue())              {
-                _iter176.write(oprot);
+              oprot.writeListBegin(new TList(TType.STRUCT, _iter159.getValue().size()));
+              for (LeaderInfo _iter160 : _iter159.getValue())              {
+                _iter160.write(oprot);
               }
               oprot.writeListEnd();
             }
@@ -842,13 +842,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         oprot.writeFieldBegin(DISK_PARTS_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.I32, TType.MAP, this.disk_parts.size()));
-          for (Map.Entry<Integer, Map<byte[],PartitionList>> _iter177 : this.disk_parts.entrySet())          {
-            oprot.writeI32(_iter177.getKey());
+          for (Map.Entry<Integer, Map<byte[],PartitionList>> _iter161 : this.disk_parts.entrySet())          {
+            oprot.writeI32(_iter161.getKey());
             {
-              oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, _iter177.getValue().size()));
-              for (Map.Entry<byte[], PartitionList> _iter178 : _iter177.getValue().entrySet())              {
-                oprot.writeBinary(_iter178.getKey());
-                _iter178.getValue().write(oprot);
+              oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, _iter161.getValue().size()));
+              for (Map.Entry<byte[], PartitionList> _iter162 : _iter161.getValue().entrySet())              {
+                oprot.writeBinary(_iter162.getKey());
+                _iter162.getValue().write(oprot);
               }
               oprot.writeMapEnd();
             }

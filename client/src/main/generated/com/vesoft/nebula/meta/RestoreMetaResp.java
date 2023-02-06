@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Comparable<MultiGetResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("MultiGetResp");
+public class RestoreMetaResp implements TBase, java.io.Serializable, Cloneable, Comparable<RestoreMetaResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("RestoreMetaResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField VALUES_FIELD_DESC = new TField("values", TType.LIST, (short)3);
+  private static final TField PART_HOSTS_FIELD_DESC = new TField("part_hosts", TType.MAP, (short)3);
 
   /**
    * 
@@ -36,10 +36,10 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<byte[]> values;
+  public Map<Integer,List<PartInfo>> part_hosts;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int VALUES = 3;
+  public static final int PART_HOSTS = 3;
 
   // isset id assignments
 
@@ -51,33 +51,35 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(VALUES, new FieldMetaData("values", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(PART_HOSTS, new FieldMetaData("part_hosts", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new ListMetaData(TType.LIST, 
+                new StructMetaData(TType.STRUCT, PartInfo.class)))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(MultiGetResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(RestoreMetaResp.class, metaDataMap);
   }
 
-  public MultiGetResp() {
+  public RestoreMetaResp() {
   }
 
-  public MultiGetResp(
+  public RestoreMetaResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<byte[]> values) {
+      Map<Integer,List<PartInfo>> part_hosts) {
     this();
     this.code = code;
     this.leader = leader;
-    this.values = values;
+    this.part_hosts = part_hosts;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<byte[]> values;
+    private Map<Integer,List<PartInfo>> part_hosts;
 
     public Builder() {
     }
@@ -92,16 +94,16 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
-    public Builder setValues(final List<byte[]> values) {
-      this.values = values;
+    public Builder setPart_hosts(final Map<Integer,List<PartInfo>> part_hosts) {
+      this.part_hosts = part_hosts;
       return this;
     }
 
-    public MultiGetResp build() {
-      MultiGetResp result = new MultiGetResp();
+    public RestoreMetaResp build() {
+      RestoreMetaResp result = new RestoreMetaResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setValues(this.values);
+      result.setPart_hosts(this.part_hosts);
       return result;
     }
   }
@@ -113,20 +115,20 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public MultiGetResp(MultiGetResp other) {
+  public RestoreMetaResp(RestoreMetaResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetValues()) {
-      this.values = TBaseHelper.deepCopy(other.values);
+    if (other.isSetPart_hosts()) {
+      this.part_hosts = TBaseHelper.deepCopy(other.part_hosts);
     }
   }
 
-  public MultiGetResp deepCopy() {
-    return new MultiGetResp(this);
+  public RestoreMetaResp deepCopy() {
+    return new RestoreMetaResp(this);
   }
 
   /**
@@ -141,7 +143,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public MultiGetResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public RestoreMetaResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +167,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     return this.leader;
   }
 
-  public MultiGetResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public RestoreMetaResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,27 +187,27 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
-  public List<byte[]> getValues() {
-    return this.values;
+  public Map<Integer,List<PartInfo>> getPart_hosts() {
+    return this.part_hosts;
   }
 
-  public MultiGetResp setValues(List<byte[]> values) {
-    this.values = values;
+  public RestoreMetaResp setPart_hosts(Map<Integer,List<PartInfo>> part_hosts) {
+    this.part_hosts = part_hosts;
     return this;
   }
 
-  public void unsetValues() {
-    this.values = null;
+  public void unsetPart_hosts() {
+    this.part_hosts = null;
   }
 
-  // Returns true if field values is set (has been assigned a value) and false otherwise
-  public boolean isSetValues() {
-    return this.values != null;
+  // Returns true if field part_hosts is set (has been assigned a value) and false otherwise
+  public boolean isSetPart_hosts() {
+    return this.part_hosts != null;
   }
 
-  public void setValuesIsSet(boolean __value) {
+  public void setPart_hostsIsSet(boolean __value) {
     if (!__value) {
-      this.values = null;
+      this.part_hosts = null;
     }
   }
 
@@ -228,11 +230,11 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
-    case VALUES:
+    case PART_HOSTS:
       if (__value == null) {
-        unsetValues();
+        unsetPart_hosts();
       } else {
-        setValues((List<byte[]>)__value);
+        setPart_hosts((Map<Integer,List<PartInfo>>)__value);
       }
       break;
 
@@ -249,8 +251,8 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     case LEADER:
       return getLeader();
 
-    case VALUES:
-      return getValues();
+    case PART_HOSTS:
+      return getPart_hosts();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +265,26 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof MultiGetResp))
+    if (!(_that instanceof RestoreMetaResp))
       return false;
-    MultiGetResp that = (MultiGetResp)_that;
+    RestoreMetaResp that = (RestoreMetaResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsSlow(this.isSetValues(), that.isSetValues(), this.values, that.values)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetPart_hosts(), that.isSetPart_hosts(), this.part_hosts, that.part_hosts)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, values});
+    return Arrays.deepHashCode(new Object[] {code, leader, part_hosts});
   }
 
   @Override
-  public int compareTo(MultiGetResp other) {
+  public int compareTo(RestoreMetaResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +311,11 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetValues()).compareTo(other.isSetValues());
+    lastComparison = Boolean.valueOf(isSetPart_hosts()).compareTo(other.isSetPart_hosts());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(values, other.values);
+    lastComparison = TBaseHelper.compareTo(part_hosts, other.part_hosts);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,20 +348,35 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case VALUES:
-          if (__field.type == TType.LIST) {
+        case PART_HOSTS:
+          if (__field.type == TType.MAP) {
             {
-              TList _list148 = iprot.readListBegin();
-              this.values = new ArrayList<byte[]>(Math.max(0, _list148.size));
-              for (int _i149 = 0; 
-                   (_list148.size < 0) ? iprot.peekList() : (_i149 < _list148.size); 
-                   ++_i149)
+              TMap _map290 = iprot.readMapBegin();
+              this.part_hosts = new HashMap<Integer,List<PartInfo>>(Math.max(0, 2*_map290.size));
+              for (int _i291 = 0; 
+                   (_map290.size < 0) ? iprot.peekMap() : (_i291 < _map290.size); 
+                   ++_i291)
               {
-                byte[] _elem150;
-                _elem150 = iprot.readBinary();
-                this.values.add(_elem150);
+                int _key292;
+                List<PartInfo> _val293;
+                _key292 = iprot.readI32();
+                {
+                  TList _list294 = iprot.readListBegin();
+                  _val293 = new ArrayList<PartInfo>(Math.max(0, _list294.size));
+                  for (int _i295 = 0; 
+                       (_list294.size < 0) ? iprot.peekList() : (_i295 < _list294.size); 
+                       ++_i295)
+                  {
+                    PartInfo _elem296;
+                    _elem296 = new PartInfo();
+                    _elem296.read(iprot);
+                    _val293.add(_elem296);
+                  }
+                  iprot.readListEnd();
+                }
+                this.part_hosts.put(_key292, _val293);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -392,14 +409,21 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.values != null) {
-      oprot.writeFieldBegin(VALUES_FIELD_DESC);
+    if (this.part_hosts != null) {
+      oprot.writeFieldBegin(PART_HOSTS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRING, this.values.size()));
-        for (byte[] _iter151 : this.values)        {
-          oprot.writeBinary(_iter151);
+        oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.part_hosts.size()));
+        for (Map.Entry<Integer, List<PartInfo>> _iter297 : this.part_hosts.entrySet())        {
+          oprot.writeI32(_iter297.getKey());
+          {
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter297.getValue().size()));
+            for (PartInfo _iter298 : _iter297.getValue())            {
+              _iter298.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -417,7 +441,7 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("MultiGetResp");
+    StringBuilder sb = new StringBuilder("RestoreMetaResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -454,13 +478,13 @@ public class MultiGetResp implements TBase, java.io.Serializable, Cloneable, Com
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("values");
+    sb.append("part_hosts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getValues() == null) {
+    if (this.getPart_hosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getValues(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getPart_hosts(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
