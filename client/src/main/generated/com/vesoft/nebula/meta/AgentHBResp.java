@@ -349,16 +349,16 @@ public class AgentHBResp implements TBase, java.io.Serializable, Cloneable, Comp
         case SERVICE_LIST:
           if (__field.type == TType.LIST) {
             {
-              TList _list179 = iprot.readListBegin();
-              this.service_list = new ArrayList<ServiceInfo>(Math.max(0, _list179.size));
-              for (int _i180 = 0; 
-                   (_list179.size < 0) ? iprot.peekList() : (_i180 < _list179.size); 
-                   ++_i180)
+              TList _list163 = iprot.readListBegin();
+              this.service_list = new ArrayList<ServiceInfo>(Math.max(0, _list163.size));
+              for (int _i164 = 0; 
+                   (_list163.size < 0) ? iprot.peekList() : (_i164 < _list163.size); 
+                   ++_i164)
               {
-                ServiceInfo _elem181;
-                _elem181 = new ServiceInfo();
-                _elem181.read(iprot);
-                this.service_list.add(_elem181);
+                ServiceInfo _elem165;
+                _elem165 = new ServiceInfo();
+                _elem165.read(iprot);
+                this.service_list.add(_elem165);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class AgentHBResp implements TBase, java.io.Serializable, Cloneable, Comp
       oprot.writeFieldBegin(SERVICE_LIST_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.service_list.size()));
-        for (ServiceInfo _iter182 : this.service_list)        {
-          _iter182.write(oprot);
+        for (ServiceInfo _iter166 : this.service_list)        {
+          _iter166.write(oprot);
         }
         oprot.writeListEnd();
       }

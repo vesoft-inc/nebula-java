@@ -309,30 +309,30 @@ public class DeleteTagsRequest implements TBase, java.io.Serializable, Cloneable
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map144 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<DelTags>>(Math.max(0, 2*_map144.size));
-              for (int _i145 = 0; 
-                   (_map144.size < 0) ? iprot.peekMap() : (_i145 < _map144.size); 
-                   ++_i145)
+              TMap _map157 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<DelTags>>(Math.max(0, 2*_map157.size));
+              for (int _i158 = 0; 
+                   (_map157.size < 0) ? iprot.peekMap() : (_i158 < _map157.size); 
+                   ++_i158)
               {
-                int _key146;
-                List<DelTags> _val147;
-                _key146 = iprot.readI32();
+                int _key159;
+                List<DelTags> _val160;
+                _key159 = iprot.readI32();
                 {
-                  TList _list148 = iprot.readListBegin();
-                  _val147 = new ArrayList<DelTags>(Math.max(0, _list148.size));
-                  for (int _i149 = 0; 
-                       (_list148.size < 0) ? iprot.peekList() : (_i149 < _list148.size); 
-                       ++_i149)
+                  TList _list161 = iprot.readListBegin();
+                  _val160 = new ArrayList<DelTags>(Math.max(0, _list161.size));
+                  for (int _i162 = 0; 
+                       (_list161.size < 0) ? iprot.peekList() : (_i162 < _list161.size); 
+                       ++_i162)
                   {
-                    DelTags _elem150;
-                    _elem150 = new DelTags();
-                    _elem150.read(iprot);
-                    _val147.add(_elem150);
+                    DelTags _elem163;
+                    _elem163 = new DelTags();
+                    _elem163.read(iprot);
+                    _val160.add(_elem163);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key146, _val147);
+                this.parts.put(_key159, _val160);
               }
               iprot.readMapEnd();
             }
@@ -372,12 +372,12 @@ public class DeleteTagsRequest implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<DelTags>> _iter151 : this.parts.entrySet())        {
-          oprot.writeI32(_iter151.getKey());
+        for (Map.Entry<Integer, List<DelTags>> _iter164 : this.parts.entrySet())        {
+          oprot.writeI32(_iter164.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter151.getValue().size()));
-            for (DelTags _iter152 : _iter151.getValue())            {
-              _iter152.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter164.getValue().size()));
+            for (DelTags _iter165 : _iter164.getValue())            {
+              _iter165.write(oprot);
             }
             oprot.writeListEnd();
           }

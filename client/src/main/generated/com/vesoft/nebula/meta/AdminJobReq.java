@@ -26,30 +26,41 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comparable<AdminJobReq> {
   private static final TStruct STRUCT_DESC = new TStruct("AdminJobReq");
-  private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)1);
-  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)2);
-  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)3);
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
+  private static final TField OP_FIELD_DESC = new TField("op", TType.I32, (short)2);
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)3);
+  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)4);
 
+  public int space_id;
   /**
    * 
-   * @see AdminJobOp
+   * @see JobOp
    */
-  public AdminJobOp op;
-  public AdminCmd cmd;
+  public JobOp op;
+  /**
+   * 
+   * @see JobType
+   */
+  public JobType type;
   public List<byte[]> paras;
-  public static final int OP = 1;
-  public static final int CMD = 2;
-  public static final int PARAS = 3;
+  public static final int SPACE_ID = 1;
+  public static final int OP = 2;
+  public static final int TYPE = 3;
+  public static final int PARAS = 4;
 
   // isset id assignments
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(CMD, new FieldMetaData("cmd", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARAS, new FieldMetaData("paras", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
@@ -65,30 +76,42 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
   }
 
   public AdminJobReq(
-      AdminJobOp op,
-      AdminCmd cmd,
+      int space_id,
+      JobOp op,
+      JobType type,
       List<byte[]> paras) {
     this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     this.op = op;
-    this.cmd = cmd;
+    this.type = type;
     this.paras = paras;
   }
 
   public static class Builder {
-    private AdminJobOp op;
-    private AdminCmd cmd;
+    private int space_id;
+    private JobOp op;
+    private JobType type;
     private List<byte[]> paras;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
 
-    public Builder setOp(final AdminJobOp op) {
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setOp(final JobOp op) {
       this.op = op;
       return this;
     }
 
-    public Builder setCmd(final AdminCmd cmd) {
-      this.cmd = cmd;
+    public Builder setType(final JobType type) {
+      this.type = type;
       return this;
     }
 
@@ -99,8 +122,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
     public AdminJobReq build() {
       AdminJobReq result = new AdminJobReq();
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
       result.setOp(this.op);
-      result.setCmd(this.cmd);
+      result.setType(this.type);
       result.setParas(this.paras);
       return result;
     }
@@ -114,11 +140,14 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
    * Performs a deep copy on <i>other</i>.
    */
   public AdminJobReq(AdminJobReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
     if (other.isSetOp()) {
       this.op = TBaseHelper.deepCopy(other.op);
     }
-    if (other.isSetCmd()) {
-      this.cmd = TBaseHelper.deepCopy(other.cmd);
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
     }
     if (other.isSetParas()) {
       this.paras = TBaseHelper.deepCopy(other.paras);
@@ -129,19 +158,42 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     return new AdminJobReq(this);
   }
 
+  public int getSpace_id() {
+    return this.space_id;
+  }
+
+  public AdminJobReq setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    return this;
+  }
+
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
+  }
+
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
+  }
+
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
+  }
+
   /**
    * 
-   * @see AdminJobOp
+   * @see JobOp
    */
-  public AdminJobOp getOp() {
+  public JobOp getOp() {
     return this.op;
   }
 
   /**
    * 
-   * @see AdminJobOp
+   * @see JobOp
    */
-  public AdminJobReq setOp(AdminJobOp op) {
+  public AdminJobReq setOp(JobOp op) {
     this.op = op;
     return this;
   }
@@ -161,27 +213,35 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
   }
 
-  public AdminCmd getCmd() {
-    return this.cmd;
+  /**
+   * 
+   * @see JobType
+   */
+  public JobType getType() {
+    return this.type;
   }
 
-  public AdminJobReq setCmd(AdminCmd cmd) {
-    this.cmd = cmd;
+  /**
+   * 
+   * @see JobType
+   */
+  public AdminJobReq setType(JobType type) {
+    this.type = type;
     return this;
   }
 
-  public void unsetCmd() {
-    this.cmd = null;
+  public void unsetType() {
+    this.type = null;
   }
 
-  // Returns true if field cmd is set (has been assigned a value) and false otherwise
-  public boolean isSetCmd() {
-    return this.cmd != null;
+  // Returns true if field type is set (has been assigned a value) and false otherwise
+  public boolean isSetType() {
+    return this.type != null;
   }
 
-  public void setCmdIsSet(boolean __value) {
+  public void setTypeIsSet(boolean __value) {
     if (!__value) {
-      this.cmd = null;
+      this.type = null;
     }
   }
 
@@ -212,19 +272,27 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
+    case SPACE_ID:
+      if (__value == null) {
+        unsetSpace_id();
+      } else {
+        setSpace_id((Integer)__value);
+      }
+      break;
+
     case OP:
       if (__value == null) {
         unsetOp();
       } else {
-        setOp((AdminJobOp)__value);
+        setOp((JobOp)__value);
       }
       break;
 
-    case CMD:
+    case TYPE:
       if (__value == null) {
-        unsetCmd();
+        unsetType();
       } else {
-        setCmd((AdminCmd)__value);
+        setType((JobType)__value);
       }
       break;
 
@@ -243,11 +311,14 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case SPACE_ID:
+      return new Integer(getSpace_id());
+
     case OP:
       return getOp();
 
-    case CMD:
-      return getCmd();
+    case TYPE:
+      return getType();
 
     case PARAS:
       return getParas();
@@ -267,9 +338,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       return false;
     AdminJobReq that = (AdminJobReq)_that;
 
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
+
     if (!TBaseHelper.equalsNobinary(this.isSetOp(), that.isSetOp(), this.op, that.op)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetCmd(), that.isSetCmd(), this.cmd, that.cmd)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
     if (!TBaseHelper.equalsSlow(this.isSetParas(), that.isSetParas(), this.paras, that.paras)) { return false; }
 
@@ -278,7 +351,7 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {op, cmd, paras});
+    return Arrays.deepHashCode(new Object[] {space_id, op, type, paras});
   }
 
   @Override
@@ -293,6 +366,14 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     }
     int lastComparison = 0;
 
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     lastComparison = Boolean.valueOf(isSetOp()).compareTo(other.isSetOp());
     if (lastComparison != 0) {
       return lastComparison;
@@ -301,11 +382,11 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetCmd()).compareTo(other.isSetCmd());
+    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(cmd, other.cmd);
+    lastComparison = TBaseHelper.compareTo(type, other.type);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -331,16 +412,24 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
       }
       switch (__field.id)
       {
-        case OP:
+        case SPACE_ID:
           if (__field.type == TType.I32) {
-            this.op = AdminJobOp.findByValue(iprot.readI32());
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case CMD:
+        case OP:
           if (__field.type == TType.I32) {
-            this.cmd = AdminCmd.findByValue(iprot.readI32());
+            this.op = JobOp.findByValue(iprot.readI32());
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case TYPE:
+          if (__field.type == TType.I32) {
+            this.type = JobType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -381,14 +470,17 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
+    oprot.writeFieldEnd();
     if (this.op != null) {
       oprot.writeFieldBegin(OP_FIELD_DESC);
       oprot.writeI32(this.op == null ? 0 : this.op.getValue());
       oprot.writeFieldEnd();
     }
-    if (this.cmd != null) {
-      oprot.writeFieldBegin(CMD_FIELD_DESC);
-      oprot.writeI32(this.cmd == null ? 0 : this.cmd.getValue());
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
       oprot.writeFieldEnd();
     }
     if (this.paras != null) {
@@ -423,6 +515,13 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     boolean first = true;
 
     sb.append(indentStr);
+    sb.append("space_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
     sb.append("op");
     sb.append(space);
     sb.append(":").append(space);
@@ -442,19 +541,19 @@ public class AdminJobReq implements TBase, java.io.Serializable, Cloneable, Comp
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("cmd");
+    sb.append("type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getCmd() == null) {
+    if (this.getType() == null) {
       sb.append("null");
     } else {
-      String cmd_name = this.getCmd() == null ? "null" : this.getCmd().name();
-      if (cmd_name != null) {
-        sb.append(cmd_name);
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
         sb.append(" (");
       }
-      sb.append(this.getCmd());
-      if (cmd_name != null) {
+      sb.append(this.getType());
+      if (type_name != null) {
         sb.append(")");
       }
     }

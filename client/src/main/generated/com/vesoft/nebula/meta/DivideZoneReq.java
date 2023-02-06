@@ -269,30 +269,30 @@ public class DivideZoneReq implements TBase, java.io.Serializable, Cloneable, Co
         case ZONE_ITEMS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map232 = iprot.readMapBegin();
-              this.zone_items = new HashMap<byte[],List<com.vesoft.nebula.HostAddr>>(Math.max(0, 2*_map232.size));
-              for (int _i233 = 0; 
-                   (_map232.size < 0) ? iprot.peekMap() : (_i233 < _map232.size); 
-                   ++_i233)
+              TMap _map220 = iprot.readMapBegin();
+              this.zone_items = new HashMap<byte[],List<com.vesoft.nebula.HostAddr>>(Math.max(0, 2*_map220.size));
+              for (int _i221 = 0; 
+                   (_map220.size < 0) ? iprot.peekMap() : (_i221 < _map220.size); 
+                   ++_i221)
               {
-                byte[] _key234;
-                List<com.vesoft.nebula.HostAddr> _val235;
-                _key234 = iprot.readBinary();
+                byte[] _key222;
+                List<com.vesoft.nebula.HostAddr> _val223;
+                _key222 = iprot.readBinary();
                 {
-                  TList _list236 = iprot.readListBegin();
-                  _val235 = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list236.size));
-                  for (int _i237 = 0; 
-                       (_list236.size < 0) ? iprot.peekList() : (_i237 < _list236.size); 
-                       ++_i237)
+                  TList _list224 = iprot.readListBegin();
+                  _val223 = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list224.size));
+                  for (int _i225 = 0; 
+                       (_list224.size < 0) ? iprot.peekList() : (_i225 < _list224.size); 
+                       ++_i225)
                   {
-                    com.vesoft.nebula.HostAddr _elem238;
-                    _elem238 = new com.vesoft.nebula.HostAddr();
-                    _elem238.read(iprot);
-                    _val235.add(_elem238);
+                    com.vesoft.nebula.HostAddr _elem226;
+                    _elem226 = new com.vesoft.nebula.HostAddr();
+                    _elem226.read(iprot);
+                    _val223.add(_elem226);
                   }
                   iprot.readListEnd();
                 }
-                this.zone_items.put(_key234, _val235);
+                this.zone_items.put(_key222, _val223);
               }
               iprot.readMapEnd();
             }
@@ -326,12 +326,12 @@ public class DivideZoneReq implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(ZONE_ITEMS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.STRING, TType.LIST, this.zone_items.size()));
-        for (Map.Entry<byte[], List<com.vesoft.nebula.HostAddr>> _iter239 : this.zone_items.entrySet())        {
-          oprot.writeBinary(_iter239.getKey());
+        for (Map.Entry<byte[], List<com.vesoft.nebula.HostAddr>> _iter227 : this.zone_items.entrySet())        {
+          oprot.writeBinary(_iter227.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter239.getValue().size()));
-            for (com.vesoft.nebula.HostAddr _iter240 : _iter239.getValue())            {
-              _iter240.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter227.getValue().size()));
+            for (com.vesoft.nebula.HostAddr _iter228 : _iter227.getValue())            {
+              _iter228.write(oprot);
             }
             oprot.writeListEnd();
           }

@@ -45,21 +45,19 @@ public class StorageAdminService {
 
     public CreateCPResp createCheckpoint(CreateCPRequest req) throws TException;
 
-    public AdminExecResp dropCheckpoint(DropCPRequest req) throws TException;
+    public DropCPResp dropCheckpoint(DropCPRequest req) throws TException;
 
-    public AdminExecResp blockingWrites(BlockingSignRequest req) throws TException;
-
-    public AdminExecResp rebuildTagIndex(RebuildIndexRequest req) throws TException;
-
-    public AdminExecResp rebuildEdgeIndex(RebuildIndexRequest req) throws TException;
+    public BlockingSignResp blockingWrites(BlockingSignRequest req) throws TException;
 
     public GetLeaderPartsResp getLeaderParts(GetLeaderReq req) throws TException;
 
     public AdminExecResp checkPeers(CheckPeersReq req) throws TException;
 
-    public AdminExecResp addAdminTask(AddAdminTaskRequest req) throws TException;
+    public AddTaskResp addAdminTask(AddTaskRequest req) throws TException;
 
-    public AdminExecResp stopAdminTask(StopAdminTaskRequest req) throws TException;
+    public StopTaskResp stopAdminTask(StopTaskRequest req) throws TException;
+
+    public ClearSpaceResp clearSpace(ClearSpaceReq req) throws TException;
 
   }
 
@@ -83,17 +81,15 @@ public class StorageAdminService {
 
     public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void rebuildTagIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler) throws TException;
-
-    public void rebuildEdgeIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler) throws TException;
-
     public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler) throws TException;
 
     public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void addAdminTask(AddAdminTaskRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void addAdminTask(AddTaskRequest req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void stopAdminTask(StopAdminTaskRequest req, AsyncMethodCallback resultHandler) throws TException;
+    public void stopAdminTask(StopTaskRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void clearSpace(ClearSpaceReq req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -441,7 +437,7 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "createCheckpoint failed: unknown result");
     }
 
-    public AdminExecResp dropCheckpoint(DropCPRequest req) throws TException
+    public DropCPResp dropCheckpoint(DropCPRequest req) throws TException
     {
       ContextStack ctx = getContextStack("StorageAdminService.dropCheckpoint", null);
       this.setContextStack(ctx);
@@ -463,7 +459,7 @@ public class StorageAdminService {
       return;
     }
 
-    public AdminExecResp recv_dropCheckpoint() throws TException
+    public DropCPResp recv_dropCheckpoint() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
@@ -486,7 +482,7 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "dropCheckpoint failed: unknown result");
     }
 
-    public AdminExecResp blockingWrites(BlockingSignRequest req) throws TException
+    public BlockingSignResp blockingWrites(BlockingSignRequest req) throws TException
     {
       ContextStack ctx = getContextStack("StorageAdminService.blockingWrites", null);
       this.setContextStack(ctx);
@@ -508,7 +504,7 @@ public class StorageAdminService {
       return;
     }
 
-    public AdminExecResp recv_blockingWrites() throws TException
+    public BlockingSignResp recv_blockingWrites() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
@@ -529,96 +525,6 @@ public class StorageAdminService {
         return result.success;
       }
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "blockingWrites failed: unknown result");
-    }
-
-    public AdminExecResp rebuildTagIndex(RebuildIndexRequest req) throws TException
-    {
-      ContextStack ctx = getContextStack("StorageAdminService.rebuildTagIndex", null);
-      this.setContextStack(ctx);
-      send_rebuildTagIndex(req);
-      return recv_rebuildTagIndex();
-    }
-
-    public void send_rebuildTagIndex(RebuildIndexRequest req) throws TException
-    {
-      ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "StorageAdminService.rebuildTagIndex", null);
-      oprot_.writeMessageBegin(new TMessage("rebuildTagIndex", TMessageType.CALL, seqid_));
-      rebuildTagIndex_args args = new rebuildTagIndex_args();
-      args.req = req;
-      args.write(oprot_);
-      oprot_.writeMessageEnd();
-      oprot_.getTransport().flush();
-      super.postWrite(ctx, "StorageAdminService.rebuildTagIndex", args);
-      return;
-    }
-
-    public AdminExecResp recv_rebuildTagIndex() throws TException
-    {
-      ContextStack ctx = super.getContextStack();
-      long bytes;
-      TMessageType mtype;
-      super.preRead(ctx, "StorageAdminService.rebuildTagIndex");
-      TMessage msg = iprot_.readMessageBegin();
-      if (msg.type == TMessageType.EXCEPTION) {
-        TApplicationException x = TApplicationException.read(iprot_);
-        iprot_.readMessageEnd();
-        throw x;
-      }
-      rebuildTagIndex_result result = new rebuildTagIndex_result();
-      result.read(iprot_);
-      iprot_.readMessageEnd();
-      super.postRead(ctx, "StorageAdminService.rebuildTagIndex", result);
-
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "rebuildTagIndex failed: unknown result");
-    }
-
-    public AdminExecResp rebuildEdgeIndex(RebuildIndexRequest req) throws TException
-    {
-      ContextStack ctx = getContextStack("StorageAdminService.rebuildEdgeIndex", null);
-      this.setContextStack(ctx);
-      send_rebuildEdgeIndex(req);
-      return recv_rebuildEdgeIndex();
-    }
-
-    public void send_rebuildEdgeIndex(RebuildIndexRequest req) throws TException
-    {
-      ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "StorageAdminService.rebuildEdgeIndex", null);
-      oprot_.writeMessageBegin(new TMessage("rebuildEdgeIndex", TMessageType.CALL, seqid_));
-      rebuildEdgeIndex_args args = new rebuildEdgeIndex_args();
-      args.req = req;
-      args.write(oprot_);
-      oprot_.writeMessageEnd();
-      oprot_.getTransport().flush();
-      super.postWrite(ctx, "StorageAdminService.rebuildEdgeIndex", args);
-      return;
-    }
-
-    public AdminExecResp recv_rebuildEdgeIndex() throws TException
-    {
-      ContextStack ctx = super.getContextStack();
-      long bytes;
-      TMessageType mtype;
-      super.preRead(ctx, "StorageAdminService.rebuildEdgeIndex");
-      TMessage msg = iprot_.readMessageBegin();
-      if (msg.type == TMessageType.EXCEPTION) {
-        TApplicationException x = TApplicationException.read(iprot_);
-        iprot_.readMessageEnd();
-        throw x;
-      }
-      rebuildEdgeIndex_result result = new rebuildEdgeIndex_result();
-      result.read(iprot_);
-      iprot_.readMessageEnd();
-      super.postRead(ctx, "StorageAdminService.rebuildEdgeIndex", result);
-
-      if (result.isSetSuccess()) {
-        return result.success;
-      }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "rebuildEdgeIndex failed: unknown result");
     }
 
     public GetLeaderPartsResp getLeaderParts(GetLeaderReq req) throws TException
@@ -711,7 +617,7 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "checkPeers failed: unknown result");
     }
 
-    public AdminExecResp addAdminTask(AddAdminTaskRequest req) throws TException
+    public AddTaskResp addAdminTask(AddTaskRequest req) throws TException
     {
       ContextStack ctx = getContextStack("StorageAdminService.addAdminTask", null);
       this.setContextStack(ctx);
@@ -719,7 +625,7 @@ public class StorageAdminService {
       return recv_addAdminTask();
     }
 
-    public void send_addAdminTask(AddAdminTaskRequest req) throws TException
+    public void send_addAdminTask(AddTaskRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
       super.preWrite(ctx, "StorageAdminService.addAdminTask", null);
@@ -733,7 +639,7 @@ public class StorageAdminService {
       return;
     }
 
-    public AdminExecResp recv_addAdminTask() throws TException
+    public AddTaskResp recv_addAdminTask() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
@@ -756,7 +662,7 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "addAdminTask failed: unknown result");
     }
 
-    public AdminExecResp stopAdminTask(StopAdminTaskRequest req) throws TException
+    public StopTaskResp stopAdminTask(StopTaskRequest req) throws TException
     {
       ContextStack ctx = getContextStack("StorageAdminService.stopAdminTask", null);
       this.setContextStack(ctx);
@@ -764,7 +670,7 @@ public class StorageAdminService {
       return recv_stopAdminTask();
     }
 
-    public void send_stopAdminTask(StopAdminTaskRequest req) throws TException
+    public void send_stopAdminTask(StopTaskRequest req) throws TException
     {
       ContextStack ctx = this.getContextStack();
       super.preWrite(ctx, "StorageAdminService.stopAdminTask", null);
@@ -778,7 +684,7 @@ public class StorageAdminService {
       return;
     }
 
-    public AdminExecResp recv_stopAdminTask() throws TException
+    public StopTaskResp recv_stopAdminTask() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
@@ -801,6 +707,51 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "stopAdminTask failed: unknown result");
     }
 
+    public ClearSpaceResp clearSpace(ClearSpaceReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("StorageAdminService.clearSpace", null);
+      this.setContextStack(ctx);
+      send_clearSpace(req);
+      return recv_clearSpace();
+    }
+
+    public void send_clearSpace(ClearSpaceReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "StorageAdminService.clearSpace", null);
+      oprot_.writeMessageBegin(new TMessage("clearSpace", TMessageType.CALL, seqid_));
+      clearSpace_args args = new clearSpace_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "StorageAdminService.clearSpace", args);
+      return;
+    }
+
+    public ClearSpaceResp recv_clearSpace() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "StorageAdminService.clearSpace");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      clearSpace_result result = new clearSpace_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "StorageAdminService.clearSpace", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "clearSpace failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -819,17 +770,17 @@ public class StorageAdminService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler457) throws TException {
+    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler479) throws TException {
       checkReady();
-      transLeader_call method_call = new transLeader_call(req, resultHandler457, this, ___protocolFactory, ___transport);
+      transLeader_call method_call = new transLeader_call(req, resultHandler479, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class transLeader_call extends TAsyncMethodCall {
       private TransLeaderReq req;
-      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler458, TAsyncClient client454, TProtocolFactory protocolFactory455, TNonblockingTransport transport456) throws TException {
-        super(client454, protocolFactory455, transport456, resultHandler458, false);
+      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler480, TAsyncClient client476, TProtocolFactory protocolFactory477, TNonblockingTransport transport478) throws TException {
+        super(client476, protocolFactory477, transport478, resultHandler480, false);
         this.req = req;
       }
 
@@ -851,17 +802,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler462) throws TException {
+    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler484) throws TException {
       checkReady();
-      addPart_call method_call = new addPart_call(req, resultHandler462, this, ___protocolFactory, ___transport);
+      addPart_call method_call = new addPart_call(req, resultHandler484, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addPart_call extends TAsyncMethodCall {
       private AddPartReq req;
-      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler463, TAsyncClient client459, TProtocolFactory protocolFactory460, TNonblockingTransport transport461) throws TException {
-        super(client459, protocolFactory460, transport461, resultHandler463, false);
+      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler485, TAsyncClient client481, TProtocolFactory protocolFactory482, TNonblockingTransport transport483) throws TException {
+        super(client481, protocolFactory482, transport483, resultHandler485, false);
         this.req = req;
       }
 
@@ -883,17 +834,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler467) throws TException {
+    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler489) throws TException {
       checkReady();
-      addLearner_call method_call = new addLearner_call(req, resultHandler467, this, ___protocolFactory, ___transport);
+      addLearner_call method_call = new addLearner_call(req, resultHandler489, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addLearner_call extends TAsyncMethodCall {
       private AddLearnerReq req;
-      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler468, TAsyncClient client464, TProtocolFactory protocolFactory465, TNonblockingTransport transport466) throws TException {
-        super(client464, protocolFactory465, transport466, resultHandler468, false);
+      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler490, TAsyncClient client486, TProtocolFactory protocolFactory487, TNonblockingTransport transport488) throws TException {
+        super(client486, protocolFactory487, transport488, resultHandler490, false);
         this.req = req;
       }
 
@@ -915,17 +866,17 @@ public class StorageAdminService {
       }
     }
 
-    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler472) throws TException {
+    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler494) throws TException {
       checkReady();
-      removePart_call method_call = new removePart_call(req, resultHandler472, this, ___protocolFactory, ___transport);
+      removePart_call method_call = new removePart_call(req, resultHandler494, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class removePart_call extends TAsyncMethodCall {
       private RemovePartReq req;
-      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler473, TAsyncClient client469, TProtocolFactory protocolFactory470, TNonblockingTransport transport471) throws TException {
-        super(client469, protocolFactory470, transport471, resultHandler473, false);
+      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler495, TAsyncClient client491, TProtocolFactory protocolFactory492, TNonblockingTransport transport493) throws TException {
+        super(client491, protocolFactory492, transport493, resultHandler495, false);
         this.req = req;
       }
 
@@ -947,17 +898,17 @@ public class StorageAdminService {
       }
     }
 
-    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler477) throws TException {
+    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler499) throws TException {
       checkReady();
-      memberChange_call method_call = new memberChange_call(req, resultHandler477, this, ___protocolFactory, ___transport);
+      memberChange_call method_call = new memberChange_call(req, resultHandler499, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class memberChange_call extends TAsyncMethodCall {
       private MemberChangeReq req;
-      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler478, TAsyncClient client474, TProtocolFactory protocolFactory475, TNonblockingTransport transport476) throws TException {
-        super(client474, protocolFactory475, transport476, resultHandler478, false);
+      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler500, TAsyncClient client496, TProtocolFactory protocolFactory497, TNonblockingTransport transport498) throws TException {
+        super(client496, protocolFactory497, transport498, resultHandler500, false);
         this.req = req;
       }
 
@@ -979,17 +930,17 @@ public class StorageAdminService {
       }
     }
 
-    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler482) throws TException {
+    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler504) throws TException {
       checkReady();
-      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler482, this, ___protocolFactory, ___transport);
+      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler504, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class waitingForCatchUpData_call extends TAsyncMethodCall {
       private CatchUpDataReq req;
-      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler483, TAsyncClient client479, TProtocolFactory protocolFactory480, TNonblockingTransport transport481) throws TException {
-        super(client479, protocolFactory480, transport481, resultHandler483, false);
+      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler505, TAsyncClient client501, TProtocolFactory protocolFactory502, TNonblockingTransport transport503) throws TException {
+        super(client501, protocolFactory502, transport503, resultHandler505, false);
         this.req = req;
       }
 
@@ -1011,17 +962,17 @@ public class StorageAdminService {
       }
     }
 
-    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler487) throws TException {
+    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler509) throws TException {
       checkReady();
-      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler487, this, ___protocolFactory, ___transport);
+      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler509, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createCheckpoint_call extends TAsyncMethodCall {
       private CreateCPRequest req;
-      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler488, TAsyncClient client484, TProtocolFactory protocolFactory485, TNonblockingTransport transport486) throws TException {
-        super(client484, protocolFactory485, transport486, resultHandler488, false);
+      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler510, TAsyncClient client506, TProtocolFactory protocolFactory507, TNonblockingTransport transport508) throws TException {
+        super(client506, protocolFactory507, transport508, resultHandler510, false);
         this.req = req;
       }
 
@@ -1043,17 +994,17 @@ public class StorageAdminService {
       }
     }
 
-    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler492) throws TException {
+    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler514) throws TException {
       checkReady();
-      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler492, this, ___protocolFactory, ___transport);
+      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler514, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropCheckpoint_call extends TAsyncMethodCall {
       private DropCPRequest req;
-      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler493, TAsyncClient client489, TProtocolFactory protocolFactory490, TNonblockingTransport transport491) throws TException {
-        super(client489, protocolFactory490, transport491, resultHandler493, false);
+      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler515, TAsyncClient client511, TProtocolFactory protocolFactory512, TNonblockingTransport transport513) throws TException {
+        super(client511, protocolFactory512, transport513, resultHandler515, false);
         this.req = req;
       }
 
@@ -1065,7 +1016,7 @@ public class StorageAdminService {
         prot.writeMessageEnd();
       }
 
-      public AdminExecResp getResult() throws TException {
+      public DropCPResp getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1075,17 +1026,17 @@ public class StorageAdminService {
       }
     }
 
-    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler497) throws TException {
+    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler519) throws TException {
       checkReady();
-      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler497, this, ___protocolFactory, ___transport);
+      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler519, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class blockingWrites_call extends TAsyncMethodCall {
       private BlockingSignRequest req;
-      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler498, TAsyncClient client494, TProtocolFactory protocolFactory495, TNonblockingTransport transport496) throws TException {
-        super(client494, protocolFactory495, transport496, resultHandler498, false);
+      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler520, TAsyncClient client516, TProtocolFactory protocolFactory517, TNonblockingTransport transport518) throws TException {
+        super(client516, protocolFactory517, transport518, resultHandler520, false);
         this.req = req;
       }
 
@@ -1097,7 +1048,7 @@ public class StorageAdminService {
         prot.writeMessageEnd();
       }
 
-      public AdminExecResp getResult() throws TException {
+      public BlockingSignResp getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1107,81 +1058,17 @@ public class StorageAdminService {
       }
     }
 
-    public void rebuildTagIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler502) throws TException {
+    public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler524) throws TException {
       checkReady();
-      rebuildTagIndex_call method_call = new rebuildTagIndex_call(req, resultHandler502, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class rebuildTagIndex_call extends TAsyncMethodCall {
-      private RebuildIndexRequest req;
-      public rebuildTagIndex_call(RebuildIndexRequest req, AsyncMethodCallback resultHandler503, TAsyncClient client499, TProtocolFactory protocolFactory500, TNonblockingTransport transport501) throws TException {
-        super(client499, protocolFactory500, transport501, resultHandler503, false);
-        this.req = req;
-      }
-
-      public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("rebuildTagIndex", TMessageType.CALL, 0));
-        rebuildTagIndex_args args = new rebuildTagIndex_args();
-        args.setReq(req);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public AdminExecResp getResult() throws TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
-        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_rebuildTagIndex();
-      }
-    }
-
-    public void rebuildEdgeIndex(RebuildIndexRequest req, AsyncMethodCallback resultHandler507) throws TException {
-      checkReady();
-      rebuildEdgeIndex_call method_call = new rebuildEdgeIndex_call(req, resultHandler507, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class rebuildEdgeIndex_call extends TAsyncMethodCall {
-      private RebuildIndexRequest req;
-      public rebuildEdgeIndex_call(RebuildIndexRequest req, AsyncMethodCallback resultHandler508, TAsyncClient client504, TProtocolFactory protocolFactory505, TNonblockingTransport transport506) throws TException {
-        super(client504, protocolFactory505, transport506, resultHandler508, false);
-        this.req = req;
-      }
-
-      public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("rebuildEdgeIndex", TMessageType.CALL, 0));
-        rebuildEdgeIndex_args args = new rebuildEdgeIndex_args();
-        args.setReq(req);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public AdminExecResp getResult() throws TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
-        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_rebuildEdgeIndex();
-      }
-    }
-
-    public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler512) throws TException {
-      checkReady();
-      getLeaderParts_call method_call = new getLeaderParts_call(req, resultHandler512, this, ___protocolFactory, ___transport);
+      getLeaderParts_call method_call = new getLeaderParts_call(req, resultHandler524, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getLeaderParts_call extends TAsyncMethodCall {
       private GetLeaderReq req;
-      public getLeaderParts_call(GetLeaderReq req, AsyncMethodCallback resultHandler513, TAsyncClient client509, TProtocolFactory protocolFactory510, TNonblockingTransport transport511) throws TException {
-        super(client509, protocolFactory510, transport511, resultHandler513, false);
+      public getLeaderParts_call(GetLeaderReq req, AsyncMethodCallback resultHandler525, TAsyncClient client521, TProtocolFactory protocolFactory522, TNonblockingTransport transport523) throws TException {
+        super(client521, protocolFactory522, transport523, resultHandler525, false);
         this.req = req;
       }
 
@@ -1203,17 +1090,17 @@ public class StorageAdminService {
       }
     }
 
-    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler517) throws TException {
+    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler529) throws TException {
       checkReady();
-      checkPeers_call method_call = new checkPeers_call(req, resultHandler517, this, ___protocolFactory, ___transport);
+      checkPeers_call method_call = new checkPeers_call(req, resultHandler529, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class checkPeers_call extends TAsyncMethodCall {
       private CheckPeersReq req;
-      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler518, TAsyncClient client514, TProtocolFactory protocolFactory515, TNonblockingTransport transport516) throws TException {
-        super(client514, protocolFactory515, transport516, resultHandler518, false);
+      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler530, TAsyncClient client526, TProtocolFactory protocolFactory527, TNonblockingTransport transport528) throws TException {
+        super(client526, protocolFactory527, transport528, resultHandler530, false);
         this.req = req;
       }
 
@@ -1235,17 +1122,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addAdminTask(AddAdminTaskRequest req, AsyncMethodCallback resultHandler522) throws TException {
+    public void addAdminTask(AddTaskRequest req, AsyncMethodCallback resultHandler534) throws TException {
       checkReady();
-      addAdminTask_call method_call = new addAdminTask_call(req, resultHandler522, this, ___protocolFactory, ___transport);
+      addAdminTask_call method_call = new addAdminTask_call(req, resultHandler534, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addAdminTask_call extends TAsyncMethodCall {
-      private AddAdminTaskRequest req;
-      public addAdminTask_call(AddAdminTaskRequest req, AsyncMethodCallback resultHandler523, TAsyncClient client519, TProtocolFactory protocolFactory520, TNonblockingTransport transport521) throws TException {
-        super(client519, protocolFactory520, transport521, resultHandler523, false);
+      private AddTaskRequest req;
+      public addAdminTask_call(AddTaskRequest req, AsyncMethodCallback resultHandler535, TAsyncClient client531, TProtocolFactory protocolFactory532, TNonblockingTransport transport533) throws TException {
+        super(client531, protocolFactory532, transport533, resultHandler535, false);
         this.req = req;
       }
 
@@ -1257,7 +1144,7 @@ public class StorageAdminService {
         prot.writeMessageEnd();
       }
 
-      public AdminExecResp getResult() throws TException {
+      public AddTaskResp getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -1267,17 +1154,17 @@ public class StorageAdminService {
       }
     }
 
-    public void stopAdminTask(StopAdminTaskRequest req, AsyncMethodCallback resultHandler527) throws TException {
+    public void stopAdminTask(StopTaskRequest req, AsyncMethodCallback resultHandler539) throws TException {
       checkReady();
-      stopAdminTask_call method_call = new stopAdminTask_call(req, resultHandler527, this, ___protocolFactory, ___transport);
+      stopAdminTask_call method_call = new stopAdminTask_call(req, resultHandler539, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class stopAdminTask_call extends TAsyncMethodCall {
-      private StopAdminTaskRequest req;
-      public stopAdminTask_call(StopAdminTaskRequest req, AsyncMethodCallback resultHandler528, TAsyncClient client524, TProtocolFactory protocolFactory525, TNonblockingTransport transport526) throws TException {
-        super(client524, protocolFactory525, transport526, resultHandler528, false);
+      private StopTaskRequest req;
+      public stopAdminTask_call(StopTaskRequest req, AsyncMethodCallback resultHandler540, TAsyncClient client536, TProtocolFactory protocolFactory537, TNonblockingTransport transport538) throws TException {
+        super(client536, protocolFactory537, transport538, resultHandler540, false);
         this.req = req;
       }
 
@@ -1289,13 +1176,45 @@ public class StorageAdminService {
         prot.writeMessageEnd();
       }
 
-      public AdminExecResp getResult() throws TException {
+      public StopTaskResp getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
         return (new Client(prot)).recv_stopAdminTask();
+      }
+    }
+
+    public void clearSpace(ClearSpaceReq req, AsyncMethodCallback resultHandler544) throws TException {
+      checkReady();
+      clearSpace_call method_call = new clearSpace_call(req, resultHandler544, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class clearSpace_call extends TAsyncMethodCall {
+      private ClearSpaceReq req;
+      public clearSpace_call(ClearSpaceReq req, AsyncMethodCallback resultHandler545, TAsyncClient client541, TProtocolFactory protocolFactory542, TNonblockingTransport transport543) throws TException {
+        super(client541, protocolFactory542, transport543, resultHandler545, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("clearSpace", TMessageType.CALL, 0));
+        clearSpace_args args = new clearSpace_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ClearSpaceResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_clearSpace();
       }
     }
 
@@ -1316,12 +1235,11 @@ public class StorageAdminService {
       processMap_.put("createCheckpoint", new createCheckpoint());
       processMap_.put("dropCheckpoint", new dropCheckpoint());
       processMap_.put("blockingWrites", new blockingWrites());
-      processMap_.put("rebuildTagIndex", new rebuildTagIndex());
-      processMap_.put("rebuildEdgeIndex", new rebuildEdgeIndex());
       processMap_.put("getLeaderParts", new getLeaderParts());
       processMap_.put("checkPeers", new checkPeers());
       processMap_.put("addAdminTask", new addAdminTask());
       processMap_.put("stopAdminTask", new stopAdminTask());
+      processMap_.put("clearSpace", new clearSpace());
     }
 
     protected static interface ProcessFunction {
@@ -1543,48 +1461,6 @@ public class StorageAdminService {
 
     }
 
-    private class rebuildTagIndex implements ProcessFunction {
-      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
-      {
-        Object handler_ctx = event_handler_.getContext("StorageAdminService.rebuildTagIndex", server_ctx);
-        rebuildTagIndex_args args = new rebuildTagIndex_args();
-        event_handler_.preRead(handler_ctx, "StorageAdminService.rebuildTagIndex");
-        args.read(iprot);
-        iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "StorageAdminService.rebuildTagIndex", args);
-        rebuildTagIndex_result result = new rebuildTagIndex_result();
-        result.success = iface_.rebuildTagIndex(args.req);
-        event_handler_.preWrite(handler_ctx, "StorageAdminService.rebuildTagIndex", result);
-        oprot.writeMessageBegin(new TMessage("rebuildTagIndex", TMessageType.REPLY, seqid));
-        result.write(oprot);
-        oprot.writeMessageEnd();
-        oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "StorageAdminService.rebuildTagIndex", result);
-      }
-
-    }
-
-    private class rebuildEdgeIndex implements ProcessFunction {
-      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
-      {
-        Object handler_ctx = event_handler_.getContext("StorageAdminService.rebuildEdgeIndex", server_ctx);
-        rebuildEdgeIndex_args args = new rebuildEdgeIndex_args();
-        event_handler_.preRead(handler_ctx, "StorageAdminService.rebuildEdgeIndex");
-        args.read(iprot);
-        iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "StorageAdminService.rebuildEdgeIndex", args);
-        rebuildEdgeIndex_result result = new rebuildEdgeIndex_result();
-        result.success = iface_.rebuildEdgeIndex(args.req);
-        event_handler_.preWrite(handler_ctx, "StorageAdminService.rebuildEdgeIndex", result);
-        oprot.writeMessageBegin(new TMessage("rebuildEdgeIndex", TMessageType.REPLY, seqid));
-        result.write(oprot);
-        oprot.writeMessageEnd();
-        oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "StorageAdminService.rebuildEdgeIndex", result);
-      }
-
-    }
-
     private class getLeaderParts implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
@@ -1665,6 +1541,27 @@ public class StorageAdminService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "StorageAdminService.stopAdminTask", result);
+      }
+
+    }
+
+    private class clearSpace implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("StorageAdminService.clearSpace", server_ctx);
+        clearSpace_args args = new clearSpace_args();
+        event_handler_.preRead(handler_ctx, "StorageAdminService.clearSpace");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "StorageAdminService.clearSpace", args);
+        clearSpace_result result = new clearSpace_result();
+        result.success = iface_.clearSpace(args.req);
+        event_handler_.preWrite(handler_ctx, "StorageAdminService.clearSpace", result);
+        oprot.writeMessageBegin(new TMessage("clearSpace", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "StorageAdminService.clearSpace", result);
       }
 
     }
@@ -4938,7 +4835,7 @@ public class StorageAdminService {
     private static final TStruct STRUCT_DESC = new TStruct("dropCheckpoint_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public AdminExecResp success;
+    public DropCPResp success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -4948,7 +4845,7 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
+          new StructMetaData(TType.STRUCT, DropCPResp.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -4960,7 +4857,7 @@ public class StorageAdminService {
     }
 
     public dropCheckpoint_result(
-        AdminExecResp success) {
+        DropCPResp success) {
       this();
       this.success = success;
     }
@@ -4978,11 +4875,11 @@ public class StorageAdminService {
       return new dropCheckpoint_result(this);
     }
 
-    public AdminExecResp getSuccess() {
+    public DropCPResp getSuccess() {
       return this.success;
     }
 
-    public dropCheckpoint_result setSuccess(AdminExecResp success) {
+    public dropCheckpoint_result setSuccess(DropCPResp success) {
       this.success = success;
       return this;
     }
@@ -5008,7 +4905,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)__value);
+          setSuccess((DropCPResp)__value);
         }
         break;
 
@@ -5083,7 +4980,7 @@ public class StorageAdminService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
+              this.success = new DropCPResp();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -5373,7 +5270,7 @@ public class StorageAdminService {
     private static final TStruct STRUCT_DESC = new TStruct("blockingWrites_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public AdminExecResp success;
+    public BlockingSignResp success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -5383,7 +5280,7 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
+          new StructMetaData(TType.STRUCT, BlockingSignResp.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -5395,7 +5292,7 @@ public class StorageAdminService {
     }
 
     public blockingWrites_result(
-        AdminExecResp success) {
+        BlockingSignResp success) {
       this();
       this.success = success;
     }
@@ -5413,11 +5310,11 @@ public class StorageAdminService {
       return new blockingWrites_result(this);
     }
 
-    public AdminExecResp getSuccess() {
+    public BlockingSignResp getSuccess() {
       return this.success;
     }
 
-    public blockingWrites_result setSuccess(AdminExecResp success) {
+    public blockingWrites_result setSuccess(BlockingSignResp success) {
       this.success = success;
       return this;
     }
@@ -5443,7 +5340,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)__value);
+          setSuccess((BlockingSignResp)__value);
         }
         break;
 
@@ -5518,7 +5415,7 @@ public class StorageAdminService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
+              this.success = new BlockingSignResp();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -5560,876 +5457,6 @@ public class StorageAdminService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("blockingWrites_result");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("success");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getSuccess() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class rebuildTagIndex_args implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildTagIndex_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("rebuildTagIndex_args");
-    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
-
-    public RebuildIndexRequest req;
-    public static final int REQ = 1;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, RebuildIndexRequest.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(rebuildTagIndex_args.class, metaDataMap);
-    }
-
-    public rebuildTagIndex_args() {
-    }
-
-    public rebuildTagIndex_args(
-        RebuildIndexRequest req) {
-      this();
-      this.req = req;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public rebuildTagIndex_args(rebuildTagIndex_args other) {
-      if (other.isSetReq()) {
-        this.req = TBaseHelper.deepCopy(other.req);
-      }
-    }
-
-    public rebuildTagIndex_args deepCopy() {
-      return new rebuildTagIndex_args(this);
-    }
-
-    public RebuildIndexRequest getReq() {
-      return this.req;
-    }
-
-    public rebuildTagIndex_args setReq(RebuildIndexRequest req) {
-      this.req = req;
-      return this;
-    }
-
-    public void unsetReq() {
-      this.req = null;
-    }
-
-    // Returns true if field req is set (has been assigned a value) and false otherwise
-    public boolean isSetReq() {
-      return this.req != null;
-    }
-
-    public void setReqIsSet(boolean __value) {
-      if (!__value) {
-        this.req = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case REQ:
-        if (__value == null) {
-          unsetReq();
-        } else {
-          setReq((RebuildIndexRequest)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return getReq();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof rebuildTagIndex_args))
-        return false;
-      rebuildTagIndex_args that = (rebuildTagIndex_args)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {req});
-    }
-
-    @Override
-    public int compareTo(rebuildTagIndex_args other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) { 
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case REQ:
-            if (__field.type == TType.STRUCT) {
-              this.req = new RebuildIndexRequest();
-              this.req.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      if (this.req != null) {
-        oprot.writeFieldBegin(REQ_FIELD_DESC);
-        this.req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("rebuildTagIndex_args");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getReq() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class rebuildTagIndex_result implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildTagIndex_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("rebuildTagIndex_result");
-    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-
-    public AdminExecResp success;
-    public static final int SUCCESS = 0;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(rebuildTagIndex_result.class, metaDataMap);
-    }
-
-    public rebuildTagIndex_result() {
-    }
-
-    public rebuildTagIndex_result(
-        AdminExecResp success) {
-      this();
-      this.success = success;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public rebuildTagIndex_result(rebuildTagIndex_result other) {
-      if (other.isSetSuccess()) {
-        this.success = TBaseHelper.deepCopy(other.success);
-      }
-    }
-
-    public rebuildTagIndex_result deepCopy() {
-      return new rebuildTagIndex_result(this);
-    }
-
-    public AdminExecResp getSuccess() {
-      return this.success;
-    }
-
-    public rebuildTagIndex_result setSuccess(AdminExecResp success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    // Returns true if field success is set (has been assigned a value) and false otherwise
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean __value) {
-      if (!__value) {
-        this.success = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case SUCCESS:
-        if (__value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((AdminExecResp)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return getSuccess();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof rebuildTagIndex_result))
-        return false;
-      rebuildTagIndex_result that = (rebuildTagIndex_result)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {success});
-    }
-
-    @Override
-    public int compareTo(rebuildTagIndex_result other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) { 
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case SUCCESS:
-            if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
-              this.success.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      oprot.writeStructBegin(STRUCT_DESC);
-
-      if (this.isSetSuccess()) {
-        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-        this.success.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("rebuildTagIndex_result");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("success");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getSuccess() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class rebuildEdgeIndex_args implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildEdgeIndex_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("rebuildEdgeIndex_args");
-    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
-
-    public RebuildIndexRequest req;
-    public static final int REQ = 1;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, RebuildIndexRequest.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(rebuildEdgeIndex_args.class, metaDataMap);
-    }
-
-    public rebuildEdgeIndex_args() {
-    }
-
-    public rebuildEdgeIndex_args(
-        RebuildIndexRequest req) {
-      this();
-      this.req = req;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public rebuildEdgeIndex_args(rebuildEdgeIndex_args other) {
-      if (other.isSetReq()) {
-        this.req = TBaseHelper.deepCopy(other.req);
-      }
-    }
-
-    public rebuildEdgeIndex_args deepCopy() {
-      return new rebuildEdgeIndex_args(this);
-    }
-
-    public RebuildIndexRequest getReq() {
-      return this.req;
-    }
-
-    public rebuildEdgeIndex_args setReq(RebuildIndexRequest req) {
-      this.req = req;
-      return this;
-    }
-
-    public void unsetReq() {
-      this.req = null;
-    }
-
-    // Returns true if field req is set (has been assigned a value) and false otherwise
-    public boolean isSetReq() {
-      return this.req != null;
-    }
-
-    public void setReqIsSet(boolean __value) {
-      if (!__value) {
-        this.req = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case REQ:
-        if (__value == null) {
-          unsetReq();
-        } else {
-          setReq((RebuildIndexRequest)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case REQ:
-        return getReq();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof rebuildEdgeIndex_args))
-        return false;
-      rebuildEdgeIndex_args that = (rebuildEdgeIndex_args)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {req});
-    }
-
-    @Override
-    public int compareTo(rebuildEdgeIndex_args other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(req, other.req);
-      if (lastComparison != 0) { 
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case REQ:
-            if (__field.type == TType.STRUCT) {
-              this.req = new RebuildIndexRequest();
-              this.req.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      validate();
-
-      oprot.writeStructBegin(STRUCT_DESC);
-      if (this.req != null) {
-        oprot.writeFieldBegin(REQ_FIELD_DESC);
-        this.req.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("rebuildEdgeIndex_args");
-      sb.append(space);
-      sb.append("(");
-      sb.append(newLine);
-      boolean first = true;
-
-      sb.append(indentStr);
-      sb.append("req");
-      sb.append(space);
-      sb.append(":").append(space);
-      if (this.getReq() == null) {
-        sb.append("null");
-      } else {
-        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
-      }
-      first = false;
-      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws TException {
-      // check for required fields
-    }
-
-  }
-
-  public static class rebuildEdgeIndex_result implements TBase, java.io.Serializable, Cloneable, Comparable<rebuildEdgeIndex_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("rebuildEdgeIndex_result");
-    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-
-    public AdminExecResp success;
-    public static final int SUCCESS = 0;
-
-    // isset id assignments
-
-    public static final Map<Integer, FieldMetaData> metaDataMap;
-
-    static {
-      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
-      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
-    }
-
-    static {
-      FieldMetaData.addStructMetaDataMap(rebuildEdgeIndex_result.class, metaDataMap);
-    }
-
-    public rebuildEdgeIndex_result() {
-    }
-
-    public rebuildEdgeIndex_result(
-        AdminExecResp success) {
-      this();
-      this.success = success;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public rebuildEdgeIndex_result(rebuildEdgeIndex_result other) {
-      if (other.isSetSuccess()) {
-        this.success = TBaseHelper.deepCopy(other.success);
-      }
-    }
-
-    public rebuildEdgeIndex_result deepCopy() {
-      return new rebuildEdgeIndex_result(this);
-    }
-
-    public AdminExecResp getSuccess() {
-      return this.success;
-    }
-
-    public rebuildEdgeIndex_result setSuccess(AdminExecResp success) {
-      this.success = success;
-      return this;
-    }
-
-    public void unsetSuccess() {
-      this.success = null;
-    }
-
-    // Returns true if field success is set (has been assigned a value) and false otherwise
-    public boolean isSetSuccess() {
-      return this.success != null;
-    }
-
-    public void setSuccessIsSet(boolean __value) {
-      if (!__value) {
-        this.success = null;
-      }
-    }
-
-    public void setFieldValue(int fieldID, Object __value) {
-      switch (fieldID) {
-      case SUCCESS:
-        if (__value == null) {
-          unsetSuccess();
-        } else {
-          setSuccess((AdminExecResp)__value);
-        }
-        break;
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      case SUCCESS:
-        return getSuccess();
-
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
-    }
-
-    @Override
-    public boolean equals(Object _that) {
-      if (_that == null)
-        return false;
-      if (this == _that)
-        return true;
-      if (!(_that instanceof rebuildEdgeIndex_result))
-        return false;
-      rebuildEdgeIndex_result that = (rebuildEdgeIndex_result)_that;
-
-      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return Arrays.deepHashCode(new Object[] {success});
-    }
-
-    @Override
-    public int compareTo(rebuildEdgeIndex_result other) {
-      if (other == null) {
-        // See java.lang.Comparable docs
-        throw new NullPointerException();
-      }
-
-      if (other == this) {
-        return 0;
-      }
-      int lastComparison = 0;
-
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(success, other.success);
-      if (lastComparison != 0) { 
-        return lastComparison;
-      }
-      return 0;
-    }
-
-    public void read(TProtocol iprot) throws TException {
-      TField __field;
-      iprot.readStructBegin(metaDataMap);
-      while (true)
-      {
-        __field = iprot.readFieldBegin();
-        if (__field.type == TType.STOP) { 
-          break;
-        }
-        switch (__field.id)
-        {
-          case SUCCESS:
-            if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
-              this.success.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, __field.type);
-            }
-            break;
-          default:
-            TProtocolUtil.skip(iprot, __field.type);
-            break;
-        }
-        iprot.readFieldEnd();
-      }
-      iprot.readStructEnd();
-
-
-      // check for required fields of primitive type, which can't be checked in the validate method
-      validate();
-    }
-
-    public void write(TProtocol oprot) throws TException {
-      oprot.writeStructBegin(STRUCT_DESC);
-
-      if (this.isSetSuccess()) {
-        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-        this.success.write(oprot);
-        oprot.writeFieldEnd();
-      }
-      oprot.writeFieldStop();
-      oprot.writeStructEnd();
-    }
-
-    @Override
-    public String toString() {
-      return toString(1, true);
-    }
-
-    @Override
-    public String toString(int indent, boolean prettyPrint) {
-      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
-      String newLine = prettyPrint ? "\n" : "";
-      String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("rebuildEdgeIndex_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -7330,7 +6357,7 @@ public class StorageAdminService {
     private static final TStruct STRUCT_DESC = new TStruct("addAdminTask_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public AddAdminTaskRequest req;
+    public AddTaskRequest req;
     public static final int REQ = 1;
 
     // isset id assignments
@@ -7340,7 +6367,7 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AddAdminTaskRequest.class)));
+          new StructMetaData(TType.STRUCT, AddTaskRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -7352,7 +6379,7 @@ public class StorageAdminService {
     }
 
     public addAdminTask_args(
-        AddAdminTaskRequest req) {
+        AddTaskRequest req) {
       this();
       this.req = req;
     }
@@ -7370,11 +6397,11 @@ public class StorageAdminService {
       return new addAdminTask_args(this);
     }
 
-    public AddAdminTaskRequest getReq() {
+    public AddTaskRequest getReq() {
       return this.req;
     }
 
-    public addAdminTask_args setReq(AddAdminTaskRequest req) {
+    public addAdminTask_args setReq(AddTaskRequest req) {
       this.req = req;
       return this;
     }
@@ -7400,7 +6427,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetReq();
         } else {
-          setReq((AddAdminTaskRequest)__value);
+          setReq((AddTaskRequest)__value);
         }
         break;
 
@@ -7475,7 +6502,7 @@ public class StorageAdminService {
         {
           case REQ:
             if (__field.type == TType.STRUCT) {
-              this.req = new AddAdminTaskRequest();
+              this.req = new AddTaskRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -7548,7 +6575,7 @@ public class StorageAdminService {
     private static final TStruct STRUCT_DESC = new TStruct("addAdminTask_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public AdminExecResp success;
+    public AddTaskResp success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -7558,7 +6585,7 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
+          new StructMetaData(TType.STRUCT, AddTaskResp.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -7570,7 +6597,7 @@ public class StorageAdminService {
     }
 
     public addAdminTask_result(
-        AdminExecResp success) {
+        AddTaskResp success) {
       this();
       this.success = success;
     }
@@ -7588,11 +6615,11 @@ public class StorageAdminService {
       return new addAdminTask_result(this);
     }
 
-    public AdminExecResp getSuccess() {
+    public AddTaskResp getSuccess() {
       return this.success;
     }
 
-    public addAdminTask_result setSuccess(AdminExecResp success) {
+    public addAdminTask_result setSuccess(AddTaskResp success) {
       this.success = success;
       return this;
     }
@@ -7618,7 +6645,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)__value);
+          setSuccess((AddTaskResp)__value);
         }
         break;
 
@@ -7693,7 +6720,7 @@ public class StorageAdminService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
+              this.success = new AddTaskResp();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -7765,7 +6792,7 @@ public class StorageAdminService {
     private static final TStruct STRUCT_DESC = new TStruct("stopAdminTask_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
-    public StopAdminTaskRequest req;
+    public StopTaskRequest req;
     public static final int REQ = 1;
 
     // isset id assignments
@@ -7775,7 +6802,7 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, StopAdminTaskRequest.class)));
+          new StructMetaData(TType.STRUCT, StopTaskRequest.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -7787,7 +6814,7 @@ public class StorageAdminService {
     }
 
     public stopAdminTask_args(
-        StopAdminTaskRequest req) {
+        StopTaskRequest req) {
       this();
       this.req = req;
     }
@@ -7805,11 +6832,11 @@ public class StorageAdminService {
       return new stopAdminTask_args(this);
     }
 
-    public StopAdminTaskRequest getReq() {
+    public StopTaskRequest getReq() {
       return this.req;
     }
 
-    public stopAdminTask_args setReq(StopAdminTaskRequest req) {
+    public stopAdminTask_args setReq(StopTaskRequest req) {
       this.req = req;
       return this;
     }
@@ -7835,7 +6862,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetReq();
         } else {
-          setReq((StopAdminTaskRequest)__value);
+          setReq((StopTaskRequest)__value);
         }
         break;
 
@@ -7910,7 +6937,7 @@ public class StorageAdminService {
         {
           case REQ:
             if (__field.type == TType.STRUCT) {
-              this.req = new StopAdminTaskRequest();
+              this.req = new StopTaskRequest();
               this.req.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -7983,7 +7010,7 @@ public class StorageAdminService {
     private static final TStruct STRUCT_DESC = new TStruct("stopAdminTask_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public AdminExecResp success;
+    public StopTaskResp success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -7993,7 +7020,7 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
+          new StructMetaData(TType.STRUCT, StopTaskResp.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
@@ -8005,7 +7032,7 @@ public class StorageAdminService {
     }
 
     public stopAdminTask_result(
-        AdminExecResp success) {
+        StopTaskResp success) {
       this();
       this.success = success;
     }
@@ -8023,11 +7050,11 @@ public class StorageAdminService {
       return new stopAdminTask_result(this);
     }
 
-    public AdminExecResp getSuccess() {
+    public StopTaskResp getSuccess() {
       return this.success;
     }
 
-    public stopAdminTask_result setSuccess(AdminExecResp success) {
+    public stopAdminTask_result setSuccess(StopTaskResp success) {
       this.success = success;
       return this;
     }
@@ -8053,7 +7080,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)__value);
+          setSuccess((StopTaskResp)__value);
         }
         break;
 
@@ -8128,7 +7155,7 @@ public class StorageAdminService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
+              this.success = new StopTaskResp();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -8170,6 +7197,441 @@ public class StorageAdminService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("stopAdminTask_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class clearSpace_args implements TBase, java.io.Serializable, Cloneable, Comparable<clearSpace_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("clearSpace_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public ClearSpaceReq req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ClearSpaceReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(clearSpace_args.class, metaDataMap);
+    }
+
+    public clearSpace_args() {
+    }
+
+    public clearSpace_args(
+        ClearSpaceReq req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public clearSpace_args(clearSpace_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public clearSpace_args deepCopy() {
+      return new clearSpace_args(this);
+    }
+
+    public ClearSpaceReq getReq() {
+      return this.req;
+    }
+
+    public clearSpace_args setReq(ClearSpaceReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((ClearSpaceReq)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof clearSpace_args))
+        return false;
+      clearSpace_args that = (clearSpace_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(clearSpace_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new ClearSpaceReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("clearSpace_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class clearSpace_result implements TBase, java.io.Serializable, Cloneable, Comparable<clearSpace_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("clearSpace_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ClearSpaceResp success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ClearSpaceResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(clearSpace_result.class, metaDataMap);
+    }
+
+    public clearSpace_result() {
+    }
+
+    public clearSpace_result(
+        ClearSpaceResp success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public clearSpace_result(clearSpace_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public clearSpace_result deepCopy() {
+      return new clearSpace_result(this);
+    }
+
+    public ClearSpaceResp getSuccess() {
+      return this.success;
+    }
+
+    public clearSpace_result setSuccess(ClearSpaceResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ClearSpaceResp)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof clearSpace_result))
+        return false;
+      clearSpace_result that = (clearSpace_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(clearSpace_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new ClearSpaceResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("clearSpace_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

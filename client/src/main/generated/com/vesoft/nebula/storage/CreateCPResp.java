@@ -26,12 +26,16 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Comparable<CreateCPResp> {
   private static final TStruct STRUCT_DESC = new TStruct("CreateCPResp");
-  private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
+  private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField INFO_FIELD_DESC = new TField("info", TType.LIST, (short)2);
 
-  public ResponseCommon result;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode code;
   public List<com.vesoft.nebula.CheckpointInfo> info;
-  public static final int RESULT = 1;
+  public static final int CODE = 1;
   public static final int INFO = 2;
 
   // isset id assignments
@@ -40,8 +44,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
-        new StructMetaData(TType.STRUCT, ResponseCommon.class)));
+    tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(INFO, new FieldMetaData("info", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.CheckpointInfo.class))));
@@ -56,28 +60,22 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
   }
 
   public CreateCPResp(
-      ResponseCommon result) {
-    this();
-    this.result = result;
-  }
-
-  public CreateCPResp(
-      ResponseCommon result,
+      com.vesoft.nebula.ErrorCode code,
       List<com.vesoft.nebula.CheckpointInfo> info) {
     this();
-    this.result = result;
+    this.code = code;
     this.info = info;
   }
 
   public static class Builder {
-    private ResponseCommon result;
+    private com.vesoft.nebula.ErrorCode code;
     private List<com.vesoft.nebula.CheckpointInfo> info;
 
     public Builder() {
     }
 
-    public Builder setResult(final ResponseCommon result) {
-      this.result = result;
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
+      this.code = code;
       return this;
     }
 
@@ -88,7 +86,7 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
     public CreateCPResp build() {
       CreateCPResp result = new CreateCPResp();
-      result.setResult(this.result);
+      result.setCode(this.code);
       result.setInfo(this.info);
       return result;
     }
@@ -102,8 +100,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
    * Performs a deep copy on <i>other</i>.
    */
   public CreateCPResp(CreateCPResp other) {
-    if (other.isSetResult()) {
-      this.result = TBaseHelper.deepCopy(other.result);
+    if (other.isSetCode()) {
+      this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetInfo()) {
       this.info = TBaseHelper.deepCopy(other.info);
@@ -114,27 +112,35 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     return new CreateCPResp(this);
   }
 
-  public ResponseCommon getResult() {
-    return this.result;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode getCode() {
+    return this.code;
   }
 
-  public CreateCPResp setResult(ResponseCommon result) {
-    this.result = result;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public CreateCPResp setCode(com.vesoft.nebula.ErrorCode code) {
+    this.code = code;
     return this;
   }
 
-  public void unsetResult() {
-    this.result = null;
+  public void unsetCode() {
+    this.code = null;
   }
 
-  // Returns true if field result is set (has been assigned a value) and false otherwise
-  public boolean isSetResult() {
-    return this.result != null;
+  // Returns true if field code is set (has been assigned a value) and false otherwise
+  public boolean isSetCode() {
+    return this.code != null;
   }
 
-  public void setResultIsSet(boolean __value) {
+  public void setCodeIsSet(boolean __value) {
     if (!__value) {
-      this.result = null;
+      this.code = null;
     }
   }
 
@@ -165,11 +171,11 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case RESULT:
+    case CODE:
       if (__value == null) {
-        unsetResult();
+        unsetCode();
       } else {
-        setResult((ResponseCommon)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -188,8 +194,8 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case RESULT:
-      return getResult();
+    case CODE:
+      return getCode();
 
     case INFO:
       return getInfo();
@@ -209,7 +215,7 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       return false;
     CreateCPResp that = (CreateCPResp)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetInfo(), that.isSetInfo(), this.info, that.info)) { return false; }
 
@@ -218,7 +224,7 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, info});
+    return Arrays.deepHashCode(new Object[] {code, info});
   }
 
   @Override
@@ -233,11 +239,11 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetResult()).compareTo(other.isSetResult());
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(result, other.result);
+    lastComparison = TBaseHelper.compareTo(code, other.code);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -263,10 +269,9 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
       }
       switch (__field.id)
       {
-        case RESULT:
-          if (__field.type == TType.STRUCT) {
-            this.result = new ResponseCommon();
-            this.result.read(iprot);
+        case CODE:
+          if (__field.type == TType.I32) {
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -274,16 +279,16 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
         case INFO:
           if (__field.type == TType.LIST) {
             {
-              TList _list289 = iprot.readListBegin();
-              this.info = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list289.size));
-              for (int _i290 = 0; 
-                   (_list289.size < 0) ? iprot.peekList() : (_i290 < _list289.size); 
-                   ++_i290)
+              TList _list281 = iprot.readListBegin();
+              this.info = new ArrayList<com.vesoft.nebula.CheckpointInfo>(Math.max(0, _list281.size));
+              for (int _i282 = 0; 
+                   (_list281.size < 0) ? iprot.peekList() : (_i282 < _list281.size); 
+                   ++_i282)
               {
-                com.vesoft.nebula.CheckpointInfo _elem291;
-                _elem291 = new com.vesoft.nebula.CheckpointInfo();
-                _elem291.read(iprot);
-                this.info.add(_elem291);
+                com.vesoft.nebula.CheckpointInfo _elem283;
+                _elem283 = new com.vesoft.nebula.CheckpointInfo();
+                _elem283.read(iprot);
+                this.info.add(_elem283);
               }
               iprot.readListEnd();
             }
@@ -308,17 +313,17 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.result != null) {
-      oprot.writeFieldBegin(RESULT_FIELD_DESC);
-      this.result.write(oprot);
+    if (this.code != null) {
+      oprot.writeFieldBegin(CODE_FIELD_DESC);
+      oprot.writeI32(this.code == null ? 0 : this.code.getValue());
       oprot.writeFieldEnd();
     }
     if (this.info != null) {
       oprot.writeFieldBegin(INFO_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.info.size()));
-        for (com.vesoft.nebula.CheckpointInfo _iter292 : this.info)        {
-          _iter292.write(oprot);
+        for (com.vesoft.nebula.CheckpointInfo _iter284 : this.info)        {
+          _iter284.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -345,13 +350,21 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("result");
+    sb.append("code");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getResult() == null) {
+    if (this.getCode() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
+      String code_name = this.getCode() == null ? "null" : this.getCode().name();
+      if (code_name != null) {
+        sb.append(code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getCode());
+      if (code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -372,9 +385,6 @@ public class CreateCPResp implements TBase, java.io.Serializable, Cloneable, Com
 
   public void validate() throws TException {
     // check for required fields
-    if (result == null) {
-      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
-    }
   }
 
 }

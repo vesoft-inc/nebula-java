@@ -27,33 +27,39 @@ import com.facebook.thrift.protocol.*;
 public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Comparable<ReportTaskReq> {
   private static final TStruct STRUCT_DESC = new TStruct("ReportTaskReq");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
-  private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)2);
-  private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)3);
-  private static final TField STATS_FIELD_DESC = new TField("stats", TType.STRUCT, (short)4);
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)2);
+  private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)3);
+  private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)4);
+  private static final TField STATS_FIELD_DESC = new TField("stats", TType.STRUCT, (short)5);
 
   /**
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
   public com.vesoft.nebula.ErrorCode code;
+  public int space_id;
   public int job_id;
   public int task_id;
   public StatsItem stats;
   public static final int CODE = 1;
-  public static final int JOB_ID = 2;
-  public static final int TASK_ID = 3;
-  public static final int STATS = 4;
+  public static final int SPACE_ID = 2;
+  public static final int JOB_ID = 3;
+  public static final int TASK_ID = 4;
+  public static final int STATS = 5;
 
   // isset id assignments
-  private static final int __JOB_ID_ISSET_ID = 0;
-  private static final int __TASK_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private static final int __JOB_ID_ISSET_ID = 1;
+  private static final int __TASK_ID_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
     tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(JOB_ID, new FieldMetaData("job_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
@@ -73,10 +79,13 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   public ReportTaskReq(
       com.vesoft.nebula.ErrorCode code,
+      int space_id,
       int job_id,
       int task_id) {
     this();
     this.code = code;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     this.job_id = job_id;
     setJob_idIsSet(true);
     this.task_id = task_id;
@@ -85,11 +94,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   public ReportTaskReq(
       com.vesoft.nebula.ErrorCode code,
+      int space_id,
       int job_id,
       int task_id,
       StatsItem stats) {
     this();
     this.code = code;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     this.job_id = job_id;
     setJob_idIsSet(true);
     this.task_id = task_id;
@@ -99,17 +111,24 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
+    private int space_id;
     private int job_id;
     private int task_id;
     private StatsItem stats;
 
-    BitSet __optional_isset = new BitSet(2);
+    BitSet __optional_isset = new BitSet(3);
 
     public Builder() {
     }
 
     public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
       this.code = code;
+      return this;
+    }
+
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
       return this;
     }
 
@@ -133,6 +152,9 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     public ReportTaskReq build() {
       ReportTaskReq result = new ReportTaskReq();
       result.setCode(this.code);
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
+      }
       if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
         result.setJob_id(this.job_id);
       }
@@ -157,6 +179,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
     this.job_id = TBaseHelper.deepCopy(other.job_id);
     this.task_id = TBaseHelper.deepCopy(other.task_id);
     if (other.isSetStats()) {
@@ -198,6 +221,29 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     if (!__value) {
       this.code = null;
     }
+  }
+
+  public int getSpace_id() {
+    return this.space_id;
+  }
+
+  public ReportTaskReq setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    return this;
+  }
+
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
+  }
+
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
+  }
+
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
   }
 
   public int getJob_id() {
@@ -280,6 +326,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
+    case SPACE_ID:
+      if (__value == null) {
+        unsetSpace_id();
+      } else {
+        setSpace_id((Integer)__value);
+      }
+      break;
+
     case JOB_ID:
       if (__value == null) {
         unsetJob_id();
@@ -314,6 +368,9 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
     case CODE:
       return getCode();
 
+    case SPACE_ID:
+      return new Integer(getSpace_id());
+
     case JOB_ID:
       return new Integer(getJob_id());
 
@@ -340,6 +397,8 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
+
     if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.task_id, that.task_id)) { return false; }
@@ -351,7 +410,7 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, job_id, task_id, stats});
+    return Arrays.deepHashCode(new Object[] {code, space_id, job_id, task_id, stats});
   }
 
   @Override
@@ -371,6 +430,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(code, other.code);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -415,6 +482,14 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
         case CODE:
           if (__field.type == TType.I32) {
             this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case SPACE_ID:
+          if (__field.type == TType.I32) {
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -465,6 +540,9 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeI32(this.code == null ? 0 : this.code.getValue());
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
+    oprot.writeFieldEnd();
     oprot.writeFieldBegin(JOB_ID_FIELD_DESC);
     oprot.writeI32(this.job_id);
     oprot.writeFieldEnd();
@@ -515,6 +593,13 @@ public class ReportTaskReq implements TBase, java.io.Serializable, Cloneable, Co
         sb.append(")");
       }
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("space_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);

@@ -37,6 +37,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
   private static final TField RANDOM_FIELD_DESC = new TField("random", TType.BOOL, (short)9);
   private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I64, (short)10);
   private static final TField FILTER_FIELD_DESC = new TField("filter", TType.STRING, (short)11);
+  private static final TField TAG_FILTER_FIELD_DESC = new TField("tag_filter", TType.STRING, (short)12);
 
   public List<Integer> edge_types;
   /**
@@ -53,6 +54,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
   public boolean random;
   public long limit;
   public byte[] filter;
+  public byte[] tag_filter;
   public static final int EDGE_TYPES = 1;
   public static final int EDGE_DIRECTION = 2;
   public static final int DEDUP = 3;
@@ -64,6 +66,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
   public static final int RANDOM = 9;
   public static final int LIMIT = 10;
   public static final int FILTER = 11;
+  public static final int TAG_FILTER = 12;
 
   // isset id assignments
   private static final int __DEDUP_ISSET_ID = 0;
@@ -103,6 +106,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(FILTER, new FieldMetaData("filter", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(TAG_FILTER, new FieldMetaData("tag_filter", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -139,7 +144,8 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       List<OrderBy> order_by,
       boolean random,
       long limit,
-      byte[] filter) {
+      byte[] filter,
+      byte[] tag_filter) {
     this();
     this.edge_types = edge_types;
     this.edge_direction = edge_direction;
@@ -155,6 +161,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     this.limit = limit;
     setLimitIsSet(true);
     this.filter = filter;
+    this.tag_filter = tag_filter;
   }
 
   public static class Builder {
@@ -169,6 +176,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     private boolean random;
     private long limit;
     private byte[] filter;
+    private byte[] tag_filter;
 
     BitSet __optional_isset = new BitSet(3);
 
@@ -233,6 +241,11 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return this;
     }
 
+    public Builder setTag_filter(final byte[] tag_filter) {
+      this.tag_filter = tag_filter;
+      return this;
+    }
+
     public TraverseSpec build() {
       TraverseSpec result = new TraverseSpec();
       result.setEdge_types(this.edge_types);
@@ -252,6 +265,7 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
         result.setLimit(this.limit);
       }
       result.setFilter(this.filter);
+      result.setTag_filter(this.tag_filter);
       return result;
     }
   }
@@ -292,6 +306,9 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     this.limit = TBaseHelper.deepCopy(other.limit);
     if (other.isSetFilter()) {
       this.filter = TBaseHelper.deepCopy(other.filter);
+    }
+    if (other.isSetTag_filter()) {
+      this.tag_filter = TBaseHelper.deepCopy(other.tag_filter);
     }
   }
 
@@ -568,6 +585,30 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     }
   }
 
+  public byte[] getTag_filter() {
+    return this.tag_filter;
+  }
+
+  public TraverseSpec setTag_filter(byte[] tag_filter) {
+    this.tag_filter = tag_filter;
+    return this;
+  }
+
+  public void unsetTag_filter() {
+    this.tag_filter = null;
+  }
+
+  // Returns true if field tag_filter is set (has been assigned a value) and false otherwise
+  public boolean isSetTag_filter() {
+    return this.tag_filter != null;
+  }
+
+  public void setTag_filterIsSet(boolean __value) {
+    if (!__value) {
+      this.tag_filter = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -659,6 +700,14 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       }
       break;
 
+    case TAG_FILTER:
+      if (__value == null) {
+        unsetTag_filter();
+      } else {
+        setTag_filter((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -699,6 +748,9 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
     case FILTER:
       return getFilter();
 
+    case TAG_FILTER:
+      return getTag_filter();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -736,12 +788,14 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
 
     if (!TBaseHelper.equalsSlow(this.isSetFilter(), that.isSetFilter(), this.filter, that.filter)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetTag_filter(), that.isSetTag_filter(), this.tag_filter, that.tag_filter)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {edge_types, edge_direction, dedup, stat_props, vertex_props, edge_props, expressions, order_by, random, limit, filter});
+    return Arrays.deepHashCode(new Object[] {edge_types, edge_direction, dedup, stat_props, vertex_props, edge_props, expressions, order_by, random, limit, filter, tag_filter});
   }
 
   @Override
@@ -841,6 +895,14 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(filter, other.filter);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTag_filter()).compareTo(other.isSetTag_filter());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(tag_filter, other.tag_filter);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -1015,6 +1077,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case TAG_FILTER:
+          if (__field.type == TType.STRING) {
+            this.tag_filter = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -1130,6 +1199,13 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
       if (isSetFilter()) {
         oprot.writeFieldBegin(FILTER_FIELD_DESC);
         oprot.writeBinary(this.filter);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.tag_filter != null) {
+      if (isSetTag_filter()) {
+        oprot.writeFieldBegin(TAG_FILTER_FIELD_DESC);
+        oprot.writeBinary(this.tag_filter);
         oprot.writeFieldEnd();
       }
     }
@@ -1295,6 +1371,25 @@ public class TraverseSpec implements TBase, java.io.Serializable, Cloneable, Com
             sb.append(Integer.toHexString(this.getFilter()[i]).length() > 1 ? Integer.toHexString(this.getFilter()[i]).substring(Integer.toHexString(this.getFilter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getFilter()[i]).toUpperCase());
           }
           if (this.getFilter().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetTag_filter())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("tag_filter");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getTag_filter() == null) {
+        sb.append("null");
+      } else {
+          int __tag_filter_size = Math.min(this.getTag_filter().length, 128);
+          for (int i = 0; i < __tag_filter_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getTag_filter()[i]).length() > 1 ? Integer.toHexString(this.getTag_filter()[i]).substring(Integer.toHexString(this.getTag_filter()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getTag_filter()[i]).toUpperCase());
+          }
+          if (this.getTag_filter().length > 128) sb.append(" ...");
       }
       first = false;
     }

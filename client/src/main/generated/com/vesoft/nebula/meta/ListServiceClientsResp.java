@@ -351,30 +351,30 @@ public class ListServiceClientsResp implements TBase, java.io.Serializable, Clon
         case CLIENTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map298 = iprot.readMapBegin();
-              this.clients = new HashMap<ExternalServiceType,List<ServiceClient>>(Math.max(0, 2*_map298.size));
-              for (int _i299 = 0; 
-                   (_map298.size < 0) ? iprot.peekMap() : (_i299 < _map298.size); 
-                   ++_i299)
+              TMap _map303 = iprot.readMapBegin();
+              this.clients = new HashMap<ExternalServiceType,List<ServiceClient>>(Math.max(0, 2*_map303.size));
+              for (int _i304 = 0; 
+                   (_map303.size < 0) ? iprot.peekMap() : (_i304 < _map303.size); 
+                   ++_i304)
               {
-                ExternalServiceType _key300;
-                List<ServiceClient> _val301;
-                _key300 = ExternalServiceType.findByValue(iprot.readI32());
+                ExternalServiceType _key305;
+                List<ServiceClient> _val306;
+                _key305 = ExternalServiceType.findByValue(iprot.readI32());
                 {
-                  TList _list302 = iprot.readListBegin();
-                  _val301 = new ArrayList<ServiceClient>(Math.max(0, _list302.size));
-                  for (int _i303 = 0; 
-                       (_list302.size < 0) ? iprot.peekList() : (_i303 < _list302.size); 
-                       ++_i303)
+                  TList _list307 = iprot.readListBegin();
+                  _val306 = new ArrayList<ServiceClient>(Math.max(0, _list307.size));
+                  for (int _i308 = 0; 
+                       (_list307.size < 0) ? iprot.peekList() : (_i308 < _list307.size); 
+                       ++_i308)
                   {
-                    ServiceClient _elem304;
-                    _elem304 = new ServiceClient();
-                    _elem304.read(iprot);
-                    _val301.add(_elem304);
+                    ServiceClient _elem309;
+                    _elem309 = new ServiceClient();
+                    _elem309.read(iprot);
+                    _val306.add(_elem309);
                   }
                   iprot.readListEnd();
                 }
-                this.clients.put(_key300, _val301);
+                this.clients.put(_key305, _val306);
               }
               iprot.readMapEnd();
             }
@@ -413,12 +413,12 @@ public class ListServiceClientsResp implements TBase, java.io.Serializable, Clon
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.clients.size()));
-        for (Map.Entry<ExternalServiceType, List<ServiceClient>> _iter305 : this.clients.entrySet())        {
-          oprot.writeI32(_iter305.getKey() == null ? 0 : _iter305.getKey().getValue());
+        for (Map.Entry<ExternalServiceType, List<ServiceClient>> _iter310 : this.clients.entrySet())        {
+          oprot.writeI32(_iter310.getKey() == null ? 0 : _iter310.getKey().getValue());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter305.getValue().size()));
-            for (ServiceClient _iter306 : _iter305.getValue())            {
-              _iter306.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter310.getValue().size()));
+            for (ServiceClient _iter311 : _iter310.getValue())            {
+              _iter311.write(oprot);
             }
             oprot.writeListEnd();
           }

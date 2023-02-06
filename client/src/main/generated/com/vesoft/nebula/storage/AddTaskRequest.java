@@ -24,40 +24,36 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneable, Comparable<AddAdminTaskRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("AddAdminTaskRequest");
-  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)1);
+public class AddTaskRequest implements TBase, java.io.Serializable, Cloneable, Comparable<AddTaskRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("AddTaskRequest");
+  private static final TField JOB_TYPE_FIELD_DESC = new TField("job_type", TType.I32, (short)1);
   private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)2);
   private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)3);
   private static final TField PARA_FIELD_DESC = new TField("para", TType.STRUCT, (short)4);
-  private static final TField CONCURRENCY_FIELD_DESC = new TField("concurrency", TType.I32, (short)5);
 
   /**
    * 
-   * @see com.vesoft.nebula.meta.AdminCmd
+   * @see com.vesoft.nebula.meta.JobType
    */
-  public com.vesoft.nebula.meta.AdminCmd cmd;
+  public com.vesoft.nebula.meta.JobType job_type;
   public int job_id;
   public int task_id;
   public TaskPara para;
-  public int concurrency;
-  public static final int CMD = 1;
+  public static final int JOB_TYPE = 1;
   public static final int JOB_ID = 2;
   public static final int TASK_ID = 3;
   public static final int PARA = 4;
-  public static final int CONCURRENCY = 5;
 
   // isset id assignments
   private static final int __JOB_ID_ISSET_ID = 0;
   private static final int __TASK_ID_ISSET_ID = 1;
-  private static final int __CONCURRENCY_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(CMD, new FieldMetaData("cmd", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(JOB_TYPE, new FieldMetaData("job_type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(JOB_ID, new FieldMetaData("job_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
@@ -65,63 +61,43 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARA, new FieldMetaData("para", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, TaskPara.class)));
-    tmpMetaDataMap.put(CONCURRENCY, new FieldMetaData("concurrency", TFieldRequirementType.OPTIONAL, 
-        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(AddAdminTaskRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(AddTaskRequest.class, metaDataMap);
   }
 
-  public AddAdminTaskRequest() {
+  public AddTaskRequest() {
   }
 
-  public AddAdminTaskRequest(
-      com.vesoft.nebula.meta.AdminCmd cmd,
+  public AddTaskRequest(
+      com.vesoft.nebula.meta.JobType job_type,
       int job_id,
       int task_id,
       TaskPara para) {
     this();
-    this.cmd = cmd;
+    this.job_type = job_type;
     this.job_id = job_id;
     setJob_idIsSet(true);
     this.task_id = task_id;
     setTask_idIsSet(true);
     this.para = para;
-  }
-
-  public AddAdminTaskRequest(
-      com.vesoft.nebula.meta.AdminCmd cmd,
-      int job_id,
-      int task_id,
-      TaskPara para,
-      int concurrency) {
-    this();
-    this.cmd = cmd;
-    this.job_id = job_id;
-    setJob_idIsSet(true);
-    this.task_id = task_id;
-    setTask_idIsSet(true);
-    this.para = para;
-    this.concurrency = concurrency;
-    setConcurrencyIsSet(true);
   }
 
   public static class Builder {
-    private com.vesoft.nebula.meta.AdminCmd cmd;
+    private com.vesoft.nebula.meta.JobType job_type;
     private int job_id;
     private int task_id;
     private TaskPara para;
-    private int concurrency;
 
-    BitSet __optional_isset = new BitSet(3);
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
 
-    public Builder setCmd(final com.vesoft.nebula.meta.AdminCmd cmd) {
-      this.cmd = cmd;
+    public Builder setJob_type(final com.vesoft.nebula.meta.JobType job_type) {
+      this.job_type = job_type;
       return this;
     }
 
@@ -142,15 +118,9 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
-    public Builder setConcurrency(final int concurrency) {
-      this.concurrency = concurrency;
-      __optional_isset.set(__CONCURRENCY_ISSET_ID, true);
-      return this;
-    }
-
-    public AddAdminTaskRequest build() {
-      AddAdminTaskRequest result = new AddAdminTaskRequest();
-      result.setCmd(this.cmd);
+    public AddTaskRequest build() {
+      AddTaskRequest result = new AddTaskRequest();
+      result.setJob_type(this.job_type);
       if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
         result.setJob_id(this.job_id);
       }
@@ -158,9 +128,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
         result.setTask_id(this.task_id);
       }
       result.setPara(this.para);
-      if (__optional_isset.get(__CONCURRENCY_ISSET_ID)) {
-        result.setConcurrency(this.concurrency);
-      }
       return result;
     }
   }
@@ -172,53 +139,52 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public AddAdminTaskRequest(AddAdminTaskRequest other) {
+  public AddTaskRequest(AddTaskRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    if (other.isSetCmd()) {
-      this.cmd = TBaseHelper.deepCopy(other.cmd);
+    if (other.isSetJob_type()) {
+      this.job_type = TBaseHelper.deepCopy(other.job_type);
     }
     this.job_id = TBaseHelper.deepCopy(other.job_id);
     this.task_id = TBaseHelper.deepCopy(other.task_id);
     if (other.isSetPara()) {
       this.para = TBaseHelper.deepCopy(other.para);
     }
-    this.concurrency = TBaseHelper.deepCopy(other.concurrency);
   }
 
-  public AddAdminTaskRequest deepCopy() {
-    return new AddAdminTaskRequest(this);
-  }
-
-  /**
-   * 
-   * @see com.vesoft.nebula.meta.AdminCmd
-   */
-  public com.vesoft.nebula.meta.AdminCmd getCmd() {
-    return this.cmd;
+  public AddTaskRequest deepCopy() {
+    return new AddTaskRequest(this);
   }
 
   /**
    * 
-   * @see com.vesoft.nebula.meta.AdminCmd
+   * @see com.vesoft.nebula.meta.JobType
    */
-  public AddAdminTaskRequest setCmd(com.vesoft.nebula.meta.AdminCmd cmd) {
-    this.cmd = cmd;
+  public com.vesoft.nebula.meta.JobType getJob_type() {
+    return this.job_type;
+  }
+
+  /**
+   * 
+   * @see com.vesoft.nebula.meta.JobType
+   */
+  public AddTaskRequest setJob_type(com.vesoft.nebula.meta.JobType job_type) {
+    this.job_type = job_type;
     return this;
   }
 
-  public void unsetCmd() {
-    this.cmd = null;
+  public void unsetJob_type() {
+    this.job_type = null;
   }
 
-  // Returns true if field cmd is set (has been assigned a value) and false otherwise
-  public boolean isSetCmd() {
-    return this.cmd != null;
+  // Returns true if field job_type is set (has been assigned a value) and false otherwise
+  public boolean isSetJob_type() {
+    return this.job_type != null;
   }
 
-  public void setCmdIsSet(boolean __value) {
+  public void setJob_typeIsSet(boolean __value) {
     if (!__value) {
-      this.cmd = null;
+      this.job_type = null;
     }
   }
 
@@ -226,7 +192,7 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     return this.job_id;
   }
 
-  public AddAdminTaskRequest setJob_id(int job_id) {
+  public AddTaskRequest setJob_id(int job_id) {
     this.job_id = job_id;
     setJob_idIsSet(true);
     return this;
@@ -249,7 +215,7 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     return this.task_id;
   }
 
-  public AddAdminTaskRequest setTask_id(int task_id) {
+  public AddTaskRequest setTask_id(int task_id) {
     this.task_id = task_id;
     setTask_idIsSet(true);
     return this;
@@ -272,7 +238,7 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     return this.para;
   }
 
-  public AddAdminTaskRequest setPara(TaskPara para) {
+  public AddTaskRequest setPara(TaskPara para) {
     this.para = para;
     return this;
   }
@@ -292,36 +258,13 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  public int getConcurrency() {
-    return this.concurrency;
-  }
-
-  public AddAdminTaskRequest setConcurrency(int concurrency) {
-    this.concurrency = concurrency;
-    setConcurrencyIsSet(true);
-    return this;
-  }
-
-  public void unsetConcurrency() {
-    __isset_bit_vector.clear(__CONCURRENCY_ISSET_ID);
-  }
-
-  // Returns true if field concurrency is set (has been assigned a value) and false otherwise
-  public boolean isSetConcurrency() {
-    return __isset_bit_vector.get(__CONCURRENCY_ISSET_ID);
-  }
-
-  public void setConcurrencyIsSet(boolean __value) {
-    __isset_bit_vector.set(__CONCURRENCY_ISSET_ID, __value);
-  }
-
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case CMD:
+    case JOB_TYPE:
       if (__value == null) {
-        unsetCmd();
+        unsetJob_type();
       } else {
-        setCmd((com.vesoft.nebula.meta.AdminCmd)__value);
+        setJob_type((com.vesoft.nebula.meta.JobType)__value);
       }
       break;
 
@@ -349,14 +292,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
-    case CONCURRENCY:
-      if (__value == null) {
-        unsetConcurrency();
-      } else {
-        setConcurrency((Integer)__value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -364,8 +299,8 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case CMD:
-      return getCmd();
+    case JOB_TYPE:
+      return getJob_type();
 
     case JOB_ID:
       return new Integer(getJob_id());
@@ -375,9 +310,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
 
     case PARA:
       return getPara();
-
-    case CONCURRENCY:
-      return new Integer(getConcurrency());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -390,11 +322,11 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof AddAdminTaskRequest))
+    if (!(_that instanceof AddTaskRequest))
       return false;
-    AddAdminTaskRequest that = (AddAdminTaskRequest)_that;
+    AddTaskRequest that = (AddTaskRequest)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetCmd(), that.isSetCmd(), this.cmd, that.cmd)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetJob_type(), that.isSetJob_type(), this.job_type, that.job_type)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id)) { return false; }
 
@@ -402,18 +334,16 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
 
     if (!TBaseHelper.equalsNobinary(this.isSetPara(), that.isSetPara(), this.para, that.para)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetConcurrency(), that.isSetConcurrency(), this.concurrency, that.concurrency)) { return false; }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {cmd, job_id, task_id, para, concurrency});
+    return Arrays.deepHashCode(new Object[] {job_type, job_id, task_id, para});
   }
 
   @Override
-  public int compareTo(AddAdminTaskRequest other) {
+  public int compareTo(AddTaskRequest other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -424,11 +354,11 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetCmd()).compareTo(other.isSetCmd());
+    lastComparison = Boolean.valueOf(isSetJob_type()).compareTo(other.isSetJob_type());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(cmd, other.cmd);
+    lastComparison = TBaseHelper.compareTo(job_type, other.job_type);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -456,14 +386,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetConcurrency()).compareTo(other.isSetConcurrency());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(concurrency, other.concurrency);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
     return 0;
   }
 
@@ -478,9 +400,9 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       }
       switch (__field.id)
       {
-        case CMD:
+        case JOB_TYPE:
           if (__field.type == TType.I32) {
-            this.cmd = com.vesoft.nebula.meta.AdminCmd.findByValue(iprot.readI32());
+            this.job_type = com.vesoft.nebula.meta.JobType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -509,14 +431,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case CONCURRENCY:
-          if (__field.type == TType.I32) {
-            this.concurrency = iprot.readI32();
-            setConcurrencyIsSet(true);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -534,9 +448,9 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.cmd != null) {
-      oprot.writeFieldBegin(CMD_FIELD_DESC);
-      oprot.writeI32(this.cmd == null ? 0 : this.cmd.getValue());
+    if (this.job_type != null) {
+      oprot.writeFieldBegin(JOB_TYPE_FIELD_DESC);
+      oprot.writeI32(this.job_type == null ? 0 : this.job_type.getValue());
       oprot.writeFieldEnd();
     }
     oprot.writeFieldBegin(JOB_ID_FIELD_DESC);
@@ -548,11 +462,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     if (this.para != null) {
       oprot.writeFieldBegin(PARA_FIELD_DESC);
       this.para.write(oprot);
-      oprot.writeFieldEnd();
-    }
-    if (isSetConcurrency()) {
-      oprot.writeFieldBegin(CONCURRENCY_FIELD_DESC);
-      oprot.writeI32(this.concurrency);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -569,26 +478,26 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("AddAdminTaskRequest");
+    StringBuilder sb = new StringBuilder("AddTaskRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("cmd");
+    sb.append("job_type");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getCmd() == null) {
+    if (this.getJob_type() == null) {
       sb.append("null");
     } else {
-      String cmd_name = this.getCmd() == null ? "null" : this.getCmd().name();
-      if (cmd_name != null) {
-        sb.append(cmd_name);
+      String job_type_name = this.getJob_type() == null ? "null" : this.getJob_type().name();
+      if (job_type_name != null) {
+        sb.append(job_type_name);
         sb.append(" (");
       }
-      sb.append(this.getCmd());
-      if (cmd_name != null) {
+      sb.append(this.getJob_type());
+      if (job_type_name != null) {
         sb.append(")");
       }
     }
@@ -618,16 +527,6 @@ public class AddAdminTaskRequest implements TBase, java.io.Serializable, Cloneab
       sb.append(TBaseHelper.toString(this.getPara(), indent + 1, prettyPrint));
     }
     first = false;
-    if (isSetConcurrency())
-    {
-      if (!first) sb.append("," + newLine);
-      sb.append(indentStr);
-      sb.append("concurrency");
-      sb.append(space);
-      sb.append(":").append(space);
-      sb.append(TBaseHelper.toString(this.getConcurrency(), indent + 1, prettyPrint));
-      first = false;
-    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

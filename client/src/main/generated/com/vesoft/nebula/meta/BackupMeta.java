@@ -32,6 +32,9 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   private static final TField FULL_FIELD_DESC = new TField("full", TType.BOOL, (short)4);
   private static final TField ALL_SPACES_FIELD_DESC = new TField("all_spaces", TType.BOOL, (short)5);
   private static final TField CREATE_TIME_FIELD_DESC = new TField("create_time", TType.I64, (short)6);
+  private static final TField BASE_BACKUP_NAME_FIELD_DESC = new TField("base_backup_name", TType.STRING, (short)7);
+  private static final TField STORAGE_HOSTS_FIELD_DESC = new TField("storage_hosts", TType.LIST, (short)8);
+  private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)9);
 
   public Map<Integer,SpaceBackupInfo> space_backups;
   public List<byte[]> meta_files;
@@ -39,18 +42,25 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
   public boolean full;
   public boolean all_spaces;
   public long create_time;
+  public byte[] base_backup_name;
+  public List<com.vesoft.nebula.HostAddr> storage_hosts;
+  public long cluster_id;
   public static final int SPACE_BACKUPS = 1;
   public static final int META_FILES = 2;
   public static final int BACKUP_NAME = 3;
   public static final int FULL = 4;
   public static final int ALL_SPACES = 5;
   public static final int CREATE_TIME = 6;
+  public static final int BASE_BACKUP_NAME = 7;
+  public static final int STORAGE_HOSTS = 8;
+  public static final int CLUSTER_ID = 9;
 
   // isset id assignments
   private static final int __FULL_ISSET_ID = 0;
   private static final int __ALL_SPACES_ISSET_ID = 1;
   private static final int __CREATE_TIME_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __CLUSTER_ID_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -71,6 +81,13 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(CREATE_TIME, new FieldMetaData("create_time", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(BASE_BACKUP_NAME, new FieldMetaData("base_backup_name", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(STORAGE_HOSTS, new FieldMetaData("storage_hosts", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(CLUSTER_ID, new FieldMetaData("cluster_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -87,7 +104,10 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       byte[] backup_name,
       boolean full,
       boolean all_spaces,
-      long create_time) {
+      long create_time,
+      byte[] base_backup_name,
+      List<com.vesoft.nebula.HostAddr> storage_hosts,
+      long cluster_id) {
     this();
     this.space_backups = space_backups;
     this.meta_files = meta_files;
@@ -98,6 +118,10 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     setAll_spacesIsSet(true);
     this.create_time = create_time;
     setCreate_timeIsSet(true);
+    this.base_backup_name = base_backup_name;
+    this.storage_hosts = storage_hosts;
+    this.cluster_id = cluster_id;
+    setCluster_idIsSet(true);
   }
 
   public static class Builder {
@@ -107,8 +131,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     private boolean full;
     private boolean all_spaces;
     private long create_time;
+    private byte[] base_backup_name;
+    private List<com.vesoft.nebula.HostAddr> storage_hosts;
+    private long cluster_id;
 
-    BitSet __optional_isset = new BitSet(3);
+    BitSet __optional_isset = new BitSet(4);
 
     public Builder() {
     }
@@ -146,6 +173,22 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       return this;
     }
 
+    public Builder setBase_backup_name(final byte[] base_backup_name) {
+      this.base_backup_name = base_backup_name;
+      return this;
+    }
+
+    public Builder setStorage_hosts(final List<com.vesoft.nebula.HostAddr> storage_hosts) {
+      this.storage_hosts = storage_hosts;
+      return this;
+    }
+
+    public Builder setCluster_id(final long cluster_id) {
+      this.cluster_id = cluster_id;
+      __optional_isset.set(__CLUSTER_ID_ISSET_ID, true);
+      return this;
+    }
+
     public BackupMeta build() {
       BackupMeta result = new BackupMeta();
       result.setSpace_backups(this.space_backups);
@@ -159,6 +202,11 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       }
       if (__optional_isset.get(__CREATE_TIME_ISSET_ID)) {
         result.setCreate_time(this.create_time);
+      }
+      result.setBase_backup_name(this.base_backup_name);
+      result.setStorage_hosts(this.storage_hosts);
+      if (__optional_isset.get(__CLUSTER_ID_ISSET_ID)) {
+        result.setCluster_id(this.cluster_id);
       }
       return result;
     }
@@ -186,6 +234,13 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     this.full = TBaseHelper.deepCopy(other.full);
     this.all_spaces = TBaseHelper.deepCopy(other.all_spaces);
     this.create_time = TBaseHelper.deepCopy(other.create_time);
+    if (other.isSetBase_backup_name()) {
+      this.base_backup_name = TBaseHelper.deepCopy(other.base_backup_name);
+    }
+    if (other.isSetStorage_hosts()) {
+      this.storage_hosts = TBaseHelper.deepCopy(other.storage_hosts);
+    }
+    this.cluster_id = TBaseHelper.deepCopy(other.cluster_id);
   }
 
   public BackupMeta deepCopy() {
@@ -333,6 +388,77 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     __isset_bit_vector.set(__CREATE_TIME_ISSET_ID, __value);
   }
 
+  public byte[] getBase_backup_name() {
+    return this.base_backup_name;
+  }
+
+  public BackupMeta setBase_backup_name(byte[] base_backup_name) {
+    this.base_backup_name = base_backup_name;
+    return this;
+  }
+
+  public void unsetBase_backup_name() {
+    this.base_backup_name = null;
+  }
+
+  // Returns true if field base_backup_name is set (has been assigned a value) and false otherwise
+  public boolean isSetBase_backup_name() {
+    return this.base_backup_name != null;
+  }
+
+  public void setBase_backup_nameIsSet(boolean __value) {
+    if (!__value) {
+      this.base_backup_name = null;
+    }
+  }
+
+  public List<com.vesoft.nebula.HostAddr> getStorage_hosts() {
+    return this.storage_hosts;
+  }
+
+  public BackupMeta setStorage_hosts(List<com.vesoft.nebula.HostAddr> storage_hosts) {
+    this.storage_hosts = storage_hosts;
+    return this;
+  }
+
+  public void unsetStorage_hosts() {
+    this.storage_hosts = null;
+  }
+
+  // Returns true if field storage_hosts is set (has been assigned a value) and false otherwise
+  public boolean isSetStorage_hosts() {
+    return this.storage_hosts != null;
+  }
+
+  public void setStorage_hostsIsSet(boolean __value) {
+    if (!__value) {
+      this.storage_hosts = null;
+    }
+  }
+
+  public long getCluster_id() {
+    return this.cluster_id;
+  }
+
+  public BackupMeta setCluster_id(long cluster_id) {
+    this.cluster_id = cluster_id;
+    setCluster_idIsSet(true);
+    return this;
+  }
+
+  public void unsetCluster_id() {
+    __isset_bit_vector.clear(__CLUSTER_ID_ISSET_ID);
+  }
+
+  // Returns true if field cluster_id is set (has been assigned a value) and false otherwise
+  public boolean isSetCluster_id() {
+    return __isset_bit_vector.get(__CLUSTER_ID_ISSET_ID);
+  }
+
+  public void setCluster_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__CLUSTER_ID_ISSET_ID, __value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -384,6 +510,30 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       }
       break;
 
+    case BASE_BACKUP_NAME:
+      if (__value == null) {
+        unsetBase_backup_name();
+      } else {
+        setBase_backup_name((byte[])__value);
+      }
+      break;
+
+    case STORAGE_HOSTS:
+      if (__value == null) {
+        unsetStorage_hosts();
+      } else {
+        setStorage_hosts((List<com.vesoft.nebula.HostAddr>)__value);
+      }
+      break;
+
+    case CLUSTER_ID:
+      if (__value == null) {
+        unsetCluster_id();
+      } else {
+        setCluster_id((Long)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -408,6 +558,15 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
     case CREATE_TIME:
       return new Long(getCreate_time());
+
+    case BASE_BACKUP_NAME:
+      return getBase_backup_name();
+
+    case STORAGE_HOSTS:
+      return getStorage_hosts();
+
+    case CLUSTER_ID:
+      return new Long(getCluster_id());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -436,12 +595,18 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
 
     if (!TBaseHelper.equalsNobinary(this.create_time, that.create_time)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetBase_backup_name(), that.isSetBase_backup_name(), this.base_backup_name, that.base_backup_name)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetStorage_hosts(), that.isSetStorage_hosts(), this.storage_hosts, that.storage_hosts)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.cluster_id, that.cluster_id)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_backups, meta_files, backup_name, full, all_spaces, create_time});
+    return Arrays.deepHashCode(new Object[] {space_backups, meta_files, backup_name, full, all_spaces, create_time, base_backup_name, storage_hosts, cluster_id});
   }
 
   @Override
@@ -504,6 +669,30 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetBase_backup_name()).compareTo(other.isSetBase_backup_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(base_backup_name, other.base_backup_name);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetStorage_hosts()).compareTo(other.isSetStorage_hosts());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(storage_hosts, other.storage_hosts);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCluster_id()).compareTo(other.isSetCluster_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(cluster_id, other.cluster_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -521,18 +710,18 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case SPACE_BACKUPS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map273 = iprot.readMapBegin();
-              this.space_backups = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map273.size));
-              for (int _i274 = 0; 
-                   (_map273.size < 0) ? iprot.peekMap() : (_i274 < _map273.size); 
-                   ++_i274)
+              TMap _map261 = iprot.readMapBegin();
+              this.space_backups = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map261.size));
+              for (int _i262 = 0; 
+                   (_map261.size < 0) ? iprot.peekMap() : (_i262 < _map261.size); 
+                   ++_i262)
               {
-                int _key275;
-                SpaceBackupInfo _val276;
-                _key275 = iprot.readI32();
-                _val276 = new SpaceBackupInfo();
-                _val276.read(iprot);
-                this.space_backups.put(_key275, _val276);
+                int _key263;
+                SpaceBackupInfo _val264;
+                _key263 = iprot.readI32();
+                _val264 = new SpaceBackupInfo();
+                _val264.read(iprot);
+                this.space_backups.put(_key263, _val264);
               }
               iprot.readMapEnd();
             }
@@ -543,15 +732,15 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case META_FILES:
           if (__field.type == TType.LIST) {
             {
-              TList _list277 = iprot.readListBegin();
-              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list277.size));
-              for (int _i278 = 0; 
-                   (_list277.size < 0) ? iprot.peekList() : (_i278 < _list277.size); 
-                   ++_i278)
+              TList _list265 = iprot.readListBegin();
+              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list265.size));
+              for (int _i266 = 0; 
+                   (_list265.size < 0) ? iprot.peekList() : (_i266 < _list265.size); 
+                   ++_i266)
               {
-                byte[] _elem279;
-                _elem279 = iprot.readBinary();
-                this.meta_files.add(_elem279);
+                byte[] _elem267;
+                _elem267 = iprot.readBinary();
+                this.meta_files.add(_elem267);
               }
               iprot.readListEnd();
             }
@@ -590,6 +779,41 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case BASE_BACKUP_NAME:
+          if (__field.type == TType.STRING) {
+            this.base_backup_name = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case STORAGE_HOSTS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list268 = iprot.readListBegin();
+              this.storage_hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list268.size));
+              for (int _i269 = 0; 
+                   (_list268.size < 0) ? iprot.peekList() : (_i269 < _list268.size); 
+                   ++_i269)
+              {
+                com.vesoft.nebula.HostAddr _elem270;
+                _elem270 = new com.vesoft.nebula.HostAddr();
+                _elem270.read(iprot);
+                this.storage_hosts.add(_elem270);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case CLUSTER_ID:
+          if (__field.type == TType.I64) {
+            this.cluster_id = iprot.readI64();
+            setCluster_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -611,9 +835,9 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(SPACE_BACKUPS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.space_backups.size()));
-        for (Map.Entry<Integer, SpaceBackupInfo> _iter280 : this.space_backups.entrySet())        {
-          oprot.writeI32(_iter280.getKey());
-          _iter280.getValue().write(oprot);
+        for (Map.Entry<Integer, SpaceBackupInfo> _iter271 : this.space_backups.entrySet())        {
+          oprot.writeI32(_iter271.getKey());
+          _iter271.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -623,8 +847,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(META_FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.meta_files.size()));
-        for (byte[] _iter281 : this.meta_files)        {
-          oprot.writeBinary(_iter281);
+        for (byte[] _iter272 : this.meta_files)        {
+          oprot.writeBinary(_iter272);
         }
         oprot.writeListEnd();
       }
@@ -643,6 +867,25 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     oprot.writeFieldEnd();
     oprot.writeFieldBegin(CREATE_TIME_FIELD_DESC);
     oprot.writeI64(this.create_time);
+    oprot.writeFieldEnd();
+    if (this.base_backup_name != null) {
+      oprot.writeFieldBegin(BASE_BACKUP_NAME_FIELD_DESC);
+      oprot.writeBinary(this.base_backup_name);
+      oprot.writeFieldEnd();
+    }
+    if (this.storage_hosts != null) {
+      oprot.writeFieldBegin(STORAGE_HOSTS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRUCT, this.storage_hosts.size()));
+        for (com.vesoft.nebula.HostAddr _iter273 : this.storage_hosts)        {
+          _iter273.write(oprot);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
+    oprot.writeFieldBegin(CLUSTER_ID_FIELD_DESC);
+    oprot.writeI64(this.cluster_id);
     oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -721,6 +964,40 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getCreate_time(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("base_backup_name");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getBase_backup_name() == null) {
+      sb.append("null");
+    } else {
+        int __base_backup_name_size = Math.min(this.getBase_backup_name().length, 128);
+        for (int i = 0; i < __base_backup_name_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getBase_backup_name()[i]).length() > 1 ? Integer.toHexString(this.getBase_backup_name()[i]).substring(Integer.toHexString(this.getBase_backup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getBase_backup_name()[i]).toUpperCase());
+        }
+        if (this.getBase_backup_name().length > 128) sb.append(" ...");
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("storage_hosts");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getStorage_hosts() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getStorage_hosts(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("cluster_id");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.getCluster_id(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

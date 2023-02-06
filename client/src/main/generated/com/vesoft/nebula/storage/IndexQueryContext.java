@@ -305,16 +305,16 @@ public class IndexQueryContext implements TBase, java.io.Serializable, Cloneable
         case COLUMN_HINTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list169 = iprot.readListBegin();
-              this.column_hints = new ArrayList<IndexColumnHint>(Math.max(0, _list169.size));
-              for (int _i170 = 0; 
-                   (_list169.size < 0) ? iprot.peekList() : (_i170 < _list169.size); 
-                   ++_i170)
+              TList _list182 = iprot.readListBegin();
+              this.column_hints = new ArrayList<IndexColumnHint>(Math.max(0, _list182.size));
+              for (int _i183 = 0; 
+                   (_list182.size < 0) ? iprot.peekList() : (_i183 < _list182.size); 
+                   ++_i183)
               {
-                IndexColumnHint _elem171;
-                _elem171 = new IndexColumnHint();
-                _elem171.read(iprot);
-                this.column_hints.add(_elem171);
+                IndexColumnHint _elem184;
+                _elem184 = new IndexColumnHint();
+                _elem184.read(iprot);
+                this.column_hints.add(_elem184);
               }
               iprot.readListEnd();
             }
@@ -351,8 +351,8 @@ public class IndexQueryContext implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(COLUMN_HINTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.column_hints.size()));
-        for (IndexColumnHint _iter172 : this.column_hints)        {
-          _iter172.write(oprot);
+        for (IndexColumnHint _iter185 : this.column_hints)        {
+          _iter185.write(oprot);
         }
         oprot.writeListEnd();
       }

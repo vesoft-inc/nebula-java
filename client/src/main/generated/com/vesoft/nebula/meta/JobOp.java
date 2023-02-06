@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public enum AdminJobOp implements com.facebook.thrift.TEnum {
+public enum JobOp implements com.facebook.thrift.TEnum {
   ADD(1),
   SHOW_All(2),
   SHOW(3),
@@ -21,7 +21,7 @@ public enum AdminJobOp implements com.facebook.thrift.TEnum {
 
   private final int value;
 
-  private AdminJobOp(int value) {
+  private JobOp(int value) {
     this.value = value;
   }
 
@@ -36,7 +36,7 @@ public enum AdminJobOp implements com.facebook.thrift.TEnum {
    * Find a the enum type by its integer value, as defined in the Thrift IDL.
    * @return null if the value is not found.
    */
-  public static AdminJobOp findByValue(int value) { 
+  public static JobOp findByValue(int value) { 
     switch (value) {
       case 1:
         return ADD;

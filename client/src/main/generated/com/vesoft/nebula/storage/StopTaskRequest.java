@@ -24,8 +24,8 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class StopAdminTaskRequest implements TBase, java.io.Serializable, Cloneable, Comparable<StopAdminTaskRequest> {
-  private static final TStruct STRUCT_DESC = new TStruct("StopAdminTaskRequest");
+public class StopTaskRequest implements TBase, java.io.Serializable, Cloneable, Comparable<StopTaskRequest> {
+  private static final TStruct STRUCT_DESC = new TStruct("StopTaskRequest");
   private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)1);
   private static final TField TASK_ID_FIELD_DESC = new TField("task_id", TType.I32, (short)2);
 
@@ -51,13 +51,13 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(StopAdminTaskRequest.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(StopTaskRequest.class, metaDataMap);
   }
 
-  public StopAdminTaskRequest() {
+  public StopTaskRequest() {
   }
 
-  public StopAdminTaskRequest(
+  public StopTaskRequest(
       int job_id,
       int task_id) {
     this();
@@ -88,8 +88,8 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
       return this;
     }
 
-    public StopAdminTaskRequest build() {
-      StopAdminTaskRequest result = new StopAdminTaskRequest();
+    public StopTaskRequest build() {
+      StopTaskRequest result = new StopTaskRequest();
       if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
         result.setJob_id(this.job_id);
       }
@@ -107,22 +107,22 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public StopAdminTaskRequest(StopAdminTaskRequest other) {
+  public StopTaskRequest(StopTaskRequest other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.job_id = TBaseHelper.deepCopy(other.job_id);
     this.task_id = TBaseHelper.deepCopy(other.task_id);
   }
 
-  public StopAdminTaskRequest deepCopy() {
-    return new StopAdminTaskRequest(this);
+  public StopTaskRequest deepCopy() {
+    return new StopTaskRequest(this);
   }
 
   public int getJob_id() {
     return this.job_id;
   }
 
-  public StopAdminTaskRequest setJob_id(int job_id) {
+  public StopTaskRequest setJob_id(int job_id) {
     this.job_id = job_id;
     setJob_idIsSet(true);
     return this;
@@ -145,7 +145,7 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
     return this.task_id;
   }
 
-  public StopAdminTaskRequest setTask_id(int task_id) {
+  public StopTaskRequest setTask_id(int task_id) {
     this.task_id = task_id;
     setTask_idIsSet(true);
     return this;
@@ -206,9 +206,9 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof StopAdminTaskRequest))
+    if (!(_that instanceof StopTaskRequest))
       return false;
-    StopAdminTaskRequest that = (StopAdminTaskRequest)_that;
+    StopTaskRequest that = (StopTaskRequest)_that;
 
     if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id)) { return false; }
 
@@ -223,7 +223,7 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
   }
 
   @Override
-  public int compareTo(StopAdminTaskRequest other) {
+  public int compareTo(StopTaskRequest other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -317,7 +317,7 @@ public class StopAdminTaskRequest implements TBase, java.io.Serializable, Clonea
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("StopAdminTaskRequest");
+    StringBuilder sb = new StringBuilder("StopTaskRequest");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
