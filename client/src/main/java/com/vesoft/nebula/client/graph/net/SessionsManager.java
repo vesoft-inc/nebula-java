@@ -25,6 +25,7 @@ public class SessionsManager implements Serializable {
     private final CopyOnWriteArrayList<SessionWrapper> sessionList;
     private BitSet canUseBitSet;
     private Boolean isClose = false;
+    private Boolean isInited = false;
 
     public SessionsManager(SessionsManagerConfig config) {
         this.config = config;
@@ -45,17 +46,18 @@ public class SessionsManager implements Serializable {
     /**
      * getSessionWrapper: return a SessionWrapper from sessionManager,
      * the SessionWrapper couldn't use by multi-thread
+     *
      * @return SessionWrapper
      * @throws RuntimeException the exception when get SessionWrapper
      */
     public synchronized SessionWrapper getSessionWrapper() throws RuntimeException,
             ClientServerIncompatibleException {
         checkClose();
-        if (pool == null) {
+        if (!isInited) {
             init();
         }
         if (canUseBitSet.isEmpty()
-            && sessionList.size() >= config.getPoolConfig().getMaxConnSize()) {
+                && sessionList.size() >= config.getPoolConfig().getMaxConnSize()) {
             throw new RuntimeException("The SessionsManager does not have available sessions.");
         }
         if (!canUseBitSet.isEmpty()) {
@@ -70,14 +72,14 @@ public class SessionsManager implements Serializable {
         // create new session
         try {
             Session session = pool.getSession(
-                config.getUserName(), config.getPassword(), config.getReconnect());
+                    config.getUserName(), config.getPassword(), config.getReconnect());
             ResultSet resultSet = session.execute("USE " + config.getSpaceName());
             if (!resultSet.isSucceeded()) {
                 throw new RuntimeException(
-                    "Switch space `"
-                        + config.getSpaceName()
-                        + "' failed: "
-                        + resultSet.getErrorMessage());
+                        "Switch space `"
+                                + config.getSpaceName()
+                                + "' failed: "
+                                + resultSet.getErrorMessage());
             }
             SessionWrapper sessionWrapper = new SessionWrapper(session);
             sessionList.add(sessionWrapper);
@@ -90,6 +92,7 @@ public class SessionsManager implements Serializable {
     /**
      * returnSessionWrapper: return the SessionWrapper to the sessionManger,
      * the old SessionWrapper couldn't use again.
+     *
      * @param session The SessionWrapper
      */
     public synchronized void returnSessionWrapper(SessionWrapper session) {
@@ -129,6 +132,7 @@ public class SessionsManager implements Serializable {
         } catch (UnknownHostException e) {
             throw new RuntimeException("Init the pool failed: " + e.getMessage());
         }
+        isInited = true;
     }
 
     private void checkClose() {

@@ -327,17 +327,17 @@ public class RaftexService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler16) throws TException {
+    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler20) throws TException {
       checkReady();
-      askForVote_call method_call = new askForVote_call(req, resultHandler16, this, ___protocolFactory, ___transport);
+      askForVote_call method_call = new askForVote_call(req, resultHandler20, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class askForVote_call extends TAsyncMethodCall {
       private AskForVoteRequest req;
-      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler17, TAsyncClient client13, TProtocolFactory protocolFactory14, TNonblockingTransport transport15) throws TException {
-        super(client13, protocolFactory14, transport15, resultHandler17, false);
+      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler21, TAsyncClient client17, TProtocolFactory protocolFactory18, TNonblockingTransport transport19) throws TException {
+        super(client17, protocolFactory18, transport19, resultHandler21, false);
         this.req = req;
       }
 
@@ -359,17 +359,17 @@ public class RaftexService {
       }
     }
 
-    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler21) throws TException {
+    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler25) throws TException {
       checkReady();
-      appendLog_call method_call = new appendLog_call(req, resultHandler21, this, ___protocolFactory, ___transport);
+      appendLog_call method_call = new appendLog_call(req, resultHandler25, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class appendLog_call extends TAsyncMethodCall {
       private AppendLogRequest req;
-      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler22, TAsyncClient client18, TProtocolFactory protocolFactory19, TNonblockingTransport transport20) throws TException {
-        super(client18, protocolFactory19, transport20, resultHandler22, false);
+      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler26, TAsyncClient client22, TProtocolFactory protocolFactory23, TNonblockingTransport transport24) throws TException {
+        super(client22, protocolFactory23, transport24, resultHandler26, false);
         this.req = req;
       }
 
@@ -391,17 +391,17 @@ public class RaftexService {
       }
     }
 
-    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler26) throws TException {
+    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler30) throws TException {
       checkReady();
-      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler26, this, ___protocolFactory, ___transport);
+      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler30, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class sendSnapshot_call extends TAsyncMethodCall {
       private SendSnapshotRequest req;
-      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler27, TAsyncClient client23, TProtocolFactory protocolFactory24, TNonblockingTransport transport25) throws TException {
-        super(client23, protocolFactory24, transport25, resultHandler27, false);
+      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler31, TAsyncClient client27, TProtocolFactory protocolFactory28, TNonblockingTransport transport29) throws TException {
+        super(client27, protocolFactory28, transport29, resultHandler31, false);
         this.req = req;
       }
 
@@ -423,17 +423,17 @@ public class RaftexService {
       }
     }
 
-    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler31) throws TException {
+    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler35) throws TException {
       checkReady();
-      heartbeat_call method_call = new heartbeat_call(req, resultHandler31, this, ___protocolFactory, ___transport);
+      heartbeat_call method_call = new heartbeat_call(req, resultHandler35, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class heartbeat_call extends TAsyncMethodCall {
       private HeartbeatRequest req;
-      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler32, TAsyncClient client28, TProtocolFactory protocolFactory29, TNonblockingTransport transport30) throws TException {
-        super(client28, protocolFactory29, transport30, resultHandler32, false);
+      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler36, TAsyncClient client32, TProtocolFactory protocolFactory33, TNonblockingTransport transport34) throws TException {
+        super(client32, protocolFactory33, transport34, resultHandler36, false);
         this.req = req;
       }
 
@@ -455,17 +455,17 @@ public class RaftexService {
       }
     }
 
-    public void getState(GetStateRequest req, AsyncMethodCallback resultHandler36) throws TException {
+    public void getState(GetStateRequest req, AsyncMethodCallback resultHandler40) throws TException {
       checkReady();
-      getState_call method_call = new getState_call(req, resultHandler36, this, ___protocolFactory, ___transport);
+      getState_call method_call = new getState_call(req, resultHandler40, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getState_call extends TAsyncMethodCall {
       private GetStateRequest req;
-      public getState_call(GetStateRequest req, AsyncMethodCallback resultHandler37, TAsyncClient client33, TProtocolFactory protocolFactory34, TNonblockingTransport transport35) throws TException {
-        super(client33, protocolFactory34, transport35, resultHandler37, false);
+      public getState_call(GetStateRequest req, AsyncMethodCallback resultHandler41, TAsyncClient client37, TProtocolFactory protocolFactory38, TNonblockingTransport transport39) throws TException {
+        super(client37, protocolFactory38, transport39, resultHandler41, false);
         this.req = req;
       }
 

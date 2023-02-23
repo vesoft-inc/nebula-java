@@ -1,8 +1,9 @@
 # nebula-java
 
 ![](https://img.shields.io/badge/language-java-orange.svg)
-[![star this repo](http://githubbadges.com/star.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java)
-[![fork this repo](http://githubbadges.com/fork.svg?user=vesoft-inc&repo=nebula-java&style=default)](https://github.com/vesoft-inc/nebula-java/fork)
+[![LICENSE](https://img.shields.io/github/license/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/tag/vesoft-inc/nebula-java.svg?label=release)](https://github.com/vesoft-inc/nebula-java/releases)
+[![GitHub release date](https://img.shields.io/github/release-date/vesoft-inc/nebula-java.svg)](https://github.com/vesoft-inc/nebula-java/releases)
 [![codecov](https://codecov.io/gh/vesoft-inc/nebula-java/branch/master/graph/badge.svg?token=WQVAG6VMMQ)](https://codecov.io/gh/vesoft-inc/nebula-java)
 
 Nebula Java is a Java client for developers to connect their projects to Nebula Graph.
@@ -69,7 +70,7 @@ There are the version correspondence between client and Nebula:
 |    2.5.0       |    2.5.0,2.5.1      |
 |    2.6.0       |    2.6.0,2.6.1      |
 |    2.6.1       |    2.6.0,2.6.1      |
-|    3.0.0       |    3.0.x,3.1.x      |
+|    3.0.0       | 3.0.x,3.1.x,3.2.x   |
 |  3.0-SNAPSHOT  |       nightly       |
 
 ## Graph client example
@@ -87,4 +88,35 @@ Session session = pool.getSession("root", "nebula", false);
 session.execute("SHOW HOSTS;");
 session.release();
 pool.close();
+```
+
+## Graph SessionPool example
+To use SessionPool, you must config the space to connect for SessionPool. **And please notice that SessionPool
+does not support reconnect for broken connection.**
+```java
+List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
+String spaceName = "test";
+String user = "root";
+String password = "nebula";
+SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(addresses, spaceName, user, password);
+SessionPool sessionPool = new SessionPool(sessionPoolConfig);
+if (!sessionPool.init()) {
+   log.error("session pool init failed.");
+   return;
+}
+ResultSet resultSet;
+try {
+    resultSet = sessionPool.execute("match (v:player) return v limit 1;");
+    System.out.println(resultSet.toString());
+} catch (IOErrorException | ClientServerIncompatibleException | AuthFailedException | BindSpaceFailedException e) {
+    e.printStackTrace();
+    System.exit(1);
+} finally {
+    sessionPool.close();
+}
+
+
+
+
+
 ```

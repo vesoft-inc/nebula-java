@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SuppressWarnings({ "unused" })
-public enum AdminCmd implements com.facebook.thrift.TEnum {
+public enum JobType implements com.facebook.thrift.TEnum {
   COMPACT(0),
   FLUSH(1),
   REBUILD_TAG_INDEX(2),
@@ -28,7 +28,7 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
 
   private final int value;
 
-  private AdminCmd(int value) {
+  private JobType(int value) {
     this.value = value;
   }
 
@@ -43,7 +43,7 @@ public enum AdminCmd implements com.facebook.thrift.TEnum {
    * Find a the enum type by its integer value, as defined in the Thrift IDL.
    * @return null if the value is not found.
    */
-  public static AdminCmd findByValue(int value) { 
+  public static JobType findByValue(int value) { 
     switch (value) {
       case 0:
         return COMPACT;

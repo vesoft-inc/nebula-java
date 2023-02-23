@@ -17,7 +17,8 @@ public enum ListHostType implements com.facebook.thrift.TEnum {
   GRAPH(1),
   META(2),
   STORAGE(3),
-  AGENT(4);
+  AGENT(4),
+  STORAGE_LISTENER(5);
 
   private final int value;
 
@@ -48,6 +49,8 @@ public enum ListHostType implements com.facebook.thrift.TEnum {
         return STORAGE;
       case 4:
         return AGENT;
+      case 5:
+        return STORAGE_LISTENER;
       default:
         return null;
     }

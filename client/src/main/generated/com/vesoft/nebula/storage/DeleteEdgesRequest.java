@@ -309,30 +309,30 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
         case PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map131 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map131.size));
-              for (int _i132 = 0; 
-                   (_map131.size < 0) ? iprot.peekMap() : (_i132 < _map131.size); 
-                   ++_i132)
+              TMap _map144 = iprot.readMapBegin();
+              this.parts = new HashMap<Integer,List<EdgeKey>>(Math.max(0, 2*_map144.size));
+              for (int _i145 = 0; 
+                   (_map144.size < 0) ? iprot.peekMap() : (_i145 < _map144.size); 
+                   ++_i145)
               {
-                int _key133;
-                List<EdgeKey> _val134;
-                _key133 = iprot.readI32();
+                int _key146;
+                List<EdgeKey> _val147;
+                _key146 = iprot.readI32();
                 {
-                  TList _list135 = iprot.readListBegin();
-                  _val134 = new ArrayList<EdgeKey>(Math.max(0, _list135.size));
-                  for (int _i136 = 0; 
-                       (_list135.size < 0) ? iprot.peekList() : (_i136 < _list135.size); 
-                       ++_i136)
+                  TList _list148 = iprot.readListBegin();
+                  _val147 = new ArrayList<EdgeKey>(Math.max(0, _list148.size));
+                  for (int _i149 = 0; 
+                       (_list148.size < 0) ? iprot.peekList() : (_i149 < _list148.size); 
+                       ++_i149)
                   {
-                    EdgeKey _elem137;
-                    _elem137 = new EdgeKey();
-                    _elem137.read(iprot);
-                    _val134.add(_elem137);
+                    EdgeKey _elem150;
+                    _elem150 = new EdgeKey();
+                    _elem150.read(iprot);
+                    _val147.add(_elem150);
                   }
                   iprot.readListEnd();
                 }
-                this.parts.put(_key133, _val134);
+                this.parts.put(_key146, _val147);
               }
               iprot.readMapEnd();
             }
@@ -372,12 +372,12 @@ public class DeleteEdgesRequest implements TBase, java.io.Serializable, Cloneabl
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<EdgeKey>> _iter138 : this.parts.entrySet())        {
-          oprot.writeI32(_iter138.getKey());
+        for (Map.Entry<Integer, List<EdgeKey>> _iter151 : this.parts.entrySet())        {
+          oprot.writeI32(_iter151.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter138.getValue().size()));
-            for (EdgeKey _iter139 : _iter138.getValue())            {
-              _iter139.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter151.getValue().size()));
+            for (EdgeKey _iter152 : _iter151.getValue())            {
+              _iter152.write(oprot);
             }
             oprot.writeListEnd();
           }

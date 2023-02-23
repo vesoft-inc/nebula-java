@@ -7,6 +7,8 @@ package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
 import com.facebook.thrift.protocol.TCompactProtocol;
+import com.facebook.thrift.protocol.THeaderProtocol;
+import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
 import com.google.common.base.Charsets;
@@ -48,6 +50,7 @@ import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -138,17 +141,17 @@ public class MetaClient extends AbstractMetaClient {
                         SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
             }
             try {
-                transport = new TSocket(sslSocketFactory.createSocket(host, port), timeout,
-                        timeout);
+                transport = new THeaderTransport(
+                        new TSocket(sslSocketFactory.createSocket(host, port), timeout, timeout));
             } catch (IOException e) {
                 throw new TTransportException(IOErrorException.E_UNKNOWN, e);
             }
         } else {
-            transport = new TSocket(host, port, timeout, timeout);
+            transport = new THeaderTransport(new TSocket(host, port, timeout, timeout));
             transport.open();
         }
 
-        protocol = new TCompactProtocol(transport);
+        protocol = new THeaderProtocol(transport);
         client = new MetaService.Client(protocol);
 
         // check if client version matches server version
@@ -167,11 +170,14 @@ public class MetaClient extends AbstractMetaClient {
         }
     }
 
-    private void freshClient(HostAddr leader)
-            throws TTransportException {
+    private void freshClient(HostAddr leader) throws TTransportException {
         close();
         try {
-            getClient(leader.getHost(), leader.getPort());
+            if (leader.getHost() == null || "".equals(leader.getHost())) {
+                doConnect();
+            } else {
+                getClient(leader.getHost(), leader.getPort());
+            }
         } catch (ClientServerIncompatibleException e) {
             LOGGER.error(e.getMessage());
         }

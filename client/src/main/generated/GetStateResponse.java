@@ -32,6 +32,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
   private static final TField LAST_LOG_ID_FIELD_DESC = new TField("last_log_id", TType.I64, (short)6);
   private static final TField LAST_LOG_TERM_FIELD_DESC = new TField("last_log_term", TType.I64, (short)7);
   private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)8);
+  private static final TField PEERS_FIELD_DESC = new TField("peers", TType.LIST, (short)9);
 
   /**
    * 
@@ -53,6 +54,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
    * @see Status
    */
   public Status status;
+  public List<byte[]> peers;
   public static final int ERROR_CODE = 1;
   public static final int ROLE = 2;
   public static final int TERM = 3;
@@ -61,6 +63,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
   public static final int LAST_LOG_ID = 6;
   public static final int LAST_LOG_TERM = 7;
   public static final int STATUS = 8;
+  public static final int PEERS = 9;
 
   // isset id assignments
   private static final int __TERM_ISSET_ID = 0;
@@ -90,6 +93,9 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(STATUS, new FieldMetaData("status", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(PEERS, new FieldMetaData("peers", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -108,7 +114,8 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
       long committed_log_id,
       long last_log_id,
       long last_log_term,
-      Status status) {
+      Status status,
+      List<byte[]> peers) {
     this();
     this.error_code = error_code;
     this.role = role;
@@ -123,6 +130,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     this.last_log_term = last_log_term;
     setLast_log_termIsSet(true);
     this.status = status;
+    this.peers = peers;
   }
 
   public static class Builder {
@@ -134,6 +142,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     private long last_log_id;
     private long last_log_term;
     private Status status;
+    private List<byte[]> peers;
 
     BitSet __optional_isset = new BitSet(5);
 
@@ -185,6 +194,11 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
       return this;
     }
 
+    public Builder setPeers(final List<byte[]> peers) {
+      this.peers = peers;
+      return this;
+    }
+
     public GetStateResponse build() {
       GetStateResponse result = new GetStateResponse();
       result.setError_code(this.error_code);
@@ -205,6 +219,7 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
         result.setLast_log_term(this.last_log_term);
       }
       result.setStatus(this.status);
+      result.setPeers(this.peers);
       return result;
     }
   }
@@ -232,6 +247,9 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     this.last_log_term = TBaseHelper.deepCopy(other.last_log_term);
     if (other.isSetStatus()) {
       this.status = TBaseHelper.deepCopy(other.status);
+    }
+    if (other.isSetPeers()) {
+      this.peers = TBaseHelper.deepCopy(other.peers);
     }
   }
 
@@ -450,6 +468,31 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     }
   }
 
+  public List<byte[]> getPeers() {
+    return this.peers;
+  }
+
+  public GetStateResponse setPeers(List<byte[]> peers) {
+    this.peers = peers;
+    return this;
+  }
+
+  public void unsetPeers() {
+    this.peers = null;
+  }
+
+  // Returns true if field peers is set (has been assigned a value) and false otherwise
+  public boolean isSetPeers() {
+    return this.peers != null;
+  }
+
+  public void setPeersIsSet(boolean __value) {
+    if (!__value) {
+      this.peers = null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ERROR_CODE:
@@ -516,6 +559,14 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
       }
       break;
 
+    case PEERS:
+      if (__value == null) {
+        unsetPeers();
+      } else {
+        setPeers((List<byte[]>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -546,6 +597,9 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
 
     case STATUS:
       return getStatus();
+
+    case PEERS:
+      return getPeers();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -578,12 +632,14 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
 
     if (!TBaseHelper.equalsNobinary(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetPeers(), that.isSetPeers(), this.peers, that.peers)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {error_code, role, term, is_leader, committed_log_id, last_log_id, last_log_term, status});
+    return Arrays.deepHashCode(new Object[] {error_code, role, term, is_leader, committed_log_id, last_log_id, last_log_term, status, peers});
   }
 
   @Override
@@ -662,6 +718,14 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetPeers()).compareTo(other.isSetPeers());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(peers, other.peers);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -737,6 +801,25 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case PEERS:
+          if (__field.type == TType.LIST) {
+            {
+              TList _list8 = iprot.readListBegin();
+              this.peers = new ArrayList<byte[]>(Math.max(0, _list8.size));
+              for (int _i9 = 0; 
+                   (_list8.size < 0) ? iprot.peekList() : (_i9 < _list8.size); 
+                   ++_i9)
+              {
+                byte[] _elem10;
+                _elem10 = iprot.readBinary();
+                this.peers.add(_elem10);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -782,6 +865,17 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
     if (this.status != null) {
       oprot.writeFieldBegin(STATUS_FIELD_DESC);
       oprot.writeI32(this.status == null ? 0 : this.status.getValue());
+      oprot.writeFieldEnd();
+    }
+    if (this.peers != null) {
+      oprot.writeFieldBegin(PEERS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.peers.size()));
+        for (byte[] _iter11 : this.peers)        {
+          oprot.writeBinary(_iter11);
+        }
+        oprot.writeListEnd();
+      }
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -893,6 +987,17 @@ public class GetStateResponse implements TBase, java.io.Serializable, Cloneable,
       if (status_name != null) {
         sb.append(")");
       }
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("peers");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getPeers() == null) {
+      sb.append("null");
+    } else {
+      sb.append(TBaseHelper.toString(this.getPeers(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

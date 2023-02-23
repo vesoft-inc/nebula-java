@@ -41,8 +41,12 @@ public class NebulaPool implements Serializable {
         throws UnknownHostException {
         List<HostAddress> newAddrs = new ArrayList<>();
         for (HostAddress addr : addresses) {
-            String ip = InetAddress.getByName(addr.getHost()).getHostAddress();
-            newAddrs.add(new HostAddress(ip, addr.getPort()));
+            // get all host name
+            InetAddress[] inetAddresses = InetAddress.getAllByName(addr.getHost());
+            for (InetAddress inetAddress : inetAddresses) {
+                String ip = inetAddress.getHostAddress();
+                newAddrs.add(new HostAddress(ip, addr.getPort()));
+            }
         }
         return newAddrs;
     }
@@ -107,8 +111,8 @@ public class NebulaPool implements Serializable {
         objConfig.setMaxIdle(config.getMaxConnSize());
         objConfig.setMaxTotal(config.getMaxConnSize());
         objConfig.setTestOnBorrow(true);
-        objConfig.setTestOnCreate(true);
         objConfig.setTestOnReturn(true);
+        objConfig.setTestOnCreate(true);
         objConfig.setTestWhileIdle(true);
         objConfig.setTimeBetweenEvictionRunsMillis(config.getIntervalIdle() <= 0
             ? BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS
@@ -128,7 +132,9 @@ public class NebulaPool implements Serializable {
      * close the pool, all connections will be closed
      */
     public void close() {
-        checkClosed();
+        if (isClosed.get()) {
+            return;
+        }
         isClosed.set(true);
         this.loadBalancer.close();
         this.objectPool.close();

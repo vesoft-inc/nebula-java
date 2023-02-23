@@ -235,16 +235,16 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
         case CONTEXTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list173 = iprot.readListBegin();
-              this.contexts = new ArrayList<IndexQueryContext>(Math.max(0, _list173.size));
-              for (int _i174 = 0; 
-                   (_list173.size < 0) ? iprot.peekList() : (_i174 < _list173.size); 
-                   ++_i174)
+              TList _list186 = iprot.readListBegin();
+              this.contexts = new ArrayList<IndexQueryContext>(Math.max(0, _list186.size));
+              for (int _i187 = 0; 
+                   (_list186.size < 0) ? iprot.peekList() : (_i187 < _list186.size); 
+                   ++_i187)
               {
-                IndexQueryContext _elem175;
-                _elem175 = new IndexQueryContext();
-                _elem175.read(iprot);
-                this.contexts.add(_elem175);
+                IndexQueryContext _elem188;
+                _elem188 = new IndexQueryContext();
+                _elem188.read(iprot);
+                this.contexts.add(_elem188);
               }
               iprot.readListEnd();
             }
@@ -281,8 +281,8 @@ public class IndexSpec implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(CONTEXTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.contexts.size()));
-        for (IndexQueryContext _iter176 : this.contexts)        {
-          _iter176.write(oprot);
+        for (IndexQueryContext _iter189 : this.contexts)        {
+          _iter189.write(oprot);
         }
         oprot.writeListEnd();
       }

@@ -34,7 +34,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
 
   public int space_id;
   public List<byte[]> column_names;
-  public Map<Integer,List<com.vesoft.nebula.Row>> parts;
+  public Map<Integer,List<com.vesoft.nebula.Value>> parts;
   public TraverseSpec traverse_spec;
   public RequestCommon common;
   public static final int SPACE_ID = 1;
@@ -60,7 +60,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
             new ListMetaData(TType.LIST, 
-                new StructMetaData(TType.STRUCT, com.vesoft.nebula.Row.class)))));
+                new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class)))));
     tmpMetaDataMap.put(TRAVERSE_SPEC, new FieldMetaData("traverse_spec", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, TraverseSpec.class)));
     tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
@@ -78,7 +78,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
   public GetNeighborsRequest(
       int space_id,
       List<byte[]> column_names,
-      Map<Integer,List<com.vesoft.nebula.Row>> parts,
+      Map<Integer,List<com.vesoft.nebula.Value>> parts,
       TraverseSpec traverse_spec) {
     this();
     this.space_id = space_id;
@@ -91,7 +91,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
   public GetNeighborsRequest(
       int space_id,
       List<byte[]> column_names,
-      Map<Integer,List<com.vesoft.nebula.Row>> parts,
+      Map<Integer,List<com.vesoft.nebula.Value>> parts,
       TraverseSpec traverse_spec,
       RequestCommon common) {
     this();
@@ -106,7 +106,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
   public static class Builder {
     private int space_id;
     private List<byte[]> column_names;
-    private Map<Integer,List<com.vesoft.nebula.Row>> parts;
+    private Map<Integer,List<com.vesoft.nebula.Value>> parts;
     private TraverseSpec traverse_spec;
     private RequestCommon common;
 
@@ -126,7 +126,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
-    public Builder setParts(final Map<Integer,List<com.vesoft.nebula.Row>> parts) {
+    public Builder setParts(final Map<Integer,List<com.vesoft.nebula.Value>> parts) {
       this.parts = parts;
       return this;
     }
@@ -230,11 +230,11 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  public Map<Integer,List<com.vesoft.nebula.Row>> getParts() {
+  public Map<Integer,List<com.vesoft.nebula.Value>> getParts() {
     return this.parts;
   }
 
-  public GetNeighborsRequest setParts(Map<Integer,List<com.vesoft.nebula.Row>> parts) {
+  public GetNeighborsRequest setParts(Map<Integer,List<com.vesoft.nebula.Value>> parts) {
     this.parts = parts;
     return this;
   }
@@ -325,7 +325,7 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       if (__value == null) {
         unsetParts();
       } else {
-        setParts((Map<Integer,List<com.vesoft.nebula.Row>>)__value);
+        setParts((Map<Integer,List<com.vesoft.nebula.Value>>)__value);
       }
       break;
 
@@ -442,23 +442,23 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
           if (__field.type == TType.MAP) {
             {
               TMap _map44 = iprot.readMapBegin();
-              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Row>>(Math.max(0, 2*_map44.size));
+              this.parts = new HashMap<Integer,List<com.vesoft.nebula.Value>>(Math.max(0, 2*_map44.size));
               for (int _i45 = 0; 
                    (_map44.size < 0) ? iprot.peekMap() : (_i45 < _map44.size); 
                    ++_i45)
               {
                 int _key46;
-                List<com.vesoft.nebula.Row> _val47;
+                List<com.vesoft.nebula.Value> _val47;
                 _key46 = iprot.readI32();
                 {
                   TList _list48 = iprot.readListBegin();
-                  _val47 = new ArrayList<com.vesoft.nebula.Row>(Math.max(0, _list48.size));
+                  _val47 = new ArrayList<com.vesoft.nebula.Value>(Math.max(0, _list48.size));
                   for (int _i49 = 0; 
                        (_list48.size < 0) ? iprot.peekList() : (_i49 < _list48.size); 
                        ++_i49)
                   {
-                    com.vesoft.nebula.Row _elem50;
-                    _elem50 = new com.vesoft.nebula.Row();
+                    com.vesoft.nebula.Value _elem50;
+                    _elem50 = new com.vesoft.nebula.Value();
                     _elem50.read(iprot);
                     _val47.add(_elem50);
                   }
@@ -523,11 +523,11 @@ public class GetNeighborsRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.parts.size()));
-        for (Map.Entry<Integer, List<com.vesoft.nebula.Row>> _iter52 : this.parts.entrySet())        {
+        for (Map.Entry<Integer, List<com.vesoft.nebula.Value>> _iter52 : this.parts.entrySet())        {
           oprot.writeI32(_iter52.getKey());
           {
             oprot.writeListBegin(new TList(TType.STRUCT, _iter52.getValue().size()));
-            for (com.vesoft.nebula.Row _iter53 : _iter52.getValue())            {
+            for (com.vesoft.nebula.Value _iter53 : _iter52.getValue())            {
               _iter53.write(oprot);
             }
             oprot.writeListEnd();

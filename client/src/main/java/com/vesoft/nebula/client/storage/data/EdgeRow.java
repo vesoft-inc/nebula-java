@@ -6,9 +6,10 @@
 package com.vesoft.nebula.client.storage.data;
 
 import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import java.io.Serializable;
 import java.util.Map;
 
-public class EdgeRow {
+public class EdgeRow implements Serializable {
     private final ValueWrapper srcId;
     private final ValueWrapper dstId;
     private final long rank;

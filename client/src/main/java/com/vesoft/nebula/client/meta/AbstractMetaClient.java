@@ -5,24 +5,27 @@
 
 package com.vesoft.nebula.client.meta;
 
+import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.protocol.TProtocol;
+import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TTransport;
 import com.google.common.base.Preconditions;
 import com.google.common.net.InetAddresses;
 import com.google.common.net.InternetDomainName;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
-public class AbstractMetaClient {
+public class AbstractMetaClient implements Serializable {
     protected final List<HostAddress> addresses;
     protected final int connectionRetry;
     protected final int executionRetry;
     protected final int timeout;
 
-    protected TProtocol protocol;
-    protected TTransport transport;
+    protected THeaderProtocol protocol;
+    protected THeaderTransport transport;
 
     public AbstractMetaClient(List<HostAddress> addresses, int timeout,
                               int connectionRetry, int executionRetry) throws UnknownHostException {

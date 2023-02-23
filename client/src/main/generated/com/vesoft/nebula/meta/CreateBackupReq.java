@@ -27,11 +27,19 @@ import com.facebook.thrift.protocol.*;
 public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, Comparable<CreateBackupReq> {
   private static final TStruct STRUCT_DESC = new TStruct("CreateBackupReq");
   private static final TField SPACES_FIELD_DESC = new TField("spaces", TType.LIST, (short)1);
+  private static final TField BASE_BACKUP_NAME_FIELD_DESC = new TField("base_backup_name", TType.STRING, (short)2);
+  private static final TField CLUSTER_ID_FIELD_DESC = new TField("cluster_id", TType.I64, (short)3);
 
   public List<byte[]> spaces;
+  public byte[] base_backup_name;
+  public long cluster_id;
   public static final int SPACES = 1;
+  public static final int BASE_BACKUP_NAME = 2;
+  public static final int CLUSTER_ID = 3;
 
   // isset id assignments
+  private static final int __CLUSTER_ID_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -40,6 +48,10 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     tmpMetaDataMap.put(SPACES, new FieldMetaData("spaces", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(BASE_BACKUP_NAME, new FieldMetaData("base_backup_name", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(CLUSTER_ID, new FieldMetaData("cluster_id", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -51,13 +63,22 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
   }
 
   public CreateBackupReq(
-      List<byte[]> spaces) {
+      List<byte[]> spaces,
+      byte[] base_backup_name,
+      long cluster_id) {
     this();
     this.spaces = spaces;
+    this.base_backup_name = base_backup_name;
+    this.cluster_id = cluster_id;
+    setCluster_idIsSet(true);
   }
 
   public static class Builder {
     private List<byte[]> spaces;
+    private byte[] base_backup_name;
+    private long cluster_id;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -67,9 +88,24 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
+    public Builder setBase_backup_name(final byte[] base_backup_name) {
+      this.base_backup_name = base_backup_name;
+      return this;
+    }
+
+    public Builder setCluster_id(final long cluster_id) {
+      this.cluster_id = cluster_id;
+      __optional_isset.set(__CLUSTER_ID_ISSET_ID, true);
+      return this;
+    }
+
     public CreateBackupReq build() {
       CreateBackupReq result = new CreateBackupReq();
       result.setSpaces(this.spaces);
+      result.setBase_backup_name(this.base_backup_name);
+      if (__optional_isset.get(__CLUSTER_ID_ISSET_ID)) {
+        result.setCluster_id(this.cluster_id);
+      }
       return result;
     }
   }
@@ -82,9 +118,15 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
    * Performs a deep copy on <i>other</i>.
    */
   public CreateBackupReq(CreateBackupReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetSpaces()) {
       this.spaces = TBaseHelper.deepCopy(other.spaces);
     }
+    if (other.isSetBase_backup_name()) {
+      this.base_backup_name = TBaseHelper.deepCopy(other.base_backup_name);
+    }
+    this.cluster_id = TBaseHelper.deepCopy(other.cluster_id);
   }
 
   public CreateBackupReq deepCopy() {
@@ -115,6 +157,53 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
+  public byte[] getBase_backup_name() {
+    return this.base_backup_name;
+  }
+
+  public CreateBackupReq setBase_backup_name(byte[] base_backup_name) {
+    this.base_backup_name = base_backup_name;
+    return this;
+  }
+
+  public void unsetBase_backup_name() {
+    this.base_backup_name = null;
+  }
+
+  // Returns true if field base_backup_name is set (has been assigned a value) and false otherwise
+  public boolean isSetBase_backup_name() {
+    return this.base_backup_name != null;
+  }
+
+  public void setBase_backup_nameIsSet(boolean __value) {
+    if (!__value) {
+      this.base_backup_name = null;
+    }
+  }
+
+  public long getCluster_id() {
+    return this.cluster_id;
+  }
+
+  public CreateBackupReq setCluster_id(long cluster_id) {
+    this.cluster_id = cluster_id;
+    setCluster_idIsSet(true);
+    return this;
+  }
+
+  public void unsetCluster_id() {
+    __isset_bit_vector.clear(__CLUSTER_ID_ISSET_ID);
+  }
+
+  // Returns true if field cluster_id is set (has been assigned a value) and false otherwise
+  public boolean isSetCluster_id() {
+    return __isset_bit_vector.get(__CLUSTER_ID_ISSET_ID);
+  }
+
+  public void setCluster_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__CLUSTER_ID_ISSET_ID, __value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -123,6 +212,22 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
         unsetSpaces();
       } else {
         setSpaces((List<byte[]>)__value);
+      }
+      break;
+
+    case BASE_BACKUP_NAME:
+      if (__value == null) {
+        unsetBase_backup_name();
+      } else {
+        setBase_backup_name((byte[])__value);
+      }
+      break;
+
+    case CLUSTER_ID:
+      if (__value == null) {
+        unsetCluster_id();
+      } else {
+        setCluster_id((Long)__value);
       }
       break;
 
@@ -135,6 +240,12 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     switch (fieldID) {
     case SPACES:
       return getSpaces();
+
+    case BASE_BACKUP_NAME:
+      return getBase_backup_name();
+
+    case CLUSTER_ID:
+      return new Long(getCluster_id());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -153,12 +264,16 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
 
     if (!TBaseHelper.equalsSlow(this.isSetSpaces(), that.isSetSpaces(), this.spaces, that.spaces)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetBase_backup_name(), that.isSetBase_backup_name(), this.base_backup_name, that.base_backup_name)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetCluster_id(), that.isSetCluster_id(), this.cluster_id, that.cluster_id)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {spaces});
+    return Arrays.deepHashCode(new Object[] {spaces, base_backup_name, cluster_id});
   }
 
   @Override
@@ -181,6 +296,22 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetBase_backup_name()).compareTo(other.isSetBase_backup_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(base_backup_name, other.base_backup_name);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCluster_id()).compareTo(other.isSetCluster_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(cluster_id, other.cluster_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -198,18 +329,33 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
         case SPACES:
           if (__field.type == TType.LIST) {
             {
-              TList _list282 = iprot.readListBegin();
-              this.spaces = new ArrayList<byte[]>(Math.max(0, _list282.size));
-              for (int _i283 = 0; 
-                   (_list282.size < 0) ? iprot.peekList() : (_i283 < _list282.size); 
-                   ++_i283)
+              TList _list274 = iprot.readListBegin();
+              this.spaces = new ArrayList<byte[]>(Math.max(0, _list274.size));
+              for (int _i275 = 0; 
+                   (_list274.size < 0) ? iprot.peekList() : (_i275 < _list274.size); 
+                   ++_i275)
               {
-                byte[] _elem284;
-                _elem284 = iprot.readBinary();
-                this.spaces.add(_elem284);
+                byte[] _elem276;
+                _elem276 = iprot.readBinary();
+                this.spaces.add(_elem276);
               }
               iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case BASE_BACKUP_NAME:
+          if (__field.type == TType.STRING) {
+            this.base_backup_name = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case CLUSTER_ID:
+          if (__field.type == TType.I64) {
+            this.cluster_id = iprot.readI64();
+            setCluster_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -236,13 +382,25 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
         oprot.writeFieldBegin(SPACES_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.spaces.size()));
-          for (byte[] _iter285 : this.spaces)          {
-            oprot.writeBinary(_iter285);
+          for (byte[] _iter277 : this.spaces)          {
+            oprot.writeBinary(_iter277);
           }
           oprot.writeListEnd();
         }
         oprot.writeFieldEnd();
       }
+    }
+    if (this.base_backup_name != null) {
+      if (isSetBase_backup_name()) {
+        oprot.writeFieldBegin(BASE_BACKUP_NAME_FIELD_DESC);
+        oprot.writeBinary(this.base_backup_name);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (isSetCluster_id()) {
+      oprot.writeFieldBegin(CLUSTER_ID_FIELD_DESC);
+      oprot.writeI64(this.cluster_id);
+      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -275,6 +433,35 @@ public class CreateBackupReq implements TBase, java.io.Serializable, Cloneable, 
       } else {
         sb.append(TBaseHelper.toString(this.getSpaces(), indent + 1, prettyPrint));
       }
+      first = false;
+    }
+    if (isSetBase_backup_name())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("base_backup_name");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getBase_backup_name() == null) {
+        sb.append("null");
+      } else {
+          int __base_backup_name_size = Math.min(this.getBase_backup_name().length, 128);
+          for (int i = 0; i < __base_backup_name_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getBase_backup_name()[i]).length() > 1 ? Integer.toHexString(this.getBase_backup_name()[i]).substring(Integer.toHexString(this.getBase_backup_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getBase_backup_name()[i]).toUpperCase());
+          }
+          if (this.getBase_backup_name().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetCluster_id())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("cluster_id");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getCluster_id(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

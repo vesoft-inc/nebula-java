@@ -26,12 +26,16 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneable, Comparable<GetLeaderPartsResp> {
   private static final TStruct STRUCT_DESC = new TStruct("GetLeaderPartsResp");
-  private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
+  private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_PARTS_FIELD_DESC = new TField("leader_parts", TType.MAP, (short)2);
 
-  public ResponseCommon result;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode code;
   public Map<Integer,List<Integer>> leader_parts;
-  public static final int RESULT = 1;
+  public static final int CODE = 1;
   public static final int LEADER_PARTS = 2;
 
   // isset id assignments
@@ -40,8 +44,8 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
-        new StructMetaData(TType.STRUCT, ResponseCommon.class)));
+    tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER_PARTS, new FieldMetaData("leader_parts", TFieldRequirementType.DEFAULT, 
         new MapMetaData(TType.MAP, 
             new FieldValueMetaData(TType.I32), 
@@ -58,28 +62,22 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
   }
 
   public GetLeaderPartsResp(
-      ResponseCommon result) {
-    this();
-    this.result = result;
-  }
-
-  public GetLeaderPartsResp(
-      ResponseCommon result,
+      com.vesoft.nebula.ErrorCode code,
       Map<Integer,List<Integer>> leader_parts) {
     this();
-    this.result = result;
+    this.code = code;
     this.leader_parts = leader_parts;
   }
 
   public static class Builder {
-    private ResponseCommon result;
+    private com.vesoft.nebula.ErrorCode code;
     private Map<Integer,List<Integer>> leader_parts;
 
     public Builder() {
     }
 
-    public Builder setResult(final ResponseCommon result) {
-      this.result = result;
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
+      this.code = code;
       return this;
     }
 
@@ -90,7 +88,7 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
 
     public GetLeaderPartsResp build() {
       GetLeaderPartsResp result = new GetLeaderPartsResp();
-      result.setResult(this.result);
+      result.setCode(this.code);
       result.setLeader_parts(this.leader_parts);
       return result;
     }
@@ -104,8 +102,8 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
    * Performs a deep copy on <i>other</i>.
    */
   public GetLeaderPartsResp(GetLeaderPartsResp other) {
-    if (other.isSetResult()) {
-      this.result = TBaseHelper.deepCopy(other.result);
+    if (other.isSetCode()) {
+      this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader_parts()) {
       this.leader_parts = TBaseHelper.deepCopy(other.leader_parts);
@@ -116,27 +114,35 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     return new GetLeaderPartsResp(this);
   }
 
-  public ResponseCommon getResult() {
-    return this.result;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode getCode() {
+    return this.code;
   }
 
-  public GetLeaderPartsResp setResult(ResponseCommon result) {
-    this.result = result;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public GetLeaderPartsResp setCode(com.vesoft.nebula.ErrorCode code) {
+    this.code = code;
     return this;
   }
 
-  public void unsetResult() {
-    this.result = null;
+  public void unsetCode() {
+    this.code = null;
   }
 
-  // Returns true if field result is set (has been assigned a value) and false otherwise
-  public boolean isSetResult() {
-    return this.result != null;
+  // Returns true if field code is set (has been assigned a value) and false otherwise
+  public boolean isSetCode() {
+    return this.code != null;
   }
 
-  public void setResultIsSet(boolean __value) {
+  public void setCodeIsSet(boolean __value) {
     if (!__value) {
-      this.result = null;
+      this.code = null;
     }
   }
 
@@ -167,11 +173,11 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case RESULT:
+    case CODE:
       if (__value == null) {
-        unsetResult();
+        unsetCode();
       } else {
-        setResult((ResponseCommon)__value);
+        setCode((com.vesoft.nebula.ErrorCode)__value);
       }
       break;
 
@@ -190,8 +196,8 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case RESULT:
-      return getResult();
+    case CODE:
+      return getCode();
 
     case LEADER_PARTS:
       return getLeader_parts();
@@ -211,7 +217,7 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       return false;
     GetLeaderPartsResp that = (GetLeaderPartsResp)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.isSetResult(), that.isSetResult(), this.result, that.result)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader_parts(), that.isSetLeader_parts(), this.leader_parts, that.leader_parts)) { return false; }
 
@@ -220,7 +226,7 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, leader_parts});
+    return Arrays.deepHashCode(new Object[] {code, leader_parts});
   }
 
   @Override
@@ -235,11 +241,11 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetResult()).compareTo(other.isSetResult());
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(result, other.result);
+    lastComparison = TBaseHelper.compareTo(code, other.code);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -265,10 +271,9 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
       }
       switch (__field.id)
       {
-        case RESULT:
-          if (__field.type == TType.STRUCT) {
-            this.result = new ResponseCommon();
-            this.result.read(iprot);
+        case CODE:
+          if (__field.type == TType.I32) {
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -276,29 +281,29 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
         case LEADER_PARTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map272 = iprot.readMapBegin();
-              this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map272.size));
-              for (int _i273 = 0; 
-                   (_map272.size < 0) ? iprot.peekMap() : (_i273 < _map272.size); 
-                   ++_i273)
+              TMap _map293 = iprot.readMapBegin();
+              this.leader_parts = new HashMap<Integer,List<Integer>>(Math.max(0, 2*_map293.size));
+              for (int _i294 = 0; 
+                   (_map293.size < 0) ? iprot.peekMap() : (_i294 < _map293.size); 
+                   ++_i294)
               {
-                int _key274;
-                List<Integer> _val275;
-                _key274 = iprot.readI32();
+                int _key295;
+                List<Integer> _val296;
+                _key295 = iprot.readI32();
                 {
-                  TList _list276 = iprot.readListBegin();
-                  _val275 = new ArrayList<Integer>(Math.max(0, _list276.size));
-                  for (int _i277 = 0; 
-                       (_list276.size < 0) ? iprot.peekList() : (_i277 < _list276.size); 
-                       ++_i277)
+                  TList _list297 = iprot.readListBegin();
+                  _val296 = new ArrayList<Integer>(Math.max(0, _list297.size));
+                  for (int _i298 = 0; 
+                       (_list297.size < 0) ? iprot.peekList() : (_i298 < _list297.size); 
+                       ++_i298)
                   {
-                    int _elem278;
-                    _elem278 = iprot.readI32();
-                    _val275.add(_elem278);
+                    int _elem299;
+                    _elem299 = iprot.readI32();
+                    _val296.add(_elem299);
                   }
                   iprot.readListEnd();
                 }
-                this.leader_parts.put(_key274, _val275);
+                this.leader_parts.put(_key295, _val296);
               }
               iprot.readMapEnd();
             }
@@ -323,21 +328,21 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    if (this.result != null) {
-      oprot.writeFieldBegin(RESULT_FIELD_DESC);
-      this.result.write(oprot);
+    if (this.code != null) {
+      oprot.writeFieldBegin(CODE_FIELD_DESC);
+      oprot.writeI32(this.code == null ? 0 : this.code.getValue());
       oprot.writeFieldEnd();
     }
     if (this.leader_parts != null) {
       oprot.writeFieldBegin(LEADER_PARTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.leader_parts.size()));
-        for (Map.Entry<Integer, List<Integer>> _iter279 : this.leader_parts.entrySet())        {
-          oprot.writeI32(_iter279.getKey());
+        for (Map.Entry<Integer, List<Integer>> _iter300 : this.leader_parts.entrySet())        {
+          oprot.writeI32(_iter300.getKey());
           {
-            oprot.writeListBegin(new TList(TType.I32, _iter279.getValue().size()));
-            for (int _iter280 : _iter279.getValue())            {
-              oprot.writeI32(_iter280);
+            oprot.writeListBegin(new TList(TType.I32, _iter300.getValue().size()));
+            for (int _iter301 : _iter300.getValue())            {
+              oprot.writeI32(_iter301);
             }
             oprot.writeListEnd();
           }
@@ -367,13 +372,21 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("result");
+    sb.append("code");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getResult() == null) {
+    if (this.getCode() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getResult(), indent + 1, prettyPrint));
+      String code_name = this.getCode() == null ? "null" : this.getCode().name();
+      if (code_name != null) {
+        sb.append(code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getCode());
+      if (code_name != null) {
+        sb.append(")");
+      }
     }
     first = false;
     if (!first) sb.append("," + newLine);
@@ -394,9 +407,6 @@ public class GetLeaderPartsResp implements TBase, java.io.Serializable, Cloneabl
 
   public void validate() throws TException {
     // check for required fields
-    if (result == null) {
-      throw new TProtocolException(TProtocolException.MISSING_REQUIRED_FIELD, "Required field 'result' was not present! Struct: " + toString());
-    }
   }
 
 }

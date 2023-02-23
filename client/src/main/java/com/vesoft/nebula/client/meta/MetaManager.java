@@ -16,6 +16,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * MetaManager is a manager for meta info, such as spaces,tags and edges.
  */
-public class MetaManager implements MetaCache {
+public class MetaManager implements MetaCache, Serializable {
     private class SpaceInfo {
         private SpaceItem spaceItem = null;
         private Map<String, TagItem> tagItems = new HashMap<>();

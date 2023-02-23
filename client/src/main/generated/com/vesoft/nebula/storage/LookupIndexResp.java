@@ -28,11 +28,14 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("LookupIndexResp");
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.STRUCT, (short)1);
   private static final TField DATA_FIELD_DESC = new TField("data", TType.STRUCT, (short)2);
+  private static final TField STAT_DATA_FIELD_DESC = new TField("stat_data", TType.STRUCT, (short)3);
 
   public ResponseCommon result;
   public com.vesoft.nebula.DataSet data;
+  public com.vesoft.nebula.DataSet stat_data;
   public static final int RESULT = 1;
   public static final int DATA = 2;
+  public static final int STAT_DATA = 3;
 
   // isset id assignments
 
@@ -43,6 +46,8 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
     tmpMetaDataMap.put(RESULT, new FieldMetaData("result", TFieldRequirementType.REQUIRED, 
         new StructMetaData(TType.STRUCT, ResponseCommon.class)));
     tmpMetaDataMap.put(DATA, new FieldMetaData("data", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
+    tmpMetaDataMap.put(STAT_DATA, new FieldMetaData("stat_data", TFieldRequirementType.OPTIONAL, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.DataSet.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
@@ -62,15 +67,18 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
 
   public LookupIndexResp(
       ResponseCommon result,
-      com.vesoft.nebula.DataSet data) {
+      com.vesoft.nebula.DataSet data,
+      com.vesoft.nebula.DataSet stat_data) {
     this();
     this.result = result;
     this.data = data;
+    this.stat_data = stat_data;
   }
 
   public static class Builder {
     private ResponseCommon result;
     private com.vesoft.nebula.DataSet data;
+    private com.vesoft.nebula.DataSet stat_data;
 
     public Builder() {
     }
@@ -85,10 +93,16 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
       return this;
     }
 
+    public Builder setStat_data(final com.vesoft.nebula.DataSet stat_data) {
+      this.stat_data = stat_data;
+      return this;
+    }
+
     public LookupIndexResp build() {
       LookupIndexResp result = new LookupIndexResp();
       result.setResult(this.result);
       result.setData(this.data);
+      result.setStat_data(this.stat_data);
       return result;
     }
   }
@@ -106,6 +120,9 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
     }
     if (other.isSetData()) {
       this.data = TBaseHelper.deepCopy(other.data);
+    }
+    if (other.isSetStat_data()) {
+      this.stat_data = TBaseHelper.deepCopy(other.stat_data);
     }
   }
 
@@ -161,6 +178,30 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
+  public com.vesoft.nebula.DataSet getStat_data() {
+    return this.stat_data;
+  }
+
+  public LookupIndexResp setStat_data(com.vesoft.nebula.DataSet stat_data) {
+    this.stat_data = stat_data;
+    return this;
+  }
+
+  public void unsetStat_data() {
+    this.stat_data = null;
+  }
+
+  // Returns true if field stat_data is set (has been assigned a value) and false otherwise
+  public boolean isSetStat_data() {
+    return this.stat_data != null;
+  }
+
+  public void setStat_dataIsSet(boolean __value) {
+    if (!__value) {
+      this.stat_data = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case RESULT:
@@ -179,6 +220,14 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case STAT_DATA:
+      if (__value == null) {
+        unsetStat_data();
+      } else {
+        setStat_data((com.vesoft.nebula.DataSet)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -191,6 +240,9 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
 
     case DATA:
       return getData();
+
+    case STAT_DATA:
+      return getStat_data();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -211,12 +263,14 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
 
     if (!TBaseHelper.equalsNobinary(this.isSetData(), that.isSetData(), this.data, that.data)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetStat_data(), that.isSetStat_data(), this.stat_data, that.stat_data)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {result, data});
+    return Arrays.deepHashCode(new Object[] {result, data, stat_data});
   }
 
   public void read(TProtocol iprot) throws TException {
@@ -242,6 +296,14 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
           if (__field.type == TType.STRUCT) {
             this.data = new com.vesoft.nebula.DataSet();
             this.data.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case STAT_DATA:
+          if (__field.type == TType.STRUCT) {
+            this.stat_data = new com.vesoft.nebula.DataSet();
+            this.stat_data.read(iprot);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -272,6 +334,13 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
       if (isSetData()) {
         oprot.writeFieldBegin(DATA_FIELD_DESC);
         this.data.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.stat_data != null) {
+      if (isSetStat_data()) {
+        oprot.writeFieldBegin(STAT_DATA_FIELD_DESC);
+        this.stat_data.write(oprot);
         oprot.writeFieldEnd();
       }
     }
@@ -316,6 +385,20 @@ public class LookupIndexResp implements TBase, java.io.Serializable, Cloneable {
         sb.append("null");
       } else {
         sb.append(TBaseHelper.toString(this.getData(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetStat_data())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("stat_data");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getStat_data() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getStat_data(), indent + 1, prettyPrint));
       }
       first = false;
     }

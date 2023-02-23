@@ -26,19 +26,22 @@ import com.facebook.thrift.protocol.*;
 @SuppressWarnings({ "unused", "serial" })
 public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparable<JobDesc> {
   private static final TStruct STRUCT_DESC = new TStruct("JobDesc");
-  private static final TField ID_FIELD_DESC = new TField("id", TType.I32, (short)1);
-  private static final TField CMD_FIELD_DESC = new TField("cmd", TType.I32, (short)2);
-  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)3);
-  private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)4);
-  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)5);
-  private static final TField STOP_TIME_FIELD_DESC = new TField("stop_time", TType.I64, (short)6);
+  private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
+  private static final TField JOB_ID_FIELD_DESC = new TField("job_id", TType.I32, (short)2);
+  private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)3);
+  private static final TField PARAS_FIELD_DESC = new TField("paras", TType.LIST, (short)4);
+  private static final TField STATUS_FIELD_DESC = new TField("status", TType.I32, (short)5);
+  private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)6);
+  private static final TField STOP_TIME_FIELD_DESC = new TField("stop_time", TType.I64, (short)7);
+  private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)8);
 
-  public int id;
+  public int space_id;
+  public int job_id;
   /**
    * 
-   * @see AdminCmd
+   * @see JobType
    */
-  public AdminCmd cmd;
+  public JobType type;
   public List<String> paras;
   /**
    * 
@@ -47,26 +50,36 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
   public JobStatus status;
   public long start_time;
   public long stop_time;
-  public static final int ID = 1;
-  public static final int CMD = 2;
-  public static final int PARAS = 3;
-  public static final int STATUS = 4;
-  public static final int START_TIME = 5;
-  public static final int STOP_TIME = 6;
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode code;
+  public static final int SPACE_ID = 1;
+  public static final int JOB_ID = 2;
+  public static final int TYPE = 3;
+  public static final int PARAS = 4;
+  public static final int STATUS = 5;
+  public static final int START_TIME = 6;
+  public static final int STOP_TIME = 7;
+  public static final int CODE = 8;
 
   // isset id assignments
-  private static final int __ID_ISSET_ID = 0;
-  private static final int __START_TIME_ISSET_ID = 1;
-  private static final int __STOP_TIME_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __SPACE_ID_ISSET_ID = 0;
+  private static final int __JOB_ID_ISSET_ID = 1;
+  private static final int __START_TIME_ISSET_ID = 2;
+  private static final int __STOP_TIME_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
   static {
     Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
-    tmpMetaDataMap.put(ID, new FieldMetaData("id", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(SPACE_ID, new FieldMetaData("space_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(CMD, new FieldMetaData("cmd", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(JOB_ID, new FieldMetaData("job_id", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PARAS, new FieldMetaData("paras", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
@@ -77,6 +90,8 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(STOP_TIME, new FieldMetaData("stop_time", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(CODE, new FieldMetaData("code", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -88,45 +103,58 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
   }
 
   public JobDesc(
-      int id,
-      AdminCmd cmd,
+      int space_id,
+      int job_id,
+      JobType type,
       List<String> paras,
       JobStatus status,
       long start_time,
-      long stop_time) {
+      long stop_time,
+      com.vesoft.nebula.ErrorCode code) {
     this();
-    this.id = id;
-    setIdIsSet(true);
-    this.cmd = cmd;
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.job_id = job_id;
+    setJob_idIsSet(true);
+    this.type = type;
     this.paras = paras;
     this.status = status;
     this.start_time = start_time;
     setStart_timeIsSet(true);
     this.stop_time = stop_time;
     setStop_timeIsSet(true);
+    this.code = code;
   }
 
   public static class Builder {
-    private int id;
-    private AdminCmd cmd;
+    private int space_id;
+    private int job_id;
+    private JobType type;
     private List<String> paras;
     private JobStatus status;
     private long start_time;
     private long stop_time;
+    private com.vesoft.nebula.ErrorCode code;
 
-    BitSet __optional_isset = new BitSet(3);
+    BitSet __optional_isset = new BitSet(4);
 
     public Builder() {
     }
 
-    public Builder setId(final int id) {
-      this.id = id;
-      __optional_isset.set(__ID_ISSET_ID, true);
+    public Builder setSpace_id(final int space_id) {
+      this.space_id = space_id;
+      __optional_isset.set(__SPACE_ID_ISSET_ID, true);
       return this;
     }
 
-    public Builder setCmd(final AdminCmd cmd) {
-      this.cmd = cmd;
+    public Builder setJob_id(final int job_id) {
+      this.job_id = job_id;
+      __optional_isset.set(__JOB_ID_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setType(final JobType type) {
+      this.type = type;
       return this;
     }
 
@@ -152,12 +180,20 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       return this;
     }
 
+    public Builder setCode(final com.vesoft.nebula.ErrorCode code) {
+      this.code = code;
+      return this;
+    }
+
     public JobDesc build() {
       JobDesc result = new JobDesc();
-      if (__optional_isset.get(__ID_ISSET_ID)) {
-        result.setId(this.id);
+      if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
+        result.setSpace_id(this.space_id);
       }
-      result.setCmd(this.cmd);
+      if (__optional_isset.get(__JOB_ID_ISSET_ID)) {
+        result.setJob_id(this.job_id);
+      }
+      result.setType(this.type);
       result.setParas(this.paras);
       result.setStatus(this.status);
       if (__optional_isset.get(__START_TIME_ISSET_ID)) {
@@ -166,6 +202,7 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       if (__optional_isset.get(__STOP_TIME_ISSET_ID)) {
         result.setStop_time(this.stop_time);
       }
+      result.setCode(this.code);
       return result;
     }
   }
@@ -180,9 +217,10 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
   public JobDesc(JobDesc other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
-    this.id = TBaseHelper.deepCopy(other.id);
-    if (other.isSetCmd()) {
-      this.cmd = TBaseHelper.deepCopy(other.cmd);
+    this.space_id = TBaseHelper.deepCopy(other.space_id);
+    this.job_id = TBaseHelper.deepCopy(other.job_id);
+    if (other.isSetType()) {
+      this.type = TBaseHelper.deepCopy(other.type);
     }
     if (other.isSetParas()) {
       this.paras = TBaseHelper.deepCopy(other.paras);
@@ -192,64 +230,90 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     }
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.stop_time = TBaseHelper.deepCopy(other.stop_time);
+    if (other.isSetCode()) {
+      this.code = TBaseHelper.deepCopy(other.code);
+    }
   }
 
   public JobDesc deepCopy() {
     return new JobDesc(this);
   }
 
-  public int getId() {
-    return this.id;
+  public int getSpace_id() {
+    return this.space_id;
   }
 
-  public JobDesc setId(int id) {
-    this.id = id;
-    setIdIsSet(true);
+  public JobDesc setSpace_id(int space_id) {
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
     return this;
   }
 
-  public void unsetId() {
-    __isset_bit_vector.clear(__ID_ISSET_ID);
+  public void unsetSpace_id() {
+    __isset_bit_vector.clear(__SPACE_ID_ISSET_ID);
   }
 
-  // Returns true if field id is set (has been assigned a value) and false otherwise
-  public boolean isSetId() {
-    return __isset_bit_vector.get(__ID_ISSET_ID);
+  // Returns true if field space_id is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_id() {
+    return __isset_bit_vector.get(__SPACE_ID_ISSET_ID);
   }
 
-  public void setIdIsSet(boolean __value) {
-    __isset_bit_vector.set(__ID_ISSET_ID, __value);
+  public void setSpace_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__SPACE_ID_ISSET_ID, __value);
+  }
+
+  public int getJob_id() {
+    return this.job_id;
+  }
+
+  public JobDesc setJob_id(int job_id) {
+    this.job_id = job_id;
+    setJob_idIsSet(true);
+    return this;
+  }
+
+  public void unsetJob_id() {
+    __isset_bit_vector.clear(__JOB_ID_ISSET_ID);
+  }
+
+  // Returns true if field job_id is set (has been assigned a value) and false otherwise
+  public boolean isSetJob_id() {
+    return __isset_bit_vector.get(__JOB_ID_ISSET_ID);
+  }
+
+  public void setJob_idIsSet(boolean __value) {
+    __isset_bit_vector.set(__JOB_ID_ISSET_ID, __value);
   }
 
   /**
    * 
-   * @see AdminCmd
+   * @see JobType
    */
-  public AdminCmd getCmd() {
-    return this.cmd;
+  public JobType getType() {
+    return this.type;
   }
 
   /**
    * 
-   * @see AdminCmd
+   * @see JobType
    */
-  public JobDesc setCmd(AdminCmd cmd) {
-    this.cmd = cmd;
+  public JobDesc setType(JobType type) {
+    this.type = type;
     return this;
   }
 
-  public void unsetCmd() {
-    this.cmd = null;
+  public void unsetType() {
+    this.type = null;
   }
 
-  // Returns true if field cmd is set (has been assigned a value) and false otherwise
-  public boolean isSetCmd() {
-    return this.cmd != null;
+  // Returns true if field type is set (has been assigned a value) and false otherwise
+  public boolean isSetType() {
+    return this.type != null;
   }
 
-  public void setCmdIsSet(boolean __value) {
+  public void setTypeIsSet(boolean __value) {
     if (!__value) {
-      this.cmd = null;
+      this.type = null;
     }
   }
 
@@ -355,22 +419,62 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     __isset_bit_vector.set(__STOP_TIME_ISSET_ID, __value);
   }
 
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public com.vesoft.nebula.ErrorCode getCode() {
+    return this.code;
+  }
+
+  /**
+   * 
+   * @see com.vesoft.nebula.ErrorCode
+   */
+  public JobDesc setCode(com.vesoft.nebula.ErrorCode code) {
+    this.code = code;
+    return this;
+  }
+
+  public void unsetCode() {
+    this.code = null;
+  }
+
+  // Returns true if field code is set (has been assigned a value) and false otherwise
+  public boolean isSetCode() {
+    return this.code != null;
+  }
+
+  public void setCodeIsSet(boolean __value) {
+    if (!__value) {
+      this.code = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
-    case ID:
+    case SPACE_ID:
       if (__value == null) {
-        unsetId();
+        unsetSpace_id();
       } else {
-        setId((Integer)__value);
+        setSpace_id((Integer)__value);
       }
       break;
 
-    case CMD:
+    case JOB_ID:
       if (__value == null) {
-        unsetCmd();
+        unsetJob_id();
       } else {
-        setCmd((AdminCmd)__value);
+        setJob_id((Integer)__value);
+      }
+      break;
+
+    case TYPE:
+      if (__value == null) {
+        unsetType();
+      } else {
+        setType((JobType)__value);
       }
       break;
 
@@ -406,6 +510,14 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       }
       break;
 
+    case CODE:
+      if (__value == null) {
+        unsetCode();
+      } else {
+        setCode((com.vesoft.nebula.ErrorCode)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -413,11 +525,14 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
-    case ID:
-      return new Integer(getId());
+    case SPACE_ID:
+      return new Integer(getSpace_id());
 
-    case CMD:
-      return getCmd();
+    case JOB_ID:
+      return new Integer(getJob_id());
+
+    case TYPE:
+      return getType();
 
     case PARAS:
       return getParas();
@@ -430,6 +545,9 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
 
     case STOP_TIME:
       return new Long(getStop_time());
+
+    case CODE:
+      return getCode();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -446,9 +564,11 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       return false;
     JobDesc that = (JobDesc)_that;
 
-    if (!TBaseHelper.equalsNobinary(this.id, that.id)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetCmd(), that.isSetCmd(), this.cmd, that.cmd)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.job_id, that.job_id)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetParas(), that.isSetParas(), this.paras, that.paras)) { return false; }
 
@@ -458,12 +578,14 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
 
     if (!TBaseHelper.equalsNobinary(this.stop_time, that.stop_time)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {id, cmd, paras, status, start_time, stop_time});
+    return Arrays.deepHashCode(new Object[] {space_id, job_id, type, paras, status, start_time, stop_time, code});
   }
 
   @Override
@@ -478,19 +600,27 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     }
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+    lastComparison = Boolean.valueOf(isSetSpace_id()).compareTo(other.isSetSpace_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(id, other.id);
+    lastComparison = TBaseHelper.compareTo(space_id, other.space_id);
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetCmd()).compareTo(other.isSetCmd());
+    lastComparison = Boolean.valueOf(isSetJob_id()).compareTo(other.isSetJob_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(cmd, other.cmd);
+    lastComparison = TBaseHelper.compareTo(job_id, other.job_id);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetType()).compareTo(other.isSetType());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(type, other.type);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -526,6 +656,14 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetCode()).compareTo(other.isSetCode());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(code, other.code);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -540,17 +678,25 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
       }
       switch (__field.id)
       {
-        case ID:
+        case SPACE_ID:
           if (__field.type == TType.I32) {
-            this.id = iprot.readI32();
-            setIdIsSet(true);
+            this.space_id = iprot.readI32();
+            setSpace_idIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case CMD:
+        case JOB_ID:
           if (__field.type == TType.I32) {
-            this.cmd = AdminCmd.findByValue(iprot.readI32());
+            this.job_id = iprot.readI32();
+            setJob_idIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case TYPE:
+          if (__field.type == TType.I32) {
+            this.type = JobType.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -597,6 +743,13 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case CODE:
+          if (__field.type == TType.I32) {
+            this.code = com.vesoft.nebula.ErrorCode.findByValue(iprot.readI32());
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -614,12 +767,15 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
-    oprot.writeFieldBegin(ID_FIELD_DESC);
-    oprot.writeI32(this.id);
+    oprot.writeFieldBegin(SPACE_ID_FIELD_DESC);
+    oprot.writeI32(this.space_id);
     oprot.writeFieldEnd();
-    if (this.cmd != null) {
-      oprot.writeFieldBegin(CMD_FIELD_DESC);
-      oprot.writeI32(this.cmd == null ? 0 : this.cmd.getValue());
+    oprot.writeFieldBegin(JOB_ID_FIELD_DESC);
+    oprot.writeI32(this.job_id);
+    oprot.writeFieldEnd();
+    if (this.type != null) {
+      oprot.writeFieldBegin(TYPE_FIELD_DESC);
+      oprot.writeI32(this.type == null ? 0 : this.type.getValue());
       oprot.writeFieldEnd();
     }
     if (this.paras != null) {
@@ -644,6 +800,11 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     oprot.writeFieldBegin(STOP_TIME_FIELD_DESC);
     oprot.writeI64(this.stop_time);
     oprot.writeFieldEnd();
+    if (this.code != null) {
+      oprot.writeFieldBegin(CODE_FIELD_DESC);
+      oprot.writeI32(this.code == null ? 0 : this.code.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -665,26 +826,33 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     boolean first = true;
 
     sb.append(indentStr);
-    sb.append("id");
+    sb.append("space_id");
     sb.append(space);
     sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.getId(), indent + 1, prettyPrint));
+    sb.append(TBaseHelper.toString(this.getSpace_id(), indent + 1, prettyPrint));
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("cmd");
+    sb.append("job_id");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getCmd() == null) {
+    sb.append(TBaseHelper.toString(this.getJob_id(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("type");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getType() == null) {
       sb.append("null");
     } else {
-      String cmd_name = this.getCmd() == null ? "null" : this.getCmd().name();
-      if (cmd_name != null) {
-        sb.append(cmd_name);
+      String type_name = this.getType() == null ? "null" : this.getType().name();
+      if (type_name != null) {
+        sb.append(type_name);
         sb.append(" (");
       }
-      sb.append(this.getCmd());
-      if (cmd_name != null) {
+      sb.append(this.getType());
+      if (type_name != null) {
         sb.append(")");
       }
     }
@@ -732,6 +900,25 @@ public class JobDesc implements TBase, java.io.Serializable, Cloneable, Comparab
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getStop_time(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("code");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getCode() == null) {
+      sb.append("null");
+    } else {
+      String code_name = this.getCode() == null ? "null" : this.getCode().name();
+      if (code_name != null) {
+        sb.append(code_name);
+        sb.append(" (");
+      }
+      sb.append(this.getCode());
+      if (code_name != null) {
+        sb.append(")");
+      }
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

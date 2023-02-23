@@ -345,15 +345,15 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         case PARTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list216 = iprot.readListBegin();
-              this.parts = new ArrayList<Integer>(Math.max(0, _list216.size));
-              for (int _i217 = 0; 
-                   (_list216.size < 0) ? iprot.peekList() : (_i217 < _list216.size); 
-                   ++_i217)
+              TList _list233 = iprot.readListBegin();
+              this.parts = new ArrayList<Integer>(Math.max(0, _list233.size));
+              for (int _i234 = 0; 
+                   (_list233.size < 0) ? iprot.peekList() : (_i234 < _list233.size); 
+                   ++_i234)
               {
-                int _elem218;
-                _elem218 = iprot.readI32();
-                this.parts.add(_elem218);
+                int _elem235;
+                _elem235 = iprot.readI32();
+                this.parts.add(_elem235);
               }
               iprot.readListEnd();
             }
@@ -364,15 +364,15 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         case TASK_SPECIFIC_PARAS:
           if (__field.type == TType.LIST) {
             {
-              TList _list219 = iprot.readListBegin();
-              this.task_specific_paras = new ArrayList<byte[]>(Math.max(0, _list219.size));
-              for (int _i220 = 0; 
-                   (_list219.size < 0) ? iprot.peekList() : (_i220 < _list219.size); 
-                   ++_i220)
+              TList _list236 = iprot.readListBegin();
+              this.task_specific_paras = new ArrayList<byte[]>(Math.max(0, _list236.size));
+              for (int _i237 = 0; 
+                   (_list236.size < 0) ? iprot.peekList() : (_i237 < _list236.size); 
+                   ++_i237)
               {
-                byte[] _elem221;
-                _elem221 = iprot.readBinary();
-                this.task_specific_paras.add(_elem221);
+                byte[] _elem238;
+                _elem238 = iprot.readBinary();
+                this.task_specific_paras.add(_elem238);
               }
               iprot.readListEnd();
             }
@@ -405,8 +405,8 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         oprot.writeFieldBegin(PARTS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.I32, this.parts.size()));
-          for (int _iter222 : this.parts)          {
-            oprot.writeI32(_iter222);
+          for (int _iter239 : this.parts)          {
+            oprot.writeI32(_iter239);
           }
           oprot.writeListEnd();
         }
@@ -418,8 +418,8 @@ public class TaskPara implements TBase, java.io.Serializable, Cloneable, Compara
         oprot.writeFieldBegin(TASK_SPECIFIC_PARAS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.task_specific_paras.size()));
-          for (byte[] _iter223 : this.task_specific_paras)          {
-            oprot.writeBinary(_iter223);
+          for (byte[] _iter240 : this.task_specific_paras)          {
+            oprot.writeBinary(_iter240);
           }
           oprot.writeListEnd();
         }
