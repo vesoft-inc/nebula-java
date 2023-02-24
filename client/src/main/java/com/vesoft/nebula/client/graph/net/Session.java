@@ -5,23 +5,34 @@
 
 package com.vesoft.nebula.client.graph.net;
 
-import com.vesoft.nebula.Date;
+import static com.vesoft.nebula.util.ReflectUtil.isCurrentTypeOrParentType;
+
+import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.DateTime;
 import com.vesoft.nebula.Duration;
+import com.vesoft.nebula.Edge;
 import com.vesoft.nebula.Geography;
 import com.vesoft.nebula.NList;
 import com.vesoft.nebula.NMap;
+import com.vesoft.nebula.NSet;
 import com.vesoft.nebula.NullType;
+import com.vesoft.nebula.Path;
 import com.vesoft.nebula.Time;
 import com.vesoft.nebula.Value;
+import com.vesoft.nebula.Vertex;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.graph.ExecutionResponse;
+import com.vesoft.nebula.util.ReflectUtil;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -414,7 +425,6 @@ public class Session implements Serializable, AutoCloseable {
         return nmap;
     }
 
-
     /**
      * convert java value type to nebula thrift value type
      *
@@ -422,60 +432,118 @@ public class Session implements Serializable, AutoCloseable {
      * @return nebula value
      */
     public static Value value2Nvalue(Object value) throws UnsupportedOperationException {
-        Value nvalue = new Value();
-        if (value == null) {
-            nvalue.setNVal(NullType.__NULL__);
-        } else if (value instanceof Boolean) {
-            boolean bval = (Boolean) value;
-            nvalue.setBVal(bval);
-        } else if (value instanceof Integer) {
-            int ival = (Integer) value;
-            nvalue.setIVal(ival);
-        } else if (value instanceof Short) {
-            int ival = (Short) value;
-            nvalue.setIVal(ival);
-        } else if (value instanceof Byte) {
-            int ival = (Byte) value;
-            nvalue.setIVal(ival);
-        } else if (value instanceof Long) {
-            long ival = (Long) value;
-            nvalue.setIVal(ival);
-        } else if (value instanceof Float) {
-            float fval = (Float) value;
-            nvalue.setFVal(fval);
-        } else if (value instanceof Double) {
-            double dval = (Double) value;
-            nvalue.setFVal(dval);
-        } else if (value instanceof String) {
-            byte[] sval = ((String) value).getBytes();
-            nvalue.setSVal(sval);
-        } else if (value instanceof List) {
-            nvalue.setLVal(list2Nlist((List<Object>) value));
-        } else if (value instanceof Map) {
-            nvalue.setMVal(map2Nmap((Map<String, Object>) value));
-        } else if (value instanceof Value) {
-            return (Value) value;
-        } else if (value instanceof Date) {
-            nvalue.setDVal((Date) value);
-        } else if (value instanceof Time) {
-            nvalue.setTVal((Time) value);
-        } else if (value instanceof Duration) {
-            nvalue.setDuVal((Duration) value);
-        } else if (value instanceof DateTime) {
-            nvalue.setDtVal((DateTime) value);
-        } else if (value instanceof Geography) {
-            nvalue.setGgVal((Geography) value);
-        } else {
-            // unsupport other Value type, use this function carefully
-            throw new UnsupportedOperationException(
-                    "Only support convert boolean/float/int/string/map/list to nebula.Value but was"
-                            + value.getClass().getTypeName());
+        try {
+            if (value == null) {
+                Value nValue = new Value();
+                nValue.setNVal(NullType.__NULL__);
+                return nValue;
+            }
+            Class<?> type = value.getClass();
+            Setter<Object> setter = LEAF_TYPE_AND_SETTER.get(type);
+            if (setter != null) {
+                return setter.set(value);
+            }
+            for (Class<?> parentType : COMPLEX_TYPE_AND_SETTER.keySet()) {
+                if (isCurrentTypeOrParentType(type, parentType)) {
+                    return COMPLEX_TYPE_AND_SETTER.get(parentType).set(value);
+                }
+            }
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(e);
         }
-        return nvalue;
+        throw new UnsupportedOperationException(
+          "Only support convert boolean/float/int/string/map/list/date/pojo to nebula.Value but was"
+            + value.getClass().getTypeName());
     }
 
     @Override
     public synchronized void close() {
         release();
+    }
+
+    /**
+     * some value setter for java type (basic or nebula special type) that need convert to NValue
+     */
+    public static Map<Class<?>, Setter> LEAF_TYPE_AND_SETTER = 
+        new HashMap<Class<?>, Setter>() {{
+            put(Value.class, (Setter<Value>) (param) -> param);
+            put(Boolean.class, (Setter<Boolean>) Value::bVal);
+            put(Integer.class, (Setter<Integer>) Value::iVal);
+            put(Short.class, (Setter<Short>) Value::iVal);
+            put(Byte.class, (Setter<Short>) Value::iVal);
+            put(Long.class, (Setter<Long>) Value::iVal);
+            put(Float.class, (Setter<Float>) Value::fVal);
+            put(Double.class, (Setter<Double>) Value::fVal);
+            put(byte[].class, (Setter<byte[]>) Value::sVal);
+            put(Byte[].class, (Setter<byte[]>) Value::sVal);
+            put(String.class, (Setter<String>) (param) -> Value.sVal(param.getBytes()));
+            put(com.vesoft.nebula.Date.class, (Setter<com.vesoft.nebula.Date>) Value::dVal);
+            put(Time.class, (Setter<Time>) Value::tVal);
+            put(DateTime.class, (Setter<DateTime>) Value::dtVal);
+            put(Vertex.class, (Setter<Vertex>) Value::vVal);
+            put(Edge.class, (Setter<Edge>) Value::eVal);
+            put(Path.class, (Setter<Path>) Value::pVal);
+            put(NList.class, (Setter<NList>) Value::lVal);
+            put(NMap.class, (Setter<NMap>) Value::mVal);
+            put(NSet.class, (Setter<NSet>) Value::uVal);
+            put(DataSet.class, (Setter<DataSet>) Value::gVal);
+            put(Geography.class, (Setter<Geography>) Value::ggVal);
+            put(Duration.class, (Setter<Duration>) Value::duVal);
+       }};
+
+    /**
+     * some value setter for java type (complex java type include collections or date) that need
+     * convert to NValue
+     */
+    public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER = 
+        new LinkedHashMap<Class<?>, Setter>() {{
+            put(Collection.class, (Setter<Collection>) (collection) -> {
+                Value value = new Value();
+                List<Object> list = new ArrayList<>();
+                collection.forEach(el -> list.add(value2Nvalue(el)));
+                value.setLVal(list2Nlist(list));
+                return value;
+            });
+
+            put(Map.class, (Setter<Map<String, Object>>) (map) -> {
+                Value value = new Value();
+                Map<String, Object> valueMap = new HashMap<>();
+                map.forEach((k, v) -> {
+                    valueMap.put(k, value2Nvalue(v));
+                });
+                value.setMVal(map2Nmap(valueMap));
+                return value;
+            });
+
+            put(java.util.Date.class, (Setter<java.util.Date>) (date) -> {
+                Calendar calendar = new Calendar.Builder().setInstant(date).build();
+                return Value.dtVal(new DateTime(
+                  new Short(String.valueOf(calendar.get(Calendar.YEAR))),
+                  new Byte(String.valueOf(calendar.get(Calendar.MONTH))),
+                  new Byte(String.valueOf(calendar.get(Calendar.DATE))),
+                  new Byte(String.valueOf(calendar.get(Calendar.HOUR))),
+                  new Byte(String.valueOf(calendar.get(Calendar.MINUTE))),
+                  new Byte(String.valueOf(calendar.get(Calendar.SECOND))),
+                  new Short(String.valueOf(calendar.get(Calendar.MILLISECOND)))
+                ));
+            });
+
+            put(Object.class, (Setter<Object>) (obj) -> {
+                Value value = new Value();
+                Map<String, Object> pojoFields = new HashMap<>();
+                Class<?> paramType = obj.getClass();
+                Field[] declaredFields = paramType.getDeclaredFields();
+                for (Field declaredField : declaredFields) {
+                    pojoFields.put(declaredField.getName(),
+                      value2Nvalue(ReflectUtil.getValue(obj, declaredField)));
+                }
+                value.setMVal(map2Nmap(pojoFields));
+                return value;
+            });
+       }};
+
+    interface Setter<T> {
+
+        Value set(T param);
     }
 }
