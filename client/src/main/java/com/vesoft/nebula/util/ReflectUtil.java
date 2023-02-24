@@ -31,15 +31,15 @@ public class ReflectUtil {
      */
     public static Object getValue(Object o, Field field) {
         try {
-          boolean accessible = field.isAccessible();
-          if (accessible) {
-              return field.get(o);
-          } else {
-              field.setAccessible(true);
-              Object value = field.get(o);
-              field.setAccessible(false);
-              return value;
-          }
+            boolean accessible = field.isAccessible();
+            if (accessible) {
+                return field.get(o);
+            } else {
+                field.setAccessible(true);
+                Object value = field.get(o);
+                field.setAccessible(false);
+                return value;
+            }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
