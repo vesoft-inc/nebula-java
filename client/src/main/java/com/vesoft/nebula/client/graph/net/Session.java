@@ -434,9 +434,9 @@ public class Session implements Serializable, AutoCloseable {
     public static Value value2Nvalue(Object value) throws UnsupportedOperationException {
         try {
             if (value == null) {
-                Value nValue = new Value();
-                nValue.setNVal(NullType.__NULL__);
-                return nValue;
+                Value nullValue = new Value();
+                nullValue.setNVal(NullType.__NULL__);
+                return nullValue;
             }
             Class<?> type = value.getClass();
             Setter<Object> setter = LEAF_TYPE_AND_SETTER.get(type);
@@ -489,7 +489,7 @@ public class Session implements Serializable, AutoCloseable {
             put(DataSet.class, (Setter<DataSet>) Value::gVal);
             put(Geography.class, (Setter<Geography>) Value::ggVal);
             put(Duration.class, (Setter<Duration>) Value::duVal);
-       }};
+        }};
 
     /**
      * some value setter for java type (complex java type include collections or date) that need
@@ -535,12 +535,12 @@ public class Session implements Serializable, AutoCloseable {
                 Field[] declaredFields = paramType.getDeclaredFields();
                 for (Field declaredField : declaredFields) {
                     pojoFields.put(declaredField.getName(),
-                      value2Nvalue(ReflectUtil.getValue(obj, declaredField)));
+                        value2Nvalue(ReflectUtil.getValue(obj, declaredField)));
                 }
                 value.setMVal(map2Nmap(pojoFields));
                 return value;
             });
-       }};
+        }};
 
     interface Setter<T> {
 
