@@ -350,6 +350,7 @@ public class TestSessionPool {
             Process p = runtime.exec(cmd);
             p.waitFor(5, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
+            Thread.sleep(30000);
 
             try {
                 ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
