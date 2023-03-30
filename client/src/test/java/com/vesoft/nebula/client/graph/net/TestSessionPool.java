@@ -324,4 +324,50 @@ public class TestSessionPool {
         }
     }
 
+    @Test
+    public void testBrokenConnectionForSession() {
+        List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_session_pool",
+                "root", "nebula");
+        SessionPool sessionPool = new SessionPool(config);
+        assert sessionPool.init();
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            try {
+                ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                if (!resultSet.isSucceeded()) {
+                    System.out.println("show spaces failed, ErrorCode:"
+                            + resultSet.getErrorCode() + " ErrorMessage："
+                            + resultSet.getErrorMessage());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert false;
+            }
+
+            String cmd = "docker restart nebula-docker-compose_graphd0_1";
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+
+            try {
+                ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                if (!resultSet.isSucceeded()) {
+                    System.out.println("show spaces failed, ErrorCode:"
+                            + resultSet.getErrorCode() + " ErrorMessage："
+                            + resultSet.getErrorMessage());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert false;
+            }
+            sessionPool.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(), false);
+        }
+
+    }
+
 }

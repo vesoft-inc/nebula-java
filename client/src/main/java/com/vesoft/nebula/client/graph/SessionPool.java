@@ -5,6 +5,7 @@
 
 package com.vesoft.nebula.client.graph;
 
+import static com.vesoft.nebula.client.graph.exception.IOErrorException.E_CONNECT_BROKEN;
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.HostAddress;
@@ -138,22 +139,27 @@ public class SessionPool implements Serializable {
         stmtCheck(stmt);
         checkSessionPool();
         NebulaSession nebulaSession = getSession();
-        ResultSet resultSet;
-        try {
-            resultSet = nebulaSession.execute(stmt);
-
-            // re-execute for session error
-            if (isSessionError(resultSet)) {
+        ResultSet resultSet = null;
+        int tryTimes = 3;
+        while (tryTimes-- > 0) {
+            try {
+                resultSet = nebulaSession.execute(stmt);
+                if (!isSessionError(resultSet)) {
+                    useSpace(nebulaSession, resultSet);
+                    return resultSet;
+                } else {
+                    throw new IOErrorException(E_CONNECT_BROKEN, resultSet.getErrorMessage());
+                }
+            } catch (IOErrorException e) {
                 nebulaSession.release();
                 sessionList.remove(nebulaSession);
-                nebulaSession = getSession();
-                resultSet = nebulaSession.execute(stmt);
+                if (tryTimes > 0) {
+                    nebulaSession = createSessionObject(SessionState.USED);
+                } else {
+                    throw e;
+                }
             }
-        } catch (IOErrorException e) {
-            useSpace(nebulaSession, null);
-            throw e;
         }
-        useSpace(nebulaSession, resultSet);
         return resultSet;
     }
 
@@ -339,7 +345,8 @@ public class SessionPool implements Serializable {
     private void useSpace(NebulaSession nebulaSession, ResultSet resultSet)
             throws IOErrorException {
         if (resultSet == null) {
-            releaseSession(nebulaSession);
+            nebulaSession.release();
+            sessionList.remove(nebulaSession);
             return;
         }
         // space has been drop, close the SessionPool

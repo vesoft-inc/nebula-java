@@ -73,7 +73,9 @@ public class NebulaSession implements Serializable {
             connection.signout(sessionID);
             connection.close();
         } catch (Exception e) {
-            log.warn("release session failed, " + e.getMessage());
+            // not print the warn to avoid confuse for session and connect,
+            // when connection is broken, release will failed, just make connection as null.
+            // log.warn("release session failed, " + e.getMessage());
         }
         connection = null;
     }
