@@ -112,6 +112,8 @@ public class NebulaPool implements Serializable {
         objConfig.setMaxTotal(config.getMaxConnSize());
         objConfig.setTestOnBorrow(true);
         objConfig.setTestOnReturn(true);
+        objConfig.setTestOnCreate(true);
+        objConfig.setTestWhileIdle(true);
         objConfig.setTimeBetweenEvictionRunsMillis(config.getIntervalIdle() <= 0
             ? BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS
             : config.getIntervalIdle());

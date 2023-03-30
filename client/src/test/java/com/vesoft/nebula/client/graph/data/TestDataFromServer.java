@@ -45,7 +45,7 @@ public class TestDataFromServer {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(1);
         Assert.assertTrue(pool.init(Arrays.asList(new HostAddress(
-                "127.0.0.1", 9670)),
+                "127.0.0.1", 9669)),
                 nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
         ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data"
@@ -502,16 +502,13 @@ public class TestDataFromServer {
             Collections.sort(pathStrings);
             String listString = String.join(", ",
                     pathStrings);
-
-            String expectString = "ColumnName: [p],"
-                    + " Values: [(\"a\" )-[:like@0{}]->(\"f\" )<-[:like@0{}]-(\"c\" )], "
-                    + "ColumnName: [p],"
-                    + " Values: [(\"a\" )-[:like@0{}]->(\"g\" )-[:like@0{}]->(\"c\" )], "
-                    + "ColumnName: [p],"
-                    + " Values: [(\"a\" )<-[:like@0{}]-(\"b\" )<-[:like@0{}]-(\"c\" )], "
-                    + "ColumnName: [p],"
-                    + " Values: [(\"a\" )<-[:like@0{}]-(\"d\" )-[:like@0{}]->(\"c\" )]";
-
+            String expectString = "ColumnName: [p], Values: [(\"a\" :player {})-[:like@0{}]->"
+                    + "(\"f\" :player {})<-[:like@0{}]-(\"c\" :player {})], ColumnName: [p], "
+                    + "Values: [(\"a\" :player {})-[:like@0{}]->(\"g\" :player {})-[:like@0{}]->"
+                    + "(\"c\" :player {})], ColumnName: [p], Values: [(\"a\" :player {})"
+                    + "<-[:like@0{}]-(\"b\" :player {})<-[:like@0{}]-(\"c\" :player {})], "
+                    + "ColumnName: [p], Values: [(\"a\" :player {})<-[:like@0{}]-(\"d\" :player {})"
+                    + "-[:like@0{}]->(\"c\" :player {})]";
             Assert.assertEquals(expectString, listString);
         } catch (IOErrorException
                 | InterruptedException e) {
