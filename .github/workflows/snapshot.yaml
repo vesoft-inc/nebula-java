@@ -60,7 +60,7 @@ jobs:
       - name: Deploy Snapshot to Maven package
         uses: samuelmeuli/action-maven-publish@v1
         with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg_private_key: ${{ secrets.JAVA_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.JAVAGPG_PASSPHRASE }}
           nexus_username: ${{ secrets.OSSRH_USERNAME }}
           nexus_password: ${{ secrets.OSSRH_TOKEN }}
