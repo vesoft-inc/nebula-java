@@ -194,6 +194,7 @@ public class SessionPoolConfig implements Serializable {
                 + ", healthCheckTime=" + healthCheckTime
                 + ", waitTime=" + waitTime
                 + ", retryTimes=" + retryTimes
+                + ", intervalTIme=" + intervalTime
                 + '}';
     }
 }
