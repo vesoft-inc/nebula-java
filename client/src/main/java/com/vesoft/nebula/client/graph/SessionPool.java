@@ -53,6 +53,8 @@ public class SessionPool implements Serializable {
     private final int maxSessionSize;
     private final int cleanTime;
     private final int healthCheckTime;
+    private final int retryTimes;
+    private final int intervalTime;
     private final String spaceName;
     private final String useSpace;
 
@@ -62,6 +64,8 @@ public class SessionPool implements Serializable {
         this.minSessionSize = poolConfig.getMinSessionSize();
         this.maxSessionSize = poolConfig.getMaxSessionSize();
         this.cleanTime = poolConfig.getCleanTime();
+        this.retryTimes = poolConfig.getRetryTimes();
+        this.intervalTime = poolConfig.getIntervalTime();
         this.healthCheckTime = poolConfig.getHealthCheckTime();
         this.spaceName = poolConfig.getSpaceName();
         useSpace = "USE `" + spaceName + "`;";
@@ -139,27 +143,48 @@ public class SessionPool implements Serializable {
             ClientServerIncompatibleException, AuthFailedException, BindSpaceFailedException {
         stmtCheck(stmt);
         checkSessionPool();
-        NebulaSession nebulaSession = getSession();
+        NebulaSession nebulaSession = null;
         ResultSet resultSet = null;
-        int tryTimes = 3;
-        while (tryTimes-- > 0) {
+        int tryTimes = 0;
+        while (tryTimes++ < retryTimes) {
             try {
+                nebulaSession = getSession();
                 resultSet = nebulaSession.execute(stmt);
-                if (!isSessionError(resultSet)) {
-                    useSpace(nebulaSession, resultSet);
+                if (resultSet.isSucceeded()
+                        || resultSet.getErrorCode() == ErrorCode.E_SEMANTIC_ERROR.getValue()
+                        || resultSet.getErrorCode() == ErrorCode.E_SYNTAX_ERROR.getValue()) {
+                    releaseSession(nebulaSession);
                     return resultSet;
-                } else {
-                    throw new IOErrorException(E_CONNECT_BROKEN, resultSet.getErrorMessage());
                 }
-            } catch (IOErrorException e) {
+                log.warn(String.format("execute error, code: %d, message: %s, retry: %d",
+                        resultSet.getErrorCode(), resultSet.getErrorMessage(), tryTimes));
                 nebulaSession.release();
                 sessionList.remove(nebulaSession);
-                if (tryTimes > 0) {
-                    nebulaSession = createSessionObject(SessionState.USED);
+            } catch (ClientServerIncompatibleException e) {
+                // will never get here.
+            } catch (AuthFailedException | BindSpaceFailedException e) {
+                throw e;
+            } catch (IOErrorException e) {
+                if (nebulaSession != null) {
+                    nebulaSession.release();
+                    sessionList.remove(nebulaSession);
+                }
+                if (tryTimes < retryTimes) {
+                    log.warn(String.format("execute failed for IOErrorException, message: %s, "
+                            + "retry: %d", e.getMessage(), tryTimes));
+                    try {
+                        Thread.sleep(intervalTime);
+                    } catch (InterruptedException interruptedException) {
+                        // ignore
+                    }
                 } else {
                     throw e;
                 }
             }
+        }
+        if (nebulaSession != null) {
+            nebulaSession.release();
+            sessionList.remove(nebulaSession);
         }
         return resultSet;
     }
@@ -172,6 +197,7 @@ public class SessionPool implements Serializable {
      * @param parameterMap The nGql parameter map
      * @return The ResultSet
      */
+    @Deprecated
     public synchronized ResultSet execute(String stmt, Map<String, Object> parameterMap)
             throws ClientServerIncompatibleException, AuthFailedException,
             IOErrorException, BindSpaceFailedException {

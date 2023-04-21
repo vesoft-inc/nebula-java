@@ -38,6 +38,12 @@ public class SessionPoolConfig implements Serializable {
     // The wait time to get idle connection, unit ms
     private int waitTime = 0;
 
+    // retry times for failed execute
+    private int retryTimes = 3;
+
+    // interval time for retry, unit ms
+    private int intervalTime = 0;
+
 
     public SessionPoolConfig(List<HostAddress> addresses,
                              String spaceName,
@@ -150,6 +156,30 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
+    public int getRetryTimes() {
+        return retryTimes;
+    }
+
+    public SessionPoolConfig setRetryTimes(int retryTimes) {
+        if (retryTimes < 0) {
+            throw new IllegalArgumentException("retryTimes cannot be less than 0.");
+        }
+        this.retryTimes = retryTimes;
+        return this;
+    }
+
+    public int getIntervalTime() {
+        return intervalTime;
+    }
+
+    public SessionPoolConfig setIntervalTime(int intervalTime) {
+        if (intervalTime < 0) {
+            throw new IllegalArgumentException("intervalTime cannot be less than 0.");
+        }
+        this.intervalTime = intervalTime;
+        return this;
+    }
+
 
     @Override
     public String toString() {
@@ -163,6 +193,7 @@ public class SessionPoolConfig implements Serializable {
                 + ", idleTime=" + cleanTime
                 + ", healthCheckTime=" + healthCheckTime
                 + ", waitTime=" + waitTime
+                + ", retryTimes=" + retryTimes
                 + '}';
     }
 }
