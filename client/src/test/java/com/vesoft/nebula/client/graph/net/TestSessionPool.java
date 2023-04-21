@@ -234,6 +234,7 @@ public class TestSessionPool {
         // call execute() in multi threads
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         AtomicInteger failedCount = new AtomicInteger(0);
+        AtomicInteger succeedCount = new AtomicInteger(0);
         for (int i = 0; i < 10; i++) {
             executorService.submit(() -> {
                 try {
@@ -243,6 +244,8 @@ public class TestSessionPool {
                                 + resultSet.getErrorCode() + " ErrorMessage："
                                 + resultSet.getErrorMessage());
                         failedCount.incrementAndGet();
+                    } else {
+                        succeedCount.incrementAndGet();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -250,15 +253,16 @@ public class TestSessionPool {
                 }
             });
         }
+        executorService.shutdown();
         try {
-            executorService.awaitTermination(10, TimeUnit.SECONDS);
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
             assert false;
         }
-        executorService.shutdown();
         sessionPool.close();
         assert failedCount.get() == 0;
+        assert succeedCount.get() == 10;
     }
 
     @Test
@@ -312,7 +316,7 @@ public class TestSessionPool {
             sessionPool.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(e.getMessage(), false);
+            Assert.assertFalse(e.getMessage(), true);
         } finally {
             try {
                 runtime.exec("docker start nebula-docker-compose_graphd0_1")
@@ -353,7 +357,38 @@ public class TestSessionPool {
             Thread.sleep(30000);
 
             try {
-                ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                for (int i = 0; i < 10; i++) {
+                    ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                    if (!resultSet.isSucceeded()) {
+                        System.out.println("show spaces failed, ErrorCode:"
+                                + resultSet.getErrorCode() + " ErrorMessage："
+                                + resultSet.getErrorMessage());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert false;
+            }
+            sessionPool.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(), true);
+        }
+
+    }
+
+    @Test
+    public void testRetryForDownGraphd() {
+        List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_session_pool",
+                "root", "nebula").setRetryTimes(50).setIntervalTime(100);
+        SessionPool sessionPool = new SessionPool(config);
+        assert sessionPool.init();
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            try {
+                ResultSet resultSet = sessionPool.execute("SHOW HOSTS;");
                 if (!resultSet.isSucceeded()) {
                     System.out.println("show spaces failed, ErrorCode:"
                             + resultSet.getErrorCode() + " ErrorMessage："
@@ -363,12 +398,131 @@ public class TestSessionPool {
                 e.printStackTrace();
                 assert false;
             }
+
+            String cmd = "docker stop nebula-docker-compose_graphd0_1";
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+
+
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            AtomicInteger failedCount = new AtomicInteger(0);
+            AtomicInteger succeedCount = new AtomicInteger(0);
+            for (int i = 0; i < 10; i++) {
+                executorService.submit(() -> {
+                    try {
+                        Thread.sleep(10);
+                        ResultSet resultSet = sessionPool.execute("SHOW SPACES;");
+                        if (!resultSet.isSucceeded()) {
+                            System.out.println("show spaces failed, ErrorCode:"
+                                    + resultSet.getErrorCode() + " ErrorMessage："
+                                    + resultSet.getErrorMessage());
+                            failedCount.incrementAndGet();
+                        } else {
+                            succeedCount.incrementAndGet();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        failedCount.incrementAndGet();
+                    }
+                });
+            }
+
+            cmd = "docker start nebula-docker-compose_graphd0_1";
+            p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                assert false;
+            }
             sessionPool.close();
+            assert (succeedCount.get() == 10);
+            assert (failedCount.get() == 0);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertFalse(e.getMessage(), false);
+            Assert.assertFalse(e.getMessage(), true);
         }
 
     }
 
+    /**
+     * for restart stroaged, large the interval time for retry. After the storaegd started,
+     * need to wait at least one heartbeat for graphd to execute succeed.
+     */
+    @Test
+    public void testRetryForDownStoraged() {
+        List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 9669));
+        SessionPoolConfig config = new SessionPoolConfig(addresses, "space_for_session_pool",
+                "root", "nebula").setRetryTimes(50).setIntervalTime(5000);
+        SessionPool sessionPool = new SessionPool(config);
+        assert sessionPool.init();
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            try {
+                ResultSet resultSet = sessionPool.execute("MATCH (v) return v limit 1;");
+                if (!resultSet.isSucceeded()) {
+                    System.out.println("show spaces failed, ErrorCode:"
+                            + resultSet.getErrorCode() + " ErrorMessage："
+                            + resultSet.getErrorMessage());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                assert false;
+            }
+
+            String cmd = "docker stop nebula-docker-compose_storaged0_1";
+            Process p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+
+
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            AtomicInteger failedCount = new AtomicInteger(0);
+            AtomicInteger succeedCount = new AtomicInteger(0);
+            for (int i = 0; i < 10; i++) {
+                executorService.submit(() -> {
+                    try {
+                        Thread.sleep(10000);
+                        ResultSet resultSet = sessionPool.execute("MATCH (v) return v limit 1;");
+                        if (!resultSet.isSucceeded()) {
+                            System.out.println("show spaces failed, ErrorCode:"
+                                    + resultSet.getErrorCode() + " ErrorMessage："
+                                    + resultSet.getErrorMessage());
+                            failedCount.incrementAndGet();
+                        } else {
+                            succeedCount.incrementAndGet();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        failedCount.incrementAndGet();
+                    }
+                });
+            }
+
+            cmd = "docker start nebula-docker-compose_storaged0_1";
+            p = runtime.exec(cmd);
+            p.waitFor(5, TimeUnit.SECONDS);
+            ProcessUtil.printProcessStatus(cmd, p);
+
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                assert false;
+            }
+            sessionPool.close();
+            assert (succeedCount.get() == 10);
+            assert (failedCount.get() == 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertFalse(e.getMessage(), true);
+        }
+
+    }
 }
