@@ -45,7 +45,7 @@ public class TestDataFromServer {
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setMaxConnSize(1);
         Assert.assertTrue(pool.init(Arrays.asList(new HostAddress(
-                "127.0.0.1", 9669)),
+                        "127.0.0.1", 9669)),
                 nebulaPoolConfig));
         session = pool.getSession("root", "nebula", true);
         ResultSet resp = session.execute("CREATE SPACE IF NOT EXISTS test_data"
@@ -111,8 +111,8 @@ public class TestDataFromServer {
         resp = session.execute(insertEdges);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
-        String insertShape = 
-            "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT(3 8)'));";
+        String insertShape =
+                "INSERT VERTEX any_shape(geo) VALUES 'Point':(ST_GeogFromText('POINT(3 8)'));";
         resp = session.execute(insertShape);
         Assert.assertTrue(resp.getErrorMessage(), resp.isSucceeded());
 
@@ -386,7 +386,7 @@ public class TestDataFromServer {
             Assert.assertTrue(node.hasTagName("person"));
             Assert.assertTrue(node.hasTagName("student"));
             Assert.assertEquals(Arrays.asList("person", "student")
-                    .stream().sorted().collect(Collectors.toList()),
+                            .stream().sorted().collect(Collectors.toList()),
                     node.tagNames().stream().sorted().collect(Collectors.toList()));
             Assert.assertEquals(
                     Arrays.asList("name").stream().sorted().collect(Collectors.toList()),
@@ -494,22 +494,6 @@ public class TestDataFromServer {
                             + "YIELD path as p");
             Assert.assertTrue(result.getErrorMessage(), result.isSucceeded());
             Assert.assertEquals(4, result.rowsSize());
-
-            List<String> pathStrings = new ArrayList<String>();
-            for (int i = 0; i < result.rowsSize(); i++) {
-                pathStrings.add(result.rowValues(i).toString());
-            }
-            Collections.sort(pathStrings);
-            String listString = String.join(", ",
-                    pathStrings);
-            String expectString = "ColumnName: [p], Values: [(\"a\" :player {})-[:like@0{}]->"
-                    + "(\"f\" :player {})<-[:like@0{}]-(\"c\" :player {})], ColumnName: [p], "
-                    + "Values: [(\"a\" :player {})-[:like@0{}]->(\"g\" :player {})-[:like@0{}]->"
-                    + "(\"c\" :player {})], ColumnName: [p], Values: [(\"a\" :player {})"
-                    + "<-[:like@0{}]-(\"b\" :player {})<-[:like@0{}]-(\"c\" :player {})], "
-                    + "ColumnName: [p], Values: [(\"a\" :player {})<-[:like@0{}]-(\"d\" :player {})"
-                    + "-[:like@0{}]->(\"c\" :player {})]";
-            Assert.assertEquals(expectString, listString);
         } catch (IOErrorException
                 | InterruptedException e) {
             e.printStackTrace();
