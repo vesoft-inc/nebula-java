@@ -55,6 +55,7 @@ public class SessionPool implements Serializable {
     private final int healthCheckTime;
     private final int retryTimes;
     private final int intervalTime;
+    private final boolean reconnect;
     private final String spaceName;
     private final String useSpace;
 
@@ -66,6 +67,7 @@ public class SessionPool implements Serializable {
         this.cleanTime = poolConfig.getCleanTime();
         this.retryTimes = poolConfig.getRetryTimes();
         this.intervalTime = poolConfig.getIntervalTime();
+        this.reconnect = poolConfig.isReconnect();
         this.healthCheckTime = poolConfig.getHealthCheckTime();
         this.spaceName = poolConfig.getSpaceName();
         useSpace = "USE `" + spaceName + "`;";
@@ -146,7 +148,7 @@ public class SessionPool implements Serializable {
         NebulaSession nebulaSession = null;
         ResultSet resultSet = null;
         int tryTimes = 0;
-        while (tryTimes++ < retryTimes) {
+        while (tryTimes++ <= retryTimes) {
             try {
                 nebulaSession = getSession();
                 resultSet = nebulaSession.execute(stmt);
@@ -160,6 +162,11 @@ public class SessionPool implements Serializable {
                         resultSet.getErrorCode(), resultSet.getErrorMessage(), tryTimes));
                 nebulaSession.release();
                 sessionList.remove(nebulaSession);
+                try {
+                    Thread.sleep(intervalTime);
+                } catch (InterruptedException interruptedException) {
+                    // ignore
+                }
             } catch (ClientServerIncompatibleException e) {
                 // will never get here.
             } catch (AuthFailedException | BindSpaceFailedException e) {
@@ -330,11 +337,25 @@ public class SessionPool implements Serializable {
      * @param state {@link SessionState}
      * @return NebulaSession
      */
-    private synchronized NebulaSession createSessionObject(SessionState state)
+    private NebulaSession createSessionObject(SessionState state)
             throws ClientServerIncompatibleException, AuthFailedException,
             IOErrorException, BindSpaceFailedException {
         SyncConnection connection = new SyncConnection();
-        connection.open(getAddress(), sessionPoolConfig.getTimeout());
+        int tryConnect = sessionPoolConfig.getGraphAddressList().size();
+        // reconnect with all available address
+        while (tryConnect-- > 0) {
+            try {
+                connection.open(getAddress(), sessionPoolConfig.getTimeout());
+                break;
+            } catch (Exception e) {
+                if (tryConnect == 0 || !reconnect) {
+                    throw e;
+                } else {
+                    log.warn("connect failed, " + e.getMessage());
+                }
+            }
+        }
+
         AuthResult authResult;
         try {
             authResult = connection.authenticate(sessionPoolConfig.getUsername(),

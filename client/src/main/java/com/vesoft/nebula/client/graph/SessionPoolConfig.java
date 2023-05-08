@@ -44,6 +44,9 @@ public class SessionPoolConfig implements Serializable {
     // interval time for retry, unit ms
     private int intervalTime = 0;
 
+    // whether reconnect when create session using a broken graphd server
+    private boolean reconnect = false;
+
 
     public SessionPoolConfig(List<HostAddress> addresses,
                              String spaceName,
@@ -180,6 +183,14 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
+    public boolean isReconnect() {
+        return reconnect;
+    }
+
+    public SessionPoolConfig setReconnect(boolean reconnect) {
+        this.reconnect = reconnect;
+        return this;
+    }
 
     @Override
     public String toString() {
@@ -195,6 +206,7 @@ public class SessionPoolConfig implements Serializable {
                 + ", waitTime=" + waitTime
                 + ", retryTimes=" + retryTimes
                 + ", intervalTIme=" + intervalTime
+                + ", reconnect=" + reconnect
                 + '}';
     }
 }
