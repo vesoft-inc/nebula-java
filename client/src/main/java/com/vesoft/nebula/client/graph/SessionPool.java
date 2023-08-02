@@ -205,7 +205,7 @@ public class SessionPool implements Serializable {
      * @return The ResultSet
      */
     @Deprecated
-    public synchronized ResultSet execute(String stmt, Map<String, Object> parameterMap)
+    public ResultSet execute(String stmt, Map<String, Object> parameterMap)
             throws ClientServerIncompatibleException, AuthFailedException,
             IOErrorException, BindSpaceFailedException {
         stmtCheck(stmt);
