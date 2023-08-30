@@ -79,7 +79,7 @@ public class SessionPool implements Serializable {
      */
     private synchronized NebulaSession getSession() throws ClientServerIncompatibleException,
             AuthFailedException, IOErrorException, BindSpaceFailedException {
-        int retry = 1;
+        int retry = sessionPoolConfig.getRetryConnectTimes();
         while (retry-- >= 0) {
             // if there are idle sessions, get session from queue
             if (idleSessionSize.get() > 0) {
@@ -285,7 +285,7 @@ public class SessionPool implements Serializable {
     /**
      * release the NebulaSession when finished the execution.
      */
-    private synchronized void releaseSession(NebulaSession nebulaSession) {
+    private void releaseSession(NebulaSession nebulaSession) {
         nebulaSession.isUsedAndSetIdle();
         idleSessionSize.incrementAndGet();
     }

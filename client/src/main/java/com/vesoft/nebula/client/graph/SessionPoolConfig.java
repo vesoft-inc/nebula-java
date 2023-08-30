@@ -35,6 +35,9 @@ public class SessionPoolConfig implements Serializable {
     // The healthCheckTime for schedule check the health of session, unit: second
     private int healthCheckTime = 600;
 
+    // retry times to get session
+    private int retryConnectTimes = 1;
+
     // The wait time to get idle connection, unit ms
     private int waitTime = 0;
 
@@ -144,6 +147,18 @@ public class SessionPoolConfig implements Serializable {
             throw new IllegalArgumentException("cleanTime cannot be less than 0.");
         }
         this.healthCheckTime = healthCheckTime;
+        return this;
+    }
+
+    public int getRetryConnectTimes() {
+        return retryConnectTimes;
+    }
+
+    public SessionPoolConfig setRetryConnectTimes(int retryConnectTimes) {
+        if (retryConnectTimes < 0) {
+            throw new IllegalArgumentException("retryConnectTimes cannot be less than 0.");
+        }
+        this.retryConnectTimes = retryConnectTimes;
         return this;
     }
 

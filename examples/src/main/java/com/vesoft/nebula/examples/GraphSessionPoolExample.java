@@ -34,8 +34,14 @@ public class GraphSessionPoolExample {
         String spaceName = "test";
         String user = "root";
         String password = "nebula";
-        SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(addresses, spaceName, user,
-                password);
+        SessionPoolConfig sessionPoolConfig =
+                new SessionPoolConfig(addresses, spaceName, user, password)
+                        .setMaxSessionSize(10)
+                        .setMinSessionSize(10)
+                        .setRetryConnectTimes(3)
+                        .setWaitTime(100)
+                        .setRetryTimes(3)
+                        .setIntervalTime(100);
         SessionPool sessionPool = new SessionPool(sessionPoolConfig);
         if (!sessionPool.init()) {
             log.error("session pool init failed.");
@@ -46,7 +52,7 @@ public class GraphSessionPoolExample {
             resultSet = sessionPool.execute("match (v:player) return v limit 1;");
             System.out.println(resultSet.toString());
         } catch (IOErrorException | ClientServerIncompatibleException | AuthFailedException
-                | BindSpaceFailedException e) {
+                 | BindSpaceFailedException e) {
             e.printStackTrace();
             sessionPool.close();
             System.exit(1);
