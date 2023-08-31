@@ -71,6 +71,7 @@ public class SessionPool implements Serializable {
         this.healthCheckTime = poolConfig.getHealthCheckTime();
         this.spaceName = poolConfig.getSpaceName();
         useSpace = "USE `" + spaceName + "`;";
+        init();
     }
 
 
@@ -110,7 +111,9 @@ public class SessionPool implements Serializable {
 
     /**
      * init the SessionPool
+     * this function is moved into SessionPool's constructor, no need to call it manually.
      */
+    @Deprecated
     public boolean init() {
         if (hasInit.get()) {
             return true;
@@ -239,16 +242,17 @@ public class SessionPool implements Serializable {
             return;
         }
 
-        isClosed.compareAndSet(false, true);
-        for (NebulaSession nebulaSession : sessionList) {
-            nebulaSession.release();
-        }
-        sessionList.clear();
-        if (!healthCheckSchedule.isShutdown()) {
-            healthCheckSchedule.shutdown();
-        }
-        if (!sessionQueueMaintainSchedule.isShutdown()) {
-            sessionQueueMaintainSchedule.shutdown();
+        if (isClosed.compareAndSet(false, true)) {
+            for (NebulaSession nebulaSession : sessionList) {
+                nebulaSession.release();
+            }
+            sessionList.clear();
+            if (!healthCheckSchedule.isShutdown()) {
+                healthCheckSchedule.shutdown();
+            }
+            if (!sessionQueueMaintainSchedule.isShutdown()) {
+                sessionQueueMaintainSchedule.shutdown();
+            }
         }
     }
 

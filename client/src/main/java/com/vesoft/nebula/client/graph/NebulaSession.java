@@ -14,6 +14,7 @@ import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,12 @@ public class NebulaSession implements Serializable {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private long sessionID;
-    private int timezoneOffset;
+    private final long sessionID;
+    private final int timezoneOffset;
     private SyncConnection connection;
-    private AtomicReference<SessionState> state = new AtomicReference<>();
+    private final AtomicReference<SessionState> state = new AtomicReference<>();
+
+    private final AtomicBoolean isReleased = new AtomicBoolean(false);
 
     public NebulaSession(SyncConnection connection, long sessionID, int timezoneOffset,
                          SessionState state) {
@@ -69,14 +72,19 @@ public class NebulaSession implements Serializable {
     }
 
     public void release() {
-        try {
-            connection.signout(sessionID);
-            connection.close();
-        } catch (Exception e) {
-            // not print the warn to avoid confuse for session and connect,
-            // when connection is broken, release will failed, just make connection as null.
-            // log.warn("release session failed, " + e.getMessage());
+        if (isReleased.get()) {
+            return;
         }
-        connection = null;
+        if (isReleased.compareAndSet(false, true)) {
+            try {
+                connection.signout(sessionID);
+                connection.close();
+            } catch (Exception e) {
+                // not print the warn to avoid confuse for session and connect,
+                // when connection is broken, release will failed, just make connection as null.
+                // log.warn("release session failed, " + e.getMessage());
+            }
+            connection = null;
+        }
     }
 }
