@@ -37,20 +37,6 @@ public class NebulaPool implements Serializable {
     private AtomicBoolean hasInit = new AtomicBoolean(false);
     private AtomicBoolean isClosed = new AtomicBoolean(false);
 
-    private List<HostAddress> hostToIp(List<HostAddress> addresses)
-        throws UnknownHostException {
-        List<HostAddress> newAddrs = new ArrayList<>();
-        for (HostAddress addr : addresses) {
-            // get all host name
-            InetAddress[] inetAddresses = InetAddress.getAllByName(addr.getHost());
-            for (InetAddress inetAddress : inetAddresses) {
-                String ip = inetAddress.getHostAddress();
-                newAddrs.add(new HostAddress(ip, addr.getPort()));
-            }
-        }
-        return newAddrs;
-    }
-
     private void checkConfig(NebulaPoolConfig config) {
         if (config.getIdleTime() < 0) {
             throw new InvalidConfigException(
@@ -98,11 +84,10 @@ public class NebulaPool implements Serializable {
         hasInit.set(true);
         checkConfig(config);
         this.waitTime = config.getWaitTime();
-        List<HostAddress> newAddrs = hostToIp(addresses);
         this.loadBalancer = config.isEnableSsl()
-                ? new RoundRobinLoadBalancer(newAddrs, config.getTimeout(), config.getSslParam(),
+                ? new RoundRobinLoadBalancer(addresses, config.getTimeout(), config.getSslParam(),
                 config.getMinClusterHealthRate())
-                : new RoundRobinLoadBalancer(newAddrs, config.getTimeout(),
+                : new RoundRobinLoadBalancer(addresses, config.getTimeout(),
                 config.getMinClusterHealthRate());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
