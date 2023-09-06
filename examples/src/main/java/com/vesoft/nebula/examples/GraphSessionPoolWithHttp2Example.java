@@ -2,6 +2,7 @@
  *
  * This source code is licensed under Apache 2.0 License.
  */
+
 package com.vesoft.nebula.examples;
 
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
@@ -52,8 +53,8 @@ public class GraphSessionPoolWithHttp2Example {
                 "examples/src/main/resources/ssl/server.key");
         prepare(sslParam);
 
-        SessionPoolConfig sessionPoolConfig =
-                new SessionPoolConfig(Arrays.asList(new HostAddress(host, port)), spaceName, user, password)
+        SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(
+                Arrays.asList(new HostAddress(host, port)), spaceName, user, password)
                         .setMaxSessionSize(parallel)
                         .setMinSessionSize(parallel)
                         .setRetryConnectTimes(3)
