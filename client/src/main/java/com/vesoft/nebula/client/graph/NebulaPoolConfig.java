@@ -6,7 +6,6 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.SSLParam;
-import com.vesoft.nebula.client.graph.net.NebulaPool;
 import java.io.Serializable;
 
 public class NebulaPoolConfig implements Serializable {
@@ -42,6 +41,9 @@ public class NebulaPoolConfig implements Serializable {
 
     // SSL param is required if ssl is turned on
     private SSLParam sslParam = null;
+
+    // Set if use http2 protocol
+    private boolean useHttp2 = false;
 
     public boolean isEnableSsl() {
         return enableSsl;
@@ -119,6 +121,15 @@ public class NebulaPoolConfig implements Serializable {
 
     public NebulaPoolConfig setMinClusterHealthRate(double minClusterHealthRate) {
         this.minClusterHealthRate = minClusterHealthRate;
+        return this;
+    }
+
+    public boolean isUseHttp2() {
+        return useHttp2;
+    }
+
+    public NebulaPoolConfig setUseHttp2(boolean useHttp2) {
+        this.useHttp2 = useHttp2;
         return this;
     }
 }

@@ -39,9 +39,10 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection>
                         throw new IllegalArgumentException("SSL Param is required when enableSsl "
                                 + "is set to true");
                     }
-                    conn.open(address, config.getTimeout(), config.getSslParam());
+                    conn.open(address, config.getTimeout(),
+                            config.getSslParam(), config.isUseHttp2());
                 } else {
-                    conn.open(address, config.getTimeout());
+                    conn.open(address, config.getTimeout(), config.isUseHttp2());
                 }
                 return conn;
             } catch (IOErrorException e) {

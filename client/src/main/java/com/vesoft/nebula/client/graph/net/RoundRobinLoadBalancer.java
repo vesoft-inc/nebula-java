@@ -27,22 +27,35 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     private final int delayTime = 60;  // Unit seconds
     private final ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
     private SSLParam sslParam;
-    private boolean enabledSsl;
+    private boolean enabledSsl = false;
+
+    private boolean useHttp2 = false;
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
                                   double minClusterHealthRate) {
+        this(addresses, timeout, minClusterHealthRate, false);
+    }
+
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
+                                  double minClusterHealthRate, boolean useHttp2) {
         this.timeout = timeout;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);
             this.serversStatus.put(addr, S_BAD);
         }
         this.minClusterHealthRate = minClusterHealthRate;
+        this.useHttp2 = useHttp2;
         schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
                                   double minClusterHealthRate) {
-        this(addresses, timeout, minClusterHealthRate);
+        this(addresses, timeout, sslParam, minClusterHealthRate, false);
+    }
+
+    public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
+                                  double minClusterHealthRate, boolean useHttp2) {
+        this(addresses, timeout, minClusterHealthRate, useHttp2);
         this.sslParam = sslParam;
         this.enabledSsl = true;
     }
@@ -82,9 +95,9 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         try {
             Connection connection = new SyncConnection();
             if (enabledSsl) {
-                connection.open(addr, this.timeout, sslParam);
+                connection.open(addr, this.timeout, sslParam, useHttp2);
             } else {
-                connection.open(addr, this.timeout);
+                connection.open(addr, this.timeout, useHttp2);
             }
             boolean pong = connection.ping();
             connection.close();

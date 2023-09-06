@@ -19,9 +19,16 @@ public abstract class Connection implements Serializable {
     public abstract void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException;
 
+    public abstract void open(HostAddress address, int timeout,
+                              SSLParam sslParam, boolean isUseHttp2)
+            throws IOErrorException, ClientServerIncompatibleException;
+
 
     public abstract void open(HostAddress address, int timeout) throws IOErrorException,
             ClientServerIncompatibleException;
+
+    public abstract void open(HostAddress address, int timeout, boolean isUseHttp2)
+            throws IOErrorException, ClientServerIncompatibleException;
 
     public abstract void reopen() throws IOErrorException, ClientServerIncompatibleException;
 

@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.SSLParam;
 import java.io.Serializable;
 import java.util.List;
 
@@ -49,6 +50,14 @@ public class SessionPoolConfig implements Serializable {
 
     // whether reconnect when create session using a broken graphd server
     private boolean reconnect = false;
+
+    // Set to true to turn on ssl encrypted traffic
+    private boolean enableSsl = false;
+
+    // SSL param is required if ssl is turned on
+    private SSLParam sslParam = null;
+
+    private boolean useHttp2 = false;
 
 
     public SessionPoolConfig(List<HostAddress> addresses,
@@ -207,6 +216,33 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
+    public boolean isEnableSsl() {
+        return enableSsl;
+    }
+
+    public SessionPoolConfig setEnableSsl(boolean enableSsl) {
+        this.enableSsl = enableSsl;
+        return this;
+    }
+
+    public SSLParam getSslParam() {
+        return sslParam;
+    }
+
+    public SessionPoolConfig setSslParam(SSLParam sslParam) {
+        this.sslParam = sslParam;
+        return this;
+    }
+
+    public boolean isUseHttp2() {
+        return useHttp2;
+    }
+
+    public SessionPoolConfig setUseHttp2(boolean useHttp2) {
+        this.useHttp2 = useHttp2;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "SessionPoolConfig{"
@@ -222,6 +258,9 @@ public class SessionPoolConfig implements Serializable {
                 + ", retryTimes=" + retryTimes
                 + ", intervalTIme=" + intervalTime
                 + ", reconnect=" + reconnect
+                + ", enableSsl=" + enableSsl
+                + ",sslParam=" + sslParam
+                + ", useHttp2=" + useHttp2
                 + '}';
     }
 }
