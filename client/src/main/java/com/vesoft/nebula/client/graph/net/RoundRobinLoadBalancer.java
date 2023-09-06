@@ -103,6 +103,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
             connection.close();
             return pong;
         } catch (IOErrorException e) {
+            e.printStackTrace();
             return false;
         } catch (ClientServerIncompatibleException e) {
             LOGGER.error("version verify failed, ", e);
