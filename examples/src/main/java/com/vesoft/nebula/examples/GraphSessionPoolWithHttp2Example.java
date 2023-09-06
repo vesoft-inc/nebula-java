@@ -32,9 +32,9 @@ import org.slf4j.LoggerFactory;
 public class GraphSessionPoolWithHttp2Example {
     private static final Logger log = LoggerFactory.getLogger(GraphClientExample.class);
 
-    private static String host = "127.0.0.1";
+    private static String host = "192.168.8.202";
 
-    private static int port = 9669;
+    private static int port = 9119;
 
     private static String user = "root";
 
@@ -63,7 +63,7 @@ public class GraphSessionPoolWithHttp2Example {
                         .setIntervalTime(100)
                         .setEnableSsl(true)
                         .setSslParam(sslParam)
-                        .setUseHttp2(true);
+                        .setUseHttp2(false);
         SessionPool sessionPool = new SessionPool(sessionPoolConfig);
         if (!sessionPool.init()) {
             log.error("session pool init failed.");
@@ -126,7 +126,7 @@ public class GraphSessionPoolWithHttp2Example {
         NebulaPool pool = new NebulaPool();
         Session session;
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setUseHttp2(true);
+        nebulaPoolConfig.setUseHttp2(false);
         nebulaPoolConfig.setEnableSsl(true);
         nebulaPoolConfig.setSslParam(sslParam);
         nebulaPoolConfig.setMaxConnSize(10);

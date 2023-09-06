@@ -258,6 +258,8 @@ public class SessionPoolConfig implements Serializable {
                 + ", retryTimes=" + retryTimes
                 + ", intervalTIme=" + intervalTime
                 + ", reconnect=" + reconnect
+                + ", enableSsl=" + enableSsl
+                + ",sslParam=" + sslParam
                 + ", useHttp2=" + useHttp2
                 + '}';
     }

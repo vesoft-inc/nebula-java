@@ -5,17 +5,12 @@
 
 package com.facebook.thrift.transport;
 
-import static java.time.LocalTime.now;
+import com.facebook.thrift.utils.Logger;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -23,9 +18,9 @@ import okhttp3.ResponseBody;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.checkerframework.checker.units.qual.A;
 
 public class THttp2Client extends TTransport {
+    private static final Logger LOGGER = Logger.getLogger(THttp2Client.class.getName());
 
     private final ByteArrayOutputStream requestBuffer = new ByteArrayOutputStream();
     private ResponseBody responseBody = null;
@@ -87,13 +82,13 @@ public class THttp2Client extends TTransport {
 
             requestBuffer.close();
         } catch (IOException e) {
-            // ignore
+            LOGGER.warn(e.getMessage());
         }
         OkHttp3Util.close();
     }
 
     public boolean isOpen() {
-        return true;
+        return client != null;
     }
 
     public int read(byte[] buf, int off, int len) throws TTransportException {
