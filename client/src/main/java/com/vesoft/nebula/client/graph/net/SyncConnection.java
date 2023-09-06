@@ -160,7 +160,6 @@ public class SyncConnection extends Connection {
         this.transport = new THeaderTransport(new TSocket(
                 sslSocketFactory.createSocket(serverAddr.getHost(),
                         serverAddr.getPort()), this.timeout, this.timeout));
-        transport.open();
         this.protocol = new THeaderProtocol((THeaderTransport) transport);
     }
 
