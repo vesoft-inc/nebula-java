@@ -6,10 +6,12 @@
 package com.vesoft.nebula.client.graph.net;
 
 import com.facebook.thrift.TException;
+import com.facebook.thrift.protocol.TBinaryProtocol;
 import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.protocol.TProtocol;
 import com.facebook.thrift.transport.THeaderTransport;
+import com.facebook.thrift.transport.THttp2Client;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransport;
 import com.facebook.thrift.transport.TTransportException;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,23 +44,30 @@ public class SyncConnection extends Connection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncConnection.class);
 
-    protected THeaderTransport transport = null;
-    protected THeaderProtocol protocol = null;
+    protected TTransport transport = null;
+    protected TProtocol protocol = null;
     private GraphService.Client client = null;
     private int timeout = 0;
     private SSLParam sslParam = null;
     private boolean enabledSsl = false;
     private SSLSocketFactory sslSocketFactory = null;
+    private boolean useHttp2 = false;
 
     @Override
     public void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException {
-        try {
+        this.open(address, timeout, sslParam, false);
+    }
 
+    @Override
+    public void open(HostAddress address, int timeout, SSLParam sslParam, boolean isUseHttp2)
+            throws IOErrorException, ClientServerIncompatibleException {
+        try {
             this.serverAddr = address;
             this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.enabledSsl = true;
             this.sslParam = sslParam;
+            this.useHttp2 = isUseHttp2;
             if (sslSocketFactory == null) {
                 if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
                     sslSocketFactory =
@@ -67,10 +77,12 @@ public class SyncConnection extends Connection {
                             SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
                 }
             }
-            this.transport = new THeaderTransport(new TSocket(
-                    sslSocketFactory.createSocket(address.getHost(),
-                            address.getPort()), this.timeout, this.timeout));
-            this.protocol = new THeaderProtocol(transport);
+            if (isUseHttp2) {
+                getProtocolWithTlsHttp2();
+            } else {
+                getProtocolForTls();
+            }
+
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
@@ -88,15 +100,26 @@ public class SyncConnection extends Connection {
     }
 
     @Override
-    public void open(HostAddress address, int timeout)
+    public void open(HostAddress address, int timeout) throws IOErrorException,
+            ClientServerIncompatibleException {
+        this.open(address, timeout, false);
+    }
+
+    @Override
+    public void open(HostAddress address, int timeout, boolean isUseHttp2)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
             this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
+            if (isUseHttp2) {
+                getProtocolForHttp2();
+            } else {
+                getProtocol();
+            }
             this.transport = new THeaderTransport(new TSocket(
                     address.getHost(), address.getPort(), this.timeout, this.timeout));
             this.transport.open();
-            this.protocol = new THeaderProtocol(transport);
+            this.protocol = new THeaderProtocol((THeaderTransport) transport);
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
@@ -112,6 +135,58 @@ public class SyncConnection extends Connection {
         }
     }
 
+    /**
+     * create protocol for http2 with tls
+     */
+    private void getProtocolWithTlsHttp2() {
+        String url = "https://" + serverAddr.getHost() + ":" + serverAddr.getPort();
+        TrustManager trustManager;
+        if (SslUtil.getTrustManagers() == null || SslUtil.getTrustManagers().length == 0) {
+            trustManager = null;
+        } else {
+            trustManager = SslUtil.getTrustManagers()[0];
+        }
+        this.transport = new THttp2Client(url, sslSocketFactory, trustManager)
+                .setConnectTimeout(timeout)
+                .setReadTimeout(timeout);
+        transport.open();
+        this.protocol = new TBinaryProtocol(transport);
+    }
+
+    /**
+     * create protocol for http2 without tls
+     */
+    private void getProtocolForTls() throws IOException {
+        this.transport = new THeaderTransport(new TSocket(
+                sslSocketFactory.createSocket(serverAddr.getHost(),
+                        serverAddr.getPort()), this.timeout, this.timeout));
+        transport.open();
+        this.protocol = new THeaderProtocol((THeaderTransport) transport);
+    }
+
+    /**
+     * create protocol for http2
+     */
+    private void getProtocolForHttp2() {
+        String url = "http://" + serverAddr.getHost() + ":" + serverAddr.getPort();
+        this.transport = new THttp2Client(url)
+                .setConnectTimeout(timeout)
+                .setReadTimeout(timeout);
+        transport.open();
+        this.protocol = new TBinaryProtocol(transport);
+    }
+
+    /**
+     * create protocol for tcp
+     */
+    private void getProtocol() {
+        this.transport = new THeaderTransport(new TSocket(
+                serverAddr.getHost(), serverAddr.getPort(), this.timeout, this.timeout));
+        transport.open();
+        this.protocol = new THeaderProtocol((THeaderTransport) transport);
+    }
+
+
     /*
      * Because the code generated by Fbthrift does not handle the seqID,
      * the message will be dislocation when the timeout occurs,
@@ -126,9 +201,9 @@ public class SyncConnection extends Connection {
     public void reopen() throws IOErrorException, ClientServerIncompatibleException {
         close();
         if (enabledSsl) {
-            open(serverAddr, timeout, sslParam);
+            open(serverAddr, timeout, sslParam, useHttp2);
         } else {
-            open(serverAddr, timeout);
+            open(serverAddr, timeout, useHttp2);
         }
     }
 
@@ -257,6 +332,7 @@ public class SyncConnection extends Connection {
     public void close() {
         if (transport != null && transport.isOpen()) {
             transport.close();
+            transport = null;
         }
     }
 

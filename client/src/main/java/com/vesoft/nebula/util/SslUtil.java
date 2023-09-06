@@ -16,6 +16,7 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -31,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 public class SslUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(SslUtil.class);
+
+    private static TrustManager[] trustManagers;
 
     public static SSLSocketFactory getSSLSocketFactoryWithCA(CASignedSSLParam param) {
         final String caCrtFile = param.getCaCrtFilePath();
@@ -117,6 +120,8 @@ public class SslUtil {
             context.init(keyManagerFactory.getKeyManagers(),
                     trustManagerFactory.getTrustManagers(), null);
 
+
+            trustManagers = trustManagerFactory.getTrustManagers();
             // Return the newly created socket factory object
             return context.getSocketFactory();
 
@@ -176,8 +181,10 @@ public class SslUtil {
             }
 
             X509Certificate cert = certificateConverter.getCertificate(certHolder);
+
             // certificate is used to authenticate server
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            System.out.println(keyStore);
             keyStore.load(null, null);
             keyStore.setCertificateEntry("certificate", cert);
 
@@ -201,12 +208,16 @@ public class SslUtil {
             context.init(keyManagerFactory.getKeyManagers(),
                     trustManagerFactory.getTrustManagers(), null);
 
+            trustManagers = trustManagerFactory.getTrustManagers();
             // Return the newly created socket factory object
             return context.getSocketFactory();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
+            throw new RuntimeException(e);
         }
+    }
 
-        return null;
+    public static TrustManager[] getTrustManagers() {
+        return trustManagers;
     }
 }

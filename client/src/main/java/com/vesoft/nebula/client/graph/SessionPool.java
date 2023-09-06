@@ -349,7 +349,14 @@ public class SessionPool implements Serializable {
         // reconnect with all available address
         while (tryConnect-- > 0) {
             try {
-                connection.open(getAddress(), sessionPoolConfig.getTimeout());
+                if (sessionPoolConfig.isEnableSsl()) {
+                    connection.open(getAddress(), sessionPoolConfig.getTimeout(),
+                            sessionPoolConfig.getSslParam(),
+                            sessionPoolConfig.isUseHttp2());
+                } else {
+                    connection.open(getAddress(), sessionPoolConfig.getTimeout(),
+                            sessionPoolConfig.isUseHttp2());
+                }
                 break;
             } catch (Exception e) {
                 if (tryConnect == 0 || !reconnect) {
