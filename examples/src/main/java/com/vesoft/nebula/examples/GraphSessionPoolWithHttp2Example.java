@@ -81,7 +81,7 @@ public class GraphSessionPoolWithHttp2Example {
      */
     private static void executeForSingleThread(SessionPool sessionPool) {
         try {
-            ResultSet resultSet = sessionPool.execute("return 1;");
+            ResultSet resultSet = sessionPool.execute("match(v:player) return v limit 1;");
             System.out.println(resultSet.toString());
         } catch (IOErrorException | ClientServerIncompatibleException | AuthFailedException
                  | BindSpaceFailedException e) {
@@ -101,7 +101,7 @@ public class GraphSessionPoolWithHttp2Example {
             executorService.submit(() -> {
                 try {
                     for (int j = 0; j < executeTimes; j++) {
-                        ResultSet result = sessionPool.execute("return 1");
+                        ResultSet result = sessionPool.execute("match(v:player) return v limit 1;");
                         System.out.println(result.toString());
                     }
                     count.countDown();
@@ -142,6 +142,7 @@ public class GraphSessionPoolWithHttp2Example {
                     "CREATE SPACE IF NOT EXISTS " + spaceName + "(vid_type=fixed_string(20));"
                             + "USE test;"
                             + "CREATE TAG IF NOT EXISTS player(name string, age int);");
+            session.execute("insert vertex player(name,age) values \"1\":(\"Tom\",20);");
             if (!res.isSucceeded()) {
                 System.out.println(res.getErrorMessage());
                 System.exit(-1);
