@@ -116,10 +116,6 @@ public class SyncConnection extends Connection {
             } else {
                 getProtocol();
             }
-            this.transport = new THeaderTransport(new TSocket(
-                    address.getHost(), address.getPort(), this.timeout, this.timeout));
-            this.transport.open();
-            this.protocol = new THeaderProtocol((THeaderTransport) transport);
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
