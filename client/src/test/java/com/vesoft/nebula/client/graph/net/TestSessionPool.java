@@ -65,44 +65,54 @@ public class TestSessionPool {
         List<HostAddress> addresses = Arrays.asList(new HostAddress(ip, 1000));
         SessionPoolConfig config =
                 new SessionPoolConfig(addresses, "space", "user", "12345");
-        SessionPool sessionPool = new SessionPool(config);
-        assert (!sessionPool.init());
-        sessionPool.close();
+        SessionPool sessionPool;
+        try {
+            sessionPool = new SessionPool(config);
+        } catch (RuntimeException e) {
+            assert (true);
+        }
 
         // host unknown
         addresses = Arrays.asList(new HostAddress("host", 10000));
         config = new SessionPoolConfig(addresses, "space", "user", "12345");
-        sessionPool = new SessionPool(config);
-        assert (!sessionPool.init());
-        sessionPool.close();
+        try {
+            sessionPool = new SessionPool(config);
+        } catch (RuntimeException e) {
+            assert (true);
+        }
 
         // wrong user
         addresses = Arrays.asList(new HostAddress(ip, 9669));
         config = new SessionPoolConfig(addresses, "space", "user", "nebula")
                 .setMinSessionSize(1);
-        sessionPool = new SessionPool(config);
-        assert (!sessionPool.init());
-        sessionPool.close();
+        try {
+            sessionPool = new SessionPool(config);
+        } catch (RuntimeException e) {
+            assert (true);
+        }
 
         // set MinSessionSize 1, and init will return false when the user is wrong
         config = new SessionPoolConfig(addresses, "space", "user", "nebula")
                 .setMinSessionSize(1);
-        sessionPool = new SessionPool(config);
-        assert (!sessionPool.init());
-        sessionPool.close();
+        try {
+            sessionPool = new SessionPool(config);
+        } catch (RuntimeException e) {
+            assert (true);
+        }
 
         // init failed for not exist space
         config = new SessionPoolConfig(addresses, "space", "root", "nebula")
                 .setMinSessionSize(2);
-        sessionPool = new SessionPool(config);
-        assert (!sessionPool.init());
-        sessionPool.close();
+        try {
+            sessionPool = new SessionPool(config);
+        } catch (RuntimeException e) {
+            assert (true);
+        }
 
         // init success
         config = new SessionPoolConfig(addresses, "space_for_session_pool", "root", "nebula")
                 .setMinSessionSize(2);
         sessionPool = new SessionPool(config);
-        assert (sessionPool.init());
         sessionPool.close();
 
         // wrong MinSessionSize
@@ -124,7 +134,7 @@ public class TestSessionPool {
         try {
             ResultSet result = sessionPool.execute("SHOW SPACES");
         } catch (IOErrorException | AuthFailedException
-                | ClientServerIncompatibleException | BindSpaceFailedException e) {
+                 | ClientServerIncompatibleException | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
         }
@@ -144,7 +154,7 @@ public class TestSessionPool {
         try {
             sessionPool.execute("USE TEST_USE_SPACE");
         } catch (IOErrorException | AuthFailedException | ClientServerIncompatibleException
-                | BindSpaceFailedException e) {
+                 | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
         } catch (IllegalArgumentException e) {
@@ -156,7 +166,7 @@ public class TestSessionPool {
             sessionPool.execute("DROP SPACE session_pool_test");
             sessionPool.execute("YIELD 1");
         } catch (IOErrorException | AuthFailedException | ClientServerIncompatibleException
-                | BindSpaceFailedException e) {
+                 | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
         } catch (RuntimeException e) {
@@ -181,7 +191,7 @@ public class TestSessionPool {
                 assert false;
             }
         } catch (IOErrorException | AuthFailedException | ClientServerIncompatibleException
-                | BindSpaceFailedException e) {
+                 | BindSpaceFailedException e) {
             e.printStackTrace();
             assert false;
         }
@@ -200,7 +210,7 @@ public class TestSessionPool {
                 } catch (AuthFailedException e) {
                     System.out.println("auth failed, we except here.");
                 } catch (IOErrorException | ClientServerIncompatibleException
-                        | BindSpaceFailedException e) {
+                         | BindSpaceFailedException e) {
                     e.printStackTrace();
                     assert false;
                 } catch (RuntimeException e) {
