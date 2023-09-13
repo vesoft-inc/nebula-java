@@ -46,6 +46,10 @@ public class GraphSessionPoolWithHttp2Example {
 
     private static int executeTimes = 20;
 
+    private static boolean useHttp2 = false;
+
+    private static boolean useSsl = false;
+
     public static void main(String[] args) {
         SSLParam sslParam = new CASignedSSLParam(
                 "examples/src/main/resources/ssl/root.crt",
@@ -61,15 +65,10 @@ public class GraphSessionPoolWithHttp2Example {
                         .setWaitTime(100)
                         .setRetryTimes(3)
                         .setIntervalTime(100)
-                        .setEnableSsl(true)
+                        .setEnableSsl(useSsl)
                         .setSslParam(sslParam)
-                        .setUseHttp2(false);
+                        .setUseHttp2(useHttp2);
         SessionPool sessionPool = new SessionPool(sessionPoolConfig);
-        if (!sessionPool.init()) {
-            log.error("session pool init failed.");
-            System.exit(-1);
-        }
-
         executeForSingleThread(sessionPool);
         executeForMultiThreads(sessionPool);
 
@@ -126,8 +125,8 @@ public class GraphSessionPoolWithHttp2Example {
         NebulaPool pool = new NebulaPool();
         Session session;
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
-        nebulaPoolConfig.setUseHttp2(false);
-        nebulaPoolConfig.setEnableSsl(true);
+        nebulaPoolConfig.setUseHttp2(useHttp2);
+        nebulaPoolConfig.setEnableSsl(useSsl);
         nebulaPoolConfig.setSslParam(sslParam);
         nebulaPoolConfig.setMaxConnSize(10);
         List<HostAddress> addresses = Arrays.asList(new HostAddress(host, port));
