@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.graph;
 
 import static com.vesoft.nebula.client.graph.exception.IOErrorException.E_CONNECT_BROKEN;
+import static com.vesoft.nebula.client.graph.exception.IOErrorException.E_UNKNOWN;
 
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.ErrorCode;
@@ -124,8 +125,8 @@ public class SessionPool implements Serializable {
                 createSessionObject(SessionState.IDLE);
                 idleSessionSize.incrementAndGet();
             } catch (Exception e) {
-                log.error("SessionPool init failed. ", e);
-                return false;
+                log.error("SessionPool init failed. ");
+                throw new RuntimeException("create session failed.", e);
             }
         }
         healthCheckSchedule.scheduleAtFixedRate(this::checkSession, 0, healthCheckTime,
