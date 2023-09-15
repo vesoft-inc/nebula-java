@@ -5,9 +5,6 @@
 
 package com.vesoft.nebula.client.graph;
 
-import static com.vesoft.nebula.client.graph.exception.IOErrorException.E_CONNECT_BROKEN;
-import static com.vesoft.nebula.client.graph.exception.IOErrorException.E_UNKNOWN;
-
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.data.HostAddress;
@@ -353,10 +350,12 @@ public class SessionPool implements Serializable {
                 if (sessionPoolConfig.isEnableSsl()) {
                     connection.open(getAddress(), sessionPoolConfig.getTimeout(),
                             sessionPoolConfig.getSslParam(),
-                            sessionPoolConfig.isUseHttp2());
+                            sessionPoolConfig.isUseHttp2(),
+                            sessionPoolConfig.getCustomHeaders());
                 } else {
                     connection.open(getAddress(), sessionPoolConfig.getTimeout(),
-                            sessionPoolConfig.isUseHttp2());
+                            sessionPoolConfig.isUseHttp2(),
+                            sessionPoolConfig.getCustomHeaders());
                 }
                 break;
             } catch (Exception e) {

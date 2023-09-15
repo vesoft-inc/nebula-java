@@ -7,6 +7,8 @@ package com.vesoft.nebula.client.graph;
 
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NebulaPoolConfig implements Serializable {
 
@@ -44,6 +46,9 @@ public class NebulaPoolConfig implements Serializable {
 
     // Set if use http2 protocol
     private boolean useHttp2 = false;
+
+    // Set custom headers for http2
+    private Map<String,String> customHeaders = new HashMap<>();
 
     public boolean isEnableSsl() {
         return enableSsl;
@@ -130,6 +135,15 @@ public class NebulaPoolConfig implements Serializable {
 
     public NebulaPoolConfig setUseHttp2(boolean useHttp2) {
         this.useHttp2 = useHttp2;
+        return this;
+    }
+
+    public Map<String, String> getCustomHeaders() {
+        return customHeaders;
+    }
+
+    public NebulaPoolConfig setCustomHeaders(Map<String, String> customHeaders) {
+        this.customHeaders = customHeaders;
         return this;
     }
 }

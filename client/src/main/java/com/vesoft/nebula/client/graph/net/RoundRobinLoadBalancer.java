@@ -5,6 +5,7 @@ import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,13 +32,16 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
 
     private boolean useHttp2 = false;
 
+    private Map<String, String> customHeaders;
+
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
                                   double minClusterHealthRate) {
-        this(addresses, timeout, minClusterHealthRate, false);
+        this(addresses, timeout, minClusterHealthRate, false, new HashMap<>());
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
-                                  double minClusterHealthRate, boolean useHttp2) {
+                                  double minClusterHealthRate, boolean useHttp2,
+                                  Map<String, String> headers) {
         this.timeout = timeout;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);
@@ -45,17 +49,19 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         }
         this.minClusterHealthRate = minClusterHealthRate;
         this.useHttp2 = useHttp2;
+        this.customHeaders = headers;
         schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
                                   double minClusterHealthRate) {
-        this(addresses, timeout, sslParam, minClusterHealthRate, false);
+        this(addresses, timeout, sslParam, minClusterHealthRate, false, new HashMap<>());
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
-                                  double minClusterHealthRate, boolean useHttp2) {
-        this(addresses, timeout, minClusterHealthRate, useHttp2);
+                                  double minClusterHealthRate, boolean useHttp2,
+                                  Map<String, String> headers) {
+        this(addresses, timeout, minClusterHealthRate, useHttp2, headers);
         this.sslParam = sslParam;
         this.enabledSsl = true;
     }
@@ -95,9 +101,9 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         try {
             Connection connection = new SyncConnection();
             if (enabledSsl) {
-                connection.open(addr, this.timeout, sslParam, useHttp2);
+                connection.open(addr, this.timeout, sslParam, useHttp2, customHeaders);
             } else {
-                connection.open(addr, this.timeout, useHttp2);
+                connection.open(addr, this.timeout, useHttp2, customHeaders);
             }
             boolean pong = connection.ping();
             connection.close();

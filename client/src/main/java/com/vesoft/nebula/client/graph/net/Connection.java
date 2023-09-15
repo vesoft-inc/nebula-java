@@ -5,6 +5,7 @@ import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import java.io.Serializable;
+import java.util.Map;
 
 public abstract class Connection implements Serializable {
 
@@ -20,14 +21,15 @@ public abstract class Connection implements Serializable {
             throws IOErrorException, ClientServerIncompatibleException;
 
     public abstract void open(HostAddress address, int timeout,
-                              SSLParam sslParam, boolean isUseHttp2)
+                              SSLParam sslParam, boolean isUseHttp2, Map<String, String> headers)
             throws IOErrorException, ClientServerIncompatibleException;
 
 
     public abstract void open(HostAddress address, int timeout) throws IOErrorException,
             ClientServerIncompatibleException;
 
-    public abstract void open(HostAddress address, int timeout, boolean isUseHttp2)
+    public abstract void open(HostAddress address, int timeout,
+                              boolean isUseHttp2, Map<String, String> headers)
             throws IOErrorException, ClientServerIncompatibleException;
 
     public abstract void reopen() throws IOErrorException, ClientServerIncompatibleException;

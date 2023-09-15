@@ -86,9 +86,9 @@ public class NebulaPool implements Serializable {
         this.waitTime = config.getWaitTime();
         this.loadBalancer = config.isEnableSsl()
                 ? new RoundRobinLoadBalancer(addresses, config.getTimeout(), config.getSslParam(),
-                config.getMinClusterHealthRate(), config.isUseHttp2())
+                config.getMinClusterHealthRate(), config.isUseHttp2(), config.getCustomHeaders())
                 : new RoundRobinLoadBalancer(addresses, config.getTimeout(),
-                config.getMinClusterHealthRate(),config.isUseHttp2());
+                config.getMinClusterHealthRate(),config.isUseHttp2(), config.getCustomHeaders());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
