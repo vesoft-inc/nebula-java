@@ -33,9 +33,11 @@ import com.vesoft.nebula.graph.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import okhttp3.internal.http2.Http2Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,14 +55,17 @@ public class SyncConnection extends Connection {
     private SSLSocketFactory sslSocketFactory = null;
     private boolean useHttp2 = false;
 
+    private Map<String, String> headers = new HashMap<>();
+
     @Override
     public void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException {
-        this.open(address, timeout, sslParam, false);
+        this.open(address, timeout, sslParam, false, headers);
     }
 
     @Override
-    public void open(HostAddress address, int timeout, SSLParam sslParam, boolean isUseHttp2)
+    public void open(HostAddress address, int timeout, SSLParam sslParam, boolean isUseHttp2,
+                     Map<String, String> headers)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
@@ -68,6 +73,7 @@ public class SyncConnection extends Connection {
             this.enabledSsl = true;
             this.sslParam = sslParam;
             this.useHttp2 = isUseHttp2;
+            this.headers = headers;
             if (sslSocketFactory == null) {
                 if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
                     sslSocketFactory =
@@ -77,7 +83,7 @@ public class SyncConnection extends Connection {
                             SslUtil.getSSLSocketFactoryWithoutCA((SelfSignedSSLParam) sslParam);
                 }
             }
-            if (isUseHttp2) {
+            if (useHttp2) {
                 getProtocolWithTlsHttp2();
             } else {
                 getProtocolForTls();
@@ -102,16 +108,19 @@ public class SyncConnection extends Connection {
     @Override
     public void open(HostAddress address, int timeout) throws IOErrorException,
             ClientServerIncompatibleException {
-        this.open(address, timeout, false);
+        this.open(address, timeout, false, headers);
     }
 
     @Override
-    public void open(HostAddress address, int timeout, boolean isUseHttp2)
+    public void open(HostAddress address, int timeout,
+                     boolean isUseHttp2, Map<String,String> headers)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
             this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
-            if (isUseHttp2) {
+            this.useHttp2 = isUseHttp2;
+            this.headers = headers;
+            if (useHttp2) {
                 getProtocolForHttp2();
             } else {
                 getProtocol();
@@ -144,7 +153,9 @@ public class SyncConnection extends Connection {
         }
         this.transport = new THttp2Client(url, sslSocketFactory, trustManager)
                 .setConnectTimeout(timeout)
-                .setReadTimeout(timeout);
+                .setReadTimeout(timeout)
+                .setCustomHeaders(headers);
+
         transport.open();
         this.protocol = new TBinaryProtocol(transport);
     }
@@ -166,7 +177,8 @@ public class SyncConnection extends Connection {
         String url = "http://" + serverAddr.getHost() + ":" + serverAddr.getPort();
         this.transport = new THttp2Client(url)
                 .setConnectTimeout(timeout)
-                .setReadTimeout(timeout);
+                .setReadTimeout(timeout)
+                .setCustomHeaders(headers);
         transport.open();
         this.protocol = new TBinaryProtocol(transport);
     }
@@ -196,9 +208,9 @@ public class SyncConnection extends Connection {
     public void reopen() throws IOErrorException, ClientServerIncompatibleException {
         close();
         if (enabledSsl) {
-            open(serverAddr, timeout, sslParam, useHttp2);
+            open(serverAddr, timeout, sslParam, useHttp2, headers);
         } else {
-            open(serverAddr, timeout, useHttp2);
+            open(serverAddr, timeout, useHttp2, headers);
         }
     }
 

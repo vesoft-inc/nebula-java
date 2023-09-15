@@ -8,7 +8,9 @@ package com.vesoft.nebula.client.graph;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SessionPoolConfig implements Serializable {
 
@@ -58,6 +60,8 @@ public class SessionPoolConfig implements Serializable {
     private SSLParam sslParam = null;
 
     private boolean useHttp2 = false;
+
+    private Map<String, String> customHeaders = new HashMap<>();
 
 
     public SessionPoolConfig(List<HostAddress> addresses,
@@ -243,6 +247,15 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
+    public Map<String, String> getCustomHeaders() {
+        return customHeaders;
+    }
+
+    public SessionPoolConfig setCustomHeaders(Map<String, String> customHeaders) {
+        this.customHeaders = customHeaders;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "SessionPoolConfig{"
@@ -259,8 +272,9 @@ public class SessionPoolConfig implements Serializable {
                 + ", intervalTIme=" + intervalTime
                 + ", reconnect=" + reconnect
                 + ", enableSsl=" + enableSsl
-                + ",sslParam=" + sslParam
+                + ", sslParam=" + sslParam
                 + ", useHttp2=" + useHttp2
+                + ", customHeaders=" + customHeaders
                 + '}';
     }
 }
