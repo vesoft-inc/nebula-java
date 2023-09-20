@@ -85,16 +85,20 @@ There are the version correspondence between client and Nebula:
 To connect to the `nebula-graphd` process of Nebula Graph:
 
 ```java
-NebulaPoolConfig nebulaPoolConfig=new NebulaPoolConfig();
-        nebulaPoolConfig.setMaxConnSize(10);
-        List<HostAddress> addresses=Arrays.asList(new HostAddress("127.0.0.1",9669),
-        new HostAddress("127.0.0.1",9670));
-        NebulaPool pool=new NebulaPool();
-        pool.init(addresses,nebulaPoolConfig);
-        Session session=pool.getSession("root","nebula",false);
-        session.execute("SHOW HOSTS;");
-        session.release();
-        pool.close();
+NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+nebulaPoolConfig.setMaxConnSize(10);
+List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669), new HostAddress("127.0.0.1", 9670));
+
+NebulaPool pool = new NebulaPool();
+pool.init(addresses, nebulaPoolConfig);
+
+Session session = pool.getSession("root", "nebula", false);
+
+session.execute("SHOW HOSTS;");
+
+session.release();
+
+pool.close();
 ```
 
 ## Graph SessionPool example
@@ -110,31 +114,36 @@ restarted graphd server when you need to execute with new session， meaning you
 than the idle session number in the session pool.
 
 ```java
-List<HostAddress> addresses=Arrays.asList(new HostAddress("127.0.0.1",9669));
-        String spaceName="test";
-        String user="root";
-        String password="nebula";
-        SessionPoolConfig sessionPoolConfig=new SessionPoolConfig(addresses,spaceName,user,password);
-        sessionPoolConfig.setRetryTimes(3);
-        sessionPoolConfig.setIntervalTime(1000);
-        SessionPool sessionPool=new SessionPool(sessionPoolConfig);
-        if(!sessionPool.init()){
-        log.error("session pool init failed.");
-        return;
-        }
-        ResultSet resultSet;
-        try{
-        resultSet=sessionPool.execute("match (v:player) return v limit 1;");
-        System.out.println(resultSet.toString());
-        }catch(IOErrorException|ClientServerIncompatibleException|AuthFailedException|BindSpaceFailedException e){
-        e.printStackTrace();
-        System.exit(1);
-        }finally{
-        sessionPool.close();
-        }
+List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
+String spaceName = "test";
+String user = "root";
+String password = "nebula";
+SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(addresses, spaceName, user, password);
+sessionPoolConfig.setRetryTimes(3);
+sessionPoolConfig.setIntervalTime(1000);
 
+SessionPool sessionPool = new SessionPool(sessionPoolConfig);
 
+if (!sessionPool.init()) {
+  log.error("session pool init failed.");
+  return;
+}
 
+ResultSet resultSet;
 
-
+try {
+    
+  resultSet = sessionPool.execute("match (v:player) return v limit 1;");
+  System.out.println(resultSet.toString());
+  
+} catch (IOErrorException | ClientServerIncompatibleException | AuthFailedException | BindSpaceFailedException e) {
+    
+  e.printStackTrace();
+  System.exit(1);
+  
+} finally {
+    
+    sessionPool.close();
+    
+}
 ```
