@@ -30,7 +30,9 @@ import org.slf4j.LoggerFactory;
  * when use http2, please call System.exit(0) to exit your process.
  */
 public class GraphSessionPoolWithHttp2Example {
-    private static final Logger log = LoggerFactory.getLogger(GraphSessionPoolWithHttp2Example.class);
+    private static final Logger log = LoggerFactory.getLogger(
+        GraphSessionPoolWithHttp2Example.class
+    );
 
     private static String host = "192.168.8.202";
 
