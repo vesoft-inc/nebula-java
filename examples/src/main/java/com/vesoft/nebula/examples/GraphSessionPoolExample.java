@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GraphSessionPoolExample {
-    private static final Logger log = LoggerFactory.getLogger(GraphClientExample.class);
+    private static final Logger log = LoggerFactory.getLogger(GraphSessionPoolExample.class);
 
     public static void main(String[] args) {
         prepare();
