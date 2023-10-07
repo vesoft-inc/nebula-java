@@ -19,7 +19,9 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import com.vesoft.nebula.client.graph.net.Session;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,9 +50,10 @@ public class GraphSessionPoolWithHttp2Example {
 
     private static int executeTimes = 20;
 
-    private static boolean useHttp2 = false;
+    private static boolean useHttp2 = true;
 
     private static boolean useSsl = false;
+    private static Map<String, String> customHeaders = new HashMap<String, String>();
 
     public static void main(String[] args) {
         SSLParam sslParam = new CASignedSSLParam(
@@ -59,17 +62,19 @@ public class GraphSessionPoolWithHttp2Example {
                 "examples/src/main/resources/ssl/server.key");
         prepare(sslParam);
 
+        customHeaders.put("custom-header", "value");
         SessionPoolConfig sessionPoolConfig = new SessionPoolConfig(
                 Arrays.asList(new HostAddress(host, port)), spaceName, user, password)
-                        .setMaxSessionSize(parallel)
-                        .setMinSessionSize(parallel)
-                        .setRetryConnectTimes(3)
-                        .setWaitTime(100)
-                        .setRetryTimes(3)
-                        .setIntervalTime(100)
-                        .setEnableSsl(useSsl)
-                        .setSslParam(sslParam)
-                        .setUseHttp2(useHttp2);
+                .setMaxSessionSize(parallel)
+                .setMinSessionSize(parallel)
+                .setRetryConnectTimes(3)
+                .setWaitTime(100)
+                .setRetryTimes(3)
+                .setIntervalTime(100)
+                .setEnableSsl(useSsl)
+                .setSslParam(sslParam)
+                .setUseHttp2(useHttp2)
+                .setCustomHeaders(customHeaders);
         SessionPool sessionPool = new SessionPool(sessionPoolConfig);
         executeForSingleThread(sessionPool);
         executeForMultiThreads(sessionPool);
@@ -128,6 +133,7 @@ public class GraphSessionPoolWithHttp2Example {
         Session session;
         NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
         nebulaPoolConfig.setUseHttp2(useHttp2);
+        nebulaPoolConfig.setCustomHeaders(customHeaders);
         nebulaPoolConfig.setEnableSsl(useSsl);
         nebulaPoolConfig.setSslParam(sslParam);
         nebulaPoolConfig.setMaxConnSize(10);
