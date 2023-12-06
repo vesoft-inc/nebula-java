@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import okhttp3.internal.http2.Http2Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,7 +112,7 @@ public class SyncConnection extends Connection {
 
     @Override
     public void open(HostAddress address, int timeout,
-                     boolean isUseHttp2, Map<String,String> headers)
+                     boolean isUseHttp2, Map<String, String> headers)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
@@ -217,7 +216,8 @@ public class SyncConnection extends Connection {
     public AuthResult authenticate(String user, String password)
             throws AuthFailedException, IOErrorException, ClientServerIncompatibleException {
         try {
-            AuthResponse resp = client.authenticate(user.getBytes(), password.getBytes());
+            AuthResponse resp = client.authenticate(user.getBytes(Charsets.UTF_8),
+                    password.getBytes(Charsets.UTF_8));
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 if (resp.error_msg != null) {
                     throw new AuthFailedException(new String(resp.error_msg));
@@ -255,7 +255,10 @@ public class SyncConnection extends Connection {
                                                   Map<byte[], com.vesoft.nebula.Value> parameterMap)
             throws IOErrorException {
         try {
-            return client.executeWithParameter(sessionID, stmt.getBytes(), parameterMap);
+            return client.executeWithParameter(
+                    sessionID,
+                    stmt.getBytes(Charsets.UTF_8),
+                    parameterMap);
         } catch (TException e) {
             if (e instanceof TTransportException) {
                 TTransportException te = (TTransportException) e;
@@ -288,7 +291,10 @@ public class SyncConnection extends Connection {
             throws IOErrorException {
         try {
             byte[] result =
-                    client.executeJsonWithParameter(sessionID, stmt.getBytes(), parameterMap);
+                    client.executeJsonWithParameter(
+                            sessionID,
+                            stmt.getBytes(Charsets.UTF_8),
+                            parameterMap);
             return new String(result, StandardCharsets.UTF_8);
         } catch (TException e) {
             if (e instanceof TTransportException) {
