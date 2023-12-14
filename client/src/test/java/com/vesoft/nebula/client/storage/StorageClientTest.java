@@ -382,9 +382,9 @@ public class StorageClientTest {
             MockStorageData.mockCASslData();
 
             SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.crt",
+                    "src/test/resources/ssl/client.key");
             sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
             sslClient.connect();
 
@@ -421,9 +421,9 @@ public class StorageClientTest {
             MockStorageData.mockSelfSslData();
 
             SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.key",
+                    "");
             sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
             sslClient.connect();
 
