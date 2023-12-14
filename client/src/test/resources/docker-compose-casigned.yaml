@@ -16,9 +16,9 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --expired_time_factor=2
-      - --cert_path=/share/resources/test.derive.crt
-      - --key_path=/share/resources/test.derive.key
-      - --ca_path=/share/resources/test.ca.pem
+      - --cert_path=/share/resources/server.crt
+      - --key_path=/share/resources/server.key
+      - --ca_path=/share/resources/root.crt
       - --enable_ssl=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.1.1:11000/status"]
@@ -57,9 +57,9 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
-      - --cert_path=/share/resources/test.derive.crt
-      - --key_path=/share/resources/test.derive.key
-      - --ca_path=/share/resources/test.ca.pem
+      - --cert_path=/share/resources/server.crt
+      - --key_path=/share/resources/server.key
+      - --ca_path=/share/resources/root.crt
       - --enable_ssl=true
     depends_on:
       - metad-casigned
@@ -99,9 +99,9 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
-      - --cert_path=/share/resources/test.derive.crt
-      - --key_path=/share/resources/test.derive.key
-      - --ca_path=/share/resources/test.ca.pem
+      - --cert_path=/share/resources/server.crt
+      - --key_path=/share/resources/server.key
+      - --ca_path=/share/resources/root.crt
       - --enable_ssl=true
     depends_on:
       - metad-casigned
@@ -133,7 +133,7 @@ services:
       - -c
       - |
         sleep 3 &&
-        nebula-console -addr graphd-casigned -port 9669 -u root -p nebula -enable_ssl=true -ssl_root_ca_path /share/resources/test.ca.pem -ssl_cert_path /share/resources/test.derive.crt -ssl_private_key_path /share/resources/test.derive.key --ssl_insecure_skip_verify=true -e 'ADD HOSTS "172.29.2.1":9779' &&
+        nebula-console -addr graphd-casigned -port 9669 -u root -p nebula -enable_ssl=true -ssl_root_ca_path /share/resources/root.crt -ssl_cert_path /share/resources/client.crt -ssl_private_key_path /share/resources/client.key --ssl_insecure_skip_verify=true -e 'ADD HOSTS "172.29.2.1":9779' &&
         sleep 36000
     volumes:
       - ./ssl:/share/resources:Z

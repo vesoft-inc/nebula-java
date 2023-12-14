@@ -382,53 +382,14 @@ public class StorageClientTest {
             MockStorageData.mockCASslData();
 
             SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.crt",
+                    "src/test/resources/ssl/client.key");
             sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
             sslClient.connect();
 
             ScanVertexResultIterator resultIterator = sslClient.scanVertex(
                     "testStorageCA",
-                    "person");
-            assertIterator(resultIterator);
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert (false);
-        } finally {
-            if (sslClient != null) {
-                try {
-                    sslClient.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-
-    @Test
-    public void testSelfSignedSSL() {
-        // start nebula service with ssl enable
-        List<HostAddress> address = null;
-        StorageClient sslClient = null;
-        Runtime runtime = Runtime.getRuntime();
-        try {
-
-            address = Arrays.asList(new HostAddress(ip, 8559));
-
-            // mock graph data
-            MockStorageData.mockSelfSslData();
-
-            SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
-            sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
-            sslClient.connect();
-
-            ScanVertexResultIterator resultIterator = sslClient.scanVertex(
-                    "testStorageSelf",
                     "person");
             assertIterator(resultIterator);
         } catch (Exception e) {

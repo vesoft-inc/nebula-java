@@ -158,9 +158,9 @@ public class TestMetaClient extends TestCase {
             MockNebulaGraph.createSpaceWithCASSL();
 
             SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.crt",
+                    "src/test/resources/ssl/client.key");
 
             metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 8559)),
                     3000, 1, 1, true, sslParam);
@@ -187,9 +187,9 @@ public class TestMetaClient extends TestCase {
             MockNebulaGraph.createSpaceWithSelfSSL();
 
             SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.key",
+                    "");
             metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 7559)),
                     3000, 1, 1, true, sslParam);
             metaClient.connect();
