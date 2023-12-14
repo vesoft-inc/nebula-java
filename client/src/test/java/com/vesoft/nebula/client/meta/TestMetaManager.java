@@ -132,9 +132,9 @@ public class TestMetaManager extends TestCase {
             MockNebulaGraph.createSpaceWithCASSL();
 
             SSLParam sslParam = new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.crt",
+                    "src/test/resources/ssl/client.key");
 
             metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1",
                     8559)), 3000, 1, 1, true, sslParam);
@@ -170,9 +170,9 @@ public class TestMetaManager extends TestCase {
             MockNebulaGraph.createSpaceWithSelfSSL();
 
             SSLParam sslParam = new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft");
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.key",
+                    "");
             metaManager = new MetaManager(Arrays.asList(new HostAddress("127.0.0.1", 7559)),
                     3000, 1, 1, true, sslParam);
 

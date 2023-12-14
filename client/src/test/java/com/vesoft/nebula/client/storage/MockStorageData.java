@@ -107,9 +107,9 @@ public class MockStorageData {
         nebulaPoolConfig.setMaxConnSize(100);
         nebulaPoolConfig.setEnableSsl(true);
         nebulaPoolConfig.setSslParam(new CASignedSSLParam(
-                "src/test/resources/ssl/casigned.pem",
-                "src/test/resources/ssl/casigned.crt",
-                "src/test/resources/ssl/casigned.key"));
+                "src/test/resources/ssl/root.crt",
+                "src/test/resources/ssl/client.crt",
+                "src/test/resources/ssl/client.key"));
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
         NebulaPool pool = new NebulaPool();
         Session session = null;
@@ -147,9 +147,9 @@ public class MockStorageData {
         nebulaPoolConfig.setMaxConnSize(100);
         nebulaPoolConfig.setEnableSsl(true);
         nebulaPoolConfig.setSslParam(new SelfSignedSSLParam(
-                "src/test/resources/ssl/selfsigned.pem",
-                "src/test/resources/ssl/selfsigned.key",
-                "vesoft"));
+                "src/test/resources/ssl/root.crt",
+                "src/test/resources/ssl/client.key",
+                ""));
         List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 8669));
         NebulaPool pool = new NebulaPool();
         Session session = null;

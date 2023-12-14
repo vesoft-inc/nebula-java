@@ -583,9 +583,9 @@ public class TestDataFromServer {
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new SelfSignedSSLParam(
-                    "src/test/resources/ssl/selfsigned.pem",
-                    "src/test/resources/ssl/selfsigned.key",
-                    "vesoft"));
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.key",
+                    ""));
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 7669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
@@ -616,9 +616,9 @@ public class TestDataFromServer {
             nebulaSslPoolConfig.setMaxConnSize(100);
             nebulaSslPoolConfig.setEnableSsl(true);
             nebulaSslPoolConfig.setSslParam(new CASignedSSLParam(
-                    "src/test/resources/ssl/casigned.pem",
-                    "src/test/resources/ssl/casigned.crt",
-                    "src/test/resources/ssl/casigned.key"));
+                    "src/test/resources/ssl/root.crt",
+                    "src/test/resources/ssl/client.crt",
+                    "src/test/resources/ssl/client.key"));
             Assert.assertTrue(sslPool.init(Arrays.asList(new HostAddress("127.0.0.1", 8669)),
                     nebulaSslPoolConfig));
             sslSession = sslPool.getSession("root", "nebula", true);
