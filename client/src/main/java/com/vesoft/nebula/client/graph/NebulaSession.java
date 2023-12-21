@@ -11,19 +11,17 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.client.graph.net.SessionState;
 import com.vesoft.nebula.client.graph.net.SyncConnection;
+
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class NebulaSession implements Serializable {
 
     private static final long serialVersionUID = -88438249377120255L;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final long sessionID;
     private final int timezoneOffset;
@@ -69,6 +67,13 @@ public class NebulaSession implements Serializable {
         Map<byte[], Value> map = new HashMap<>();
         parameterMap.forEach((key, value) -> map.put(key.getBytes(), Session.value2Nvalue(value)));
         return new ResultSet(connection.executeWithParameter(sessionID, stmt, map), timezoneOffset);
+    }
+
+    public String executeJsonWithParameter(String stmt, Map<String, Object> parameterMap)
+            throws IOErrorException {
+        Map<byte[], Value> map = new HashMap<>();
+        parameterMap.forEach((key, value) -> map.put(key.getBytes(), Session.value2Nvalue(value)));
+        return connection.executeJsonWithParameter(sessionID, stmt, map);
     }
 
     public void release() {
