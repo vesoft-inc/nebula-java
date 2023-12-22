@@ -242,6 +242,8 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
+      - --enable_client_white_list=true
+      - --client_white_list=3.0.0:test
     depends_on:
       - metad0
       - metad1
@@ -279,6 +281,8 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
+      - --enable_client_white_list=true
+      - --client_white_list=3.0.0:test
     depends_on:
       - metad0
       - metad1
@@ -316,6 +320,8 @@ services:
       - --minloglevel=0
       - --heartbeat_interval_secs=2
       - --timezone_name=+08:00:00
+      - --enable_client_white_list=true
+      - --client_white_list=3.0.0:test
     depends_on:
       - metad0
       - metad1
@@ -341,7 +347,7 @@ services:
   console:
     image: vesoft/nebula-console:nightly
     entrypoint: ""
-    command: 
+    command:
       - sh
       - -c
       - |
