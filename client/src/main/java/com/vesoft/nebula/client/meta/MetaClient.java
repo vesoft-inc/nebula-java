@@ -79,6 +79,8 @@ public class MetaClient extends AbstractMetaClient {
     private MetaService.Client client;
     private final List<HostAddress> addresses;
 
+    private String version = null;
+
     public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
     }
@@ -112,6 +114,17 @@ public class MetaClient extends AbstractMetaClient {
         if (enableSSL && sslParam == null) {
             throw new IllegalArgumentException("SSL is enabled, but SSLParam is null.");
         }
+    }
+
+    /**
+     * set the version info for MetaClient
+     *
+     * @param version version info
+     * @return MetaClient
+     */
+    public MetaClient setVersion(String version) {
+        this.version = version;
+        return this;
     }
 
     public void connect()
@@ -155,8 +168,11 @@ public class MetaClient extends AbstractMetaClient {
         client = new MetaService.Client(protocol);
 
         // check if client version matches server version
-        VerifyClientVersionResp resp = client
-                .verifyClientVersion(new VerifyClientVersionReq());
+        VerifyClientVersionReq verifyClientVersionReq = new VerifyClientVersionReq();
+        if (version != null) {
+            verifyClientVersionReq.setClient_version(version.getBytes(Charsets.UTF_8));
+        }
+        VerifyClientVersionResp resp = client.verifyClientVersion(verifyClientVersionReq);
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
             client.getInputProtocol().getTransport().close();
             if (resp.getError_msg() == null) {
@@ -164,9 +180,7 @@ public class MetaClient extends AbstractMetaClient {
                         new String("Error code: ")
                                 + String.valueOf(resp.getCode().getValue()));
             }
-            throw new ClientServerIncompatibleException(
-                    new String(resp.getError_msg())
-                            + String.valueOf(resp.getCode().getValue()));
+            throw new ClientServerIncompatibleException(new String(resp.getError_msg()));
         }
     }
 
