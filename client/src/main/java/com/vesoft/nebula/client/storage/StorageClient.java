@@ -54,8 +54,7 @@ public class StorageClient implements Serializable {
     private String user = null;
     private String password = null;
 
-    private String graphHost = null;
-    private Integer graphPort = null;
+    private String graphAddresss = null;
 
 
     // the write list for users with read permission
@@ -122,14 +121,12 @@ public class StorageClient implements Serializable {
         return this;
     }
 
-    public StorageClient setGraphHost(String host) {
-        this.graphHost = host;
-        return this;
+    public String getGraphAddresss() {
+        return graphAddresss;
     }
 
-    public StorageClient setGraphPort(Integer port) {
-        this.graphPort = port;
-        return this;
+    public void setGraphAddresss(String graphAddresss) {
+        this.graphAddresss = graphAddresss;
     }
 
     /**
@@ -1193,13 +1190,18 @@ public class StorageClient implements Serializable {
      */
     private void authUser() throws AuthFailedException, IOErrorException,
             ClientServerIncompatibleException, UnsupportedEncodingException {
-        if (user == null || password == null || graphHost == null || graphPort == null) {
+        if (user == null || password == null || graphAddresss == null) {
             throw new IllegalArgumentException(
-                    "the user,password,graphHost,graphPort can not be null,"
+                    "the user,password,graphAddress can not be null,"
                             + " please config them first by setXXX()");
         }
         SyncConnection graphConnection = new SyncConnection();
-        graphConnection.open(new HostAddress(graphHost, graphPort), timeout);
+        String[] graphAddrAndPort = graphAddresss.split(":");
+        if (graphAddrAndPort.length != 2) {
+            throw new IllegalArgumentException("the graph address is invalid.");
+        }
+        graphConnection.open(new HostAddress(graphAddrAndPort[0].trim(),
+                Integer.valueOf(graphAddrAndPort[1].trim())), timeout);
         AuthResult authResult = graphConnection.authenticate(user, password);
         long sessionId = authResult.getSessionId();
         ResultSet resultSet = new ResultSet(
