@@ -90,8 +90,11 @@ public class GraphClientExample {
         try {
             NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
             nebulaPoolConfig.setMaxConnSize(100);
+            // optional config, default value is 3.0.0. If config other value, please make sure
+            // the NebulaGraph server has the same value in client_white_list
+            nebulaPoolConfig.setVersion("3.0.0");
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9669));
-            Boolean initResult = pool.init(addresses, nebulaPoolConfig);
+            boolean initResult = pool.init(addresses, nebulaPoolConfig);
             if (!initResult) {
                 log.error("pool init failed.");
                 return;
