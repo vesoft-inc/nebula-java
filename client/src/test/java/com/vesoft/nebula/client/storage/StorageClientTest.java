@@ -53,6 +53,37 @@ public class StorageClientTest {
     }
 
     @Test
+    public void testStorageClientWithVersionInWhiteList() {
+        List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
+        StorageClient storageClient = new StorageClient(address);
+        try {
+            storageClient.setVersion("3.0.0");
+            assert (storageClient.connect());
+
+            storageClient.setVersion("test");
+            assert (storageClient.connect());
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        }
+    }
+
+    @Test
+    public void testStorageClientWithVersionNotInWhiteList() {
+        List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
+        StorageClient storageClient = new StorageClient(address);
+        try {
+            storageClient.setVersion("INVALID_VERSION");
+            storageClient.connect();
+            assert false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert (e.getMessage()
+                    .contains("Current client is not compatible with the remote server"));
+        }
+    }
+
+    @Test
     public void testScanVertexWithNoCol() {
         try {
             client.connect();
