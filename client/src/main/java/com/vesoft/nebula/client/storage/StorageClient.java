@@ -7,7 +7,14 @@ package com.vesoft.nebula.client.storage;
 
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.data.SSLParam;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
+import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.net.AuthResult;
+import com.vesoft.nebula.client.graph.net.SyncConnection;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.scan.PartScanInfo;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
@@ -19,10 +26,13 @@ import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.storage.VertexProp;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +50,15 @@ public class StorageClient implements Serializable {
 
     private boolean enableSSL = false;
     private SSLParam sslParam = null;
+
+    private String user = null;
+    private String password = null;
+
+    private String graphAddresss = null;
+
+
+    // the write list for users with read permission
+    private Map<String, List<String>> spaceLabelWriteList = new HashMap<>();
 
     /**
      * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
@@ -92,12 +111,31 @@ public class StorageClient implements Serializable {
         }
     }
 
+    public StorageClient setUser(String user) {
+        this.user = user;
+        return this;
+    }
+
+    public StorageClient setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public String getGraphAddresss() {
+        return graphAddresss;
+    }
+
+    public void setGraphAddresss(String graphAddresss) {
+        this.graphAddresss = graphAddresss;
+    }
+
     /**
      * Connect to Nebula Storage server.
      *
      * @return true if connect successfully.
      */
     public boolean connect() throws Exception {
+        authUser();
         connection.open(addresses.get(0), timeout, enableSSL, sslParam);
         StoragePoolConfig config = new StoragePoolConfig();
         config.setEnableSSL(enableSSL);
@@ -554,6 +592,15 @@ public class StorageClient implements Serializable {
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
                     leader.getPort())));
         }
+
+        // check the user permission after the 'getLeader',
+        // if the space is not exist, 'getLeader' can throw it first.
+        if (!checkWriteList(spaceName, tagName)) {
+            throw new IllegalArgumentException(
+                    String.format("user %s has no read permission for %s.%s", user, spaceName,
+                            tagName));
+        }
+
         List<HostAddress> addrs = new ArrayList<>();
         for (HostAddr addr : metaManager.listHosts()) {
             addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
@@ -997,6 +1044,10 @@ public class StorageClient implements Serializable {
                                             long endTime,
                                             boolean allowPartSuccess,
                                             boolean allowReadFromFollower) {
+        if (!checkWriteList(spaceName, edgeName)) {
+            throw new IllegalArgumentException(
+                    String.format("user has no read permission for %s.%s", spaceName, edgeName));
+        }
         if (spaceName == null || spaceName.trim().isEmpty()) {
             throw new IllegalArgumentException("space name is empty.");
         }
@@ -1130,6 +1181,92 @@ public class StorageClient implements Serializable {
      */
     private long getEdgeId(String spaceName, String edgeName) {
         return metaManager.getEdge(spaceName, edgeName).getEdge_type();
+    }
+
+
+    /**
+     * auth user with graphd server, and get the space and labels WriteList with read permission
+     * for user
+     */
+    private void authUser() throws AuthFailedException, IOErrorException,
+            ClientServerIncompatibleException, UnsupportedEncodingException {
+        if (user == null || password == null || graphAddresss == null) {
+            throw new IllegalArgumentException(
+                    "the user,password,graphAddress can not be null,"
+                            + " please config them first by setXXX()");
+        }
+        SyncConnection graphConnection = new SyncConnection();
+        String[] graphAddrAndPort = graphAddresss.split(":");
+        if (graphAddrAndPort.length != 2) {
+            throw new IllegalArgumentException("the graph address is invalid.");
+        }
+        graphConnection.open(new HostAddress(graphAddrAndPort[0].trim(),
+                Integer.valueOf(graphAddrAndPort[1].trim())), timeout);
+        AuthResult authResult = graphConnection.authenticate(user, password);
+        long sessionId = authResult.getSessionId();
+        ResultSet resultSet = new ResultSet(
+                graphConnection.execute(sessionId, "DESC USER " + user),
+                authResult.getTimezoneOffset());
+        if (!resultSet.isSucceeded()) {
+            throw new RuntimeException("get spaces for user " + user + " failed, "
+                    + resultSet.getErrorMessage());
+        }
+        if (resultSet.isEmpty()) {
+            throw new RuntimeException("there's no space for user " + user + " to have permission"
+                    + " to access.");
+        }
+
+        for (int i = 0; i < resultSet.getRows().size(); i++) {
+            List<ValueWrapper> values = resultSet.rowValues(i).values();
+            String role = values.get(0).asString();
+            String space = values.get(1).asString();
+            if (!role.equalsIgnoreCase("BASIC")) {
+                spaceLabelWriteList.put(space, null);
+            } else {
+                List<String> labels = new ArrayList<>();
+                // get the tags and edges that the user has read permission for
+                String showGrants = String.format("USE %s; show grants %s", space, user);
+                ResultSet userGrantResult = new ResultSet(graphConnection.execute(sessionId,
+                        showGrants),
+                        authResult.getTimezoneOffset());
+                if (!userGrantResult.isSucceeded()) {
+                    throw new RuntimeException("get tags for user " + user
+                            + " failed, " + userGrantResult.getErrorMessage());
+                }
+                List<ValueWrapper> readTags = userGrantResult.colValues("READ(TAG)");
+                if (!readTags.isEmpty()) {
+                    for (ValueWrapper v : readTags.get(0).asList()) {
+                        labels.add(v.asString());
+                    }
+                }
+                List<ValueWrapper> readEdges = userGrantResult.colValues("READ(EDGE)");
+                if (!readEdges.isEmpty()) {
+                    for (ValueWrapper v : readEdges.get(0).asList()) {
+                        labels.add(v.asString());
+                    }
+                }
+                spaceLabelWriteList.put(space, labels);
+            }
+        }
+    }
+
+
+    /**
+     * check if the space and the label is in the WriteList
+     *
+     * @param spaceName space name
+     * @param label     tag name or edge type name
+     * @return true if spaceName and label in the WriteList
+     */
+    private boolean checkWriteList(String spaceName, String label) {
+        if (!spaceLabelWriteList.containsKey(spaceName)) {
+            return false;
+        }
+        if (spaceLabelWriteList.get(spaceName) != null
+                && !spaceLabelWriteList.get(spaceName).contains(label)) {
+            return false;
+        }
+        return true;
     }
 
     private static final int DEFAULT_LIMIT = 1000;

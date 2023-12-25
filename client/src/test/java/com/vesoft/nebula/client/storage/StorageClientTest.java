@@ -43,6 +43,9 @@ public class StorageClientTest {
             assert (false);
         }
         client = new StorageClient(address);
+        client.setGraphAddresss(ip + ":9669");
+        client.setUser("root");
+        client.setPassword("nebula");
     }
 
     @After
