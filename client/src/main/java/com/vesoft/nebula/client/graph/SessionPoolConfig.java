@@ -63,6 +63,8 @@ public class SessionPoolConfig implements Serializable {
 
     private Map<String, String> customHeaders = new HashMap<>();
 
+    private String version = null;
+
 
     public SessionPoolConfig(List<HostAddress> addresses,
                              String spaceName,
@@ -254,6 +256,14 @@ public class SessionPoolConfig implements Serializable {
     public SessionPoolConfig setCustomHeaders(Map<String, String> customHeaders) {
         this.customHeaders = customHeaders;
         return this;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override

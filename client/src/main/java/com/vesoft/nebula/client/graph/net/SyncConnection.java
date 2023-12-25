@@ -56,15 +56,17 @@ public class SyncConnection extends Connection {
 
     private Map<String, String> headers = new HashMap<>();
 
+    private String versionInfo = null;
+
     @Override
     public void open(HostAddress address, int timeout, SSLParam sslParam)
             throws IOErrorException, ClientServerIncompatibleException {
-        this.open(address, timeout, sslParam, false, headers);
+        this.open(address, timeout, sslParam, false, headers, versionInfo);
     }
 
     @Override
     public void open(HostAddress address, int timeout, SSLParam sslParam, boolean isUseHttp2,
-                     Map<String, String> headers)
+                     Map<String, String> headers, String version)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
@@ -73,6 +75,7 @@ public class SyncConnection extends Connection {
             this.sslParam = sslParam;
             this.useHttp2 = isUseHttp2;
             this.headers = headers;
+            this.versionInfo = version;
             if (sslSocketFactory == null) {
                 if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
                     sslSocketFactory =
@@ -91,6 +94,10 @@ public class SyncConnection extends Connection {
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
+            VerifyClientVersionReq verifyClientVersionReq = new VerifyClientVersionReq();
+            if (versionInfo != null) {
+                verifyClientVersionReq.setVersion(versionInfo.getBytes(Charsets.UTF_8));
+            }
             VerifyClientVersionResp resp =
                     client.verifyClientVersion(new VerifyClientVersionReq());
             if (resp.error_code != ErrorCode.SUCCEEDED) {
@@ -107,18 +114,19 @@ public class SyncConnection extends Connection {
     @Override
     public void open(HostAddress address, int timeout) throws IOErrorException,
             ClientServerIncompatibleException {
-        this.open(address, timeout, false, headers);
+        this.open(address, timeout, false, headers, versionInfo);
     }
 
     @Override
     public void open(HostAddress address, int timeout,
-                     boolean isUseHttp2, Map<String, String> headers)
+                     boolean isUseHttp2, Map<String, String> headers, String version)
             throws IOErrorException, ClientServerIncompatibleException {
         try {
             this.serverAddr = address;
             this.timeout = timeout <= 0 ? Integer.MAX_VALUE : timeout;
             this.useHttp2 = isUseHttp2;
             this.headers = headers;
+            this.versionInfo = version;
             if (useHttp2) {
                 getProtocolForHttp2();
             } else {
@@ -127,8 +135,12 @@ public class SyncConnection extends Connection {
             client = new GraphService.Client(protocol);
 
             // check if client version matches server version
+            VerifyClientVersionReq verifyClientVersionReq = new VerifyClientVersionReq();
+            if (versionInfo != null) {
+                verifyClientVersionReq.setVersion(versionInfo.getBytes(Charsets.UTF_8));
+            }
             VerifyClientVersionResp resp =
-                    client.verifyClientVersion(new VerifyClientVersionReq());
+                    client.verifyClientVersion(verifyClientVersionReq);
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
                 throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
@@ -207,9 +219,9 @@ public class SyncConnection extends Connection {
     public void reopen() throws IOErrorException, ClientServerIncompatibleException {
         close();
         if (enabledSsl) {
-            open(serverAddr, timeout, sslParam, useHttp2, headers);
+            open(serverAddr, timeout, sslParam, useHttp2, headers, versionInfo);
         } else {
-            open(serverAddr, timeout, useHttp2, headers);
+            open(serverAddr, timeout, useHttp2, headers, versionInfo);
         }
     }
 

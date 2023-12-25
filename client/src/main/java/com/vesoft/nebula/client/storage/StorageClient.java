@@ -54,11 +54,11 @@ public class StorageClient implements Serializable {
     private String user = null;
     private String password = null;
 
-    private String graphAddresss = null;
-
+    private String graphAddress = null;
 
     // the write list for users with read permission
     private Map<String, List<String>> spaceLabelWriteList = new HashMap<>();
+    private String version = null;
 
     /**
      * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
@@ -121,12 +121,17 @@ public class StorageClient implements Serializable {
         return this;
     }
 
-    public String getGraphAddresss() {
-        return graphAddresss;
+    public String getGraphAddress() {
+        return graphAddress;
     }
 
-    public void setGraphAddresss(String graphAddresss) {
-        this.graphAddresss = graphAddresss;
+    public void setGraphAddress(String graphAddress) {
+        this.graphAddress = graphAddress;
+    }
+
+    public StorageClient setVersion(String version) {
+        this.version = version;
+        return this;
     }
 
     /**
@@ -142,7 +147,7 @@ public class StorageClient implements Serializable {
         config.setSslParam(sslParam);
         pool = new StorageConnPool(config);
         metaManager = new MetaManager(addresses, timeout, connectionRetry, executionRetry,
-                enableSSL, sslParam);
+                enableSSL, sslParam, version);
         return true;
     }
 
@@ -1190,13 +1195,13 @@ public class StorageClient implements Serializable {
      */
     private void authUser() throws AuthFailedException, IOErrorException,
             ClientServerIncompatibleException, UnsupportedEncodingException {
-        if (user == null || password == null || graphAddresss == null) {
+        if (user == null || password == null || graphAddress == null) {
             throw new IllegalArgumentException(
                     "the user,password,graphAddress can not be null,"
                             + " please config them first by setXXX()");
         }
         SyncConnection graphConnection = new SyncConnection();
-        String[] graphAddrAndPort = graphAddresss.split(":");
+        String[] graphAddrAndPort = graphAddress.split(":");
         if (graphAddrAndPort.length != 2) {
             throw new IllegalArgumentException("the graph address is invalid.");
         }
