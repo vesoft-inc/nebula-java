@@ -1206,7 +1206,9 @@ public class StorageClient implements Serializable {
             throw new IllegalArgumentException("the graph address is invalid.");
         }
         graphConnection.open(new HostAddress(graphAddrAndPort[0].trim(),
-                Integer.valueOf(graphAddrAndPort[1].trim())), timeout);
+                        Integer.valueOf(graphAddrAndPort[1].trim())), timeout, false,
+                new HashMap<>(),
+                version);
         AuthResult authResult = graphConnection.authenticate(user, password);
         long sessionId = authResult.getSessionId();
         ResultSet resultSet = new ResultSet(
