@@ -58,7 +58,7 @@ jobs:
           popd
 
       - name: Deploy Release to Maven package
-        uses: samuelmeuli/action-maven-publish@v1
+        uses: Shinji-IkariG/action-maven-publish@v1
         with:
           gpg_private_key: ${{ secrets.JAVA_GPG_PRIVATE_KEY }}
           gpg_passphrase: ${{ secrets.JAVA_GPG_PASSPHRASE }}
