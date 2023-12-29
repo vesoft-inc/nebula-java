@@ -18,10 +18,12 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
 import com.vesoft.nebula.client.util.ProcessUtil;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -60,6 +62,9 @@ public class StorageClientTest {
         List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
         StorageClient storageClient = new StorageClient(address);
         try {
+            storageClient.setGraphAddress("127.0.0.1:9669");
+            storageClient.setUser("root");
+            storageClient.setPassword("nebula");
             storageClient.setVersion("3.0.0");
             assert (storageClient.connect());
 
@@ -76,6 +81,9 @@ public class StorageClientTest {
         List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
         StorageClient storageClient = new StorageClient(address);
         try {
+            storageClient.setGraphAddress("127.0.0.1:9669");
+            storageClient.setUser("root");
+            storageClient.setPassword("nebula");
             storageClient.setVersion("INVALID_VERSION");
             storageClient.connect();
             assert false;

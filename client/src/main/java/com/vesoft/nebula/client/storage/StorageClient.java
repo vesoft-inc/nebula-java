@@ -25,6 +25,7 @@ import com.vesoft.nebula.storage.EdgeProp;
 import com.vesoft.nebula.storage.ScanEdgeRequest;
 import com.vesoft.nebula.storage.ScanVertexRequest;
 import com.vesoft.nebula.storage.VertexProp;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,7 @@ public class StorageClient implements Serializable {
     private String graphAddress = null;
 
     // the write list for users with read permission
-    private Map<String, List<String>> spaceLabelWriteList = new HashMap<>();
+    private Map<String, List<String>> spaceLabelWriteList = null;
     private String version = null;
 
     /**
@@ -1211,6 +1213,12 @@ public class StorageClient implements Serializable {
                 version);
         AuthResult authResult = graphConnection.authenticate(user, password);
         long sessionId = authResult.getSessionId();
+
+        if (user.equals("root")) {
+            return;
+        }
+
+        spaceLabelWriteList = new HashMap<>();
         ResultSet resultSet = new ResultSet(
                 graphConnection.execute(sessionId, "DESC USER " + user),
                 authResult.getTimezoneOffset());
@@ -1266,6 +1274,9 @@ public class StorageClient implements Serializable {
      * @return true if spaceName and label in the WriteList
      */
     private boolean checkWriteList(String spaceName, String label) {
+        if (spaceLabelWriteList == null) {
+            return true;
+        }
         if (!spaceLabelWriteList.containsKey(spaceName)) {
             return false;
         }
