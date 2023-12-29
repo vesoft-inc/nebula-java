@@ -390,11 +390,13 @@ public class SessionPool implements Serializable {
                     connection.open(getAddress(), sessionPoolConfig.getTimeout(),
                             sessionPoolConfig.getSslParam(),
                             sessionPoolConfig.isUseHttp2(),
-                            sessionPoolConfig.getCustomHeaders());
+                            sessionPoolConfig.getCustomHeaders(),
+                            sessionPoolConfig.getVersion());
                 } else {
                     connection.open(getAddress(), sessionPoolConfig.getTimeout(),
                             sessionPoolConfig.isUseHttp2(),
-                            sessionPoolConfig.getCustomHeaders());
+                            sessionPoolConfig.getCustomHeaders(),
+                            sessionPoolConfig.getVersion());
                 }
                 break;
             } catch (Exception e) {

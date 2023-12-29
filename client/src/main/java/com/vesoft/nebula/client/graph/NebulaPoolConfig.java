@@ -50,6 +50,9 @@ public class NebulaPoolConfig implements Serializable {
     // Set custom headers for http2
     private Map<String,String> customHeaders = new HashMap<>();
 
+    // set version for client
+    private String version = null;
+
     public boolean isEnableSsl() {
         return enableSsl;
     }
@@ -145,5 +148,13 @@ public class NebulaPoolConfig implements Serializable {
     public NebulaPoolConfig setCustomHeaders(Map<String, String> customHeaders) {
         this.customHeaders = customHeaders;
         return this;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }
