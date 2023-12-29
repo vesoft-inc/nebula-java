@@ -25,6 +25,10 @@ public class StorageClientExample {
         // input params are the metad's ip and port
         StorageClient client = new StorageClient("127.0.0.1", 9559);
         try {
+            client.setGraphAddress("127.0.0.1:9669");
+            client.setUser("root");
+            client.setPassword("nebula");
+            client.setVersion("test");
             client.connect();
         } catch (Exception e) {
             LOGGER.error("storage client connect error, ", e);
