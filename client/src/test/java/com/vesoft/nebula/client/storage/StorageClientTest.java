@@ -8,7 +8,6 @@ package com.vesoft.nebula.client.storage;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
-import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import com.vesoft.nebula.client.storage.data.VertexRow;
@@ -17,13 +16,9 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
-import com.vesoft.nebula.client.util.ProcessUtil;
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -428,6 +423,10 @@ public class StorageClientTest {
                     "src/test/resources/ssl/client.crt",
                     "src/test/resources/ssl/client.key");
             sslClient = new StorageClient(address, 1000, 1, 1, true, sslParam);
+            sslClient.setGraphAddress("127.0.0.1:8669");
+            sslClient.setUser("root");
+            sslClient.setPassword("nebula");
+            sslClient.setVersion("3.0.0");
             sslClient.connect();
 
             ScanVertexResultIterator resultIterator = sslClient.scanVertex(
