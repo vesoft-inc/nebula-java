@@ -1,10 +1,13 @@
 name: Generate API reference via Doxygen and push to GitHub Pages
-
+env:
+  # Remember to update the version number
+  output_version: release-3.6
 on:
     push:
         branches:
-        # Remember to add v before the following version number unless the version is master.
+        # Remember to update the version number
           - release-3.6
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,11 +25,11 @@ jobs:
 
     - name: Generate Documentation
       run: |
-        echo "OUTPUT_DIRECTORY=Java-$(echo ${GITHUB_REF#refs/heads/})" >> doxygen-config
+        echo "OUTPUT_DIRECTORY=Java-${{ env.output_version}}" >> doxygen-config
         doxygen doxygen-config
 
     - name: Deploy to gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: Java-$(echo ${GITHUB_REF#refs/heads/})/html
+        publish_dir: Java-${{ env.output_version}}/html
