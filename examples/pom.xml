@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vesoft</groupId>
         <artifactId>nebula</artifactId>
-        <version>3.7.0-zszq</version>
+        <version>3.7.0-auth</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
