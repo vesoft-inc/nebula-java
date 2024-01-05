@@ -1,7 +1,5 @@
 name: Generate API reference via Doxygen and push to GitHub Pages
 env:
-  # Specify the SDK version based on which the API reference is generated
-  # output_version: release-3.6
   # Specify the doc version to which the API reference belongs
   doc_version: 3.6.0
 on:
