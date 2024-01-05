@@ -13,9 +13,7 @@ import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.pool2.impl.AbandonedConfig;
@@ -86,10 +84,10 @@ public class NebulaPool implements Serializable {
         this.loadBalancer = config.isEnableSsl()
                 ? new RoundRobinLoadBalancer(addresses, config.getTimeout(), config.getSslParam(),
                 config.getMinClusterHealthRate(), config.isUseHttp2(), config.getCustomHeaders(),
-                config.getVersion())
+                config.getHandshakeKey())
                 : new RoundRobinLoadBalancer(addresses, config.getTimeout(),
                 config.getMinClusterHealthRate(), config.isUseHttp2(), config.getCustomHeaders(),
-                config.getVersion());
+                config.getHandshakeKey());
         ConnObjectPool objectPool = new ConnObjectPool(this.loadBalancer, config);
         this.objectPool = new GenericObjectPool<>(objectPool);
         GenericObjectPoolConfig objConfig = new GenericObjectPoolConfig();
