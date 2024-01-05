@@ -1471,7 +1471,7 @@ HTML_DYNAMIC_MENUS     = YES
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_DYNAMIC_SECTIONS  = NO
+HTML_DYNAMIC_SECTIONS  = YES
 
 # If the HTML_CODE_FOLDING tag is set to YES then classes and functions can be
 # dynamically folded and expanded in the generated HTML source code.
