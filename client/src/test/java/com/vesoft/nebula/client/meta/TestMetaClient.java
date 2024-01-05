@@ -16,7 +16,6 @@ import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
-
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;

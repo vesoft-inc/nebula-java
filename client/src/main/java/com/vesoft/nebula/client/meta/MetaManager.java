@@ -91,7 +91,8 @@ public class MetaManager implements MetaCache, Serializable {
      * init the meta info cache with more config
      */
     public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
-                       int executionRetry, boolean enableSSL, SSLParam sslParam, String handshakeKey)
+                       int executionRetry, boolean enableSSL, SSLParam sslParam,
+                       String handshakeKey)
             throws TException, ClientServerIncompatibleException, UnknownHostException {
         metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
                 sslParam);

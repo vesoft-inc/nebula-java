@@ -16,7 +16,6 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
