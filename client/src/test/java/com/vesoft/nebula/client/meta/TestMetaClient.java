@@ -16,7 +16,7 @@ import com.vesoft.nebula.client.util.ProcessUtil;
 import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.TagItem;
-import java.io.IOException;
+
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
@@ -69,10 +69,10 @@ public class TestMetaClient extends TestCase {
         int port = 9559;
         try {
             MetaClient client = new MetaClient(address, port);
-            client.setVersion("3.0.0");
+            client.setHandshakeKey("3.0.0");
             client.connect();
 
-            client.setVersion("test");
+            client.setHandshakeKey("test");
             client.connect();
         } catch (TException | UnknownHostException | ClientServerIncompatibleException e) {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class TestMetaClient extends TestCase {
         int port = 9559;
         try {
             MetaClient client = new MetaClient(address, port);
-            client.setVersion("INVALID_VERSION");
+            client.setHandshakeKey("INVALID_VERSION");
             client.connect();
         } catch (ClientServerIncompatibleException e) {
             e.printStackTrace();

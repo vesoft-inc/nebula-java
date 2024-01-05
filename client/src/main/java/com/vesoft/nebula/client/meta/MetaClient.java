@@ -6,7 +6,6 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
@@ -50,7 +49,6 @@ import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -79,7 +77,7 @@ public class MetaClient extends AbstractMetaClient {
     private MetaService.Client client;
     private final List<HostAddress> addresses;
 
-    private String version = null;
+    private String handshakeKey = null;
 
     public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
@@ -117,13 +115,13 @@ public class MetaClient extends AbstractMetaClient {
     }
 
     /**
-     * set the version info for MetaClient
+     * set the handshakeKey for MetaClient
      *
-     * @param version version info
+     * @param handshakeKey handshakeKey for meta client
      * @return MetaClient
      */
-    public MetaClient setVersion(String version) {
-        this.version = version;
+    public MetaClient setHandshakeKey(String handshakeKey) {
+        this.handshakeKey = handshakeKey;
         return this;
     }
 
@@ -167,10 +165,10 @@ public class MetaClient extends AbstractMetaClient {
         protocol = new THeaderProtocol(transport);
         client = new MetaService.Client(protocol);
 
-        // check if client version matches server version
+        // check if client handshakeKey is in server client_white_list
         VerifyClientVersionReq verifyClientVersionReq = new VerifyClientVersionReq();
-        if (version != null) {
-            verifyClientVersionReq.setClient_version(version.getBytes(Charsets.UTF_8));
+        if (handshakeKey != null) {
+            verifyClientVersionReq.setClient_version(handshakeKey.getBytes(Charsets.UTF_8));
         }
         VerifyClientVersionResp resp = client.verifyClientVersion(verifyClientVersionReq);
         if (resp.getCode() != ErrorCode.SUCCEEDED) {

@@ -8,7 +8,6 @@ package com.vesoft.nebula.client.storage;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
-import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
 import com.vesoft.nebula.client.storage.data.EdgeRow;
 import com.vesoft.nebula.client.storage.data.EdgeTableRow;
 import com.vesoft.nebula.client.storage.data.VertexRow;
@@ -17,8 +16,7 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
-import com.vesoft.nebula.client.util.ProcessUtil;
-import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
@@ -57,10 +55,10 @@ public class StorageClientTest {
         List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
         StorageClient storageClient = new StorageClient(address);
         try {
-            storageClient.setVersion("3.0.0");
+            storageClient.setHandshakeKey("3.0.0");
             assert (storageClient.connect());
 
-            storageClient.setVersion("test");
+            storageClient.setHandshakeKey("test");
             assert (storageClient.connect());
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +71,7 @@ public class StorageClientTest {
         List<HostAddress> address = Arrays.asList(new HostAddress(ip, 9559));
         StorageClient storageClient = new StorageClient(address);
         try {
-            storageClient.setVersion("INVALID_VERSION");
+            storageClient.setHandshakeKey("INVALID_VERSION");
             storageClient.connect();
             assert false;
         } catch (Exception e) {
