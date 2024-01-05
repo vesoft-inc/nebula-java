@@ -1,0 +1,4 @@
+<map id="isDuration" name="isDuration">
+<area shape="rect" id="node1" title="judge the Value is Duration type, the Duration type is the nebula&#39;s type" alt="" coords="127,5,216,32"/>
+<area shape="rect" id="node2" href="$d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html#ad146fa8579a5f8a876c4688cc5a68520" title="Convert Value to String format." alt="" coords="5,5,79,32"/>
+</map>

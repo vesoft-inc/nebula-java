@@ -1,0 +1,6 @@
+<map id="getPartsAlloc" name="getPartsAlloc">
+<area shape="rect" id="node1" title="get all parts alloc of one space" alt="" coords="455,46,561,73"/>
+<area shape="rect" id="node2" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ac89cc69353fc7679b908ab4e5d2b738f" title="get all parts of one space" alt="" coords="292,46,407,73"/>
+<area shape="rect" id="node3" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a46f070fdc4b9fb7032c7ac61894190e6" title="scan edge of all parts with return cols and limit, start time, end time, if allow partial success,..." alt="" coords="5,5,244,47"/>
+<area shape="rect" id="node4" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#af81c6901ac67f4cac77250196c2004b4" title="scan vertex of all parts with specific return cols, limit, startTime, endTime， whether allow partial ..." alt="" coords="5,71,244,112"/>
+</map>

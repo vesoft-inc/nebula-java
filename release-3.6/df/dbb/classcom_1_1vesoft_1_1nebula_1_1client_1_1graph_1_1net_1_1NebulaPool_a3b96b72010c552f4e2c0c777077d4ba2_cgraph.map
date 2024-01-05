@@ -1,0 +1,4 @@
+<map id="getSession" name="getSession">
+<area shape="rect" id="node1" title="get a session from the NebulaPool" alt="" coords="5,5,99,32"/>
+<area shape="rect" id="node2" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a387191e8438c1fcee1c859f56970ab9f" title="Set the connection is invalidate, and the object pool will destroy it." alt="" coords="147,5,327,32"/>
+</map>
