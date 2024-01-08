@@ -50,8 +50,8 @@ public class NebulaPoolConfig implements Serializable {
     // Set custom headers for http2
     private Map<String,String> customHeaders = new HashMap<>();
 
-    // set version for client
-    private String version = null;
+    // set handshakeKey for client, please make the handshakeKey is in server's client_white_list
+    private String handshakeKey = null;
 
     public boolean isEnableSsl() {
         return enableSsl;
@@ -150,11 +150,11 @@ public class NebulaPoolConfig implements Serializable {
         return this;
     }
 
-    public String getVersion() {
-        return version;
+    public String getHandshakeKey() {
+        return handshakeKey;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setHandshakeKey(String handshakeKey) {
+        this.handshakeKey = handshakeKey;
     }
 }

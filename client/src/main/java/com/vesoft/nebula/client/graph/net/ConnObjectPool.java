@@ -40,10 +40,12 @@ public class ConnObjectPool extends BasePooledObjectFactory<SyncConnection>
                                 + "is set to true");
                     }
                     conn.open(address, config.getTimeout(), config.getSslParam(),
-                            config.isUseHttp2(), config.getCustomHeaders(), config.getVersion());
+                            config.isUseHttp2(), config.getCustomHeaders(),
+                            config.getHandshakeKey());
                 } else {
                     conn.open(address, config.getTimeout(),
-                            config.isUseHttp2(), config.getCustomHeaders(), config.getVersion());
+                            config.isUseHttp2(), config.getCustomHeaders(),
+                            config.getHandshakeKey());
                 }
                 return conn;
             } catch (IOErrorException e) {
