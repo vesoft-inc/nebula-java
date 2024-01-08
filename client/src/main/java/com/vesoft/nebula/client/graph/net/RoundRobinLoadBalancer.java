@@ -34,16 +34,16 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
 
     private Map<String, String> customHeaders;
 
-    private String version = null;
+    private String handshakeKey = null;
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
-                                  double minClusterHealthRate, String version) {
-        this(addresses, timeout, minClusterHealthRate, false, new HashMap<>(), version);
+                                  double minClusterHealthRate, String handshakeKey) {
+        this(addresses, timeout, minClusterHealthRate, false, new HashMap<>(), handshakeKey);
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout,
                                   double minClusterHealthRate, boolean useHttp2,
-                                  Map<String, String> headers, String version) {
+                                  Map<String, String> headers, String handshakeKey) {
         this.timeout = timeout;
         for (HostAddress addr : addresses) {
             this.addresses.add(addr);
@@ -52,19 +52,19 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         this.minClusterHealthRate = minClusterHealthRate;
         this.useHttp2 = useHttp2;
         this.customHeaders = headers;
-        this.version = version;
+        this.handshakeKey = handshakeKey;
         schedule.scheduleAtFixedRate(this::scheduleTask, 0, delayTime, TimeUnit.SECONDS);
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
-                                  double minClusterHealthRate, String version) {
-        this(addresses, timeout, sslParam, minClusterHealthRate, false, new HashMap<>(), version);
+                                  double minClusterHealthRate, String handshakeKey) {
+        this(addresses, timeout, sslParam, minClusterHealthRate, false, new HashMap<>(), handshakeKey);
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
                                   double minClusterHealthRate, boolean useHttp2,
-                                  Map<String, String> headers, String version) {
-        this(addresses, timeout, minClusterHealthRate, useHttp2, headers, version);
+                                  Map<String, String> headers, String handshakeKey) {
+        this(addresses, timeout, minClusterHealthRate, useHttp2, headers, handshakeKey);
         this.sslParam = sslParam;
         this.enabledSsl = true;
     }
@@ -104,9 +104,9 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         try {
             Connection connection = new SyncConnection();
             if (enabledSsl) {
-                connection.open(addr, this.timeout, sslParam, useHttp2, customHeaders, version);
+                connection.open(addr, this.timeout, sslParam, useHttp2, customHeaders, handshakeKey);
             } else {
-                connection.open(addr, this.timeout, useHttp2, customHeaders, version);
+                connection.open(addr, this.timeout, useHttp2, customHeaders, handshakeKey);
             }
             boolean pong = connection.ping();
             connection.close();
@@ -114,7 +114,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         } catch (IOErrorException e) {
             return false;
         } catch (ClientServerIncompatibleException e) {
-            LOGGER.error("version verify failed, ", e);
+            LOGGER.error("handshakeKey verify failed, ", e);
             return false;
         }
     }

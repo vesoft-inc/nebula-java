@@ -22,7 +22,7 @@ public abstract class Connection implements Serializable {
 
     public abstract void open(HostAddress address, int timeout,
                               SSLParam sslParam, boolean isUseHttp2, Map<String, String> headers,
-                              String version)
+                              String handshakeKey)
             throws IOErrorException, ClientServerIncompatibleException;
 
 
@@ -30,7 +30,7 @@ public abstract class Connection implements Serializable {
             ClientServerIncompatibleException;
 
     public abstract void open(HostAddress address, int timeout,
-                              boolean isUseHttp2, Map<String, String> headers, String version)
+                              boolean isUseHttp2, Map<String, String> headers, String handshakeKey)
             throws IOErrorException, ClientServerIncompatibleException;
 
     public abstract void reopen() throws IOErrorException, ClientServerIncompatibleException;

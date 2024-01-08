@@ -154,7 +154,7 @@ public class TestConnectionPool {
         try {
             NebulaPool pool = new NebulaPool();
             NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setHandshakeKey("INVALID_VERSION");
+            config.setHandshakeKey("INVALID_KEY");
             boolean initResult = pool.init(
                     Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
                     config);
