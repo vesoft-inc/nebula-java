@@ -58,7 +58,8 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
                                   double minClusterHealthRate, String handshakeKey) {
-        this(addresses, timeout, sslParam, minClusterHealthRate, false, new HashMap<>(), handshakeKey);
+        this(addresses, timeout, sslParam, minClusterHealthRate, false,
+                new HashMap<>(), handshakeKey);
     }
 
     public RoundRobinLoadBalancer(List<HostAddress> addresses, int timeout, SSLParam sslParam,
@@ -104,7 +105,8 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
         try {
             Connection connection = new SyncConnection();
             if (enabledSsl) {
-                connection.open(addr, this.timeout, sslParam, useHttp2, customHeaders, handshakeKey);
+                connection.open(addr, this.timeout, sslParam, useHttp2,
+                        customHeaders, handshakeKey);
             } else {
                 connection.open(addr, this.timeout, useHttp2, customHeaders, handshakeKey);
             }
