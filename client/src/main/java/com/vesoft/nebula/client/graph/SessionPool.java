@@ -17,6 +17,7 @@ import com.vesoft.nebula.client.graph.net.AuthResult;
 import com.vesoft.nebula.client.graph.net.SessionState;
 import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -493,8 +494,11 @@ public class SessionPool implements Serializable {
     }
 
     private boolean isSessionErrorForJson(String result) {
-        if (result == null) return true;
-        int code = JSON.parseObject(result).getJSONArray("errors").getJSONObject(0).getIntValue("code");
+        if (result == null) {
+            return true;
+        }
+        int code = JSON.parseObject(result).getJSONArray("errors")
+                .getJSONObject(0).getIntValue("code");
         return code == ErrorCode.E_SESSION_INVALID.getValue()
                 || code == ErrorCode.E_SESSION_NOT_FOUND.getValue()
                 || code == ErrorCode.E_SESSION_TIMEOUT.getValue();
