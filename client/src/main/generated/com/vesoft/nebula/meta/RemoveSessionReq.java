@@ -198,15 +198,15 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
         case SESSION_IDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list353 = iprot.readListBegin();
-              this.session_ids = new ArrayList<Long>(Math.max(0, _list353.size));
-              for (int _i354 = 0; 
-                   (_list353.size < 0) ? iprot.peekList() : (_i354 < _list353.size); 
-                   ++_i354)
+              TList _list406 = iprot.readListBegin();
+              this.session_ids = new ArrayList<Long>(Math.max(0, _list406.size));
+              for (int _i407 = 0; 
+                   (_list406.size < 0) ? iprot.peekList() : (_i407 < _list406.size); 
+                   ++_i407)
               {
-                long _elem355;
-                _elem355 = iprot.readI64();
-                this.session_ids.add(_elem355);
+                long _elem408;
+                _elem408 = iprot.readI64();
+                this.session_ids.add(_elem408);
               }
               iprot.readListEnd();
             }
@@ -235,8 +235,8 @@ public class RemoveSessionReq implements TBase, java.io.Serializable, Cloneable,
       oprot.writeFieldBegin(SESSION_IDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I64, this.session_ids.size()));
-        for (long _iter356 : this.session_ids)        {
-          oprot.writeI64(_iter356);
+        for (long _iter409 : this.session_ids)        {
+          oprot.writeI64(_iter409);
         }
         oprot.writeListEnd();
       }

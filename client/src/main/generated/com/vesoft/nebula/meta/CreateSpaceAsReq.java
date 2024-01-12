@@ -28,13 +28,18 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
   private static final TStruct STRUCT_DESC = new TStruct("CreateSpaceAsReq");
   private static final TField OLD_SPACE_NAME_FIELD_DESC = new TField("old_space_name", TType.STRING, (short)1);
   private static final TField NEW_SPACE_NAME_FIELD_DESC = new TField("new_space_name", TType.STRING, (short)2);
+  private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)3);
 
   public byte[] old_space_name;
   public byte[] new_space_name;
+  public boolean if_not_exists;
   public static final int OLD_SPACE_NAME = 1;
   public static final int NEW_SPACE_NAME = 2;
+  public static final int IF_NOT_EXISTS = 3;
 
   // isset id assignments
+  private static final int __IF_NOT_EXISTS_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -44,6 +49,8 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(NEW_SPACE_NAME, new FieldMetaData("new_space_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -56,15 +63,21 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
 
   public CreateSpaceAsReq(
       byte[] old_space_name,
-      byte[] new_space_name) {
+      byte[] new_space_name,
+      boolean if_not_exists) {
     this();
     this.old_space_name = old_space_name;
     this.new_space_name = new_space_name;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
   }
 
   public static class Builder {
     private byte[] old_space_name;
     private byte[] new_space_name;
+    private boolean if_not_exists;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -79,10 +92,19 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
       return this;
     }
 
+    public Builder setIf_not_exists(final boolean if_not_exists) {
+      this.if_not_exists = if_not_exists;
+      __optional_isset.set(__IF_NOT_EXISTS_ISSET_ID, true);
+      return this;
+    }
+
     public CreateSpaceAsReq build() {
       CreateSpaceAsReq result = new CreateSpaceAsReq();
       result.setOld_space_name(this.old_space_name);
       result.setNew_space_name(this.new_space_name);
+      if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
+        result.setIf_not_exists(this.if_not_exists);
+      }
       return result;
     }
   }
@@ -95,12 +117,15 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
    * Performs a deep copy on <i>other</i>.
    */
   public CreateSpaceAsReq(CreateSpaceAsReq other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetOld_space_name()) {
       this.old_space_name = TBaseHelper.deepCopy(other.old_space_name);
     }
     if (other.isSetNew_space_name()) {
       this.new_space_name = TBaseHelper.deepCopy(other.new_space_name);
     }
+    this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
   }
 
   public CreateSpaceAsReq deepCopy() {
@@ -155,6 +180,29 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
     }
   }
 
+  public boolean isIf_not_exists() {
+    return this.if_not_exists;
+  }
+
+  public CreateSpaceAsReq setIf_not_exists(boolean if_not_exists) {
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    return this;
+  }
+
+  public void unsetIf_not_exists() {
+    __isset_bit_vector.clear(__IF_NOT_EXISTS_ISSET_ID);
+  }
+
+  // Returns true if field if_not_exists is set (has been assigned a value) and false otherwise
+  public boolean isSetIf_not_exists() {
+    return __isset_bit_vector.get(__IF_NOT_EXISTS_ISSET_ID);
+  }
+
+  public void setIf_not_existsIsSet(boolean __value) {
+    __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case OLD_SPACE_NAME:
@@ -173,6 +221,14 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
       }
       break;
 
+    case IF_NOT_EXISTS:
+      if (__value == null) {
+        unsetIf_not_exists();
+      } else {
+        setIf_not_exists((Boolean)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -185,6 +241,9 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
 
     case NEW_SPACE_NAME:
       return getNew_space_name();
+
+    case IF_NOT_EXISTS:
+      return new Boolean(isIf_not_exists());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -205,12 +264,14 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
 
     if (!TBaseHelper.equalsSlow(this.isSetNew_space_name(), that.isSetNew_space_name(), this.new_space_name, that.new_space_name)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {old_space_name, new_space_name});
+    return Arrays.deepHashCode(new Object[] {old_space_name, new_space_name, if_not_exists});
   }
 
   @Override
@@ -238,6 +299,14 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(new_space_name, other.new_space_name);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetIf_not_exists()).compareTo(other.isSetIf_not_exists());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -269,6 +338,14 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case IF_NOT_EXISTS:
+          if (__field.type == TType.BOOL) {
+            this.if_not_exists = iprot.readBool();
+            setIf_not_existsIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -296,6 +373,9 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
       oprot.writeBinary(this.new_space_name);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
+    oprot.writeBool(this.if_not_exists);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -346,6 +426,13 @@ public class CreateSpaceAsReq implements TBase, java.io.Serializable, Cloneable,
         }
         if (this.getNew_space_name().length > 128) sb.append(" ...");
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("if_not_exists");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

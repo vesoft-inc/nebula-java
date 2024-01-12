@@ -310,16 +310,16 @@ public class ListSessionsResp implements TBase, java.io.Serializable, Cloneable 
         case SESSIONS:
           if (__field.type == TType.LIST) {
             {
-              TList _list349 = iprot.readListBegin();
-              this.sessions = new ArrayList<Session>(Math.max(0, _list349.size));
-              for (int _i350 = 0; 
-                   (_list349.size < 0) ? iprot.peekList() : (_i350 < _list349.size); 
-                   ++_i350)
+              TList _list402 = iprot.readListBegin();
+              this.sessions = new ArrayList<Session>(Math.max(0, _list402.size));
+              for (int _i403 = 0; 
+                   (_list402.size < 0) ? iprot.peekList() : (_i403 < _list402.size); 
+                   ++_i403)
               {
-                Session _elem351;
-                _elem351 = new Session();
-                _elem351.read(iprot);
-                this.sessions.add(_elem351);
+                Session _elem404;
+                _elem404 = new Session();
+                _elem404.read(iprot);
+                this.sessions.add(_elem404);
               }
               iprot.readListEnd();
             }
@@ -358,8 +358,8 @@ public class ListSessionsResp implements TBase, java.io.Serializable, Cloneable 
       oprot.writeFieldBegin(SESSIONS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.sessions.size()));
-        for (Session _iter352 : this.sessions)        {
-          _iter352.write(oprot);
+        for (Session _iter405 : this.sessions)        {
+          _iter405.write(oprot);
         }
         oprot.writeListEnd();
       }

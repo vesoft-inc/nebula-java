@@ -36,6 +36,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final TField ONLY_LATEST_VERSION_FIELD_DESC = new TField("only_latest_version", TType.BOOL, (short)8);
   private static final TField ENABLE_READ_FROM_FOLLOWER_FIELD_DESC = new TField("enable_read_from_follower", TType.BOOL, (short)9);
   private static final TField COMMON_FIELD_DESC = new TField("common", TType.STRUCT, (short)10);
+  private static final TField USERNAME_FIELD_DESC = new TField("username", TType.STRING, (short)11);
+  private static final TField PASSWORD_FIELD_DESC = new TField("password", TType.STRING, (short)12);
+  private static final TField NEED_AUTHENTICATE_FIELD_DESC = new TField("need_authenticate", TType.BOOL, (short)13);
 
   public int space_id;
   public Map<Integer,ScanCursor> parts;
@@ -47,6 +50,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public boolean only_latest_version;
   public boolean enable_read_from_follower;
   public RequestCommon common;
+  public byte[] username;
+  public byte[] password;
+  public boolean need_authenticate;
   public static final int SPACE_ID = 1;
   public static final int PARTS = 2;
   public static final int RETURN_COLUMNS = 3;
@@ -57,6 +63,9 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   public static final int ONLY_LATEST_VERSION = 8;
   public static final int ENABLE_READ_FROM_FOLLOWER = 9;
   public static final int COMMON = 10;
+  public static final int USERNAME = 11;
+  public static final int PASSWORD = 12;
+  public static final int NEED_AUTHENTICATE = 13;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -65,7 +74,8 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
   private static final int __END_TIME_ISSET_ID = 3;
   private static final int __ONLY_LATEST_VERSION_ISSET_ID = 4;
   private static final int __ENABLE_READ_FROM_FOLLOWER_ISSET_ID = 5;
-  private BitSet __isset_bit_vector = new BitSet(6);
+  private static final int __NEED_AUTHENTICATE_ISSET_ID = 6;
+  private BitSet __isset_bit_vector = new BitSet(7);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -94,6 +104,12 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         new FieldValueMetaData(TType.BOOL)));
     tmpMetaDataMap.put(COMMON, new FieldMetaData("common", TFieldRequirementType.OPTIONAL, 
         new StructMetaData(TType.STRUCT, RequestCommon.class)));
+    tmpMetaDataMap.put(USERNAME, new FieldMetaData("username", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(PASSWORD, new FieldMetaData("password", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(NEED_AUTHENTICATE, new FieldMetaData("need_authenticate", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -138,7 +154,10 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       byte[] filter,
       boolean only_latest_version,
       boolean enable_read_from_follower,
-      RequestCommon common) {
+      RequestCommon common,
+      byte[] username,
+      byte[] password,
+      boolean need_authenticate) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
@@ -156,6 +175,10 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     this.enable_read_from_follower = enable_read_from_follower;
     setEnable_read_from_followerIsSet(true);
     this.common = common;
+    this.username = username;
+    this.password = password;
+    this.need_authenticate = need_authenticate;
+    setNeed_authenticateIsSet(true);
   }
 
   public static class Builder {
@@ -169,8 +192,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     private boolean only_latest_version;
     private boolean enable_read_from_follower;
     private RequestCommon common;
+    private byte[] username;
+    private byte[] password;
+    private boolean need_authenticate;
 
-    BitSet __optional_isset = new BitSet(6);
+    BitSet __optional_isset = new BitSet(7);
 
     public Builder() {
     }
@@ -231,6 +257,22 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return this;
     }
 
+    public Builder setUsername(final byte[] username) {
+      this.username = username;
+      return this;
+    }
+
+    public Builder setPassword(final byte[] password) {
+      this.password = password;
+      return this;
+    }
+
+    public Builder setNeed_authenticate(final boolean need_authenticate) {
+      this.need_authenticate = need_authenticate;
+      __optional_isset.set(__NEED_AUTHENTICATE_ISSET_ID, true);
+      return this;
+    }
+
     public ScanVertexRequest build() {
       ScanVertexRequest result = new ScanVertexRequest();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -255,6 +297,11 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         result.setEnable_read_from_follower(this.enable_read_from_follower);
       }
       result.setCommon(this.common);
+      result.setUsername(this.username);
+      result.setPassword(this.password);
+      if (__optional_isset.get(__NEED_AUTHENTICATE_ISSET_ID)) {
+        result.setNeed_authenticate(this.need_authenticate);
+      }
       return result;
     }
   }
@@ -287,6 +334,13 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     if (other.isSetCommon()) {
       this.common = TBaseHelper.deepCopy(other.common);
     }
+    if (other.isSetUsername()) {
+      this.username = TBaseHelper.deepCopy(other.username);
+    }
+    if (other.isSetPassword()) {
+      this.password = TBaseHelper.deepCopy(other.password);
+    }
+    this.need_authenticate = TBaseHelper.deepCopy(other.need_authenticate);
   }
 
   public ScanVertexRequest deepCopy() {
@@ -527,6 +581,77 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     }
   }
 
+  public byte[] getUsername() {
+    return this.username;
+  }
+
+  public ScanVertexRequest setUsername(byte[] username) {
+    this.username = username;
+    return this;
+  }
+
+  public void unsetUsername() {
+    this.username = null;
+  }
+
+  // Returns true if field username is set (has been assigned a value) and false otherwise
+  public boolean isSetUsername() {
+    return this.username != null;
+  }
+
+  public void setUsernameIsSet(boolean __value) {
+    if (!__value) {
+      this.username = null;
+    }
+  }
+
+  public byte[] getPassword() {
+    return this.password;
+  }
+
+  public ScanVertexRequest setPassword(byte[] password) {
+    this.password = password;
+    return this;
+  }
+
+  public void unsetPassword() {
+    this.password = null;
+  }
+
+  // Returns true if field password is set (has been assigned a value) and false otherwise
+  public boolean isSetPassword() {
+    return this.password != null;
+  }
+
+  public void setPasswordIsSet(boolean __value) {
+    if (!__value) {
+      this.password = null;
+    }
+  }
+
+  public boolean isNeed_authenticate() {
+    return this.need_authenticate;
+  }
+
+  public ScanVertexRequest setNeed_authenticate(boolean need_authenticate) {
+    this.need_authenticate = need_authenticate;
+    setNeed_authenticateIsSet(true);
+    return this;
+  }
+
+  public void unsetNeed_authenticate() {
+    __isset_bit_vector.clear(__NEED_AUTHENTICATE_ISSET_ID);
+  }
+
+  // Returns true if field need_authenticate is set (has been assigned a value) and false otherwise
+  public boolean isSetNeed_authenticate() {
+    return __isset_bit_vector.get(__NEED_AUTHENTICATE_ISSET_ID);
+  }
+
+  public void setNeed_authenticateIsSet(boolean __value) {
+    __isset_bit_vector.set(__NEED_AUTHENTICATE_ISSET_ID, __value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -610,6 +735,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       }
       break;
 
+    case USERNAME:
+      if (__value == null) {
+        unsetUsername();
+      } else {
+        setUsername((byte[])__value);
+      }
+      break;
+
+    case PASSWORD:
+      if (__value == null) {
+        unsetPassword();
+      } else {
+        setPassword((byte[])__value);
+      }
+      break;
+
+    case NEED_AUTHENTICATE:
+      if (__value == null) {
+        unsetNeed_authenticate();
+      } else {
+        setNeed_authenticate((Boolean)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -647,6 +796,15 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
     case COMMON:
       return getCommon();
 
+    case USERNAME:
+      return getUsername();
+
+    case PASSWORD:
+      return getPassword();
+
+    case NEED_AUTHENTICATE:
+      return new Boolean(isNeed_authenticate());
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -682,12 +840,18 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
 
     if (!TBaseHelper.equalsNobinary(this.isSetCommon(), that.isSetCommon(), this.common, that.common)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetUsername(), that.isSetUsername(), this.username, that.username)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetPassword(), that.isSetPassword(), this.password, that.password)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetNeed_authenticate(), that.isSetNeed_authenticate(), this.need_authenticate, that.need_authenticate)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, parts, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower, common});
+    return Arrays.deepHashCode(new Object[] {space_id, parts, return_columns, limit, start_time, end_time, filter, only_latest_version, enable_read_from_follower, common, username, password, need_authenticate});
   }
 
   @Override
@@ -779,6 +943,30 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(common, other.common);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetUsername()).compareTo(other.isSetUsername());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(username, other.username);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPassword()).compareTo(other.isSetPassword());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(password, other.password);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetNeed_authenticate()).compareTo(other.isSetNeed_authenticate());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(need_authenticate, other.need_authenticate);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -901,6 +1089,28 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case USERNAME:
+          if (__field.type == TType.STRING) {
+            this.username = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case PASSWORD:
+          if (__field.type == TType.STRING) {
+            this.password = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case NEED_AUTHENTICATE:
+          if (__field.type == TType.BOOL) {
+            this.need_authenticate = iprot.readBool();
+            setNeed_authenticateIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -976,6 +1186,25 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
         this.common.write(oprot);
         oprot.writeFieldEnd();
       }
+    }
+    if (this.username != null) {
+      if (isSetUsername()) {
+        oprot.writeFieldBegin(USERNAME_FIELD_DESC);
+        oprot.writeBinary(this.username);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.password != null) {
+      if (isSetPassword()) {
+        oprot.writeFieldBegin(PASSWORD_FIELD_DESC);
+        oprot.writeBinary(this.password);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (isSetNeed_authenticate()) {
+      oprot.writeFieldBegin(NEED_AUTHENTICATE_FIELD_DESC);
+      oprot.writeBool(this.need_authenticate);
+      oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -1097,6 +1326,54 @@ public class ScanVertexRequest implements TBase, java.io.Serializable, Cloneable
       } else {
         sb.append(TBaseHelper.toString(this.getCommon(), indent + 1, prettyPrint));
       }
+      first = false;
+    }
+    if (isSetUsername())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("username");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getUsername() == null) {
+        sb.append("null");
+      } else {
+          int __username_size = Math.min(this.getUsername().length, 128);
+          for (int i = 0; i < __username_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getUsername()[i]).length() > 1 ? Integer.toHexString(this.getUsername()[i]).substring(Integer.toHexString(this.getUsername()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getUsername()[i]).toUpperCase());
+          }
+          if (this.getUsername().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetPassword())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("password");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getPassword() == null) {
+        sb.append("null");
+      } else {
+          int __password_size = Math.min(this.getPassword().length, 128);
+          for (int i = 0; i < __password_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getPassword()[i]).length() > 1 ? Integer.toHexString(this.getPassword()[i]).substring(Integer.toHexString(this.getPassword()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getPassword()[i]).toUpperCase());
+          }
+          if (this.getPassword().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetNeed_authenticate())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("need_authenticate");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.isNeed_authenticate(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -29,18 +29,22 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
   private static final TField PEERS_FIELD_DESC = new TField("peers", TType.LIST, (short)3);
+  private static final TField UPDATE_PART_FIELD_DESC = new TField("updatePart", TType.BOOL, (short)4);
 
   public int space_id;
   public int part_id;
   public List<com.vesoft.nebula.HostAddr> peers;
+  public boolean updatePart;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
   public static final int PEERS = 3;
+  public static final int UPDATEPART = 4;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
   private static final int __PART_ID_ISSET_ID = 1;
-  private BitSet __isset_bit_vector = new BitSet(2);
+  private static final int __UPDATEPART_ISSET_ID = 2;
+  private BitSet __isset_bit_vector = new BitSet(3);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -53,6 +57,8 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
     tmpMetaDataMap.put(PEERS, new FieldMetaData("peers", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(UPDATEPART, new FieldMetaData("updatePart", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -66,21 +72,25 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
   public CheckPeersReq(
       int space_id,
       int part_id,
-      List<com.vesoft.nebula.HostAddr> peers) {
+      List<com.vesoft.nebula.HostAddr> peers,
+      boolean updatePart) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.part_id = part_id;
     setPart_idIsSet(true);
     this.peers = peers;
+    this.updatePart = updatePart;
+    setUpdatePartIsSet(true);
   }
 
   public static class Builder {
     private int space_id;
     private int part_id;
     private List<com.vesoft.nebula.HostAddr> peers;
+    private boolean updatePart;
 
-    BitSet __optional_isset = new BitSet(2);
+    BitSet __optional_isset = new BitSet(3);
 
     public Builder() {
     }
@@ -102,6 +112,12 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
+    public Builder setUpdatePart(final boolean updatePart) {
+      this.updatePart = updatePart;
+      __optional_isset.set(__UPDATEPART_ISSET_ID, true);
+      return this;
+    }
+
     public CheckPeersReq build() {
       CheckPeersReq result = new CheckPeersReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -111,6 +127,9 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
         result.setPart_id(this.part_id);
       }
       result.setPeers(this.peers);
+      if (__optional_isset.get(__UPDATEPART_ISSET_ID)) {
+        result.setUpdatePart(this.updatePart);
+      }
       return result;
     }
   }
@@ -130,6 +149,7 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
     if (other.isSetPeers()) {
       this.peers = TBaseHelper.deepCopy(other.peers);
     }
+    this.updatePart = TBaseHelper.deepCopy(other.updatePart);
   }
 
   public CheckPeersReq deepCopy() {
@@ -206,6 +226,29 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
     }
   }
 
+  public boolean isUpdatePart() {
+    return this.updatePart;
+  }
+
+  public CheckPeersReq setUpdatePart(boolean updatePart) {
+    this.updatePart = updatePart;
+    setUpdatePartIsSet(true);
+    return this;
+  }
+
+  public void unsetUpdatePart() {
+    __isset_bit_vector.clear(__UPDATEPART_ISSET_ID);
+  }
+
+  // Returns true if field updatePart is set (has been assigned a value) and false otherwise
+  public boolean isSetUpdatePart() {
+    return __isset_bit_vector.get(__UPDATEPART_ISSET_ID);
+  }
+
+  public void setUpdatePartIsSet(boolean __value) {
+    __isset_bit_vector.set(__UPDATEPART_ISSET_ID, __value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -233,6 +276,14 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
+    case UPDATEPART:
+      if (__value == null) {
+        unsetUpdatePart();
+      } else {
+        setUpdatePart((Boolean)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -248,6 +299,9 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
 
     case PEERS:
       return getPeers();
+
+    case UPDATEPART:
+      return new Boolean(isUpdatePart());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -270,12 +324,14 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.isSetPeers(), that.isSetPeers(), this.peers, that.peers)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.updatePart, that.updatePart)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, peers});
+    return Arrays.deepHashCode(new Object[] {space_id, part_id, peers, updatePart});
   }
 
   @Override
@@ -314,6 +370,14 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetUpdatePart()).compareTo(other.isSetUpdatePart());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(updatePart, other.updatePart);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -347,19 +411,27 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
         case PEERS:
           if (__field.type == TType.LIST) {
             {
-              TList _list302 = iprot.readListBegin();
-              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list302.size));
-              for (int _i303 = 0; 
-                   (_list302.size < 0) ? iprot.peekList() : (_i303 < _list302.size); 
-                   ++_i303)
+              TList _list311 = iprot.readListBegin();
+              this.peers = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list311.size));
+              for (int _i312 = 0; 
+                   (_list311.size < 0) ? iprot.peekList() : (_i312 < _list311.size); 
+                   ++_i312)
               {
-                com.vesoft.nebula.HostAddr _elem304;
-                _elem304 = new com.vesoft.nebula.HostAddr();
-                _elem304.read(iprot);
-                this.peers.add(_elem304);
+                com.vesoft.nebula.HostAddr _elem313;
+                _elem313 = new com.vesoft.nebula.HostAddr();
+                _elem313.read(iprot);
+                this.peers.add(_elem313);
               }
               iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case UPDATEPART:
+          if (__field.type == TType.BOOL) {
+            this.updatePart = iprot.readBool();
+            setUpdatePartIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -391,13 +463,16 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(PEERS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.peers.size()));
-        for (com.vesoft.nebula.HostAddr _iter305 : this.peers)        {
-          _iter305.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter314 : this.peers)        {
+          _iter314.write(oprot);
         }
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(UPDATE_PART_FIELD_DESC);
+    oprot.writeBool(this.updatePart);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -441,6 +516,13 @@ public class CheckPeersReq implements TBase, java.io.Serializable, Cloneable, Co
     } else {
       sb.append(TBaseHelper.toString(this.getPeers(), indent + 1, prettyPrint));
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("updatePart");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isUpdatePart(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

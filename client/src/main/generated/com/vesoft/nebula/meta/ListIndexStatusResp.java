@@ -349,16 +349,16 @@ public class ListIndexStatusResp implements TBase, java.io.Serializable, Cloneab
         case STATUSES:
           if (__field.type == TType.LIST) {
             {
-              TList _list212 = iprot.readListBegin();
-              this.statuses = new ArrayList<IndexStatus>(Math.max(0, _list212.size));
-              for (int _i213 = 0; 
-                   (_list212.size < 0) ? iprot.peekList() : (_i213 < _list212.size); 
-                   ++_i213)
+              TList _list229 = iprot.readListBegin();
+              this.statuses = new ArrayList<IndexStatus>(Math.max(0, _list229.size));
+              for (int _i230 = 0; 
+                   (_list229.size < 0) ? iprot.peekList() : (_i230 < _list229.size); 
+                   ++_i230)
               {
-                IndexStatus _elem214;
-                _elem214 = new IndexStatus();
-                _elem214.read(iprot);
-                this.statuses.add(_elem214);
+                IndexStatus _elem231;
+                _elem231 = new IndexStatus();
+                _elem231.read(iprot);
+                this.statuses.add(_elem231);
               }
               iprot.readListEnd();
             }
@@ -397,8 +397,8 @@ public class ListIndexStatusResp implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(STATUSES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.statuses.size()));
-        for (IndexStatus _iter215 : this.statuses)        {
-          _iter215.write(oprot);
+        for (IndexStatus _iter232 : this.statuses)        {
+          _iter232.write(oprot);
         }
         oprot.writeListEnd();
       }

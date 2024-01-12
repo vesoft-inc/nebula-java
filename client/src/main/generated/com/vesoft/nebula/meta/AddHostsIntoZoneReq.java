@@ -28,18 +28,13 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
   private static final TStruct STRUCT_DESC = new TStruct("AddHostsIntoZoneReq");
   private static final TField HOSTS_FIELD_DESC = new TField("hosts", TType.LIST, (short)1);
   private static final TField ZONE_NAME_FIELD_DESC = new TField("zone_name", TType.STRING, (short)2);
-  private static final TField IS_NEW_FIELD_DESC = new TField("is_new", TType.BOOL, (short)3);
 
   public List<com.vesoft.nebula.HostAddr> hosts;
   public byte[] zone_name;
-  public boolean is_new;
   public static final int HOSTS = 1;
   public static final int ZONE_NAME = 2;
-  public static final int IS_NEW = 3;
 
   // isset id assignments
-  private static final int __IS_NEW_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -50,8 +45,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
     tmpMetaDataMap.put(ZONE_NAME, new FieldMetaData("zone_name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    tmpMetaDataMap.put(IS_NEW, new FieldMetaData("is_new", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -64,21 +57,15 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
 
   public AddHostsIntoZoneReq(
       List<com.vesoft.nebula.HostAddr> hosts,
-      byte[] zone_name,
-      boolean is_new) {
+      byte[] zone_name) {
     this();
     this.hosts = hosts;
     this.zone_name = zone_name;
-    this.is_new = is_new;
-    setIs_newIsSet(true);
   }
 
   public static class Builder {
     private List<com.vesoft.nebula.HostAddr> hosts;
     private byte[] zone_name;
-    private boolean is_new;
-
-    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -93,19 +80,10 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
       return this;
     }
 
-    public Builder setIs_new(final boolean is_new) {
-      this.is_new = is_new;
-      __optional_isset.set(__IS_NEW_ISSET_ID, true);
-      return this;
-    }
-
     public AddHostsIntoZoneReq build() {
       AddHostsIntoZoneReq result = new AddHostsIntoZoneReq();
       result.setHosts(this.hosts);
       result.setZone_name(this.zone_name);
-      if (__optional_isset.get(__IS_NEW_ISSET_ID)) {
-        result.setIs_new(this.is_new);
-      }
       return result;
     }
   }
@@ -118,15 +96,12 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
    * Performs a deep copy on <i>other</i>.
    */
   public AddHostsIntoZoneReq(AddHostsIntoZoneReq other) {
-    __isset_bit_vector.clear();
-    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetHosts()) {
       this.hosts = TBaseHelper.deepCopy(other.hosts);
     }
     if (other.isSetZone_name()) {
       this.zone_name = TBaseHelper.deepCopy(other.zone_name);
     }
-    this.is_new = TBaseHelper.deepCopy(other.is_new);
   }
 
   public AddHostsIntoZoneReq deepCopy() {
@@ -181,29 +156,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
     }
   }
 
-  public boolean isIs_new() {
-    return this.is_new;
-  }
-
-  public AddHostsIntoZoneReq setIs_new(boolean is_new) {
-    this.is_new = is_new;
-    setIs_newIsSet(true);
-    return this;
-  }
-
-  public void unsetIs_new() {
-    __isset_bit_vector.clear(__IS_NEW_ISSET_ID);
-  }
-
-  // Returns true if field is_new is set (has been assigned a value) and false otherwise
-  public boolean isSetIs_new() {
-    return __isset_bit_vector.get(__IS_NEW_ISSET_ID);
-  }
-
-  public void setIs_newIsSet(boolean __value) {
-    __isset_bit_vector.set(__IS_NEW_ISSET_ID, __value);
-  }
-
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -223,14 +175,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
       }
       break;
 
-    case IS_NEW:
-      if (__value == null) {
-        unsetIs_new();
-      } else {
-        setIs_new((Boolean)__value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -243,9 +187,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
 
     case ZONE_NAME:
       return getZone_name();
-
-    case IS_NEW:
-      return new Boolean(isIs_new());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -266,14 +207,12 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
 
     if (!TBaseHelper.equalsSlow(this.isSetZone_name(), that.isSetZone_name(), this.zone_name, that.zone_name)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.is_new, that.is_new)) { return false; }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {hosts, zone_name, is_new});
+    return Arrays.deepHashCode(new Object[] {hosts, zone_name});
   }
 
   @Override
@@ -304,14 +243,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetIs_new()).compareTo(other.isSetIs_new());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(is_new, other.is_new);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
     return 0;
   }
 
@@ -329,16 +260,16 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
         case HOSTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list229 = iprot.readListBegin();
-              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list229.size));
-              for (int _i230 = 0; 
-                   (_list229.size < 0) ? iprot.peekList() : (_i230 < _list229.size); 
-                   ++_i230)
+              TList _list246 = iprot.readListBegin();
+              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list246.size));
+              for (int _i247 = 0; 
+                   (_list246.size < 0) ? iprot.peekList() : (_i247 < _list246.size); 
+                   ++_i247)
               {
-                com.vesoft.nebula.HostAddr _elem231;
-                _elem231 = new com.vesoft.nebula.HostAddr();
-                _elem231.read(iprot);
-                this.hosts.add(_elem231);
+                com.vesoft.nebula.HostAddr _elem248;
+                _elem248 = new com.vesoft.nebula.HostAddr();
+                _elem248.read(iprot);
+                this.hosts.add(_elem248);
               }
               iprot.readListEnd();
             }
@@ -349,14 +280,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
         case ZONE_NAME:
           if (__field.type == TType.STRING) {
             this.zone_name = iprot.readBinary();
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
-        case IS_NEW:
-          if (__field.type == TType.BOOL) {
-            this.is_new = iprot.readBool();
-            setIs_newIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -382,8 +305,8 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter232 : this.hosts)        {
-          _iter232.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter249 : this.hosts)        {
+          _iter249.write(oprot);
         }
         oprot.writeListEnd();
       }
@@ -394,9 +317,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
       oprot.writeBinary(this.zone_name);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(IS_NEW_FIELD_DESC);
-    oprot.writeBool(this.is_new);
-    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -442,13 +362,6 @@ public class AddHostsIntoZoneReq implements TBase, java.io.Serializable, Cloneab
         }
         if (this.getZone_name().length > 128) sb.append(" ...");
     }
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("is_new");
-    sb.append(space);
-    sb.append(":").append(space);
-    sb.append(TBaseHelper.toString(this.isIs_new(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -29,13 +29,16 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField DEPEND_SCHEMA_FIELD_DESC = new TField("depend_schema", TType.STRUCT, (short)2);
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)3);
+  private static final TField ANALYZER_FIELD_DESC = new TField("analyzer", TType.STRING, (short)4);
 
   public int space_id;
   public com.vesoft.nebula.SchemaID depend_schema;
   public List<byte[]> fields;
+  public byte[] analyzer;
   public static final int SPACE_ID = 1;
   public static final int DEPEND_SCHEMA = 2;
   public static final int FIELDS = 3;
+  public static final int ANALYZER = 4;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -52,6 +55,8 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
     tmpMetaDataMap.put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new FieldValueMetaData(TType.STRING))));
+    tmpMetaDataMap.put(ANALYZER, new FieldMetaData("analyzer", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -65,18 +70,21 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
   public FTIndex(
       int space_id,
       com.vesoft.nebula.SchemaID depend_schema,
-      List<byte[]> fields) {
+      List<byte[]> fields,
+      byte[] analyzer) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.depend_schema = depend_schema;
     this.fields = fields;
+    this.analyzer = analyzer;
   }
 
   public static class Builder {
     private int space_id;
     private com.vesoft.nebula.SchemaID depend_schema;
     private List<byte[]> fields;
+    private byte[] analyzer;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -99,6 +107,11 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       return this;
     }
 
+    public Builder setAnalyzer(final byte[] analyzer) {
+      this.analyzer = analyzer;
+      return this;
+    }
+
     public FTIndex build() {
       FTIndex result = new FTIndex();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -106,6 +119,7 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       }
       result.setDepend_schema(this.depend_schema);
       result.setFields(this.fields);
+      result.setAnalyzer(this.analyzer);
       return result;
     }
   }
@@ -126,6 +140,9 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
     }
     if (other.isSetFields()) {
       this.fields = TBaseHelper.deepCopy(other.fields);
+    }
+    if (other.isSetAnalyzer()) {
+      this.analyzer = TBaseHelper.deepCopy(other.analyzer);
     }
   }
 
@@ -204,6 +221,30 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
     }
   }
 
+  public byte[] getAnalyzer() {
+    return this.analyzer;
+  }
+
+  public FTIndex setAnalyzer(byte[] analyzer) {
+    this.analyzer = analyzer;
+    return this;
+  }
+
+  public void unsetAnalyzer() {
+    this.analyzer = null;
+  }
+
+  // Returns true if field analyzer is set (has been assigned a value) and false otherwise
+  public boolean isSetAnalyzer() {
+    return this.analyzer != null;
+  }
+
+  public void setAnalyzerIsSet(boolean __value) {
+    if (!__value) {
+      this.analyzer = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -231,6 +272,14 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       }
       break;
 
+    case ANALYZER:
+      if (__value == null) {
+        unsetAnalyzer();
+      } else {
+        setAnalyzer((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -246,6 +295,9 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
 
     case FIELDS:
       return getFields();
+
+    case ANALYZER:
+      return getAnalyzer();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -268,12 +320,14 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
 
     if (!TBaseHelper.equalsSlow(this.isSetFields(), that.isSetFields(), this.fields, that.fields)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetAnalyzer(), that.isSetAnalyzer(), this.analyzer, that.analyzer)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, depend_schema, fields});
+    return Arrays.deepHashCode(new Object[] {space_id, depend_schema, fields, analyzer});
   }
 
   @Override
@@ -312,6 +366,14 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetAnalyzer()).compareTo(other.isSetAnalyzer());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(analyzer, other.analyzer);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -345,18 +407,25 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
         case FIELDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list312 = iprot.readListBegin();
-              this.fields = new ArrayList<byte[]>(Math.max(0, _list312.size));
-              for (int _i313 = 0; 
-                   (_list312.size < 0) ? iprot.peekList() : (_i313 < _list312.size); 
-                   ++_i313)
+              TList _list365 = iprot.readListBegin();
+              this.fields = new ArrayList<byte[]>(Math.max(0, _list365.size));
+              for (int _i366 = 0; 
+                   (_list365.size < 0) ? iprot.peekList() : (_i366 < _list365.size); 
+                   ++_i366)
               {
-                byte[] _elem314;
-                _elem314 = iprot.readBinary();
-                this.fields.add(_elem314);
+                byte[] _elem367;
+                _elem367 = iprot.readBinary();
+                this.fields.add(_elem367);
               }
               iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case ANALYZER:
+          if (__field.type == TType.STRING) {
+            this.analyzer = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -390,11 +459,16 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.fields.size()));
-        for (byte[] _iter315 : this.fields)        {
-          oprot.writeBinary(_iter315);
+        for (byte[] _iter368 : this.fields)        {
+          oprot.writeBinary(_iter368);
         }
         oprot.writeListEnd();
       }
+      oprot.writeFieldEnd();
+    }
+    if (this.analyzer != null) {
+      oprot.writeFieldBegin(ANALYZER_FIELD_DESC);
+      oprot.writeBinary(this.analyzer);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -443,6 +517,22 @@ public class FTIndex implements TBase, java.io.Serializable, Cloneable, Comparab
       sb.append("null");
     } else {
       sb.append(TBaseHelper.toString(this.getFields(), indent + 1, prettyPrint));
+    }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("analyzer");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getAnalyzer() == null) {
+      sb.append("null");
+    } else {
+        int __analyzer_size = Math.min(this.getAnalyzer().length, 128);
+        for (int i = 0; i < __analyzer_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getAnalyzer()[i]).length() > 1 ? Integer.toHexString(this.getAnalyzer()[i]).substring(Integer.toHexString(this.getAnalyzer()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getAnalyzer()[i]).toUpperCase());
+        }
+        if (this.getAnalyzer().length > 128) sb.append(" ...");
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

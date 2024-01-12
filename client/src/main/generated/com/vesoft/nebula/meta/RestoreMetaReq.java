@@ -261,15 +261,15 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
         case FILES:
           if (__field.type == TType.LIST) {
             {
-              TList _list278 = iprot.readListBegin();
-              this.files = new ArrayList<byte[]>(Math.max(0, _list278.size));
-              for (int _i279 = 0; 
-                   (_list278.size < 0) ? iprot.peekList() : (_i279 < _list278.size); 
-                   ++_i279)
+              TList _list318 = iprot.readListBegin();
+              this.files = new ArrayList<byte[]>(Math.max(0, _list318.size));
+              for (int _i319 = 0; 
+                   (_list318.size < 0) ? iprot.peekList() : (_i319 < _list318.size); 
+                   ++_i319)
               {
-                byte[] _elem280;
-                _elem280 = iprot.readBinary();
-                this.files.add(_elem280);
+                byte[] _elem320;
+                _elem320 = iprot.readBinary();
+                this.files.add(_elem320);
               }
               iprot.readListEnd();
             }
@@ -280,16 +280,16 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
         case HOSTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list281 = iprot.readListBegin();
-              this.hosts = new ArrayList<HostPair>(Math.max(0, _list281.size));
-              for (int _i282 = 0; 
-                   (_list281.size < 0) ? iprot.peekList() : (_i282 < _list281.size); 
-                   ++_i282)
+              TList _list321 = iprot.readListBegin();
+              this.hosts = new ArrayList<HostPair>(Math.max(0, _list321.size));
+              for (int _i322 = 0; 
+                   (_list321.size < 0) ? iprot.peekList() : (_i322 < _list321.size); 
+                   ++_i322)
               {
-                HostPair _elem283;
-                _elem283 = new HostPair();
-                _elem283.read(iprot);
-                this.hosts.add(_elem283);
+                HostPair _elem323;
+                _elem323 = new HostPair();
+                _elem323.read(iprot);
+                this.hosts.add(_elem323);
               }
               iprot.readListEnd();
             }
@@ -318,8 +318,8 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.files.size()));
-        for (byte[] _iter284 : this.files)        {
-          oprot.writeBinary(_iter284);
+        for (byte[] _iter324 : this.files)        {
+          oprot.writeBinary(_iter324);
         }
         oprot.writeListEnd();
       }
@@ -329,8 +329,8 @@ public class RestoreMetaReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeFieldBegin(HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (HostPair _iter285 : this.hosts)        {
-          _iter285.write(oprot);
+        for (HostPair _iter325 : this.hosts)        {
+          _iter325.write(oprot);
         }
         oprot.writeListEnd();
       }

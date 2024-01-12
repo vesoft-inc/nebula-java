@@ -35,6 +35,8 @@ public class InternalStorageService {
 
     public UpdateResponse chainUpdateEdge(ChainUpdateEdgeRequest req) throws TException;
 
+    public ExecResponse syncData(SyncDataRequest req) throws TException;
+
     public ExecResponse chainDeleteEdges(ChainDeleteEdgesRequest req) throws TException;
 
   }
@@ -44,6 +46,8 @@ public class InternalStorageService {
     public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void syncData(SyncDataRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler) throws TException;
 
@@ -168,6 +172,51 @@ public class InternalStorageService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "chainUpdateEdge failed: unknown result");
     }
 
+    public ExecResponse syncData(SyncDataRequest req) throws TException
+    {
+      ContextStack ctx = getContextStack("InternalStorageService.syncData", null);
+      this.setContextStack(ctx);
+      send_syncData(req);
+      return recv_syncData();
+    }
+
+    public void send_syncData(SyncDataRequest req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "InternalStorageService.syncData", null);
+      oprot_.writeMessageBegin(new TMessage("syncData", TMessageType.CALL, seqid_));
+      syncData_args args = new syncData_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "InternalStorageService.syncData", args);
+      return;
+    }
+
+    public ExecResponse recv_syncData() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "InternalStorageService.syncData");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      syncData_result result = new syncData_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "InternalStorageService.syncData", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "syncData failed: unknown result");
+    }
+
     public ExecResponse chainDeleteEdges(ChainDeleteEdgesRequest req) throws TException
     {
       ContextStack ctx = getContextStack("InternalStorageService.chainDeleteEdges", null);
@@ -231,17 +280,17 @@ public class InternalStorageService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler552) throws TException {
+    public void chainAddEdges(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler602) throws TException {
       checkReady();
-      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler552, this, ___protocolFactory, ___transport);
+      chainAddEdges_call method_call = new chainAddEdges_call(req, resultHandler602, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainAddEdges_call extends TAsyncMethodCall {
       private ChainAddEdgesRequest req;
-      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler553, TAsyncClient client549, TProtocolFactory protocolFactory550, TNonblockingTransport transport551) throws TException {
-        super(client549, protocolFactory550, transport551, resultHandler553, false);
+      public chainAddEdges_call(ChainAddEdgesRequest req, AsyncMethodCallback resultHandler603, TAsyncClient client599, TProtocolFactory protocolFactory600, TNonblockingTransport transport601) throws TException {
+        super(client599, protocolFactory600, transport601, resultHandler603, false);
         this.req = req;
       }
 
@@ -263,17 +312,17 @@ public class InternalStorageService {
       }
     }
 
-    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler557) throws TException {
+    public void chainUpdateEdge(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler607) throws TException {
       checkReady();
-      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler557, this, ___protocolFactory, ___transport);
+      chainUpdateEdge_call method_call = new chainUpdateEdge_call(req, resultHandler607, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainUpdateEdge_call extends TAsyncMethodCall {
       private ChainUpdateEdgeRequest req;
-      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler558, TAsyncClient client554, TProtocolFactory protocolFactory555, TNonblockingTransport transport556) throws TException {
-        super(client554, protocolFactory555, transport556, resultHandler558, false);
+      public chainUpdateEdge_call(ChainUpdateEdgeRequest req, AsyncMethodCallback resultHandler608, TAsyncClient client604, TProtocolFactory protocolFactory605, TNonblockingTransport transport606) throws TException {
+        super(client604, protocolFactory605, transport606, resultHandler608, false);
         this.req = req;
       }
 
@@ -295,17 +344,49 @@ public class InternalStorageService {
       }
     }
 
-    public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler562) throws TException {
+    public void syncData(SyncDataRequest req, AsyncMethodCallback resultHandler612) throws TException {
       checkReady();
-      chainDeleteEdges_call method_call = new chainDeleteEdges_call(req, resultHandler562, this, ___protocolFactory, ___transport);
+      syncData_call method_call = new syncData_call(req, resultHandler612, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class syncData_call extends TAsyncMethodCall {
+      private SyncDataRequest req;
+      public syncData_call(SyncDataRequest req, AsyncMethodCallback resultHandler613, TAsyncClient client609, TProtocolFactory protocolFactory610, TNonblockingTransport transport611) throws TException {
+        super(client609, protocolFactory610, transport611, resultHandler613, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("syncData", TMessageType.CALL, 0));
+        syncData_args args = new syncData_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ExecResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_syncData();
+      }
+    }
+
+    public void chainDeleteEdges(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler617) throws TException {
+      checkReady();
+      chainDeleteEdges_call method_call = new chainDeleteEdges_call(req, resultHandler617, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class chainDeleteEdges_call extends TAsyncMethodCall {
       private ChainDeleteEdgesRequest req;
-      public chainDeleteEdges_call(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler563, TAsyncClient client559, TProtocolFactory protocolFactory560, TNonblockingTransport transport561) throws TException {
-        super(client559, protocolFactory560, transport561, resultHandler563, false);
+      public chainDeleteEdges_call(ChainDeleteEdgesRequest req, AsyncMethodCallback resultHandler618, TAsyncClient client614, TProtocolFactory protocolFactory615, TNonblockingTransport transport616) throws TException {
+        super(client614, protocolFactory615, transport616, resultHandler618, false);
         this.req = req;
       }
 
@@ -337,6 +418,7 @@ public class InternalStorageService {
       event_handler_ = new TProcessorEventHandler(); // Empty handler
       processMap_.put("chainAddEdges", new chainAddEdges());
       processMap_.put("chainUpdateEdge", new chainUpdateEdge());
+      processMap_.put("syncData", new syncData());
       processMap_.put("chainDeleteEdges", new chainDeleteEdges());
     }
 
@@ -408,6 +490,27 @@ public class InternalStorageService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "InternalStorageService.chainUpdateEdge", result);
+      }
+
+    }
+
+    private class syncData implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("InternalStorageService.syncData", server_ctx);
+        syncData_args args = new syncData_args();
+        event_handler_.preRead(handler_ctx, "InternalStorageService.syncData");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "InternalStorageService.syncData", args);
+        syncData_result result = new syncData_result();
+        result.success = iface_.syncData(args.req);
+        event_handler_.preWrite(handler_ctx, "InternalStorageService.syncData", result);
+        oprot.writeMessageBegin(new TMessage("syncData", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "InternalStorageService.syncData", result);
       }
 
     }
@@ -1210,6 +1313,441 @@ public class InternalStorageService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("chainUpdateEdge_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class syncData_args implements TBase, java.io.Serializable, Cloneable, Comparable<syncData_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("syncData_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public SyncDataRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, SyncDataRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(syncData_args.class, metaDataMap);
+    }
+
+    public syncData_args() {
+    }
+
+    public syncData_args(
+        SyncDataRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public syncData_args(syncData_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public syncData_args deepCopy() {
+      return new syncData_args(this);
+    }
+
+    public SyncDataRequest getReq() {
+      return this.req;
+    }
+
+    public syncData_args setReq(SyncDataRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((SyncDataRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof syncData_args))
+        return false;
+      syncData_args that = (syncData_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(syncData_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new SyncDataRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("syncData_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class syncData_result implements TBase, java.io.Serializable, Cloneable, Comparable<syncData_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("syncData_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ExecResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ExecResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(syncData_result.class, metaDataMap);
+    }
+
+    public syncData_result() {
+    }
+
+    public syncData_result(
+        ExecResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public syncData_result(syncData_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public syncData_result deepCopy() {
+      return new syncData_result(this);
+    }
+
+    public ExecResponse getSuccess() {
+      return this.success;
+    }
+
+    public syncData_result setSuccess(ExecResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ExecResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof syncData_result))
+        return false;
+      syncData_result that = (syncData_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(syncData_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new ExecResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("syncData_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

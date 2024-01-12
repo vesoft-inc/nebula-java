@@ -28,7 +28,9 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
   private static final TStruct STRUCT_DESC = new TStruct("AddListenerReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField TYPE_FIELD_DESC = new TField("type", TType.I32, (short)2);
-  private static final TField HOSTS_FIELD_DESC = new TField("hosts", TType.LIST, (short)3);
+  private static final TField STORAGE_HOSTS_FIELD_DESC = new TField("storage_hosts", TType.LIST, (short)3);
+  private static final TField META_HOST_FIELD_DESC = new TField("meta_host", TType.STRUCT, (short)4);
+  private static final TField SPACE_NAME_FIELD_DESC = new TField("space_name", TType.STRING, (short)5);
 
   public int space_id;
   /**
@@ -36,10 +38,14 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
    * @see ListenerType
    */
   public ListenerType type;
-  public List<com.vesoft.nebula.HostAddr> hosts;
+  public List<com.vesoft.nebula.HostAddr> storage_hosts;
+  public com.vesoft.nebula.HostAddr meta_host;
+  public byte[] space_name;
   public static final int SPACE_ID = 1;
   public static final int TYPE = 2;
-  public static final int HOSTS = 3;
+  public static final int STORAGE_HOSTS = 3;
+  public static final int META_HOST = 4;
+  public static final int SPACE_NAME = 5;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -53,9 +59,13 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(TYPE, new FieldMetaData("type", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(HOSTS, new FieldMetaData("hosts", TFieldRequirementType.DEFAULT, 
+    tmpMetaDataMap.put(STORAGE_HOSTS, new FieldMetaData("storage_hosts", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class))));
+    tmpMetaDataMap.put(META_HOST, new FieldMetaData("meta_host", TFieldRequirementType.OPTIONAL, 
+        new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
+    tmpMetaDataMap.put(SPACE_NAME, new FieldMetaData("space_name", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -69,18 +79,35 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
   public AddListenerReq(
       int space_id,
       ListenerType type,
-      List<com.vesoft.nebula.HostAddr> hosts) {
+      List<com.vesoft.nebula.HostAddr> storage_hosts) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.type = type;
-    this.hosts = hosts;
+    this.storage_hosts = storage_hosts;
+  }
+
+  public AddListenerReq(
+      int space_id,
+      ListenerType type,
+      List<com.vesoft.nebula.HostAddr> storage_hosts,
+      com.vesoft.nebula.HostAddr meta_host,
+      byte[] space_name) {
+    this();
+    this.space_id = space_id;
+    setSpace_idIsSet(true);
+    this.type = type;
+    this.storage_hosts = storage_hosts;
+    this.meta_host = meta_host;
+    this.space_name = space_name;
   }
 
   public static class Builder {
     private int space_id;
     private ListenerType type;
-    private List<com.vesoft.nebula.HostAddr> hosts;
+    private List<com.vesoft.nebula.HostAddr> storage_hosts;
+    private com.vesoft.nebula.HostAddr meta_host;
+    private byte[] space_name;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -98,8 +125,18 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
       return this;
     }
 
-    public Builder setHosts(final List<com.vesoft.nebula.HostAddr> hosts) {
-      this.hosts = hosts;
+    public Builder setStorage_hosts(final List<com.vesoft.nebula.HostAddr> storage_hosts) {
+      this.storage_hosts = storage_hosts;
+      return this;
+    }
+
+    public Builder setMeta_host(final com.vesoft.nebula.HostAddr meta_host) {
+      this.meta_host = meta_host;
+      return this;
+    }
+
+    public Builder setSpace_name(final byte[] space_name) {
+      this.space_name = space_name;
       return this;
     }
 
@@ -109,7 +146,9 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
         result.setSpace_id(this.space_id);
       }
       result.setType(this.type);
-      result.setHosts(this.hosts);
+      result.setStorage_hosts(this.storage_hosts);
+      result.setMeta_host(this.meta_host);
+      result.setSpace_name(this.space_name);
       return result;
     }
   }
@@ -128,8 +167,14 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
     if (other.isSetType()) {
       this.type = TBaseHelper.deepCopy(other.type);
     }
-    if (other.isSetHosts()) {
-      this.hosts = TBaseHelper.deepCopy(other.hosts);
+    if (other.isSetStorage_hosts()) {
+      this.storage_hosts = TBaseHelper.deepCopy(other.storage_hosts);
+    }
+    if (other.isSetMeta_host()) {
+      this.meta_host = TBaseHelper.deepCopy(other.meta_host);
+    }
+    if (other.isSetSpace_name()) {
+      this.space_name = TBaseHelper.deepCopy(other.space_name);
     }
   }
 
@@ -192,27 +237,75 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public List<com.vesoft.nebula.HostAddr> getHosts() {
-    return this.hosts;
+  public List<com.vesoft.nebula.HostAddr> getStorage_hosts() {
+    return this.storage_hosts;
   }
 
-  public AddListenerReq setHosts(List<com.vesoft.nebula.HostAddr> hosts) {
-    this.hosts = hosts;
+  public AddListenerReq setStorage_hosts(List<com.vesoft.nebula.HostAddr> storage_hosts) {
+    this.storage_hosts = storage_hosts;
     return this;
   }
 
-  public void unsetHosts() {
-    this.hosts = null;
+  public void unsetStorage_hosts() {
+    this.storage_hosts = null;
   }
 
-  // Returns true if field hosts is set (has been assigned a value) and false otherwise
-  public boolean isSetHosts() {
-    return this.hosts != null;
+  // Returns true if field storage_hosts is set (has been assigned a value) and false otherwise
+  public boolean isSetStorage_hosts() {
+    return this.storage_hosts != null;
   }
 
-  public void setHostsIsSet(boolean __value) {
+  public void setStorage_hostsIsSet(boolean __value) {
     if (!__value) {
-      this.hosts = null;
+      this.storage_hosts = null;
+    }
+  }
+
+  public com.vesoft.nebula.HostAddr getMeta_host() {
+    return this.meta_host;
+  }
+
+  public AddListenerReq setMeta_host(com.vesoft.nebula.HostAddr meta_host) {
+    this.meta_host = meta_host;
+    return this;
+  }
+
+  public void unsetMeta_host() {
+    this.meta_host = null;
+  }
+
+  // Returns true if field meta_host is set (has been assigned a value) and false otherwise
+  public boolean isSetMeta_host() {
+    return this.meta_host != null;
+  }
+
+  public void setMeta_hostIsSet(boolean __value) {
+    if (!__value) {
+      this.meta_host = null;
+    }
+  }
+
+  public byte[] getSpace_name() {
+    return this.space_name;
+  }
+
+  public AddListenerReq setSpace_name(byte[] space_name) {
+    this.space_name = space_name;
+    return this;
+  }
+
+  public void unsetSpace_name() {
+    this.space_name = null;
+  }
+
+  // Returns true if field space_name is set (has been assigned a value) and false otherwise
+  public boolean isSetSpace_name() {
+    return this.space_name != null;
+  }
+
+  public void setSpace_nameIsSet(boolean __value) {
+    if (!__value) {
+      this.space_name = null;
     }
   }
 
@@ -235,11 +328,27 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
-    case HOSTS:
+    case STORAGE_HOSTS:
       if (__value == null) {
-        unsetHosts();
+        unsetStorage_hosts();
       } else {
-        setHosts((List<com.vesoft.nebula.HostAddr>)__value);
+        setStorage_hosts((List<com.vesoft.nebula.HostAddr>)__value);
+      }
+      break;
+
+    case META_HOST:
+      if (__value == null) {
+        unsetMeta_host();
+      } else {
+        setMeta_host((com.vesoft.nebula.HostAddr)__value);
+      }
+      break;
+
+    case SPACE_NAME:
+      if (__value == null) {
+        unsetSpace_name();
+      } else {
+        setSpace_name((byte[])__value);
       }
       break;
 
@@ -256,8 +365,14 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
     case TYPE:
       return getType();
 
-    case HOSTS:
-      return getHosts();
+    case STORAGE_HOSTS:
+      return getStorage_hosts();
+
+    case META_HOST:
+      return getMeta_host();
+
+    case SPACE_NAME:
+      return getSpace_name();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -278,14 +393,18 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
 
     if (!TBaseHelper.equalsNobinary(this.isSetType(), that.isSetType(), this.type, that.type)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetHosts(), that.isSetHosts(), this.hosts, that.hosts)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetStorage_hosts(), that.isSetStorage_hosts(), this.storage_hosts, that.storage_hosts)) { return false; }
+
+    if (!TBaseHelper.equalsNobinary(this.isSetMeta_host(), that.isSetMeta_host(), this.meta_host, that.meta_host)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetSpace_name(), that.isSetSpace_name(), this.space_name, that.space_name)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, type, hosts});
+    return Arrays.deepHashCode(new Object[] {space_id, type, storage_hosts, meta_host, space_name});
   }
 
   @Override
@@ -316,11 +435,27 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetHosts()).compareTo(other.isSetHosts());
+    lastComparison = Boolean.valueOf(isSetStorage_hosts()).compareTo(other.isSetStorage_hosts());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(hosts, other.hosts);
+    lastComparison = TBaseHelper.compareTo(storage_hosts, other.storage_hosts);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetMeta_host()).compareTo(other.isSetMeta_host());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(meta_host, other.meta_host);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetSpace_name()).compareTo(other.isSetSpace_name());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(space_name, other.space_name);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -353,22 +488,37 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case HOSTS:
+        case STORAGE_HOSTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list245 = iprot.readListBegin();
-              this.hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list245.size));
-              for (int _i246 = 0; 
-                   (_list245.size < 0) ? iprot.peekList() : (_i246 < _list245.size); 
-                   ++_i246)
+              TList _list262 = iprot.readListBegin();
+              this.storage_hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list262.size));
+              for (int _i263 = 0; 
+                   (_list262.size < 0) ? iprot.peekList() : (_i263 < _list262.size); 
+                   ++_i263)
               {
-                com.vesoft.nebula.HostAddr _elem247;
-                _elem247 = new com.vesoft.nebula.HostAddr();
-                _elem247.read(iprot);
-                this.hosts.add(_elem247);
+                com.vesoft.nebula.HostAddr _elem264;
+                _elem264 = new com.vesoft.nebula.HostAddr();
+                _elem264.read(iprot);
+                this.storage_hosts.add(_elem264);
               }
               iprot.readListEnd();
             }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case META_HOST:
+          if (__field.type == TType.STRUCT) {
+            this.meta_host = new com.vesoft.nebula.HostAddr();
+            this.meta_host.read(iprot);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case SPACE_NAME:
+          if (__field.type == TType.STRING) {
+            this.space_name = iprot.readBinary();
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -398,16 +548,30 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
       oprot.writeI32(this.type == null ? 0 : this.type.getValue());
       oprot.writeFieldEnd();
     }
-    if (this.hosts != null) {
-      oprot.writeFieldBegin(HOSTS_FIELD_DESC);
+    if (this.storage_hosts != null) {
+      oprot.writeFieldBegin(STORAGE_HOSTS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter248 : this.hosts)        {
-          _iter248.write(oprot);
+        oprot.writeListBegin(new TList(TType.STRUCT, this.storage_hosts.size()));
+        for (com.vesoft.nebula.HostAddr _iter265 : this.storage_hosts)        {
+          _iter265.write(oprot);
         }
         oprot.writeListEnd();
       }
       oprot.writeFieldEnd();
+    }
+    if (this.meta_host != null) {
+      if (isSetMeta_host()) {
+        oprot.writeFieldBegin(META_HOST_FIELD_DESC);
+        this.meta_host.write(oprot);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (this.space_name != null) {
+      if (isSetSpace_name()) {
+        oprot.writeFieldBegin(SPACE_NAME_FIELD_DESC);
+        oprot.writeBinary(this.space_name);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -456,15 +620,48 @@ public class AddListenerReq implements TBase, java.io.Serializable, Cloneable, C
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("hosts");
+    sb.append("storage_hosts");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getHosts() == null) {
+    if (this.getStorage_hosts() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getHosts(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getStorage_hosts(), indent + 1, prettyPrint));
     }
     first = false;
+    if (isSetMeta_host())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("meta_host");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getMeta_host() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getMeta_host(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
+    if (isSetSpace_name())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("space_name");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSpace_name() == null) {
+        sb.append("null");
+      } else {
+          int __space_name_size = Math.min(this.getSpace_name().length, 128);
+          for (int i = 0; i < __space_name_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getSpace_name()[i]).length() > 1 ? Integer.toHexString(this.getSpace_name()[i]).substring(Integer.toHexString(this.getSpace_name()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getSpace_name()[i]).toUpperCase());
+          }
+          if (this.getSpace_name().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

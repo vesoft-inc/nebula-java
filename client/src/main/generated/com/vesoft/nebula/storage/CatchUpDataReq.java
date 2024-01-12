@@ -28,14 +28,11 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
   private static final TStruct STRUCT_DESC = new TStruct("CatchUpDataReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
   private static final TField PART_ID_FIELD_DESC = new TField("part_id", TType.I32, (short)2);
-  private static final TField TARGET_FIELD_DESC = new TField("target", TType.STRUCT, (short)3);
 
   public int space_id;
   public int part_id;
-  public com.vesoft.nebula.HostAddr target;
   public static final int SPACE_ID = 1;
   public static final int PART_ID = 2;
-  public static final int TARGET = 3;
 
   // isset id assignments
   private static final int __SPACE_ID_ISSET_ID = 0;
@@ -50,8 +47,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(PART_ID, new FieldMetaData("part_id", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    tmpMetaDataMap.put(TARGET, new FieldMetaData("target", TFieldRequirementType.DEFAULT, 
-        new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -64,20 +59,17 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
 
   public CatchUpDataReq(
       int space_id,
-      int part_id,
-      com.vesoft.nebula.HostAddr target) {
+      int part_id) {
     this();
     this.space_id = space_id;
     setSpace_idIsSet(true);
     this.part_id = part_id;
     setPart_idIsSet(true);
-    this.target = target;
   }
 
   public static class Builder {
     private int space_id;
     private int part_id;
-    private com.vesoft.nebula.HostAddr target;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -96,11 +88,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
       return this;
     }
 
-    public Builder setTarget(final com.vesoft.nebula.HostAddr target) {
-      this.target = target;
-      return this;
-    }
-
     public CatchUpDataReq build() {
       CatchUpDataReq result = new CatchUpDataReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
@@ -109,7 +96,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
       if (__optional_isset.get(__PART_ID_ISSET_ID)) {
         result.setPart_id(this.part_id);
       }
-      result.setTarget(this.target);
       return result;
     }
   }
@@ -126,9 +112,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
     this.part_id = TBaseHelper.deepCopy(other.part_id);
-    if (other.isSetTarget()) {
-      this.target = TBaseHelper.deepCopy(other.target);
-    }
   }
 
   public CatchUpDataReq deepCopy() {
@@ -181,30 +164,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
     __isset_bit_vector.set(__PART_ID_ISSET_ID, __value);
   }
 
-  public com.vesoft.nebula.HostAddr getTarget() {
-    return this.target;
-  }
-
-  public CatchUpDataReq setTarget(com.vesoft.nebula.HostAddr target) {
-    this.target = target;
-    return this;
-  }
-
-  public void unsetTarget() {
-    this.target = null;
-  }
-
-  // Returns true if field target is set (has been assigned a value) and false otherwise
-  public boolean isSetTarget() {
-    return this.target != null;
-  }
-
-  public void setTargetIsSet(boolean __value) {
-    if (!__value) {
-      this.target = null;
-    }
-  }
-
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SPACE_ID:
@@ -223,14 +182,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
-    case TARGET:
-      if (__value == null) {
-        unsetTarget();
-      } else {
-        setTarget((com.vesoft.nebula.HostAddr)__value);
-      }
-      break;
-
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -243,9 +194,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
 
     case PART_ID:
       return new Integer(getPart_id());
-
-    case TARGET:
-      return getTarget();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -266,14 +214,12 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
 
     if (!TBaseHelper.equalsNobinary(this.part_id, that.part_id)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetTarget(), that.isSetTarget(), this.target, that.target)) { return false; }
-
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_id, part_id, target});
+    return Arrays.deepHashCode(new Object[] {space_id, part_id});
   }
 
   @Override
@@ -301,14 +247,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(part_id, other.part_id);
-    if (lastComparison != 0) { 
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetTarget()).compareTo(other.isSetTarget());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(target, other.target);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -342,14 +280,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case TARGET:
-          if (__field.type == TType.STRUCT) {
-            this.target = new com.vesoft.nebula.HostAddr();
-            this.target.read(iprot);
-          } else { 
-            TProtocolUtil.skip(iprot, __field.type);
-          }
-          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -373,11 +303,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
     oprot.writeFieldBegin(PART_ID_FIELD_DESC);
     oprot.writeI32(this.part_id);
     oprot.writeFieldEnd();
-    if (this.target != null) {
-      oprot.writeFieldBegin(TARGET_FIELD_DESC);
-      this.target.write(oprot);
-      oprot.writeFieldEnd();
-    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -410,17 +335,6 @@ public class CatchUpDataReq implements TBase, java.io.Serializable, Cloneable, C
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getPart_id(), indent + 1, prettyPrint));
-    first = false;
-    if (!first) sb.append("," + newLine);
-    sb.append(indentStr);
-    sb.append("target");
-    sb.append(space);
-    sb.append(":").append(space);
-    if (this.getTarget() == null) {
-      sb.append("null");
-    } else {
-      sb.append(TBaseHelper.toString(this.getTarget(), indent + 1, prettyPrint));
-    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

@@ -349,15 +349,15 @@ public class RemoveSessionResp implements TBase, java.io.Serializable, Cloneable
         case REMOVED_SESSION_IDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list357 = iprot.readListBegin();
-              this.removed_session_ids = new ArrayList<Long>(Math.max(0, _list357.size));
-              for (int _i358 = 0; 
-                   (_list357.size < 0) ? iprot.peekList() : (_i358 < _list357.size); 
-                   ++_i358)
+              TList _list410 = iprot.readListBegin();
+              this.removed_session_ids = new ArrayList<Long>(Math.max(0, _list410.size));
+              for (int _i411 = 0; 
+                   (_list410.size < 0) ? iprot.peekList() : (_i411 < _list410.size); 
+                   ++_i411)
               {
-                long _elem359;
-                _elem359 = iprot.readI64();
-                this.removed_session_ids.add(_elem359);
+                long _elem412;
+                _elem412 = iprot.readI64();
+                this.removed_session_ids.add(_elem412);
               }
               iprot.readListEnd();
             }
@@ -396,8 +396,8 @@ public class RemoveSessionResp implements TBase, java.io.Serializable, Cloneable
       oprot.writeFieldBegin(REMOVED_SESSION_IDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I64, this.removed_session_ids.size()));
-        for (long _iter360 : this.removed_session_ids)        {
-          oprot.writeI64(_iter360);
+        for (long _iter413 : this.removed_session_ids)        {
+          oprot.writeI64(_iter413);
         }
         oprot.writeListEnd();
       }

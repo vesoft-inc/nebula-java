@@ -351,30 +351,30 @@ public class RestoreMetaResp implements TBase, java.io.Serializable, Cloneable, 
         case PART_HOSTS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map290 = iprot.readMapBegin();
-              this.part_hosts = new HashMap<Integer,List<PartInfo>>(Math.max(0, 2*_map290.size));
-              for (int _i291 = 0; 
-                   (_map290.size < 0) ? iprot.peekMap() : (_i291 < _map290.size); 
-                   ++_i291)
+              TMap _map330 = iprot.readMapBegin();
+              this.part_hosts = new HashMap<Integer,List<PartInfo>>(Math.max(0, 2*_map330.size));
+              for (int _i331 = 0; 
+                   (_map330.size < 0) ? iprot.peekMap() : (_i331 < _map330.size); 
+                   ++_i331)
               {
-                int _key292;
-                List<PartInfo> _val293;
-                _key292 = iprot.readI32();
+                int _key332;
+                List<PartInfo> _val333;
+                _key332 = iprot.readI32();
                 {
-                  TList _list294 = iprot.readListBegin();
-                  _val293 = new ArrayList<PartInfo>(Math.max(0, _list294.size));
-                  for (int _i295 = 0; 
-                       (_list294.size < 0) ? iprot.peekList() : (_i295 < _list294.size); 
-                       ++_i295)
+                  TList _list334 = iprot.readListBegin();
+                  _val333 = new ArrayList<PartInfo>(Math.max(0, _list334.size));
+                  for (int _i335 = 0; 
+                       (_list334.size < 0) ? iprot.peekList() : (_i335 < _list334.size); 
+                       ++_i335)
                   {
-                    PartInfo _elem296;
-                    _elem296 = new PartInfo();
-                    _elem296.read(iprot);
-                    _val293.add(_elem296);
+                    PartInfo _elem336;
+                    _elem336 = new PartInfo();
+                    _elem336.read(iprot);
+                    _val333.add(_elem336);
                   }
                   iprot.readListEnd();
                 }
-                this.part_hosts.put(_key292, _val293);
+                this.part_hosts.put(_key332, _val333);
               }
               iprot.readMapEnd();
             }
@@ -413,12 +413,12 @@ public class RestoreMetaResp implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(PART_HOSTS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.LIST, this.part_hosts.size()));
-        for (Map.Entry<Integer, List<PartInfo>> _iter297 : this.part_hosts.entrySet())        {
-          oprot.writeI32(_iter297.getKey());
+        for (Map.Entry<Integer, List<PartInfo>> _iter337 : this.part_hosts.entrySet())        {
+          oprot.writeI32(_iter337.getKey());
           {
-            oprot.writeListBegin(new TList(TType.STRUCT, _iter297.getValue().size()));
-            for (PartInfo _iter298 : _iter297.getValue())            {
-              _iter298.write(oprot);
+            oprot.writeListBegin(new TList(TType.STRUCT, _iter337.getValue().size()));
+            for (PartInfo _iter338 : _iter337.getValue())            {
+              _iter338.write(oprot);
             }
             oprot.writeListEnd();
           }

@@ -41,7 +41,7 @@ public class StorageAdminService {
 
     public AdminExecResp memberChange(MemberChangeReq req) throws TException;
 
-    public AdminExecResp waitingForCatchUpData(CatchUpDataReq req) throws TException;
+    public CatchUpResp getCatchUpState(CatchUpDataReq req) throws TException;
 
     public CreateCPResp createCheckpoint(CreateCPRequest req) throws TException;
 
@@ -59,6 +59,8 @@ public class StorageAdminService {
 
     public ClearSpaceResp clearSpace(ClearSpaceReq req) throws TException;
 
+    public GetSyncProgressResp getSyncProgress(GetSyncProgressReq req) throws TException;
+
   }
 
   public interface AsyncIface {
@@ -73,7 +75,7 @@ public class StorageAdminService {
 
     public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler) throws TException;
 
-    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler) throws TException;
+    public void getCatchUpState(CatchUpDataReq req, AsyncMethodCallback resultHandler) throws TException;
 
     public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler) throws TException;
 
@@ -90,6 +92,8 @@ public class StorageAdminService {
     public void stopAdminTask(StopTaskRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void clearSpace(ClearSpaceReq req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void getSyncProgress(GetSyncProgressReq req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -347,49 +351,49 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "memberChange failed: unknown result");
     }
 
-    public AdminExecResp waitingForCatchUpData(CatchUpDataReq req) throws TException
+    public CatchUpResp getCatchUpState(CatchUpDataReq req) throws TException
     {
-      ContextStack ctx = getContextStack("StorageAdminService.waitingForCatchUpData", null);
+      ContextStack ctx = getContextStack("StorageAdminService.getCatchUpState", null);
       this.setContextStack(ctx);
-      send_waitingForCatchUpData(req);
-      return recv_waitingForCatchUpData();
+      send_getCatchUpState(req);
+      return recv_getCatchUpState();
     }
 
-    public void send_waitingForCatchUpData(CatchUpDataReq req) throws TException
+    public void send_getCatchUpState(CatchUpDataReq req) throws TException
     {
       ContextStack ctx = this.getContextStack();
-      super.preWrite(ctx, "StorageAdminService.waitingForCatchUpData", null);
-      oprot_.writeMessageBegin(new TMessage("waitingForCatchUpData", TMessageType.CALL, seqid_));
-      waitingForCatchUpData_args args = new waitingForCatchUpData_args();
+      super.preWrite(ctx, "StorageAdminService.getCatchUpState", null);
+      oprot_.writeMessageBegin(new TMessage("getCatchUpState", TMessageType.CALL, seqid_));
+      getCatchUpState_args args = new getCatchUpState_args();
       args.req = req;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
-      super.postWrite(ctx, "StorageAdminService.waitingForCatchUpData", args);
+      super.postWrite(ctx, "StorageAdminService.getCatchUpState", args);
       return;
     }
 
-    public AdminExecResp recv_waitingForCatchUpData() throws TException
+    public CatchUpResp recv_getCatchUpState() throws TException
     {
       ContextStack ctx = super.getContextStack();
       long bytes;
       TMessageType mtype;
-      super.preRead(ctx, "StorageAdminService.waitingForCatchUpData");
+      super.preRead(ctx, "StorageAdminService.getCatchUpState");
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
         TApplicationException x = TApplicationException.read(iprot_);
         iprot_.readMessageEnd();
         throw x;
       }
-      waitingForCatchUpData_result result = new waitingForCatchUpData_result();
+      getCatchUpState_result result = new getCatchUpState_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
-      super.postRead(ctx, "StorageAdminService.waitingForCatchUpData", result);
+      super.postRead(ctx, "StorageAdminService.getCatchUpState", result);
 
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "waitingForCatchUpData failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getCatchUpState failed: unknown result");
     }
 
     public CreateCPResp createCheckpoint(CreateCPRequest req) throws TException
@@ -752,6 +756,51 @@ public class StorageAdminService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "clearSpace failed: unknown result");
     }
 
+    public GetSyncProgressResp getSyncProgress(GetSyncProgressReq req) throws TException
+    {
+      ContextStack ctx = getContextStack("StorageAdminService.getSyncProgress", null);
+      this.setContextStack(ctx);
+      send_getSyncProgress(req);
+      return recv_getSyncProgress();
+    }
+
+    public void send_getSyncProgress(GetSyncProgressReq req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "StorageAdminService.getSyncProgress", null);
+      oprot_.writeMessageBegin(new TMessage("getSyncProgress", TMessageType.CALL, seqid_));
+      getSyncProgress_args args = new getSyncProgress_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "StorageAdminService.getSyncProgress", args);
+      return;
+    }
+
+    public GetSyncProgressResp recv_getSyncProgress() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "StorageAdminService.getSyncProgress");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      getSyncProgress_result result = new getSyncProgress_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "StorageAdminService.getSyncProgress", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getSyncProgress failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -770,17 +819,17 @@ public class StorageAdminService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler479) throws TException {
+    public void transLeader(TransLeaderReq req, AsyncMethodCallback resultHandler523) throws TException {
       checkReady();
-      transLeader_call method_call = new transLeader_call(req, resultHandler479, this, ___protocolFactory, ___transport);
+      transLeader_call method_call = new transLeader_call(req, resultHandler523, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class transLeader_call extends TAsyncMethodCall {
       private TransLeaderReq req;
-      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler480, TAsyncClient client476, TProtocolFactory protocolFactory477, TNonblockingTransport transport478) throws TException {
-        super(client476, protocolFactory477, transport478, resultHandler480, false);
+      public transLeader_call(TransLeaderReq req, AsyncMethodCallback resultHandler524, TAsyncClient client520, TProtocolFactory protocolFactory521, TNonblockingTransport transport522) throws TException {
+        super(client520, protocolFactory521, transport522, resultHandler524, false);
         this.req = req;
       }
 
@@ -802,17 +851,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler484) throws TException {
+    public void addPart(AddPartReq req, AsyncMethodCallback resultHandler528) throws TException {
       checkReady();
-      addPart_call method_call = new addPart_call(req, resultHandler484, this, ___protocolFactory, ___transport);
+      addPart_call method_call = new addPart_call(req, resultHandler528, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addPart_call extends TAsyncMethodCall {
       private AddPartReq req;
-      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler485, TAsyncClient client481, TProtocolFactory protocolFactory482, TNonblockingTransport transport483) throws TException {
-        super(client481, protocolFactory482, transport483, resultHandler485, false);
+      public addPart_call(AddPartReq req, AsyncMethodCallback resultHandler529, TAsyncClient client525, TProtocolFactory protocolFactory526, TNonblockingTransport transport527) throws TException {
+        super(client525, protocolFactory526, transport527, resultHandler529, false);
         this.req = req;
       }
 
@@ -834,17 +883,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler489) throws TException {
+    public void addLearner(AddLearnerReq req, AsyncMethodCallback resultHandler533) throws TException {
       checkReady();
-      addLearner_call method_call = new addLearner_call(req, resultHandler489, this, ___protocolFactory, ___transport);
+      addLearner_call method_call = new addLearner_call(req, resultHandler533, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addLearner_call extends TAsyncMethodCall {
       private AddLearnerReq req;
-      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler490, TAsyncClient client486, TProtocolFactory protocolFactory487, TNonblockingTransport transport488) throws TException {
-        super(client486, protocolFactory487, transport488, resultHandler490, false);
+      public addLearner_call(AddLearnerReq req, AsyncMethodCallback resultHandler534, TAsyncClient client530, TProtocolFactory protocolFactory531, TNonblockingTransport transport532) throws TException {
+        super(client530, protocolFactory531, transport532, resultHandler534, false);
         this.req = req;
       }
 
@@ -866,17 +915,17 @@ public class StorageAdminService {
       }
     }
 
-    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler494) throws TException {
+    public void removePart(RemovePartReq req, AsyncMethodCallback resultHandler538) throws TException {
       checkReady();
-      removePart_call method_call = new removePart_call(req, resultHandler494, this, ___protocolFactory, ___transport);
+      removePart_call method_call = new removePart_call(req, resultHandler538, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class removePart_call extends TAsyncMethodCall {
       private RemovePartReq req;
-      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler495, TAsyncClient client491, TProtocolFactory protocolFactory492, TNonblockingTransport transport493) throws TException {
-        super(client491, protocolFactory492, transport493, resultHandler495, false);
+      public removePart_call(RemovePartReq req, AsyncMethodCallback resultHandler539, TAsyncClient client535, TProtocolFactory protocolFactory536, TNonblockingTransport transport537) throws TException {
+        super(client535, protocolFactory536, transport537, resultHandler539, false);
         this.req = req;
       }
 
@@ -898,17 +947,17 @@ public class StorageAdminService {
       }
     }
 
-    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler499) throws TException {
+    public void memberChange(MemberChangeReq req, AsyncMethodCallback resultHandler543) throws TException {
       checkReady();
-      memberChange_call method_call = new memberChange_call(req, resultHandler499, this, ___protocolFactory, ___transport);
+      memberChange_call method_call = new memberChange_call(req, resultHandler543, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class memberChange_call extends TAsyncMethodCall {
       private MemberChangeReq req;
-      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler500, TAsyncClient client496, TProtocolFactory protocolFactory497, TNonblockingTransport transport498) throws TException {
-        super(client496, protocolFactory497, transport498, resultHandler500, false);
+      public memberChange_call(MemberChangeReq req, AsyncMethodCallback resultHandler544, TAsyncClient client540, TProtocolFactory protocolFactory541, TNonblockingTransport transport542) throws TException {
+        super(client540, protocolFactory541, transport542, resultHandler544, false);
         this.req = req;
       }
 
@@ -930,49 +979,49 @@ public class StorageAdminService {
       }
     }
 
-    public void waitingForCatchUpData(CatchUpDataReq req, AsyncMethodCallback resultHandler504) throws TException {
+    public void getCatchUpState(CatchUpDataReq req, AsyncMethodCallback resultHandler548) throws TException {
       checkReady();
-      waitingForCatchUpData_call method_call = new waitingForCatchUpData_call(req, resultHandler504, this, ___protocolFactory, ___transport);
+      getCatchUpState_call method_call = new getCatchUpState_call(req, resultHandler548, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class waitingForCatchUpData_call extends TAsyncMethodCall {
+    public static class getCatchUpState_call extends TAsyncMethodCall {
       private CatchUpDataReq req;
-      public waitingForCatchUpData_call(CatchUpDataReq req, AsyncMethodCallback resultHandler505, TAsyncClient client501, TProtocolFactory protocolFactory502, TNonblockingTransport transport503) throws TException {
-        super(client501, protocolFactory502, transport503, resultHandler505, false);
+      public getCatchUpState_call(CatchUpDataReq req, AsyncMethodCallback resultHandler549, TAsyncClient client545, TProtocolFactory protocolFactory546, TNonblockingTransport transport547) throws TException {
+        super(client545, protocolFactory546, transport547, resultHandler549, false);
         this.req = req;
       }
 
       public void write_args(TProtocol prot) throws TException {
-        prot.writeMessageBegin(new TMessage("waitingForCatchUpData", TMessageType.CALL, 0));
-        waitingForCatchUpData_args args = new waitingForCatchUpData_args();
+        prot.writeMessageBegin(new TMessage("getCatchUpState", TMessageType.CALL, 0));
+        getCatchUpState_args args = new getCatchUpState_args();
         args.setReq(req);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public AdminExecResp getResult() throws TException {
+      public CatchUpResp getResult() throws TException {
         if (getState() != State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
         TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_waitingForCatchUpData();
+        return (new Client(prot)).recv_getCatchUpState();
       }
     }
 
-    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler509) throws TException {
+    public void createCheckpoint(CreateCPRequest req, AsyncMethodCallback resultHandler553) throws TException {
       checkReady();
-      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler509, this, ___protocolFactory, ___transport);
+      createCheckpoint_call method_call = new createCheckpoint_call(req, resultHandler553, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class createCheckpoint_call extends TAsyncMethodCall {
       private CreateCPRequest req;
-      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler510, TAsyncClient client506, TProtocolFactory protocolFactory507, TNonblockingTransport transport508) throws TException {
-        super(client506, protocolFactory507, transport508, resultHandler510, false);
+      public createCheckpoint_call(CreateCPRequest req, AsyncMethodCallback resultHandler554, TAsyncClient client550, TProtocolFactory protocolFactory551, TNonblockingTransport transport552) throws TException {
+        super(client550, protocolFactory551, transport552, resultHandler554, false);
         this.req = req;
       }
 
@@ -994,17 +1043,17 @@ public class StorageAdminService {
       }
     }
 
-    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler514) throws TException {
+    public void dropCheckpoint(DropCPRequest req, AsyncMethodCallback resultHandler558) throws TException {
       checkReady();
-      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler514, this, ___protocolFactory, ___transport);
+      dropCheckpoint_call method_call = new dropCheckpoint_call(req, resultHandler558, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class dropCheckpoint_call extends TAsyncMethodCall {
       private DropCPRequest req;
-      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler515, TAsyncClient client511, TProtocolFactory protocolFactory512, TNonblockingTransport transport513) throws TException {
-        super(client511, protocolFactory512, transport513, resultHandler515, false);
+      public dropCheckpoint_call(DropCPRequest req, AsyncMethodCallback resultHandler559, TAsyncClient client555, TProtocolFactory protocolFactory556, TNonblockingTransport transport557) throws TException {
+        super(client555, protocolFactory556, transport557, resultHandler559, false);
         this.req = req;
       }
 
@@ -1026,17 +1075,17 @@ public class StorageAdminService {
       }
     }
 
-    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler519) throws TException {
+    public void blockingWrites(BlockingSignRequest req, AsyncMethodCallback resultHandler563) throws TException {
       checkReady();
-      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler519, this, ___protocolFactory, ___transport);
+      blockingWrites_call method_call = new blockingWrites_call(req, resultHandler563, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class blockingWrites_call extends TAsyncMethodCall {
       private BlockingSignRequest req;
-      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler520, TAsyncClient client516, TProtocolFactory protocolFactory517, TNonblockingTransport transport518) throws TException {
-        super(client516, protocolFactory517, transport518, resultHandler520, false);
+      public blockingWrites_call(BlockingSignRequest req, AsyncMethodCallback resultHandler564, TAsyncClient client560, TProtocolFactory protocolFactory561, TNonblockingTransport transport562) throws TException {
+        super(client560, protocolFactory561, transport562, resultHandler564, false);
         this.req = req;
       }
 
@@ -1058,17 +1107,17 @@ public class StorageAdminService {
       }
     }
 
-    public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler524) throws TException {
+    public void getLeaderParts(GetLeaderReq req, AsyncMethodCallback resultHandler568) throws TException {
       checkReady();
-      getLeaderParts_call method_call = new getLeaderParts_call(req, resultHandler524, this, ___protocolFactory, ___transport);
+      getLeaderParts_call method_call = new getLeaderParts_call(req, resultHandler568, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getLeaderParts_call extends TAsyncMethodCall {
       private GetLeaderReq req;
-      public getLeaderParts_call(GetLeaderReq req, AsyncMethodCallback resultHandler525, TAsyncClient client521, TProtocolFactory protocolFactory522, TNonblockingTransport transport523) throws TException {
-        super(client521, protocolFactory522, transport523, resultHandler525, false);
+      public getLeaderParts_call(GetLeaderReq req, AsyncMethodCallback resultHandler569, TAsyncClient client565, TProtocolFactory protocolFactory566, TNonblockingTransport transport567) throws TException {
+        super(client565, protocolFactory566, transport567, resultHandler569, false);
         this.req = req;
       }
 
@@ -1090,17 +1139,17 @@ public class StorageAdminService {
       }
     }
 
-    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler529) throws TException {
+    public void checkPeers(CheckPeersReq req, AsyncMethodCallback resultHandler573) throws TException {
       checkReady();
-      checkPeers_call method_call = new checkPeers_call(req, resultHandler529, this, ___protocolFactory, ___transport);
+      checkPeers_call method_call = new checkPeers_call(req, resultHandler573, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class checkPeers_call extends TAsyncMethodCall {
       private CheckPeersReq req;
-      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler530, TAsyncClient client526, TProtocolFactory protocolFactory527, TNonblockingTransport transport528) throws TException {
-        super(client526, protocolFactory527, transport528, resultHandler530, false);
+      public checkPeers_call(CheckPeersReq req, AsyncMethodCallback resultHandler574, TAsyncClient client570, TProtocolFactory protocolFactory571, TNonblockingTransport transport572) throws TException {
+        super(client570, protocolFactory571, transport572, resultHandler574, false);
         this.req = req;
       }
 
@@ -1122,17 +1171,17 @@ public class StorageAdminService {
       }
     }
 
-    public void addAdminTask(AddTaskRequest req, AsyncMethodCallback resultHandler534) throws TException {
+    public void addAdminTask(AddTaskRequest req, AsyncMethodCallback resultHandler578) throws TException {
       checkReady();
-      addAdminTask_call method_call = new addAdminTask_call(req, resultHandler534, this, ___protocolFactory, ___transport);
+      addAdminTask_call method_call = new addAdminTask_call(req, resultHandler578, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class addAdminTask_call extends TAsyncMethodCall {
       private AddTaskRequest req;
-      public addAdminTask_call(AddTaskRequest req, AsyncMethodCallback resultHandler535, TAsyncClient client531, TProtocolFactory protocolFactory532, TNonblockingTransport transport533) throws TException {
-        super(client531, protocolFactory532, transport533, resultHandler535, false);
+      public addAdminTask_call(AddTaskRequest req, AsyncMethodCallback resultHandler579, TAsyncClient client575, TProtocolFactory protocolFactory576, TNonblockingTransport transport577) throws TException {
+        super(client575, protocolFactory576, transport577, resultHandler579, false);
         this.req = req;
       }
 
@@ -1154,17 +1203,17 @@ public class StorageAdminService {
       }
     }
 
-    public void stopAdminTask(StopTaskRequest req, AsyncMethodCallback resultHandler539) throws TException {
+    public void stopAdminTask(StopTaskRequest req, AsyncMethodCallback resultHandler583) throws TException {
       checkReady();
-      stopAdminTask_call method_call = new stopAdminTask_call(req, resultHandler539, this, ___protocolFactory, ___transport);
+      stopAdminTask_call method_call = new stopAdminTask_call(req, resultHandler583, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class stopAdminTask_call extends TAsyncMethodCall {
       private StopTaskRequest req;
-      public stopAdminTask_call(StopTaskRequest req, AsyncMethodCallback resultHandler540, TAsyncClient client536, TProtocolFactory protocolFactory537, TNonblockingTransport transport538) throws TException {
-        super(client536, protocolFactory537, transport538, resultHandler540, false);
+      public stopAdminTask_call(StopTaskRequest req, AsyncMethodCallback resultHandler584, TAsyncClient client580, TProtocolFactory protocolFactory581, TNonblockingTransport transport582) throws TException {
+        super(client580, protocolFactory581, transport582, resultHandler584, false);
         this.req = req;
       }
 
@@ -1186,17 +1235,17 @@ public class StorageAdminService {
       }
     }
 
-    public void clearSpace(ClearSpaceReq req, AsyncMethodCallback resultHandler544) throws TException {
+    public void clearSpace(ClearSpaceReq req, AsyncMethodCallback resultHandler588) throws TException {
       checkReady();
-      clearSpace_call method_call = new clearSpace_call(req, resultHandler544, this, ___protocolFactory, ___transport);
+      clearSpace_call method_call = new clearSpace_call(req, resultHandler588, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class clearSpace_call extends TAsyncMethodCall {
       private ClearSpaceReq req;
-      public clearSpace_call(ClearSpaceReq req, AsyncMethodCallback resultHandler545, TAsyncClient client541, TProtocolFactory protocolFactory542, TNonblockingTransport transport543) throws TException {
-        super(client541, protocolFactory542, transport543, resultHandler545, false);
+      public clearSpace_call(ClearSpaceReq req, AsyncMethodCallback resultHandler589, TAsyncClient client585, TProtocolFactory protocolFactory586, TNonblockingTransport transport587) throws TException {
+        super(client585, protocolFactory586, transport587, resultHandler589, false);
         this.req = req;
       }
 
@@ -1218,6 +1267,38 @@ public class StorageAdminService {
       }
     }
 
+    public void getSyncProgress(GetSyncProgressReq req, AsyncMethodCallback resultHandler593) throws TException {
+      checkReady();
+      getSyncProgress_call method_call = new getSyncProgress_call(req, resultHandler593, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class getSyncProgress_call extends TAsyncMethodCall {
+      private GetSyncProgressReq req;
+      public getSyncProgress_call(GetSyncProgressReq req, AsyncMethodCallback resultHandler594, TAsyncClient client590, TProtocolFactory protocolFactory591, TNonblockingTransport transport592) throws TException {
+        super(client590, protocolFactory591, transport592, resultHandler594, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("getSyncProgress", TMessageType.CALL, 0));
+        getSyncProgress_args args = new getSyncProgress_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public GetSyncProgressResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_getSyncProgress();
+      }
+    }
+
   }
 
   public static class Processor implements TProcessor {
@@ -1231,7 +1312,7 @@ public class StorageAdminService {
       processMap_.put("addLearner", new addLearner());
       processMap_.put("removePart", new removePart());
       processMap_.put("memberChange", new memberChange());
-      processMap_.put("waitingForCatchUpData", new waitingForCatchUpData());
+      processMap_.put("getCatchUpState", new getCatchUpState());
       processMap_.put("createCheckpoint", new createCheckpoint());
       processMap_.put("dropCheckpoint", new dropCheckpoint());
       processMap_.put("blockingWrites", new blockingWrites());
@@ -1240,6 +1321,7 @@ public class StorageAdminService {
       processMap_.put("addAdminTask", new addAdminTask());
       processMap_.put("stopAdminTask", new stopAdminTask());
       processMap_.put("clearSpace", new clearSpace());
+      processMap_.put("getSyncProgress", new getSyncProgress());
     }
 
     protected static interface ProcessFunction {
@@ -1377,23 +1459,23 @@ public class StorageAdminService {
 
     }
 
-    private class waitingForCatchUpData implements ProcessFunction {
+    private class getCatchUpState implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
       {
-        Object handler_ctx = event_handler_.getContext("StorageAdminService.waitingForCatchUpData", server_ctx);
-        waitingForCatchUpData_args args = new waitingForCatchUpData_args();
-        event_handler_.preRead(handler_ctx, "StorageAdminService.waitingForCatchUpData");
+        Object handler_ctx = event_handler_.getContext("StorageAdminService.getCatchUpState", server_ctx);
+        getCatchUpState_args args = new getCatchUpState_args();
+        event_handler_.preRead(handler_ctx, "StorageAdminService.getCatchUpState");
         args.read(iprot);
         iprot.readMessageEnd();
-        event_handler_.postRead(handler_ctx, "StorageAdminService.waitingForCatchUpData", args);
-        waitingForCatchUpData_result result = new waitingForCatchUpData_result();
-        result.success = iface_.waitingForCatchUpData(args.req);
-        event_handler_.preWrite(handler_ctx, "StorageAdminService.waitingForCatchUpData", result);
-        oprot.writeMessageBegin(new TMessage("waitingForCatchUpData", TMessageType.REPLY, seqid));
+        event_handler_.postRead(handler_ctx, "StorageAdminService.getCatchUpState", args);
+        getCatchUpState_result result = new getCatchUpState_result();
+        result.success = iface_.getCatchUpState(args.req);
+        event_handler_.preWrite(handler_ctx, "StorageAdminService.getCatchUpState", result);
+        oprot.writeMessageBegin(new TMessage("getCatchUpState", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
-        event_handler_.postWrite(handler_ctx, "StorageAdminService.waitingForCatchUpData", result);
+        event_handler_.postWrite(handler_ctx, "StorageAdminService.getCatchUpState", result);
       }
 
     }
@@ -1562,6 +1644,27 @@ public class StorageAdminService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "StorageAdminService.clearSpace", result);
+      }
+
+    }
+
+    private class getSyncProgress implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("StorageAdminService.getSyncProgress", server_ctx);
+        getSyncProgress_args args = new getSyncProgress_args();
+        event_handler_.preRead(handler_ctx, "StorageAdminService.getSyncProgress");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "StorageAdminService.getSyncProgress", args);
+        getSyncProgress_result result = new getSyncProgress_result();
+        result.success = iface_.getSyncProgress(args.req);
+        event_handler_.preWrite(handler_ctx, "StorageAdminService.getSyncProgress", result);
+        oprot.writeMessageBegin(new TMessage("getSyncProgress", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "StorageAdminService.getSyncProgress", result);
       }
 
     }
@@ -3743,8 +3846,8 @@ public class StorageAdminService {
 
   }
 
-  public static class waitingForCatchUpData_args implements TBase, java.io.Serializable, Cloneable, Comparable<waitingForCatchUpData_args>   {
-    private static final TStruct STRUCT_DESC = new TStruct("waitingForCatchUpData_args");
+  public static class getCatchUpState_args implements TBase, java.io.Serializable, Cloneable, Comparable<getCatchUpState_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getCatchUpState_args");
     private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
 
     public CatchUpDataReq req;
@@ -3762,13 +3865,13 @@ public class StorageAdminService {
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(waitingForCatchUpData_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getCatchUpState_args.class, metaDataMap);
     }
 
-    public waitingForCatchUpData_args() {
+    public getCatchUpState_args() {
     }
 
-    public waitingForCatchUpData_args(
+    public getCatchUpState_args(
         CatchUpDataReq req) {
       this();
       this.req = req;
@@ -3777,21 +3880,21 @@ public class StorageAdminService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public waitingForCatchUpData_args(waitingForCatchUpData_args other) {
+    public getCatchUpState_args(getCatchUpState_args other) {
       if (other.isSetReq()) {
         this.req = TBaseHelper.deepCopy(other.req);
       }
     }
 
-    public waitingForCatchUpData_args deepCopy() {
-      return new waitingForCatchUpData_args(this);
+    public getCatchUpState_args deepCopy() {
+      return new getCatchUpState_args(this);
     }
 
     public CatchUpDataReq getReq() {
       return this.req;
     }
 
-    public waitingForCatchUpData_args setReq(CatchUpDataReq req) {
+    public getCatchUpState_args setReq(CatchUpDataReq req) {
       this.req = req;
       return this;
     }
@@ -3842,9 +3945,9 @@ public class StorageAdminService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof waitingForCatchUpData_args))
+      if (!(_that instanceof getCatchUpState_args))
         return false;
-      waitingForCatchUpData_args that = (waitingForCatchUpData_args)_that;
+      getCatchUpState_args that = (getCatchUpState_args)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
 
@@ -3857,7 +3960,7 @@ public class StorageAdminService {
     }
 
     @Override
-    public int compareTo(waitingForCatchUpData_args other) {
+    public int compareTo(getCatchUpState_args other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -3934,7 +4037,7 @@ public class StorageAdminService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("waitingForCatchUpData_args");
+      StringBuilder sb = new StringBuilder("getCatchUpState_args");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -3961,11 +4064,11 @@ public class StorageAdminService {
 
   }
 
-  public static class waitingForCatchUpData_result implements TBase, java.io.Serializable, Cloneable, Comparable<waitingForCatchUpData_result>   {
-    private static final TStruct STRUCT_DESC = new TStruct("waitingForCatchUpData_result");
+  public static class getCatchUpState_result implements TBase, java.io.Serializable, Cloneable, Comparable<getCatchUpState_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getCatchUpState_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
 
-    public AdminExecResp success;
+    public CatchUpResp success;
     public static final int SUCCESS = 0;
 
     // isset id assignments
@@ -3975,19 +4078,19 @@ public class StorageAdminService {
     static {
       Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
       tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new StructMetaData(TType.STRUCT, AdminExecResp.class)));
+          new StructMetaData(TType.STRUCT, CatchUpResp.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
     }
 
     static {
-      FieldMetaData.addStructMetaDataMap(waitingForCatchUpData_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getCatchUpState_result.class, metaDataMap);
     }
 
-    public waitingForCatchUpData_result() {
+    public getCatchUpState_result() {
     }
 
-    public waitingForCatchUpData_result(
-        AdminExecResp success) {
+    public getCatchUpState_result(
+        CatchUpResp success) {
       this();
       this.success = success;
     }
@@ -3995,21 +4098,21 @@ public class StorageAdminService {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public waitingForCatchUpData_result(waitingForCatchUpData_result other) {
+    public getCatchUpState_result(getCatchUpState_result other) {
       if (other.isSetSuccess()) {
         this.success = TBaseHelper.deepCopy(other.success);
       }
     }
 
-    public waitingForCatchUpData_result deepCopy() {
-      return new waitingForCatchUpData_result(this);
+    public getCatchUpState_result deepCopy() {
+      return new getCatchUpState_result(this);
     }
 
-    public AdminExecResp getSuccess() {
+    public CatchUpResp getSuccess() {
       return this.success;
     }
 
-    public waitingForCatchUpData_result setSuccess(AdminExecResp success) {
+    public getCatchUpState_result setSuccess(CatchUpResp success) {
       this.success = success;
       return this;
     }
@@ -4035,7 +4138,7 @@ public class StorageAdminService {
         if (__value == null) {
           unsetSuccess();
         } else {
-          setSuccess((AdminExecResp)__value);
+          setSuccess((CatchUpResp)__value);
         }
         break;
 
@@ -4060,9 +4163,9 @@ public class StorageAdminService {
         return false;
       if (this == _that)
         return true;
-      if (!(_that instanceof waitingForCatchUpData_result))
+      if (!(_that instanceof getCatchUpState_result))
         return false;
-      waitingForCatchUpData_result that = (waitingForCatchUpData_result)_that;
+      getCatchUpState_result that = (getCatchUpState_result)_that;
 
       if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
 
@@ -4075,7 +4178,7 @@ public class StorageAdminService {
     }
 
     @Override
-    public int compareTo(waitingForCatchUpData_result other) {
+    public int compareTo(getCatchUpState_result other) {
       if (other == null) {
         // See java.lang.Comparable docs
         throw new NullPointerException();
@@ -4110,7 +4213,7 @@ public class StorageAdminService {
         {
           case SUCCESS:
             if (__field.type == TType.STRUCT) {
-              this.success = new AdminExecResp();
+              this.success = new CatchUpResp();
               this.success.read(iprot);
             } else { 
               TProtocolUtil.skip(iprot, __field.type);
@@ -4151,7 +4254,7 @@ public class StorageAdminService {
       String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
-      StringBuilder sb = new StringBuilder("waitingForCatchUpData_result");
+      StringBuilder sb = new StringBuilder("getCatchUpState_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -7632,6 +7735,441 @@ public class StorageAdminService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("clearSpace_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class getSyncProgress_args implements TBase, java.io.Serializable, Cloneable, Comparable<getSyncProgress_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getSyncProgress_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public GetSyncProgressReq req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, GetSyncProgressReq.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(getSyncProgress_args.class, metaDataMap);
+    }
+
+    public getSyncProgress_args() {
+    }
+
+    public getSyncProgress_args(
+        GetSyncProgressReq req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getSyncProgress_args(getSyncProgress_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public getSyncProgress_args deepCopy() {
+      return new getSyncProgress_args(this);
+    }
+
+    public GetSyncProgressReq getReq() {
+      return this.req;
+    }
+
+    public getSyncProgress_args setReq(GetSyncProgressReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((GetSyncProgressReq)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof getSyncProgress_args))
+        return false;
+      getSyncProgress_args that = (getSyncProgress_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(getSyncProgress_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new GetSyncProgressReq();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("getSyncProgress_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class getSyncProgress_result implements TBase, java.io.Serializable, Cloneable, Comparable<getSyncProgress_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getSyncProgress_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public GetSyncProgressResp success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, GetSyncProgressResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(getSyncProgress_result.class, metaDataMap);
+    }
+
+    public getSyncProgress_result() {
+    }
+
+    public getSyncProgress_result(
+        GetSyncProgressResp success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public getSyncProgress_result(getSyncProgress_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public getSyncProgress_result deepCopy() {
+      return new getSyncProgress_result(this);
+    }
+
+    public GetSyncProgressResp getSuccess() {
+      return this.success;
+    }
+
+    public getSyncProgress_result setSuccess(GetSyncProgressResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((GetSyncProgressResp)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof getSyncProgress_result))
+        return false;
+      getSyncProgress_result that = (getSyncProgress_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(getSyncProgress_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new GetSyncProgressResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("getSyncProgress_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

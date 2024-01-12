@@ -278,15 +278,15 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
         case SPACE_IDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list289 = iprot.readListBegin();
-              this.space_ids = new ArrayList<Integer>(Math.max(0, _list289.size));
-              for (int _i290 = 0; 
-                   (_list289.size < 0) ? iprot.peekList() : (_i290 < _list289.size); 
-                   ++_i290)
+              TList _list298 = iprot.readListBegin();
+              this.space_ids = new ArrayList<Integer>(Math.max(0, _list298.size));
+              for (int _i299 = 0; 
+                   (_list298.size < 0) ? iprot.peekList() : (_i299 < _list298.size); 
+                   ++_i299)
               {
-                int _elem291;
-                _elem291 = iprot.readI32();
-                this.space_ids.add(_elem291);
+                int _elem300;
+                _elem300 = iprot.readI32();
+                this.space_ids.add(_elem300);
               }
               iprot.readListEnd();
             }
@@ -322,8 +322,8 @@ public class BlockingSignRequest implements TBase, java.io.Serializable, Cloneab
       oprot.writeFieldBegin(SPACE_IDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.space_ids.size()));
-        for (int _iter292 : this.space_ids)        {
-          oprot.writeI32(_iter292);
+        for (int _iter301 : this.space_ids)        {
+          oprot.writeI32(_iter301);
         }
         oprot.writeListEnd();
       }
