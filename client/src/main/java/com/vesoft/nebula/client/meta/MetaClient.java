@@ -77,8 +77,6 @@ public class MetaClient extends AbstractMetaClient {
     private MetaService.Client client;
     private final List<HostAddress> addresses;
 
-    private String handshakeKey = null;
-
     public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
     }
@@ -112,17 +110,6 @@ public class MetaClient extends AbstractMetaClient {
         if (enableSSL && sslParam == null) {
             throw new IllegalArgumentException("SSL is enabled, but SSLParam is null.");
         }
-    }
-
-    /**
-     * set the handshakeKey for MetaClient
-     *
-     * @param handshakeKey handshakeKey for meta client
-     * @return MetaClient
-     */
-    public MetaClient setHandshakeKey(String handshakeKey) {
-        this.handshakeKey = handshakeKey;
-        return this;
     }
 
     public void connect()
@@ -165,12 +152,7 @@ public class MetaClient extends AbstractMetaClient {
         protocol = new THeaderProtocol(transport);
         client = new MetaService.Client(protocol);
 
-        // check if client handshakeKey is in server client_white_list
-        VerifyClientVersionReq verifyClientVersionReq = new VerifyClientVersionReq();
-        if (handshakeKey != null) {
-            verifyClientVersionReq.setClient_version(handshakeKey.getBytes(Charsets.UTF_8));
-        }
-        VerifyClientVersionResp resp = client.verifyClientVersion(verifyClientVersionReq);
+        VerifyClientVersionResp resp = client.verifyClientVersion(new VerifyClientVersionReq());
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
             client.getInputProtocol().getTransport().close();
             if (resp.getError_msg() == null) {

@@ -133,38 +133,6 @@ public class TestConnectionPool {
         }
     }
 
-    @Test
-    public void testVersionInWhiteList() {
-        try {
-            NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setHandshakeKey("test");
-            pool.init(
-                    Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
-                    config);
-            assert true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    @Test
-    public void testVersionNotInWhiteList() {
-        try {
-            NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setHandshakeKey("INVALID_VERSION");
-            boolean initResult = pool.init(
-                    Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
-                    config);
-            assert !initResult;
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
     @Test()
     public void testGetSession() {
         NebulaPool pool = null;
