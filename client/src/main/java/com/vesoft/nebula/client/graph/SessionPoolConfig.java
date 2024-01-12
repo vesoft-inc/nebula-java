@@ -63,9 +63,6 @@ public class SessionPoolConfig implements Serializable {
 
     private Map<String, String> customHeaders = new HashMap<>();
 
-    private String handshakeKey = null;
-
-
     public SessionPoolConfig(List<HostAddress> addresses,
                              String spaceName,
                              String username,
@@ -258,14 +255,6 @@ public class SessionPoolConfig implements Serializable {
         return this;
     }
 
-    public String getHandshakeKey() {
-        return handshakeKey;
-    }
-
-    public void setHandshakeKey(String handshakeKey) {
-        this.handshakeKey = handshakeKey;
-    }
-
     @Override
     public String toString() {
         return "SessionPoolConfig{"
@@ -285,7 +274,6 @@ public class SessionPoolConfig implements Serializable {
                 + ", sslParam=" + sslParam
                 + ", useHttp2=" + useHttp2
                 + ", customHeaders=" + customHeaders
-                + ", handshakeKey=" + handshakeKey
                 + '}';
     }
 }

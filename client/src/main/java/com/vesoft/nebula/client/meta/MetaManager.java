@@ -64,18 +64,6 @@ public class MetaManager implements MetaCache, Serializable {
     }
 
     /**
-     * init the meta info cache with client handshakeKey
-     */
-    public MetaManager(List<HostAddress> address, String handshakeKey)
-            throws TException, ClientServerIncompatibleException, UnknownHostException {
-        metaClient = new MetaClient(address);
-        metaClient.setHandshakeKey(handshakeKey);
-        metaClient.connect();
-        fillMetaInfo();
-    }
-
-
-    /**
      * init the meta info cache with more config
      */
     public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
@@ -87,19 +75,6 @@ public class MetaManager implements MetaCache, Serializable {
         fillMetaInfo();
     }
 
-    /**
-     * init the meta info cache with more config
-     */
-    public MetaManager(List<HostAddress> address, int timeout, int connectionRetry,
-                       int executionRetry, boolean enableSSL, SSLParam sslParam,
-                       String handshakeKey)
-            throws TException, ClientServerIncompatibleException, UnknownHostException {
-        metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
-                sslParam);
-        metaClient.setHandshakeKey(handshakeKey);
-        metaClient.connect();
-        fillMetaInfo();
-    }
 
     /**
      * close meta client

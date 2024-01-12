@@ -63,38 +63,6 @@ public class TestMetaClient extends TestCase {
         }
     }
 
-
-    public void testConnectWithVersionInWhiteList() {
-        int port = 9559;
-        try {
-            MetaClient client = new MetaClient(address, port);
-            client.setHandshakeKey("3.0.0");
-            client.connect();
-
-            client.setHandshakeKey("test");
-            client.connect();
-        } catch (TException | UnknownHostException | ClientServerIncompatibleException e) {
-            e.printStackTrace();
-            assert (false);
-        }
-    }
-
-
-    public void testConnectWithVersionNotInWhiteList() {
-        int port = 9559;
-        try {
-            MetaClient client = new MetaClient(address, port);
-            client.setHandshakeKey("INVALID_VERSION");
-            client.connect();
-        } catch (ClientServerIncompatibleException e) {
-            e.printStackTrace();
-            assert (true);
-        } catch (TException | UnknownHostException e) {
-            e.printStackTrace();
-            assert (false);
-        }
-    }
-
     public void testGetSpaces() {
         try {
             List<IdName> spaces = metaClient.getSpaces();
