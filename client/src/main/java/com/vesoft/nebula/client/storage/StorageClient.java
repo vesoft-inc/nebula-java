@@ -41,6 +41,9 @@ public class StorageClient implements Serializable {
     private boolean enableSSL = false;
     private SSLParam sslParam = null;
 
+    private String user = null;
+    private String password = null;
+
     /**
      * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
      * one server host.
@@ -106,6 +109,16 @@ public class StorageClient implements Serializable {
         metaManager = new MetaManager(addresses, timeout, connectionRetry, executionRetry,
                 enableSSL, sslParam);
         return true;
+    }
+
+    public StorageClient setUser(String user) {
+        this.user = user;
+        return this;
+    }
+
+    public StorageClient setPassword(String password) {
+        this.password = password;
+        return this;
     }
 
 
@@ -619,6 +632,8 @@ public class StorageClient implements Serializable {
                 .withSpaceName(spaceName)
                 .withTagName(tagName)
                 .withPartSuccess(allowPartSuccess)
+                .withUser(user)
+                .withPassword(password)
                 .build();
     }
 

@@ -45,8 +45,7 @@ public class StorageClientExample {
     public static void scanVertex(StorageClient client) {
         ScanVertexResultIterator iterator = client.scanVertex(
                 "test",
-                "person",
-                Arrays.asList("name", "age"));
+                "player");
 
         while (iterator.hasNext()) {
             ScanVertexResult result = null;
