@@ -6,7 +6,6 @@
 package com.vesoft.nebula.client.meta;
 
 import com.facebook.thrift.TException;
-import com.facebook.thrift.protocol.TCompactProtocol;
 import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
@@ -50,7 +49,6 @@ import com.vesoft.nebula.meta.VerifyClientVersionReq;
 import com.vesoft.nebula.meta.VerifyClientVersionResp;
 import com.vesoft.nebula.util.SslUtil;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -78,8 +76,6 @@ public class MetaClient extends AbstractMetaClient {
 
     private MetaService.Client client;
     private final List<HostAddress> addresses;
-
-    private String version = null;
 
     public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
@@ -114,17 +110,6 @@ public class MetaClient extends AbstractMetaClient {
         if (enableSSL && sslParam == null) {
             throw new IllegalArgumentException("SSL is enabled, but SSLParam is null.");
         }
-    }
-
-    /**
-     * set the version info for MetaClient
-     *
-     * @param version version info
-     * @return MetaClient
-     */
-    public MetaClient setVersion(String version) {
-        this.version = version;
-        return this;
     }
 
     public void connect()
@@ -167,12 +152,7 @@ public class MetaClient extends AbstractMetaClient {
         protocol = new THeaderProtocol(transport);
         client = new MetaService.Client(protocol);
 
-        // check if client version matches server version
-        VerifyClientVersionReq verifyClientVersionReq = new VerifyClientVersionReq();
-        if (version != null) {
-            verifyClientVersionReq.setClient_version(version.getBytes(Charsets.UTF_8));
-        }
-        VerifyClientVersionResp resp = client.verifyClientVersion(verifyClientVersionReq);
+        VerifyClientVersionResp resp = client.verifyClientVersion(new VerifyClientVersionReq());
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
             client.getInputProtocol().getTransport().close();
             if (resp.getError_msg() == null) {

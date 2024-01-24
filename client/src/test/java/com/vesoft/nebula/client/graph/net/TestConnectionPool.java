@@ -9,7 +9,6 @@ import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
-import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.InvalidConfigException;
 import java.net.UnknownHostException;
@@ -128,38 +127,6 @@ public class TestConnectionPool {
                     Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
                     config);
             assert true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    @Test
-    public void testVersionInWhiteList() {
-        try {
-            NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setVersion("test");
-            pool.init(
-                    Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
-                    config);
-            assert true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert false;
-        }
-    }
-
-    @Test
-    public void testVersionNotInWhiteList() {
-        try {
-            NebulaPool pool = new NebulaPool();
-            NebulaPoolConfig config = new NebulaPoolConfig();
-            config.setVersion("INVALID_VERSION");
-            boolean initResult = pool.init(
-                    Collections.singletonList(new HostAddress("127.0.0.1", 9669)),
-                    config);
-            assert !initResult;
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

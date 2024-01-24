@@ -17,6 +17,7 @@ import com.vesoft.nebula.client.graph.net.AuthResult;
 import com.vesoft.nebula.client.graph.net.SessionState;
 import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -231,6 +232,44 @@ public class SessionPool implements Serializable {
         return resultSet;
     }
 
+    public String executeJson(String stmt)
+            throws ClientServerIncompatibleException, AuthFailedException,
+            IOErrorException, BindSpaceFailedException {
+        return executeJsonWithParameter(stmt, (Map<String, Object>) Collections.EMPTY_MAP);
+    }
+
+    public String executeJsonWithParameter(String stmt,
+                                                  Map<String, Object> parameterMap)
+            throws ClientServerIncompatibleException, AuthFailedException,
+            IOErrorException, BindSpaceFailedException {
+        stmtCheck(stmt);
+        checkSessionPool();
+        NebulaSession nebulaSession = getSession();
+        String result;
+        try {
+            result = nebulaSession.executeJsonWithParameter(stmt, parameterMap);
+
+            // re-execute for session error
+            if (isSessionErrorForJson(result)) {
+                sessionList.remove(nebulaSession);
+                nebulaSession = getSession();
+                result = nebulaSession.executeJsonWithParameter(stmt, parameterMap);
+            }
+        } catch (IOErrorException e) {
+            if (e.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                sessionList.remove(nebulaSession);
+                nebulaSession = getSession();
+                result = nebulaSession.executeJsonWithParameter(stmt, parameterMap);
+                return result;
+            }
+            useSpace(nebulaSession, null);
+            throw e;
+        }
+
+        useSpaceForJson(nebulaSession, result);
+        return result;
+    }
+
 
     /**
      * close the session pool
@@ -351,13 +390,11 @@ public class SessionPool implements Serializable {
                     connection.open(getAddress(), sessionPoolConfig.getTimeout(),
                             sessionPoolConfig.getSslParam(),
                             sessionPoolConfig.isUseHttp2(),
-                            sessionPoolConfig.getCustomHeaders(),
-                            sessionPoolConfig.getVersion());
+                            sessionPoolConfig.getCustomHeaders());
                 } else {
                     connection.open(getAddress(), sessionPoolConfig.getTimeout(),
                             sessionPoolConfig.isUseHttp2(),
-                            sessionPoolConfig.getCustomHeaders(),
-                            sessionPoolConfig.getVersion());
+                            sessionPoolConfig.getCustomHeaders());
                 }
                 break;
             } catch (Exception e) {
@@ -452,6 +489,17 @@ public class SessionPool implements Serializable {
                 && (resultSet.getErrorCode() == ErrorCode.E_SESSION_INVALID.getValue()
                 || resultSet.getErrorCode() == ErrorCode.E_SESSION_NOT_FOUND.getValue()
                 || resultSet.getErrorCode() == ErrorCode.E_SESSION_TIMEOUT.getValue());
+    }
+
+    private boolean isSessionErrorForJson(String result) {
+        if (result == null) {
+            return true;
+        }
+        int code = JSON.parseObject(result).getJSONArray("errors")
+                .getJSONObject(0).getIntValue("code");
+        return code == ErrorCode.E_SESSION_INVALID.getValue()
+                || code == ErrorCode.E_SESSION_NOT_FOUND.getValue()
+                || code == ErrorCode.E_SESSION_TIMEOUT.getValue();
     }
 
 
