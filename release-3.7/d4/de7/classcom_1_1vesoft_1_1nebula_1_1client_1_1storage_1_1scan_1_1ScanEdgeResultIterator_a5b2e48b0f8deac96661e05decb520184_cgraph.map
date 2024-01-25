@@ -1,0 +1,5 @@
+<map id="next" name="next">
+<area shape="rect" id="node1" title="get the next edge set" alt="" coords="5,46,56,73"/>
+<area shape="rect" id="node2" href="$d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b" title="delete part from set" alt="" coords="104,5,377,47"/>
+<area shape="rect" id="node3" href="$d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#a913b721e422822b8446fcef948bd4c75" title="get part according to leader" alt="" coords="104,71,377,112"/>
+</map>

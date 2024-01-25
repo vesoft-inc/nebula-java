@@ -1,0 +1,6 @@
+<map id="getDurationString" name="getDurationString">
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,143,83"/>
+<area shape="rect" id="node2" href="$dc/de9/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1DurationWrapper.html#a6f6c4176fa78e1c4140c8c726c7fa8c7" title="@retrun utc duration microseconds" alt="" coords="191,5,323,32"/>
+<area shape="rect" id="node3" href="$dc/de9/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1DurationWrapper.html#a9a6ebde0e8c3a757fec9a061cc9268d6" title=" " alt="" coords="211,56,302,83"/>
+<area shape="rect" id="node4" href="$dc/de9/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1DurationWrapper.html#ae181e8d1114da83eeab434f2e3ede13a" title=" " alt="" coords="208,107,305,133"/>
+</map>

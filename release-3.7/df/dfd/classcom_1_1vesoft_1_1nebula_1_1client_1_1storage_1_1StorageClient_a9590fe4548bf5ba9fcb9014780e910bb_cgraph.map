@@ -1,0 +1,6 @@
+<map id="scanVertex" name="scanVertex">
+<area shape="rect" id="node1" title="scan vertex of all parts with no return cols, limit, startTime, endTime， whether allow partial succes..." alt="" coords="5,42,100,69"/>
+<area shape="rect" id="node2" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ac89cc69353fc7679b908ab4e5d2b738f" title="get all parts of one space" alt="" coords="148,5,372,47"/>
+<area shape="rect" id="node4" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a02283ce6ccffcac4c2528c789b43b960" title="scan vertex of all parts with specific return cols, if returnCols is an empty list,..." alt="" coords="213,71,307,98"/>
+<area shape="rect" id="node3" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a3ee399a21679d629874d0453271a6e25" title="get all parts alloc of one space" alt="" coords="420,5,644,47"/>
+</map>

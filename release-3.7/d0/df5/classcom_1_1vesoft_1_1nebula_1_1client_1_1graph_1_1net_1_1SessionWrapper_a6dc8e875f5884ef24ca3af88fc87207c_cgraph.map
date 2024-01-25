@@ -1,0 +1,7 @@
+<map id="execute" name="execute">
+<area shape="rect" id="node1" title="Execute the query sentence." alt="" coords="5,46,79,73"/>
+<area shape="rect" id="node2" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="127,39,379,80"/>
+<area shape="rect" id="node3" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="427,39,679,80"/>
+<area shape="rect" id="node4" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a31a7ce3b234c17bd35441139ff7e0fcf" title="Update the services&#39; status when the connection is broken, it is called by Session and NebulaPool." alt="" coords="727,5,979,47"/>
+<area shape="rect" id="node5" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#acb6b236ec21cd76522050bad6efce128" title="convert java value type to nebula thrift value type" alt="" coords="727,71,979,112"/>
+</map>

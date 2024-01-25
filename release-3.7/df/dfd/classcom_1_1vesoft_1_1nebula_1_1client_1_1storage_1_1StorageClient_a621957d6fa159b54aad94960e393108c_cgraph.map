@@ -1,0 +1,4 @@
+<map id="scanVertex" name="scanVertex">
+<area shape="rect" id="node1" title="scan vertex of all parts with specific returnCols, limit, startTime and endTime." alt="" coords="5,5,100,32"/>
+<area shape="rect" id="node2" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a02283ce6ccffcac4c2528c789b43b960" title="scan vertex of all parts with specific return cols, if returnCols is an empty list,..." alt="" coords="148,5,243,32"/>
+</map>
