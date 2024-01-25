@@ -1,0 +1,5 @@
+<map id="setInvalidateConnection" name="setInvalidateConnection">
+<area shape="rect" id="node1" title="Set the connection is invalidate, and the object pool will destroy it." alt="" coords="460,13,640,39"/>
+<area shape="rect" id="node2" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a3b96b72010c552f4e2c0c777077d4ba2" title="get a session from the NebulaPool" alt="" coords="319,13,412,39"/>
+<area shape="rect" id="node3" href="$db/d14/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionsManager.html#aac20ffe3d7a994c3054a6487a8a67345" title="getSessionWrapper: return a SessionWrapper from sessionManager, the SessionWrapper couldn&#39;t use by mu..." alt="" coords="5,5,271,47"/>
+</map>

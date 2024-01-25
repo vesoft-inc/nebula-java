@@ -1,0 +1,7 @@
+<map id="ValueWrapper" name="ValueWrapper">
+<area shape="rect" id="node1" title=" " alt="" coords="240,56,353,83"/>
+<area shape="rect" id="node2" href="$d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html#a9cd2c9fe10e4b2ed93f9abc9fcf1a9df" title="Convert the original data type Value to ArrayList." alt="" coords="129,5,189,32"/>
+<area shape="rect" id="node4" href="$d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html#a1b623826b57277cd8abb6e8fdc659392" title="Convert the original data type Value to HashMap." alt="" coords="127,56,192,83"/>
+<area shape="rect" id="node5" href="$d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html#a4ea08eb0be56d4445f4e7440ff4ccd01" title="Convert the original data type Value to HashSet." alt="" coords="130,107,189,133"/>
+<area shape="rect" id="node3" href="$d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html#ad146fa8579a5f8a876c4688cc5a68520" title="Convert Value to String format." alt="" coords="5,56,79,83"/>
+</map>

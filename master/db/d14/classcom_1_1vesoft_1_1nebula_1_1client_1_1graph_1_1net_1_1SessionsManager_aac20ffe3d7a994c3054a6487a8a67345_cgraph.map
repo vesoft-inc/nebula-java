@@ -1,0 +1,11 @@
+<map id="getSessionWrapper" name="getSessionWrapper">
+<area shape="rect" id="node1" title="getSessionWrapper: return a SessionWrapper from sessionManager, the SessionWrapper couldn&#39;t use by mu..." alt="" coords="5,143,153,170"/>
+<area shape="rect" id="node2" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="205,37,457,79"/>
+<area shape="rect" id="node6" href="$dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a8f518227eb38895cf5f2c5ece567d7cb" title="get the error message of the execute result" alt="" coords="201,103,461,144"/>
+<area shape="rect" id="node7" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a3b96b72010c552f4e2c0c777077d4ba2" title="get a session from the NebulaPool" alt="" coords="205,168,457,209"/>
+<area shape="rect" id="node9" href="$dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a9338f18ff3f9cc869f6a2f3fffce4fcd" title="the execute result is succeeded" alt="" coords="201,233,461,275"/>
+<area shape="rect" id="node3" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="513,37,765,79"/>
+<area shape="rect" id="node4" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a31a7ce3b234c17bd35441139ff7e0fcf" title="Update the services&#39; status when the connection is broken, it is called by Session and NebulaPool." alt="" coords="816,5,1068,47"/>
+<area shape="rect" id="node5" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#acb6b236ec21cd76522050bad6efce128" title="convert java value type to nebula thrift value type" alt="" coords="816,71,1068,112"/>
+<area shape="rect" id="node8" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a387191e8438c1fcee1c859f56970ab9f" title="Set the connection is invalidate, and the object pool will destroy it." alt="" coords="509,168,768,209"/>
+</map>

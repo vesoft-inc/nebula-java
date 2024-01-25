@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,115,92,141"/>
+<area shape="rect" id="node2" href="$d3/d29/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1AuthFailedException.html" title=" " alt="" coords="170,5,325,32"/>
+<area shape="rect" id="node3" href="$dd/d59/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1BindSpaceFailedException.html" title=" " alt="" coords="151,56,343,83"/>
+<area shape="rect" id="node4" href="$d6/d31/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1ClientServerIncompatibleException.html" title=" " alt="" coords="154,107,341,149"/>
+<area shape="rect" id="node5" href="$d6/d79/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1NotValidConnectionException.html" title=" " alt="" coords="140,173,355,200"/>
+<area shape="rect" id="node6" href="$da/de3/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1exception_1_1ExecuteFailedException.html" title=" " alt="" coords="160,224,335,251"/>
+</map>
