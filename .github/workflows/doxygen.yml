@@ -6,7 +6,7 @@ on:
   push:
     branches:
         # Remember to update the version number
-      - master
+      - release-3.7
 
 jobs:
   build:
