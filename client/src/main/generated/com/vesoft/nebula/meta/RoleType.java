@@ -17,7 +17,8 @@ public enum RoleType implements com.facebook.thrift.TEnum {
   ADMIN(2),
   DBA(3),
   USER(4),
-  GUEST(5);
+  GUEST(5),
+  BASIC(6);
 
   private final int value;
 
@@ -48,6 +49,8 @@ public enum RoleType implements com.facebook.thrift.TEnum {
         return USER;
       case 5:
         return GUEST;
+      case 6:
+        return BASIC;
       default:
         return null;
     }

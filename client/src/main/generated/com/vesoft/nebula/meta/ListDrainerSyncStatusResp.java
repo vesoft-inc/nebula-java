@@ -24,11 +24,11 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListListenerResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListListenerResp> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListListenerResp");
+public class ListDrainerSyncStatusResp implements TBase, java.io.Serializable, Cloneable, Comparable<ListDrainerSyncStatusResp> {
+  private static final TStruct STRUCT_DESC = new TStruct("ListDrainerSyncStatusResp");
   private static final TField CODE_FIELD_DESC = new TField("code", TType.I32, (short)1);
   private static final TField LEADER_FIELD_DESC = new TField("leader", TType.STRUCT, (short)2);
-  private static final TField LISTENERS_FIELD_DESC = new TField("listeners", TType.LIST, (short)3);
+  private static final TField SYNC_INFOS_FIELD_DESC = new TField("sync_infos", TType.MAP, (short)3);
 
   /**
    * 
@@ -36,10 +36,10 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
    */
   public com.vesoft.nebula.ErrorCode code;
   public com.vesoft.nebula.HostAddr leader;
-  public List<ListenerInfo> listeners;
+  public Map<Integer,com.vesoft.nebula.SyncInfo> sync_infos;
   public static final int CODE = 1;
   public static final int LEADER = 2;
-  public static final int LISTENERS = 3;
+  public static final int SYNC_INFOS = 3;
 
   // isset id assignments
 
@@ -51,33 +51,34 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
         new FieldValueMetaData(TType.I32)));
     tmpMetaDataMap.put(LEADER, new FieldMetaData("leader", TFieldRequirementType.DEFAULT, 
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.HostAddr.class)));
-    tmpMetaDataMap.put(LISTENERS, new FieldMetaData("listeners", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new StructMetaData(TType.STRUCT, ListenerInfo.class))));
+    tmpMetaDataMap.put(SYNC_INFOS, new FieldMetaData("sync_infos", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.I32), 
+            new StructMetaData(TType.STRUCT, com.vesoft.nebula.SyncInfo.class))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListListenerResp.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(ListDrainerSyncStatusResp.class, metaDataMap);
   }
 
-  public ListListenerResp() {
+  public ListDrainerSyncStatusResp() {
   }
 
-  public ListListenerResp(
+  public ListDrainerSyncStatusResp(
       com.vesoft.nebula.ErrorCode code,
       com.vesoft.nebula.HostAddr leader,
-      List<ListenerInfo> listeners) {
+      Map<Integer,com.vesoft.nebula.SyncInfo> sync_infos) {
     this();
     this.code = code;
     this.leader = leader;
-    this.listeners = listeners;
+    this.sync_infos = sync_infos;
   }
 
   public static class Builder {
     private com.vesoft.nebula.ErrorCode code;
     private com.vesoft.nebula.HostAddr leader;
-    private List<ListenerInfo> listeners;
+    private Map<Integer,com.vesoft.nebula.SyncInfo> sync_infos;
 
     public Builder() {
     }
@@ -92,16 +93,16 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
       return this;
     }
 
-    public Builder setListeners(final List<ListenerInfo> listeners) {
-      this.listeners = listeners;
+    public Builder setSync_infos(final Map<Integer,com.vesoft.nebula.SyncInfo> sync_infos) {
+      this.sync_infos = sync_infos;
       return this;
     }
 
-    public ListListenerResp build() {
-      ListListenerResp result = new ListListenerResp();
+    public ListDrainerSyncStatusResp build() {
+      ListDrainerSyncStatusResp result = new ListDrainerSyncStatusResp();
       result.setCode(this.code);
       result.setLeader(this.leader);
-      result.setListeners(this.listeners);
+      result.setSync_infos(this.sync_infos);
       return result;
     }
   }
@@ -113,20 +114,20 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListListenerResp(ListListenerResp other) {
+  public ListDrainerSyncStatusResp(ListDrainerSyncStatusResp other) {
     if (other.isSetCode()) {
       this.code = TBaseHelper.deepCopy(other.code);
     }
     if (other.isSetLeader()) {
       this.leader = TBaseHelper.deepCopy(other.leader);
     }
-    if (other.isSetListeners()) {
-      this.listeners = TBaseHelper.deepCopy(other.listeners);
+    if (other.isSetSync_infos()) {
+      this.sync_infos = TBaseHelper.deepCopy(other.sync_infos);
     }
   }
 
-  public ListListenerResp deepCopy() {
-    return new ListListenerResp(this);
+  public ListDrainerSyncStatusResp deepCopy() {
+    return new ListDrainerSyncStatusResp(this);
   }
 
   /**
@@ -141,7 +142,7 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
    * 
    * @see com.vesoft.nebula.ErrorCode
    */
-  public ListListenerResp setCode(com.vesoft.nebula.ErrorCode code) {
+  public ListDrainerSyncStatusResp setCode(com.vesoft.nebula.ErrorCode code) {
     this.code = code;
     return this;
   }
@@ -165,7 +166,7 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
     return this.leader;
   }
 
-  public ListListenerResp setLeader(com.vesoft.nebula.HostAddr leader) {
+  public ListDrainerSyncStatusResp setLeader(com.vesoft.nebula.HostAddr leader) {
     this.leader = leader;
     return this;
   }
@@ -185,27 +186,27 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
     }
   }
 
-  public List<ListenerInfo> getListeners() {
-    return this.listeners;
+  public Map<Integer,com.vesoft.nebula.SyncInfo> getSync_infos() {
+    return this.sync_infos;
   }
 
-  public ListListenerResp setListeners(List<ListenerInfo> listeners) {
-    this.listeners = listeners;
+  public ListDrainerSyncStatusResp setSync_infos(Map<Integer,com.vesoft.nebula.SyncInfo> sync_infos) {
+    this.sync_infos = sync_infos;
     return this;
   }
 
-  public void unsetListeners() {
-    this.listeners = null;
+  public void unsetSync_infos() {
+    this.sync_infos = null;
   }
 
-  // Returns true if field listeners is set (has been assigned a value) and false otherwise
-  public boolean isSetListeners() {
-    return this.listeners != null;
+  // Returns true if field sync_infos is set (has been assigned a value) and false otherwise
+  public boolean isSetSync_infos() {
+    return this.sync_infos != null;
   }
 
-  public void setListenersIsSet(boolean __value) {
+  public void setSync_infosIsSet(boolean __value) {
     if (!__value) {
-      this.listeners = null;
+      this.sync_infos = null;
     }
   }
 
@@ -228,11 +229,11 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
       }
       break;
 
-    case LISTENERS:
+    case SYNC_INFOS:
       if (__value == null) {
-        unsetListeners();
+        unsetSync_infos();
       } else {
-        setListeners((List<ListenerInfo>)__value);
+        setSync_infos((Map<Integer,com.vesoft.nebula.SyncInfo>)__value);
       }
       break;
 
@@ -249,8 +250,8 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
     case LEADER:
       return getLeader();
 
-    case LISTENERS:
-      return getListeners();
+    case SYNC_INFOS:
+      return getSync_infos();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -263,26 +264,26 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListListenerResp))
+    if (!(_that instanceof ListDrainerSyncStatusResp))
       return false;
-    ListListenerResp that = (ListListenerResp)_that;
+    ListDrainerSyncStatusResp that = (ListDrainerSyncStatusResp)_that;
 
     if (!TBaseHelper.equalsNobinary(this.isSetCode(), that.isSetCode(), this.code, that.code)) { return false; }
 
     if (!TBaseHelper.equalsNobinary(this.isSetLeader(), that.isSetLeader(), this.leader, that.leader)) { return false; }
 
-    if (!TBaseHelper.equalsNobinary(this.isSetListeners(), that.isSetListeners(), this.listeners, that.listeners)) { return false; }
+    if (!TBaseHelper.equalsNobinary(this.isSetSync_infos(), that.isSetSync_infos(), this.sync_infos, that.sync_infos)) { return false; }
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {code, leader, listeners});
+    return Arrays.deepHashCode(new Object[] {code, leader, sync_infos});
   }
 
   @Override
-  public int compareTo(ListListenerResp other) {
+  public int compareTo(ListDrainerSyncStatusResp other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -309,11 +310,11 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
     if (lastComparison != 0) { 
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetListeners()).compareTo(other.isSetListeners());
+    lastComparison = Boolean.valueOf(isSetSync_infos()).compareTo(other.isSetSync_infos());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(listeners, other.listeners);
+    lastComparison = TBaseHelper.compareTo(sync_infos, other.sync_infos);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,21 +347,23 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
-        case LISTENERS:
-          if (__field.type == TType.LIST) {
+        case SYNC_INFOS:
+          if (__field.type == TType.MAP) {
             {
-              TList _list249 = iprot.readListBegin();
-              this.listeners = new ArrayList<ListenerInfo>(Math.max(0, _list249.size));
-              for (int _i250 = 0; 
-                   (_list249.size < 0) ? iprot.peekList() : (_i250 < _list249.size); 
-                   ++_i250)
+              TMap _map288 = iprot.readMapBegin();
+              this.sync_infos = new HashMap<Integer,com.vesoft.nebula.SyncInfo>(Math.max(0, 2*_map288.size));
+              for (int _i289 = 0; 
+                   (_map288.size < 0) ? iprot.peekMap() : (_i289 < _map288.size); 
+                   ++_i289)
               {
-                ListenerInfo _elem251;
-                _elem251 = new ListenerInfo();
-                _elem251.read(iprot);
-                this.listeners.add(_elem251);
+                int _key290;
+                com.vesoft.nebula.SyncInfo _val291;
+                _key290 = iprot.readI32();
+                _val291 = new com.vesoft.nebula.SyncInfo();
+                _val291.read(iprot);
+                this.sync_infos.put(_key290, _val291);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
@@ -393,14 +396,15 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
       this.leader.write(oprot);
       oprot.writeFieldEnd();
     }
-    if (this.listeners != null) {
-      oprot.writeFieldBegin(LISTENERS_FIELD_DESC);
+    if (this.sync_infos != null) {
+      oprot.writeFieldBegin(SYNC_INFOS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.listeners.size()));
-        for (ListenerInfo _iter252 : this.listeners)        {
-          _iter252.write(oprot);
+        oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.sync_infos.size()));
+        for (Map.Entry<Integer, com.vesoft.nebula.SyncInfo> _iter292 : this.sync_infos.entrySet())        {
+          oprot.writeI32(_iter292.getKey());
+          _iter292.getValue().write(oprot);
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -418,7 +422,7 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListListenerResp");
+    StringBuilder sb = new StringBuilder("ListDrainerSyncStatusResp");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);
@@ -455,13 +459,13 @@ public class ListListenerResp implements TBase, java.io.Serializable, Cloneable,
     first = false;
     if (!first) sb.append("," + newLine);
     sb.append(indentStr);
-    sb.append("listeners");
+    sb.append("sync_infos");
     sb.append(space);
     sb.append(":").append(space);
-    if (this.getListeners() == null) {
+    if (this.getSync_infos() == null) {
       sb.append("null");
     } else {
-      sb.append(TBaseHelper.toString(this.getListeners(), indent + 1, prettyPrint));
+      sb.append(TBaseHelper.toString(this.getSync_infos(), indent + 1, prettyPrint));
     }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

@@ -28,13 +28,18 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
   private static final TStruct STRUCT_DESC = new TStruct("CreateCPRequest");
   private static final TField SPACE_IDS_FIELD_DESC = new TField("space_ids", TType.LIST, (short)1);
   private static final TField NAME_FIELD_DESC = new TField("name", TType.STRING, (short)2);
+  private static final TField FOR_ALL_REPLICAS_FIELD_DESC = new TField("for_all_replicas", TType.BOOL, (short)3);
 
   public List<Integer> space_ids;
   public byte[] name;
+  public boolean for_all_replicas;
   public static final int SPACE_IDS = 1;
   public static final int NAME = 2;
+  public static final int FOR_ALL_REPLICAS = 3;
 
   // isset id assignments
+  private static final int __FOR_ALL_REPLICAS_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -45,6 +50,8 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
             new FieldValueMetaData(TType.I32))));
     tmpMetaDataMap.put(NAME, new FieldMetaData("name", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(FOR_ALL_REPLICAS, new FieldMetaData("for_all_replicas", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -57,15 +64,21 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
 
   public CreateCPRequest(
       List<Integer> space_ids,
-      byte[] name) {
+      byte[] name,
+      boolean for_all_replicas) {
     this();
     this.space_ids = space_ids;
     this.name = name;
+    this.for_all_replicas = for_all_replicas;
+    setFor_all_replicasIsSet(true);
   }
 
   public static class Builder {
     private List<Integer> space_ids;
     private byte[] name;
+    private boolean for_all_replicas;
+
+    BitSet __optional_isset = new BitSet(1);
 
     public Builder() {
     }
@@ -80,10 +93,19 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
+    public Builder setFor_all_replicas(final boolean for_all_replicas) {
+      this.for_all_replicas = for_all_replicas;
+      __optional_isset.set(__FOR_ALL_REPLICAS_ISSET_ID, true);
+      return this;
+    }
+
     public CreateCPRequest build() {
       CreateCPRequest result = new CreateCPRequest();
       result.setSpace_ids(this.space_ids);
       result.setName(this.name);
+      if (__optional_isset.get(__FOR_ALL_REPLICAS_ISSET_ID)) {
+        result.setFor_all_replicas(this.for_all_replicas);
+      }
       return result;
     }
   }
@@ -96,12 +118,15 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
    * Performs a deep copy on <i>other</i>.
    */
   public CreateCPRequest(CreateCPRequest other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetSpace_ids()) {
       this.space_ids = TBaseHelper.deepCopy(other.space_ids);
     }
     if (other.isSetName()) {
       this.name = TBaseHelper.deepCopy(other.name);
     }
+    this.for_all_replicas = TBaseHelper.deepCopy(other.for_all_replicas);
   }
 
   public CreateCPRequest deepCopy() {
@@ -156,6 +181,29 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
     }
   }
 
+  public boolean isFor_all_replicas() {
+    return this.for_all_replicas;
+  }
+
+  public CreateCPRequest setFor_all_replicas(boolean for_all_replicas) {
+    this.for_all_replicas = for_all_replicas;
+    setFor_all_replicasIsSet(true);
+    return this;
+  }
+
+  public void unsetFor_all_replicas() {
+    __isset_bit_vector.clear(__FOR_ALL_REPLICAS_ISSET_ID);
+  }
+
+  // Returns true if field for_all_replicas is set (has been assigned a value) and false otherwise
+  public boolean isSetFor_all_replicas() {
+    return __isset_bit_vector.get(__FOR_ALL_REPLICAS_ISSET_ID);
+  }
+
+  public void setFor_all_replicasIsSet(boolean __value) {
+    __isset_bit_vector.set(__FOR_ALL_REPLICAS_ISSET_ID, __value);
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -175,6 +223,14 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
       }
       break;
 
+    case FOR_ALL_REPLICAS:
+      if (__value == null) {
+        unsetFor_all_replicas();
+      } else {
+        setFor_all_replicas((Boolean)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -187,6 +243,9 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
 
     case NAME:
       return getName();
+
+    case FOR_ALL_REPLICAS:
+      return new Boolean(isFor_all_replicas());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -207,12 +266,14 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
 
     if (!TBaseHelper.equalsSlow(this.isSetName(), that.isSetName(), this.name, that.name)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.for_all_replicas, that.for_all_replicas)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {space_ids, name});
+    return Arrays.deepHashCode(new Object[] {space_ids, name, for_all_replicas});
   }
 
   @Override
@@ -243,6 +304,14 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetFor_all_replicas()).compareTo(other.isSetFor_all_replicas());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(for_all_replicas, other.for_all_replicas);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -260,15 +329,15 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
         case SPACE_IDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list277 = iprot.readListBegin();
-              this.space_ids = new ArrayList<Integer>(Math.max(0, _list277.size));
-              for (int _i278 = 0; 
-                   (_list277.size < 0) ? iprot.peekList() : (_i278 < _list277.size); 
-                   ++_i278)
+              TList _list286 = iprot.readListBegin();
+              this.space_ids = new ArrayList<Integer>(Math.max(0, _list286.size));
+              for (int _i287 = 0; 
+                   (_list286.size < 0) ? iprot.peekList() : (_i287 < _list286.size); 
+                   ++_i287)
               {
-                int _elem279;
-                _elem279 = iprot.readI32();
-                this.space_ids.add(_elem279);
+                int _elem288;
+                _elem288 = iprot.readI32();
+                this.space_ids.add(_elem288);
               }
               iprot.readListEnd();
             }
@@ -279,6 +348,14 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
         case NAME:
           if (__field.type == TType.STRING) {
             this.name = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case FOR_ALL_REPLICAS:
+          if (__field.type == TType.BOOL) {
+            this.for_all_replicas = iprot.readBool();
+            setFor_all_replicasIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, __field.type);
           }
@@ -304,8 +381,8 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(SPACE_IDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.space_ids.size()));
-        for (int _iter280 : this.space_ids)        {
-          oprot.writeI32(_iter280);
+        for (int _iter289 : this.space_ids)        {
+          oprot.writeI32(_iter289);
         }
         oprot.writeListEnd();
       }
@@ -316,6 +393,9 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeBinary(this.name);
       oprot.writeFieldEnd();
     }
+    oprot.writeFieldBegin(FOR_ALL_REPLICAS_FIELD_DESC);
+    oprot.writeBool(this.for_all_replicas);
+    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -361,6 +441,13 @@ public class CreateCPRequest implements TBase, java.io.Serializable, Cloneable, 
         }
         if (this.getName().length > 128) sb.append(" ...");
     }
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("for_all_replicas");
+    sb.append(space);
+    sb.append(":").append(space);
+    sb.append(TBaseHelper.toString(this.isFor_all_replicas(), indent + 1, prettyPrint));
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");

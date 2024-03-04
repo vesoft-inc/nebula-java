@@ -260,15 +260,15 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
         case SPACE_IDS:
           if (__field.type == TType.LIST) {
             {
-              TList _list285 = iprot.readListBegin();
-              this.space_ids = new ArrayList<Integer>(Math.max(0, _list285.size));
-              for (int _i286 = 0; 
-                   (_list285.size < 0) ? iprot.peekList() : (_i286 < _list285.size); 
-                   ++_i286)
+              TList _list294 = iprot.readListBegin();
+              this.space_ids = new ArrayList<Integer>(Math.max(0, _list294.size));
+              for (int _i295 = 0; 
+                   (_list294.size < 0) ? iprot.peekList() : (_i295 < _list294.size); 
+                   ++_i295)
               {
-                int _elem287;
-                _elem287 = iprot.readI32();
-                this.space_ids.add(_elem287);
+                int _elem296;
+                _elem296 = iprot.readI32();
+                this.space_ids.add(_elem296);
               }
               iprot.readListEnd();
             }
@@ -304,8 +304,8 @@ public class DropCPRequest implements TBase, java.io.Serializable, Cloneable, Co
       oprot.writeFieldBegin(SPACE_IDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.I32, this.space_ids.size()));
-        for (int _iter288 : this.space_ids)        {
-          oprot.writeI32(_iter288);
+        for (int _iter297 : this.space_ids)        {
+          oprot.writeI32(_iter297);
         }
         oprot.writeListEnd();
       }

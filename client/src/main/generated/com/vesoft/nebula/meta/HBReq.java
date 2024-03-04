@@ -34,6 +34,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   private static final TField DISK_PARTS_FIELD_DESC = new TField("disk_parts", TType.MAP, (short)6);
   private static final TField DIR_FIELD_DESC = new TField("dir", TType.STRUCT, (short)7);
   private static final TField VERSION_FIELD_DESC = new TField("version", TType.STRING, (short)8);
+  private static final TField CPU_CORES_FIELD_DESC = new TField("cpu_cores", TType.I32, (short)9);
+  private static final TField ZONE_FIELD_DESC = new TField("zone", TType.STRING, (short)10);
 
   /**
    * 
@@ -47,6 +49,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public Map<Integer,Map<byte[],PartitionList>> disk_parts;
   public com.vesoft.nebula.DirInfo dir;
   public byte[] version;
+  public int cpu_cores;
+  public byte[] zone;
   public static final int ROLE = 1;
   public static final int HOST = 2;
   public static final int CLUSTER_ID = 3;
@@ -55,10 +59,13 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   public static final int DISK_PARTS = 6;
   public static final int DIR = 7;
   public static final int VERSION = 8;
+  public static final int CPU_CORES = 9;
+  public static final int ZONE = 10;
 
   // isset id assignments
   private static final int __CLUSTER_ID_ISSET_ID = 0;
-  private BitSet __isset_bit_vector = new BitSet(1);
+  private static final int __CPU_CORES_ISSET_ID = 1;
+  private BitSet __isset_bit_vector = new BitSet(2);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -87,6 +94,10 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
         new StructMetaData(TType.STRUCT, com.vesoft.nebula.DirInfo.class)));
     tmpMetaDataMap.put(VERSION, new FieldMetaData("version", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
+    tmpMetaDataMap.put(CPU_CORES, new FieldMetaData("cpu_cores", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I32)));
+    tmpMetaDataMap.put(ZONE, new FieldMetaData("zone", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -95,6 +106,8 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
   }
 
   public HBReq() {
+    this.cpu_cores = -1;
+
   }
 
   public HBReq(
@@ -118,7 +131,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       byte[] git_info_sha,
       Map<Integer,Map<byte[],PartitionList>> disk_parts,
       com.vesoft.nebula.DirInfo dir,
-      byte[] version) {
+      byte[] version,
+      int cpu_cores,
+      byte[] zone) {
     this();
     this.role = role;
     this.host = host;
@@ -129,6 +144,9 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     this.disk_parts = disk_parts;
     this.dir = dir;
     this.version = version;
+    this.cpu_cores = cpu_cores;
+    setCpu_coresIsSet(true);
+    this.zone = zone;
   }
 
   public static class Builder {
@@ -140,8 +158,10 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     private Map<Integer,Map<byte[],PartitionList>> disk_parts;
     private com.vesoft.nebula.DirInfo dir;
     private byte[] version;
+    private int cpu_cores;
+    private byte[] zone;
 
-    BitSet __optional_isset = new BitSet(1);
+    BitSet __optional_isset = new BitSet(2);
 
     public Builder() {
     }
@@ -187,6 +207,17 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return this;
     }
 
+    public Builder setCpu_cores(final int cpu_cores) {
+      this.cpu_cores = cpu_cores;
+      __optional_isset.set(__CPU_CORES_ISSET_ID, true);
+      return this;
+    }
+
+    public Builder setZone(final byte[] zone) {
+      this.zone = zone;
+      return this;
+    }
+
     public HBReq build() {
       HBReq result = new HBReq();
       result.setRole(this.role);
@@ -199,6 +230,10 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       result.setDisk_parts(this.disk_parts);
       result.setDir(this.dir);
       result.setVersion(this.version);
+      if (__optional_isset.get(__CPU_CORES_ISSET_ID)) {
+        result.setCpu_cores(this.cpu_cores);
+      }
+      result.setZone(this.zone);
       return result;
     }
   }
@@ -234,6 +269,10 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
     if (other.isSetVersion()) {
       this.version = TBaseHelper.deepCopy(other.version);
+    }
+    this.cpu_cores = TBaseHelper.deepCopy(other.cpu_cores);
+    if (other.isSetZone()) {
+      this.zone = TBaseHelper.deepCopy(other.zone);
     }
   }
 
@@ -440,6 +479,53 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
     }
   }
 
+  public int getCpu_cores() {
+    return this.cpu_cores;
+  }
+
+  public HBReq setCpu_cores(int cpu_cores) {
+    this.cpu_cores = cpu_cores;
+    setCpu_coresIsSet(true);
+    return this;
+  }
+
+  public void unsetCpu_cores() {
+    __isset_bit_vector.clear(__CPU_CORES_ISSET_ID);
+  }
+
+  // Returns true if field cpu_cores is set (has been assigned a value) and false otherwise
+  public boolean isSetCpu_cores() {
+    return __isset_bit_vector.get(__CPU_CORES_ISSET_ID);
+  }
+
+  public void setCpu_coresIsSet(boolean __value) {
+    __isset_bit_vector.set(__CPU_CORES_ISSET_ID, __value);
+  }
+
+  public byte[] getZone() {
+    return this.zone;
+  }
+
+  public HBReq setZone(byte[] zone) {
+    this.zone = zone;
+    return this;
+  }
+
+  public void unsetZone() {
+    this.zone = null;
+  }
+
+  // Returns true if field zone is set (has been assigned a value) and false otherwise
+  public boolean isSetZone() {
+    return this.zone != null;
+  }
+
+  public void setZoneIsSet(boolean __value) {
+    if (!__value) {
+      this.zone = null;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
@@ -507,6 +593,22 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       }
       break;
 
+    case CPU_CORES:
+      if (__value == null) {
+        unsetCpu_cores();
+      } else {
+        setCpu_cores((Integer)__value);
+      }
+      break;
+
+    case ZONE:
+      if (__value == null) {
+        unsetZone();
+      } else {
+        setZone((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -537,6 +639,12 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     case VERSION:
       return getVersion();
+
+    case CPU_CORES:
+      return new Integer(getCpu_cores());
+
+    case ZONE:
+      return getZone();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -569,12 +677,16 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
 
     if (!TBaseHelper.equalsSlow(this.isSetVersion(), that.isSetVersion(), this.version, that.version)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetCpu_cores(), that.isSetCpu_cores(), this.cpu_cores, that.cpu_cores)) { return false; }
+
+    if (!TBaseHelper.equalsSlow(this.isSetZone(), that.isSetZone(), this.zone, that.zone)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, disk_parts, dir, version});
+    return Arrays.deepHashCode(new Object[] {role, host, cluster_id, leader_partIds, git_info_sha, disk_parts, dir, version, cpu_cores, zone});
   }
 
   @Override
@@ -650,6 +762,22 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(version, other.version);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetCpu_cores()).compareTo(other.isSetCpu_cores());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(cpu_cores, other.cpu_cores);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetZone()).compareTo(other.isSetZone());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(zone, other.zone);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -782,6 +910,21 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case CPU_CORES:
+          if (__field.type == TType.I32) {
+            this.cpu_cores = iprot.readI32();
+            setCpu_coresIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
+        case ZONE:
+          if (__field.type == TType.STRING) {
+            this.zone = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -869,6 +1012,18 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
       if (isSetVersion()) {
         oprot.writeFieldBegin(VERSION_FIELD_DESC);
         oprot.writeBinary(this.version);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (isSetCpu_cores()) {
+      oprot.writeFieldBegin(CPU_CORES_FIELD_DESC);
+      oprot.writeI32(this.cpu_cores);
+      oprot.writeFieldEnd();
+    }
+    if (this.zone != null) {
+      if (isSetZone()) {
+        oprot.writeFieldBegin(ZONE_FIELD_DESC);
+        oprot.writeBinary(this.zone);
         oprot.writeFieldEnd();
       }
     }
@@ -1002,6 +1157,35 @@ public class HBReq implements TBase, java.io.Serializable, Cloneable, Comparable
             sb.append(Integer.toHexString(this.getVersion()[i]).length() > 1 ? Integer.toHexString(this.getVersion()[i]).substring(Integer.toHexString(this.getVersion()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getVersion()[i]).toUpperCase());
           }
           if (this.getVersion().length > 128) sb.append(" ...");
+      }
+      first = false;
+    }
+    if (isSetCpu_cores())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("cpu_cores");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getCpu_cores(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetZone())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("zone");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getZone() == null) {
+        sb.append("null");
+      } else {
+          int __zone_size = Math.min(this.getZone().length, 128);
+          for (int i = 0; i < __zone_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getZone()[i]).length() > 1 ? Integer.toHexString(this.getZone()[i]).substring(Integer.toHexString(this.getZone()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getZone()[i]).toUpperCase());
+          }
+          if (this.getZone().length > 128) sb.append(" ...");
       }
       first = false;
     }

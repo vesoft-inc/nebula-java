@@ -38,9 +38,13 @@ public class ScanResultIterator implements Serializable {
     protected final String labelName;
     protected final boolean partSuccess;
 
+    protected final String user;
+    protected final String password;
+
     protected ScanResultIterator(MetaManager metaManager, StorageConnPool pool,
                                  PartScanQueue partScanQueue, List<HostAddress> addresses,
-                                 String spaceName, String labelName, boolean partSuccess) {
+                                 String spaceName, String labelName, boolean partSuccess,
+                                 String user, String password) {
         this.metaManager = metaManager;
         this.pool = pool;
         this.partScanQueue = partScanQueue;
@@ -49,6 +53,8 @@ public class ScanResultIterator implements Serializable {
         this.labelName = labelName;
         this.partSuccess = partSuccess;
         this.partCursor = new HashMap<>(partScanQueue.size());
+        this.user = user;
+        this.password = password;
     }
 
 
@@ -121,10 +127,10 @@ public class ScanResultIterator implements Serializable {
                 freshLeader(spaceName, partInfo.getPart(), partResult.getLeader());
                 partInfo.setLeader(getLeader(partResult.getLeader()));
             } else {
-                int code = partResult.getCode().getValue();
-                LOGGER.error(String.format("part scan failed, error code=%d", code));
+                ErrorCode code = partResult.getCode();
+                LOGGER.error(String.format("part scan failed, error code=%s", code));
                 partScanQueue.dropPart(partInfo);
-                exceptions.add(new Exception(String.format("part scan, error code=%d", code)));
+                exceptions.add(new Exception(String.format("part scan, error code=%s", code)));
             }
         }
     }

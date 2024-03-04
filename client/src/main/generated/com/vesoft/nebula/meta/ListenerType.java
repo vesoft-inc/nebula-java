@@ -14,7 +14,9 @@ import java.util.HashMap;
 @SuppressWarnings({ "unused" })
 public enum ListenerType implements com.facebook.thrift.TEnum {
   UNKNOWN(0),
-  ELASTICSEARCH(1);
+  ELASTICSEARCH(1),
+  SYNC(2),
+  ALL(3);
 
   private final int value;
 
@@ -39,6 +41,10 @@ public enum ListenerType implements com.facebook.thrift.TEnum {
         return UNKNOWN;
       case 1:
         return ELASTICSEARCH;
+      case 2:
+        return SYNC;
+      case 3:
+        return ALL;
       default:
         return null;
     }

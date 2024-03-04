@@ -279,16 +279,16 @@ public class SignInServiceReq implements TBase, java.io.Serializable, Cloneable,
         case CLIENTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list299 = iprot.readListBegin();
-              this.clients = new ArrayList<ServiceClient>(Math.max(0, _list299.size));
-              for (int _i300 = 0; 
-                   (_list299.size < 0) ? iprot.peekList() : (_i300 < _list299.size); 
-                   ++_i300)
+              TList _list339 = iprot.readListBegin();
+              this.clients = new ArrayList<ServiceClient>(Math.max(0, _list339.size));
+              for (int _i340 = 0; 
+                   (_list339.size < 0) ? iprot.peekList() : (_i340 < _list339.size); 
+                   ++_i340)
               {
-                ServiceClient _elem301;
-                _elem301 = new ServiceClient();
-                _elem301.read(iprot);
-                this.clients.add(_elem301);
+                ServiceClient _elem341;
+                _elem341 = new ServiceClient();
+                _elem341.read(iprot);
+                this.clients.add(_elem341);
               }
               iprot.readListEnd();
             }
@@ -322,8 +322,8 @@ public class SignInServiceReq implements TBase, java.io.Serializable, Cloneable,
       oprot.writeFieldBegin(CLIENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.clients.size()));
-        for (ServiceClient _iter302 : this.clients)        {
-          _iter302.write(oprot);
+        for (ServiceClient _iter342 : this.clients)        {
+          _iter342.write(oprot);
         }
         oprot.writeListEnd();
       }

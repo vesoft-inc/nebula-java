@@ -29,13 +29,16 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
   private static final TField ACCOUNT_FIELD_DESC = new TField("account", TType.STRING, (short)1);
   private static final TField ENCODED_PWD_FIELD_DESC = new TField("encoded_pwd", TType.STRING, (short)2);
   private static final TField IF_NOT_EXISTS_FIELD_DESC = new TField("if_not_exists", TType.BOOL, (short)3);
+  private static final TField IP_WHITELIST_FIELD_DESC = new TField("ip_whitelist", TType.SET, (short)4);
 
   public byte[] account;
   public byte[] encoded_pwd;
   public boolean if_not_exists;
+  public Set<byte[]> ip_whitelist;
   public static final int ACCOUNT = 1;
   public static final int ENCODED_PWD = 2;
   public static final int IF_NOT_EXISTS = 3;
+  public static final int IP_WHITELIST = 4;
 
   // isset id assignments
   private static final int __IF_NOT_EXISTS_ISSET_ID = 0;
@@ -51,6 +54,9 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
         new FieldValueMetaData(TType.STRING)));
     tmpMetaDataMap.put(IF_NOT_EXISTS, new FieldMetaData("if_not_exists", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(IP_WHITELIST, new FieldMetaData("ip_whitelist", TFieldRequirementType.OPTIONAL, 
+        new SetMetaData(TType.SET, 
+            new FieldValueMetaData(TType.STRING))));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -72,10 +78,24 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     setIf_not_existsIsSet(true);
   }
 
+  public CreateUserReq(
+      byte[] account,
+      byte[] encoded_pwd,
+      boolean if_not_exists,
+      Set<byte[]> ip_whitelist) {
+    this();
+    this.account = account;
+    this.encoded_pwd = encoded_pwd;
+    this.if_not_exists = if_not_exists;
+    setIf_not_existsIsSet(true);
+    this.ip_whitelist = ip_whitelist;
+  }
+
   public static class Builder {
     private byte[] account;
     private byte[] encoded_pwd;
     private boolean if_not_exists;
+    private Set<byte[]> ip_whitelist;
 
     BitSet __optional_isset = new BitSet(1);
 
@@ -98,6 +118,11 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
+    public Builder setIp_whitelist(final Set<byte[]> ip_whitelist) {
+      this.ip_whitelist = ip_whitelist;
+      return this;
+    }
+
     public CreateUserReq build() {
       CreateUserReq result = new CreateUserReq();
       result.setAccount(this.account);
@@ -105,6 +130,7 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       if (__optional_isset.get(__IF_NOT_EXISTS_ISSET_ID)) {
         result.setIf_not_exists(this.if_not_exists);
       }
+      result.setIp_whitelist(this.ip_whitelist);
       return result;
     }
   }
@@ -126,6 +152,9 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       this.encoded_pwd = TBaseHelper.deepCopy(other.encoded_pwd);
     }
     this.if_not_exists = TBaseHelper.deepCopy(other.if_not_exists);
+    if (other.isSetIp_whitelist()) {
+      this.ip_whitelist = TBaseHelper.deepCopy(other.ip_whitelist);
+    }
   }
 
   public CreateUserReq deepCopy() {
@@ -203,6 +232,31 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     __isset_bit_vector.set(__IF_NOT_EXISTS_ISSET_ID, __value);
   }
 
+  public Set<byte[]> getIp_whitelist() {
+    return this.ip_whitelist;
+  }
+
+  public CreateUserReq setIp_whitelist(Set<byte[]> ip_whitelist) {
+    this.ip_whitelist = ip_whitelist;
+    return this;
+  }
+
+  public void unsetIp_whitelist() {
+    this.ip_whitelist = null;
+  }
+
+  // Returns true if field ip_whitelist is set (has been assigned a value) and false otherwise
+  public boolean isSetIp_whitelist() {
+    return this.ip_whitelist != null;
+  }
+
+  public void setIp_whitelistIsSet(boolean __value) {
+    if (!__value) {
+      this.ip_whitelist = null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ACCOUNT:
@@ -229,6 +283,14 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
+    case IP_WHITELIST:
+      if (__value == null) {
+        unsetIp_whitelist();
+      } else {
+        setIp_whitelist((Set<byte[]>)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -244,6 +306,9 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
 
     case IF_NOT_EXISTS:
       return new Boolean(isIf_not_exists());
+
+    case IP_WHITELIST:
+      return getIp_whitelist();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -266,12 +331,14 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.if_not_exists, that.if_not_exists)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetIp_whitelist(), that.isSetIp_whitelist(), this.ip_whitelist, that.ip_whitelist)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {account, encoded_pwd, if_not_exists});
+    return Arrays.deepHashCode(new Object[] {account, encoded_pwd, if_not_exists, ip_whitelist});
   }
 
   @Override
@@ -307,6 +374,14 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(if_not_exists, other.if_not_exists);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetIp_whitelist()).compareTo(other.isSetIp_whitelist());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(ip_whitelist, other.ip_whitelist);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -346,6 +421,25 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case IP_WHITELIST:
+          if (__field.type == TType.SET) {
+            {
+              TSet _set183 = iprot.readSetBegin();
+              this.ip_whitelist = new HashSet<byte[]>(Math.max(0, 2*_set183.size));
+              for (int _i184 = 0; 
+                   (_set183.size < 0) ? iprot.peekSet() : (_i184 < _set183.size); 
+                   ++_i184)
+              {
+                byte[] _elem185;
+                _elem185 = iprot.readBinary();
+                this.ip_whitelist.add(_elem185);
+              }
+              iprot.readSetEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -376,6 +470,19 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     oprot.writeFieldBegin(IF_NOT_EXISTS_FIELD_DESC);
     oprot.writeBool(this.if_not_exists);
     oprot.writeFieldEnd();
+    if (this.ip_whitelist != null) {
+      if (isSetIp_whitelist()) {
+        oprot.writeFieldBegin(IP_WHITELIST_FIELD_DESC);
+        {
+          oprot.writeSetBegin(new TSet(TType.STRING, this.ip_whitelist.size()));
+          for (byte[] _iter186 : this.ip_whitelist)          {
+            oprot.writeBinary(_iter186);
+          }
+          oprot.writeSetEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -434,6 +541,20 @@ public class CreateUserReq implements TBase, java.io.Serializable, Cloneable, Co
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.isIf_not_exists(), indent + 1, prettyPrint));
     first = false;
+    if (isSetIp_whitelist())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("ip_whitelist");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getIp_whitelist() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getIp_whitelist(), indent + 1, prettyPrint));
+      }
+      first = false;
+    }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
     return sb.toString();

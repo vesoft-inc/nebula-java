@@ -45,6 +45,8 @@ public class GraphService {
 
     public VerifyClientVersionResp verifyClientVersion(VerifyClientVersionReq req) throws TException;
 
+    public HealthResp health() throws TException;
+
   }
 
   public interface AsyncIface {
@@ -62,6 +64,8 @@ public class GraphService {
     public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler) throws TException;
 
     public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void health(AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -392,6 +396,50 @@ public class GraphService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "verifyClientVersion failed: unknown result");
     }
 
+    public HealthResp health() throws TException
+    {
+      ContextStack ctx = getContextStack("GraphService.health", null);
+      this.setContextStack(ctx);
+      send_health();
+      return recv_health();
+    }
+
+    public void send_health() throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "GraphService.health", null);
+      oprot_.writeMessageBegin(new TMessage("health", TMessageType.CALL, seqid_));
+      health_args args = new health_args();
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "GraphService.health", args);
+      return;
+    }
+
+    public HealthResp recv_health() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "GraphService.health");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      health_result result = new health_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "GraphService.health", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "health failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -410,9 +458,9 @@ public class GraphService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler36) throws TException {
+    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler37) throws TException {
       checkReady();
-      authenticate_call method_call = new authenticate_call(username, password, resultHandler36, this, ___protocolFactory, ___transport);
+      authenticate_call method_call = new authenticate_call(username, password, resultHandler37, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -420,8 +468,8 @@ public class GraphService {
     public static class authenticate_call extends TAsyncMethodCall {
       private byte[] username;
       private byte[] password;
-      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler37, TAsyncClient client33, TProtocolFactory protocolFactory34, TNonblockingTransport transport35) throws TException {
-        super(client33, protocolFactory34, transport35, resultHandler37, false);
+      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler38, TAsyncClient client34, TProtocolFactory protocolFactory35, TNonblockingTransport transport36) throws TException {
+        super(client34, protocolFactory35, transport36, resultHandler38, false);
         this.username = username;
         this.password = password;
       }
@@ -445,17 +493,17 @@ public class GraphService {
       }
     }
 
-    public void signout(long sessionId, AsyncMethodCallback resultHandler41) throws TException {
+    public void signout(long sessionId, AsyncMethodCallback resultHandler42) throws TException {
       checkReady();
-      signout_call method_call = new signout_call(sessionId, resultHandler41, this, ___protocolFactory, ___transport);
+      signout_call method_call = new signout_call(sessionId, resultHandler42, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class signout_call extends TAsyncMethodCall {
       private long sessionId;
-      public signout_call(long sessionId, AsyncMethodCallback resultHandler42, TAsyncClient client38, TProtocolFactory protocolFactory39, TNonblockingTransport transport40) throws TException {
-        super(client38, protocolFactory39, transport40, resultHandler42, true);
+      public signout_call(long sessionId, AsyncMethodCallback resultHandler43, TAsyncClient client39, TProtocolFactory protocolFactory40, TNonblockingTransport transport41) throws TException {
+        super(client39, protocolFactory40, transport41, resultHandler43, true);
         this.sessionId = sessionId;
       }
 
@@ -476,9 +524,9 @@ public class GraphService {
       }
     }
 
-    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler46) throws TException {
+    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler47) throws TException {
       checkReady();
-      execute_call method_call = new execute_call(sessionId, stmt, resultHandler46, this, ___protocolFactory, ___transport);
+      execute_call method_call = new execute_call(sessionId, stmt, resultHandler47, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -486,8 +534,8 @@ public class GraphService {
     public static class execute_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler47, TAsyncClient client43, TProtocolFactory protocolFactory44, TNonblockingTransport transport45) throws TException {
-        super(client43, protocolFactory44, transport45, resultHandler47, false);
+      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler48, TAsyncClient client44, TProtocolFactory protocolFactory45, TNonblockingTransport transport46) throws TException {
+        super(client44, protocolFactory45, transport46, resultHandler48, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -511,9 +559,9 @@ public class GraphService {
       }
     }
 
-    public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler51) throws TException {
+    public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler52) throws TException {
       checkReady();
-      executeWithParameter_call method_call = new executeWithParameter_call(sessionId, stmt, parameterMap, resultHandler51, this, ___protocolFactory, ___transport);
+      executeWithParameter_call method_call = new executeWithParameter_call(sessionId, stmt, parameterMap, resultHandler52, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -522,8 +570,8 @@ public class GraphService {
       private long sessionId;
       private byte[] stmt;
       private Map<byte[],com.vesoft.nebula.Value> parameterMap;
-      public executeWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler52, TAsyncClient client48, TProtocolFactory protocolFactory49, TNonblockingTransport transport50) throws TException {
-        super(client48, protocolFactory49, transport50, resultHandler52, false);
+      public executeWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler53, TAsyncClient client49, TProtocolFactory protocolFactory50, TNonblockingTransport transport51) throws TException {
+        super(client49, protocolFactory50, transport51, resultHandler53, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
         this.parameterMap = parameterMap;
@@ -549,9 +597,9 @@ public class GraphService {
       }
     }
 
-    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler56) throws TException {
+    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler57) throws TException {
       checkReady();
-      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler56, this, ___protocolFactory, ___transport);
+      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler57, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -559,8 +607,8 @@ public class GraphService {
     public static class executeJson_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler57, TAsyncClient client53, TProtocolFactory protocolFactory54, TNonblockingTransport transport55) throws TException {
-        super(client53, protocolFactory54, transport55, resultHandler57, false);
+      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler58, TAsyncClient client54, TProtocolFactory protocolFactory55, TNonblockingTransport transport56) throws TException {
+        super(client54, protocolFactory55, transport56, resultHandler58, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -584,9 +632,9 @@ public class GraphService {
       }
     }
 
-    public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler61) throws TException {
+    public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler62) throws TException {
       checkReady();
-      executeJsonWithParameter_call method_call = new executeJsonWithParameter_call(sessionId, stmt, parameterMap, resultHandler61, this, ___protocolFactory, ___transport);
+      executeJsonWithParameter_call method_call = new executeJsonWithParameter_call(sessionId, stmt, parameterMap, resultHandler62, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -595,8 +643,8 @@ public class GraphService {
       private long sessionId;
       private byte[] stmt;
       private Map<byte[],com.vesoft.nebula.Value> parameterMap;
-      public executeJsonWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler62, TAsyncClient client58, TProtocolFactory protocolFactory59, TNonblockingTransport transport60) throws TException {
-        super(client58, protocolFactory59, transport60, resultHandler62, false);
+      public executeJsonWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler63, TAsyncClient client59, TProtocolFactory protocolFactory60, TNonblockingTransport transport61) throws TException {
+        super(client59, protocolFactory60, transport61, resultHandler63, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
         this.parameterMap = parameterMap;
@@ -622,17 +670,17 @@ public class GraphService {
       }
     }
 
-    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler66) throws TException {
+    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler67) throws TException {
       checkReady();
-      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler66, this, ___protocolFactory, ___transport);
+      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler67, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class verifyClientVersion_call extends TAsyncMethodCall {
       private VerifyClientVersionReq req;
-      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler67, TAsyncClient client63, TProtocolFactory protocolFactory64, TNonblockingTransport transport65) throws TException {
-        super(client63, protocolFactory64, transport65, resultHandler67, false);
+      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler68, TAsyncClient client64, TProtocolFactory protocolFactory65, TNonblockingTransport transport66) throws TException {
+        super(client64, protocolFactory65, transport66, resultHandler68, false);
         this.req = req;
       }
 
@@ -654,6 +702,35 @@ public class GraphService {
       }
     }
 
+    public void health(AsyncMethodCallback resultHandler72) throws TException {
+      checkReady();
+      health_call method_call = new health_call(resultHandler72, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class health_call extends TAsyncMethodCall {
+      public health_call(AsyncMethodCallback resultHandler73, TAsyncClient client69, TProtocolFactory protocolFactory70, TNonblockingTransport transport71) throws TException {
+        super(client69, protocolFactory70, transport71, resultHandler73, false);
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("health", TMessageType.CALL, 0));
+        health_args args = new health_args();
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public HealthResp getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_health();
+      }
+    }
+
   }
 
   public static class Processor implements TProcessor {
@@ -669,6 +746,7 @@ public class GraphService {
       processMap_.put("executeJson", new executeJson());
       processMap_.put("executeJsonWithParameter", new executeJsonWithParameter());
       processMap_.put("verifyClientVersion", new verifyClientVersion());
+      processMap_.put("health", new health());
     }
 
     protected static interface ProcessFunction {
@@ -837,6 +915,27 @@ public class GraphService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "GraphService.verifyClientVersion", result);
+      }
+
+    }
+
+    private class health implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("GraphService.health", server_ctx);
+        health_args args = new health_args();
+        event_handler_.preRead(handler_ctx, "GraphService.health");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "GraphService.health", args);
+        health_result result = new health_result();
+        result.success = iface_.health();
+        event_handler_.preWrite(handler_ctx, "GraphService.health", result);
+        oprot.writeMessageBegin(new TMessage("health", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "GraphService.health", result);
       }
 
     }
@@ -2311,18 +2410,18 @@ public class GraphService {
           case PARAMETERMAP:
             if (__field.type == TType.MAP) {
               {
-                TMap _map68 = iprot.readMapBegin();
-                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map68.size));
-                for (int _i69 = 0; 
-                     (_map68.size < 0) ? iprot.peekMap() : (_i69 < _map68.size); 
-                     ++_i69)
+                TMap _map74 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map74.size));
+                for (int _i75 = 0; 
+                     (_map74.size < 0) ? iprot.peekMap() : (_i75 < _map74.size); 
+                     ++_i75)
                 {
-                  byte[] _key70;
-                  com.vesoft.nebula.Value _val71;
-                  _key70 = iprot.readBinary();
-                  _val71 = new com.vesoft.nebula.Value();
-                  _val71.read(iprot);
-                  this.parameterMap.put(_key70, _val71);
+                  byte[] _key76;
+                  com.vesoft.nebula.Value _val77;
+                  _key76 = iprot.readBinary();
+                  _val77 = new com.vesoft.nebula.Value();
+                  _val77.read(iprot);
+                  this.parameterMap.put(_key76, _val77);
                 }
                 iprot.readMapEnd();
               }
@@ -2359,9 +2458,9 @@ public class GraphService {
         oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
-          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter72 : this.parameterMap.entrySet())          {
-            oprot.writeBinary(_iter72.getKey());
-            _iter72.getValue().write(oprot);
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter78 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter78.getKey());
+            _iter78.getValue().write(oprot);
           }
           oprot.writeMapEnd();
         }
@@ -3384,18 +3483,18 @@ public class GraphService {
           case PARAMETERMAP:
             if (__field.type == TType.MAP) {
               {
-                TMap _map73 = iprot.readMapBegin();
-                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map73.size));
-                for (int _i74 = 0; 
-                     (_map73.size < 0) ? iprot.peekMap() : (_i74 < _map73.size); 
-                     ++_i74)
+                TMap _map79 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map79.size));
+                for (int _i80 = 0; 
+                     (_map79.size < 0) ? iprot.peekMap() : (_i80 < _map79.size); 
+                     ++_i80)
                 {
-                  byte[] _key75;
-                  com.vesoft.nebula.Value _val76;
-                  _key75 = iprot.readBinary();
-                  _val76 = new com.vesoft.nebula.Value();
-                  _val76.read(iprot);
-                  this.parameterMap.put(_key75, _val76);
+                  byte[] _key81;
+                  com.vesoft.nebula.Value _val82;
+                  _key81 = iprot.readBinary();
+                  _val82 = new com.vesoft.nebula.Value();
+                  _val82.read(iprot);
+                  this.parameterMap.put(_key81, _val82);
                 }
                 iprot.readMapEnd();
               }
@@ -3432,9 +3531,9 @@ public class GraphService {
         oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
-          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter77 : this.parameterMap.entrySet())          {
-            oprot.writeBinary(_iter77.getKey());
-            _iter77.getValue().write(oprot);
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter83 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter83.getKey());
+            _iter83.getValue().write(oprot);
           }
           oprot.writeMapEnd();
         }
@@ -4134,6 +4233,356 @@ public class GraphService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("verifyClientVersion_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class health_args implements TBase, java.io.Serializable, Cloneable, Comparable<health_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("health_args");
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(health_args.class, metaDataMap);
+    }
+
+    public health_args() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public health_args(health_args other) {
+    }
+
+    public health_args deepCopy() {
+      return new health_args(this);
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof health_args))
+        return false;
+      health_args that = (health_args)_that;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {});
+    }
+
+    @Override
+    public int compareTo(health_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("health_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class health_result implements TBase, java.io.Serializable, Cloneable, Comparable<health_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("health_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public HealthResp success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, HealthResp.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(health_result.class, metaDataMap);
+    }
+
+    public health_result() {
+    }
+
+    public health_result(
+        HealthResp success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public health_result(health_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public health_result deepCopy() {
+      return new health_result(this);
+    }
+
+    public HealthResp getSuccess() {
+      return this.success;
+    }
+
+    public health_result setSuccess(HealthResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((HealthResp)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof health_result))
+        return false;
+      health_result that = (health_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(health_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new HealthResp();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("health_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

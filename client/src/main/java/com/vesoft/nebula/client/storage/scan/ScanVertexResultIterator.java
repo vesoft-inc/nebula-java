@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.storage.scan;
 
 import com.facebook.thrift.TException;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
@@ -44,9 +45,11 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                                      ScanVertexRequest request,
                                      String spaceName,
                                      String labelName,
-                                     boolean partSuccess) {
+                                     boolean partSuccess,
+                                     String user,
+                                     String password) {
         super(metaManager, pool, new PartScanQueue(partScanInfoList), addresses, spaceName,
-                labelName, partSuccess);
+                labelName, partSuccess, user, password);
         this.request = request;
     }
 
@@ -97,6 +100,11 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                 cursorMap.put(partInfo.getPart(), partInfo.getCursor());
                 ScanVertexRequest partRequest = new ScanVertexRequest(request);
                 partRequest.setParts(cursorMap);
+                if (user != null && password != null) {
+                    partRequest.setUsername(user.getBytes(Charsets.UTF_8));
+                    partRequest.setPassword(password.getBytes(Charsets.UTF_8));
+                }
+                partRequest.setNeed_authenticate(true);
                 try {
                     response = connection.scanVertex(partRequest);
                 } catch (TException e) {
@@ -158,9 +166,6 @@ public class ScanVertexResultIterator extends ScanResultIterator {
     }
 
 
-
-
-
     /**
      * builder to build {@link ScanVertexResult}
      */
@@ -174,6 +179,9 @@ public class ScanVertexResultIterator extends ScanResultIterator {
         String spaceName;
         String tagName;
         boolean partSuccess = false;
+
+        String user = null;
+        String password = null;
 
         public ScanVertexResultBuilder withMetaClient(MetaManager metaManager) {
             this.metaManager = metaManager;
@@ -215,6 +223,16 @@ public class ScanVertexResultIterator extends ScanResultIterator {
             return this;
         }
 
+        public ScanVertexResultBuilder withUser(String user) {
+            this.user = user;
+            return this;
+        }
+
+        public ScanVertexResultBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
         public ScanVertexResultIterator build() {
             return new ScanVertexResultIterator(
                     metaManager,
@@ -224,7 +242,9 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                     request,
                     spaceName,
                     tagName,
-                    partSuccess);
+                    partSuccess,
+                    user,
+                    password);
         }
     }
 }

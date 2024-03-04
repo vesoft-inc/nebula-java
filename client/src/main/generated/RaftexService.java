@@ -39,6 +39,10 @@ public class RaftexService {
 
     public GetStateResponse getState(GetStateRequest req) throws TException;
 
+    public StartSendCheckpointResponse startSendCheckpoint(SendCheckpointRequest req) throws TException;
+
+    public EndSendCheckpointResponse endSendCheckpoint(SendCheckpointRequest req) throws TException;
+
   }
 
   public interface AsyncIface {
@@ -52,6 +56,10 @@ public class RaftexService {
     public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler) throws TException;
 
     public void getState(GetStateRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void startSendCheckpoint(SendCheckpointRequest req, AsyncMethodCallback resultHandler) throws TException;
+
+    public void endSendCheckpoint(SendCheckpointRequest req, AsyncMethodCallback resultHandler) throws TException;
 
   }
 
@@ -309,6 +317,96 @@ public class RaftexService {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "getState failed: unknown result");
     }
 
+    public StartSendCheckpointResponse startSendCheckpoint(SendCheckpointRequest req) throws TException
+    {
+      ContextStack ctx = getContextStack("RaftexService.startSendCheckpoint", null);
+      this.setContextStack(ctx);
+      send_startSendCheckpoint(req);
+      return recv_startSendCheckpoint();
+    }
+
+    public void send_startSendCheckpoint(SendCheckpointRequest req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "RaftexService.startSendCheckpoint", null);
+      oprot_.writeMessageBegin(new TMessage("startSendCheckpoint", TMessageType.CALL, seqid_));
+      startSendCheckpoint_args args = new startSendCheckpoint_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "RaftexService.startSendCheckpoint", args);
+      return;
+    }
+
+    public StartSendCheckpointResponse recv_startSendCheckpoint() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "RaftexService.startSendCheckpoint");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      startSendCheckpoint_result result = new startSendCheckpoint_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "RaftexService.startSendCheckpoint", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "startSendCheckpoint failed: unknown result");
+    }
+
+    public EndSendCheckpointResponse endSendCheckpoint(SendCheckpointRequest req) throws TException
+    {
+      ContextStack ctx = getContextStack("RaftexService.endSendCheckpoint", null);
+      this.setContextStack(ctx);
+      send_endSendCheckpoint(req);
+      return recv_endSendCheckpoint();
+    }
+
+    public void send_endSendCheckpoint(SendCheckpointRequest req) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "RaftexService.endSendCheckpoint", null);
+      oprot_.writeMessageBegin(new TMessage("endSendCheckpoint", TMessageType.CALL, seqid_));
+      endSendCheckpoint_args args = new endSendCheckpoint_args();
+      args.req = req;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "RaftexService.endSendCheckpoint", args);
+      return;
+    }
+
+    public EndSendCheckpointResponse recv_endSendCheckpoint() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "RaftexService.endSendCheckpoint");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      endSendCheckpoint_result result = new endSendCheckpoint_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "RaftexService.endSendCheckpoint", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "endSendCheckpoint failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends TAsyncClient implements AsyncIface {
     public static class Factory implements TAsyncClientFactory<AsyncClient> {
@@ -327,17 +425,17 @@ public class RaftexService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler20) throws TException {
+    public void askForVote(AskForVoteRequest req, AsyncMethodCallback resultHandler22) throws TException {
       checkReady();
-      askForVote_call method_call = new askForVote_call(req, resultHandler20, this, ___protocolFactory, ___transport);
+      askForVote_call method_call = new askForVote_call(req, resultHandler22, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class askForVote_call extends TAsyncMethodCall {
       private AskForVoteRequest req;
-      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler21, TAsyncClient client17, TProtocolFactory protocolFactory18, TNonblockingTransport transport19) throws TException {
-        super(client17, protocolFactory18, transport19, resultHandler21, false);
+      public askForVote_call(AskForVoteRequest req, AsyncMethodCallback resultHandler23, TAsyncClient client19, TProtocolFactory protocolFactory20, TNonblockingTransport transport21) throws TException {
+        super(client19, protocolFactory20, transport21, resultHandler23, false);
         this.req = req;
       }
 
@@ -359,17 +457,17 @@ public class RaftexService {
       }
     }
 
-    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler25) throws TException {
+    public void appendLog(AppendLogRequest req, AsyncMethodCallback resultHandler27) throws TException {
       checkReady();
-      appendLog_call method_call = new appendLog_call(req, resultHandler25, this, ___protocolFactory, ___transport);
+      appendLog_call method_call = new appendLog_call(req, resultHandler27, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class appendLog_call extends TAsyncMethodCall {
       private AppendLogRequest req;
-      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler26, TAsyncClient client22, TProtocolFactory protocolFactory23, TNonblockingTransport transport24) throws TException {
-        super(client22, protocolFactory23, transport24, resultHandler26, false);
+      public appendLog_call(AppendLogRequest req, AsyncMethodCallback resultHandler28, TAsyncClient client24, TProtocolFactory protocolFactory25, TNonblockingTransport transport26) throws TException {
+        super(client24, protocolFactory25, transport26, resultHandler28, false);
         this.req = req;
       }
 
@@ -391,17 +489,17 @@ public class RaftexService {
       }
     }
 
-    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler30) throws TException {
+    public void sendSnapshot(SendSnapshotRequest req, AsyncMethodCallback resultHandler32) throws TException {
       checkReady();
-      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler30, this, ___protocolFactory, ___transport);
+      sendSnapshot_call method_call = new sendSnapshot_call(req, resultHandler32, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class sendSnapshot_call extends TAsyncMethodCall {
       private SendSnapshotRequest req;
-      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler31, TAsyncClient client27, TProtocolFactory protocolFactory28, TNonblockingTransport transport29) throws TException {
-        super(client27, protocolFactory28, transport29, resultHandler31, false);
+      public sendSnapshot_call(SendSnapshotRequest req, AsyncMethodCallback resultHandler33, TAsyncClient client29, TProtocolFactory protocolFactory30, TNonblockingTransport transport31) throws TException {
+        super(client29, protocolFactory30, transport31, resultHandler33, false);
         this.req = req;
       }
 
@@ -423,17 +521,17 @@ public class RaftexService {
       }
     }
 
-    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler35) throws TException {
+    public void heartbeat(HeartbeatRequest req, AsyncMethodCallback resultHandler37) throws TException {
       checkReady();
-      heartbeat_call method_call = new heartbeat_call(req, resultHandler35, this, ___protocolFactory, ___transport);
+      heartbeat_call method_call = new heartbeat_call(req, resultHandler37, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class heartbeat_call extends TAsyncMethodCall {
       private HeartbeatRequest req;
-      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler36, TAsyncClient client32, TProtocolFactory protocolFactory33, TNonblockingTransport transport34) throws TException {
-        super(client32, protocolFactory33, transport34, resultHandler36, false);
+      public heartbeat_call(HeartbeatRequest req, AsyncMethodCallback resultHandler38, TAsyncClient client34, TProtocolFactory protocolFactory35, TNonblockingTransport transport36) throws TException {
+        super(client34, protocolFactory35, transport36, resultHandler38, false);
         this.req = req;
       }
 
@@ -455,17 +553,17 @@ public class RaftexService {
       }
     }
 
-    public void getState(GetStateRequest req, AsyncMethodCallback resultHandler40) throws TException {
+    public void getState(GetStateRequest req, AsyncMethodCallback resultHandler42) throws TException {
       checkReady();
-      getState_call method_call = new getState_call(req, resultHandler40, this, ___protocolFactory, ___transport);
+      getState_call method_call = new getState_call(req, resultHandler42, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class getState_call extends TAsyncMethodCall {
       private GetStateRequest req;
-      public getState_call(GetStateRequest req, AsyncMethodCallback resultHandler41, TAsyncClient client37, TProtocolFactory protocolFactory38, TNonblockingTransport transport39) throws TException {
-        super(client37, protocolFactory38, transport39, resultHandler41, false);
+      public getState_call(GetStateRequest req, AsyncMethodCallback resultHandler43, TAsyncClient client39, TProtocolFactory protocolFactory40, TNonblockingTransport transport41) throws TException {
+        super(client39, protocolFactory40, transport41, resultHandler43, false);
         this.req = req;
       }
 
@@ -487,6 +585,70 @@ public class RaftexService {
       }
     }
 
+    public void startSendCheckpoint(SendCheckpointRequest req, AsyncMethodCallback resultHandler47) throws TException {
+      checkReady();
+      startSendCheckpoint_call method_call = new startSendCheckpoint_call(req, resultHandler47, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class startSendCheckpoint_call extends TAsyncMethodCall {
+      private SendCheckpointRequest req;
+      public startSendCheckpoint_call(SendCheckpointRequest req, AsyncMethodCallback resultHandler48, TAsyncClient client44, TProtocolFactory protocolFactory45, TNonblockingTransport transport46) throws TException {
+        super(client44, protocolFactory45, transport46, resultHandler48, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("startSendCheckpoint", TMessageType.CALL, 0));
+        startSendCheckpoint_args args = new startSendCheckpoint_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public StartSendCheckpointResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_startSendCheckpoint();
+      }
+    }
+
+    public void endSendCheckpoint(SendCheckpointRequest req, AsyncMethodCallback resultHandler52) throws TException {
+      checkReady();
+      endSendCheckpoint_call method_call = new endSendCheckpoint_call(req, resultHandler52, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class endSendCheckpoint_call extends TAsyncMethodCall {
+      private SendCheckpointRequest req;
+      public endSendCheckpoint_call(SendCheckpointRequest req, AsyncMethodCallback resultHandler53, TAsyncClient client49, TProtocolFactory protocolFactory50, TNonblockingTransport transport51) throws TException {
+        super(client49, protocolFactory50, transport51, resultHandler53, false);
+        this.req = req;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("endSendCheckpoint", TMessageType.CALL, 0));
+        endSendCheckpoint_args args = new endSendCheckpoint_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public EndSendCheckpointResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_endSendCheckpoint();
+      }
+    }
+
   }
 
   public static class Processor implements TProcessor {
@@ -500,6 +662,8 @@ public class RaftexService {
       processMap_.put("sendSnapshot", new sendSnapshot());
       processMap_.put("heartbeat", new heartbeat());
       processMap_.put("getState", new getState());
+      processMap_.put("startSendCheckpoint", new startSendCheckpoint());
+      processMap_.put("endSendCheckpoint", new endSendCheckpoint());
     }
 
     protected static interface ProcessFunction {
@@ -633,6 +797,48 @@ public class RaftexService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "RaftexService.getState", result);
+      }
+
+    }
+
+    private class startSendCheckpoint implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("RaftexService.startSendCheckpoint", server_ctx);
+        startSendCheckpoint_args args = new startSendCheckpoint_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.startSendCheckpoint");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "RaftexService.startSendCheckpoint", args);
+        startSendCheckpoint_result result = new startSendCheckpoint_result();
+        result.success = iface_.startSendCheckpoint(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.startSendCheckpoint", result);
+        oprot.writeMessageBegin(new TMessage("startSendCheckpoint", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "RaftexService.startSendCheckpoint", result);
+      }
+
+    }
+
+    private class endSendCheckpoint implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("RaftexService.endSendCheckpoint", server_ctx);
+        endSendCheckpoint_args args = new endSendCheckpoint_args();
+        event_handler_.preRead(handler_ctx, "RaftexService.endSendCheckpoint");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "RaftexService.endSendCheckpoint", args);
+        endSendCheckpoint_result result = new endSendCheckpoint_result();
+        result.success = iface_.endSendCheckpoint(args.req);
+        event_handler_.preWrite(handler_ctx, "RaftexService.endSendCheckpoint", result);
+        oprot.writeMessageBegin(new TMessage("endSendCheckpoint", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "RaftexService.endSendCheckpoint", result);
       }
 
     }
@@ -2788,6 +2994,876 @@ public class RaftexService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("getState_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class startSendCheckpoint_args implements TBase, java.io.Serializable, Cloneable, Comparable<startSendCheckpoint_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("startSendCheckpoint_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public SendCheckpointRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, SendCheckpointRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(startSendCheckpoint_args.class, metaDataMap);
+    }
+
+    public startSendCheckpoint_args() {
+    }
+
+    public startSendCheckpoint_args(
+        SendCheckpointRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public startSendCheckpoint_args(startSendCheckpoint_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public startSendCheckpoint_args deepCopy() {
+      return new startSendCheckpoint_args(this);
+    }
+
+    public SendCheckpointRequest getReq() {
+      return this.req;
+    }
+
+    public startSendCheckpoint_args setReq(SendCheckpointRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((SendCheckpointRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof startSendCheckpoint_args))
+        return false;
+      startSendCheckpoint_args that = (startSendCheckpoint_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(startSendCheckpoint_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new SendCheckpointRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("startSendCheckpoint_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class startSendCheckpoint_result implements TBase, java.io.Serializable, Cloneable, Comparable<startSendCheckpoint_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("startSendCheckpoint_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public StartSendCheckpointResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, StartSendCheckpointResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(startSendCheckpoint_result.class, metaDataMap);
+    }
+
+    public startSendCheckpoint_result() {
+    }
+
+    public startSendCheckpoint_result(
+        StartSendCheckpointResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public startSendCheckpoint_result(startSendCheckpoint_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public startSendCheckpoint_result deepCopy() {
+      return new startSendCheckpoint_result(this);
+    }
+
+    public StartSendCheckpointResponse getSuccess() {
+      return this.success;
+    }
+
+    public startSendCheckpoint_result setSuccess(StartSendCheckpointResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((StartSendCheckpointResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof startSendCheckpoint_result))
+        return false;
+      startSendCheckpoint_result that = (startSendCheckpoint_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(startSendCheckpoint_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new StartSendCheckpointResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("startSendCheckpoint_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class endSendCheckpoint_args implements TBase, java.io.Serializable, Cloneable, Comparable<endSendCheckpoint_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("endSendCheckpoint_args");
+    private static final TField REQ_FIELD_DESC = new TField("req", TType.STRUCT, (short)1);
+
+    public SendCheckpointRequest req;
+    public static final int REQ = 1;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(REQ, new FieldMetaData("req", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, SendCheckpointRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(endSendCheckpoint_args.class, metaDataMap);
+    }
+
+    public endSendCheckpoint_args() {
+    }
+
+    public endSendCheckpoint_args(
+        SendCheckpointRequest req) {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public endSendCheckpoint_args(endSendCheckpoint_args other) {
+      if (other.isSetReq()) {
+        this.req = TBaseHelper.deepCopy(other.req);
+      }
+    }
+
+    public endSendCheckpoint_args deepCopy() {
+      return new endSendCheckpoint_args(this);
+    }
+
+    public SendCheckpointRequest getReq() {
+      return this.req;
+    }
+
+    public endSendCheckpoint_args setReq(SendCheckpointRequest req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    // Returns true if field req is set (has been assigned a value) and false otherwise
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean __value) {
+      if (!__value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case REQ:
+        if (__value == null) {
+          unsetReq();
+        } else {
+          setReq((SendCheckpointRequest)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case REQ:
+        return getReq();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof endSendCheckpoint_args))
+        return false;
+      endSendCheckpoint_args that = (endSendCheckpoint_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetReq(), that.isSetReq(), this.req, that.req)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {req});
+    }
+
+    @Override
+    public int compareTo(endSendCheckpoint_args other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(req, other.req);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case REQ:
+            if (__field.type == TType.STRUCT) {
+              this.req = new SendCheckpointRequest();
+              this.req.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.req != null) {
+        oprot.writeFieldBegin(REQ_FIELD_DESC);
+        this.req.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("endSendCheckpoint_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("req");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getReq() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getReq(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class endSendCheckpoint_result implements TBase, java.io.Serializable, Cloneable, Comparable<endSendCheckpoint_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("endSendCheckpoint_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public EndSendCheckpointResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, EndSendCheckpointResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(endSendCheckpoint_result.class, metaDataMap);
+    }
+
+    public endSendCheckpoint_result() {
+    }
+
+    public endSendCheckpoint_result(
+        EndSendCheckpointResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public endSendCheckpoint_result(endSendCheckpoint_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public endSendCheckpoint_result deepCopy() {
+      return new endSendCheckpoint_result(this);
+    }
+
+    public EndSendCheckpointResponse getSuccess() {
+      return this.success;
+    }
+
+    public endSendCheckpoint_result setSuccess(EndSendCheckpointResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((EndSendCheckpointResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof endSendCheckpoint_result))
+        return false;
+      endSendCheckpoint_result that = (endSendCheckpoint_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    @Override
+    public int compareTo(endSendCheckpoint_result other) {
+      if (other == null) {
+        // See java.lang.Comparable docs
+        throw new NullPointerException();
+      }
+
+      if (other == this) {
+        return 0;
+      }
+      int lastComparison = 0;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, other.success);
+      if (lastComparison != 0) { 
+        return lastComparison;
+      }
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new EndSendCheckpointResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("endSendCheckpoint_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);

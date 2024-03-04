@@ -14,7 +14,8 @@ public enum Status implements com.facebook.thrift.TEnum {
   STARTING(0),
   RUNNING(1),
   STOPPED(2),
-  WAITING_SNAPSHOT(3);
+  WAITING_SNAPSHOT(3),
+  WAITING_CHECKPOINT(4);
 
   private final int value;
 
@@ -43,6 +44,8 @@ public enum Status implements com.facebook.thrift.TEnum {
         return STOPPED;
       case 3:
         return WAITING_SNAPSHOT;
+      case 4:
+        return WAITING_CHECKPOINT;
       default:
         return null;
     }

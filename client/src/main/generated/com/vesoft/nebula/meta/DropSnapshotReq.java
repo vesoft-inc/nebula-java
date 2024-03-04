@@ -198,15 +198,15 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
         case NAMES:
           if (__field.type == TType.LIST) {
             {
-              TList _list204 = iprot.readListBegin();
-              this.names = new ArrayList<byte[]>(Math.max(0, _list204.size));
-              for (int _i205 = 0; 
-                   (_list204.size < 0) ? iprot.peekList() : (_i205 < _list204.size); 
-                   ++_i205)
+              TList _list221 = iprot.readListBegin();
+              this.names = new ArrayList<byte[]>(Math.max(0, _list221.size));
+              for (int _i222 = 0; 
+                   (_list221.size < 0) ? iprot.peekList() : (_i222 < _list221.size); 
+                   ++_i222)
               {
-                byte[] _elem206;
-                _elem206 = iprot.readBinary();
-                this.names.add(_elem206);
+                byte[] _elem223;
+                _elem223 = iprot.readBinary();
+                this.names.add(_elem223);
               }
               iprot.readListEnd();
             }
@@ -235,8 +235,8 @@ public class DropSnapshotReq implements TBase, java.io.Serializable, Cloneable, 
       oprot.writeFieldBegin(NAMES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.names.size()));
-        for (byte[] _iter207 : this.names)        {
-          oprot.writeBinary(_iter207);
+        for (byte[] _iter224 : this.names)        {
+          oprot.writeBinary(_iter224);
         }
         oprot.writeListEnd();
       }

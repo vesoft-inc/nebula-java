@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.vesoft.nebula.meta;
+package com.vesoft.nebula.storage;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import com.facebook.thrift.transport.*;
 import com.facebook.thrift.protocol.*;
 
 @SuppressWarnings({ "unused", "serial" })
-public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, Comparable<ListListenerReq> {
-  private static final TStruct STRUCT_DESC = new TStruct("ListListenerReq");
+public class GetSyncProgressReq implements TBase, java.io.Serializable, Cloneable, Comparable<GetSyncProgressReq> {
+  private static final TStruct STRUCT_DESC = new TStruct("GetSyncProgressReq");
   private static final TField SPACE_ID_FIELD_DESC = new TField("space_id", TType.I32, (short)1);
 
   public int space_id;
@@ -45,13 +45,13 @@ public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, 
   }
 
   static {
-    FieldMetaData.addStructMetaDataMap(ListListenerReq.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(GetSyncProgressReq.class, metaDataMap);
   }
 
-  public ListListenerReq() {
+  public GetSyncProgressReq() {
   }
 
-  public ListListenerReq(
+  public GetSyncProgressReq(
       int space_id) {
     this();
     this.space_id = space_id;
@@ -72,8 +72,8 @@ public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, 
       return this;
     }
 
-    public ListListenerReq build() {
-      ListListenerReq result = new ListListenerReq();
+    public GetSyncProgressReq build() {
+      GetSyncProgressReq result = new GetSyncProgressReq();
       if (__optional_isset.get(__SPACE_ID_ISSET_ID)) {
         result.setSpace_id(this.space_id);
       }
@@ -88,21 +88,21 @@ public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ListListenerReq(ListListenerReq other) {
+  public GetSyncProgressReq(GetSyncProgressReq other) {
     __isset_bit_vector.clear();
     __isset_bit_vector.or(other.__isset_bit_vector);
     this.space_id = TBaseHelper.deepCopy(other.space_id);
   }
 
-  public ListListenerReq deepCopy() {
-    return new ListListenerReq(this);
+  public GetSyncProgressReq deepCopy() {
+    return new GetSyncProgressReq(this);
   }
 
   public int getSpace_id() {
     return this.space_id;
   }
 
-  public ListListenerReq setSpace_id(int space_id) {
+  public GetSyncProgressReq setSpace_id(int space_id) {
     this.space_id = space_id;
     setSpace_idIsSet(true);
     return this;
@@ -152,9 +152,9 @@ public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, 
       return false;
     if (this == _that)
       return true;
-    if (!(_that instanceof ListListenerReq))
+    if (!(_that instanceof GetSyncProgressReq))
       return false;
-    ListListenerReq that = (ListListenerReq)_that;
+    GetSyncProgressReq that = (GetSyncProgressReq)_that;
 
     if (!TBaseHelper.equalsNobinary(this.space_id, that.space_id)) { return false; }
 
@@ -167,7 +167,7 @@ public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, 
   }
 
   @Override
-  public int compareTo(ListListenerReq other) {
+  public int compareTo(GetSyncProgressReq other) {
     if (other == null) {
       // See java.lang.Comparable docs
       throw new NullPointerException();
@@ -242,7 +242,7 @@ public class ListListenerReq implements TBase, java.io.Serializable, Cloneable, 
     String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
     String newLine = prettyPrint ? "\n" : "";
     String space = prettyPrint ? " " : "";
-    StringBuilder sb = new StringBuilder("ListListenerReq");
+    StringBuilder sb = new StringBuilder("GetSyncProgressReq");
     sb.append(space);
     sb.append("(");
     sb.append(newLine);

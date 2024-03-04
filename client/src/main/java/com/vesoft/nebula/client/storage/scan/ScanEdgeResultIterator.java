@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.storage.scan;
 
 import com.facebook.thrift.TException;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.DataSet;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
@@ -41,9 +42,11 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                                    ScanEdgeRequest request,
                                    String spaceName,
                                    String labelName,
-                                   boolean partSuccess) {
+                                   boolean partSuccess,
+                                   String user,
+                                   String password) {
         super(metaManager, pool, new PartScanQueue(partScanInfoList), addresses, spaceName,
-                labelName, partSuccess);
+                labelName, partSuccess, user, password);
         this.request = request;
     }
 
@@ -95,6 +98,11 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                 cursorMap.put(partInfo.getPart(), partInfo.getCursor());
                 ScanEdgeRequest partRequest = new ScanEdgeRequest(request);
                 partRequest.setParts(cursorMap);
+                if (user != null && password != null) {
+                    partRequest.setUsername(user.getBytes(Charsets.UTF_8));
+                    partRequest.setPassword(password.getBytes(Charsets.UTF_8));
+                }
+                partRequest.setNeed_authenticate(true);
                 try {
                     response = connection.scanEdge(partRequest);
                 } catch (TException e) {
@@ -170,6 +178,8 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         String spaceName;
         String edgeName;
         boolean partSuccess = false;
+        String user = null;
+        String password = null;
 
         public ScanEdgeResultBuilder withMetaClient(MetaManager metaManager) {
             this.metaManager = metaManager;
@@ -211,6 +221,15 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             return this;
         }
 
+        public ScanEdgeResultBuilder withUser(String user) {
+            this.user = user;
+            return this;
+        }
+
+        public ScanEdgeResultBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
 
         public ScanEdgeResultIterator build() {
             return new ScanEdgeResultIterator(
@@ -221,7 +240,9 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                     request,
                     spaceName,
                     edgeName,
-                    partSuccess);
+                    partSuccess,
+                    user,
+                    password);
         }
     }
 }

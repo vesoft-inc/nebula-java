@@ -710,18 +710,18 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case SPACE_BACKUPS:
           if (__field.type == TType.MAP) {
             {
-              TMap _map261 = iprot.readMapBegin();
-              this.space_backups = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map261.size));
-              for (int _i262 = 0; 
-                   (_map261.size < 0) ? iprot.peekMap() : (_i262 < _map261.size); 
-                   ++_i262)
+              TMap _map301 = iprot.readMapBegin();
+              this.space_backups = new HashMap<Integer,SpaceBackupInfo>(Math.max(0, 2*_map301.size));
+              for (int _i302 = 0; 
+                   (_map301.size < 0) ? iprot.peekMap() : (_i302 < _map301.size); 
+                   ++_i302)
               {
-                int _key263;
-                SpaceBackupInfo _val264;
-                _key263 = iprot.readI32();
-                _val264 = new SpaceBackupInfo();
-                _val264.read(iprot);
-                this.space_backups.put(_key263, _val264);
+                int _key303;
+                SpaceBackupInfo _val304;
+                _key303 = iprot.readI32();
+                _val304 = new SpaceBackupInfo();
+                _val304.read(iprot);
+                this.space_backups.put(_key303, _val304);
               }
               iprot.readMapEnd();
             }
@@ -732,15 +732,15 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case META_FILES:
           if (__field.type == TType.LIST) {
             {
-              TList _list265 = iprot.readListBegin();
-              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list265.size));
-              for (int _i266 = 0; 
-                   (_list265.size < 0) ? iprot.peekList() : (_i266 < _list265.size); 
-                   ++_i266)
+              TList _list305 = iprot.readListBegin();
+              this.meta_files = new ArrayList<byte[]>(Math.max(0, _list305.size));
+              for (int _i306 = 0; 
+                   (_list305.size < 0) ? iprot.peekList() : (_i306 < _list305.size); 
+                   ++_i306)
               {
-                byte[] _elem267;
-                _elem267 = iprot.readBinary();
-                this.meta_files.add(_elem267);
+                byte[] _elem307;
+                _elem307 = iprot.readBinary();
+                this.meta_files.add(_elem307);
               }
               iprot.readListEnd();
             }
@@ -789,16 +789,16 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
         case STORAGE_HOSTS:
           if (__field.type == TType.LIST) {
             {
-              TList _list268 = iprot.readListBegin();
-              this.storage_hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list268.size));
-              for (int _i269 = 0; 
-                   (_list268.size < 0) ? iprot.peekList() : (_i269 < _list268.size); 
-                   ++_i269)
+              TList _list308 = iprot.readListBegin();
+              this.storage_hosts = new ArrayList<com.vesoft.nebula.HostAddr>(Math.max(0, _list308.size));
+              for (int _i309 = 0; 
+                   (_list308.size < 0) ? iprot.peekList() : (_i309 < _list308.size); 
+                   ++_i309)
               {
-                com.vesoft.nebula.HostAddr _elem270;
-                _elem270 = new com.vesoft.nebula.HostAddr();
-                _elem270.read(iprot);
-                this.storage_hosts.add(_elem270);
+                com.vesoft.nebula.HostAddr _elem310;
+                _elem310 = new com.vesoft.nebula.HostAddr();
+                _elem310.read(iprot);
+                this.storage_hosts.add(_elem310);
               }
               iprot.readListEnd();
             }
@@ -835,9 +835,9 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(SPACE_BACKUPS_FIELD_DESC);
       {
         oprot.writeMapBegin(new TMap(TType.I32, TType.STRUCT, this.space_backups.size()));
-        for (Map.Entry<Integer, SpaceBackupInfo> _iter271 : this.space_backups.entrySet())        {
-          oprot.writeI32(_iter271.getKey());
-          _iter271.getValue().write(oprot);
+        for (Map.Entry<Integer, SpaceBackupInfo> _iter311 : this.space_backups.entrySet())        {
+          oprot.writeI32(_iter311.getKey());
+          _iter311.getValue().write(oprot);
         }
         oprot.writeMapEnd();
       }
@@ -847,8 +847,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(META_FILES_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRING, this.meta_files.size()));
-        for (byte[] _iter272 : this.meta_files)        {
-          oprot.writeBinary(_iter272);
+        for (byte[] _iter312 : this.meta_files)        {
+          oprot.writeBinary(_iter312);
         }
         oprot.writeListEnd();
       }
@@ -877,8 +877,8 @@ public class BackupMeta implements TBase, java.io.Serializable, Cloneable, Compa
       oprot.writeFieldBegin(STORAGE_HOSTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.storage_hosts.size()));
-        for (com.vesoft.nebula.HostAddr _iter273 : this.storage_hosts)        {
-          _iter273.write(oprot);
+        for (com.vesoft.nebula.HostAddr _iter313 : this.storage_hosts)        {
+          _iter313.write(oprot);
         }
         oprot.writeListEnd();
       }

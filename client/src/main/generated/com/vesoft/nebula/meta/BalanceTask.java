@@ -31,6 +31,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
   private static final TField RESULT_FIELD_DESC = new TField("result", TType.I32, (short)3);
   private static final TField START_TIME_FIELD_DESC = new TField("start_time", TType.I64, (short)4);
   private static final TField STOP_TIME_FIELD_DESC = new TField("stop_time", TType.I64, (short)5);
+  private static final TField STATUS_FIELD_DESC = new TField("status", TType.STRING, (short)6);
 
   public byte[] id;
   public byte[] command;
@@ -41,11 +42,13 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
   public TaskResult result;
   public long start_time;
   public long stop_time;
+  public byte[] status;
   public static final int ID = 1;
   public static final int COMMAND = 2;
   public static final int RESULT = 3;
   public static final int START_TIME = 4;
   public static final int STOP_TIME = 5;
+  public static final int STATUS = 6;
 
   // isset id assignments
   private static final int __START_TIME_ISSET_ID = 0;
@@ -66,6 +69,8 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(STOP_TIME, new FieldMetaData("stop_time", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I64)));
+    tmpMetaDataMap.put(STATUS, new FieldMetaData("status", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -81,7 +86,8 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       byte[] command,
       TaskResult result,
       long start_time,
-      long stop_time) {
+      long stop_time,
+      byte[] status) {
     this();
     this.id = id;
     this.command = command;
@@ -90,6 +96,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     setStart_timeIsSet(true);
     this.stop_time = stop_time;
     setStop_timeIsSet(true);
+    this.status = status;
   }
 
   public static class Builder {
@@ -98,6 +105,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     private TaskResult result;
     private long start_time;
     private long stop_time;
+    private byte[] status;
 
     BitSet __optional_isset = new BitSet(2);
 
@@ -131,6 +139,11 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       return this;
     }
 
+    public Builder setStatus(final byte[] status) {
+      this.status = status;
+      return this;
+    }
+
     public BalanceTask build() {
       BalanceTask result = new BalanceTask();
       result.setId(this.id);
@@ -142,6 +155,7 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       if (__optional_isset.get(__STOP_TIME_ISSET_ID)) {
         result.setStop_time(this.stop_time);
       }
+      result.setStatus(this.status);
       return result;
     }
   }
@@ -167,6 +181,9 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     }
     this.start_time = TBaseHelper.deepCopy(other.start_time);
     this.stop_time = TBaseHelper.deepCopy(other.stop_time);
+    if (other.isSetStatus()) {
+      this.status = TBaseHelper.deepCopy(other.status);
+    }
   }
 
   public BalanceTask deepCopy() {
@@ -299,6 +316,30 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     __isset_bit_vector.set(__STOP_TIME_ISSET_ID, __value);
   }
 
+  public byte[] getStatus() {
+    return this.status;
+  }
+
+  public BalanceTask setStatus(byte[] status) {
+    this.status = status;
+    return this;
+  }
+
+  public void unsetStatus() {
+    this.status = null;
+  }
+
+  // Returns true if field status is set (has been assigned a value) and false otherwise
+  public boolean isSetStatus() {
+    return this.status != null;
+  }
+
+  public void setStatusIsSet(boolean __value) {
+    if (!__value) {
+      this.status = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case ID:
@@ -341,6 +382,14 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
       }
       break;
 
+    case STATUS:
+      if (__value == null) {
+        unsetStatus();
+      } else {
+        setStatus((byte[])__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -362,6 +411,9 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
 
     case STOP_TIME:
       return new Long(getStop_time());
+
+    case STATUS:
+      return getStatus();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -388,12 +440,14 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
 
     if (!TBaseHelper.equalsNobinary(this.stop_time, that.stop_time)) { return false; }
 
+    if (!TBaseHelper.equalsSlow(this.isSetStatus(), that.isSetStatus(), this.status, that.status)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {id, command, result, start_time, stop_time});
+    return Arrays.deepHashCode(new Object[] {id, command, result, start_time, stop_time, status});
   }
 
   @Override
@@ -448,6 +502,14 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     if (lastComparison != 0) { 
       return lastComparison;
     }
+    lastComparison = Boolean.valueOf(isSetStatus()).compareTo(other.isSetStatus());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(status, other.status);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
     return 0;
   }
 
@@ -499,6 +561,13 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case STATUS:
+          if (__field.type == TType.STRING) {
+            this.status = iprot.readBinary();
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -537,6 +606,11 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     oprot.writeFieldBegin(STOP_TIME_FIELD_DESC);
     oprot.writeI64(this.stop_time);
     oprot.writeFieldEnd();
+    if (this.status != null) {
+      oprot.writeFieldBegin(STATUS_FIELD_DESC);
+      oprot.writeBinary(this.status);
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -620,6 +694,22 @@ public class BalanceTask implements TBase, java.io.Serializable, Cloneable, Comp
     sb.append(space);
     sb.append(":").append(space);
     sb.append(TBaseHelper.toString(this.getStop_time(), indent + 1, prettyPrint));
+    first = false;
+    if (!first) sb.append("," + newLine);
+    sb.append(indentStr);
+    sb.append("status");
+    sb.append(space);
+    sb.append(":").append(space);
+    if (this.getStatus() == null) {
+      sb.append("null");
+    } else {
+        int __status_size = Math.min(this.getStatus().length, 128);
+        for (int i = 0; i < __status_size; i++) {
+          if (i != 0) sb.append(" ");
+          sb.append(Integer.toHexString(this.getStatus()[i]).length() > 1 ? Integer.toHexString(this.getStatus()[i]).substring(Integer.toHexString(this.getStatus()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getStatus()[i]).toUpperCase());
+        }
+        if (this.getStatus().length > 128) sb.append(" ...");
+    }
     first = false;
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
     sb.append(")");
