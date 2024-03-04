@@ -126,85 +126,91 @@ $(document).ready(function(){initNavTree('d5/d8a/ScanResultIterator_8java_source
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">protected</span> <span class="keyword">final</span> String labelName;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">protected</span> <span class="keyword">final</span> <span class="keywordtype">boolean</span> partSuccess;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">protected</span> <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html">ScanResultIterator</a>(<a class="code" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html">MetaManager</a> metaManager, <a class="code" href="../../db/d5b/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageConnPool.html">StorageConnPool</a> pool,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                 <a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html">PartScanQueue</a> partScanQueue, List&lt;HostAddress&gt; addresses,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                 String spaceName, String labelName, <span class="keywordtype">boolean</span> partSuccess) {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        this.metaManager = metaManager;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        this.pool = pool;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        this.partScanQueue = partScanQueue;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        this.addresses = addresses;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        this.spaceName = spaceName;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        this.labelName = labelName;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        this.partSuccess = partSuccess;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        this.partCursor = <span class="keyword">new</span> HashMap&lt;&gt;(partScanQueue.size());</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a58d1cc3d61071d927bf040bf0b035a22">   60</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">boolean</span> <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a58d1cc3d61071d927bf040bf0b035a22">hasNext</a>() {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> hasNext;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">   72</a></span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">freshLeader</a>(String spaceName, <span class="keywordtype">int</span> part, HostAddr leader) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        metaManager.<a class="code" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#adc228d53a1ce0a70c4ba3f16a300b73f">updateLeader</a>(spaceName, part, leader);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">protected</span> <a class="code" href="../../d5/d82/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress.html">HostAddress</a> getLeader(HostAddr leader) {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d5/d82/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress.html">HostAddress</a>(leader.getHost(), leader.getPort());</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleNullResponse(<a class="code" href="../../d0/ded/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanInfo.html">PartScanInfo</a> partInfo, List&lt;Exception&gt; exceptions) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        LOGGER.error(<span class="stringliteral">&quot;part scan failed, response is null&quot;</span>);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        exceptions.add(<span class="keyword">new</span> Exception(<span class="stringliteral">&quot;null scan response&quot;</span>));</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">protected</span> <span class="keyword">final</span> String user;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">protected</span> <span class="keyword">final</span> String password;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">protected</span> <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html">ScanResultIterator</a>(<a class="code" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html">MetaManager</a> metaManager, <a class="code" href="../../db/d5b/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageConnPool.html">StorageConnPool</a> pool,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                 <a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html">PartScanQueue</a> partScanQueue, List&lt;HostAddress&gt; addresses,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                 String spaceName, String labelName, <span class="keywordtype">boolean</span> partSuccess,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                 String user, String password) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        this.metaManager = metaManager;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        this.pool = pool;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        this.partScanQueue = partScanQueue;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        this.addresses = addresses;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        this.spaceName = spaceName;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        this.labelName = labelName;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        this.partSuccess = partSuccess;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        this.partCursor = <span class="keyword">new</span> HashMap&lt;&gt;(partScanQueue.size());</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this.user = user;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        this.password = password;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a58d1cc3d61071d927bf040bf0b035a22">   66</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">boolean</span> <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a58d1cc3d61071d927bf040bf0b035a22">hasNext</a>() {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> hasNext;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">   78</a></span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">freshLeader</a>(String spaceName, <span class="keywordtype">int</span> part, HostAddr leader) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        metaManager.<a class="code" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#adc228d53a1ce0a70c4ba3f16a300b73f">updateLeader</a>(spaceName, part, leader);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">protected</span> <a class="code" href="../../d5/d82/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress.html">HostAddress</a> getLeader(HostAddr leader) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d5/d82/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress.html">HostAddress</a>(leader.getHost(), leader.getPort());</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleNullResult(PartScanInfo partInfo, List&lt;Exception&gt; exceptions) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        LOGGER.error(<span class="stringliteral">&quot;part scan failed, response result is null&quot;</span>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleNullResponse(<a class="code" href="../../d0/ded/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanInfo.html">PartScanInfo</a> partInfo, List&lt;Exception&gt; exceptions) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        LOGGER.error(<span class="stringliteral">&quot;part scan failed, response is null&quot;</span>);</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        exceptions.add(<span class="keyword">new</span> Exception(<span class="stringliteral">&quot;null scan response result&quot;</span>));</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        exceptions.add(<span class="keyword">new</span> Exception(<span class="stringliteral">&quot;null scan response&quot;</span>));</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> throwExceptions(List&lt;Exception&gt; exceptions) <span class="keywordflow">throws</span> ExecuteFailedException {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        StringBuilder errorMsg = <span class="keyword">new</span> StringBuilder();</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; exceptions.size(); i++) {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keywordflow">if</span> (i != 0) {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                errorMsg.append(<span class="stringliteral">&quot;,&quot;</span>);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            errorMsg.append(exceptions.get(i).getMessage());</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        }</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">throw</span> <span class="keyword">new</span> ExecuteFailedException(<span class="stringliteral">&quot;no parts succeed, error message: &quot;</span> + errorMsg.toString());</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">boolean</span> isSuccessful(ScanResponse response) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">return</span> response != <span class="keyword">null</span> &amp;&amp; response.result.failed_parts.size() &lt;= 0;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleSucceedResult(AtomicInteger existSuccess, ScanResponse response,</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                                       PartScanInfo partInfo) {</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        existSuccess.addAndGet(1);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">if</span> (response.getCursors().get(partInfo.getPart()).next_cursor == <span class="keyword">null</span>) {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            partInfo.setCursor(response.getCursors().get(partInfo.getPart()));</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    }</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleFailedResult(ScanResponse response, PartScanInfo partInfo,</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                                      List&lt;Exception&gt; exceptions) {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">for</span> (PartitionResult partResult : response.getResult().getFailed_parts()) {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="keywordflow">if</span> (partResult.code == ErrorCode.E_LEADER_CHANGED) {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">freshLeader</a>(spaceName, partInfo.getPart(), partResult.getLeader());</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                partInfo.setLeader(getLeader(partResult.getLeader()));</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="keywordtype">int</span> code = partResult.getCode().getValue();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                LOGGER.error(String.format(<span class="stringliteral">&quot;part scan failed, error code=%d&quot;</span>, code));</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                exceptions.add(<span class="keyword">new</span> Exception(String.format(<span class="stringliteral">&quot;part scan, error code=%d&quot;</span>, code)));</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        }</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleNullResult(PartScanInfo partInfo, List&lt;Exception&gt; exceptions) {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        LOGGER.error(<span class="stringliteral">&quot;part scan failed, response result is null&quot;</span>);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        exceptions.add(<span class="keyword">new</span> Exception(<span class="stringliteral">&quot;null scan response result&quot;</span>));</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> throwExceptions(List&lt;Exception&gt; exceptions) <span class="keywordflow">throws</span> ExecuteFailedException {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        StringBuilder errorMsg = <span class="keyword">new</span> StringBuilder();</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; exceptions.size(); i++) {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">if</span> (i != 0) {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                errorMsg.append(<span class="stringliteral">&quot;,&quot;</span>);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            errorMsg.append(exceptions.get(i).getMessage());</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">throw</span> <span class="keyword">new</span> ExecuteFailedException(<span class="stringliteral">&quot;no parts succeed, error message: &quot;</span> + errorMsg.toString());</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">boolean</span> isSuccessful(ScanResponse response) {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">return</span> response != <span class="keyword">null</span> &amp;&amp; response.result.failed_parts.size() &lt;= 0;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleSucceedResult(AtomicInteger existSuccess, ScanResponse response,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                                       PartScanInfo partInfo) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        existSuccess.addAndGet(1);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">if</span> (response.getCursors().get(partInfo.getPart()).next_cursor == <span class="keyword">null</span>) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            partInfo.setCursor(response.getCursors().get(partInfo.getPart()));</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">protected</span> <span class="keywordtype">void</span> handleFailedResult(ScanResponse response, PartScanInfo partInfo,</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                                      List&lt;Exception&gt; exceptions) {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordflow">for</span> (PartitionResult partResult : response.getResult().getFailed_parts()) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="keywordflow">if</span> (partResult.code == ErrorCode.E_LEADER_CHANGED) {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                <a class="code" href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">freshLeader</a>(spaceName, partInfo.getPart(), partResult.getLeader());</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                partInfo.setLeader(getLeader(partResult.getLeader()));</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                ErrorCode code = partResult.getCode();</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                LOGGER.error(String.format(<span class="stringliteral">&quot;part scan failed, error code=%s&quot;</span>, code));</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                partScanQueue.<a class="code" href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">dropPart</a>(partInfo);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                exceptions.add(<span class="keyword">new</span> Exception(String.format(<span class="stringliteral">&quot;part scan, error code=%s&quot;</span>, code)));</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            }</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}</div>
 <div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress_html"><div class="ttname"><a href="../../d5/d82/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress.html">com.vesoft.nebula.client.graph.data.HostAddress</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/dee/HostAddress_8java_source.html#l00010">HostAddress.java:10</a></div></div>
 <div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_html"><div class="ttname"><a href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html">com.vesoft.nebula.client.meta.MetaManager</a></div><div class="ttdoc">MetaManager is a manager for meta info, such as spaces,tags and edges.</div><div class="ttdef"><b>Definition:</b> <a href="../../df/d34/MetaManager_8java_source.html#l00034">MetaManager.java:34</a></div></div>
 <div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_html_adc228d53a1ce0a70c4ba3f16a300b73f"><div class="ttname"><a href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#adc228d53a1ce0a70c4ba3f16a300b73f">com.vesoft.nebula.client.meta.MetaManager.updateLeader</a></div><div class="ttdeci">void updateLeader(String spaceName, int part, HostAddr newLeader)</div><div class="ttdoc">cache new leader for part</div><div class="ttdef"><b>Definition:</b> <a href="../../df/d34/MetaManager_8java_source.html#l00329">MetaManager.java:329</a></div></div>
@@ -213,8 +219,8 @@ $(document).ready(function(){initNavTree('d5/d8a/ScanResultIterator_8java_source
 <div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue_html"><div class="ttname"><a href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html">com.vesoft.nebula.client.storage.scan.PartScanQueue</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d3f/PartScanQueue_8java_source.html#l00012">PartScanQueue.java:12</a></div></div>
 <div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue_html_ac3f7325ca38faa13c1c4b2e9c914388b"><div class="ttname"><a href="../../d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b">com.vesoft.nebula.client.storage.scan.PartScanQueue.dropPart</a></div><div class="ttdeci">synchronized void dropPart(PartScanInfo partScanInfo)</div><div class="ttdoc">delete part from set</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d3f/PartScanQueue_8java_source.html#l00039">PartScanQueue.java:39</a></div></div>
 <div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator_html"><div class="ttname"><a href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html">com.vesoft.nebula.client.storage.scan.ScanResultIterator</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d5/d8a/ScanResultIterator_8java_source.html#l00026">ScanResultIterator.java:26</a></div></div>
-<div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator_html_a58d1cc3d61071d927bf040bf0b035a22"><div class="ttname"><a href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a58d1cc3d61071d927bf040bf0b035a22">com.vesoft.nebula.client.storage.scan.ScanResultIterator.hasNext</a></div><div class="ttdeci">boolean hasNext()</div><div class="ttdoc">if iter has more vertex data</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/d8a/ScanResultIterator_8java_source.html#l00060">ScanResultIterator.java:60</a></div></div>
-<div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator_html_af8faa2a2302aef45e6053ae4237242f8"><div class="ttname"><a href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">com.vesoft.nebula.client.storage.scan.ScanResultIterator.freshLeader</a></div><div class="ttdeci">void freshLeader(String spaceName, int part, HostAddr leader)</div><div class="ttdoc">fresh leader for part</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/d8a/ScanResultIterator_8java_source.html#l00072">ScanResultIterator.java:72</a></div></div>
+<div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator_html_a58d1cc3d61071d927bf040bf0b035a22"><div class="ttname"><a href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a58d1cc3d61071d927bf040bf0b035a22">com.vesoft.nebula.client.storage.scan.ScanResultIterator.hasNext</a></div><div class="ttdeci">boolean hasNext()</div><div class="ttdoc">if iter has more vertex data</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/d8a/ScanResultIterator_8java_source.html#l00066">ScanResultIterator.java:66</a></div></div>
+<div class="ttc" id="aclasscom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator_html_af8faa2a2302aef45e6053ae4237242f8"><div class="ttname"><a href="../../de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8">com.vesoft.nebula.client.storage.scan.ScanResultIterator.freshLeader</a></div><div class="ttdeci">void freshLeader(String spaceName, int part, HostAddr leader)</div><div class="ttdoc">fresh leader for part</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/d8a/ScanResultIterator_8java_source.html#l00078">ScanResultIterator.java:78</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,6 +1,6 @@
 var classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator =
 [
-    [ "ScanResultIterator", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#ac78148cef0febeb2a0ff2c44100fb212", null ],
+    [ "ScanResultIterator", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a9a882f5ca8c0ec4fa4939bb9f516f468", null ],
     [ "freshLeader", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8", null ],
     [ "getLeader", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aac55d5a2cbddd97f6c7b57c47d8e7555", null ],
     [ "handleFailedResult", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a081a52bce9d70090e6123f965990046f", null ],
@@ -17,6 +17,8 @@ var classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultItera
     [ "partCursor", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a32d1f0d67952f54020775c566e1a6a88", null ],
     [ "partScanQueue", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a8a92f35648032a188efd0c8b7b8fa046", null ],
     [ "partSuccess", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a26ec31f5d5b087d21c035ca10c2c70a5", null ],
+    [ "password", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aeaa551b82acfe8e65bf52dc571d3c1ac", null ],
     [ "pool", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a591f444b954928d726995788af22864a", null ],
-    [ "spaceName", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a1efe6525e19500ec0745422f00bce129", null ]
+    [ "spaceName", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a1efe6525e19500ec0745422f00bce129", null ],
+    [ "user", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aa6fb16700d8bd09a0cc890638796776b", null ]
 ];
