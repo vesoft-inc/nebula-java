@@ -61,7 +61,7 @@ public class SslUtil {
         }
 
 
-        // verify server certificate using client config, the server certificate must be sign
+        // verify server certificate using client config, the server certificate must be issued
         // by client caCrt.
         final String caCrtFile = param.getCaCrtFilePath();
         final String crtFile = param.getCrtFilePath();
