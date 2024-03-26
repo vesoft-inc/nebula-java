@@ -109,6 +109,7 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
             connection.close();
             return pong;
         } catch (IOErrorException e) {
+            LOGGER.warn(String.format("ping server %s failed", addr.toString()), e);
             return false;
         } catch (ClientServerIncompatibleException e) {
             LOGGER.error("version verify failed, ", e);

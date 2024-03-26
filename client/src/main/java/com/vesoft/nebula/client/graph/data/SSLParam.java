@@ -11,6 +11,8 @@ public abstract class SSLParam implements Serializable {
 
     private static final long serialVersionUID = 7410233298826490747L;
 
+    private boolean skipVerifyServer = false;
+
     public enum SignMode {
         NONE,
         SELF_SIGNED,
@@ -18,6 +20,14 @@ public abstract class SSLParam implements Serializable {
     }
 
     private SignMode signMode;
+
+    public boolean isSkipVerifyServer() {
+        return skipVerifyServer;
+    }
+
+    public void setSkipVerifyServer(boolean skipVerifyServer) {
+        this.skipVerifyServer = skipVerifyServer;
+    }
 
     public SSLParam(SignMode signMode) {
         this.signMode = signMode;
