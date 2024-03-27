@@ -73,7 +73,9 @@ public class SyncConnection extends Connection {
             this.useHttp2 = isUseHttp2;
             this.headers = headers;
             if (sslSocketFactory == null) {
-                if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
+                if (sslParam == null) {
+                    sslSocketFactory = SslUtil.getSSLSocketFactoryWithoutVerify();
+                } else if (sslParam.getSignMode() == SSLParam.SignMode.CA_SIGNED) {
                     sslSocketFactory =
                             SslUtil.getSSLSocketFactoryWithCA((CASignedSSLParam) sslParam);
                 } else {

@@ -10,6 +10,10 @@ public class CASignedSSLParam extends SSLParam {
     private String crtFilePath;
     private String keyFilePath;
 
+    public CASignedSSLParam() {
+        super(SignMode.CA_SIGNED);
+    }
+
     public CASignedSSLParam(String caCrtFilePath, String crtFilePath, String keyFilePath) {
         super(SignMode.CA_SIGNED);
         this.caCrtFilePath = caCrtFilePath;

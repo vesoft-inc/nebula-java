@@ -41,7 +41,8 @@ public class NebulaPoolConfig implements Serializable {
     // Set to true to turn on ssl encrypted traffic
     private boolean enableSsl = false;
 
-    // SSL param is required if ssl is turned on
+    // if enableSsl is true but SSL param is not config,
+    // then client will not verify the server certificate. Encrypted transmission only.
     private SSLParam sslParam = null;
 
     // Set if use http2 protocol

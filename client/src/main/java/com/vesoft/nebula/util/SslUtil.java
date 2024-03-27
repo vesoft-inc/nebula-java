@@ -7,17 +7,30 @@ package com.vesoft.nebula.util;
 
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.SelfSignedSSLParam;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.Security;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -36,6 +49,20 @@ public class SslUtil {
     private static TrustManager[] trustManagers;
 
     public static SSLSocketFactory getSSLSocketFactoryWithCA(CASignedSSLParam param) {
+        // skip the verify for server certificate
+        if (param.isSkipVerifyServer()) {
+            return getSSLSocketFactoryWithoutVerify();
+        }
+
+        // if cert and key are null, consider the server certificate is CA,
+        // and verify if server certificate is CA.
+        if (param.getCaCrtFilePath() == null) {
+            return getSSLSocketFactoryVerifyCACert();
+        }
+
+
+        // verify server certificate using client config, the server certificate must be issued
+        // by client caCrt.
         final String caCrtFile = param.getCaCrtFilePath();
         final String crtFile = param.getCrtFilePath();
         final String keyFile = param.getKeyFilePath();
@@ -219,5 +246,66 @@ public class SslUtil {
 
     public static TrustManager[] getTrustManagers() {
         return trustManagers;
+    }
+
+
+    public static SSLSocketFactory getSSLSocketFactoryWithoutVerify() {
+        TrustManager[] trustManagers = new TrustManager[]{
+            new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustManagers, null);
+            return sslContext.getSocketFactory();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * check if the server's cert is issued by a CA
+     */
+    public static SSLSocketFactory getSSLSocketFactoryVerifyCACert() {
+        try {
+            String trustStoreUrl = System.getProperty("javax.net.ssl.trustStore");
+            String trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
+            KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+
+            if (trustStoreUrl == null || trustStorePassword == null) {
+                throw new RuntimeException(
+                        "No truststore provided to verify the Server certificate,"
+                                + " please set javax.net.ssl.trustStore and "
+                                + "javax.net.ssl.trustStorePassword for the System.");
+            }
+            InputStream in = new FileInputStream(trustStoreUrl);
+            keystore.load(in, trustStorePassword.toCharArray());
+
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(keystore, trustStorePassword.toCharArray());
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf.init(keystore);
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+            return sslContext.getSocketFactory();
+        } catch (Exception e) {
+            LOGGER.error("get SSLSocketFactory error,", e);
+        }
+        return null;
     }
 }
