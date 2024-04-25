@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   metad-casigned:
-    image: vesoft/nebula-metad:nightly
+    image: vesoft/nebula-metad:v3.6.0
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -42,7 +42,7 @@ services:
       - SYS_PTRACE
 
   storaged-casigned:
-    image: vesoft/nebula-storaged:nightly
+    image: vesoft/nebula-storaged:v3.6.0
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -85,7 +85,7 @@ services:
       - SYS_PTRACE
 
   graphd-casigned:
-    image: vesoft/nebula-graphd:nightly
+    image: vesoft/nebula-graphd:v3.6.0
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -126,7 +126,7 @@ services:
     cap_add:
       - SYS_PTRACE
   console:
-    image: vesoft/nebula-console:nightly
+    image: vesoft/nebula-console:v3.6.0
     entrypoint: ""
     command: 
       - sh
