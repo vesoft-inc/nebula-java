@@ -1,12 +1,12 @@
 name: Generate API reference via Doxygen and push to GitHub Pages
 env:
   # Specify the doc version to which the API reference belongs
-  doc_version: 3.6.0
+  doc_version: 3.8.0
 on:
   push:
     branches:
         # Remember to update the version number
-      - master
+      - release-3.8
 
 jobs:
   build:
