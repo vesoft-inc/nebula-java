@@ -1,0 +1,5 @@
+<map id="getPart" name="getPart">
+<area shape="rect" id="node1" title="get part according to leader" alt="" coords="327,46,395,73"/>
+<area shape="rect" id="node2" href="$d4/de7/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanEdgeResultIterator.html#a5b2e48b0f8deac96661e05decb520184" title="get the next edge set" alt="" coords="5,5,279,47"/>
+<area shape="rect" id="node3" href="$d7/d42/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanVertexResultIterator.html#aad3fa20d9dda09a71e89a73c6b276af4" title="get the next vertex set" alt="" coords="5,71,279,112"/>
+</map>

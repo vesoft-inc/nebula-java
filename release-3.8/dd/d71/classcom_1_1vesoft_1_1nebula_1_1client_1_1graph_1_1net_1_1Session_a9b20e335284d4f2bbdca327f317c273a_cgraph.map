@@ -1,0 +1,4 @@
+<map id="release" name="release">
+<area shape="rect" id="node1" title="Notifies the server that the session is no longer needed and returns the connection to the pool,..." alt="" coords="5,13,76,39"/>
+<area shape="rect" id="node2" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#ad910b67ce42562b9b61e1fa7a556acd2" title="Return the connection to object pool." alt="" coords="124,5,376,47"/>
+</map>
