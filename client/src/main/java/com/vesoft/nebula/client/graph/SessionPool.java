@@ -418,7 +418,14 @@ public class SessionPool implements Serializable {
 
         NebulaSession nebulaSession = new NebulaSession(connection, authResult.getSessionId(),
                 authResult.getTimezoneOffset(), state);
-        ResultSet result = nebulaSession.execute(useSpace);
+        ResultSet result = null;
+        try {
+            result = nebulaSession.execute(useSpace);
+        } catch (IOErrorException e) {
+            log.error("binding space failed,", e);
+            nebulaSession.release();
+            throw new BindSpaceFailedException("binding space failed:" + e.getMessage());
+        }
         if (!result.isSucceeded()) {
             nebulaSession.release();
             throw new BindSpaceFailedException(result.getErrorMessage());

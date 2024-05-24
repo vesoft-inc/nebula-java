@@ -134,6 +134,7 @@ public class SyncConnection extends Connection {
                         Charsets.UTF_8));
             }
         } catch (TException e) {
+            close();
             throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
         }
     }
