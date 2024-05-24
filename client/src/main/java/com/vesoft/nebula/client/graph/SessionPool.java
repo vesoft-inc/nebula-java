@@ -239,7 +239,7 @@ public class SessionPool implements Serializable {
     }
 
     public String executeJsonWithParameter(String stmt,
-                                                  Map<String, Object> parameterMap)
+                                           Map<String, Object> parameterMap)
             throws ClientServerIncompatibleException, AuthFailedException,
             IOErrorException, BindSpaceFailedException {
         stmtCheck(stmt);
@@ -412,13 +412,27 @@ public class SessionPool implements Serializable {
                     sessionPoolConfig.getPassword());
         } catch (AuthFailedException e) {
             log.error(e.getMessage());
-            close();
+            if (e.getMessage().toLowerCase().contains("user not exist")
+                    || e.getMessage().toLowerCase().contains("invalid password")) {
+                // close the session pool
+                close();
+            } else {
+                // just close the connection
+                connection.close();
+            }
             throw e;
         }
 
         NebulaSession nebulaSession = new NebulaSession(connection, authResult.getSessionId(),
                 authResult.getTimezoneOffset(), state);
-        ResultSet result = nebulaSession.execute(useSpace);
+        ResultSet result = null;
+        try {
+            result = nebulaSession.execute(useSpace);
+        } catch (IOErrorException e) {
+            log.error("binding space failed,", e);
+            nebulaSession.release();
+            throw new BindSpaceFailedException("binding space failed:" + e.getMessage());
+        }
         if (!result.isSucceeded()) {
             nebulaSession.release();
             throw new BindSpaceFailedException(result.getErrorMessage());
