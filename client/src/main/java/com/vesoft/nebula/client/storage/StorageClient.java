@@ -1096,6 +1096,8 @@ public class StorageClient implements Serializable {
                 .withSpaceName(spaceName)
                 .withEdgeName(edgeName)
                 .withPartSuccess(allowPartSuccess)
+                .withUser(user)
+                .withPassword(password)
                 .build();
     }
 
